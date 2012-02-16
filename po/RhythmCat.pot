@@ -1,0 +1,437 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR Free Software Foundation, Inc.
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: RhythmCat 1.9.0\n"
+"Report-Msgid-Bugs-To: http://code.google.com/p/rhythmcat/issues/list\n"
+"POT-Creation-Date: 2012-01-20 20:57+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: lib/rclib-core.c:553
+msgid "The core is already initialized!"
+msgstr ""
+
+#: lib/rclib-core.c:570 lib/rclib-core.c:580 lib/rclib-core.c:590
+#: lib/rclib-core.c:601 lib/rclib-core.c:612 lib/rclib-core.c:623
+#, c-format
+msgid "Cannot load necessary plugin: %s"
+msgstr ""
+
+#: lib/rclib-core.c:633 lib/rclib-core.c:659
+#, c-format
+msgid "Cannot create bin: %s"
+msgstr ""
+
+#: lib/rclib-core.c:643 lib/rclib-core.c:670
+msgid "Cannot link elements!"
+msgstr ""
+
+#: ui/ui-listmodel.c:361 ui/ui-player.c:188 ui/ui-player.c:658
+msgid "Unknown Title"
+msgstr ""
+
+#: ui/ui-listmodel.c:365 ui/ui-player.c:195 ui/ui-player.c:659
+msgid "Unknown Artist"
+msgstr ""
+
+#: ui/ui-listmodel.c:369 ui/ui-player.c:200 ui/ui-player.c:660
+msgid "Unknown Album"
+msgstr ""
+
+#: ui/ui-listview.c:671
+msgid "Name"
+msgstr ""
+
+#: ui/ui-listview.c:677
+msgid "Title"
+msgstr ""
+
+#: ui/ui-listview.c:680
+msgid "Artist"
+msgstr ""
+
+#: ui/ui-listview.c:683
+msgid "Album"
+msgstr ""
+
+#: ui/ui-listview.c:686
+msgid "Length"
+msgstr ""
+
+#: ui/ui-listview.c:954
+#, c-format
+msgid "Playlist %u"
+msgstr ""
+
+#: ui/ui-menu.c:71
+msgid "_File"
+msgstr ""
+
+#: ui/ui-menu.c:72
+msgid "_Edit"
+msgstr ""
+
+#: ui/ui-menu.c:73
+msgid "_View"
+msgstr ""
+
+#: ui/ui-menu.c:74
+msgid "_Control"
+msgstr ""
+
+#: ui/ui-menu.c:75
+msgid "_Help"
+msgstr ""
+
+#: ui/ui-menu.c:76
+msgid "_Repeat"
+msgstr ""
+
+#: ui/ui-menu.c:77
+msgid "Ran_dom"
+msgstr ""
+
+#: ui/ui-menu.c:79 ui/ui-menu.c:187
+msgid "_New Playlist"
+msgstr ""
+
+#: ui/ui-menu.c:80 ui/ui-menu.c:188
+msgid "Create a new playlist"
+msgstr ""
+
+#: ui/ui-menu.c:83 ui/ui-menu.c:203
+msgid "Import _Music"
+msgstr ""
+
+#: ui/ui-menu.c:84 ui/ui-menu.c:204
+msgid "Import music file"
+msgstr ""
+
+#: ui/ui-menu.c:87 ui/ui-menu.c:207
+msgid "Import _Playlist"
+msgstr ""
+
+#: ui/ui-menu.c:88 ui/ui-menu.c:208
+msgid "Import music from playlist"
+msgstr ""
+
+#: ui/ui-menu.c:91
+msgid "Import _Folder"
+msgstr ""
+
+#: ui/ui-menu.c:92
+msgid "Import all music from folder"
+msgstr ""
+
+#: ui/ui-menu.c:95
+msgid "_Export Playlist"
+msgstr ""
+
+#: ui/ui-menu.c:96 ui/ui-menu.c:200
+msgid "Export music to a playlist"
+msgstr ""
+
+#: ui/ui-menu.c:99
+msgid "Export _All Playlists"
+msgstr ""
+
+#: ui/ui-menu.c:100
+msgid "Export all playlists to a folder"
+msgstr ""
+
+#: ui/ui-menu.c:103 ui/ui-menu.c:259
+msgid "_Quit"
+msgstr ""
+
+#: ui/ui-menu.c:104 ui/ui-menu.c:260
+msgid "Quit this player"
+msgstr ""
+
+#: ui/ui-menu.c:107 ui/ui-menu.c:191
+msgid "Re_name Playlist"
+msgstr ""
+
+#: ui/ui-menu.c:108
+msgid "Rename the playlist"
+msgstr ""
+
+#: ui/ui-menu.c:111 ui/ui-menu.c:195
+msgid "R_emove Playlist"
+msgstr ""
+
+#: ui/ui-menu.c:112 ui/ui-menu.c:196
+msgid "Remove the playlist"
+msgstr ""
+
+#: ui/ui-menu.c:115 ui/ui-menu.c:215
+msgid "Bind _lyric file"
+msgstr ""
+
+#: ui/ui-menu.c:116 ui/ui-menu.c:216
+msgid "Bind lyric file to the selected music"
+msgstr ""
+
+#: ui/ui-menu.c:119 ui/ui-menu.c:219
+msgid "Bind al_bum file"
+msgstr ""
+
+#: ui/ui-menu.c:120 ui/ui-menu.c:220
+msgid "Bind album file to the selected music"
+msgstr ""
+
+#: ui/ui-menu.c:123
+msgid "_Remove Music"
+msgstr ""
+
+#: ui/ui-menu.c:124 ui/ui-menu.c:224
+msgid "Remove music from playlist"
+msgstr ""
+
+#: ui/ui-menu.c:127 ui/ui-menu.c:211
+msgid "Select _All"
+msgstr ""
+
+#: ui/ui-menu.c:128 ui/ui-menu.c:212
+msgid "Select all music in the playlist"
+msgstr ""
+
+#: ui/ui-menu.c:131 ui/ui-menu.c:227
+msgid "Re_fresh Playlist"
+msgstr ""
+
+#: ui/ui-menu.c:132 ui/ui-menu.c:228
+msgid "Refresh music information in the playlist"
+msgstr ""
+
+#: ui/ui-menu.c:135
+msgid "Plu_gins"
+msgstr ""
+
+#: ui/ui-menu.c:136
+msgid "Configure plugins"
+msgstr ""
+
+#: ui/ui-menu.c:139
+msgid "_Preferences"
+msgstr ""
+
+#: ui/ui-menu.c:140
+msgid "Configure the player"
+msgstr ""
+
+#: ui/ui-menu.c:143
+msgid "_Mini Mode"
+msgstr ""
+
+#: ui/ui-menu.c:144
+msgid "Enable mini mode"
+msgstr ""
+
+#: ui/ui-menu.c:147 ui/ui-menu.c:231
+msgid "_Play/Pause"
+msgstr ""
+
+#: ui/ui-menu.c:148 ui/ui-menu.c:232
+msgid "Play or pause the music"
+msgstr ""
+
+#: ui/ui-menu.c:151 ui/ui-menu.c:235
+msgid "_Stop"
+msgstr ""
+
+#: ui/ui-menu.c:152 ui/ui-menu.c:236
+msgid "Stop the music"
+msgstr ""
+
+#: ui/ui-menu.c:155 ui/ui-menu.c:239
+msgid "Pre_vious"
+msgstr ""
+
+#: ui/ui-menu.c:156 ui/ui-menu.c:240
+msgid "Play previous music"
+msgstr ""
+
+#: ui/ui-menu.c:159 ui/ui-menu.c:243
+msgid "_Next"
+msgstr ""
+
+#: ui/ui-menu.c:160 ui/ui-menu.c:244
+msgid "Play next music"
+msgstr ""
+
+#: ui/ui-menu.c:163
+msgid "_Backward"
+msgstr ""
+
+#: ui/ui-menu.c:164
+msgid "Backward 5 seconds"
+msgstr ""
+
+#: ui/ui-menu.c:167
+msgid "_Forward"
+msgstr ""
+
+#: ui/ui-menu.c:168
+msgid "Forward 5 seconds"
+msgstr ""
+
+#: ui/ui-menu.c:171
+msgid "_Increase Volume"
+msgstr ""
+
+#: ui/ui-menu.c:172
+msgid "Increase the volume"
+msgstr ""
+
+#: ui/ui-menu.c:175
+msgid "_Decrease Volume"
+msgstr ""
+
+#: ui/ui-menu.c:176
+msgid "Decrease the volume"
+msgstr ""
+
+#: ui/ui-menu.c:179 ui/ui-menu.c:255
+msgid "_About"
+msgstr ""
+
+#: ui/ui-menu.c:180 ui/ui-menu.c:256
+msgid "About this player"
+msgstr ""
+
+#: ui/ui-menu.c:183
+msgid "_Supported Format"
+msgstr ""
+
+#: ui/ui-menu.c:184
+msgid "Check the supported music format of this player"
+msgstr ""
+
+#: ui/ui-menu.c:192
+msgid "Raname the playlist"
+msgstr ""
+
+#: ui/ui-menu.c:199
+msgid "E_xport Playlist"
+msgstr ""
+
+#: ui/ui-menu.c:223
+msgid "R_emove Music"
+msgstr ""
+
+#: ui/ui-menu.c:247
+msgid "S_how Player"
+msgstr ""
+
+#: ui/ui-menu.c:248
+msgid "Show the window of player"
+msgstr ""
+
+#: ui/ui-menu.c:251
+msgid "_Mode Switch"
+msgstr ""
+
+#: ui/ui-menu.c:252
+msgid "Switch between normal mode and mini mode"
+msgstr ""
+
+#: ui/ui-menu.c:269
+msgid "_No Repeat"
+msgstr ""
+
+#: ui/ui-menu.c:270
+msgid "No repeat"
+msgstr ""
+
+#: ui/ui-menu.c:272
+msgid "Single _Music Repeat"
+msgstr ""
+
+#: ui/ui-menu.c:273
+msgid "Repeat playing single music"
+msgstr ""
+
+#: ui/ui-menu.c:275
+msgid "Single _Playlist Repeat"
+msgstr ""
+
+#: ui/ui-menu.c:276
+msgid "Repeat playing single playlist"
+msgstr ""
+
+#: ui/ui-menu.c:278
+msgid "_All Playlists Repeat"
+msgstr ""
+
+#: ui/ui-menu.c:279
+msgid "Repeat playing all playlists"
+msgstr ""
+
+#: ui/ui-menu.c:287
+msgid "_No Random"
+msgstr ""
+
+#: ui/ui-menu.c:288
+msgid "No random playing"
+msgstr ""
+
+#: ui/ui-menu.c:290
+msgid "_Single Playlist Random"
+msgstr ""
+
+#: ui/ui-menu.c:291
+msgid "Random playing a music in the playlist"
+msgstr ""
+
+#: ui/ui-menu.c:293
+msgid "_All Playlists Random"
+msgstr ""
+
+#: ui/ui-menu.c:294
+msgid "Random playing a music in all playlists"
+msgstr ""
+
+#: ui/ui-menu.c:302 ui/ui-menu.c:306
+msgid "Always On _Top"
+msgstr ""
+
+#: ui/ui-menu.c:303 ui/ui-menu.c:307
+msgid "Always on top"
+msgstr ""
+
+#: ui/ui-player.c:208 ui/ui-player.c:661
+msgid "Unknown Format"
+msgstr ""
+
+#: ui/ui-player.c:210
+#, c-format
+msgid "%d kbps "
+msgstr ""
+
+#: ui/ui-player.c:213
+#, c-format
+msgid "%d Hz "
+msgstr ""
+
+#: ui/ui-player.c:217
+msgid "Mono"
+msgstr ""
+
+#: ui/ui-player.c:220
+msgid "Stereo"
+msgstr ""
+
+#: ui/ui-player.c:223
+#, c-format
+msgid "%d channels"
+msgstr ""

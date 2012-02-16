@@ -1,0 +1,835 @@
+<?xml version="1.0"?>
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
+               "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd"
+[
+  <!ENTITY % local.common.attrib "xmlns:xi  CDATA  #FIXED 'http://www.w3.org/2003/XInclude'">
+]>
+<refentry id="RCLibCore">
+<refmeta>
+<refentrytitle role="top_of_page" id="RCLibCore.top_of_page">RCLibCore</refentrytitle>
+<manvolnum>3</manvolnum>
+<refmiscinfo>
+  LIBRHYTHMCAT Library
+</refmiscinfo>
+</refmeta>
+<refnamediv>
+<refname>RCLibCore</refname>
+<refpurpose>The audio player core</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv id="RCLibCore.synopsis" role="synopsis">
+<title role="synopsis.title">Synopsis</title>
+
+<synopsis>
+#include &lt;rclib-core.h&gt;
+
+#define             <link linkend="RCLIB-CORE-TYPE:CAPS">RCLIB_CORE_TYPE</link>
+struct              <link linkend="RCLibCore-struct">RCLibCore</link>;
+struct              <link linkend="RCLibCoreClass">RCLibCoreClass</link>;
+enum                <link linkend="RCLibCoreEQType">RCLibCoreEQType</link>;
+enum                <link linkend="RCLibCoreErrorCode">RCLibCoreErrorCode</link>;
+struct              <link linkend="RCLibCoreMetadata">RCLibCoreMetadata</link>;
+<link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            <link linkend="rclib-core-init">rclib_core_init</link>                     (<parameter><link linkend="gint"><type>gint</type></link> *argc</parameter>,
+                                                         <parameter><link linkend="gchar"><type>gchar</type></link> **argv[]</parameter>,
+                                                         <parameter><link linkend="GError"><type>GError</type></link> **error</parameter>);
+<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rclib-core-exit">rclib_core_exit</link>                     ();
+<link linkend="GObject"><returnvalue>GObject</returnvalue></link> *           <link linkend="rclib-core-get-instance">rclib_core_get_instance</link>             ();
+<link linkend="gulong"><returnvalue>gulong</returnvalue></link>              <link linkend="rclib-core-signal-connect">rclib_core_signal_connect</link>           (<parameter>const <link linkend="gchar"><type>gchar</type></link> *name</parameter>,
+                                                         <parameter><link linkend="GCallback"><type>GCallback</type></link> callback</parameter>,
+                                                         <parameter><link linkend="gpointer"><type>gpointer</type></link> data</parameter>);
+<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rclib-core-signal-disconnect">rclib_core_signal_disconnect</link>        (<parameter><link linkend="gulong"><type>gulong</type></link> handler_id</parameter>);
+<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rclib-core-set-uri">rclib_core_set_uri</link>                  (<parameter>const <link linkend="gchar"><type>gchar</type></link> *uri</parameter>,
+                                                         <parameter><link linkend="gpointer"><type>gpointer</type></link> reference</parameter>);
+<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rclib-core-set-reference">rclib_core_set_reference</link>            (<parameter><link linkend="gpointer"><type>gpointer</type></link> reference</parameter>);
+<link linkend="gchar"><returnvalue>gchar</returnvalue></link> *             <link linkend="rclib-core-get-uri">rclib_core_get_uri</link>                  ();
+<link linkend="gpointer"><returnvalue>gpointer</returnvalue></link>            <link linkend="rclib-core-get-reference">rclib_core_get_reference</link>            ();
+<link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            <link linkend="rclib-core-set-position">rclib_core_set_position</link>             (<parameter><link linkend="gint64"><type>gint64</type></link> pos</parameter>);
+<link linkend="gint64"><returnvalue>gint64</returnvalue></link>              <link linkend="rclib-core-query-position">rclib_core_query_position</link>           ();
+<link linkend="gint64"><returnvalue>gint64</returnvalue></link>              <link linkend="rclib-core-query-duration">rclib_core_query_duration</link>           ();
+<link linkend="GstStateChangeReturn"><returnvalue>GstStateChangeReturn</returnvalue></link> <link linkend="rclib-core-get-state">rclib_core_get_state</link>               (<parameter><link linkend="GstState"><type>GstState</type></link> *state</parameter>,
+                                                         <parameter><link linkend="GstState"><type>GstState</type></link> *pending</parameter>,
+                                                         <parameter><link linkend="GstClockTime"><type>GstClockTime</type></link> timeout</parameter>);
+<link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            <link linkend="rclib-core-play">rclib_core_play</link>                     ();
+<link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            <link linkend="rclib-core-pause">rclib_core_pause</link>                    ();
+<link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            <link linkend="rclib-core-stop">rclib_core_stop</link>                     ();
+<link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            <link linkend="rclib-core-set-volume">rclib_core_set_volume</link>               (<parameter><link linkend="gdouble"><type>gdouble</type></link> volume</parameter>);
+<link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            <link linkend="rclib-core-get-volume">rclib_core_get_volume</link>               (<parameter><link linkend="gdouble"><type>gdouble</type></link> *volume</parameter>);
+<link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            <link linkend="rclib-core-set-eq">rclib_core_set_eq</link>                   (<parameter><link linkend="RCLibCoreEQType"><type>RCLibCoreEQType</type></link> type</parameter>,
+                                                         <parameter><link linkend="gdouble"><type>gdouble</type></link> *band</parameter>);
+<link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            <link linkend="rclib-core-get-eq">rclib_core_get_eq</link>                   (<parameter><link linkend="RCLibCoreEQType"><type>RCLibCoreEQType</type></link> *type</parameter>,
+                                                         <parameter><link linkend="gdouble"><type>gdouble</type></link> *band</parameter>);
+const <link linkend="gchar"><returnvalue>gchar</returnvalue></link> *       <link linkend="rclib-core-get-eq-name">rclib_core_get_eq_name</link>              (<parameter><link linkend="RCLibCoreEQType"><type>RCLibCoreEQType</type></link> type</parameter>);
+<link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            <link linkend="rclib-core-set-balance">rclib_core_set_balance</link>              (<parameter><link linkend="gfloat"><type>gfloat</type></link> balance</parameter>);
+<link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            <link linkend="rclib-core-get-balance">rclib_core_get_balance</link>              (<parameter><link linkend="gfloat"><type>gfloat</type></link> *balance</parameter>);
+<link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            <link linkend="rclib-core-set-echo">rclib_core_set_echo</link>                 (<parameter><link linkend="guint64"><type>guint64</type></link> delay</parameter>,
+                                                         <parameter><link linkend="guint64"><type>guint64</type></link> max_delay</parameter>,
+                                                         <parameter><link linkend="gfloat"><type>gfloat</type></link> feedback</parameter>,
+                                                         <parameter><link linkend="gfloat"><type>gfloat</type></link> intensity</parameter>);
+<link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            <link linkend="rclib-core-get-echo">rclib_core_get_echo</link>                 (<parameter><link linkend="guint64"><type>guint64</type></link> *delay</parameter>,
+                                                         <parameter><link linkend="guint64"><type>guint64</type></link> *max_delay</parameter>,
+                                                         <parameter><link linkend="gfloat"><type>gfloat</type></link> *feedback</parameter>,
+                                                         <parameter><link linkend="gfloat"><type>gfloat</type></link> *intensity</parameter>);
+<link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            <link linkend="rclib-core-effect-plugin-add">rclib_core_effect_plugin_add</link>        (<parameter><link linkend="GstElement"><type>GstElement</type></link> *element</parameter>);
+<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rclib-core-effect-plugin-remove">rclib_core_effect_plugin_remove</link>     (<parameter><link linkend="GstElement"><type>GstElement</type></link> *element</parameter>);
+<link linkend="GList"><returnvalue>GList</returnvalue></link> *             <link linkend="rclib-core-effect-plugin-get-list">rclib_core_effect_plugin_get_list</link>   ();
+</synopsis>
+</refsynopsisdiv>
+<refsect1 id="RCLibCore.object-hierarchy" role="object_hierarchy">
+<title role="object_hierarchy.title">Object Hierarchy</title>
+<synopsis>
+  <link linkend="GObject">GObject</link>
+   +----RCLibCore
+</synopsis>
+</refsect1>
+<refsect1 id="RCLibCore.signals" role="signal_proto">
+<title role="signal_proto.title">Signals</title>
+<synopsis>
+  &quot;<link linkend="RCLibCore-balance-changed">balance-changed</link>&quot;                                : <link linkend="G-SIGNAL-RUN-FIRST:CAPS"><literal>Run First</literal></link>
+  &quot;<link linkend="RCLibCore-echo-changed">echo-changed</link>&quot;                                   : <link linkend="G-SIGNAL-RUN-FIRST:CAPS"><literal>Run First</literal></link>
+  &quot;<link linkend="RCLibCore-eos">eos</link>&quot;                                            : <link linkend="G-SIGNAL-RUN-FIRST:CAPS"><literal>Run First</literal></link>
+  &quot;<link linkend="RCLibCore-eq-changed">eq-changed</link>&quot;                                     : <link linkend="G-SIGNAL-RUN-FIRST:CAPS"><literal>Run First</literal></link>
+  &quot;<link linkend="RCLibCore-error">error</link>&quot;                                          : <link linkend="G-SIGNAL-RUN-FIRST:CAPS"><literal>Run First</literal></link>
+  &quot;<link linkend="RCLibCore-new-duration">new-duration</link>&quot;                                   : <link linkend="G-SIGNAL-RUN-FIRST:CAPS"><literal>Run First</literal></link>
+  &quot;<link linkend="RCLibCore-spectrum-updated">spectrum-updated</link>&quot;                               : <link linkend="G-SIGNAL-RUN-FIRST:CAPS"><literal>Run First</literal></link>
+  &quot;<link linkend="RCLibCore-state-changed">state-changed</link>&quot;                                  : <link linkend="G-SIGNAL-RUN-FIRST:CAPS"><literal>Run First</literal></link>
+  &quot;<link linkend="RCLibCore-tag-found">tag-found</link>&quot;                                      : <link linkend="G-SIGNAL-RUN-FIRST:CAPS"><literal>Run First</literal></link>
+  &quot;<link linkend="RCLibCore-uri-changed">uri-changed</link>&quot;                                    : <link linkend="G-SIGNAL-RUN-FIRST:CAPS"><literal>Run First</literal></link>
+  &quot;<link linkend="RCLibCore-volume-changed">volume-changed</link>&quot;                                 : <link linkend="G-SIGNAL-RUN-FIRST:CAPS"><literal>Run First</literal></link>
+</synopsis>
+</refsect1>
+
+<refsect1 id="RCLibCore.description" role="desc">
+<title role="desc.title">Description</title>
+<para>
+The <link linkend="RCLibCore"><type>RCLibCore</type></link> is a class which plays audio files, controls the player,
+and manages sound effects. The core uses GStreamer as its backend.
+</para>
+</refsect1>
+<refsect1 id="RCLibCore.details" role="details">
+<title role="details.title">Details</title>
+<refsect2 id="RCLIB-CORE-TYPE:CAPS" role="macro">
+<title>RCLIB_CORE_TYPE</title>
+<indexterm zone="RCLIB-CORE-TYPE:CAPS"><primary>RCLIB_CORE_TYPE</primary></indexterm>
+<programlisting>#define RCLIB_CORE_TYPE (rclib_core_get_type())
+</programlisting>
+</refsect2>
+<refsect2 id="RCLibCore-struct" role="struct">
+<title>struct RCLibCore</title>
+<indexterm zone="RCLibCore-struct"><primary>RCLibCore</primary></indexterm>
+<programlisting>struct RCLibCore;</programlisting>
+<para>
+The audio player core. The contents of the <link linkend="RCLibCore"><type>RCLibCore</type></link> structure are
+private and should only be accessed via the provided API.
+</para></refsect2>
+<refsect2 id="RCLibCoreClass" role="struct">
+<title>struct RCLibCoreClass</title>
+<indexterm zone="RCLibCoreClass"><primary>RCLibCoreClass</primary></indexterm>
+<programlisting>struct RCLibCoreClass {
+};
+</programlisting>
+<para>
+<link linkend="RCLibCore"><type>RCLibCore</type></link> class.
+</para></refsect2>
+<refsect2 id="RCLibCoreEQType" role="enum">
+<title>enum RCLibCoreEQType</title>
+<indexterm zone="RCLibCoreEQType"><primary>RCLibCoreEQType</primary></indexterm>
+<programlisting>typedef enum {
+    RCLIB_CORE_EQ_TYPE_NONE = 0,
+    RCLIB_CORE_EQ_TYPE_POP = 1,
+    RCLIB_CORE_EQ_TYPE_ROCK = 2,
+    RCLIB_CORE_EQ_TYPE_METAL = 3,
+    RCLIB_CORE_EQ_TYPE_DANCE = 4,
+    RCLIB_CORE_EQ_TYPE_ELECTRONIC = 5,
+    RCLIB_CORE_EQ_TYPE_JAZZ = 6,
+    RCLIB_CORE_EQ_TYPE_CLASSICAL = 7,
+    RCLIB_CORE_EQ_TYPE_BLUES = 8,
+    RCLIB_CORE_EQ_TYPE_VOCAL = 9,
+    RCLIB_CORE_EQ_TYPE_CUSTOM = 10
+} RCLibCoreEQType;
+</programlisting>
+<para>
+The enum type for the equalizer in the core.
+</para><variablelist role="enum">
+<varlistentry id="RCLIB-CORE-EQ-TYPE-NONE:CAPS" role="constant">
+<term><literal>RCLIB_CORE_EQ_TYPE_NONE</literal></term>
+<listitem><simpara>no equalizer effect
+</simpara></listitem>
+</varlistentry>
+<varlistentry id="RCLIB-CORE-EQ-TYPE-POP:CAPS" role="constant">
+<term><literal>RCLIB_CORE_EQ_TYPE_POP</literal></term>
+<listitem><simpara>the pop style
+</simpara></listitem>
+</varlistentry>
+<varlistentry id="RCLIB-CORE-EQ-TYPE-ROCK:CAPS" role="constant">
+<term><literal>RCLIB_CORE_EQ_TYPE_ROCK</literal></term>
+<listitem><simpara>the rock style
+</simpara></listitem>
+</varlistentry>
+<varlistentry id="RCLIB-CORE-EQ-TYPE-METAL:CAPS" role="constant">
+<term><literal>RCLIB_CORE_EQ_TYPE_METAL</literal></term>
+<listitem><simpara>the metal style
+</simpara></listitem>
+</varlistentry>
+<varlistentry id="RCLIB-CORE-EQ-TYPE-DANCE:CAPS" role="constant">
+<term><literal>RCLIB_CORE_EQ_TYPE_DANCE</literal></term>
+<listitem><simpara>the dance style
+</simpara></listitem>
+</varlistentry>
+<varlistentry id="RCLIB-CORE-EQ-TYPE-ELECTRONIC:CAPS" role="constant">
+<term><literal>RCLIB_CORE_EQ_TYPE_ELECTRONIC</literal></term>
+<listitem><simpara>the electronic style
+</simpara></listitem>
+</varlistentry>
+<varlistentry id="RCLIB-CORE-EQ-TYPE-JAZZ:CAPS" role="constant">
+<term><literal>RCLIB_CORE_EQ_TYPE_JAZZ</literal></term>
+<listitem><simpara>the jazz style
+</simpara></listitem>
+</varlistentry>
+<varlistentry id="RCLIB-CORE-EQ-TYPE-CLASSICAL:CAPS" role="constant">
+<term><literal>RCLIB_CORE_EQ_TYPE_CLASSICAL</literal></term>
+<listitem><simpara>the classical style
+</simpara></listitem>
+</varlistentry>
+<varlistentry id="RCLIB-CORE-EQ-TYPE-BLUES:CAPS" role="constant">
+<term><literal>RCLIB_CORE_EQ_TYPE_BLUES</literal></term>
+<listitem><simpara>the blues style
+</simpara></listitem>
+</varlistentry>
+<varlistentry id="RCLIB-CORE-EQ-TYPE-VOCAL:CAPS" role="constant">
+<term><literal>RCLIB_CORE_EQ_TYPE_VOCAL</literal></term>
+<listitem><simpara>the vocal style
+</simpara></listitem>
+</varlistentry>
+<varlistentry id="RCLIB-CORE-EQ-TYPE-CUSTOM:CAPS" role="constant">
+<term><literal>RCLIB_CORE_EQ_TYPE_CUSTOM</literal></term>
+<listitem><simpara>the custom style
+</simpara></listitem>
+</varlistentry>
+</variablelist></refsect2>
+<refsect2 id="RCLibCoreErrorCode" role="enum">
+<title>enum RCLibCoreErrorCode</title>
+<indexterm zone="RCLibCoreErrorCode"><primary>RCLibCoreErrorCode</primary></indexterm>
+<programlisting>typedef enum {
+    RCLIB_CORE_ERROR_OK = 0,
+    RCLIB_CORE_ERROR_ALREADY_INIT = 1,
+    RCLIB_CORE_ERROR_NOT_INIT = 2,
+    RCLIB_CORE_ERROR_MISSING_CORE_PLUGIN = 3,
+    RCLIB_CORE_ERROR_CREATE_BIN_FAILED = 4,
+    RCLIB_CORE_ERROR_LINK_FAILED = 5
+} RCLibCoreErrorCode;
+</programlisting>
+<para>
+The enum type for core error messages.
+</para><variablelist role="enum">
+<varlistentry id="RCLIB-CORE-ERROR-OK:CAPS" role="constant">
+<term><literal>RCLIB_CORE_ERROR_OK</literal></term>
+<listitem><simpara>no error
+</simpara></listitem>
+</varlistentry>
+<varlistentry id="RCLIB-CORE-ERROR-ALREADY-INIT:CAPS" role="constant">
+<term><literal>RCLIB_CORE_ERROR_ALREADY_INIT</literal></term>
+<listitem><simpara>the core is already initialized
+</simpara></listitem>
+</varlistentry>
+<varlistentry id="RCLIB-CORE-ERROR-NOT-INIT:CAPS" role="constant">
+<term><literal>RCLIB_CORE_ERROR_NOT_INIT</literal></term>
+<listitem><simpara>the core is not initialized yet
+</simpara></listitem>
+</varlistentry>
+<varlistentry id="RCLIB-CORE-ERROR-MISSING-CORE-PLUGIN:CAPS" role="constant">
+<term><literal>RCLIB_CORE_ERROR_MISSING_CORE_PLUGIN</literal></term>
+<listitem><simpara>necessary plug-ins are missing
+</simpara></listitem>
+</varlistentry>
+<varlistentry id="RCLIB-CORE-ERROR-CREATE-BIN-FAILED:CAPS" role="constant">
+<term><literal>RCLIB_CORE_ERROR_CREATE_BIN_FAILED</literal></term>
+<listitem><simpara>cannot create necessary <link linkend="GstBin"><type>GstBin</type></link>
+</simpara></listitem>
+</varlistentry>
+<varlistentry id="RCLIB-CORE-ERROR-LINK-FAILED:CAPS" role="constant">
+<term><literal>RCLIB_CORE_ERROR_LINK_FAILED</literal></term>
+<listitem><simpara>cannot link necessary <link linkend="GstElement"><type>GstElement</type></link>
+</simpara></listitem>
+</varlistentry>
+</variablelist></refsect2>
+<refsect2 id="RCLibCoreMetadata" role="struct">
+<title>struct RCLibCoreMetadata</title>
+<indexterm zone="RCLibCoreMetadata"><primary>RCLibCoreMetadata</primary></indexterm>
+<programlisting>struct RCLibCoreMetadata {
+    gchar *title;
+    gchar *artist;
+    gchar *album;
+    gchar *ftype;
+    guint bitrate;
+    gint64 duration;
+    gint track;
+    gint year;
+    gint rate;
+    gint channels;
+    GstBuffer *image;
+};
+</programlisting>
+<para>
+The structure for metadata read from core.
+</para><variablelist role="struct">
+<varlistentry><term><link linkend="gchar"><type>gchar</type></link>&#160;*<structfield id="RCLibCoreMetadata.title">title</structfield>;</term>
+<listitem><simpara>the title</simpara></listitem>
+</varlistentry>
+<varlistentry><term><link linkend="gchar"><type>gchar</type></link>&#160;*<structfield id="RCLibCoreMetadata.artist">artist</structfield>;</term>
+<listitem><simpara>the artist</simpara></listitem>
+</varlistentry>
+<varlistentry><term><link linkend="gchar"><type>gchar</type></link>&#160;*<structfield id="RCLibCoreMetadata.album">album</structfield>;</term>
+<listitem><simpara>the album name</simpara></listitem>
+</varlistentry>
+<varlistentry><term><link linkend="gchar"><type>gchar</type></link>&#160;*<structfield id="RCLibCoreMetadata.ftype">ftype</structfield>;</term>
+<listitem><simpara>the format information</simpara></listitem>
+</varlistentry>
+<varlistentry><term><link linkend="guint"><type>guint</type></link>&#160;<structfield id="RCLibCoreMetadata.bitrate">bitrate</structfield>;</term>
+<listitem><simpara>the bitrate (unit: bit/s)</simpara></listitem>
+</varlistentry>
+<varlistentry><term><link linkend="gint64"><type>gint64</type></link>&#160;<structfield id="RCLibCoreMetadata.duration">duration</structfield>;</term>
+<listitem><simpara>the duration of the music (unit: nanosecond)</simpara></listitem>
+</varlistentry>
+<varlistentry><term><link linkend="gint"><type>gint</type></link>&#160;<structfield id="RCLibCoreMetadata.track">track</structfield>;</term>
+<listitem><simpara>the track number</simpara></listitem>
+</varlistentry>
+<varlistentry><term><link linkend="gint"><type>gint</type></link>&#160;<structfield id="RCLibCoreMetadata.year">year</structfield>;</term>
+<listitem><simpara>the year</simpara></listitem>
+</varlistentry>
+<varlistentry><term><link linkend="gint"><type>gint</type></link>&#160;<structfield id="RCLibCoreMetadata.rate">rate</structfield>;</term>
+<listitem><simpara>the sample rate</simpara></listitem>
+</varlistentry>
+<varlistentry><term><link linkend="gint"><type>gint</type></link>&#160;<structfield id="RCLibCoreMetadata.channels">channels</structfield>;</term>
+<listitem><simpara>the number of channel</simpara></listitem>
+</varlistentry>
+<varlistentry><term><link linkend="GstBuffer"><type>GstBuffer</type></link>&#160;*<structfield id="RCLibCoreMetadata.image">image</structfield>;</term>
+<listitem><simpara>the cover image buffer</simpara></listitem>
+</varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rclib-core-init" role="function">
+<title>rclib_core_init ()</title>
+<indexterm zone="rclib-core-init"><primary>rclib_core_init</primary></indexterm>
+<programlisting><link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            rclib_core_init                     (<parameter><link linkend="gint"><type>gint</type></link> *argc</parameter>,
+                                                         <parameter><link linkend="gchar"><type>gchar</type></link> **argv[]</parameter>,
+                                                         <parameter><link linkend="GError"><type>GError</type></link> **error</parameter>);</programlisting>
+<para>
+Initialize the core, if the initialization failed, it returns FALSE,
+and <parameter>error</parameter> will be set.
+</para><variablelist role="params">
+<varlistentry><term><parameter>argc</parameter>&#160;:</term>
+<listitem><simpara>pointer to application's argc</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>argv</parameter>&#160;:</term>
+<listitem><simpara>pointer to application's argv</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>error</parameter>&#160;:</term>
+<listitem><simpara>return location for a GError, or NULL</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara>Whether the initialization succeeded.</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rclib-core-exit" role="function">
+<title>rclib_core_exit ()</title>
+<indexterm zone="rclib-core-exit"><primary>rclib_core_exit</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rclib_core_exit                     ();</programlisting>
+<para>
+Unload the core.
+</para></refsect2>
+<refsect2 id="rclib-core-get-instance" role="function">
+<title>rclib_core_get_instance ()</title>
+<indexterm zone="rclib-core-get-instance"><primary>rclib_core_get_instance</primary></indexterm>
+<programlisting><link linkend="GObject"><returnvalue>GObject</returnvalue></link> *           rclib_core_get_instance             ();</programlisting>
+<para>
+Get the running <link linkend="RCLibCore"><type>RCLibCore</type></link> instance.
+</para><variablelist role="params">
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara>The running instance.</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rclib-core-signal-connect" role="function">
+<title>rclib_core_signal_connect ()</title>
+<indexterm zone="rclib-core-signal-connect"><primary>rclib_core_signal_connect</primary></indexterm>
+<programlisting><link linkend="gulong"><returnvalue>gulong</returnvalue></link>              rclib_core_signal_connect           (<parameter>const <link linkend="gchar"><type>gchar</type></link> *name</parameter>,
+                                                         <parameter><link linkend="GCallback"><type>GCallback</type></link> callback</parameter>,
+                                                         <parameter><link linkend="gpointer"><type>gpointer</type></link> data</parameter>);</programlisting>
+<para>
+Connect the GCallback function to the given signal for the running
+instance of <link linkend="RCLibCore"><type>RCLibCore</type></link> object.
+</para><variablelist role="params">
+<varlistentry><term><parameter>name</parameter>&#160;:</term>
+<listitem><simpara>the name of the signal</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>callback</parameter>&#160;:</term>
+<listitem><simpara>the the <link linkend="GCallback"><type>GCallback</type></link> to connect</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>data</parameter>&#160;:</term>
+<listitem><simpara>the user data</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara>The handler ID.</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rclib-core-signal-disconnect" role="function">
+<title>rclib_core_signal_disconnect ()</title>
+<indexterm zone="rclib-core-signal-disconnect"><primary>rclib_core_signal_disconnect</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rclib_core_signal_disconnect        (<parameter><link linkend="gulong"><type>gulong</type></link> handler_id</parameter>);</programlisting>
+<para>
+Disconnects a handler from the running core instance so it will
+not be called during any future or currently ongoing emissions
+of the signal it has been connected to. The <link linkend="handler-id"><type>handler_id</type></link> becomes
+invalid and may be reused.
+</para><variablelist role="params">
+<varlistentry><term><parameter>handler_id</parameter>&#160;:</term>
+<listitem><simpara>handler id of the handler to be disconnected</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rclib-core-set-uri" role="function">
+<title>rclib_core_set_uri ()</title>
+<indexterm zone="rclib-core-set-uri"><primary>rclib_core_set_uri</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rclib_core_set_uri                  (<parameter>const <link linkend="gchar"><type>gchar</type></link> *uri</parameter>,
+                                                         <parameter><link linkend="gpointer"><type>gpointer</type></link> reference</parameter>);</programlisting>
+<para>
+Set the URI to play.
+</para><variablelist role="params">
+<varlistentry><term><parameter>uri</parameter>&#160;:</term>
+<listitem><simpara>the URI to play</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>reference</parameter>&#160;:</term>
+<listitem><simpara>the reference to set, set to NULL if not used</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rclib-core-set-reference" role="function">
+<title>rclib_core_set_reference ()</title>
+<indexterm zone="rclib-core-set-reference"><primary>rclib_core_set_reference</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rclib_core_set_reference            (<parameter><link linkend="gpointer"><type>gpointer</type></link> reference</parameter>);</programlisting>
+<para>
+Set the reference.
+</para><variablelist role="params">
+<varlistentry><term><parameter>reference</parameter>&#160;:</term>
+<listitem><simpara>the reference to set, set to NULL if not used</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rclib-core-get-uri" role="function">
+<title>rclib_core_get_uri ()</title>
+<indexterm zone="rclib-core-get-uri"><primary>rclib_core_get_uri</primary></indexterm>
+<programlisting><link linkend="gchar"><returnvalue>gchar</returnvalue></link> *             rclib_core_get_uri                  ();</programlisting>
+<para>
+Get the URI.
+</para><variablelist role="params">
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara>The URI, NULL if not set.</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rclib-core-get-reference" role="function">
+<title>rclib_core_get_reference ()</title>
+<indexterm zone="rclib-core-get-reference"><primary>rclib_core_get_reference</primary></indexterm>
+<programlisting><link linkend="gpointer"><returnvalue>gpointer</returnvalue></link>            rclib_core_get_reference            ();</programlisting>
+<para>
+Get the reference.
+</para><variablelist role="params">
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara>The reference.</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rclib-core-set-position" role="function">
+<title>rclib_core_set_position ()</title>
+<indexterm zone="rclib-core-set-position"><primary>rclib_core_set_position</primary></indexterm>
+<programlisting><link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            rclib_core_set_position             (<parameter><link linkend="gint64"><type>gint64</type></link> pos</parameter>);</programlisting>
+<para>
+Set the position for the player (in nanosecond).
+Notice that this function can only be used when this player is playing
+or paused.
+</para><variablelist role="params">
+<varlistentry><term><parameter>pos</parameter>&#160;:</term>
+<listitem><simpara>the position to set</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara>Whether the operation succeeded.</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rclib-core-query-position" role="function">
+<title>rclib_core_query_position ()</title>
+<indexterm zone="rclib-core-query-position"><primary>rclib_core_query_position</primary></indexterm>
+<programlisting><link linkend="gint64"><returnvalue>gint64</returnvalue></link>              rclib_core_query_position           ();</programlisting>
+<para>
+Get the playing position in the player (in nanosecond).
+</para><variablelist role="params">
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara>The playing position (in nanosecond).</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rclib-core-query-duration" role="function">
+<title>rclib_core_query_duration ()</title>
+<indexterm zone="rclib-core-query-duration"><primary>rclib_core_query_duration</primary></indexterm>
+<programlisting><link linkend="gint64"><returnvalue>gint64</returnvalue></link>              rclib_core_query_duration           ();</programlisting>
+<para>
+Return the duration of the music set on this player (in nanosecond).
+</para><variablelist role="params">
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara>The duration (in nanosecond).</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rclib-core-get-state" role="function">
+<title>rclib_core_get_state ()</title>
+<indexterm zone="rclib-core-get-state"><primary>rclib_core_get_state</primary></indexterm>
+<programlisting><link linkend="GstStateChangeReturn"><returnvalue>GstStateChangeReturn</returnvalue></link> rclib_core_get_state               (<parameter><link linkend="GstState"><type>GstState</type></link> *state</parameter>,
+                                                         <parameter><link linkend="GstState"><type>GstState</type></link> *pending</parameter>,
+                                                         <parameter><link linkend="GstClockTime"><type>GstClockTime</type></link> timeout</parameter>);</programlisting>
+<para>
+Gets the state of the element.
+</para><variablelist role="params">
+<varlistentry><term><parameter>state</parameter>&#160;:</term>
+<listitem><simpara>a pointer to <link linkend="GstState"><type>GstState</type></link> to hold the state. Can be NULL</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>pending</parameter>&#160;:</term>
+<listitem><simpara>a pointer to <link linkend="GstState"><type>GstState</type></link> to hold the pending state. Can be NULL</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>timeout</parameter>&#160;:</term>
+<listitem><simpara>a <link linkend="GstClockTime"><type>GstClockTime</type></link> to specify the timeout for an async state
+change or GST_CLOCK_TIME_NONE for infinite timeout</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara><link linkend="GST-STATE-CHANGE-SUCCESS:CAPS"><type>GST_STATE_CHANGE_SUCCESS</type></link> if the element has no more pending
+state and the last state change succeeded, <link linkend="GST-STATE-CHANGE-ASYNC:CAPS"><type>GST_STATE_CHANGE_ASYNC</type></link> if
+the element is still performing a state change or
+<link linkend="GST-STATE-CHANGE-FAILURE:CAPS"><type>GST_STATE_CHANGE_FAILURE</type></link> if the last state change failed. MT safe.</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rclib-core-play" role="function">
+<title>rclib_core_play ()</title>
+<indexterm zone="rclib-core-play"><primary>rclib_core_play</primary></indexterm>
+<programlisting><link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            rclib_core_play                     ();</programlisting>
+<para>
+Set the state of the player to play.
+</para><variablelist role="params">
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara>Whether the state is set to play successfully.</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rclib-core-pause" role="function">
+<title>rclib_core_pause ()</title>
+<indexterm zone="rclib-core-pause"><primary>rclib_core_pause</primary></indexterm>
+<programlisting><link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            rclib_core_pause                    ();</programlisting>
+<para>
+Set the state of the player to pause.
+</para><variablelist role="params">
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara>Whether the state is set to pause successfully.</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rclib-core-stop" role="function">
+<title>rclib_core_stop ()</title>
+<indexterm zone="rclib-core-stop"><primary>rclib_core_stop</primary></indexterm>
+<programlisting><link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            rclib_core_stop                     ();</programlisting>
+<para>
+Set the player to stop state.
+</para><variablelist role="params">
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara>Whether the state is set to stop successfully.</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rclib-core-set-volume" role="function">
+<title>rclib_core_set_volume ()</title>
+<indexterm zone="rclib-core-set-volume"><primary>rclib_core_set_volume</primary></indexterm>
+<programlisting><link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            rclib_core_set_volume               (<parameter><link linkend="gdouble"><type>gdouble</type></link> volume</parameter>);</programlisting>
+<para>
+Set the volume of the player.
+</para><variablelist role="params">
+<varlistentry><term><parameter>volume</parameter>&#160;:</term>
+<listitem><simpara>the volume of the player, it should be between 0.0 and 1.0.</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara>Whether the volume is set successfully.</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rclib-core-get-volume" role="function">
+<title>rclib_core_get_volume ()</title>
+<indexterm zone="rclib-core-get-volume"><primary>rclib_core_get_volume</primary></indexterm>
+<programlisting><link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            rclib_core_get_volume               (<parameter><link linkend="gdouble"><type>gdouble</type></link> *volume</parameter>);</programlisting>
+<para>
+Get the volume of the player.
+</para><variablelist role="params">
+<varlistentry><term><parameter>volume</parameter>&#160;:</term>
+<listitem><simpara>the volume to return</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara>Whether the volume is read successfully.</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rclib-core-set-eq" role="function">
+<title>rclib_core_set_eq ()</title>
+<indexterm zone="rclib-core-set-eq"><primary>rclib_core_set_eq</primary></indexterm>
+<programlisting><link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            rclib_core_set_eq                   (<parameter><link linkend="RCLibCoreEQType"><type>RCLibCoreEQType</type></link> type</parameter>,
+                                                         <parameter><link linkend="gdouble"><type>gdouble</type></link> *band</parameter>);</programlisting>
+<para>
+Set the equalizer of the player.
+</para><variablelist role="params">
+<varlistentry><term><parameter>type</parameter>&#160;:</term>
+<listitem><simpara>the equalizer style type</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>band</parameter>&#160;:</term>
+<listitem><simpara>an array (10 elements) of the gains for each frequency band</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara>Whether the equalizer is set successfully.</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rclib-core-get-eq" role="function">
+<title>rclib_core_get_eq ()</title>
+<indexterm zone="rclib-core-get-eq"><primary>rclib_core_get_eq</primary></indexterm>
+<programlisting><link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            rclib_core_get_eq                   (<parameter><link linkend="RCLibCoreEQType"><type>RCLibCoreEQType</type></link> *type</parameter>,
+                                                         <parameter><link linkend="gdouble"><type>gdouble</type></link> *band</parameter>);</programlisting>
+<para>
+Get the equalizer of the player.
+</para><variablelist role="params">
+<varlistentry><term><parameter>type</parameter>&#160;:</term>
+<listitem><simpara>the equalizer style type</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>band</parameter>&#160;:</term>
+<listitem><simpara>an array (10 elements) of the gains for each frequency band</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara>Whether the data from equalizer is read successfully.</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rclib-core-get-eq-name" role="function">
+<title>rclib_core_get_eq_name ()</title>
+<indexterm zone="rclib-core-get-eq-name"><primary>rclib_core_get_eq_name</primary></indexterm>
+<programlisting>const <link linkend="gchar"><returnvalue>gchar</returnvalue></link> *       rclib_core_get_eq_name              (<parameter><link linkend="RCLibCoreEQType"><type>RCLibCoreEQType</type></link> type</parameter>);</programlisting>
+<para>
+Get the name of the equalizer style type.
+</para><variablelist role="params">
+<varlistentry><term><parameter>type</parameter>&#160;:</term>
+<listitem><simpara>the equalizer style type</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara>The style name.</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rclib-core-set-balance" role="function">
+<title>rclib_core_set_balance ()</title>
+<indexterm zone="rclib-core-set-balance"><primary>rclib_core_set_balance</primary></indexterm>
+<programlisting><link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            rclib_core_set_balance              (<parameter><link linkend="gfloat"><type>gfloat</type></link> balance</parameter>);</programlisting>
+<para>
+Set the position in stereo panorama.
+</para><variablelist role="params">
+<varlistentry><term><parameter>balance</parameter>&#160;:</term>
+<listitem><simpara>set the position in stereo panorama</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara>Whether the balance position is set successfully.</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rclib-core-get-balance" role="function">
+<title>rclib_core_get_balance ()</title>
+<indexterm zone="rclib-core-get-balance"><primary>rclib_core_get_balance</primary></indexterm>
+<programlisting><link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            rclib_core_get_balance              (<parameter><link linkend="gfloat"><type>gfloat</type></link> *balance</parameter>);</programlisting>
+<para>
+Get the position in stereo panorama.
+</para><variablelist role="params">
+<varlistentry><term><parameter>balance</parameter>&#160;:</term>
+<listitem><simpara>return the value of the position in stereo panorama</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara>Whether the balance position is read successfully.</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rclib-core-set-echo" role="function">
+<title>rclib_core_set_echo ()</title>
+<indexterm zone="rclib-core-set-echo"><primary>rclib_core_set_echo</primary></indexterm>
+<programlisting><link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            rclib_core_set_echo                 (<parameter><link linkend="guint64"><type>guint64</type></link> delay</parameter>,
+                                                         <parameter><link linkend="guint64"><type>guint64</type></link> max_delay</parameter>,
+                                                         <parameter><link linkend="gfloat"><type>gfloat</type></link> feedback</parameter>,
+                                                         <parameter><link linkend="gfloat"><type>gfloat</type></link> intensity</parameter>);</programlisting>
+<para>
+Set the properties of the echo effect.
+</para><variablelist role="params">
+<varlistentry><term><parameter>delay</parameter>&#160;:</term>
+<listitem><simpara>the delay of the echo in nanoseconds</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>max_delay</parameter>&#160;:</term>
+<listitem><simpara>the maximum delay of the echo in nanoseconds
+(can't be changed in PLAYING or PAUSED state)</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>feedback</parameter>&#160;:</term>
+<listitem><simpara>the amount of feedback</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>intensity</parameter>&#160;:</term>
+<listitem><simpara>the intensity of the echo</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara>Whether the properties of the echo effect are set successfully.</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rclib-core-get-echo" role="function">
+<title>rclib_core_get_echo ()</title>
+<indexterm zone="rclib-core-get-echo"><primary>rclib_core_get_echo</primary></indexterm>
+<programlisting><link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            rclib_core_get_echo                 (<parameter><link linkend="guint64"><type>guint64</type></link> *delay</parameter>,
+                                                         <parameter><link linkend="guint64"><type>guint64</type></link> *max_delay</parameter>,
+                                                         <parameter><link linkend="gfloat"><type>gfloat</type></link> *feedback</parameter>,
+                                                         <parameter><link linkend="gfloat"><type>gfloat</type></link> *intensity</parameter>);</programlisting>
+<para>
+Get the properties of the echo effect.
+</para><variablelist role="params">
+<varlistentry><term><parameter>delay</parameter>&#160;:</term>
+<listitem><simpara>return the delay of the echo in nanoseconds</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>max_delay</parameter>&#160;:</term>
+<listitem><simpara>return the maximum delay of the echo in nanoseconds</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>feedback</parameter>&#160;:</term>
+<listitem><simpara>return the amount of feedback</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>intensity</parameter>&#160;:</term>
+<listitem><simpara>return the intensity of the echo</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara>Whether the properties of the echo effect are read successfully.</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rclib-core-effect-plugin-add" role="function">
+<title>rclib_core_effect_plugin_add ()</title>
+<indexterm zone="rclib-core-effect-plugin-add"><primary>rclib_core_effect_plugin_add</primary></indexterm>
+<programlisting><link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            rclib_core_effect_plugin_add        (<parameter><link linkend="GstElement"><type>GstElement</type></link> *element</parameter>);</programlisting>
+<para>
+Add a new GStreamer sound effect plugin to the player.
+Notice that this operation must be done when the player is not
+in playing or paused state.
+</para><variablelist role="params">
+<varlistentry><term><parameter>element</parameter>&#160;:</term>
+<listitem><simpara>a new GStreamer sound effect plugin to add</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara>Whether the operation succeeded.</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rclib-core-effect-plugin-remove" role="function">
+<title>rclib_core_effect_plugin_remove ()</title>
+<indexterm zone="rclib-core-effect-plugin-remove"><primary>rclib_core_effect_plugin_remove</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rclib_core_effect_plugin_remove     (<parameter><link linkend="GstElement"><type>GstElement</type></link> *element</parameter>);</programlisting>
+<para>
+Remove an existed GStreamer sound effect plugin to the player.
+Notice that this operation must be done when the player is not
+in playing or paused state.
+</para><variablelist role="params">
+<varlistentry><term><parameter>element</parameter>&#160;:</term>
+<listitem><simpara>a new GStreamer sound effect plugin to remove</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rclib-core-effect-plugin-get-list" role="function">
+<title>rclib_core_effect_plugin_get_list ()</title>
+<indexterm zone="rclib-core-effect-plugin-get-list"><primary>rclib_core_effect_plugin_get_list</primary></indexterm>
+<programlisting><link linkend="GList"><returnvalue>GList</returnvalue></link> *             rclib_core_effect_plugin_get_list   ();</programlisting>
+<para>
+Get the list of the sound effect plugins that added to the player.
+</para><variablelist role="params">
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara>The plugin list, please do not modify or free it.</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+
+</refsect1>
+<refsect1 id="RCLibCore.signal-details" role="signals">
+<title role="signals.title">Signal Details</title>
+<refsect2 id="RCLibCore-balance-changed" role="signal"><title>The <literal>&quot;balance-changed&quot;</literal> signal</title>
+<indexterm zone="RCLibCore-balance-changed"><primary>RCLibCore::balance-changed</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                user_function                      (<link linkend="RCLibCore"><type>RCLibCore</type></link> *core,
+                                                        <link linkend="gfloat"><type>gfloat</type></link>     balance,
+                                                        <link linkend="gpointer"><type>gpointer</type></link>   user_data)      : <link linkend="G-SIGNAL-RUN-FIRST:CAPS"><literal>Run First</literal></link></programlisting>
+<para>
+The ::balance-changed signal is emitted when new balance was applied.
+</para><variablelist role="params">
+<varlistentry><term><parameter>core</parameter>&#160;:</term>
+<listitem><simpara>the <link linkend="RCLibCore"><type>RCLibCore</type></link> that received the signal</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>balance</parameter>&#160;:</term>
+<listitem><simpara>the balance value (from -1.0 (left) to 1.0 (right))</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>user_data</parameter>&#160;:</term>
+<listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
+</variablelist></refsect2><refsect2 id="RCLibCore-echo-changed" role="signal"><title>The <literal>&quot;echo-changed&quot;</literal> signal</title>
+<indexterm zone="RCLibCore-echo-changed"><primary>RCLibCore::echo-changed</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                user_function                      (<link linkend="RCLibCore"><type>RCLibCore</type></link> *core,
+                                                        <link linkend="gpointer"><type>gpointer</type></link>   user_data)      : <link linkend="G-SIGNAL-RUN-FIRST:CAPS"><literal>Run First</literal></link></programlisting>
+<para>
+The ::echo-changed signal is emitted when new echo settings
+were applied.
+</para><variablelist role="params">
+<varlistentry><term><parameter>core</parameter>&#160;:</term>
+<listitem><simpara>the <link linkend="RCLibCore"><type>RCLibCore</type></link> that received the signal</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>user_data</parameter>&#160;:</term>
+<listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
+</variablelist></refsect2><refsect2 id="RCLibCore-eos" role="signal"><title>The <literal>&quot;eos&quot;</literal> signal</title>
+<indexterm zone="RCLibCore-eos"><primary>RCLibCore::eos</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                user_function                      (<link linkend="RCLibCore"><type>RCLibCore</type></link> *core,
+                                                        <link linkend="gpointer"><type>gpointer</type></link>   user_data)      : <link linkend="G-SIGNAL-RUN-FIRST:CAPS"><literal>Run First</literal></link></programlisting>
+<para>
+The ::eos signal is emitted when end-of-stream reached in the
+current pipeline of the core.
+</para><variablelist role="params">
+<varlistentry><term><parameter>core</parameter>&#160;:</term>
+<listitem><simpara>the <link linkend="RCLibCore"><type>RCLibCore</type></link> that received the signal</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>user_data</parameter>&#160;:</term>
+<listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
+</variablelist></refsect2><refsect2 id="RCLibCore-eq-changed" role="signal"><title>The <literal>&quot;eq-changed&quot;</literal> signal</title>
+<indexterm zone="RCLibCore-eq-changed"><primary>RCLibCore::eq-changed</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                user_function                      (<link linkend="RCLibCore"><type>RCLibCore</type></link> *core,
+                                                        <link linkend="guint"><type>guint</type></link>      type,
+                                                        <link linkend="gpointer"><type>gpointer</type></link>   values,
+                                                        <link linkend="gpointer"><type>gpointer</type></link>   user_data)      : <link linkend="G-SIGNAL-RUN-FIRST:CAPS"><literal>Run First</literal></link></programlisting>
+<para>
+The ::eq-changed signal is emitted when new equalizer settings were
+applied.
+</para><variablelist role="params">
+<varlistentry><term><parameter>core</parameter>&#160;:</term>
+<listitem><simpara>the <link linkend="RCLibCore"><type>RCLibCore</type></link> that received the signal</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>type</parameter>&#160;:</term>
+<listitem><simpara>the equalizer style type</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>values</parameter>&#160;:</term>
+<listitem><simpara>an array of 10 <link linkend="gdouble"><type>gdouble</type></link> elements for equalizer settings</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>user_data</parameter>&#160;:</term>
+<listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
+</variablelist></refsect2><refsect2 id="RCLibCore-error" role="signal"><title>The <literal>&quot;error&quot;</literal> signal</title>
+<indexterm zone="RCLibCore-error"><primary>RCLibCore::error</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                user_function                      (<link linkend="RCLibCore"><type>RCLibCore</type></link> *core,
+                                                        <link linkend="gpointer"><type>gpointer</type></link>   reference,
+                                                        <link linkend="gpointer"><type>gpointer</type></link>   user_data)      : <link linkend="G-SIGNAL-RUN-FIRST:CAPS"><literal>Run First</literal></link></programlisting>
+<para>
+The ::error signal is emitted when any error in the core occurs.
+</para><variablelist role="params">
+<varlistentry><term><parameter>core</parameter>&#160;:</term>
+<listitem><simpara>the <link linkend="RCLibCore"><type>RCLibCore</type></link> that received the signal</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>reference</parameter>&#160;:</term>
+<listitem><simpara>the database reference</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>user_data</parameter>&#160;:</term>
+<listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
+</variablelist></refsect2><refsect2 id="RCLibCore-new-duration" role="signal"><title>The <literal>&quot;new-duration&quot;</literal> signal</title>
+<indexterm zone="RCLibCore-new-duration"><primary>RCLibCore::new-duration</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                user_function                      (<link linkend="RCLibCore"><type>RCLibCore</type></link> *core,
+                                                        <link linkend="gint64"><type>gint64</type></link>     duration,
+                                                        <link linkend="gpointer"><type>gpointer</type></link>   reference,
+                                                        <link linkend="gpointer"><type>gpointer</type></link>   user_data)      : <link linkend="G-SIGNAL-RUN-FIRST:CAPS"><literal>Run First</literal></link></programlisting>
+<para>
+The ::new-duration signal is emitted when new duration information
+was found.
+</para><variablelist role="params">
+<varlistentry><term><parameter>core</parameter>&#160;:</term>
+<listitem><simpara>the <link linkend="RCLibCore"><type>RCLibCore</type></link> that received the signal</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>duration</parameter>&#160;:</term>
+<listitem><simpara>the duration (unit: nanosecond)</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>reference</parameter>&#160;:</term>
+<listitem><simpara>the database reference</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>user_data</parameter>&#160;:</term>
+<listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
+</variablelist></refsect2><refsect2 id="RCLibCore-spectrum-updated" role="signal"><title>The <literal>&quot;spectrum-updated&quot;</literal> signal</title>
+<indexterm zone="RCLibCore-spectrum-updated"><primary>RCLibCore::spectrum-updated</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                user_function                      (<link linkend="RCLibCore"><type>RCLibCore</type></link> *core,
+                                                        <link linkend="guint"><type>guint</type></link>      rate,
+                                                        <link linkend="guint"><type>guint</type></link>      bands,
+                                                        <link linkend="gfloat"><type>gfloat</type></link>     threshold,
+                                                        <link linkend="gpointer"><type>gpointer</type></link>   magnitudes,
+                                                        <link linkend="gpointer"><type>gpointer</type></link>   user_data)       : <link linkend="G-SIGNAL-RUN-FIRST:CAPS"><literal>Run First</literal></link></programlisting>
+<para>
+The ::spectrum-updated signal is emitted when the spectrum
+message is received.
+</para><variablelist role="params">
+<varlistentry><term><parameter>core</parameter>&#160;:</term>
+<listitem><simpara>the <link linkend="RCLibCore"><type>RCLibCore</type></link> that received the signal</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>rate</parameter>&#160;:</term>
+<listitem><simpara>the sample rate</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>bands</parameter>&#160;:</term>
+<listitem><simpara>the band number</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>threshold</parameter>&#160;:</term>
+<listitem><simpara>the threshold</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>magnitudes</parameter>&#160;:</term>
+<listitem><simpara>the magnitude array</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>user_data</parameter>&#160;:</term>
+<listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
+</variablelist></refsect2><refsect2 id="RCLibCore-state-changed" role="signal"><title>The <literal>&quot;state-changed&quot;</literal> signal</title>
+<indexterm zone="RCLibCore-state-changed"><primary>RCLibCore::state-changed</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                user_function                      (<link linkend="RCLibCore"><type>RCLibCore</type></link> *core,
+                                                        <link linkend="gint"><type>gint</type></link>       state,
+                                                        <link linkend="gpointer"><type>gpointer</type></link>   user_data)      : <link linkend="G-SIGNAL-RUN-FIRST:CAPS"><literal>Run First</literal></link></programlisting>
+<para>
+The ::state-changed signal is emitted when the state of the core
+is changed.
+</para><variablelist role="params">
+<varlistentry><term><parameter>core</parameter>&#160;:</term>
+<listitem><simpara>the <link linkend="RCLibCore"><type>RCLibCore</type></link> that received the signal</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>state</parameter>&#160;:</term>
+<listitem><simpara>the state of the core</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>user_data</parameter>&#160;:</term>
+<listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
+</variablelist></refsect2><refsect2 id="RCLibCore-tag-found" role="signal"><title>The <literal>&quot;tag-found&quot;</literal> signal</title>
+<indexterm zone="RCLibCore-tag-found"><primary>RCLibCore::tag-found</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                user_function                      (<link linkend="RCLibCore"><type>RCLibCore</type></link> *core,
+                                                        <link linkend="gpointer"><type>gpointer</type></link>   metadata,
+                                                        <link linkend="gpointer"><type>gpointer</type></link>   reference,
+                                                        <link linkend="gpointer"><type>gpointer</type></link>   user_data)      : <link linkend="G-SIGNAL-RUN-FIRST:CAPS"><literal>Run First</literal></link></programlisting>
+<para>
+The ::tag-found signal is emitted when new metadata (tag) was
+found.
+</para><variablelist role="params">
+<varlistentry><term><parameter>core</parameter>&#160;:</term>
+<listitem><simpara>the <link linkend="RCLibCore"><type>RCLibCore</type></link> that received the signal</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>metadata</parameter>&#160;:</term>
+<listitem><simpara>the metadata</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>reference</parameter>&#160;:</term>
+<listitem><simpara>the database reference</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>user_data</parameter>&#160;:</term>
+<listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
+</variablelist></refsect2><refsect2 id="RCLibCore-uri-changed" role="signal"><title>The <literal>&quot;uri-changed&quot;</literal> signal</title>
+<indexterm zone="RCLibCore-uri-changed"><primary>RCLibCore::uri-changed</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                user_function                      (<link linkend="RCLibCore"><type>RCLibCore</type></link> *core,
+                                                        <link linkend="gchar"><type>gchar</type></link>     *uri,
+                                                        <link linkend="gpointer"><type>gpointer</type></link>   reference,
+                                                        <link linkend="gpointer"><type>gpointer</type></link>   user_data)      : <link linkend="G-SIGNAL-RUN-FIRST:CAPS"><literal>Run First</literal></link></programlisting>
+<para>
+The ::uri-changed signal is emitted when new URI was set.
+</para><variablelist role="params">
+<varlistentry><term><parameter>core</parameter>&#160;:</term>
+<listitem><simpara>the <link linkend="RCLibCore"><type>RCLibCore</type></link> that received the signal</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>uri</parameter>&#160;:</term>
+<listitem><simpara>the URI</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>reference</parameter>&#160;:</term>
+<listitem><simpara>the database reference</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>user_data</parameter>&#160;:</term>
+<listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
+</variablelist></refsect2><refsect2 id="RCLibCore-volume-changed" role="signal"><title>The <literal>&quot;volume-changed&quot;</literal> signal</title>
+<indexterm zone="RCLibCore-volume-changed"><primary>RCLibCore::volume-changed</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                user_function                      (<link linkend="RCLibCore"><type>RCLibCore</type></link> *core,
+                                                        <link linkend="gdouble"><type>gdouble</type></link>    volume,
+                                                        <link linkend="gpointer"><type>gpointer</type></link>   user_data)      : <link linkend="G-SIGNAL-RUN-FIRST:CAPS"><literal>Run First</literal></link></programlisting>
+<para>
+The ::volume-changed signal is emitted when the volume was changed.
+</para><variablelist role="params">
+<varlistentry><term><parameter>core</parameter>&#160;:</term>
+<listitem><simpara>the <link linkend="RCLibCore"><type>RCLibCore</type></link> that received the signal</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>volume</parameter>&#160;:</term>
+<listitem><simpara>the volume (from 0.0 to 1.0)</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>user_data</parameter>&#160;:</term>
+<listitem><simpara>user data set when the signal handler was connected.</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+</refsect1>
+
+</refentry>

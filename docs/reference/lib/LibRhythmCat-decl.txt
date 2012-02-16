@@ -1,0 +1,1066 @@
+<MACRO>
+<NAME>RCLIB_CORE_TYPE</NAME>
+#define RCLIB_CORE_TYPE (rclib_core_get_type())
+</MACRO>
+<MACRO>
+<NAME>RCLIB_CORE</NAME>
+#define RCLIB_CORE(obj) (G_TYPE_CHECK_INSTANCE_CAST((obj), RCLIB_CORE_TYPE, \
+    RCLibCore))
+</MACRO>
+<MACRO>
+<NAME>RCLIB_CORE_CLASS</NAME>
+#define RCLIB_CORE_CLASS(k) (G_TYPE_CHECK_CLASS_CAST((k), RCLIB_CORE_TYPE, \
+    RCLibCoreClass))
+</MACRO>
+<MACRO>
+<NAME>RCLIB_IS_CORE</NAME>
+#define RCLIB_IS_CORE(o) (G_TYPE_CHECK_INSTANCE_TYPE((o), RCLIB_CORE_TYPE))
+</MACRO>
+<MACRO>
+<NAME>RCLIB_IS_CORE_CLASS</NAME>
+#define RCLIB_IS_CORE_CLASS(k) (G_TYPE_CHECK_CLASS_TYPE((k), RCLIB_CORE_TYPE))
+</MACRO>
+<MACRO>
+<NAME>RCLIB_CORE_GET_CLASS</NAME>
+#define RCLIB_CORE_GET_CLASS(o) (G_TYPE_INSTANCE_GET_CLASS((o), \
+    RCLIB_CORE_TYPE, RCLibCoreClass))
+</MACRO>
+<ENUM>
+<NAME>RCLibCoreErrorCode</NAME>
+typedef enum {
+    RCLIB_CORE_ERROR_OK = 0,
+    RCLIB_CORE_ERROR_ALREADY_INIT = 1,
+    RCLIB_CORE_ERROR_NOT_INIT = 2,
+    RCLIB_CORE_ERROR_MISSING_CORE_PLUGIN = 3,
+    RCLIB_CORE_ERROR_CREATE_BIN_FAILED = 4,
+    RCLIB_CORE_ERROR_LINK_FAILED = 5
+}RCLibCoreErrorCode;
+</ENUM>
+<ENUM>
+<NAME>RCLibCoreEQType</NAME>
+typedef enum {
+    RCLIB_CORE_EQ_TYPE_NONE = 0,
+    RCLIB_CORE_EQ_TYPE_POP = 1,
+    RCLIB_CORE_EQ_TYPE_ROCK = 2,
+    RCLIB_CORE_EQ_TYPE_METAL = 3,
+    RCLIB_CORE_EQ_TYPE_DANCE = 4,
+    RCLIB_CORE_EQ_TYPE_ELECTRONIC = 5,
+    RCLIB_CORE_EQ_TYPE_JAZZ = 6,
+    RCLIB_CORE_EQ_TYPE_CLASSICAL = 7,
+    RCLIB_CORE_EQ_TYPE_BLUES = 8,
+    RCLIB_CORE_EQ_TYPE_VOCAL = 9,
+    RCLIB_CORE_EQ_TYPE_CUSTOM = 10
+}RCLibCoreEQType;
+</ENUM>
+<STRUCT>
+<NAME>RCLibCoreMetadata</NAME>
+struct _RCLibCoreMetadata {
+    gchar *title;
+    gchar *artist;
+    gchar *album;
+    gchar *ftype;
+    guint bitrate;
+    gint64 duration;
+    gint track;
+    gint year;
+    gint rate;
+    gint channels;
+    GstBuffer *image;
+};
+</STRUCT>
+<STRUCT>
+<NAME>RCLibCore</NAME>
+struct _RCLibCore {
+    /*< private >*/
+    GObject parent;
+};
+</STRUCT>
+<STRUCT>
+<NAME>RCLibCoreClass</NAME>
+struct _RCLibCoreClass {
+    /*< private >*/
+    GObjectClass parent_class;
+    void (*state_changed)(RCLibCore *core, GstState state);
+    void (*eos)(RCLibCore *core);
+    void (*tag_found)(RCLibCore *core, const RCLibCoreMetadata *metadata,
+        gpointer reference);
+    void (*new_duration)(RCLibCore *core, gint64 duration,
+        gpointer reference);
+    void (*uri_changed)(RCLibCore *core, const gchar *uri,
+        gpointer reference);
+    void (*volume_changed)(RCLibCore *core, gdouble volume);
+    void (*eq_changed)(RCLibCore *core, RCLibCoreEQType type,
+        gdouble *values);
+    void (*balance_changed)(RCLibCore *core, gfloat balance);
+    void (*echo_changed)(RCLibCore *core);
+    void (*spectrum_updated)(RCLibCore *core, guint rate, guint bands,
+        const GValue *magnitudes);
+    void (*error)(RCLibCore *core, gpointer reference);
+};
+</STRUCT>
+<FUNCTION>
+<NAME>rclib_core_get_type</NAME>
+<RETURNS>GType  </RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_core_init</NAME>
+<RETURNS>gboolean  </RETURNS>
+gint *argc, gchar **argv[], GError **error 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_core_exit</NAME>
+<RETURNS>void  </RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_core_get_instance</NAME>
+<RETURNS>GObject  *</RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_core_signal_connect</NAME>
+<RETURNS>gulong  </RETURNS>
+const gchar *name, GCallback callback, gpointer data 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_core_signal_disconnect</NAME>
+<RETURNS>void  </RETURNS>
+gulong handler_id 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_core_set_uri</NAME>
+<RETURNS>void  </RETURNS>
+const gchar *uri, gpointer reference 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_core_set_reference</NAME>
+<RETURNS>void  </RETURNS>
+gpointer reference 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_core_get_uri</NAME>
+<RETURNS>gchar  *</RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_core_get_reference</NAME>
+<RETURNS>gpointer  </RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_core_set_position</NAME>
+<RETURNS>gboolean  </RETURNS>
+gint64 pos 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_core_query_position</NAME>
+<RETURNS>gint64  </RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_core_query_duration</NAME>
+<RETURNS>gint64  </RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_core_get_state</NAME>
+<RETURNS>GstStateChangeReturn  </RETURNS>
+GstState *state, GstState *pending, GstClockTime timeout 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_core_play</NAME>
+<RETURNS>gboolean  </RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_core_pause</NAME>
+<RETURNS>gboolean  </RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_core_stop</NAME>
+<RETURNS>gboolean  </RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_core_set_volume</NAME>
+<RETURNS>gboolean  </RETURNS>
+gdouble volume 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_core_get_volume</NAME>
+<RETURNS>gboolean  </RETURNS>
+gdouble *volume 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_core_set_eq</NAME>
+<RETURNS>gboolean  </RETURNS>
+RCLibCoreEQType type, gdouble *band 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_core_get_eq</NAME>
+<RETURNS>gboolean  </RETURNS>
+RCLibCoreEQType *type, gdouble *band 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_core_get_eq_name</NAME>
+<RETURNS>const gchar  *</RETURNS>
+RCLibCoreEQType type 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_core_set_balance</NAME>
+<RETURNS>gboolean  </RETURNS>
+gfloat balance 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_core_get_balance</NAME>
+<RETURNS>gboolean  </RETURNS>
+gfloat *balance 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_core_set_echo</NAME>
+<RETURNS>gboolean  </RETURNS>
+guint64 delay, guint64 max_delay, gfloat feedback, gfloat intensity 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_core_get_echo</NAME>
+<RETURNS>gboolean  </RETURNS>
+guint64 *delay, guint64 *max_delay, gfloat *feedback, gfloat *intensity 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_core_effect_plugin_add</NAME>
+<RETURNS>gboolean  </RETURNS>
+GstElement *element 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_core_effect_plugin_remove</NAME>
+<RETURNS>void  </RETURNS>
+GstElement *element 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_core_effect_plugin_get_list</NAME>
+<RETURNS>GList  *</RETURNS>
+ 
+</FUNCTION>
+<MACRO>
+<NAME>RCLIB_LYRIC_TYPE</NAME>
+#define RCLIB_LYRIC_TYPE (rclib_lyric_get_type())
+</MACRO>
+<MACRO>
+<NAME>RCLIB_LYRIC</NAME>
+#define RCLIB_LYRIC(obj) (G_TYPE_CHECK_INSTANCE_CAST((obj), \
+    RCLIB_LYRIC_TYPE, RCLibLyric))
+</MACRO>
+<MACRO>
+<NAME>RCLIB_LYRIC_CLASS</NAME>
+#define RCLIB_LYRIC_CLASS(k) (G_TYPE_CHECK_CLASS_CAST((k), \
+    RCLIB_LYRIC_TYPE, RCLibLyricClass))
+</MACRO>
+<MACRO>
+<NAME>RCLIB_IS_LYRIC</NAME>
+#define RCLIB_IS_LYRIC(o) (G_TYPE_CHECK_INSTANCE_TYPE((o), \
+    RCLIB_LYRIC_TYPE))
+</MACRO>
+<MACRO>
+<NAME>RCLIB_IS_LYRIC_CLASS</NAME>
+#define RCLIB_IS_LYRIC_CLASS(k) (G_TYPE_CHECK_CLASS_TYPE((k), \
+    RCLIB_LYRIC_TYPE))
+</MACRO>
+<MACRO>
+<NAME>RCLIB_LYRIC_GET_CLASS</NAME>
+#define RCLIB_LYRIC_GET_CLASS(o) (G_TYPE_INSTANCE_GET_CLASS((o), \
+    RCLIB_LYRIC_TYPE, RCLibLyricClass))
+</MACRO>
+<STRUCT>
+<NAME>RCLibLyricData</NAME>
+struct _RCLibLyricData {
+    gint64 time;
+    gint64 length;
+    gchar *text;
+};
+</STRUCT>
+<STRUCT>
+<NAME>RCLibLyric</NAME>
+struct _RCLibLyric {
+    /*< private >*/
+    GObject parent;
+};
+</STRUCT>
+<STRUCT>
+<NAME>RCLibLyricClass</NAME>
+struct _RCLibLyricClass {
+    /*< private >*/
+    GObjectClass parent_class;
+    void (*lyric_ready)(RCLibLyric *lyric, guint index);
+    void (*line_changed)(RCLibLyric *lyric, guint index,
+        const RCLibLyricData *lyric_data);
+    void (*lyric_timer)(RCLibLyric *lyric, guint index,
+        gint64 pos, const RCLibLyricData *lyric_data);
+};
+</STRUCT>
+<FUNCTION>
+<NAME>rclib_lyric_get_type</NAME>
+<RETURNS>GType  </RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_lyric_init</NAME>
+<RETURNS>void  </RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_lyric_exit</NAME>
+<RETURNS>void  </RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_lyric_get_instance</NAME>
+<RETURNS>GObject  *</RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_lyric_signal_connect</NAME>
+<RETURNS>gulong  </RETURNS>
+const gchar *name, GCallback callback, gpointer data 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_lyric_signal_disconnect</NAME>
+<RETURNS>void  </RETURNS>
+gulong handler_id 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_lyric_set_fallback_encoding</NAME>
+<RETURNS>void  </RETURNS>
+const gchar *encoding 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_lyric_get_fallback_encoding</NAME>
+<RETURNS>const gchar  *</RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_lyric_load_file</NAME>
+<RETURNS>gboolean  </RETURNS>
+const gchar *filename, guint index 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_lyric_clean</NAME>
+<RETURNS>void  </RETURNS>
+guint index 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_lyric_get_line</NAME>
+<RETURNS>const RCLibLyricData  *</RETURNS>
+guint index, gint64 time 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_lyric_set_search_dir</NAME>
+<RETURNS>void  </RETURNS>
+const gchar *dir 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_lyric_get_search_dir</NAME>
+<RETURNS>const gchar  *</RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_lyric_search_lyric</NAME>
+<RETURNS>gchar  *</RETURNS>
+const gchar *uri, const gchar *title, const gchar *artist 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_lyric_is_available</NAME>
+<RETURNS>gboolean  </RETURNS>
+guint index 
+</FUNCTION>
+<STRUCT>
+<NAME>RCLibTagMetadata</NAME>
+struct _RCLibTagMetadata {
+    gint64 length;
+    gchar *uri;
+    guint tracknum;
+    guint bitrate;
+    gint samplerate;
+    gint channels;
+    gint year;
+    gchar *title;
+    gchar *artist;
+    gchar *album;
+    gchar *comment;
+    gchar *ftype;
+    gchar *emb_cue;
+    GstBuffer *image;
+    gboolean eos;
+    gboolean audio_flag;
+    gboolean video_flag;
+    gpointer user_data;
+};
+</STRUCT>
+<FUNCTION>
+<NAME>rclib_tag_read_metadata</NAME>
+<RETURNS>RCLibTagMetadata  *</RETURNS>
+const gchar *uri 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_tag_free</NAME>
+<RETURNS>void  </RETURNS>
+RCLibTagMetadata *mmd 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_tag_get_name_from_fpath</NAME>
+<RETURNS>gchar  *</RETURNS>
+const gchar *filename 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_tag_set_fallback_encoding</NAME>
+<RETURNS>void  </RETURNS>
+const gchar *encoding 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_tag_get_fallback_encoding</NAME>
+<RETURNS>const gchar  *</RETURNS>
+ 
+</FUNCTION>
+<MACRO>
+<NAME>RCLIB_PLAYER_TYPE</NAME>
+#define RCLIB_PLAYER_TYPE (rclib_player_get_type())
+</MACRO>
+<MACRO>
+<NAME>RCLIB_PLAYER</NAME>
+#define RCLIB_PLAYER(obj) (G_TYPE_CHECK_INSTANCE_CAST((obj), \
+    RCLIB_PLAYER_TYPE, RCLibPlayer))
+</MACRO>
+<MACRO>
+<NAME>RCLIB_PLAYER_CLASS</NAME>
+#define RCLIB_PLAYER_CLASS(k) (G_TYPE_CHECK_CLASS_CAST((k), \
+    RCLIB_PLAYER_TYPE, RCLibPlayerClass))
+</MACRO>
+<MACRO>
+<NAME>RCLIB_IS_PLAYER</NAME>
+#define RCLIB_IS_PLAYER(o) (G_TYPE_CHECK_INSTANCE_TYPE((o), \
+    RCLIB_PLAYER_TYPE))
+</MACRO>
+<MACRO>
+<NAME>RCLIB_IS_PLAYER_CLASS</NAME>
+#define RCLIB_IS_PLAYER_CLASS(k) (G_TYPE_CHECK_CLASS_TYPE((k), \
+    RCLIB_PLAYER_TYPE))
+</MACRO>
+<MACRO>
+<NAME>RCLIB_PLAYER_GET_CLASS</NAME>
+#define RCLIB_PLAYER_GET_CLASS(o) (G_TYPE_INSTANCE_GET_CLASS((o), \
+    RCLIB_PLAYER_TYPE, RCLibPlayerClass))
+</MACRO>
+<ENUM>
+<NAME>RCLibPlayerRepeatMode</NAME>
+typedef enum {
+    RCLIB_PLAYER_REPEAT_NONE,
+    RCLIB_PLAYER_REPEAT_SINGLE,
+    RCLIB_PLAYER_REPEAT_LIST,
+    RCLIB_PLAYER_REPEAT_ALL
+}RCLibPlayerRepeatMode;
+</ENUM>
+<ENUM>
+<NAME>RCLibPlayerRandomMode</NAME>
+typedef enum {
+    RCLIB_PLAYER_RANDOM_NONE,
+    RCLIB_PLAYER_RANDOM_SINGLE,
+    RCLIB_PlAYER_RANDOM_ALL
+}RCLibPlayerRandomMode;
+</ENUM>
+<STRUCT>
+<NAME>RCLibPlayer</NAME>
+struct _RCLibPlayer {
+    /*< private >*/
+    GObject parent;
+};
+</STRUCT>
+<STRUCT>
+<NAME>RCLibPlayerClass</NAME>
+struct _RCLibPlayerClass {
+    /*< private >*/
+    GObjectClass parent_class;
+    void (*repeat_mode_changed)(RCLibPlayer *player,
+        RCLibPlayerRepeatMode mode);
+    void (*random_mode_changed)(RCLibPlayer *player,
+        RCLibPlayerRandomMode mode);
+};
+</STRUCT>
+<FUNCTION>
+<NAME>rclib_player_get_type</NAME>
+<RETURNS>GType  </RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_player_init</NAME>
+<RETURNS>void  </RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_player_exit</NAME>
+<RETURNS>void  </RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_player_get_instance</NAME>
+<RETURNS>GObject  *</RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_player_signal_connect</NAME>
+<RETURNS>gulong  </RETURNS>
+const gchar *name, GCallback callback, gpointer data 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_player_signal_disconnect</NAME>
+<RETURNS>void  </RETURNS>
+gulong handler_id 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_player_play_db</NAME>
+<RETURNS>void  </RETURNS>
+GSequenceIter *iter 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_player_play_uri</NAME>
+<RETURNS>void  </RETURNS>
+const gchar *uri 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_player_play_prev</NAME>
+<RETURNS>void  </RETURNS>
+gboolean jump, gboolean repeat, gboolean loop 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_player_play_next</NAME>
+<RETURNS>void  </RETURNS>
+gboolean jump, gboolean repeat, gboolean loop 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_player_set_repeat_mode</NAME>
+<RETURNS>void  </RETURNS>
+RCLibPlayerRepeatMode mode 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_player_set_random_mode</NAME>
+<RETURNS>void  </RETURNS>
+RCLibPlayerRandomMode mode 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_player_get_repeat_mode</NAME>
+<RETURNS>RCLibPlayerRepeatMode  </RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_player_get_random_mode</NAME>
+<RETURNS>RCLibPlayerRandomMode  </RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_settings_init</NAME>
+<RETURNS>gboolean  </RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_settings_exit</NAME>
+<RETURNS>void  </RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_settings_load_from_file</NAME>
+<RETURNS>gboolean  </RETURNS>
+const gchar *filename 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_settings_apply</NAME>
+<RETURNS>void  </RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_settings_update</NAME>
+<RETURNS>void  </RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_settings_sync</NAME>
+<RETURNS>void  </RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_settings_get_string</NAME>
+<RETURNS>gchar  *</RETURNS>
+const gchar *group_name, const gchar *key, GError **error 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_settings_get_integer</NAME>
+<RETURNS>gint  </RETURNS>
+const gchar *group_name, const gchar *key, GError **error 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_settings_get_double</NAME>
+<RETURNS>gdouble  </RETURNS>
+const gchar *group_name, const gchar *key, GError **error 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_settings_get_boolean</NAME>
+<RETURNS>gboolean  </RETURNS>
+const gchar *group_name, const gchar *key, GError **error 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_settings_get_string_list</NAME>
+<RETURNS>gchar  **</RETURNS>
+const gchar *group_name, const gchar *key, gsize *length, GError **error 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_settings_get_boolean_list</NAME>
+<RETURNS>gboolean  *</RETURNS>
+const gchar *group_name, const gchar *key, gsize *length, GError **error 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_settings_get_integer_list</NAME>
+<RETURNS>gint  *</RETURNS>
+const gchar *group_name, const gchar *key, gsize *length, GError **error 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_settings_get_double_list</NAME>
+<RETURNS>gdouble  *</RETURNS>
+const gchar *group_name, const gchar *key, gsize *length, GError **error 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_settings_set_string</NAME>
+<RETURNS>void  </RETURNS>
+const gchar *group_name, const gchar *key, const gchar *string 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_settings_set_boolean</NAME>
+<RETURNS>void  </RETURNS>
+const gchar *group_name, const gchar *key, gboolean value 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_settings_set_integer</NAME>
+<RETURNS>void  </RETURNS>
+const gchar *group_name, const gchar *key, gint value 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_settings_set_double</NAME>
+<RETURNS>void  </RETURNS>
+const gchar *group_name, const gchar *key, gdouble value 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_settings_set_string_list</NAME>
+<RETURNS>void  </RETURNS>
+const gchar *group_name, const gchar *key, const gchar * const list[], gsize length 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_settings_set_boolean_list</NAME>
+<RETURNS>void  </RETURNS>
+const gchar *group_name, const gchar *key, gboolean list[], gsize length 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_settings_set_integer_list</NAME>
+<RETURNS>void  </RETURNS>
+const gchar *group_name, const gchar *key, gint list[], gsize length 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_settings_set_double_list</NAME>
+<RETURNS>void  </RETURNS>
+const gchar *group_name, const gchar *key, gdouble list[], gsize length 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_settings_has_key</NAME>
+<RETURNS>gboolean  </RETURNS>
+const gchar *group_name, gchar *key, GError **error 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_util_get_data_dir</NAME>
+<RETURNS>gchar  *</RETURNS>
+const gchar *name, const gchar *arg0 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_util_is_supported_media</NAME>
+<RETURNS>gboolean  </RETURNS>
+const gchar *file 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_util_is_supported_list</NAME>
+<RETURNS>gboolean  </RETURNS>
+const gchar *file 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_util_set_cover_search_dir</NAME>
+<RETURNS>void  </RETURNS>
+const gchar *dir 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_util_get_cover_search_dir</NAME>
+<RETURNS>const gchar  *</RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_util_search_cover</NAME>
+<RETURNS>gchar  *</RETURNS>
+const gchar *uri, const gchar *title, const gchar *artist, const gchar *album 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_util_detect_encoding_by_locale</NAME>
+<RETURNS>gchar  *</RETURNS>
+ 
+</FUNCTION>
+<ENUM>
+<NAME>RCLibCueInputType</NAME>
+typedef enum {
+    RCLIB_CUE_INPUT_URI = 0,
+    RCLIB_CUE_INPUT_PATH = 1,
+    RCLIB_CUE_INPUT_EMBEDED = 2
+}RCLibCueInputType;
+</ENUM>
+<STRUCT>
+<NAME>RCLibCueTrack</NAME>
+struct _RCLibCueTrack {
+    guint index;
+    gchar *title;
+    gchar *performer;
+    guint64 time0;
+    guint64 time1;
+};
+</STRUCT>
+<STRUCT>
+<NAME>RCLibCueData</NAME>
+struct _RCLibCueData {
+    RCLibCueInputType type;
+    gchar *file;
+    gchar *performer;
+    gchar *title;
+    guint length;
+    RCLibCueTrack *track;
+};
+</STRUCT>
+<FUNCTION>
+<NAME>rclib_cue_read_data</NAME>
+<RETURNS>guint  </RETURNS>
+const gchar *input, RCLibCueInputType type, RCLibCueData *data 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_cue_free</NAME>
+<RETURNS>void  </RETURNS>
+RCLibCueData *data 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_cue_get_track_num</NAME>
+<RETURNS>gboolean  </RETURNS>
+const gchar *path, gchar **cue_path, gint *track_num 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_cue_set_fallback_encoding</NAME>
+<RETURNS>void  </RETURNS>
+const gchar *encoding 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_cue_get_fallback_encoding</NAME>
+<RETURNS>const gchar  *</RETURNS>
+ 
+</FUNCTION>
+<MACRO>
+<NAME>RCLIB_DB_TYPE</NAME>
+#define RCLIB_DB_TYPE (rclib_db_get_type())
+</MACRO>
+<MACRO>
+<NAME>RCLIB_DB</NAME>
+#define RCLIB_DB(obj) (G_TYPE_CHECK_INSTANCE_CAST((obj), RCLIB_DB_TYPE, \
+    RCLibDb))
+</MACRO>
+<MACRO>
+<NAME>RCLIB_DB_CLASS</NAME>
+#define RCLIB_DB_CLASS(k) (G_TYPE_CHECK_CLASS_CAST((k), RCLIB_DB_TYPE, \
+    RCLibDbClass))
+</MACRO>
+<MACRO>
+<NAME>RCLIB_IS_DB</NAME>
+#define RCLIB_IS_DB(o) (G_TYPE_CHECK_INSTANCE_TYPE((o), RCLIB_DB_TYPE))
+</MACRO>
+<MACRO>
+<NAME>RCLIB_IS_DB_CLASS</NAME>
+#define RCLIB_IS_DB_CLASS(k) (G_TYPE_CHECK_CLASS_TYPE((k), RCLIB_DB_TYPE))
+</MACRO>
+<MACRO>
+<NAME>RCLIB_DB_GET_CLASS</NAME>
+#define RCLIB_DB_GET_CLASS(o) (G_TYPE_INSTANCE_GET_CLASS((o), \
+    RCLIB_DB_TYPE, RCLibDbClass))
+</MACRO>
+<ENUM>
+<NAME>RCLibDbCatalogType</NAME>
+typedef enum {
+    RCLIB_DB_CATALOG_TYPE_PLAYLIST = 1
+}RCLibDbCatalogType;
+</ENUM>
+<ENUM>
+<NAME>RCLibDbPlaylistType</NAME>
+typedef enum {
+    RCLIB_DB_PLAYLIST_TYPE_MISSING = 0,
+    RCLIB_DB_PLAYLIST_TYPE_MUSIC = 1,
+    RCLIB_DB_PLAYLIST_TYPE_CUE = 2
+}RCLibDbPlaylistType;
+</ENUM>
+<STRUCT>
+<NAME>RCLibDbCatalogData</NAME>
+struct _RCLibDbCatalogData {
+    GSequence *playlist;
+    gchar *name;
+    RCLibDbCatalogType type;
+    gpointer store;
+};
+</STRUCT>
+<STRUCT>
+<NAME>RCLibDbPlaylistData</NAME>
+struct _RCLibDbPlaylistData {
+    GSequenceIter *catalog;
+    RCLibDbPlaylistType type;
+    gchar *uri;
+    gchar *title;
+    gchar *artist;
+    gchar *album;
+    gchar *ftype;
+    gint64 length;
+    gint tracknum;
+    gint year;
+    guint rating;
+    gchar *lyricfile;
+    gchar *lyricsecfile;
+    gchar *albumfile;
+};
+</STRUCT>
+<STRUCT>
+<NAME>RCLibDb</NAME>
+struct _RCLibDb {
+    /*< private >*/
+    GObject parent;
+};
+</STRUCT>
+<STRUCT>
+<NAME>RCLibDbClass</NAME>
+struct _RCLibDbClass {
+    /*< private >*/
+    GObjectClass parent_class;
+    void (*catalog_added)(RCLibDb *db, GSequenceIter *iter);
+    void (*catalog_changed)(RCLibDb *db, GSequenceIter *iter);
+    void (*catalog_delete)(RCLibDb *db, GSequenceIter *iter);
+    void (*catalog_reordered)(RCLibDb *db, gint *new_order);
+    void (*playlist_added)(RCLibDb *db, GSequenceIter *iter);
+    void (*playlist_changed)(RCLibDb *db, GSequenceIter *iter);
+    void (*playlist_delete)(RCLibDb *db, GSequenceIter *iter);
+    void (*playlist_reordered)(RCLibDb *db, GSequenceIter *iter,
+        gint *new_order);
+    void (*import_updated)(RCLibDb *db, gint remaining);
+    void (*refresh_updated)(RCLibDb *db, gint remaining);
+};
+</STRUCT>
+<FUNCTION>
+<NAME>rclib_db_get_type</NAME>
+<RETURNS>GType  </RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_db_init</NAME>
+<RETURNS>gboolean  </RETURNS>
+const gchar *file 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_db_exit</NAME>
+<RETURNS>void  </RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_db_get_instance</NAME>
+<RETURNS>GObject  *</RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_db_signal_connect</NAME>
+<RETURNS>gulong  </RETURNS>
+const gchar *name, GCallback callback, gpointer data 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_db_signal_disconnect</NAME>
+<RETURNS>void  </RETURNS>
+gulong handler_id 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_db_catalog_add</NAME>
+<RETURNS>GSequenceIter  *</RETURNS>
+const gchar *name, GSequenceIter *iter, gint type 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_db_get_catalog</NAME>
+<RETURNS>GSequence  *</RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_db_catalog_delete</NAME>
+<RETURNS>void  </RETURNS>
+GSequenceIter *iter 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_db_catalog_set_name</NAME>
+<RETURNS>void  </RETURNS>
+GSequenceIter *iter, const gchar *name 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_db_catalog_set_type</NAME>
+<RETURNS>void  </RETURNS>
+GSequenceIter *iter, RCLibDbCatalogType type 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_db_catalog_reorder</NAME>
+<RETURNS>void  </RETURNS>
+gint *new_order 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_db_playlist_add_music</NAME>
+<RETURNS>void  </RETURNS>
+GSequenceIter *iter, GSequenceIter *insert_iter, const gchar *uri 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_db_playlist_delete</NAME>
+<RETURNS>void  </RETURNS>
+GSequenceIter *iter 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_db_playlist_update_metadata</NAME>
+<RETURNS>void  </RETURNS>
+GSequenceIter *iter, const RCLibDbPlaylistData *data 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_db_playlist_update_length</NAME>
+<RETURNS>void  </RETURNS>
+GSequenceIter *iter, gint64 length 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_db_playlist_set_type</NAME>
+<RETURNS>void  </RETURNS>
+GSequenceIter *iter, RCLibDbPlaylistType type 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_db_playlist_set_rating</NAME>
+<RETURNS>void  </RETURNS>
+GSequenceIter *iter, gint rating 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_db_playlist_set_lyric_bind</NAME>
+<RETURNS>void  </RETURNS>
+GSequenceIter *iter, const gchar *filename 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_db_playlist_set_lyric_secondary_bind</NAME>
+<RETURNS>void  </RETURNS>
+GSequenceIter *iter, const gchar *filename 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_db_playlist_set_album_bind</NAME>
+<RETURNS>void  </RETURNS>
+GSequenceIter *iter, const gchar *filename 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_db_playlist_get_lyric_bind</NAME>
+<RETURNS>const gchar  *</RETURNS>
+GSequenceIter *iter 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_db_playlist_get_lyric_secondary_bind</NAME>
+<RETURNS>const gchar  *</RETURNS>
+GSequenceIter *iter 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_db_playlist_get_album_bind</NAME>
+<RETURNS>const gchar  *</RETURNS>
+GSequenceIter *iter 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_db_playlist_reorder</NAME>
+<RETURNS>void  </RETURNS>
+GSequenceIter *iter, gint *new_order 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_db_playlist_move_to_another_catalog</NAME>
+<RETURNS>void  </RETURNS>
+GSequenceIter **iters, guint num, GSequenceIter *catalog_iter 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_db_playlist_add_m3u_file</NAME>
+<RETURNS>void  </RETURNS>
+GSequenceIter *iter, GSequenceIter *insert_iter, const gchar *filename 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_db_playlist_add_directory</NAME>
+<RETURNS>void  </RETURNS>
+GSequenceIter *iter, GSequenceIter *insert_iter, const gchar *dir 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_db_playlist_export_m3u_file</NAME>
+<RETURNS>gboolean  </RETURNS>
+GSequenceIter *iter, const gchar *sfilename 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_db_playlist_export_all_m3u_files</NAME>
+<RETURNS>gboolean  </RETURNS>
+const gchar *dir 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_db_playlist_refresh</NAME>
+<RETURNS>void  </RETURNS>
+GSequenceIter *iter 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_db_playlist_import_cancel</NAME>
+<RETURNS>void  </RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_db_playlist_refresh_cancel</NAME>
+<RETURNS>void  </RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_db_playlist_import_queue_get_length</NAME>
+<RETURNS>gint  </RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_db_playlist_refresh_queue_get_length</NAME>
+<RETURNS>gint  </RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_db_playlist_sync</NAME>
+<RETURNS>gboolean  </RETURNS>
+ 
+</FUNCTION>
+<VARIABLE>
+<NAME>rclib_major_version</NAME>
+extern const guint rclib_major_version;
+</VARIABLE>
+<VARIABLE>
+<NAME>rclib_minor_version</NAME>
+extern const guint rclib_minor_version;
+</VARIABLE>
+<VARIABLE>
+<NAME>rclib_micro_version</NAME>
+extern const guint rclib_micro_version;
+</VARIABLE>
+<VARIABLE>
+<NAME>rclib_build_date</NAME>
+extern const gchar *rclib_build_date;
+</VARIABLE>
+<VARIABLE>
+<NAME>rclib_build_time</NAME>
+extern const gchar *rclib_build_time;
+</VARIABLE>
+<FUNCTION>
+<NAME>rclib_init</NAME>
+<RETURNS>gboolean  </RETURNS>
+gint *argc, gchar **argv[], const gchar *dir, GError **error 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_exit</NAME>
+<RETURNS>void  </RETURNS>
+ 
+</FUNCTION>

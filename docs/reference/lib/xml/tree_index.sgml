@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<!DOCTYPE screen PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
+               "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd"
+[
+  <!ENTITY % local.common.attrib "xmlns:xi  CDATA  #FIXED 'http://www.w3.org/2003/XInclude'">
+]>
+<screen>
+    <link linkend="GObject">GObject</link>
+        <link linkend="RCLibCore">RCLibCore</link>
+        <link linkend="RCLibDb">RCLibDb</link>
+        <link linkend="RCLibLyric">RCLibLyric</link>
+        <link linkend="RCLibPlayer">RCLibPlayer</link>
+</screen>

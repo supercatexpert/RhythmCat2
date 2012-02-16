@@ -1,0 +1,12 @@
+
+[Desktop Entry]
+Categories=GTK;AudioVideo;Player;
+Comment=RhythmCat2 Music Player
+GenericName=Music Player
+Icon=/usr/share/RhythmCat2/images/RhythmCat2_128x128.PNG
+Name=RhythmCat2
+Exec=RhythmCat2
+StartupNotify=false
+Type=Application
+Name[en_US]=RhythmCat2 Music Player
+MimeType=application/x-ogg;application/ogg;audio/x-vorbis+ogg;audio/x-scpls;audio/x-mp3;audio/x-mpeg;audio/mpeg;audio/x-mpegurl;audio/x-flac;

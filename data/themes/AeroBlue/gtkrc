@@ -1,0 +1,391 @@
+# RhythmCat Theme Style "AeroBlue" RC File
+# Author: SuperCat <supercatexpert@gmail.com>
+
+style "rc-main-window"
+{
+	bg[NORMAL]	= "#5197EF"
+	engine "pixmap"
+	{
+		image
+		{
+			function	= FLAT_BOX
+			file		= "window-bg.png"
+			stretch		= TRUE
+			recolorable	= FALSE
+		}
+	}
+}
+
+style "rc-mini-window"
+{
+	bg[NORMAL]	= "#5197EF"
+	fg[NORMAL]	= "#FFFFFF"
+}
+
+style "rc-widget-bg"
+{
+	bg[NORMAL]	= "#F0F0F0"
+	fg[NORMAL]	= "#000000"
+	engine "pixmap"
+	{
+		image
+		{
+			function	= FLAT
+			file		= "trans.png"
+			stretch		= TRUE
+			recolorable	= TRUE
+		}
+	}
+}
+
+style "rc-list-notebook"
+{
+	bg[NORMAL]	= "#5197EF"
+	fg[NORMAL]	= "#FFFFFF"
+	bg[ACTIVE]	= "#71B7FF"
+}
+
+style "rc-lyric-label"
+{
+	bg[NORMAL]	= "#5197EF"
+	fg[NORMAL]	= "#FFFFFF"
+}
+
+style "rc-normal-label"
+{
+	fg[NORMAL]	= "#FFFFFF"
+	fg[ACTIVE]	= "#FFFFFF"
+	text[NORMAL]	= "#FFFFFF"
+}
+
+style "rc-time-label"
+{
+	fg[NORMAL]	= "#FFFFFF"
+	text[NORMAL]	= "#FFFFFF"
+}
+
+style "rc-list-view"
+{
+	bg[NORMAL]	= "#F0F0F0"
+	text[NORMAL]	= "#000000"
+	text[PRELIGHT]	= "#000000"
+	text[ACTIVE]	= "#000000"
+	text[SELECTED]	= "#000000"
+	base[NORMAL]	= "#F0F0F0"
+	base[PRELIGHT]	= shade (0.8, "#C7E3F8")
+	base[SELECTED]	= shade (0.8, "#C7E3F8")
+	base[ACTIVE]	= shade (0.8, "#C7E3F8")
+	engine "pixmap"
+	{
+		image
+		{
+			function	= FLAT_BOX
+			state		= SELECTED
+			border		= {0, 0, 0, 0}
+			file	= "list-selected.png"
+		}
+	}
+}
+
+style "rc-control-button"
+{
+	bg[NORMAL]	= "#5197EF"
+	bg[PRELIGHT]	= "#97BEEF"
+	bg[SELECTED]	= "#80B1EF"
+	bg[ACTIVE]	= "#80B1EF"
+        bg[INSENSITIVE] = "#5197EF"
+}
+
+style "rc-normal-button"
+{
+	fg[NORMAL]	= "#FFFFFF"
+	fg[PRELIGHT]	= "#FFFFFF"
+	fg[SELECTED]	= "#FFFFFF"
+	fg[ACTIVE]	= "#FFFFFF"
+	text[NORMAL]	= "#FFFFFF"
+	text[PRELIGHT]	= "#FFFFFF"
+	text[SELECTED]	= "#FFFFFF"
+	text[ACTIVE]	= "#FFFFFF"
+	bg[NORMAL]	= "#61A7FF"
+	bg[ACTIVE]	= "#80B1EF"
+	bg[PRELIGHT]	= "#97BEEF"
+	bg[SELECTED]	= "#80B1EF"
+	base[NORMAL]	= "#61A7FF"
+	base[ACTIVE]	= "#80B1EF"
+	base[PRELIGHT]	= "#97BEEF"
+	base[SELECTED]	= "#80B1EF"
+}
+
+style "rc-time-scale"
+{
+	bg[NORMAL]	= "#707070"
+	bg[ACTIVE]	= "#33A8E5"
+	bg[PRELIGHT]	= "#909090"
+	bg[SELECTED]	= "#33A8E5"
+        bg[INSENSITIVE] = "#383838"
+	GtkRange::trough-border = 0
+	GtkRange::slider-width = 8
+	GtkRange::stepper-size = 15
+	GtkScale::slider-length	= 15
+	GtkScale::slider-width	= 15
+	GtkScale::trough-side-details = 0
+	GtkScale::activate_slider = 1
+	GtkScale::trough-under-steppers = 1
+	engine "pixmap"
+	{
+		image 
+		{
+			function	= BOX
+			recolorable	= FALSE
+			detail		= "trough"
+			file		= "time-trough.png"
+			border		= { 10, 10, 0, 0 }
+			stretch		= TRUE
+			orientation	= HORIZONTAL
+		}
+		image 
+		{
+			function	= SLIDER
+			recolorable	= TRUE
+			state		= NORMAL
+			file		= "null.png"
+			border		= { 0, 0, 0, 0 }
+			stretch		= TRUE
+			overlay_file	= "time-slider-normal.png"
+			overlay_stretch	= FALSE
+			orientation	= HORIZONTAL
+		}
+		image 
+		{
+			function	= SLIDER
+			recolorable	= TRUE
+			state		= PRELIGHT
+			file		= "null.png"
+			border		= { 0, 0, 0, 0 }
+			stretch		= TRUE
+			overlay_file	= "time-slider-prelight.png"
+			overlay_stretch	= FALSE
+			orientation	= HORIZONTAL
+		}
+		image 
+		{
+			function	= SLIDER
+			recolorable	= TRUE
+			state		= ACTIVE
+			file		= "null.png"
+			border		= { 0, 0, 0, 0 }
+			stretch		= TRUE
+			overlay_file	= "time-slider-prelight.png"
+			overlay_stretch	= FALSE
+			orientation	= HORIZONTAL
+		}
+		image 
+		{
+			function	= SLIDER
+			recolorable	= TRUE
+			state		= INSENSITIVE
+			file		= "null.png"
+			border		= { 0, 0, 0, 0 }
+			stretch		= TRUE
+			overlay_file	= "time-slider-disabled.png"
+			overlay_stretch	= FALSE
+			orientation	= HORIZONTAL
+		}	
+	}
+}
+
+style "rc-normal-scale"
+{
+	bg[NORMAL]	= "#61A7FF"
+	bg[ACTIVE]	= "#00E000"
+	bg[PRELIGHT]	= "#61A7FF"
+	bg[SELECTED]	= "#00E000"
+        bg[INSENSITIVE] = "#5197EF"
+}
+
+style "rc-normal-scrollbar"
+{
+	bg[NORMAL]	= "#707070"
+	GtkRange::trough_border = 0
+	GtkRange::slider_width = 15
+	GtkRange::stepper_size = 15
+	GtkScrollbar::min_slider_length = 30
+	engine "pixmap" 
+	{
+		image 
+		{
+			function        = BOX
+			recolorable     = TRUE
+			detail          = "trough"
+			file            = "scrollbar-trough-vert.png"
+			border          = { 0, 0, 30, 30 }
+			stretch         = TRUE
+			orientation     = VERTICAL
+		}
+		image 
+		{
+			function	= STEPPER
+			recolorable	= TRUE
+			state		= NORMAL
+			file		= "scrollbar-stepper-up.png"
+			stretch		= TRUE
+			arrow_direction	= UP
+		}
+		image 
+		{
+			function	= STEPPER
+			recolorable	= TRUE
+			state		= PRELIGHT
+			file		= "scrollbar-stepper-up-prelight.png"
+			stretch		= TRUE
+			arrow_direction	= UP
+		}
+		image 
+		{
+			function	= STEPPER
+			recolorable	= TRUE
+			state		= ACTIVE
+			file		= "scrollbar-stepper-up-prelight.png"
+			stretch		= TRUE
+			arrow_direction	= UP
+		}
+		image 
+		{
+			function	= STEPPER
+			recolorable	= TRUE
+			state		= INSENSITIVE
+			file		= "scrollbar-stepper-up-insens.png"
+			stretch		= TRUE
+			arrow_direction	= UP
+		}
+
+
+		image 
+		{
+			function	= STEPPER
+			recolorable	= TRUE
+			state		= NORMAL
+			file		= "scrollbar-stepper-down.png"
+			stretch		= TRUE
+			arrow_direction	= DOWN
+		}
+		image 
+		{
+			function	= STEPPER
+			recolorable	= TRUE
+			state		= PRELIGHT
+			file		= "scrollbar-stepper-down-prelight.png"
+			stretch		= TRUE
+			arrow_direction	= DOWN
+		}
+		image 
+		{
+			function	= STEPPER
+			recolorable	= TRUE
+			state		= ACTIVE
+			file		= "scrollbar-stepper-down-prelight.png"
+			stretch		= TRUE
+			arrow_direction	= DOWN
+		}
+		image 
+		{
+			function	= STEPPER
+			recolorable	= TRUE
+			state		= INSENSITIVE
+			file		= "scrollbar-stepper-down-insens.png"
+			stretch		= TRUE
+			arrow_direction	= DOWN
+		}
+
+
+		image 
+		{
+			function        = SLIDER
+			recolorable     = TRUE
+			state           = NORMAL
+			file            = "scrollbar-slider-vert.png"
+			border          = { 6, 6, 15, 15 }
+			stretch         = TRUE
+			orientation     = VERTICAL
+		}
+		image 
+		{
+			function        = SLIDER
+			recolorable     = TRUE
+			state           = ACTIVE
+			file            = "scrollbar-slider-vert-prelight.png"
+			border          = { 6, 6, 15, 15 }
+			stretch         = TRUE
+			orientation     = VERTICAL
+		}
+		image 
+		{
+			function        = SLIDER 
+			recolorable     = TRUE
+			state           = PRELIGHT
+			file            = "scrollbar-slider-vert-prelight.png"
+			border          = { 6, 6, 15, 15 }
+			stretch         = TRUE
+			orientation     = VERTICAL
+		}
+		image 
+		{
+			function        = SLIDER 
+			recolorable     = TRUE
+			state           = INSENSITIVE
+			file            = "scrollbar-slider-vert.png"
+			border          = { 6, 6, 15, 15 }
+			stretch         = TRUE
+			orientation     = VERTICAL
+		}
+	}
+}
+
+style "rc-list-paned"
+{
+	bg[NORMAL]	= "#484848"
+	bg[PRELIGHT]	= "#585858"
+	GtkPaned::handle-size = 5
+}
+
+widget "RCMainWindow"	style "rc-main-window"
+widget "RCMiniWindow"	style "rc-mini-window"
+widget "RCMainWindow.*.RCPlistNotebook*"	style "rc-list-notebook"
+widget "RCMainWindow.*.RCStatusInfoBar"	style "rc-widget-bg"
+widget "RCMainWindow.*.GtkProgressBar"	style "rc-widget-bg"
+widget "RCMainWindow.*.GtkEventBox"	style "rc-widget-bg"
+widget "RCMiniWindow.*.GtkEventBox"	style "rc-mini-window"
+widget "RCMiniWindow.*.RCMiniInfoFixed"	style "rc-mini-window"
+widget "RCMiniWindow.*.RCMiniLyricFixed"	style "rc-mini-window"
+widget "RCMainWindow.*.GtkLabel"	style "rc-normal-label"
+widget "RCMiniWindow.*.GtkLabel"	style "rc-normal-label"
+widget "RCMiniWindow.*.GtkArrow"	style "rc-normal-label"
+widget "RCMainWindow.*.RCTitleLabel"	style "rc-normal-label"
+widget "RCMainWindow.*.RCArtistLabel"	style "rc-normal-label"
+widget "RCMainWindow.*.RCAlbumLabel"	style "rc-normal-label"
+widget "RCMainWindow.*.RCInfoLabel"	style "rc-normal-label"
+widget "RCMainWindow.*.RCLengthLabel"	style "rc-normal-label"
+widget "RCMainWindow.*.RCLyricLabel"	style "rc-lyric-label"
+widget "RCMiniWindow.*.RCMiniInfoLabel"	style "rc-normal-label"
+widget "RCMiniWindow.*.RCMiniLyricLabel"	style "rc-normal-label"
+widget "RCMiniWindow.*.RCMiniTimeLabel"	style "rc-normal-label"
+widget "RCMainWindow.*.RCTimeLabel"	style "rc-time-label"
+widget "RCMainWindow.*.RCEQLabel"	style "rc-normal-label"
+widget "RCMainWindow.*.GtkTreeView*"	style "rc-list-view"
+widget "RCMainWindow.*.RCListView1*"	style "rc-list-view"
+widget "RCMainWindow.*.RCListView2*"	style "rc-list-view"
+widget "RCMainWindow.*.RCControlButton*"	style "rc-control-button"
+widget "RCMainWindow.*.RCVolumeButton*"	style "rc-control-button"
+widget "RCMainWindow.*.GtkButton*"	style "rc-normal-button"
+widget "RCMiniWindow.*.RCMiniControlButton*"	style "rc-control-button"
+widget "RCMiniWindow.*.RCMiniWindowButton*"	style "rc-control-button"
+widget "RCMiniWindow.*.RCMiniVolumeButton*"	style "rc-control-button"
+widget "RCMainWindow.*.RCEQCombobox*"	style "rc-normal-button"
+widget "RCMainWindow.*.RCEQSaveButton*"	style "rc-normal-button"
+widget "RCMainWindow.*.RCEQImportButton*"	style "rc-normal-button"
+widget "RCMainWindow.*.RCTimeScalerBar"	style "rc-time-scale"
+widget "RCMainWindow.*.RCEQScaler"	style "rc-normal-scale"
+widget "RCMainWindow.*.GtkVScrollbar"	style "rc-normal-scrollbar"
+widget "RCMainWindow.*.GtkHScrollbar"	style "rc-normal-scrollbar"
+widget "RCMainWindow.*.RCListHPaned"	style "rc-list-paned"
+

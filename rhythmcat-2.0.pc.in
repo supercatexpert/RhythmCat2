@@ -1,0 +1,11 @@
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+libdir=@libdir@
+includedir=@includedir@
+
+Name: rhythmcat
+Description: player API for RhythmCat
+Version: @VERSION@
+Requires: glib-2.0 gobject-2.0 gio-2.0 gstreamer-0.10 gstreamer-pbutils-0.10 sqlite3
+Libs: -L${libdir} -lrhythmcat-2.0
+Cflags: -I${includedir}/rhythmcat-2.0

@@ -1,0 +1,4 @@
+rclib_core_get_type
+rclib_db_get_type
+rclib_lyric_get_type
+rclib_player_get_type

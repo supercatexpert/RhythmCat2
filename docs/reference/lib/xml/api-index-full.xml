@@ -1,0 +1,219 @@
+<?xml version="1.0"?>
+<!DOCTYPE indexdiv PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
+               "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd"
+[
+  <!ENTITY % local.common.attrib "xmlns:xi  CDATA  #FIXED 'http://www.w3.org/2003/XInclude'">
+]>
+<indexdiv>
+<indexdiv><title>B</title>
+<indexentry><primaryie linkends="rclib-build-date"><link linkend="rclib-build-date">rclib_build_date</link>, variable in <link linkend="LibRhythmCat-Main-module">Main module</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rclib-build-time"><link linkend="rclib-build-time">rclib_build_time</link>, variable in <link linkend="LibRhythmCat-Main-module">Main module</link></primaryie></indexentry>
+</indexdiv>
+<indexdiv><title>C</title>
+<indexentry><primaryie linkends="RCLibCore-struct"><link linkend="RCLibCore-struct">RCLibCore</link>, struct in <link linkend="RCLibCore">RCLibCore</link></primaryie></indexentry>
+<indexentry><primaryie linkends="RCLibCore-balance-changed"><link linkend="RCLibCore-balance-changed">RCLibCore::balance-changed</link>, object signal in <link linkend="RCLibCore">RCLibCore</link></primaryie></indexentry>
+<indexentry><primaryie linkends="RCLibCore-echo-changed"><link linkend="RCLibCore-echo-changed">RCLibCore::echo-changed</link>, object signal in <link linkend="RCLibCore">RCLibCore</link></primaryie></indexentry>
+<indexentry><primaryie linkends="RCLibCore-eos"><link linkend="RCLibCore-eos">RCLibCore::eos</link>, object signal in <link linkend="RCLibCore">RCLibCore</link></primaryie></indexentry>
+<indexentry><primaryie linkends="RCLibCore-eq-changed"><link linkend="RCLibCore-eq-changed">RCLibCore::eq-changed</link>, object signal in <link linkend="RCLibCore">RCLibCore</link></primaryie></indexentry>
+<indexentry><primaryie linkends="RCLibCore-error"><link linkend="RCLibCore-error">RCLibCore::error</link>, object signal in <link linkend="RCLibCore">RCLibCore</link></primaryie></indexentry>
+<indexentry><primaryie linkends="RCLibCore-new-duration"><link linkend="RCLibCore-new-duration">RCLibCore::new-duration</link>, object signal in <link linkend="RCLibCore">RCLibCore</link></primaryie></indexentry>
+<indexentry><primaryie linkends="RCLibCore-spectrum-updated"><link linkend="RCLibCore-spectrum-updated">RCLibCore::spectrum-updated</link>, object signal in <link linkend="RCLibCore">RCLibCore</link></primaryie></indexentry>
+<indexentry><primaryie linkends="RCLibCore-state-changed"><link linkend="RCLibCore-state-changed">RCLibCore::state-changed</link>, object signal in <link linkend="RCLibCore">RCLibCore</link></primaryie></indexentry>
+<indexentry><primaryie linkends="RCLibCore-tag-found"><link linkend="RCLibCore-tag-found">RCLibCore::tag-found</link>, object signal in <link linkend="RCLibCore">RCLibCore</link></primaryie></indexentry>
+<indexentry><primaryie linkends="RCLibCore-uri-changed"><link linkend="RCLibCore-uri-changed">RCLibCore::uri-changed</link>, object signal in <link linkend="RCLibCore">RCLibCore</link></primaryie></indexentry>
+<indexentry><primaryie linkends="RCLibCore-volume-changed"><link linkend="RCLibCore-volume-changed">RCLibCore::volume-changed</link>, object signal in <link linkend="RCLibCore">RCLibCore</link></primaryie></indexentry>
+<indexentry><primaryie linkends="RCLibCoreClass"><link linkend="RCLibCoreClass">RCLibCoreClass</link>, struct in <link linkend="RCLibCore">RCLibCore</link></primaryie></indexentry>
+<indexentry><primaryie linkends="RCLibCoreEQType"><link linkend="RCLibCoreEQType">RCLibCoreEQType</link>, enum in <link linkend="RCLibCore">RCLibCore</link></primaryie></indexentry>
+<indexentry><primaryie linkends="RCLibCoreErrorCode"><link linkend="RCLibCoreErrorCode">RCLibCoreErrorCode</link>, enum in <link linkend="RCLibCore">RCLibCore</link></primaryie></indexentry>
+<indexentry><primaryie linkends="RCLibCoreMetadata"><link linkend="RCLibCoreMetadata">RCLibCoreMetadata</link>, struct in <link linkend="RCLibCore">RCLibCore</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rclib-core-effect-plugin-add"><link linkend="rclib-core-effect-plugin-add">rclib_core_effect_plugin_add</link>, function in <link linkend="RCLibCore">RCLibCore</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rclib-core-effect-plugin-get-list"><link linkend="rclib-core-effect-plugin-get-list">rclib_core_effect_plugin_get_list</link>, function in <link linkend="RCLibCore">RCLibCore</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rclib-core-effect-plugin-remove"><link linkend="rclib-core-effect-plugin-remove">rclib_core_effect_plugin_remove</link>, function in <link linkend="RCLibCore">RCLibCore</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rclib-core-exit"><link linkend="rclib-core-exit">rclib_core_exit</link>, function in <link linkend="RCLibCore">RCLibCore</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rclib-core-get-balance"><link linkend="rclib-core-get-balance">rclib_core_get_balance</link>, function in <link linkend="RCLibCore">RCLibCore</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rclib-core-get-echo"><link linkend="rclib-core-get-echo">rclib_core_get_echo</link>, function in <link linkend="RCLibCore">RCLibCore</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rclib-core-get-eq"><link linkend="rclib-core-get-eq">rclib_core_get_eq</link>, function in <link linkend="RCLibCore">RCLibCore</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rclib-core-get-eq-name"><link linkend="rclib-core-get-eq-name">rclib_core_get_eq_name</link>, function in <link linkend="RCLibCore">RCLibCore</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rclib-core-get-instance"><link linkend="rclib-core-get-instance">rclib_core_get_instance</link>, function in <link linkend="RCLibCore">RCLibCore</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rclib-core-get-reference"><link linkend="rclib-core-get-reference">rclib_core_get_reference</link>, function in <link linkend="RCLibCore">RCLibCore</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rclib-core-get-state"><link linkend="rclib-core-get-state">rclib_core_get_state</link>, function in <link linkend="RCLibCore">RCLibCore</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rclib-core-get-uri"><link linkend="rclib-core-get-uri">rclib_core_get_uri</link>, function in <link linkend="RCLibCore">RCLibCore</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rclib-core-get-volume"><link linkend="rclib-core-get-volume">rclib_core_get_volume</link>, function in <link linkend="RCLibCore">RCLibCore</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rclib-core-init"><link linkend="rclib-core-init">rclib_core_init</link>, function in <link linkend="RCLibCore">RCLibCore</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rclib-core-pause"><link linkend="rclib-core-pause">rclib_core_pause</link>, function in <link linkend="RCLibCore">RCLibCore</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rclib-core-play"><link linkend="rclib-core-play">rclib_core_play</link>, function in <link linkend="RCLibCore">RCLibCore</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rclib-core-query-duration"><link linkend="rclib-core-query-duration">rclib_core_query_duration</link>, function in <link linkend="RCLibCore">RCLibCore</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rclib-core-query-position"><link linkend="rclib-core-query-position">rclib_core_query_position</link>, function in <link linkend="RCLibCore">RCLibCore</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rclib-core-set-balance"><link linkend="rclib-core-set-balance">rclib_core_set_balance</link>, function in <link linkend="RCLibCore">RCLibCore</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rclib-core-set-echo"><link linkend="rclib-core-set-echo">rclib_core_set_echo</link>, function in <link linkend="RCLibCore">RCLibCore</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rclib-core-set-eq"><link linkend="rclib-core-set-eq">rclib_core_set_eq</link>, function in <link linkend="RCLibCore">RCLibCore</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rclib-core-set-position"><link linkend="rclib-core-set-position">rclib_core_set_position</link>, function in <link linkend="RCLibCore">RCLibCore</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rclib-core-set-reference"><link linkend="rclib-core-set-reference">rclib_core_set_reference</link>, function in <link linkend="RCLibCore">RCLibCore</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rclib-core-set-uri"><link linkend="rclib-core-set-uri">rclib_core_set_uri</link>, function in <link linkend="RCLibCore">RCLibCore</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rclib-core-set-volume"><link linkend="rclib-core-set-volume">rclib_core_set_volume</link>, function in <link linkend="RCLibCore">RCLibCore</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rclib-core-signal-connect"><link linkend="rclib-core-signal-connect">rclib_core_signal_connect</link>, function in <link linkend="RCLibCore">RCLibCore</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rclib-core-signal-disconnect"><link linkend="rclib-core-signal-disconnect">rclib_core_signal_disconnect</link>, function in <link linkend="RCLibCore">RCLibCore</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rclib-core-stop"><link linkend="rclib-core-stop">rclib_core_stop</link>, function in <link linkend="RCLibCore">RCLibCore</link></primaryie></indexentry>
+<indexentry><primaryie linkends="RCLIB-CORE-TYPE:CAPS"><link linkend="RCLIB-CORE-TYPE:CAPS">RCLIB_CORE_TYPE</link>, macro in <link linkend="RCLibCore">RCLibCore</link></primaryie></indexentry>
+<indexentry><primaryie linkends="RCLibCueData"><link linkend="RCLibCueData">RCLibCueData</link>, struct in <link linkend="LibRhythmCat-Cue-Parser">Cue Parser</link></primaryie></indexentry>
+<indexentry><primaryie linkends="RCLibCueInputType"><link linkend="RCLibCueInputType">RCLibCueInputType</link>, enum in <link linkend="LibRhythmCat-Cue-Parser">Cue Parser</link></primaryie></indexentry>
+<indexentry><primaryie linkends="RCLibCueTrack"><link linkend="RCLibCueTrack">RCLibCueTrack</link>, struct in <link linkend="LibRhythmCat-Cue-Parser">Cue Parser</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rclib-cue-free"><link linkend="rclib-cue-free">rclib_cue_free</link>, function in <link linkend="LibRhythmCat-Cue-Parser">Cue Parser</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rclib-cue-get-fallback-encoding"><link linkend="rclib-cue-get-fallback-encoding">rclib_cue_get_fallback_encoding</link>, function in <link linkend="LibRhythmCat-Cue-Parser">Cue Parser</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rclib-cue-get-track-num"><link linkend="rclib-cue-get-track-num">rclib_cue_get_track_num</link>, function in <link linkend="LibRhythmCat-Cue-Parser">Cue Parser</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rclib-cue-read-data"><link linkend="rclib-cue-read-data">rclib_cue_read_data</link>, function in <link linkend="LibRhythmCat-Cue-Parser">Cue Parser</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rclib-cue-set-fallback-encoding"><link linkend="rclib-cue-set-fallback-encoding">rclib_cue_set_fallback_encoding</link>, function in <link linkend="LibRhythmCat-Cue-Parser">Cue Parser</link></primaryie></indexentry>
+</indexdiv>
+<indexdiv><title>D</title>
+<indexentry><primaryie linkends="RCLibDb-struct"><link linkend="RCLibDb-struct">RCLibDb</link>, struct in <link linkend="RCLibDb">RCLibDb</link></primaryie></indexentry>
+<indexentry><primaryie linkends="RCLibDb-catalog-added"><link linkend="RCLibDb-catalog-added">RCLibDb::catalog-added</link>, object signal in <link linkend="RCLibDb">RCLibDb</link></primaryie></indexentry>
+<indexentry><primaryie linkends="RCLibDb-catalog-changed"><link linkend="RCLibDb-catalog-changed">RCLibDb::catalog-changed</link>, object signal in <link linkend="RCLibDb">RCLibDb</link></primaryie></indexentry>
+<indexentry><primaryie linkends="RCLibDb-catalog-delete"><link linkend="RCLibDb-catalog-delete">RCLibDb::catalog-delete</link>, object signal in <link linkend="RCLibDb">RCLibDb</link></primaryie></indexentry>
+<indexentry><primaryie linkends="RCLibDb-catalog-reordered"><link linkend="RCLibDb-catalog-reordered">RCLibDb::catalog-reordered</link>, object signal in <link linkend="RCLibDb">RCLibDb</link></primaryie></indexentry>
+<indexentry><primaryie linkends="RCLibDb-import-updated"><link linkend="RCLibDb-import-updated">RCLibDb::import-updated</link>, object signal in <link linkend="RCLibDb">RCLibDb</link></primaryie></indexentry>
+<indexentry><primaryie linkends="RCLibDb-playlist-added"><link linkend="RCLibDb-playlist-added">RCLibDb::playlist-added</link>, object signal in <link linkend="RCLibDb">RCLibDb</link></primaryie></indexentry>
+<indexentry><primaryie linkends="RCLibDb-playlist-changed"><link linkend="RCLibDb-playlist-changed">RCLibDb::playlist-changed</link>, object signal in <link linkend="RCLibDb">RCLibDb</link></primaryie></indexentry>
+<indexentry><primaryie linkends="RCLibDb-playlist-delete"><link linkend="RCLibDb-playlist-delete">RCLibDb::playlist-delete</link>, object signal in <link linkend="RCLibDb">RCLibDb</link></primaryie></indexentry>
+<indexentry><primaryie linkends="RCLibDb-playlist-reordered"><link linkend="RCLibDb-playlist-reordered">RCLibDb::playlist-reordered</link>, object signal in <link linkend="RCLibDb">RCLibDb</link></primaryie></indexentry>
+<indexentry><primaryie linkends="RCLibDb-refresh-updated"><link linkend="RCLibDb-refresh-updated">RCLibDb::refresh-updated</link>, object signal in <link linkend="RCLibDb">RCLibDb</link></primaryie></indexentry>
+<indexentry><primaryie linkends="RCLibDbCatalogData"><link linkend="RCLibDbCatalogData">RCLibDbCatalogData</link>, struct in <link linkend="RCLibDb">RCLibDb</link></primaryie></indexentry>
+<indexentry><primaryie linkends="RCLibDbCatalogType"><link linkend="RCLibDbCatalogType">RCLibDbCatalogType</link>, enum in <link linkend="RCLibDb">RCLibDb</link></primaryie></indexentry>
+<indexentry><primaryie linkends="RCLibDbClass"><link linkend="RCLibDbClass">RCLibDbClass</link>, struct in <link linkend="RCLibDb">RCLibDb</link></primaryie></indexentry>
+<indexentry><primaryie linkends="RCLibDbPlaylistData"><link linkend="RCLibDbPlaylistData">RCLibDbPlaylistData</link>, struct in <link linkend="RCLibDb">RCLibDb</link></primaryie></indexentry>
+<indexentry><primaryie linkends="RCLibDbPlaylistType"><link linkend="RCLibDbPlaylistType">RCLibDbPlaylistType</link>, enum in <link linkend="RCLibDb">RCLibDb</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rclib-db-catalog-add"><link linkend="rclib-db-catalog-add">rclib_db_catalog_add</link>, function in <link linkend="RCLibDb">RCLibDb</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rclib-db-catalog-delete"><link linkend="rclib-db-catalog-delete">rclib_db_catalog_delete</link>, function in <link linkend="RCLibDb">RCLibDb</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rclib-db-catalog-reorder"><link linkend="rclib-db-catalog-reorder">rclib_db_catalog_reorder</link>, function in <link linkend="RCLibDb">RCLibDb</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rclib-db-catalog-set-name"><link linkend="rclib-db-catalog-set-name">rclib_db_catalog_set_name</link>, function in <link linkend="RCLibDb">RCLibDb</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rclib-db-catalog-set-type"><link linkend="rclib-db-catalog-set-type">rclib_db_catalog_set_type</link>, function in <link linkend="RCLibDb">RCLibDb</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rclib-db-exit"><link linkend="rclib-db-exit">rclib_db_exit</link>, function in <link linkend="RCLibDb">RCLibDb</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rclib-db-get-catalog"><link linkend="rclib-db-get-catalog">rclib_db_get_catalog</link>, function in <link linkend="RCLibDb">RCLibDb</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rclib-db-get-instance"><link linkend="rclib-db-get-instance">rclib_db_get_instance</link>, function in <link linkend="RCLibDb">RCLibDb</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rclib-db-init"><link linkend="rclib-db-init">rclib_db_init</link>, function in <link linkend="RCLibDb">RCLibDb</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rclib-db-playlist-add-directory"><link linkend="rclib-db-playlist-add-directory">rclib_db_playlist_add_directory</link>, function in <link linkend="RCLibDb">RCLibDb</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rclib-db-playlist-add-m3u-file"><link linkend="rclib-db-playlist-add-m3u-file">rclib_db_playlist_add_m3u_file</link>, function in <link linkend="RCLibDb">RCLibDb</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rclib-db-playlist-add-music"><link linkend="rclib-db-playlist-add-music">rclib_db_playlist_add_music</link>, function in <link linkend="RCLibDb">RCLibDb</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rclib-db-playlist-delete"><link linkend="rclib-db-playlist-delete">rclib_db_playlist_delete</link>, function in <link linkend="RCLibDb">RCLibDb</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rclib-db-playlist-export-all-m3u-files"><link linkend="rclib-db-playlist-export-all-m3u-files">rclib_db_playlist_export_all_m3u_files</link>, function in <link linkend="RCLibDb">RCLibDb</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rclib-db-playlist-export-m3u-file"><link linkend="rclib-db-playlist-export-m3u-file">rclib_db_playlist_export_m3u_file</link>, function in <link linkend="RCLibDb">RCLibDb</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rclib-db-playlist-get-album-bind"><link linkend="rclib-db-playlist-get-album-bind">rclib_db_playlist_get_album_bind</link>, function in <link linkend="RCLibDb">RCLibDb</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rclib-db-playlist-get-lyric-bind"><link linkend="rclib-db-playlist-get-lyric-bind">rclib_db_playlist_get_lyric_bind</link>, function in <link linkend="RCLibDb">RCLibDb</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rclib-db-playlist-get-lyric-secondary-bind"><link linkend="rclib-db-playlist-get-lyric-secondary-bind">rclib_db_playlist_get_lyric_secondary_bind</link>, function in <link linkend="RCLibDb">RCLibDb</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rclib-db-playlist-import-cancel"><link linkend="rclib-db-playlist-import-cancel">rclib_db_playlist_import_cancel</link>, function in <link linkend="RCLibDb">RCLibDb</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rclib-db-playlist-import-queue-get-length"><link linkend="rclib-db-playlist-import-queue-get-length">rclib_db_playlist_import_queue_get_length</link>, function in <link linkend="RCLibDb">RCLibDb</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rclib-db-playlist-move-to-another-catalog"><link linkend="rclib-db-playlist-move-to-another-catalog">rclib_db_playlist_move_to_another_catalog</link>, function in <link linkend="RCLibDb">RCLibDb</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rclib-db-playlist-refresh"><link linkend="rclib-db-playlist-refresh">rclib_db_playlist_refresh</link>, function in <link linkend="RCLibDb">RCLibDb</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rclib-db-playlist-refresh-cancel"><link linkend="rclib-db-playlist-refresh-cancel">rclib_db_playlist_refresh_cancel</link>, function in <link linkend="RCLibDb">RCLibDb</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rclib-db-playlist-refresh-queue-get-length"><link linkend="rclib-db-playlist-refresh-queue-get-length">rclib_db_playlist_refresh_queue_get_length</link>, function in <link linkend="RCLibDb">RCLibDb</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rclib-db-playlist-reorder"><link linkend="rclib-db-playlist-reorder">rclib_db_playlist_reorder</link>, function in <link linkend="RCLibDb">RCLibDb</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rclib-db-playlist-set-album-bind"><link linkend="rclib-db-playlist-set-album-bind">rclib_db_playlist_set_album_bind</link>, function in <link linkend="RCLibDb">RCLibDb</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rclib-db-playlist-set-lyric-bind"><link linkend="rclib-db-playlist-set-lyric-bind">rclib_db_playlist_set_lyric_bind</link>, function in <link linkend="RCLibDb">RCLibDb</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rclib-db-playlist-set-lyric-secondary-bind"><link linkend="rclib-db-playlist-set-lyric-secondary-bind">rclib_db_playlist_set_lyric_secondary_bind</link>, function in <link linkend="RCLibDb">RCLibDb</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rclib-db-playlist-set-rating"><link linkend="rclib-db-playlist-set-rating">rclib_db_playlist_set_rating</link>, function in <link linkend="RCLibDb">RCLibDb</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rclib-db-playlist-set-type"><link linkend="rclib-db-playlist-set-type">rclib_db_playlist_set_type</link>, function in <link linkend="RCLibDb">RCLibDb</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rclib-db-playlist-sync"><link linkend="rclib-db-playlist-sync">rclib_db_playlist_sync</link>, function in <link linkend="RCLibDb">RCLibDb</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rclib-db-playlist-update-length"><link linkend="rclib-db-playlist-update-length">rclib_db_playlist_update_length</link>, function in <link linkend="RCLibDb">RCLibDb</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rclib-db-playlist-update-metadata"><link linkend="rclib-db-playlist-update-metadata">rclib_db_playlist_update_metadata</link>, function in <link linkend="RCLibDb">RCLibDb</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rclib-db-signal-connect"><link linkend="rclib-db-signal-connect">rclib_db_signal_connect</link>, function in <link linkend="RCLibDb">RCLibDb</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rclib-db-signal-disconnect"><link linkend="rclib-db-signal-disconnect">rclib_db_signal_disconnect</link>, function in <link linkend="RCLibDb">RCLibDb</link></primaryie></indexentry>
+<indexentry><primaryie linkends="RCLIB-DB-TYPE:CAPS"><link linkend="RCLIB-DB-TYPE:CAPS">RCLIB_DB_TYPE</link>, macro in <link linkend="RCLibDb">RCLibDb</link></primaryie></indexentry>
+</indexdiv>
+<indexdiv><title>E</title>
+<indexentry><primaryie linkends="rclib-exit"><link linkend="rclib-exit">rclib_exit</link>, function in <link linkend="LibRhythmCat-Main-module">Main module</link></primaryie></indexentry>
+</indexdiv>
+<indexdiv><title>I</title>
+<indexentry><primaryie linkends="rclib-init"><link linkend="rclib-init">rclib_init</link>, function in <link linkend="LibRhythmCat-Main-module">Main module</link></primaryie></indexentry>
+</indexdiv>
+<indexdiv><title>L</title>
+<indexentry><primaryie linkends="RCLibLyric-struct"><link linkend="RCLibLyric-struct">RCLibLyric</link>, struct in <link linkend="RCLibLyric">RCLibLyric</link></primaryie></indexentry>
+<indexentry><primaryie linkends="RCLibLyric-line-changed"><link linkend="RCLibLyric-line-changed">RCLibLyric::line-changed</link>, object signal in <link linkend="RCLibLyric">RCLibLyric</link></primaryie></indexentry>
+<indexentry><primaryie linkends="RCLibLyric-lyric-ready"><link linkend="RCLibLyric-lyric-ready">RCLibLyric::lyric-ready</link>, object signal in <link linkend="RCLibLyric">RCLibLyric</link></primaryie></indexentry>
+<indexentry><primaryie linkends="RCLibLyric-lyric-timer"><link linkend="RCLibLyric-lyric-timer">RCLibLyric::lyric-timer</link>, object signal in <link linkend="RCLibLyric">RCLibLyric</link></primaryie></indexentry>
+<indexentry><primaryie linkends="RCLibLyricClass"><link linkend="RCLibLyricClass">RCLibLyricClass</link>, struct in <link linkend="RCLibLyric">RCLibLyric</link></primaryie></indexentry>
+<indexentry><primaryie linkends="RCLibLyricData"><link linkend="RCLibLyricData">RCLibLyricData</link>, struct in <link linkend="RCLibLyric">RCLibLyric</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rclib-lyric-clean"><link linkend="rclib-lyric-clean">rclib_lyric_clean</link>, function in <link linkend="RCLibLyric">RCLibLyric</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rclib-lyric-exit"><link linkend="rclib-lyric-exit">rclib_lyric_exit</link>, function in <link linkend="RCLibLyric">RCLibLyric</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rclib-lyric-get-fallback-encoding"><link linkend="rclib-lyric-get-fallback-encoding">rclib_lyric_get_fallback_encoding</link>, function in <link linkend="RCLibLyric">RCLibLyric</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rclib-lyric-get-instance"><link linkend="rclib-lyric-get-instance">rclib_lyric_get_instance</link>, function in <link linkend="RCLibLyric">RCLibLyric</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rclib-lyric-get-line"><link linkend="rclib-lyric-get-line">rclib_lyric_get_line</link>, function in <link linkend="RCLibLyric">RCLibLyric</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rclib-lyric-get-search-dir"><link linkend="rclib-lyric-get-search-dir">rclib_lyric_get_search_dir</link>, function in <link linkend="RCLibLyric">RCLibLyric</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rclib-lyric-init"><link linkend="rclib-lyric-init">rclib_lyric_init</link>, function in <link linkend="RCLibLyric">RCLibLyric</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rclib-lyric-is-available"><link linkend="rclib-lyric-is-available">rclib_lyric_is_available</link>, function in <link linkend="RCLibLyric">RCLibLyric</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rclib-lyric-load-file"><link linkend="rclib-lyric-load-file">rclib_lyric_load_file</link>, function in <link linkend="RCLibLyric">RCLibLyric</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rclib-lyric-search-lyric"><link linkend="rclib-lyric-search-lyric">rclib_lyric_search_lyric</link>, function in <link linkend="RCLibLyric">RCLibLyric</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rclib-lyric-set-fallback-encoding"><link linkend="rclib-lyric-set-fallback-encoding">rclib_lyric_set_fallback_encoding</link>, function in <link linkend="RCLibLyric">RCLibLyric</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rclib-lyric-set-search-dir"><link linkend="rclib-lyric-set-search-dir">rclib_lyric_set_search_dir</link>, function in <link linkend="RCLibLyric">RCLibLyric</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rclib-lyric-signal-connect"><link linkend="rclib-lyric-signal-connect">rclib_lyric_signal_connect</link>, function in <link linkend="RCLibLyric">RCLibLyric</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rclib-lyric-signal-disconnect"><link linkend="rclib-lyric-signal-disconnect">rclib_lyric_signal_disconnect</link>, function in <link linkend="RCLibLyric">RCLibLyric</link></primaryie></indexentry>
+<indexentry><primaryie linkends="RCLIB-LYRIC-TYPE:CAPS"><link linkend="RCLIB-LYRIC-TYPE:CAPS">RCLIB_LYRIC_TYPE</link>, macro in <link linkend="RCLibLyric">RCLibLyric</link></primaryie></indexentry>
+</indexdiv>
+<indexdiv><title>M</title>
+<indexentry><primaryie linkends="rclib-major-version"><link linkend="rclib-major-version">rclib_major_version</link>, variable in <link linkend="LibRhythmCat-Main-module">Main module</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rclib-micro-version"><link linkend="rclib-micro-version">rclib_micro_version</link>, variable in <link linkend="LibRhythmCat-Main-module">Main module</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rclib-minor-version"><link linkend="rclib-minor-version">rclib_minor_version</link>, variable in <link linkend="LibRhythmCat-Main-module">Main module</link></primaryie></indexentry>
+</indexdiv>
+<indexdiv><title>P</title>
+<indexentry><primaryie linkends="RCLibPlayer-struct"><link linkend="RCLibPlayer-struct">RCLibPlayer</link>, struct in <link linkend="RCLibPlayer">RCLibPlayer</link></primaryie></indexentry>
+<indexentry><primaryie linkends="RCLibPlayer-random-mode-changed"><link linkend="RCLibPlayer-random-mode-changed">RCLibPlayer::random-mode-changed</link>, object signal in <link linkend="RCLibPlayer">RCLibPlayer</link></primaryie></indexentry>
+<indexentry><primaryie linkends="RCLibPlayer-repeat-mode-changed"><link linkend="RCLibPlayer-repeat-mode-changed">RCLibPlayer::repeat-mode-changed</link>, object signal in <link linkend="RCLibPlayer">RCLibPlayer</link></primaryie></indexentry>
+<indexentry><primaryie linkends="RCLibPlayerClass"><link linkend="RCLibPlayerClass">RCLibPlayerClass</link>, struct in <link linkend="RCLibPlayer">RCLibPlayer</link></primaryie></indexentry>
+<indexentry><primaryie linkends="RCLibPlayerRandomMode"><link linkend="RCLibPlayerRandomMode">RCLibPlayerRandomMode</link>, enum in <link linkend="RCLibPlayer">RCLibPlayer</link></primaryie></indexentry>
+<indexentry><primaryie linkends="RCLibPlayerRepeatMode"><link linkend="RCLibPlayerRepeatMode">RCLibPlayerRepeatMode</link>, enum in <link linkend="RCLibPlayer">RCLibPlayer</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rclib-player-exit"><link linkend="rclib-player-exit">rclib_player_exit</link>, function in <link linkend="RCLibPlayer">RCLibPlayer</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rclib-player-get-instance"><link linkend="rclib-player-get-instance">rclib_player_get_instance</link>, function in <link linkend="RCLibPlayer">RCLibPlayer</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rclib-player-get-random-mode"><link linkend="rclib-player-get-random-mode">rclib_player_get_random_mode</link>, function in <link linkend="RCLibPlayer">RCLibPlayer</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rclib-player-get-repeat-mode"><link linkend="rclib-player-get-repeat-mode">rclib_player_get_repeat_mode</link>, function in <link linkend="RCLibPlayer">RCLibPlayer</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rclib-player-init"><link linkend="rclib-player-init">rclib_player_init</link>, function in <link linkend="RCLibPlayer">RCLibPlayer</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rclib-player-play-db"><link linkend="rclib-player-play-db">rclib_player_play_db</link>, function in <link linkend="RCLibPlayer">RCLibPlayer</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rclib-player-play-next"><link linkend="rclib-player-play-next">rclib_player_play_next</link>, function in <link linkend="RCLibPlayer">RCLibPlayer</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rclib-player-play-prev"><link linkend="rclib-player-play-prev">rclib_player_play_prev</link>, function in <link linkend="RCLibPlayer">RCLibPlayer</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rclib-player-play-uri"><link linkend="rclib-player-play-uri">rclib_player_play_uri</link>, function in <link linkend="RCLibPlayer">RCLibPlayer</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rclib-player-set-random-mode"><link linkend="rclib-player-set-random-mode">rclib_player_set_random_mode</link>, function in <link linkend="RCLibPlayer">RCLibPlayer</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rclib-player-set-repeat-mode"><link linkend="rclib-player-set-repeat-mode">rclib_player_set_repeat_mode</link>, function in <link linkend="RCLibPlayer">RCLibPlayer</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rclib-player-signal-connect"><link linkend="rclib-player-signal-connect">rclib_player_signal_connect</link>, function in <link linkend="RCLibPlayer">RCLibPlayer</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rclib-player-signal-disconnect"><link linkend="rclib-player-signal-disconnect">rclib_player_signal_disconnect</link>, function in <link linkend="RCLibPlayer">RCLibPlayer</link></primaryie></indexentry>
+<indexentry><primaryie linkends="RCLIB-PLAYER-TYPE:CAPS"><link linkend="RCLIB-PLAYER-TYPE:CAPS">RCLIB_PLAYER_TYPE</link>, macro in <link linkend="RCLibPlayer">RCLibPlayer</link></primaryie></indexentry>
+</indexdiv>
+<indexdiv><title>S</title>
+<indexentry><primaryie linkends="rclib-settings-apply"><link linkend="rclib-settings-apply">rclib_settings_apply</link>, function in <link linkend="LibRhythmCat-Settings">Settings</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rclib-settings-exit"><link linkend="rclib-settings-exit">rclib_settings_exit</link>, function in <link linkend="LibRhythmCat-Settings">Settings</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rclib-settings-get-boolean"><link linkend="rclib-settings-get-boolean">rclib_settings_get_boolean</link>, function in <link linkend="LibRhythmCat-Settings">Settings</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rclib-settings-get-boolean-list"><link linkend="rclib-settings-get-boolean-list">rclib_settings_get_boolean_list</link>, function in <link linkend="LibRhythmCat-Settings">Settings</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rclib-settings-get-double"><link linkend="rclib-settings-get-double">rclib_settings_get_double</link>, function in <link linkend="LibRhythmCat-Settings">Settings</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rclib-settings-get-double-list"><link linkend="rclib-settings-get-double-list">rclib_settings_get_double_list</link>, function in <link linkend="LibRhythmCat-Settings">Settings</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rclib-settings-get-integer"><link linkend="rclib-settings-get-integer">rclib_settings_get_integer</link>, function in <link linkend="LibRhythmCat-Settings">Settings</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rclib-settings-get-integer-list"><link linkend="rclib-settings-get-integer-list">rclib_settings_get_integer_list</link>, function in <link linkend="LibRhythmCat-Settings">Settings</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rclib-settings-get-string"><link linkend="rclib-settings-get-string">rclib_settings_get_string</link>, function in <link linkend="LibRhythmCat-Settings">Settings</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rclib-settings-get-string-list"><link linkend="rclib-settings-get-string-list">rclib_settings_get_string_list</link>, function in <link linkend="LibRhythmCat-Settings">Settings</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rclib-settings-has-key"><link linkend="rclib-settings-has-key">rclib_settings_has_key</link>, function in <link linkend="LibRhythmCat-Settings">Settings</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rclib-settings-init"><link linkend="rclib-settings-init">rclib_settings_init</link>, function in <link linkend="LibRhythmCat-Settings">Settings</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rclib-settings-load-from-file"><link linkend="rclib-settings-load-from-file">rclib_settings_load_from_file</link>, function in <link linkend="LibRhythmCat-Settings">Settings</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rclib-settings-set-boolean"><link linkend="rclib-settings-set-boolean">rclib_settings_set_boolean</link>, function in <link linkend="LibRhythmCat-Settings">Settings</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rclib-settings-set-boolean-list"><link linkend="rclib-settings-set-boolean-list">rclib_settings_set_boolean_list</link>, function in <link linkend="LibRhythmCat-Settings">Settings</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rclib-settings-set-double"><link linkend="rclib-settings-set-double">rclib_settings_set_double</link>, function in <link linkend="LibRhythmCat-Settings">Settings</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rclib-settings-set-double-list"><link linkend="rclib-settings-set-double-list">rclib_settings_set_double_list</link>, function in <link linkend="LibRhythmCat-Settings">Settings</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rclib-settings-set-integer"><link linkend="rclib-settings-set-integer">rclib_settings_set_integer</link>, function in <link linkend="LibRhythmCat-Settings">Settings</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rclib-settings-set-integer-list"><link linkend="rclib-settings-set-integer-list">rclib_settings_set_integer_list</link>, function in <link linkend="LibRhythmCat-Settings">Settings</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rclib-settings-set-string"><link linkend="rclib-settings-set-string">rclib_settings_set_string</link>, function in <link linkend="LibRhythmCat-Settings">Settings</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rclib-settings-set-string-list"><link linkend="rclib-settings-set-string-list">rclib_settings_set_string_list</link>, function in <link linkend="LibRhythmCat-Settings">Settings</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rclib-settings-sync"><link linkend="rclib-settings-sync">rclib_settings_sync</link>, function in <link linkend="LibRhythmCat-Settings">Settings</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rclib-settings-update"><link linkend="rclib-settings-update">rclib_settings_update</link>, function in <link linkend="LibRhythmCat-Settings">Settings</link></primaryie></indexentry>
+</indexdiv>
+<indexdiv><title>T</title>
+<indexentry><primaryie linkends="RCLibTagMetadata"><link linkend="RCLibTagMetadata">RCLibTagMetadata</link>, struct in <link linkend="LibRhythmCat-Tag-Processor">Tag Processor</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rclib-tag-free"><link linkend="rclib-tag-free">rclib_tag_free</link>, function in <link linkend="LibRhythmCat-Tag-Processor">Tag Processor</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rclib-tag-get-fallback-encoding"><link linkend="rclib-tag-get-fallback-encoding">rclib_tag_get_fallback_encoding</link>, function in <link linkend="LibRhythmCat-Tag-Processor">Tag Processor</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rclib-tag-get-name-from-fpath"><link linkend="rclib-tag-get-name-from-fpath">rclib_tag_get_name_from_fpath</link>, function in <link linkend="LibRhythmCat-Tag-Processor">Tag Processor</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rclib-tag-read-metadata"><link linkend="rclib-tag-read-metadata">rclib_tag_read_metadata</link>, function in <link linkend="LibRhythmCat-Tag-Processor">Tag Processor</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rclib-tag-set-fallback-encoding"><link linkend="rclib-tag-set-fallback-encoding">rclib_tag_set_fallback_encoding</link>, function in <link linkend="LibRhythmCat-Tag-Processor">Tag Processor</link></primaryie></indexentry>
+</indexdiv>
+<indexdiv><title>U</title>
+<indexentry><primaryie linkends="rclib-util-detect-encoding-by-locale"><link linkend="rclib-util-detect-encoding-by-locale">rclib_util_detect_encoding_by_locale</link>, function in <link linkend="LibRhythmCat-Utilities">Utilities</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rclib-util-get-cover-search-dir"><link linkend="rclib-util-get-cover-search-dir">rclib_util_get_cover_search_dir</link>, function in <link linkend="LibRhythmCat-Utilities">Utilities</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rclib-util-get-data-dir"><link linkend="rclib-util-get-data-dir">rclib_util_get_data_dir</link>, function in <link linkend="LibRhythmCat-Utilities">Utilities</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rclib-util-is-supported-list"><link linkend="rclib-util-is-supported-list">rclib_util_is_supported_list</link>, function in <link linkend="LibRhythmCat-Utilities">Utilities</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rclib-util-is-supported-media"><link linkend="rclib-util-is-supported-media">rclib_util_is_supported_media</link>, function in <link linkend="LibRhythmCat-Utilities">Utilities</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rclib-util-search-cover"><link linkend="rclib-util-search-cover">rclib_util_search_cover</link>, function in <link linkend="LibRhythmCat-Utilities">Utilities</link></primaryie></indexentry>
+<indexentry><primaryie linkends="rclib-util-set-cover-search-dir"><link linkend="rclib-util-set-cover-search-dir">rclib_util_set_cover_search_dir</link>, function in <link linkend="LibRhythmCat-Utilities">Utilities</link></primaryie></indexentry>
+</indexdiv>
+</indexdiv>

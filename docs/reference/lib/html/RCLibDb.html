@@ -1,0 +1,1364 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>RCLibDb</title>
+<meta name="generator" content="DocBook XSL Stylesheets V1.76.1">
+<link rel="home" href="index.html" title="LibRhythmCat Reference Manual">
+<link rel="up" href="ch01.html" title="LibRhythmCat">
+<link rel="prev" href="RCLibCore.html" title="RCLibCore">
+<link rel="next" href="RCLibPlayer.html" title="RCLibPlayer">
+<meta name="generator" content="GTK-Doc V1.18 (XML mode)">
+<link rel="stylesheet" href="style.css" type="text/css">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2">
+<tr valign="middle">
+<td><a accesskey="p" href="RCLibCore.html"><img src="left.png" width="24" height="24" border="0" alt="Prev"></a></td>
+<td><a accesskey="u" href="ch01.html"><img src="up.png" width="24" height="24" border="0" alt="Up"></a></td>
+<td><a accesskey="h" href="index.html"><img src="home.png" width="24" height="24" border="0" alt="Home"></a></td>
+<th width="100%" align="center">LibRhythmCat Reference Manual</th>
+<td><a accesskey="n" href="RCLibPlayer.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
+</tr>
+<tr><td colspan="5" class="shortcuts">
+<a href="#RCLibDb.synopsis" class="shortcut">Top</a>
+                   | 
+                  <a href="#RCLibDb.description" class="shortcut">Description</a>
+                   | 
+                  <a href="#RCLibDb.object-hierarchy" class="shortcut">Object Hierarchy</a>
+                   | 
+                  <a href="#RCLibDb.signals" class="shortcut">Signals</a>
+</td></tr>
+</table>
+<div class="refentry">
+<a name="RCLibDb"></a><div class="titlepage"></div>
+<div class="refnamediv"><table width="100%"><tr>
+<td valign="top">
+<h2><span class="refentrytitle"><a name="RCLibDb.top_of_page"></a>RCLibDb</span></h2>
+<p>RCLibDb — The playlist database</p>
+</td>
+<td valign="top" align="right"></td>
+</tr></table></div>
+<div class="refsynopsisdiv">
+<a name="RCLibDb.synopsis"></a><h2>Synopsis</h2>
+<pre class="synopsis">
+#include &lt;rclib-db.h&gt;
+
+#define             <a class="link" href="RCLibDb.html#RCLIB-DB-TYPE:CAPS" title="RCLIB_DB_TYPE">RCLIB_DB_TYPE</a>
+struct              <a class="link" href="RCLibDb.html#RCLibDb-struct" title="struct RCLibDb">RCLibDb</a>;
+struct              <a class="link" href="RCLibDb.html#RCLibDbCatalogData" title="struct RCLibDbCatalogData">RCLibDbCatalogData</a>;
+enum                <a class="link" href="RCLibDb.html#RCLibDbCatalogType" title="enum RCLibDbCatalogType">RCLibDbCatalogType</a>;
+struct              <a class="link" href="RCLibDb.html#RCLibDbClass" title="struct RCLibDbClass">RCLibDbClass</a>;
+struct              <a class="link" href="RCLibDb.html#RCLibDbPlaylistData" title="struct RCLibDbPlaylistData">RCLibDbPlaylistData</a>;
+enum                <a class="link" href="RCLibDb.html#RCLibDbPlaylistType" title="enum RCLibDbPlaylistType">RCLibDbPlaylistType</a>;
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RCLibDb.html#rclib-db-init" title="rclib_db_init ()">rclib_db_init</a>                       (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *file</code></em>);
+<span class="returnvalue">void</span>                <a class="link" href="RCLibDb.html#rclib-db-exit" title="rclib_db_exit ()">rclib_db_exit</a>                       ();
+<a href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GObject"><span class="returnvalue">GObject</span></a> *           <a class="link" href="RCLibDb.html#rclib-db-get-instance" title="rclib_db_get_instance ()">rclib_db_get_instance</a>               ();
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gulong"><span class="returnvalue">gulong</span></a>              <a class="link" href="RCLibDb.html#rclib-db-signal-connect" title="rclib_db_signal_connect ()">rclib_db_signal_connect</a>             (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *name</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/gobject/gobject-Closures.html#GCallback"><span class="type">GCallback</span></a> callback</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> data</code></em>);
+<span class="returnvalue">void</span>                <a class="link" href="RCLibDb.html#rclib-db-signal-disconnect" title="rclib_db_signal_disconnect ()">rclib_db_signal_disconnect</a>          (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gulong"><span class="type">gulong</span></a> handler_id</code></em>);
+<a href="/usr/share/gtk-doc/html/glib/glib-Sequences.html#GSequenceIter"><span class="returnvalue">GSequenceIter</span></a> *     <a class="link" href="RCLibDb.html#rclib-db-catalog-add" title="rclib_db_catalog_add ()">rclib_db_catalog_add</a>                (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *name</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Sequences.html#GSequenceIter"><span class="type">GSequenceIter</span></a> *iter</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> type</code></em>);
+<a href="/usr/share/gtk-doc/html/glib/glib-Sequences.html#GSequence"><span class="returnvalue">GSequence</span></a> *         <a class="link" href="RCLibDb.html#rclib-db-get-catalog" title="rclib_db_get_catalog ()">rclib_db_get_catalog</a>                ();
+<span class="returnvalue">void</span>                <a class="link" href="RCLibDb.html#rclib-db-catalog-set-name" title="rclib_db_catalog_set_name ()">rclib_db_catalog_set_name</a>           (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Sequences.html#GSequenceIter"><span class="type">GSequenceIter</span></a> *iter</code></em>,
+                                                         <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *name</code></em>);
+<span class="returnvalue">void</span>                <a class="link" href="RCLibDb.html#rclib-db-catalog-set-type" title="rclib_db_catalog_set_type ()">rclib_db_catalog_set_type</a>           (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Sequences.html#GSequenceIter"><span class="type">GSequenceIter</span></a> *iter</code></em>,
+                                                         <em class="parameter"><code><a class="link" href="RCLibDb.html#RCLibDbCatalogType" title="enum RCLibDbCatalogType"><span class="type">RCLibDbCatalogType</span></a> type</code></em>);
+<span class="returnvalue">void</span>                <a class="link" href="RCLibDb.html#rclib-db-catalog-delete" title="rclib_db_catalog_delete ()">rclib_db_catalog_delete</a>             (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Sequences.html#GSequenceIter"><span class="type">GSequenceIter</span></a> *iter</code></em>);
+<span class="returnvalue">void</span>                <a class="link" href="RCLibDb.html#rclib-db-catalog-reorder" title="rclib_db_catalog_reorder ()">rclib_db_catalog_reorder</a>            (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> *new_order</code></em>);
+<span class="returnvalue">void</span>                <a class="link" href="RCLibDb.html#rclib-db-playlist-add-music" title="rclib_db_playlist_add_music ()">rclib_db_playlist_add_music</a>         (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Sequences.html#GSequenceIter"><span class="type">GSequenceIter</span></a> *iter</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Sequences.html#GSequenceIter"><span class="type">GSequenceIter</span></a> *insert_iter</code></em>,
+                                                         <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *uri</code></em>);
+<span class="returnvalue">void</span>                <a class="link" href="RCLibDb.html#rclib-db-playlist-add-m3u-file" title="rclib_db_playlist_add_m3u_file ()">rclib_db_playlist_add_m3u_file</a>      (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Sequences.html#GSequenceIter"><span class="type">GSequenceIter</span></a> *iter</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Sequences.html#GSequenceIter"><span class="type">GSequenceIter</span></a> *insert_iter</code></em>,
+                                                         <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *filename</code></em>);
+<span class="returnvalue">void</span>                <a class="link" href="RCLibDb.html#rclib-db-playlist-add-directory" title="rclib_db_playlist_add_directory ()">rclib_db_playlist_add_directory</a>     (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Sequences.html#GSequenceIter"><span class="type">GSequenceIter</span></a> *iter</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Sequences.html#GSequenceIter"><span class="type">GSequenceIter</span></a> *insert_iter</code></em>,
+                                                         <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *dir</code></em>);
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RCLibDb.html#rclib-db-playlist-export-all-m3u-files" title="rclib_db_playlist_export_all_m3u_files ()">rclib_db_playlist_export_all_m3u_files</a>
+                                                        (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *dir</code></em>);
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RCLibDb.html#rclib-db-playlist-export-m3u-file" title="rclib_db_playlist_export_m3u_file ()">rclib_db_playlist_export_m3u_file</a>   (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Sequences.html#GSequenceIter"><span class="type">GSequenceIter</span></a> *iter</code></em>,
+                                                         <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *sfilename</code></em>);
+<span class="returnvalue">void</span>                <a class="link" href="RCLibDb.html#rclib-db-playlist-delete" title="rclib_db_playlist_delete ()">rclib_db_playlist_delete</a>            (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Sequences.html#GSequenceIter"><span class="type">GSequenceIter</span></a> *iter</code></em>);
+<span class="returnvalue">void</span>                <a class="link" href="RCLibDb.html#rclib-db-playlist-update-metadata" title="rclib_db_playlist_update_metadata ()">rclib_db_playlist_update_metadata</a>   (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Sequences.html#GSequenceIter"><span class="type">GSequenceIter</span></a> *iter</code></em>,
+                                                         <em class="parameter"><code>const <a class="link" href="RCLibDb.html#RCLibDbPlaylistData" title="struct RCLibDbPlaylistData"><span class="type">RCLibDbPlaylistData</span></a> *data</code></em>);
+<span class="returnvalue">void</span>                <a class="link" href="RCLibDb.html#rclib-db-playlist-update-length" title="rclib_db_playlist_update_length ()">rclib_db_playlist_update_length</a>     (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Sequences.html#GSequenceIter"><span class="type">GSequenceIter</span></a> *iter</code></em>,
+                                                         <em class="parameter"><code><span class="type">gint64</span> length</code></em>);
+<span class="returnvalue">void</span>                <a class="link" href="RCLibDb.html#rclib-db-playlist-set-type" title="rclib_db_playlist_set_type ()">rclib_db_playlist_set_type</a>          (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Sequences.html#GSequenceIter"><span class="type">GSequenceIter</span></a> *iter</code></em>,
+                                                         <em class="parameter"><code><a class="link" href="RCLibDb.html#RCLibDbPlaylistType" title="enum RCLibDbPlaylistType"><span class="type">RCLibDbPlaylistType</span></a> type</code></em>);
+<span class="returnvalue">void</span>                <a class="link" href="RCLibDb.html#rclib-db-playlist-set-rating" title="rclib_db_playlist_set_rating ()">rclib_db_playlist_set_rating</a>        (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Sequences.html#GSequenceIter"><span class="type">GSequenceIter</span></a> *iter</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> rating</code></em>);
+<span class="returnvalue">void</span>                <a class="link" href="RCLibDb.html#rclib-db-playlist-set-lyric-bind" title="rclib_db_playlist_set_lyric_bind ()">rclib_db_playlist_set_lyric_bind</a>    (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Sequences.html#GSequenceIter"><span class="type">GSequenceIter</span></a> *iter</code></em>,
+                                                         <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *filename</code></em>);
+<span class="returnvalue">void</span>                <a class="link" href="RCLibDb.html#rclib-db-playlist-set-lyric-secondary-bind" title="rclib_db_playlist_set_lyric_secondary_bind ()">rclib_db_playlist_set_lyric_secondary_bind</a>
+                                                        (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Sequences.html#GSequenceIter"><span class="type">GSequenceIter</span></a> *iter</code></em>,
+                                                         <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *filename</code></em>);
+<span class="returnvalue">void</span>                <a class="link" href="RCLibDb.html#rclib-db-playlist-set-album-bind" title="rclib_db_playlist_set_album_bind ()">rclib_db_playlist_set_album_bind</a>    (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Sequences.html#GSequenceIter"><span class="type">GSequenceIter</span></a> *iter</code></em>,
+                                                         <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *filename</code></em>);
+const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *       <a class="link" href="RCLibDb.html#rclib-db-playlist-get-lyric-bind" title="rclib_db_playlist_get_lyric_bind ()">rclib_db_playlist_get_lyric_bind</a>    (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Sequences.html#GSequenceIter"><span class="type">GSequenceIter</span></a> *iter</code></em>);
+const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *       <a class="link" href="RCLibDb.html#rclib-db-playlist-get-lyric-secondary-bind" title="rclib_db_playlist_get_lyric_secondary_bind ()">rclib_db_playlist_get_lyric_secondary_bind</a>
+                                                        (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Sequences.html#GSequenceIter"><span class="type">GSequenceIter</span></a> *iter</code></em>);
+const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *       <a class="link" href="RCLibDb.html#rclib-db-playlist-get-album-bind" title="rclib_db_playlist_get_album_bind ()">rclib_db_playlist_get_album_bind</a>    (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Sequences.html#GSequenceIter"><span class="type">GSequenceIter</span></a> *iter</code></em>);
+<span class="returnvalue">void</span>                <a class="link" href="RCLibDb.html#rclib-db-playlist-reorder" title="rclib_db_playlist_reorder ()">rclib_db_playlist_reorder</a>           (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Sequences.html#GSequenceIter"><span class="type">GSequenceIter</span></a> *iter</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> *new_order</code></em>);
+<span class="returnvalue">void</span>                <a class="link" href="RCLibDb.html#rclib-db-playlist-move-to-another-catalog" title="rclib_db_playlist_move_to_another_catalog ()">rclib_db_playlist_move_to_another_catalog</a>
+                                                        (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Sequences.html#GSequenceIter"><span class="type">GSequenceIter</span></a> **iters</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> num</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Sequences.html#GSequenceIter"><span class="type">GSequenceIter</span></a> *catalog_iter</code></em>);
+<span class="returnvalue">void</span>                <a class="link" href="RCLibDb.html#rclib-db-playlist-refresh" title="rclib_db_playlist_refresh ()">rclib_db_playlist_refresh</a>           (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Sequences.html#GSequenceIter"><span class="type">GSequenceIter</span></a> *iter</code></em>);
+<span class="returnvalue">void</span>                <a class="link" href="RCLibDb.html#rclib-db-playlist-import-cancel" title="rclib_db_playlist_import_cancel ()">rclib_db_playlist_import_cancel</a>     ();
+<span class="returnvalue">void</span>                <a class="link" href="RCLibDb.html#rclib-db-playlist-refresh-cancel" title="rclib_db_playlist_refresh_cancel ()">rclib_db_playlist_refresh_cancel</a>    ();
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="returnvalue">gint</span></a>                <a class="link" href="RCLibDb.html#rclib-db-playlist-import-queue-get-length" title="rclib_db_playlist_import_queue_get_length ()">rclib_db_playlist_import_queue_get_length</a>
+                                                        ();
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="returnvalue">gint</span></a>                <a class="link" href="RCLibDb.html#rclib-db-playlist-refresh-queue-get-length" title="rclib_db_playlist_refresh_queue_get_length ()">rclib_db_playlist_refresh_queue_get_length</a>
+                                                        ();
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RCLibDb.html#rclib-db-playlist-sync" title="rclib_db_playlist_sync ()">rclib_db_playlist_sync</a>              ();
+</pre>
+</div>
+<div class="refsect1">
+<a name="RCLibDb.object-hierarchy"></a><h2>Object Hierarchy</h2>
+<pre class="synopsis">
+  <a href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GObject">GObject</a>
+   +----RCLibDb
+</pre>
+</div>
+<div class="refsect1">
+<a name="RCLibDb.signals"></a><h2>Signals</h2>
+<pre class="synopsis">
+  "<a class="link" href="RCLibDb.html#RCLibDb-catalog-added" title='The "catalog-added" signal'>catalog-added</a>"                                  : <a href="/usr/share/gtk-doc/html/gobject/gobject-Signals.html#G-SIGNAL-RUN-FIRST:CAPS"><code class="literal">Run First</code></a>
+  "<a class="link" href="RCLibDb.html#RCLibDb-catalog-changed" title='The "catalog-changed" signal'>catalog-changed</a>"                                : <a href="/usr/share/gtk-doc/html/gobject/gobject-Signals.html#G-SIGNAL-RUN-FIRST:CAPS"><code class="literal">Run First</code></a>
+  "<a class="link" href="RCLibDb.html#RCLibDb-catalog-delete" title='The "catalog-delete" signal'>catalog-delete</a>"                                 : <a href="/usr/share/gtk-doc/html/gobject/gobject-Signals.html#G-SIGNAL-RUN-FIRST:CAPS"><code class="literal">Run First</code></a>
+  "<a class="link" href="RCLibDb.html#RCLibDb-catalog-reordered" title='The "catalog-reordered" signal'>catalog-reordered</a>"                              : <a href="/usr/share/gtk-doc/html/gobject/gobject-Signals.html#G-SIGNAL-RUN-FIRST:CAPS"><code class="literal">Run First</code></a>
+  "<a class="link" href="RCLibDb.html#RCLibDb-import-updated" title='The "import-updated" signal'>import-updated</a>"                                 : <a href="/usr/share/gtk-doc/html/gobject/gobject-Signals.html#G-SIGNAL-RUN-FIRST:CAPS"><code class="literal">Run First</code></a>
+  "<a class="link" href="RCLibDb.html#RCLibDb-playlist-added" title='The "playlist-added" signal'>playlist-added</a>"                                 : <a href="/usr/share/gtk-doc/html/gobject/gobject-Signals.html#G-SIGNAL-RUN-FIRST:CAPS"><code class="literal">Run First</code></a>
+  "<a class="link" href="RCLibDb.html#RCLibDb-playlist-changed" title='The "playlist-changed" signal'>playlist-changed</a>"                               : <a href="/usr/share/gtk-doc/html/gobject/gobject-Signals.html#G-SIGNAL-RUN-FIRST:CAPS"><code class="literal">Run First</code></a>
+  "<a class="link" href="RCLibDb.html#RCLibDb-playlist-delete" title='The "playlist-delete" signal'>playlist-delete</a>"                                : <a href="/usr/share/gtk-doc/html/gobject/gobject-Signals.html#G-SIGNAL-RUN-FIRST:CAPS"><code class="literal">Run First</code></a>
+  "<a class="link" href="RCLibDb.html#RCLibDb-playlist-reordered" title='The "playlist-reordered" signal'>playlist-reordered</a>"                             : <a href="/usr/share/gtk-doc/html/gobject/gobject-Signals.html#G-SIGNAL-RUN-FIRST:CAPS"><code class="literal">Run First</code></a>
+  "<a class="link" href="RCLibDb.html#RCLibDb-refresh-updated" title='The "refresh-updated" signal'>refresh-updated</a>"                                : <a href="/usr/share/gtk-doc/html/gobject/gobject-Signals.html#G-SIGNAL-RUN-FIRST:CAPS"><code class="literal">Run First</code></a>
+</pre>
+</div>
+<div class="refsect1">
+<a name="RCLibDb.description"></a><h2>Description</h2>
+<p>
+The <a class="link" href="RCLibDb.html" title="RCLibDb"><span class="type">RCLibDb</span></a> is a class which manages the playlists in the player,
+all playlists are put in a catalog list, and all music are put in
+their playlists. The catalog item (playlist) and playlist item (music)
+data can be accessed by <a href="/usr/share/gtk-doc/html/glib/glib-Sequences.html#GSequenceIter"><span class="type">GSequenceIter</span></a>. The database can import music
+or playlist file asynchronously, or update the metadata in playlists
+asynchronously.
+</p>
+</div>
+<div class="refsect1">
+<a name="RCLibDb.details"></a><h2>Details</h2>
+<div class="refsect2">
+<a name="RCLIB-DB-TYPE:CAPS"></a><h3>RCLIB_DB_TYPE</h3>
+<pre class="programlisting">#define RCLIB_DB_TYPE (rclib_db_get_type())
+</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="RCLibDb-struct"></a><h3>struct RCLibDb</h3>
+<pre class="programlisting">struct RCLibDb;</pre>
+<p>
+The playlist database. The contents of the <a class="link" href="RCLibDb.html" title="RCLibDb"><span class="type">RCLibDb</span></a> structure are
+private and should only be accessed via the provided API.
+</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="RCLibDbCatalogData"></a><h3>struct RCLibDbCatalogData</h3>
+<pre class="programlisting">struct RCLibDbCatalogData {
+    GSequence *playlist;
+    gchar *name;
+    RCLibDbCatalogType type;
+    gpointer store;
+};
+</pre>
+<p>
+The structure for catalog item data.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Sequences.html#GSequence"><span class="type">GSequence</span></a> *<em class="structfield"><code><a name="RCLibDbCatalogData.playlist"></a>playlist</code></em>;</span></p></td>
+<td>a playlist</td>
+</tr>
+<tr>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *<em class="structfield"><code><a name="RCLibDbCatalogData.name"></a>name</code></em>;</span></p></td>
+<td>the name</td>
+</tr>
+<tr>
+<td><p><span class="term"><a class="link" href="RCLibDb.html#RCLibDbCatalogType" title="enum RCLibDbCatalogType"><span class="type">RCLibDbCatalogType</span></a> <em class="structfield"><code><a name="RCLibDbCatalogData.type"></a>type</code></em>;</span></p></td>
+<td>the type of the item in catalog</td>
+</tr>
+<tr>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> <em class="structfield"><code><a name="RCLibDbCatalogData.store"></a>store</code></em>;</span></p></td>
+<td>the store, used in UI</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="RCLibDbCatalogType"></a><h3>enum RCLibDbCatalogType</h3>
+<pre class="programlisting">typedef enum {
+    RCLIB_DB_CATALOG_TYPE_PLAYLIST = 1
+} RCLibDbCatalogType;
+</pre>
+<p>
+The enum type for catalog type.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><a name="RCLIB-DB-CATALOG-TYPE-PLAYLIST:CAPS"></a><span class="term"><code class="literal">RCLIB_DB_CATALOG_TYPE_PLAYLIST</code></span></p></td>
+<td>the catalog is a playlist
+</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="RCLibDbClass"></a><h3>struct RCLibDbClass</h3>
+<pre class="programlisting">struct RCLibDbClass {
+};
+</pre>
+<p>
+<a class="link" href="RCLibDb.html" title="RCLibDb"><span class="type">RCLibDb</span></a> class.
+</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="RCLibDbPlaylistData"></a><h3>struct RCLibDbPlaylistData</h3>
+<pre class="programlisting">struct RCLibDbPlaylistData {
+    GSequenceIter *catalog;
+    RCLibDbPlaylistType type;
+    gchar *uri;
+    gchar *title;
+    gchar *artist;
+    gchar *album;
+    gchar *ftype;
+    gint64 length;
+    gint tracknum;
+    gint year;
+    guint rating;
+    gchar *lyricfile;
+    gchar *lyricsecfile;
+    gchar *albumfile;
+};
+</pre>
+<p>
+The structure for playlist item data.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Sequences.html#GSequenceIter"><span class="type">GSequenceIter</span></a> *<em class="structfield"><code><a name="RCLibDbPlaylistData.catalog"></a>catalog</code></em>;</span></p></td>
+<td>the catalog item data</td>
+</tr>
+<tr>
+<td><p><span class="term"><a class="link" href="RCLibDb.html#RCLibDbPlaylistType" title="enum RCLibDbPlaylistType"><span class="type">RCLibDbPlaylistType</span></a> <em class="structfield"><code><a name="RCLibDbPlaylistData.type"></a>type</code></em>;</span></p></td>
+<td>the type of the item in playlist</td>
+</tr>
+<tr>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *<em class="structfield"><code><a name="RCLibDbPlaylistData.uri"></a>uri</code></em>;</span></p></td>
+<td>the URI</td>
+</tr>
+<tr>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *<em class="structfield"><code><a name="RCLibDbPlaylistData.title"></a>title</code></em>;</span></p></td>
+<td>the title</td>
+</tr>
+<tr>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *<em class="structfield"><code><a name="RCLibDbPlaylistData.artist"></a>artist</code></em>;</span></p></td>
+<td>the artist</td>
+</tr>
+<tr>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *<em class="structfield"><code><a name="RCLibDbPlaylistData.album"></a>album</code></em>;</span></p></td>
+<td>the album</td>
+</tr>
+<tr>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *<em class="structfield"><code><a name="RCLibDbPlaylistData.ftype"></a>ftype</code></em>;</span></p></td>
+<td>the format information</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="type">gint64</span> <em class="structfield"><code><a name="RCLibDbPlaylistData.length"></a>length</code></em>;</span></p></td>
+<td>the the duration (length) of the music (unit: nanosecond)</td>
+</tr>
+<tr>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> <em class="structfield"><code><a name="RCLibDbPlaylistData.tracknum"></a>tracknum</code></em>;</span></p></td>
+<td>the track number</td>
+</tr>
+<tr>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> <em class="structfield"><code><a name="RCLibDbPlaylistData.year"></a>year</code></em>;</span></p></td>
+<td>the year</td>
+</tr>
+<tr>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> <em class="structfield"><code><a name="RCLibDbPlaylistData.rating"></a>rating</code></em>;</span></p></td>
+<td>the rating level</td>
+</tr>
+<tr>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *<em class="structfield"><code><a name="RCLibDbPlaylistData.lyricfile"></a>lyricfile</code></em>;</span></p></td>
+<td>the lyric binding file path</td>
+</tr>
+<tr>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *<em class="structfield"><code><a name="RCLibDbPlaylistData.lyricsecfile"></a>lyricsecfile</code></em>;</span></p></td>
+<td>the secondary lyric binding file path</td>
+</tr>
+<tr>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *<em class="structfield"><code><a name="RCLibDbPlaylistData.albumfile"></a>albumfile</code></em>;</span></p></td>
+<td>the album cover image binding file path</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="RCLibDbPlaylistType"></a><h3>enum RCLibDbPlaylistType</h3>
+<pre class="programlisting">typedef enum {
+    RCLIB_DB_PLAYLIST_TYPE_MISSING = 0,
+    RCLIB_DB_PLAYLIST_TYPE_MUSIC = 1,
+    RCLIB_DB_PLAYLIST_TYPE_CUE = 2
+} RCLibDbPlaylistType;
+</pre>
+<p>
+The enum type for playlist type.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><a name="RCLIB-DB-PLAYLIST-TYPE-MISSING:CAPS"></a><span class="term"><code class="literal">RCLIB_DB_PLAYLIST_TYPE_MISSING</code></span></p></td>
+<td>the playlist item is missing
+</td>
+</tr>
+<tr>
+<td><p><a name="RCLIB-DB-PLAYLIST-TYPE-MUSIC:CAPS"></a><span class="term"><code class="literal">RCLIB_DB_PLAYLIST_TYPE_MUSIC</code></span></p></td>
+<td>the playlist item is music
+</td>
+</tr>
+<tr>
+<td><p><a name="RCLIB-DB-PLAYLIST-TYPE-CUE:CAPS"></a><span class="term"><code class="literal">RCLIB_DB_PLAYLIST_TYPE_CUE</code></span></p></td>
+<td>the playlist item is from CUE sheet
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-db-init"></a><h3>rclib_db_init ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rclib_db_init                       (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *file</code></em>);</pre>
+<p>
+Initialize the music library database.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>file</code></em> :</span></p></td>
+<td>the file of the music library database to load</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>Whether the initialization succeeded.</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-db-exit"></a><h3>rclib_db_exit ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rclib_db_exit                       ();</pre>
+<p>
+Unload the music library database.
+</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-db-get-instance"></a><h3>rclib_db_get_instance ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GObject"><span class="returnvalue">GObject</span></a> *           rclib_db_get_instance               ();</pre>
+<p>
+Get the running <a class="link" href="RCLibDb.html" title="RCLibDb"><span class="type">RCLibDb</span></a> instance.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>The running instance.</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-db-signal-connect"></a><h3>rclib_db_signal_connect ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gulong"><span class="returnvalue">gulong</span></a>              rclib_db_signal_connect             (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *name</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/gobject/gobject-Closures.html#GCallback"><span class="type">GCallback</span></a> callback</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> data</code></em>);</pre>
+<p>
+Connect the GCallback function to the given signal for the running
+instance of <a class="link" href="RCLibDb.html" title="RCLibDb"><span class="type">RCLibDb</span></a> object.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>name</code></em> :</span></p></td>
+<td>the name of the signal</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>callback</code></em> :</span></p></td>
+<td>the the <a href="/usr/share/gtk-doc/html/gobject/gobject-Closures.html#GCallback"><span class="type">GCallback</span></a> to connect</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>data</code></em> :</span></p></td>
+<td>the user data</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>The handler ID.</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-db-signal-disconnect"></a><h3>rclib_db_signal_disconnect ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rclib_db_signal_disconnect          (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gulong"><span class="type">gulong</span></a> handler_id</code></em>);</pre>
+<p>
+Disconnects a handler from the running <a class="link" href="RCLibDb.html" title="RCLibDb"><span class="type">RCLibDb</span></a> instance so it will
+not be called during any future or currently ongoing emissions
+of the signal it has been connected to. The <span class="type">handler_id</span> becomes
+invalid and may be reused.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><em class="parameter"><code>handler_id</code></em> :</span></p></td>
+<td>handler id of the handler to be disconnected</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-db-catalog-add"></a><h3>rclib_db_catalog_add ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Sequences.html#GSequenceIter"><span class="returnvalue">GSequenceIter</span></a> *     rclib_db_catalog_add                (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *name</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Sequences.html#GSequenceIter"><span class="type">GSequenceIter</span></a> *iter</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> type</code></em>);</pre>
+<p>
+Add a new playlist to the catalog before the <span class="type">iter</span>, if the <span class="type">iter</span>
+is <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><span class="type">NULL</span></a>, it will be added to the end.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>name</code></em> :</span></p></td>
+<td>the name for the new playlist</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>iter</code></em> :</span></p></td>
+<td>insert position (before this <span class="type">iter</span>)</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>type</code></em> :</span></p></td>
+<td>the type of the new playlist</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>The iter to the new playlist in the catalog.</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-db-get-catalog"></a><h3>rclib_db_get_catalog ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Sequences.html#GSequence"><span class="returnvalue">GSequence</span></a> *         rclib_db_get_catalog                ();</pre>
+<p>
+Get the catalog.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>The catalog, NULL if the catalog does not exist.</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-db-catalog-set-name"></a><h3>rclib_db_catalog_set_name ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rclib_db_catalog_set_name           (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Sequences.html#GSequenceIter"><span class="type">GSequenceIter</span></a> *iter</code></em>,
+                                                         <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *name</code></em>);</pre>
+<p>
+Set the name of the catalog pointed to by <span class="type">iter</span>.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>iter</code></em> :</span></p></td>
+<td>the iter to the catalog</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>name</code></em> :</span></p></td>
+<td>the new name for the catalog</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-db-catalog-set-type"></a><h3>rclib_db_catalog_set_type ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rclib_db_catalog_set_type           (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Sequences.html#GSequenceIter"><span class="type">GSequenceIter</span></a> *iter</code></em>,
+                                                         <em class="parameter"><code><a class="link" href="RCLibDb.html#RCLibDbCatalogType" title="enum RCLibDbCatalogType"><span class="type">RCLibDbCatalogType</span></a> type</code></em>);</pre>
+<p>
+Set the type of the catalog pointed to by <span class="type">iter</span>.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>iter</code></em> :</span></p></td>
+<td>the iter to the catalog</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>type</code></em> :</span></p></td>
+<td>the new type for the catalog</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-db-catalog-delete"></a><h3>rclib_db_catalog_delete ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rclib_db_catalog_delete             (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Sequences.html#GSequenceIter"><span class="type">GSequenceIter</span></a> *iter</code></em>);</pre>
+<p>
+Delete the catalog pointed to by <span class="type">iter</span>.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><em class="parameter"><code>iter</code></em> :</span></p></td>
+<td>the iter to the catalog</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-db-catalog-reorder"></a><h3>rclib_db_catalog_reorder ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rclib_db_catalog_reorder            (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> *new_order</code></em>);</pre>
+<p>
+Reorder the catalog to follow the order indicated by <em class="parameter"><code>new_order</code></em>.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><em class="parameter"><code>new_order</code></em> :</span></p></td>
+<td>an array of integers mapping the new position of
+each child to its old position before the re-ordering,
+i.e. <em class="parameter"><code>new_order</code></em><code class="literal">[newpos] = oldpos</code>. <span class="annotation">[<acronym title="Parameter points to an array of items."><span class="acronym">array</span></acronym>]</span>
+</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-db-playlist-add-music"></a><h3>rclib_db_playlist_add_music ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rclib_db_playlist_add_music         (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Sequences.html#GSequenceIter"><span class="type">GSequenceIter</span></a> *iter</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Sequences.html#GSequenceIter"><span class="type">GSequenceIter</span></a> *insert_iter</code></em>,
+                                                         <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *uri</code></em>);</pre>
+<p>
+Add music to the music library by given catalog iter.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>iter</code></em> :</span></p></td>
+<td>the catalog iter</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>insert_iter</code></em> :</span></p></td>
+<td>insert the music before this iter</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>uri</code></em> :</span></p></td>
+<td>the URI of the music</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-db-playlist-add-m3u-file"></a><h3>rclib_db_playlist_add_m3u_file ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rclib_db_playlist_add_m3u_file      (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Sequences.html#GSequenceIter"><span class="type">GSequenceIter</span></a> *iter</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Sequences.html#GSequenceIter"><span class="type">GSequenceIter</span></a> *insert_iter</code></em>,
+                                                         <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *filename</code></em>);</pre>
+<p>
+Load a m3u playlist file, and add all music inside to
+the catalog pointed to by <span class="type">iter</span>.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>iter</code></em> :</span></p></td>
+<td>the catalog iter</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>insert_iter</code></em> :</span></p></td>
+<td>insert the music before this iter</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>filename</code></em> :</span></p></td>
+<td>the path of the playlist file</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-db-playlist-add-directory"></a><h3>rclib_db_playlist_add_directory ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rclib_db_playlist_add_directory     (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Sequences.html#GSequenceIter"><span class="type">GSequenceIter</span></a> *iter</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Sequences.html#GSequenceIter"><span class="type">GSequenceIter</span></a> *insert_iter</code></em>,
+                                                         <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *dir</code></em>);</pre>
+<p>
+Add all music in the directory to the catalog pointed to by <span class="type">iter</span>.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>iter</code></em> :</span></p></td>
+<td>the catalog iter</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>insert_iter</code></em> :</span></p></td>
+<td>insert the music before this iter</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>dir</code></em> :</span></p></td>
+<td>the directory path</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-db-playlist-export-all-m3u-files"></a><h3>rclib_db_playlist_export_all_m3u_files ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rclib_db_playlist_export_all_m3u_files
+                                                        (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *dir</code></em>);</pre>
+<p>
+Export all playlists in the catalog to playlist files.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>dir</code></em> :</span></p></td>
+<td>the directory to save playlist files</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>Whether the operation succeeded.</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-db-playlist-export-m3u-file"></a><h3>rclib_db_playlist_export_m3u_file ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rclib_db_playlist_export_m3u_file   (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Sequences.html#GSequenceIter"><span class="type">GSequenceIter</span></a> *iter</code></em>,
+                                                         <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *sfilename</code></em>);</pre>
+<p>
+Export the catalog pointed to by <span class="type">iter</span> to a new playlist file.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>iter</code></em> :</span></p></td>
+<td>the catalog iter</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>sfilename</code></em> :</span></p></td>
+<td>the new playlist file path</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>Whether the operation succeeded.</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-db-playlist-delete"></a><h3>rclib_db_playlist_delete ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rclib_db_playlist_delete            (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Sequences.html#GSequenceIter"><span class="type">GSequenceIter</span></a> *iter</code></em>);</pre>
+<p>
+Delete the playlist data pointed to by <span class="type">iter</span>.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><em class="parameter"><code>iter</code></em> :</span></p></td>
+<td>the iter to the playlist data</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-db-playlist-update-metadata"></a><h3>rclib_db_playlist_update_metadata ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rclib_db_playlist_update_metadata   (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Sequences.html#GSequenceIter"><span class="type">GSequenceIter</span></a> *iter</code></em>,
+                                                         <em class="parameter"><code>const <a class="link" href="RCLibDb.html#RCLibDbPlaylistData" title="struct RCLibDbPlaylistData"><span class="type">RCLibDbPlaylistData</span></a> *data</code></em>);</pre>
+<p>
+Update the metadata in the playlist pointed to by <span class="type">iter</span>.
+Title, artist, album, file type, track number, year information
+will be updated.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>iter</code></em> :</span></p></td>
+<td>the iter to the playlist</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>data</code></em> :</span></p></td>
+<td>the new metadata</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-db-playlist-update-length"></a><h3>rclib_db_playlist_update_length ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rclib_db_playlist_update_length     (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Sequences.html#GSequenceIter"><span class="type">GSequenceIter</span></a> *iter</code></em>,
+                                                         <em class="parameter"><code><span class="type">gint64</span> length</code></em>);</pre>
+<p>
+Update the length (duration) information in the playlist pointed to
+by <span class="type">iter</span>.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>iter</code></em> :</span></p></td>
+<td>the iter to the playlist</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>length</code></em> :</span></p></td>
+<td>the new length (duration)</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-db-playlist-set-type"></a><h3>rclib_db_playlist_set_type ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rclib_db_playlist_set_type          (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Sequences.html#GSequenceIter"><span class="type">GSequenceIter</span></a> *iter</code></em>,
+                                                         <em class="parameter"><code><a class="link" href="RCLibDb.html#RCLibDbPlaylistType" title="enum RCLibDbPlaylistType"><span class="type">RCLibDbPlaylistType</span></a> type</code></em>);</pre>
+<p>
+Set the type information in the playlist pointed to by <span class="type">iter</span>.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>iter</code></em> :</span></p></td>
+<td>the iter to the playlist</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>type</code></em> :</span></p></td>
+<td>the new type to set</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-db-playlist-set-rating"></a><h3>rclib_db_playlist_set_rating ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rclib_db_playlist_set_rating        (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Sequences.html#GSequenceIter"><span class="type">GSequenceIter</span></a> *iter</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> rating</code></em>);</pre>
+<p>
+Set the rating in the playlist pointed to by <span class="type">iter</span>.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>iter</code></em> :</span></p></td>
+<td>the iter to the playlist</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>rating</code></em> :</span></p></td>
+<td>the new rating to set</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-db-playlist-set-lyric-bind"></a><h3>rclib_db_playlist_set_lyric_bind ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rclib_db_playlist_set_lyric_bind    (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Sequences.html#GSequenceIter"><span class="type">GSequenceIter</span></a> *iter</code></em>,
+                                                         <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *filename</code></em>);</pre>
+<p>
+Bind the lyric file to the music in the playlist pointed to by <span class="type">iter</span>.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>iter</code></em> :</span></p></td>
+<td>the iter to the playlist</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>filename</code></em> :</span></p></td>
+<td>the path of the lyric file</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-db-playlist-set-lyric-secondary-bind"></a><h3>rclib_db_playlist_set_lyric_secondary_bind ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rclib_db_playlist_set_lyric_secondary_bind
+                                                        (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Sequences.html#GSequenceIter"><span class="type">GSequenceIter</span></a> *iter</code></em>,
+                                                         <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *filename</code></em>);</pre>
+<p>
+Bind the secondary lyric file to the music in the playlist pointed
+to by <span class="type">iter</span>.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>iter</code></em> :</span></p></td>
+<td>the iter to the playlist</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>filename</code></em> :</span></p></td>
+<td>the path of the lyric file</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-db-playlist-set-album-bind"></a><h3>rclib_db_playlist_set_album_bind ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rclib_db_playlist_set_album_bind    (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Sequences.html#GSequenceIter"><span class="type">GSequenceIter</span></a> *iter</code></em>,
+                                                         <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *filename</code></em>);</pre>
+<p>
+Bind the album image file to the music in the playlist pointed
+to by <span class="type">iter</span>.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>iter</code></em> :</span></p></td>
+<td>the iter to the playlist</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>filename</code></em> :</span></p></td>
+<td>the path of the album image file</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-db-playlist-get-lyric-bind"></a><h3>rclib_db_playlist_get_lyric_bind ()</h3>
+<pre class="programlisting">const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *       rclib_db_playlist_get_lyric_bind    (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Sequences.html#GSequenceIter"><span class="type">GSequenceIter</span></a> *iter</code></em>);</pre>
+<p>
+Get the lyric file bound to the music in the playlist pointed
+to by <span class="type">iter</span>.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>iter</code></em> :</span></p></td>
+<td>the iter to the playlist</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>The lyric file path.</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-db-playlist-get-lyric-secondary-bind"></a><h3>rclib_db_playlist_get_lyric_secondary_bind ()</h3>
+<pre class="programlisting">const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *       rclib_db_playlist_get_lyric_secondary_bind
+                                                        (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Sequences.html#GSequenceIter"><span class="type">GSequenceIter</span></a> *iter</code></em>);</pre>
+<p>
+Get the secondary lyric file bound to the music in the playlist pointed
+to by <span class="type">iter</span>.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>iter</code></em> :</span></p></td>
+<td>the iter to the playlist</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>The lyric file path.</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-db-playlist-get-album-bind"></a><h3>rclib_db_playlist_get_album_bind ()</h3>
+<pre class="programlisting">const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *       rclib_db_playlist_get_album_bind    (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Sequences.html#GSequenceIter"><span class="type">GSequenceIter</span></a> *iter</code></em>);</pre>
+<p>
+Get the album image file bound to the music in the playlist pointed
+to by <span class="type">iter</span>.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>iter</code></em> :</span></p></td>
+<td>the iter to the playlist</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>The album image file path.</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-db-playlist-reorder"></a><h3>rclib_db_playlist_reorder ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rclib_db_playlist_reorder           (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Sequences.html#GSequenceIter"><span class="type">GSequenceIter</span></a> *iter</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> *new_order</code></em>);</pre>
+<p>
+Reorder the playlist to follow the order indicated by <em class="parameter"><code>new_order</code></em>.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>iter</code></em> :</span></p></td>
+<td>the iter pointed to catalog</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>new_order</code></em> :</span></p></td>
+<td>an array of integers mapping the new position of
+each child to its old position before the re-ordering,
+i.e. <em class="parameter"><code>new_order</code></em><code class="literal">[newpos] = oldpos</code>. <span class="annotation">[<acronym title="Parameter points to an array of items."><span class="acronym">array</span></acronym>]</span>
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-db-playlist-move-to-another-catalog"></a><h3>rclib_db_playlist_move_to_another_catalog ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rclib_db_playlist_move_to_another_catalog
+                                                        (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Sequences.html#GSequenceIter"><span class="type">GSequenceIter</span></a> **iters</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> num</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Sequences.html#GSequenceIter"><span class="type">GSequenceIter</span></a> *catalog_iter</code></em>);</pre>
+<p>
+Move the playlist data pointed to by <span class="type">iters</span> to another catalog
+pointed to by <span class="type">catalog_iter</span>.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>iters</code></em> :</span></p></td>
+<td>an iter array</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>num</code></em> :</span></p></td>
+<td>the size of the iter array</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>catalog_iter</code></em> :</span></p></td>
+<td>the iter for the catalog</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-db-playlist-refresh"></a><h3>rclib_db_playlist_refresh ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rclib_db_playlist_refresh           (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Sequences.html#GSequenceIter"><span class="type">GSequenceIter</span></a> *iter</code></em>);</pre>
+<p>
+Refresh the metadata of the music in the playlist pointed to
+by the given catalog <span class="type">iter</span>.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><em class="parameter"><code>iter</code></em> :</span></p></td>
+<td>the catalog iter</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-db-playlist-import-cancel"></a><h3>rclib_db_playlist_import_cancel ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rclib_db_playlist_import_cancel     ();</pre>
+<p>
+Cancel all remaining import jobs in the queue.
+</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-db-playlist-refresh-cancel"></a><h3>rclib_db_playlist_refresh_cancel ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rclib_db_playlist_refresh_cancel    ();</pre>
+<p>
+Cancel all remaining refresh jobs in the queue.
+</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-db-playlist-import-queue-get-length"></a><h3>rclib_db_playlist_import_queue_get_length ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="returnvalue">gint</span></a>                rclib_db_playlist_import_queue_get_length
+                                                        ();</pre>
+<p>
+Get the number of remaining jobs in the import queue.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>The number of remaining jobs.</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-db-playlist-refresh-queue-get-length"></a><h3>rclib_db_playlist_refresh_queue_get_length ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="returnvalue">gint</span></a>                rclib_db_playlist_refresh_queue_get_length
+                                                        ();</pre>
+<p>
+Get the number of remaining jobs in the refresh queue.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>The number of remaining jobs.</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-db-playlist-sync"></a><h3>rclib_db_playlist_sync ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rclib_db_playlist_sync              ();</pre>
+</div>
+</div>
+<div class="refsect1">
+<a name="RCLibDb.signal-details"></a><h2>Signal Details</h2>
+<div class="refsect2">
+<a name="RCLibDb-catalog-added"></a><h3>The <code class="literal">"catalog-added"</code> signal</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                user_function                      (<a class="link" href="RCLibDb.html" title="RCLibDb"><span class="type">RCLibDb</span></a> *db,
+                                                        <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> iter,
+                                                        <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> user_data)      : <a href="/usr/share/gtk-doc/html/gobject/gobject-Signals.html#G-SIGNAL-RUN-FIRST:CAPS"><code class="literal">Run First</code></a></pre>
+<p>
+The ::catalog-added signal is emitted when a new item has been
+added to the catalog.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>db</code></em> :</span></p></td>
+<td>the <a class="link" href="RCLibDb.html" title="RCLibDb"><span class="type">RCLibDb</span></a> that received the signal</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>iter</code></em> :</span></p></td>
+<td>the <span class="type">iter</span> pointed to the added item</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>user_data</code></em> :</span></p></td>
+<td>user data set when the signal handler was connected.</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="RCLibDb-catalog-changed"></a><h3>The <code class="literal">"catalog-changed"</code> signal</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                user_function                      (<a class="link" href="RCLibDb.html" title="RCLibDb"><span class="type">RCLibDb</span></a> *db,
+                                                        <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> iter,
+                                                        <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> user_data)      : <a href="/usr/share/gtk-doc/html/gobject/gobject-Signals.html#G-SIGNAL-RUN-FIRST:CAPS"><code class="literal">Run First</code></a></pre>
+<p>
+The ::catalog-changed signal is emitted when an item has been
+changed in the catalog.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>db</code></em> :</span></p></td>
+<td>the <a class="link" href="RCLibDb.html" title="RCLibDb"><span class="type">RCLibDb</span></a> that received the signal</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>iter</code></em> :</span></p></td>
+<td>the <span class="type">iter</span> pointed to the changed item</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>user_data</code></em> :</span></p></td>
+<td>user data set when the signal handler was connected.</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="RCLibDb-catalog-delete"></a><h3>The <code class="literal">"catalog-delete"</code> signal</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                user_function                      (<a class="link" href="RCLibDb.html" title="RCLibDb"><span class="type">RCLibDb</span></a> *db,
+                                                        <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> iter,
+                                                        <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> user_data)      : <a href="/usr/share/gtk-doc/html/gobject/gobject-Signals.html#G-SIGNAL-RUN-FIRST:CAPS"><code class="literal">Run First</code></a></pre>
+<p>
+The ::catalog-delete signal is emitted before an item in the catalog
+is about to be deleted.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>db</code></em> :</span></p></td>
+<td>the <a class="link" href="RCLibDb.html" title="RCLibDb"><span class="type">RCLibDb</span></a> that received the signal</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>iter</code></em> :</span></p></td>
+<td>the <span class="type">iter</span> pointed to the item which is about to be deleted</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>user_data</code></em> :</span></p></td>
+<td>user data set when the signal handler was connected.</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="RCLibDb-catalog-reordered"></a><h3>The <code class="literal">"catalog-reordered"</code> signal</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                user_function                      (<a class="link" href="RCLibDb.html" title="RCLibDb"><span class="type">RCLibDb</span></a> *db,
+                                                        <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> new_order,
+                                                        <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> user_data)      : <a href="/usr/share/gtk-doc/html/gobject/gobject-Signals.html#G-SIGNAL-RUN-FIRST:CAPS"><code class="literal">Run First</code></a></pre>
+<p>
+The ::catalog-reordered signal is emitted when the catalog items have
+been reordered.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>db</code></em> :</span></p></td>
+<td>the <a class="link" href="RCLibDb.html" title="RCLibDb"><span class="type">RCLibDb</span></a> that received the signal</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>new_order</code></em> :</span></p></td>
+<td>an array of integers mapping the current position of each
+catalog item to its old position before the re-ordering,
+i.e. <em class="parameter"><code>new_order</code></em><code class="literal">[newpos] = oldpos</code>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>user_data</code></em> :</span></p></td>
+<td>user data set when the signal handler was connected.</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="RCLibDb-import-updated"></a><h3>The <code class="literal">"import-updated"</code> signal</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                user_function                      (<a class="link" href="RCLibDb.html" title="RCLibDb"><span class="type">RCLibDb</span></a> *db,
+                                                        <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a>     remaining,
+                                                        <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> user_data)      : <a href="/usr/share/gtk-doc/html/gobject/gobject-Signals.html#G-SIGNAL-RUN-FIRST:CAPS"><code class="literal">Run First</code></a></pre>
+<p>
+The ::import-updated signal is emitted when a job in the import
+queue have been processed.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>db</code></em> :</span></p></td>
+<td>the <a class="link" href="RCLibDb.html" title="RCLibDb"><span class="type">RCLibDb</span></a> that received the signal</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>remaining</code></em> :</span></p></td>
+<td>the number of remaing jobs in current import queue</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>user_data</code></em> :</span></p></td>
+<td>user data set when the signal handler was connected.</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="RCLibDb-playlist-added"></a><h3>The <code class="literal">"playlist-added"</code> signal</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                user_function                      (<a class="link" href="RCLibDb.html" title="RCLibDb"><span class="type">RCLibDb</span></a> *db,
+                                                        <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> iter,
+                                                        <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> user_data)      : <a href="/usr/share/gtk-doc/html/gobject/gobject-Signals.html#G-SIGNAL-RUN-FIRST:CAPS"><code class="literal">Run First</code></a></pre>
+<p>
+The ::playlist-added signal is emitted when a new item has been
+added to the playlist.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>db</code></em> :</span></p></td>
+<td>the <a class="link" href="RCLibDb.html" title="RCLibDb"><span class="type">RCLibDb</span></a> that received the signal</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>iter</code></em> :</span></p></td>
+<td>the <span class="type">iter</span> pointed to the added item</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>user_data</code></em> :</span></p></td>
+<td>user data set when the signal handler was connected.</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="RCLibDb-playlist-changed"></a><h3>The <code class="literal">"playlist-changed"</code> signal</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                user_function                      (<a class="link" href="RCLibDb.html" title="RCLibDb"><span class="type">RCLibDb</span></a> *db,
+                                                        <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> iter,
+                                                        <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> user_data)      : <a href="/usr/share/gtk-doc/html/gobject/gobject-Signals.html#G-SIGNAL-RUN-FIRST:CAPS"><code class="literal">Run First</code></a></pre>
+<p>
+The ::playlist-changed signal is emitted when an item has been
+changed in the playlist.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>db</code></em> :</span></p></td>
+<td>the <a class="link" href="RCLibDb.html" title="RCLibDb"><span class="type">RCLibDb</span></a> that received the signal</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>iter</code></em> :</span></p></td>
+<td>the <span class="type">iter</span> pointed to the changed item</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>user_data</code></em> :</span></p></td>
+<td>user data set when the signal handler was connected.</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="RCLibDb-playlist-delete"></a><h3>The <code class="literal">"playlist-delete"</code> signal</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                user_function                      (<a class="link" href="RCLibDb.html" title="RCLibDb"><span class="type">RCLibDb</span></a> *db,
+                                                        <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> iter,
+                                                        <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> user_data)      : <a href="/usr/share/gtk-doc/html/gobject/gobject-Signals.html#G-SIGNAL-RUN-FIRST:CAPS"><code class="literal">Run First</code></a></pre>
+<p>
+The ::playlist-delete signal is emitted before an item in the playlist
+is about to be deleted.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>db</code></em> :</span></p></td>
+<td>the <a class="link" href="RCLibDb.html" title="RCLibDb"><span class="type">RCLibDb</span></a> that received the signal</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>iter</code></em> :</span></p></td>
+<td>the <span class="type">iter</span> pointed to the item which is about to be deleted</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>user_data</code></em> :</span></p></td>
+<td>user data set when the signal handler was connected.</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="RCLibDb-playlist-reordered"></a><h3>The <code class="literal">"playlist-reordered"</code> signal</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                user_function                      (<a class="link" href="RCLibDb.html" title="RCLibDb"><span class="type">RCLibDb</span></a> *db,
+                                                        <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> iter,
+                                                        <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> new_order,
+                                                        <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> user_data)      : <a href="/usr/share/gtk-doc/html/gobject/gobject-Signals.html#G-SIGNAL-RUN-FIRST:CAPS"><code class="literal">Run First</code></a></pre>
+<p>
+The ::playlist-reordered signal is emitted when the catalog items have
+been reordered.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>db</code></em> :</span></p></td>
+<td>the <a class="link" href="RCLibDb.html" title="RCLibDb"><span class="type">RCLibDb</span></a> that received the signal</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>iter</code></em> :</span></p></td>
+<td>the <span class="type">iter</span> pointed to the catalog item which contains the
+reordered playlist items</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>new_order</code></em> :</span></p></td>
+<td>an array of integers mapping the current position of each
+playlist item to its old position before the re-ordering,
+i.e. <em class="parameter"><code>new_order</code></em><code class="literal">[newpos] = oldpos</code>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>user_data</code></em> :</span></p></td>
+<td>user data set when the signal handler was connected.</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="RCLibDb-refresh-updated"></a><h3>The <code class="literal">"refresh-updated"</code> signal</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                user_function                      (<a class="link" href="RCLibDb.html" title="RCLibDb"><span class="type">RCLibDb</span></a> *db,
+                                                        <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a>     remaining,
+                                                        <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> user_data)      : <a href="/usr/share/gtk-doc/html/gobject/gobject-Signals.html#G-SIGNAL-RUN-FIRST:CAPS"><code class="literal">Run First</code></a></pre>
+<p>
+The ::refresh-updated signal is emitted when a job in the refresh
+queue have been processed.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>db</code></em> :</span></p></td>
+<td>the <a class="link" href="RCLibDb.html" title="RCLibDb"><span class="type">RCLibDb</span></a> that received the signal</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>remaining</code></em> :</span></p></td>
+<td>the number of remaing jobs in current refresh queue</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>user_data</code></em> :</span></p></td>
+<td>user data set when the signal handler was connected.</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+</div>
+</div>
+<div class="footer">
+<hr>
+          Generated by GTK-Doc V1.18</div>
+</body>
+</html>

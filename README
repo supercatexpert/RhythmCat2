@@ -1,0 +1,71 @@
+Introduction:
+
+RhythmCat2 is a music player which can be used under Linux. It is not only a
+normal music player, it has both command-line interface and graphic user
+interface, and it can extend its features by plug-ins, like lyric show
+in window, desktop lyric show, etc...
+
+Since this project in just in experimental stage, only GUI version has been
+implemented.
+
+Developing platform:
+
+Operating System: Debian Wheezy (Testing) for AMD64
+Compiler: gcc 4.6.2
+Programming Language: C
+Dependent Libraries: glib-2.0 (>=2.30) gtk+-3.0(>=3.0) libjson0 (>=0.9)
+    gstreamer-0.10 (>=0.10.30) gstreamer-plugins-base-0.10 (>=0.10.30)
+    gstreamer-plugins-good-0.10 (>=0.10.30)
+    
+Suggest Libraries: gstreamer-plugins-bad-0.10 gstreamer-plugins-ugly-0.10
+
+Developing stage:
+
+Experimental, features are limited.
+
+License:
+
+GNU GPL v3.
+You MUST accept the GPL v3 License, then you can use this program and the
+source code.
+You can get the GPL v3 License (plain text) here:
+http://www.gnu.org/licenses/gpl.txt
+Or read the COPYING file in the source archive.
+
+How to install this program:
+
+Get the latest version from Github:
+
+git clone git://github.com/supercatexpert/RhythmCat2.git
+
+We now provide source code and binaries for Linux on both i386 and AMD64 (you
+can find the package of source code and binaries in the Downloads page).
+Binaries can be executed directly in most of desktop distributions of Linux.
+If you cannot run the program, you should check if the needed libraries are
+installed. Notice that if you downloaded the source code, you should compile
+it, then you can use this program. Before you compile it, you should check the
+developing environment, and the libraries which this program depends. In
+Debian/Ubuntu, you can run the commands below to help you install the packages
+that the compiling needed: 
+
+sudo apt-get install build-essential libgtk-3-dev libgstreamer0.10-dev \
+    libgstreamer-plugins-base0.10-dev libjson-glib-dev
+
+If you want to play MP3 or other Restricted Format, please install Gstreamer
+Bad & Ugly plugins. In Debian/Ubuntu, you can just run:
+
+sudo apt-get install gstreamer0.10-plugins-bad gstreamer0.10-plugins-ugly
+
+Then you can try to compile it:
+
+./configure
+make
+sudo make install
+
+This program is in experimental stage now. We provide no WARRANTY. 
+If you found any bugs, please send an e-mail to me, and report the bugs you
+found. My e-mail: supercatexpert@gmail.com . Or send the Issue on the 
+Github project page.
+
+
+

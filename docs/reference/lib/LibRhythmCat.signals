@@ -1,0 +1,217 @@
+<SIGNAL>
+<NAME>RCLibCore::balance-changed</NAME>
+<RETURNS>void</RETURNS>
+<FLAGS>f</FLAGS>
+RCLibCore *rclibcore
+gfloat  arg1
+</SIGNAL>
+
+<SIGNAL>
+<NAME>RCLibCore::echo-changed</NAME>
+<RETURNS>void</RETURNS>
+<FLAGS>f</FLAGS>
+RCLibCore *rclibcore
+</SIGNAL>
+
+<SIGNAL>
+<NAME>RCLibCore::eos</NAME>
+<RETURNS>void</RETURNS>
+<FLAGS>f</FLAGS>
+RCLibCore *rclibcore
+</SIGNAL>
+
+<SIGNAL>
+<NAME>RCLibCore::eq-changed</NAME>
+<RETURNS>void</RETURNS>
+<FLAGS>f</FLAGS>
+RCLibCore *rclibcore
+guint  arg1
+gpointer  arg2
+</SIGNAL>
+
+<SIGNAL>
+<NAME>RCLibCore::error</NAME>
+<RETURNS>void</RETURNS>
+<FLAGS>f</FLAGS>
+RCLibCore *rclibcore
+gpointer  arg1
+</SIGNAL>
+
+<SIGNAL>
+<NAME>RCLibCore::new-duration</NAME>
+<RETURNS>void</RETURNS>
+<FLAGS>f</FLAGS>
+RCLibCore *rclibcore
+gint64  arg1
+gpointer  arg2
+</SIGNAL>
+
+<SIGNAL>
+<NAME>RCLibCore::spectrum-updated</NAME>
+<RETURNS>void</RETURNS>
+<FLAGS>f</FLAGS>
+RCLibCore *rclibcore
+guint  arg1
+guint  arg2
+gfloat  arg3
+gpointer  arg4
+</SIGNAL>
+
+<SIGNAL>
+<NAME>RCLibCore::state-changed</NAME>
+<RETURNS>void</RETURNS>
+<FLAGS>f</FLAGS>
+RCLibCore *rclibcore
+gint  arg1
+</SIGNAL>
+
+<SIGNAL>
+<NAME>RCLibCore::tag-found</NAME>
+<RETURNS>void</RETURNS>
+<FLAGS>f</FLAGS>
+RCLibCore *rclibcore
+gpointer  arg1
+gpointer  arg2
+</SIGNAL>
+
+<SIGNAL>
+<NAME>RCLibCore::uri-changed</NAME>
+<RETURNS>void</RETURNS>
+<FLAGS>f</FLAGS>
+RCLibCore *rclibcore
+gchar *arg1
+gpointer  arg2
+</SIGNAL>
+
+<SIGNAL>
+<NAME>RCLibCore::volume-changed</NAME>
+<RETURNS>void</RETURNS>
+<FLAGS>f</FLAGS>
+RCLibCore *rclibcore
+gdouble  arg1
+</SIGNAL>
+
+<SIGNAL>
+<NAME>RCLibDb::catalog-added</NAME>
+<RETURNS>void</RETURNS>
+<FLAGS>f</FLAGS>
+RCLibDb *rclibdb
+gpointer  arg1
+</SIGNAL>
+
+<SIGNAL>
+<NAME>RCLibDb::catalog-changed</NAME>
+<RETURNS>void</RETURNS>
+<FLAGS>f</FLAGS>
+RCLibDb *rclibdb
+gpointer  arg1
+</SIGNAL>
+
+<SIGNAL>
+<NAME>RCLibDb::catalog-delete</NAME>
+<RETURNS>void</RETURNS>
+<FLAGS>f</FLAGS>
+RCLibDb *rclibdb
+gpointer  arg1
+</SIGNAL>
+
+<SIGNAL>
+<NAME>RCLibDb::catalog-reordered</NAME>
+<RETURNS>void</RETURNS>
+<FLAGS>f</FLAGS>
+RCLibDb *rclibdb
+gpointer  arg1
+</SIGNAL>
+
+<SIGNAL>
+<NAME>RCLibDb::import-updated</NAME>
+<RETURNS>void</RETURNS>
+<FLAGS>f</FLAGS>
+RCLibDb *rclibdb
+gint  arg1
+</SIGNAL>
+
+<SIGNAL>
+<NAME>RCLibDb::playlist-added</NAME>
+<RETURNS>void</RETURNS>
+<FLAGS>f</FLAGS>
+RCLibDb *rclibdb
+gpointer  arg1
+</SIGNAL>
+
+<SIGNAL>
+<NAME>RCLibDb::playlist-changed</NAME>
+<RETURNS>void</RETURNS>
+<FLAGS>f</FLAGS>
+RCLibDb *rclibdb
+gpointer  arg1
+</SIGNAL>
+
+<SIGNAL>
+<NAME>RCLibDb::playlist-delete</NAME>
+<RETURNS>void</RETURNS>
+<FLAGS>f</FLAGS>
+RCLibDb *rclibdb
+gpointer  arg1
+</SIGNAL>
+
+<SIGNAL>
+<NAME>RCLibDb::playlist-reordered</NAME>
+<RETURNS>void</RETURNS>
+<FLAGS>f</FLAGS>
+RCLibDb *rclibdb
+gpointer  arg1
+gpointer  arg2
+</SIGNAL>
+
+<SIGNAL>
+<NAME>RCLibDb::refresh-updated</NAME>
+<RETURNS>void</RETURNS>
+<FLAGS>f</FLAGS>
+RCLibDb *rclibdb
+gint  arg1
+</SIGNAL>
+
+<SIGNAL>
+<NAME>RCLibLyric::line-changed</NAME>
+<RETURNS>void</RETURNS>
+<FLAGS>f</FLAGS>
+RCLibLyric *rcliblyric
+guint  arg1
+gpointer  arg2
+</SIGNAL>
+
+<SIGNAL>
+<NAME>RCLibLyric::lyric-ready</NAME>
+<RETURNS>void</RETURNS>
+<FLAGS>f</FLAGS>
+RCLibLyric *rcliblyric
+guint  arg1
+</SIGNAL>
+
+<SIGNAL>
+<NAME>RCLibLyric::lyric-timer</NAME>
+<RETURNS>void</RETURNS>
+<FLAGS>f</FLAGS>
+RCLibLyric *rcliblyric
+guint  arg1
+gint64  arg2
+gpointer  arg3
+</SIGNAL>
+
+<SIGNAL>
+<NAME>RCLibPlayer::random-mode-changed</NAME>
+<RETURNS>void</RETURNS>
+<FLAGS>f</FLAGS>
+RCLibPlayer *rclibplayer
+guint  arg1
+</SIGNAL>
+
+<SIGNAL>
+<NAME>RCLibPlayer::repeat-mode-changed</NAME>
+<RETURNS>void</RETURNS>
+<FLAGS>f</FLAGS>
+RCLibPlayer *rclibplayer
+guint  arg1
+</SIGNAL>
+

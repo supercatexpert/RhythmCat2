@@ -1,0 +1,16 @@
+# List of source files which contain translatable strings.
+lib/rclib.c
+lib/rclib-cue.c
+lib/rclib-marshal.c
+lib/rclib-tag.c
+lib/rclib-core.c
+lib/rclib-db.c
+lib/rclib-player.c
+
+ui/ui-listmodel.c
+ui/ui-listview.c
+ui/ui-menu.c
+ui/ui-player.c
+ui/main.c  
+
+

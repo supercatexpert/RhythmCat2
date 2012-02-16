@@ -1,0 +1,422 @@
+GtkWindow#RCMainWindow.background
+{
+    background-color: #F0F0F0;
+    background-image: -gtk-gradient (linear,
+        left top, right bottom,
+        from (#5197EF), to (#5197EF));
+}
+
+GtkWindow#RCMiniWindow,
+GtkWindow#RCMainWindow GtkEventBox,
+GtkWindow#RCMiniWindow GtkEventBox
+{
+    background-color: #5197EF;
+    background-image: -gtk-gradient (linear,
+        left top, right bottom,
+        from (#5197EF), to (#5197EF));
+}
+
+GtkWindow#RCMainWindow GtkNotebook#RCPlistNotebook
+{
+    color: #FFFFFF;
+    background-color: #5197EF;
+    background-image: -gtk-gradient (linear,
+        left top, right bottom,
+        from (#5197EF), to (#5197EF));
+}
+
+GtkWindow#RCMainWindow GtkNotebook#RCPlistNotebook:active
+{
+    color: #FFFFFF;
+    background-color: #71B7FF;
+    background-image: -gtk-gradient (linear,
+        left top, right bottom,
+        from (#71B7FF), to (#71B7FF));
+}
+
+GtkWindow#RCMainWindow GtkLabel#RCTitleLabel,
+GtkWindow#RCMainWindow GtkLabel#RCArtistLabel,
+GtkWindow#RCMainWindow GtkLabel#RCAlbumLabel,
+GtkWindow#RCMainWindow GtkLabel#RCInfoLabel,
+GtkWindow#RCMainWindow GtkLabel#RCLengthLabel,
+GtkWindow#RCMainWindow GtkLabel#RCLyricLabel,
+GtkWindow#RCMainWindow GtkLabel#RCEQLabel,
+GtkWindow#RCMiniWindow GtkLabel
+{
+    color: #FFFFFF;
+}
+
+GtkWindow#RCMainWindow RCGuiScrolledText#RCLyricLabel,
+GtkWidget#RCMiniWindow RCGuiScrolledText#RCMiniLyricLabel,
+GtkWidget#RCMiniWindow RCGuiScrolledText#RCMiniInfoLabel
+{
+    color: #FFFFFF;
+    background-color: #5197EF;
+}
+
+
+GtkLabel#RCTimeLabel
+{
+    color: #FFFFFF;
+}
+
+GtkWindow#RCMiniWindow GtkArrow
+{
+    background-color: #5197EF;
+    color: #FFFFFF;
+}
+
+GtkTreeView#RCListView1,
+GtkTreeView#RCListView2
+{
+    background-color: #F0F0F0;
+    color: #000000;
+}
+
+GtkTreeView#RCListView1 row,
+GtkTreeView#RCListView1 row:insensitive,
+GtkTreeView#RCListView2 row,
+GtkTreeView#RCListView2 row:insensitive
+{
+    background-color: #F0F0F0;
+    color: #000000;
+}
+
+GtkTreeView#RCListView1 row:selected,
+GtkTreeView#RCListView1 row:selected:focused,
+GtkTreeView#RCListView2 row:selected,
+GtkTreeView#RCListView2 row:selected:focused
+{
+    background-color: #C7E3F8;
+    background-image: -gtk-gradient (linear,
+        left top, left bottom,
+        color-stop(0, #A7C3D8),
+        color-stop(0.5, #C7E3F8),
+        color-stop(1, #A7C3D8));
+    color: #000000;
+}
+
+GtkButton#RCControlButton,
+GtkButton#RCMiniControlButton,
+GtkButton#RCMiniWindowButton,
+GtkVolumeButton#RCVolumeButton
+{
+    background-color: #5197EF;
+    background-image: -gtk-gradient (linear,
+        left top, right bottom,
+        from (#5197EF), to (#5197EF));
+}
+
+GtkButton#RCControlButton:active,
+GtkButton#RCMiniControlButton:active,
+GtkButton#RCMiniWindowButton:active,
+GtkVolumeButton#RCVolumeButton:active
+{
+    background-color: #80B1EF;
+    background-image: -gtk-gradient (linear,
+        left top, right bottom,
+        from (#80B1EF), to (#80B1EF));
+}
+
+GtkButton#RCControlButton:hover,
+GtkButton#RCMiniControlButton:hover,
+GtkButton#RCMiniWindowButton:hover,
+GtkVolumeButton#RCVolumeButton:hover,
+GtkButton#RCControlButton:prelight,
+GtkButton#RCMiniControlButton:prelight,
+GtkButton#RCMiniWindowButton:prelight,
+GtkVolumeButton#RCVolumeButton:prelight
+{
+    background-color: #97BEEF;
+    background-image: -gtk-gradient (linear,
+        left top, right bottom,
+        from (#97BEEF), to (#97BEEF));
+}
+
+GtkButton#RCControlButton:insensitive,
+GtkButton#RCMiniControlButton:insensitive,
+GtkButton#RCMiniWindowButton:insensitive,
+GtkVolumeButton#RCVolumeButton:insensitive
+{
+    background-color: #5197EF;
+    background-image: -gtk-gradient (linear,
+        left top, right bottom,
+        from (#5197EF), to (#5197EF));
+}
+
+GtkWindow#RCMiniWindow GtkButton,
+GtkComboBox#RCEQCombobox,
+GtkComboBox#RCEQCombobox GtkButton,
+GtkButton#RCEQSaveButton,
+GtkButton#RCEQImportButton
+{
+    background-color: #61A7FF;
+    background-image: -gtk-gradient (linear,
+        left top, right bottom,
+        from (#61A7FF), to (#61A7FF));
+    color: #FFFFFF
+}
+
+GtkWindow#RCMiniWindow GtkButton:active,
+GtkComboBox#RCEQCombobox:active,
+GtkButton#RCEQSaveButton:active,
+GtkButton#RCEQImportButton:active
+{
+    background-color: #80B1EF;
+    background-image: -gtk-gradient (linear,
+        left top, right bottom,
+        from (#80B1EF), to (#80B1EF));
+    color: #FFFFFF
+}
+
+GtkWindow#RCMiniWindow GtkButton:hover,
+GtkComboBox#RCEQCombobox:hover,
+GtkButton#RCEQSaveButton:hover,
+GtkButton#RCEQImportButton:hover,
+GtkWindow#RCMiniWindow GtkButton:prelight,
+GtkComboBox#RCEQCombobox:prelight,
+GtkButton#RCEQSaveButton:prelight,
+GtkButton#RCEQImportButton:prelight
+{
+    background-color: #97BEEF;
+    background-image: -gtk-gradient (linear,
+        left top, right bottom,
+        from (#97BEEF), to (#97BEEF));
+    color: #FFFFFF
+}
+
+GtkHScale#RCTimeScalerBar
+{
+    -GtkScale-slider-length: 16;
+    -GtkRange-slider-width: 16;
+    -GtkRange-trough-border: 0;
+    -GtkScale-slider-border: 0;
+    background-color: #5197EF;
+}
+
+GtkVScale#RCEQScaler
+{
+    -GtkScale-slider-length: 16;
+    -GtkRange-slider-width: 15;
+    -GtkRange-trough-border: 0;
+    background-color: #5197EF;
+}
+
+GtkHScale#RCTimeScalerBar:hover,
+GtkVScale#RCEQScaler:hover,
+GtkHScale#RCTimeScalerBar:prelight,
+GtkVScale#RCEQScaler:prelight
+{
+    background-color: #5197EF;
+}
+
+GtkHScale#RCTimeScalerBar:active,
+GtkVScale#RCEQScaler:active,
+GtkHScale#RCTimeScalerBar:selected,
+GtkVScale#RCEQScaler:selected
+{
+    background-color: #5197EF;
+}
+
+GtkHScale#RCTimeScalerBar:insensitive,
+GtkVScale#RCEQScaler:insensitive
+{
+    background-color: #5197EF;
+}
+
+GtkHScale#RCTimeScalerBar.slider
+{
+    border-width: 0;
+    border-radius: 10;
+    border-color: #0175E4;
+    background-image: -gtk-gradient (radial,
+        center center, 0, center center, 1,
+        from (#0175E4), to (#3263BF));
+}
+
+GtkHScale#RCTimeScalerBar.slider:insensitive
+{
+    border-width: 0;
+    border-radius: 10;
+    border-color: #0045B4;
+    background-image: -gtk-gradient (radial,
+        center center, 0, center center, 1,
+        from (#0045B4), to (#02338F));
+}
+
+GtkHScale#RCTimeScalerBar.slider:prelight
+{
+    border-width: 0;
+    border-radius: 10;
+    border-color: #31A5FF;
+    background-image: -gtk-gradient (radial,
+        center center, 0, center center, 1,
+        from (#31A5FF), to (#41B5FF));
+}
+
+GtkHScale#RCTimeScalerBar.slider:active
+{
+    border-width: 0;
+    border-radius: 10;
+    border-color: #1185F4;
+    background-image: -gtk-gradient (radial,
+        center center, 0, center center, 1,
+        from (#1185F4), to (#2195FF));
+}
+
+GtkVScale#RCEQScaler.slider
+{
+    border-width: 1;
+    border-radius: 3;
+    background-image: -gtk-gradient (linear,
+        left top, left bottom,
+        from (#FFFFFF), to (#EEEEEC));
+
+    -adwaita-border-gradient: -gtk-gradient (linear,
+        left top, left bottom,
+        from (shade (#888A85, 0.90)),
+        to (shade (#888A85, 1.35)));
+}
+
+GtkHScale#RCTimeScalerBar.trough
+{
+    border-width: 1;
+    border-radius: 2;
+    border-style: solid;
+    border-color: #33A8E5;
+    background-image: -gtk-gradient (linear,
+        left top, right top,
+        from (#33A8E5), to (#8BD1F5));
+}
+
+GtkVScale#RCEQScaler.trough
+{
+    border-width: 1;
+    border-radius: 2;
+    border-style: solid;
+    border-color: #888A85;
+}
+
+GtkHScale#RCTimeScalerBar.scale-has-marks-below.slider.horizontal
+{
+    -adwaita-border-gradient: -gtk-gradient (linear,
+        left top, left bottom,
+        from (shade (#888A85, 0.90)),
+        to (shade (#888A85, 1.35)));
+}
+
+GtkHScale#RCTimeScalerBar.scale-has-marks-above.slider.horizontal
+{
+    -adwaita-border-gradient: -gtk-gradient (linear,
+        left bottom, left top,
+        from (shade (#888A85, 0.90)),
+        to (shade (#888A85, 1.35)));
+}
+
+GtkVScale#RCEQScaler.scale-has-marks-below.slider.vertical
+{
+    -adwaita-border-gradient: -gtk-gradient (linear,
+        left top, right top,
+        from (shade (#888A85, 0.90)),
+        to (shade (#888A85, 1.35)));
+}
+
+
+
+GtkVScale#RCEQScaler.scale-has-marks-above.slider.vertical
+{
+    -adwaita-border-gradient: -gtk-gradient (linear,
+        right top, left top,
+        from (shade (#888A85, 0.90)),
+        to (shade (#888A85, 1.35)));
+}
+
+GtkScrolledWindow#RCListScrolledWindow GtkVScrollbar
+{
+    background-color: #707070;
+}
+
+GtkScrolledWindow#RCListScrolledWindow .scrollbar
+{
+    -GtkRange-trough-border: 0;
+    -GtkRange-slider-width: 12;
+    -GtkRange-stepper-size: 12;
+    -GtkScrollbar-min-slider-length: 30;
+}
+
+GtkScrolledWindow#RCListScrolledWindow .scrollbar.trough
+{
+    border-width: 0;
+    border-radius: 0;
+    background-color: #F0F0F0;
+}
+
+GtkScrolledWindow#RCListScrolledWindow .scrollbar.slider,
+GtkScrolledWindow#RCListScrolledWindow .scrollbar.slider:insensitive
+{
+    border-radius: 6;
+    border-width: 0;
+    background-color: #7DB5FA;
+    background-image: -gtk-gradient (linear,
+        left top, left bottom,
+        color-stop(0, #7DB5FA),
+        color-stop(0.5, #6DA5EA),
+        color-stop(1, #7DB5FA));
+}
+
+GtkScrolledWindow#RCListScrolledWindow .scrollbar.slider:prelight,
+GtkScrolledWindow#RCListScrolledWindow .scrollbar.slider:active
+{
+    border-radius: 6;
+    border-width: 0;
+    background-color: #A4CBFC;
+    background-image: -gtk-gradient (linear,
+        left top, left bottom,
+        color-stop(0, #A4CBFC),
+        color-stop(0.5, #94BBEC),
+        color-stop(1, #A4CBFC));
+}
+
+GtkScrolledWindow#RCListScrolledWindow .scrollbar.button
+{
+    border-width: 0;
+    background-color: #F0F0F0;
+    color: #101010;
+}
+
+GtkScrolledWindow#RCListScrolledWindow .scrollbar.button:insensitive
+{
+    border-width: 0;
+    background-color: #F0F0F0;
+    color: #C0C0C0;
+}
+
+GtkScrolledWindow#RCListScrolledWindow .scrollbar.button:prelight,
+GtkScrolledWindow#RCListScrolledWindow .scrollbar.button:active
+{
+    border-width: 0;
+    background-color: #F0F0F0;
+    color: #505050;
+}
+
+GtkScrolledWindow#RCListScrolledWindow GtkHScrollbar
+{
+    background-color: #F0F0F0;
+}
+
+GtkWindow#RCMainWindow GtkPaned.pane-separator,
+GtkWindow#RCMainWindow GtkPaned.pane-separator:insensitive
+{
+    border-width: 0;
+    background-color: #C0C0C0;
+    color: #F0F0F0;
+}
+
+GtkWindow#RCMainWindow GtkPaned.pane-separator:prelight,
+GtkWindow#RCMainWindow GtkPaned.pane-separator:active
+{
+    border-width: 0;
+    background-color: #C0C0C0;
+    color: #F0F0F0;
+}
+
