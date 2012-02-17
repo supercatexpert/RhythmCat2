@@ -1861,18 +1861,9 @@ void rclib_db_playlist_move_to_another_catalog(GSequenceIter **iters,
     {
         old_data = g_sequence_get(iters[i]);
         if(old_data==NULL) continue;
-        new_data = g_new(RCLibDbPlaylistData, 1);
-        memcpy(new_data, old_data, sizeof(RCLibDbPlaylistData));
-        new_data->catalog = catalog_iter;
-        new_data->uri = g_strdup(old_data->uri);
-        new_data->title = g_strdup(old_data->title);
-        new_data->artist = g_strdup(old_data->artist);
-        new_data->album = g_strdup(old_data->album);
-        new_data->ftype = g_strdup(old_data->ftype);
-        new_data->lyricfile = g_strdup(old_data->lyricfile);
-        new_data->lyricsecfile = g_strdup(old_data->lyricsecfile);
-        new_data->albumfile = g_strdup(old_data->albumfile);
+        new_data = rclib_db_playlist_data_ref(old_data);
         rclib_db_playlist_delete(iters[i]);
+        new_data->catalog = catalog_iter;
         new_iter = g_sequence_append(catalog_data->playlist, new_data);
         if(iters[i]==reference)
             rclib_core_update_db_reference(new_iter);

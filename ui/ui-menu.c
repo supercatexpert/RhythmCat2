@@ -29,7 +29,7 @@
 #include "common.h"
 
 static GtkUIManager *ui_manager = NULL;
-static GtkActionGroup *ui_actions;
+static GtkActionGroup *ui_actions = NULL;
 
 static void rc_ui_menu_play_button_clicked_cb()
 {
@@ -86,6 +86,16 @@ static void rc_ui_menu_random_clicked_cb(GtkAction *action,
     rclib_player_set_random_mode(value);
     g_signal_handlers_unblock_by_func(action,
         G_CALLBACK(rc_ui_menu_random_clicked_cb), data);
+}
+
+static void rc_ui_menu_progress_import_cancel_clicked_cb()
+{
+    rclib_db_playlist_import_cancel();
+}
+
+static void rc_ui_menu_progress_refresh_cancel_clicked_cb()
+{
+    rclib_db_playlist_refresh_cancel();
 }
 
 static GtkActionEntry ui_menu_entries[] =
@@ -253,6 +263,22 @@ static GtkActionEntry ui_menu_entries[] =
       N_("_Save album image as"), NULL,
       N_("Save the album image"),
       G_CALLBACK(NULL) },
+    { "ProgressImportStatus", NULL,
+      N_("Importing: 0 remaining"), NULL,
+      NULL,
+      NULL },
+    { "ProgressRefreshStatus", NULL,
+      N_("Refreshing: 0 remaining"), NULL,
+      NULL,
+      NULL },
+    { "ProgressImportCancel", NULL,
+      N_("Stop _importing"), NULL,
+      N_("Terminate the remaining importing jobs."),
+      G_CALLBACK(rc_ui_menu_progress_import_cancel_clicked_cb) },
+    { "ProgressRefreshCancel", NULL,
+      N_("Stop _refreshing"), NULL,
+      N_("Terminate the remaining refreshing jobs."),
+      G_CALLBACK(rc_ui_menu_progress_refresh_cancel_clicked_cb) },
     { "TrayPlay", GTK_STOCK_MEDIA_PLAY,
       N_("_Play/Pause"), NULL,
       N_("Play or pause the music"),
@@ -419,6 +445,12 @@ static const gchar *ui_menu_info =
     "  </popup>"
     "  <popup action='AlbumPopupMenu'>"
     "    <menuitem action='AlbumSaveImage'/>"
+    "  </popup>"
+    "  <popup action='ProgressPopupMenu'>"
+    "    <menuitem action='ProgressImportStatus'/>"
+    "    <menuitem action='ProgressRefreshStatus'/>"
+    "    <menuitem action='ProgressImportCancel'/>"
+    "    <menuitem action='ProgressRefreshCancel'/>"
     "  </popup>"
     "  <popup action='TrayPopupMenu'>"
     "    <menuitem action='TrayPlay'/>"
@@ -662,7 +694,19 @@ void rc_ui_menu_init()
     catalog_selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(
         rc_ui_listview_get_catalog_widget()));
     playlist_selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(
-        rc_ui_listview_get_playlist_widget()));    
+        rc_ui_listview_get_playlist_widget()));
+    gtk_action_set_sensitive(gtk_ui_manager_get_action(ui_manager,
+        "/ProgressPopupMenu/ProgressImportStatus"), FALSE);
+    gtk_action_set_sensitive(gtk_ui_manager_get_action(ui_manager,
+        "/ProgressPopupMenu/ProgressRefreshStatus"), FALSE);
+    gtk_action_set_visible(gtk_ui_manager_get_action(ui_manager,
+        "/ProgressPopupMenu/ProgressImportStatus"), FALSE);
+    gtk_action_set_visible(gtk_ui_manager_get_action(ui_manager,
+        "/ProgressPopupMenu/ProgressRefreshStatus"), FALSE);
+    gtk_action_set_visible(gtk_ui_manager_get_action(ui_manager,
+        "/ProgressPopupMenu/ProgressImportCancel"), FALSE);
+    gtk_action_set_visible(gtk_ui_manager_get_action(ui_manager,
+        "/ProgressPopupMenu/ProgressRefreshCancel"), FALSE);
     rclib_core_signal_connect("state-changed",
         G_CALLBACK(rc_ui_menu_core_state_changed_cb), NULL);
     rclib_core_signal_connect("volume-changed",

@@ -1539,8 +1539,7 @@ void rclib_core_update_db_reference(GSequenceIter *new_ref)
     if(core_instance==NULL) return;
     priv = RCLIB_CORE_GET_PRIVATE(RCLIB_CORE(core_instance));
     if(priv==NULL) return;
-    if(priv->db_reference!=NULL)
-        priv->db_reference = new_ref;
+    priv->db_reference = new_ref;
 }
 
 /**
@@ -1557,8 +1556,7 @@ void rclib_core_update_external_reference(gpointer new_ref)
     if(core_instance==NULL) return;
     priv = RCLIB_CORE_GET_PRIVATE(RCLIB_CORE(core_instance));
     if(priv==NULL || priv->db_reference!=NULL) return;
-    if(priv->ext_reference!=NULL)
-        priv->ext_reference = new_ref;
+    priv->ext_reference = new_ref;
 }
 
 /**
