@@ -123,19 +123,16 @@ static gboolean rclib_lyric_watch_timer(gpointer data)
 }
 
 static void rclib_lyric_tag_found_cb(RCLibCore *core,
-    const RCLibCoreMetadata *metadata, gpointer data)
+    const RCLibCoreMetadata *metadata, const gchar *uri, gpointer data)
 {
     RCLibLyricPrivate *priv;
     RCLibLyric *lyric;
     gchar *lyric_path;
-    gchar *uri;
-    if(data==NULL) return;
+    if(data==NULL || uri==NULL) return;
     lyric = RCLIB_LYRIC(data);
     priv = RCLIB_LYRIC_GET_PRIVATE(RCLIB_LYRIC(lyric));
     if(priv==NULL) return;
-    uri = rclib_core_get_uri();
     lyric_path = rclib_lyric_search_lyric(uri, metadata->title, metadata->artist);
-    g_free(uri);
     if(lyric_path!=NULL)
     {
         if(priv->parsed_data1.filename==NULL)
@@ -304,6 +301,8 @@ void rclib_lyric_init()
 void rclib_lyric_exit()
 {
     if(lyric_instance!=NULL) g_object_unref(lyric_instance);
+    lyric_instance = NULL;
+    g_log(G_LOG_DOMAIN, G_LOG_LEVEL_MESSAGE, "Lyric processor exited.");
 }
 
 /**

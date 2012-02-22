@@ -171,7 +171,8 @@ struct _RCLibCoreClass {
     GObjectClass parent_class;
     void (*state_changed)(RCLibCore *core, GstState state);
     void (*eos)(RCLibCore *core);
-    void (*tag_found)(RCLibCore *core, const RCLibCoreMetadata *metadata);
+    void (*tag_found)(RCLibCore *core, const RCLibCoreMetadata *metadata,
+        const gchar *uri);
     void (*new_duration)(RCLibCore *core, gint64 duration);
     void (*uri_changed)(RCLibCore *core, const gchar *uri);
     void (*volume_changed)(RCLibCore *core, gdouble volume);
@@ -202,6 +203,7 @@ gchar *rclib_core_get_uri();
 GSequenceIter *rclib_core_get_db_reference();
 gpointer rclib_core_get_external_reference();
 RCLibCoreSourceType rclib_core_get_source_type();
+const RCLibCoreMetadata *rclib_core_get_metadata();
 gboolean rclib_core_set_position(gint64 pos);
 gint64 rclib_core_query_position();
 gint64 rclib_core_query_duration();

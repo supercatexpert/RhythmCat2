@@ -35,6 +35,7 @@
 #include "rclib-util.h"
 #include "rclib-lyric.h"
 #include "rclib-settings.h"
+#include "rclib-dbus.h"
 
 G_BEGIN_DECLS
 

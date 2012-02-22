@@ -138,9 +138,12 @@ void rclib_settings_exit()
     {
         rclib_settings_update();
         rclib_settings_save(settings_path);
+        g_free(settings_path);
     }
     if(settings_keyfile!=NULL)
         g_key_file_free(settings_keyfile);
+    settings_keyfile = NULL;
+    g_log(G_LOG_DOMAIN, G_LOG_LEVEL_MESSAGE, "Settings module exited.");
 }
 
 /**

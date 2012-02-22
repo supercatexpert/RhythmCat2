@@ -648,14 +648,15 @@ static void rclib_core_class_init(RCLibCoreClass *klass)
      * RCLibCore::tag-found:
      * @core: the #RCLibCore that received the signal
      * @metadata: the metadata
+     * @uri: the URI
      * 
      * The ::tag-found signal is emitted when new metadata (tag) was
      * found.
      */
     core_signals[SIGNAL_TAG_FOUND] = g_signal_new("tag-found",
         RCLIB_CORE_TYPE, G_SIGNAL_RUN_FIRST, G_STRUCT_OFFSET(RCLibCoreClass,
-        tag_found), NULL, NULL, g_cclosure_marshal_VOID__POINTER,
-        G_TYPE_NONE, 1, G_TYPE_POINTER, NULL);
+        tag_found), NULL, NULL, rclib_marshal_VOID__POINTER_STRING,
+        G_TYPE_NONE, 2, G_TYPE_POINTER, G_TYPE_STRING, NULL);
 
     /**
      * RCLibCore::new-duration:
@@ -862,6 +863,8 @@ static gboolean rclib_core_bus_callback(GstBus *bus, GstMessage *msg,
     gpointer data)
 {
     gint64 duration = 0;
+    gchar *uri;
+    GstQuery *query;
     GstFormat format = GST_FORMAT_TIME;
     RCLibCorePrivate *priv = NULL;
     GObject *object = G_OBJECT(data);
@@ -881,17 +884,22 @@ static gboolean rclib_core_bus_callback(GstBus *bus, GstMessage *msg,
     switch(GST_MESSAGE_TYPE(msg))
     {
         case GST_MESSAGE_EOS:
-            gst_element_set_state(priv->playbin, GST_STATE_READY); 
+            gst_element_set_state(priv->playbin, GST_STATE_NULL); 
+            gst_element_set_state(priv->playbin, GST_STATE_READY);
             g_signal_emit(object, core_signals[SIGNAL_EOS], 0);
             break;
         case GST_MESSAGE_TAG:
             gst_message_parse_tag_full(msg, &pad, &tags);
+            query = gst_query_new_uri();
+            gst_element_query(priv->playbin, query);
+            gst_query_parse_uri(query, &uri);         
             if(rclib_core_parse_metadata(tags, pad, &(priv->metadata),
                 priv->start_time, priv->end_time))
             {
                 g_signal_emit(object, core_signals[SIGNAL_TAG_FOUND], 0,
-                    &(priv->metadata));
+                    &(priv->metadata), uri);
             }
+            g_free(uri);
             gst_tag_list_free(tags);
             if(pad!=NULL) gst_object_unref(pad);
             break;
@@ -1381,6 +1389,8 @@ gboolean rclib_core_init(gint *argc, gchar **argv[], GError **error)
 void rclib_core_exit()
 {
     if(core_instance!=NULL) g_object_unref(core_instance);
+    core_instance = NULL;
+    g_log(G_LOG_DOMAIN, G_LOG_LEVEL_MESSAGE, "Core exited.");
 }
 
 /**
@@ -1453,8 +1463,12 @@ void rclib_core_set_uri(const gchar *uri, GSequenceIter *db_reference,
     gboolean cue_flag = FALSE;
     gboolean emb_cue_flag = FALSE;
     if(core_instance==NULL || uri==NULL) return;
-    rclib_core_stop();
     priv = RCLIB_CORE_GET_PRIVATE(RCLIB_CORE(core_instance));
+    gst_element_set_state(priv->playbin, GST_STATE_NULL);
+    gst_element_set_state(priv->playbin, GST_STATE_READY);
+    rclib_core_set_position(0);
+    priv->db_reference = NULL;
+    priv->ext_reference_pre = NULL;
     scheme = g_uri_parse_scheme(uri);
     /* We can only read CUE file on local machine. */
     if(g_strcmp0(scheme, "file")==0)
@@ -1612,6 +1626,14 @@ gpointer rclib_core_get_external_reference()
     return priv->ext_reference;
 }
 
+/**
+ * rclib_core_get_source_type:
+ *
+ * Get source type of the URI.
+ *
+ * Returns: The source type.
+ */
+
 RCLibCoreSourceType rclib_core_get_source_type()
 {
     RCLibCorePrivate *priv;
@@ -1619,6 +1641,23 @@ RCLibCoreSourceType rclib_core_get_source_type()
     priv = RCLIB_CORE_GET_PRIVATE(RCLIB_CORE(core_instance));
     if(priv==NULL) return RCLIB_CORE_SOURCE_NONE;
     return priv->type;
+}
+
+/**
+ * rclib_core_get_metadata:
+ *
+ * Get metadata read from the loaded file in the core.
+ *
+ * Returns: The metadata.
+ */
+
+const RCLibCoreMetadata *rclib_core_get_metadata()
+{
+    RCLibCorePrivate *priv;
+    if(core_instance==NULL) return NULL;
+    priv = RCLIB_CORE_GET_PRIVATE(RCLIB_CORE(core_instance));
+    if(priv==NULL) return NULL;
+    return &(priv->metadata);
 }
 
 /**
@@ -1791,6 +1830,7 @@ gboolean rclib_core_stop()
     gboolean flag;
     if(core_instance==NULL) return FALSE;
     priv = RCLIB_CORE_GET_PRIVATE(RCLIB_CORE(core_instance));
+    gst_element_set_state(priv->playbin, GST_STATE_NULL);
     flag = gst_element_set_state(priv->playbin, GST_STATE_READY);
     if(flag) rclib_core_set_position(0);
     return flag;

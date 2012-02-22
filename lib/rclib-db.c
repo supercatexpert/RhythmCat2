@@ -1146,6 +1146,8 @@ gboolean rclib_db_init(const gchar *file)
 void rclib_db_exit()
 {
     if(db_instance!=NULL) g_object_unref(db_instance);
+    db_instance = NULL;
+    g_log(G_LOG_DOMAIN, G_LOG_LEVEL_MESSAGE, "Database exited.");
 }
 
 /**

@@ -81,6 +81,8 @@ typedef struct RCUiPlayerPrivate
     GdkPixbuf *cover_default_pixbuf;
     GdkPixbuf *icon_pixbuf;
     GdkPixbuf *menu_pixbuf;
+    GdkPixbuf *cover_using_pixbuf;
+    gchar *cover_file_path;
     GtkStatusIcon *tray_icon;
     guint cover_image_width;
     guint cover_image_height;
@@ -94,7 +96,56 @@ typedef struct RCUiPlayerPrivate
 static GObject *ui_player_instance = NULL;
 static GtkApplication *ui_player_app = NULL;
 
-static void rc_ui_player_time_label_set_value(RCUiPlayerPrivate *priv, gint64 pos)
+static inline void rc_ui_player_title_label_set_value(
+    RCUiPlayerPrivate *priv, const gchar *uri, const gchar *title)
+{
+    gchar *filename = NULL;
+    gchar *rtitle = NULL;
+    if(title!=NULL && strlen(title)>0)
+    {
+        gtk_label_set_text(GTK_LABEL(priv->title_label), title);  
+    }
+    else
+    {
+        filename = g_filename_from_uri(uri, NULL, NULL);
+        if(filename!=NULL)
+        {
+            rtitle = rclib_tag_get_name_from_fpath(filename);
+            g_free(filename);
+        }
+        if(rtitle!=NULL)
+        {
+            gtk_label_set_text(GTK_LABEL(priv->title_label), rtitle);
+            g_free(rtitle);
+        }
+        else
+            gtk_label_set_text(GTK_LABEL(priv->title_label),
+                _("Unknown Title"));
+    }
+}
+
+static inline void rc_ui_player_artist_label_set_value(
+    RCUiPlayerPrivate *priv, const gchar *artist)
+{
+    if(artist!=NULL && strlen(artist)>0)
+        gtk_label_set_text(GTK_LABEL(priv->artist_label), artist);
+    else
+        gtk_label_set_text(GTK_LABEL(priv->artist_label),
+            _("Unknown Artist"));
+}
+
+static inline void rc_ui_player_album_label_set_value(
+    RCUiPlayerPrivate *priv, const gchar *album)
+{
+    if(album!=NULL && strlen(album)>0)
+        gtk_label_set_text(GTK_LABEL(priv->album_label), album);
+    else
+        gtk_label_set_text(GTK_LABEL(priv->album_label),
+            _("Unknown Album"));
+}
+
+static inline void rc_ui_player_time_label_set_value(
+    RCUiPlayerPrivate *priv, gint64 pos)
 {
     gint min, sec;
     gchar *string;
@@ -154,6 +205,9 @@ static gboolean rc_ui_player_cover_image_set_gst_buffer(
     gdk_pixbuf_loader_close(loader, NULL);
     g_object_unref(loader);
     if(pixbuf==NULL) return FALSE;
+    if(priv->cover_using_pixbuf!=NULL)
+        g_object_unref(priv->cover_using_pixbuf);
+    priv->cover_using_pixbuf = g_object_ref(pixbuf);
     flag = rc_ui_player_cover_image_set_pixbuf(priv, pixbuf);
     g_object_unref(pixbuf);
     return flag;
@@ -168,6 +222,8 @@ static gboolean rc_ui_player_cover_image_set_file(RCUiPlayerPrivate *priv,
     if(!g_file_test(file, G_FILE_TEST_EXISTS)) return FALSE;
     pixbuf = gdk_pixbuf_new_from_file(file, NULL);
     if(pixbuf==NULL) return FALSE;
+    g_free(priv->cover_file_path);
+    priv->cover_file_path = g_strdup(file);
     flag = rc_ui_player_cover_image_set_pixbuf(priv, pixbuf);
     g_object_unref(pixbuf);
     return flag;
@@ -189,64 +245,26 @@ static void rc_ui_player_new_duration_cb(RCLibCore *core, gint64 duration,
 }
 
 static void rc_ui_player_tag_found_cb(RCLibCore *core,
-    const RCLibCoreMetadata *metadata, gpointer data)
+    const RCLibCoreMetadata *metadata, const gchar *uri, gpointer data)
 {
     RCUiPlayerPrivate *priv = (RCUiPlayerPrivate *)data;
     gchar *filename = NULL;
-    gchar *uri = NULL;
-    gchar *title = NULL;
     RCLibCoreSourceType type;
     gint ret;
     GString *info;
     RCLibDbPlaylistData *playlist_data;
     GSequenceIter *iter = rclib_core_get_db_reference();
-    if(data==NULL || metadata==NULL) return;
+    if(data==NULL || metadata==NULL || uri==NULL) return;
     if(iter!=NULL)
     {
-        uri = rclib_core_get_uri();
         playlist_data = g_sequence_get(iter);
         type = rclib_core_get_source_type();
         ret = g_strcmp0(uri, playlist_data->uri);
-        g_free(uri);
         if(type==RCLIB_CORE_SOURCE_NORMAL && ret!=0) return;
     }
-    if(metadata->title!=NULL && strlen(metadata->title)>0)
-    {
-        gtk_label_set_text(GTK_LABEL(priv->title_label), metadata->title);  
-    }
-    else
-    {
-        uri = rclib_core_get_uri();
-        if(uri!=NULL)
-        {
-            filename = g_filename_from_uri(uri, NULL, NULL);
-            if(filename!=NULL)
-            {
-                title = rclib_tag_get_name_from_fpath(filename);
-                g_free(filename);
-            }
-            g_free(uri);
-        }
-        if(title!=NULL)
-        {
-            gtk_label_set_text(GTK_LABEL(priv->title_label), title);
-            g_free(title);
-        }
-        else
-            gtk_label_set_text(GTK_LABEL(priv->title_label),
-                _("Unknown Title"));
-
-    }
-    if(metadata->artist!=NULL && strlen(metadata->artist)>0)
-        gtk_label_set_text(GTK_LABEL(priv->artist_label), metadata->artist);
-    else
-        gtk_label_set_text(GTK_LABEL(priv->artist_label),
-            _("Unknown Artist"));
-    if(metadata->album!=NULL && strlen(metadata->album)>0)
-        gtk_label_set_text(GTK_LABEL(priv->album_label), metadata->album);
-    else
-        gtk_label_set_text(GTK_LABEL(priv->album_label),
-            _("Unknown Album"));
+    rc_ui_player_title_label_set_value(priv, uri, metadata->title);
+    rc_ui_player_artist_label_set_value(priv, metadata->artist);
+    rc_ui_player_album_label_set_value(priv, metadata->album);
     if(metadata->duration>0)
         rc_ui_player_new_duration_cb(core, metadata->duration,
             data);
@@ -292,33 +310,42 @@ static void rc_ui_player_uri_changed_cb(RCLibCore *core, const gchar *uri,
 {
     RCUiPlayerPrivate *priv = (RCUiPlayerPrivate *)data;
     GSequenceIter *reference;
+    RCLibDbPlaylistData *playlist_data = NULL;
     gchar *filename = NULL;
-    gchar *title = NULL;
     if(data==NULL) return;
     reference = rclib_core_get_db_reference();
     gtk_image_set_from_pixbuf(GTK_IMAGE(priv->album_image),
         priv->cover_default_pixbuf);
+    if(priv->cover_using_pixbuf!=NULL)
+        g_object_unref(priv->cover_using_pixbuf);
+    if(priv->cover_file_path!=NULL)
+        g_free(priv->cover_file_path);
+    priv->cover_using_pixbuf = NULL;
+    priv->cover_file_path = NULL;
     priv->cover_set_flag = FALSE;
-    if(uri!=NULL)
+    if(reference!=NULL)
+        playlist_data = g_sequence_get(reference);
+    if(playlist_data!=NULL)
     {
-        filename = g_filename_from_uri(uri, NULL, NULL);
-        if(filename!=NULL)
+        playlist_data = g_sequence_get(reference);
+        if(playlist_data!=NULL)
         {
-            title = rclib_tag_get_name_from_fpath(filename);
-            g_free(filename);
+            rc_ui_player_title_label_set_value(priv, uri,
+                playlist_data->title);
+            rc_ui_player_artist_label_set_value(priv,
+                playlist_data->artist);
+            rc_ui_player_album_label_set_value(priv,
+                playlist_data->album);
         }
     }
-    if(title!=NULL)
-    {
-        gtk_label_set_text(GTK_LABEL(priv->title_label), title);
-        g_free(title);
-    }
     else
-        gtk_label_set_text(GTK_LABEL(priv->title_label),
-            _("Unknown Title"));
-    gtk_label_set_text(GTK_LABEL(priv->artist_label), _("Unknown Artist"));
-    gtk_label_set_text(GTK_LABEL(priv->album_label), _("Unknown Album"));
-    gtk_label_set_text(GTK_LABEL(priv->info_label), _("Unknown Format"));
+    {
+        rc_ui_player_title_label_set_value(priv, uri, NULL);
+        rc_ui_player_artist_label_set_value(priv, NULL);
+        rc_ui_player_album_label_set_value(priv, NULL);
+        gtk_label_set_text(GTK_LABEL(priv->info_label),
+            _("Unknown Format"));
+    }
     if(reference!=NULL)
         filename = g_strdup(rclib_db_playlist_get_album_bind(reference));
     if(filename==NULL)
@@ -1193,6 +1220,8 @@ void rc_ui_player_init(GtkApplication *app)
 void rc_ui_player_exit()
 {
     g_object_unref(ui_player_instance);
+    ui_player_instance = NULL;
+    g_log(G_LOG_DOMAIN, G_LOG_LEVEL_MESSAGE, "Main UI exited.");
 }
 
 /**

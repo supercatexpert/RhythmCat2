@@ -3,6 +3,7 @@
 #include <glib/gprintf.h>
 #include <rclib.h>
 #include "ui-player.h"
+#include "mpris2.h"
 #include "common.h"
 
 static void rc_main_app_activate_cb(GApplication *application,
@@ -10,6 +11,7 @@ static void rc_main_app_activate_cb(GApplication *application,
 {
     rc_ui_player_init(GTK_APPLICATION(application));
     rclib_settings_apply();
+    rc_mpris2_init();
 }
 
 int main(int argc, char *argv[])
@@ -58,6 +60,7 @@ int main(int argc, char *argv[])
         NULL);
     status = g_application_run(G_APPLICATION(app), argc, argv);
     g_object_unref(app);
+    rc_mpris2_exit();
     rclib_exit();
     g_free(data_dir);
     return status;

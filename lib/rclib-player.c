@@ -262,6 +262,8 @@ void rclib_player_init()
 void rclib_player_exit()
 {
     if(player_instance!=NULL) g_object_unref(player_instance);
+    player_instance = NULL;
+    g_log(G_LOG_DOMAIN, G_LOG_LEVEL_MESSAGE, "Player scheduler exited.");
 }
 
 /**

@@ -648,8 +648,8 @@ MSGFMT_OPTS
 MSGFMT
 USE_NLS
 GETTEXT_PACKAGE
-JSON_GLIB_LIBS
-JSON_GLIB_CFLAGS
+JSON_LIBS
+JSON_CFLAGS
 GTK_LIBS
 GTK_CFLAGS
 GSTREAMER_LIBS
@@ -830,8 +830,8 @@ GSTREAMER_CFLAGS
 GSTREAMER_LIBS
 GTK_CFLAGS
 GTK_LIBS
-JSON_GLIB_CFLAGS
-JSON_GLIB_LIBS'
+JSON_CFLAGS
+JSON_LIBS'
 
 
 # Initialize some variables set by options.
@@ -1508,10 +1508,8 @@ Some influential environment variables:
               linker flags for GSTREAMER, overriding pkg-config
   GTK_CFLAGS  C compiler flags for GTK, overriding pkg-config
   GTK_LIBS    linker flags for GTK, overriding pkg-config
-  JSON_GLIB_CFLAGS 
-              C compiler flags for JSON_GLIB, overriding pkg-config
-  JSON_GLIB_LIBS 
-              linker flags for JSON_GLIB, overriding pkg-config
+  JSON_CFLAGS C compiler flags for JSON, overriding pkg-config
+  JSON_LIBS   linker flags for JSON, overriding pkg-config
 
 Use these variables to override the choices made by `configure' or to help
 it to find libraries and programs with nonstandard names/locations.
@@ -2848,11 +2846,11 @@ MAKEINFO=${MAKEINFO-"${am_missing_run}makeinfo"}
 
 # We need awk for the "check" target.  The system "awk" is bad on
 # some platforms.
-# Always define AMTAR for backward compatibility.
+# Always define AMTAR for backward compatibility.  Yes, it's still used
+# in the wild :-(  We should find a proper way to deprecate it ...
+AMTAR='$${TAR-tar}'
 
-AMTAR=${AMTAR-"${am_missing_run}tar"}
-
-am__tar='${AMTAR} chof - "$$tardir"'; am__untar='${AMTAR} xf -'
+am__tar='$${TAR-tar} chof - "$$tardir"' am__untar='$${TAR-tar} xf -'
 
 
 
@@ -12112,14 +12110,17 @@ if test -n "$GSTREAMER_CFLAGS"; then
  elif test -n "$PKG_CONFIG"; then
     if test -n "$PKG_CONFIG" && \
     { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"gstreamer-0.10 >= 0.10.30, \\
-    gstreamer-pbutils-0.10 >= 0.10.30\""; } >&5
+    gstreamer-pbutils-0.10 >= 0.10.30 gstreamer-plugins-base-0.10 >= 0.10.30 \\
+    gstreamer-fft-0.10\""; } >&5
   ($PKG_CONFIG --exists --print-errors "gstreamer-0.10 >= 0.10.30, \
-    gstreamer-pbutils-0.10 >= 0.10.30") 2>&5
+    gstreamer-pbutils-0.10 >= 0.10.30 gstreamer-plugins-base-0.10 >= 0.10.30 \
+    gstreamer-fft-0.10") 2>&5
   ac_status=$?
   $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
   test $ac_status = 0; }; then
   pkg_cv_GSTREAMER_CFLAGS=`$PKG_CONFIG --cflags "gstreamer-0.10 >= 0.10.30, \
-    gstreamer-pbutils-0.10 >= 0.10.30" 2>/dev/null`
+    gstreamer-pbutils-0.10 >= 0.10.30 gstreamer-plugins-base-0.10 >= 0.10.30 \
+    gstreamer-fft-0.10" 2>/dev/null`
 		      test "x$?" != "x0" && pkg_failed=yes 
 else
   pkg_failed=yes
@@ -12132,14 +12133,17 @@ if test -n "$GSTREAMER_LIBS"; then
  elif test -n "$PKG_CONFIG"; then
     if test -n "$PKG_CONFIG" && \
     { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"gstreamer-0.10 >= 0.10.30, \\
-    gstreamer-pbutils-0.10 >= 0.10.30\""; } >&5
+    gstreamer-pbutils-0.10 >= 0.10.30 gstreamer-plugins-base-0.10 >= 0.10.30 \\
+    gstreamer-fft-0.10\""; } >&5
   ($PKG_CONFIG --exists --print-errors "gstreamer-0.10 >= 0.10.30, \
-    gstreamer-pbutils-0.10 >= 0.10.30") 2>&5
+    gstreamer-pbutils-0.10 >= 0.10.30 gstreamer-plugins-base-0.10 >= 0.10.30 \
+    gstreamer-fft-0.10") 2>&5
   ac_status=$?
   $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
   test $ac_status = 0; }; then
   pkg_cv_GSTREAMER_LIBS=`$PKG_CONFIG --libs "gstreamer-0.10 >= 0.10.30, \
-    gstreamer-pbutils-0.10 >= 0.10.30" 2>/dev/null`
+    gstreamer-pbutils-0.10 >= 0.10.30 gstreamer-plugins-base-0.10 >= 0.10.30 \
+    gstreamer-fft-0.10" 2>/dev/null`
 		      test "x$?" != "x0" && pkg_failed=yes 
 else
   pkg_failed=yes
@@ -12161,16 +12165,19 @@ else
 fi
         if test $_pkg_short_errors_supported = yes; then
 	        GSTREAMER_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors --cflags --libs "gstreamer-0.10 >= 0.10.30, \
-    gstreamer-pbutils-0.10 >= 0.10.30" 2>&1`
+    gstreamer-pbutils-0.10 >= 0.10.30 gstreamer-plugins-base-0.10 >= 0.10.30 \
+    gstreamer-fft-0.10" 2>&1`
         else 
 	        GSTREAMER_PKG_ERRORS=`$PKG_CONFIG --print-errors --cflags --libs "gstreamer-0.10 >= 0.10.30, \
-    gstreamer-pbutils-0.10 >= 0.10.30" 2>&1`
+    gstreamer-pbutils-0.10 >= 0.10.30 gstreamer-plugins-base-0.10 >= 0.10.30 \
+    gstreamer-fft-0.10" 2>&1`
         fi
 	# Put the nasty error message in config.log where it belongs
 	echo "$GSTREAMER_PKG_ERRORS" >&5
 
 	as_fn_error $? "Package requirements (gstreamer-0.10 >= 0.10.30, \
-    gstreamer-pbutils-0.10 >= 0.10.30) were not met:
+    gstreamer-pbutils-0.10 >= 0.10.30 gstreamer-plugins-base-0.10 >= 0.10.30 \
+    gstreamer-fft-0.10) were not met:
 
 $GSTREAMER_PKG_ERRORS
 
@@ -12295,19 +12302,19 @@ $as_echo "yes" >&6; }
 fi
 
 pkg_failed=no
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for JSON_GLIB" >&5
-$as_echo_n "checking for JSON_GLIB... " >&6; }
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for JSON" >&5
+$as_echo_n "checking for JSON... " >&6; }
 
-if test -n "$JSON_GLIB_CFLAGS"; then
-    pkg_cv_JSON_GLIB_CFLAGS="$JSON_GLIB_CFLAGS"
+if test -n "$JSON_CFLAGS"; then
+    pkg_cv_JSON_CFLAGS="$JSON_CFLAGS"
  elif test -n "$PKG_CONFIG"; then
     if test -n "$PKG_CONFIG" && \
-    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"json-glib-1.0 >= 0.12.0\""; } >&5
-  ($PKG_CONFIG --exists --print-errors "json-glib-1.0 >= 0.12.0") 2>&5
+    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"json >= 0.9\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "json >= 0.9") 2>&5
   ac_status=$?
   $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
   test $ac_status = 0; }; then
-  pkg_cv_JSON_GLIB_CFLAGS=`$PKG_CONFIG --cflags "json-glib-1.0 >= 0.12.0" 2>/dev/null`
+  pkg_cv_JSON_CFLAGS=`$PKG_CONFIG --cflags "json >= 0.9" 2>/dev/null`
 		      test "x$?" != "x0" && pkg_failed=yes 
 else
   pkg_failed=yes
@@ -12315,16 +12322,16 @@ fi
  else
     pkg_failed=untried
 fi
-if test -n "$JSON_GLIB_LIBS"; then
-    pkg_cv_JSON_GLIB_LIBS="$JSON_GLIB_LIBS"
+if test -n "$JSON_LIBS"; then
+    pkg_cv_JSON_LIBS="$JSON_LIBS"
  elif test -n "$PKG_CONFIG"; then
     if test -n "$PKG_CONFIG" && \
-    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"json-glib-1.0 >= 0.12.0\""; } >&5
-  ($PKG_CONFIG --exists --print-errors "json-glib-1.0 >= 0.12.0") 2>&5
+    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"json >= 0.9\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "json >= 0.9") 2>&5
   ac_status=$?
   $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
   test $ac_status = 0; }; then
-  pkg_cv_JSON_GLIB_LIBS=`$PKG_CONFIG --libs "json-glib-1.0 >= 0.12.0" 2>/dev/null`
+  pkg_cv_JSON_LIBS=`$PKG_CONFIG --libs "json >= 0.9" 2>/dev/null`
 		      test "x$?" != "x0" && pkg_failed=yes 
 else
   pkg_failed=yes
@@ -12345,22 +12352,22 @@ else
         _pkg_short_errors_supported=no
 fi
         if test $_pkg_short_errors_supported = yes; then
-	        JSON_GLIB_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors --cflags --libs "json-glib-1.0 >= 0.12.0" 2>&1`
+	        JSON_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors --cflags --libs "json >= 0.9" 2>&1`
         else 
-	        JSON_GLIB_PKG_ERRORS=`$PKG_CONFIG --print-errors --cflags --libs "json-glib-1.0 >= 0.12.0" 2>&1`
+	        JSON_PKG_ERRORS=`$PKG_CONFIG --print-errors --cflags --libs "json >= 0.9" 2>&1`
         fi
 	# Put the nasty error message in config.log where it belongs
-	echo "$JSON_GLIB_PKG_ERRORS" >&5
+	echo "$JSON_PKG_ERRORS" >&5
 
-	as_fn_error $? "Package requirements (json-glib-1.0 >= 0.12.0) were not met:
+	as_fn_error $? "Package requirements (json >= 0.9) were not met:
 
-$JSON_GLIB_PKG_ERRORS
+$JSON_PKG_ERRORS
 
 Consider adjusting the PKG_CONFIG_PATH environment variable if you
 installed software in a non-standard prefix.
 
-Alternatively, you may set the environment variables JSON_GLIB_CFLAGS
-and JSON_GLIB_LIBS to avoid the need to call pkg-config.
+Alternatively, you may set the environment variables JSON_CFLAGS
+and JSON_LIBS to avoid the need to call pkg-config.
 See the pkg-config man page for more details." "$LINENO" 5        
 elif test $pkg_failed = untried; then
      	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
@@ -12371,15 +12378,15 @@ as_fn_error $? "The pkg-config script could not be found or is too old.  Make su
 is in your PATH or set the PKG_CONFIG environment variable to the full
 path to pkg-config.
 
-Alternatively, you may set the environment variables JSON_GLIB_CFLAGS
-and JSON_GLIB_LIBS to avoid the need to call pkg-config.
+Alternatively, you may set the environment variables JSON_CFLAGS
+and JSON_LIBS to avoid the need to call pkg-config.
 See the pkg-config man page for more details.
 
 To get pkg-config, see <http://pkg-config.freedesktop.org/>.
 See \`config.log' for more details" "$LINENO" 5; }        
 else
-	JSON_GLIB_CFLAGS=$pkg_cv_JSON_GLIB_CFLAGS
-	JSON_GLIB_LIBS=$pkg_cv_JSON_GLIB_LIBS
+	JSON_CFLAGS=$pkg_cv_JSON_CFLAGS
+	JSON_LIBS=$pkg_cv_JSON_LIBS
         { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
 $as_echo "yes" >&6; }
 	

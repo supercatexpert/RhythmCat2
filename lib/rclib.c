@@ -50,22 +50,19 @@ const gchar *rclib_build_time = __TIME__;
 static gchar *db_file = NULL;
 
 static void rclib_main_update_db_metadata_cb(RCLibCore *core,
-    const RCLibCoreMetadata *metadata, gpointer data)
+    const RCLibCoreMetadata *metadata, const gchar *uri, gpointer data)
 {
     RCLibDbPlaylistData *playlist_data;
     gchar *lyric_path;
-    gchar *uri;
     gint ret;
     RCLibCoreSourceType type;
     GSequenceIter *iter;
-    if(metadata==NULL) return;
-    uri = rclib_core_get_uri();
+    if(metadata==NULL || uri==NULL) return;
     iter = rclib_core_get_db_reference();
     if(iter==NULL) return;
     playlist_data = g_sequence_get(iter);
     type = rclib_core_get_source_type();
     ret = g_strcmp0(uri, playlist_data->uri);
-    g_free(uri);
     if(type==RCLIB_CORE_SOURCE_NORMAL && ret!=0) return;
     playlist_data = g_new0(RCLibDbPlaylistData, 1);
     playlist_data->title = metadata->title;
@@ -79,10 +76,8 @@ static void rclib_main_update_db_metadata_cb(RCLibCore *core,
         rclib_db_playlist_update_length(iter, metadata->duration);
     if(!rclib_lyric_is_available(0))
     {
-        uri = rclib_core_get_uri();
         lyric_path = rclib_lyric_search_lyric(uri, metadata->title,
             metadata->artist);
-        g_free(uri);
         if(lyric_path!=NULL)
         {
             rclib_lyric_load_file(lyric_path, 0);
