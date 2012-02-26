@@ -262,7 +262,7 @@ static GtkActionEntry ui_menu_entries[] =
     { "AlbumSaveImage", GTK_STOCK_SAVE_AS,
       N_("_Save album image as"), NULL,
       N_("Save the album image"),
-      G_CALLBACK(NULL) },
+      G_CALLBACK(rc_ui_dialog_save_album) },
     { "ProgressImportStatus", NULL,
       N_("Importing: 0 remaining"), NULL,
       NULL,
@@ -695,6 +695,8 @@ void rc_ui_menu_init()
         rc_ui_listview_get_catalog_widget()));
     playlist_selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(
         rc_ui_listview_get_playlist_widget()));
+    gtk_action_set_sensitive(gtk_ui_manager_get_action(ui_manager,
+        "/AlbumPopupMenu/AlbumSaveImage"), FALSE);
     gtk_action_set_sensitive(gtk_ui_manager_get_action(ui_manager,
         "/ProgressPopupMenu/ProgressImportStatus"), FALSE);
     gtk_action_set_sensitive(gtk_ui_manager_get_action(ui_manager,

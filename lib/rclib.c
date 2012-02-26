@@ -43,17 +43,20 @@
 
 const guint rclib_major_version = 1;
 const guint rclib_minor_version = 9;
-const guint rclib_micro_version = 0;
+const guint rclib_micro_version = 1;
 const gchar *rclib_build_date = __DATE__;
 const gchar *rclib_build_time = __TIME__;
 
 static gchar *db_file = NULL;
+static gulong main_tag_found_handler;
+static gulong main_new_duration_handler;
+static gulong main_catalog_delete_handler;
+static gulong main_playist_delete_handler;
 
 static void rclib_main_update_db_metadata_cb(RCLibCore *core,
     const RCLibCoreMetadata *metadata, const gchar *uri, gpointer data)
 {
     RCLibDbPlaylistData *playlist_data;
-    gchar *lyric_path;
     gint ret;
     RCLibCoreSourceType type;
     GSequenceIter *iter;
@@ -74,16 +77,6 @@ static void rclib_main_update_db_metadata_cb(RCLibCore *core,
     rclib_db_playlist_update_metadata(iter, playlist_data);
     if(metadata->duration>0)
         rclib_db_playlist_update_length(iter, metadata->duration);
-    if(!rclib_lyric_is_available(0))
-    {
-        lyric_path = rclib_lyric_search_lyric(uri, metadata->title,
-            metadata->artist);
-        if(lyric_path!=NULL)
-        {
-            rclib_lyric_load_file(lyric_path, 0);
-            g_free(lyric_path);
-        }
-    }
     g_free(playlist_data);
 }
 
@@ -93,31 +86,6 @@ static void rclib_main_update_db_duration_cb(RCLibCore *core,
     GSequenceIter *iter = rclib_core_get_db_reference();
     if(iter==NULL || duration<0) return;
     rclib_db_playlist_update_length(iter, duration);
-}
-
-static void rclib_main_uri_changed_cb(RCLibCore *core, const gchar *uri,
-    gpointer data)
-{
-    GSequenceIter *iter = NULL;
-    gchar *lyric_path = NULL;
-    gchar *lyric_sec_path = NULL;
-    rclib_lyric_clean(0);
-    rclib_lyric_clean(1);
-    iter = rclib_core_get_db_reference();
-    if(iter!=NULL)
-    {
-        lyric_path = g_strdup(rclib_db_playlist_get_lyric_bind(iter));
-        lyric_sec_path = g_strdup(
-            rclib_db_playlist_get_lyric_secondary_bind(iter));
-    }
-    if(lyric_path==NULL)
-        lyric_path = rclib_lyric_search_lyric(uri, NULL, NULL);
-    if(lyric_path!=NULL)
-        rclib_lyric_load_file(lyric_path, 0);
-    if(lyric_sec_path!=NULL)
-        rclib_lyric_load_file(lyric_sec_path, 1);
-    g_free(lyric_path);
-    g_free(lyric_sec_path);
 }
 
 static void rclib_main_catalog_delete_cb(RCLibDb *db, GSequenceIter *iter,
@@ -180,6 +148,7 @@ gboolean rclib_init(gint *argc, gchar **argv[], const gchar *dir,
     }
     rclib_player_init();
     rclib_lyric_init();
+    rclib_album_init();
     rclib_settings_init();
     lyric_dir = g_build_filename(dir, "Lyrics", NULL);
     rclib_lyric_set_search_dir(lyric_dir);
@@ -190,15 +159,13 @@ gboolean rclib_init(gint *argc, gchar **argv[], const gchar *dir,
     settings_file = g_build_filename(dir, "settings.conf", NULL);
     rclib_settings_load_from_file(settings_file);
     g_free(settings_file);
-    rclib_core_signal_connect("tag-found",
+    main_tag_found_handler = rclib_core_signal_connect("tag-found",
         G_CALLBACK(rclib_main_update_db_metadata_cb), NULL);
-    rclib_core_signal_connect("new-duration",
+    main_new_duration_handler = rclib_core_signal_connect("new-duration",
         G_CALLBACK(rclib_main_update_db_duration_cb), NULL);
-    rclib_core_signal_connect("uri-changed",
-        G_CALLBACK(rclib_main_uri_changed_cb), NULL);
-    rclib_db_signal_connect("catalog-delete",
+    main_catalog_delete_handler = rclib_db_signal_connect("catalog-delete",
         G_CALLBACK(rclib_main_catalog_delete_cb), NULL);
-    rclib_db_signal_connect("playlist-delete",
+    main_playist_delete_handler = rclib_db_signal_connect("playlist-delete",
         G_CALLBACK(rclib_main_playlist_delete_cb), NULL);
     return TRUE;
 }
@@ -211,8 +178,17 @@ gboolean rclib_init(gint *argc, gchar **argv[], const gchar *dir,
 
 void rclib_exit()
 {
+    if(main_tag_found_handler>0)
+        rclib_core_signal_disconnect(main_tag_found_handler);
+    if(main_new_duration_handler>0)
+        rclib_core_signal_disconnect(main_new_duration_handler);
+    if(main_catalog_delete_handler>0)
+        rclib_db_signal_disconnect(main_catalog_delete_handler);
+    if(main_playist_delete_handler>0)
+        rclib_db_signal_disconnect(main_playist_delete_handler);
     g_free(db_file);
     rclib_settings_exit();
+    rclib_album_exit();
     rclib_lyric_exit();
     rclib_core_exit();
     rclib_db_exit();

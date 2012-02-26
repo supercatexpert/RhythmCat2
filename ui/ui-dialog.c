@@ -664,7 +664,44 @@ void rc_ui_dialog_bind_album()
     gtk_widget_destroy(dialog);
 }
 
+/**
+ * rc_ui_dialog_save_album:
+ *
+ * Show a dialog to save the album image.
+ */
 
+void rc_ui_dialog_save_album()
+{
+    GtkWidget *file_chooser;
+    gint result = 0;
+    gchar *file_name = NULL;
+    const gchar *home_dir;
+    if(!rclib_album_get_album_data(NULL, NULL)) return;
+    file_chooser = gtk_file_chooser_dialog_new(_("Save the playlist..."),
+        NULL, GTK_FILE_CHOOSER_ACTION_SAVE, GTK_STOCK_SAVE,
+        GTK_RESPONSE_ACCEPT, GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL, NULL);
+    home_dir = g_getenv("HOME");
+    if(home_dir==NULL)
+        home_dir = g_get_home_dir();
+    gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(file_chooser),
+        home_dir);
+    gtk_file_chooser_set_do_overwrite_confirmation(
+        GTK_FILE_CHOOSER(file_chooser), TRUE);
+    result = gtk_dialog_run(GTK_DIALOG(file_chooser));
+    switch(result)
+    {
+        case GTK_RESPONSE_ACCEPT:
+            file_name = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(
+                file_chooser));
+            rclib_album_save_file(file_name);
+            g_free(file_name);
+            break;
+        case GTK_RESPONSE_CANCEL:
+            break;
+        default: break;
+    }
+    gtk_widget_destroy(file_chooser);
+}
 
 
 

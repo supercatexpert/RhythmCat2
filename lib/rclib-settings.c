@@ -116,7 +116,6 @@ gboolean rclib_settings_init()
         RCLIB_PLAYER_REPEAT_ALL);
     rclib_settings_set_integer("Player", "RandomMode",
         RCLIB_PLAYER_RANDOM_NONE);
-    rclib_settings_set_double("Player", "Volume", 1.0);
     rclib_settings_set_integer("SoundEffect", "EQStyle",
         RCLIB_CORE_EQ_TYPE_NONE);
     rclib_settings_set_double_list("SoundEffect", "EQ", eq_array, 10);
@@ -175,7 +174,6 @@ void rclib_settings_apply()
 {
     GError *error = NULL;
     gint ivalue;
-    gdouble dvalue;
     gdouble *darray;
     gsize size;
     ivalue = rclib_settings_get_integer("Player", "RepeatMode", &error);
@@ -192,16 +190,6 @@ void rclib_settings_apply()
     if(error==NULL)
     {
         rclib_player_set_random_mode(ivalue);
-    }   
-    else
-    {
-        g_error_free(error);
-        error = NULL;
-    }
-    dvalue = rclib_settings_get_double("Player", "Volume", &error);
-    if(error==NULL)
-    {
-        rclib_core_set_volume(dvalue);
     }   
     else
     {
@@ -246,8 +234,6 @@ void rclib_settings_update()
     rclib_settings_set_integer("Player", "RepeatMode", ivalue);
     ivalue = rclib_player_get_random_mode();
     rclib_settings_set_integer("Player", "RandomMode", ivalue);
-    if(rclib_core_get_volume(&dvalue))
-        rclib_settings_set_double("Player", "Volume", dvalue);
     if(rclib_core_get_eq((RCLibCoreEQType *)&ivalue, eq_array))
     {
         rclib_settings_set_integer("SoundEffect", "EQStyle", ivalue);

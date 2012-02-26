@@ -49,8 +49,8 @@ am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
 am_RhythmCat2_OBJECTS = ui-listmodel.$(OBJEXT) ui-player.$(OBJEXT) \
 	ui-listview.$(OBJEXT) ui-menu.$(OBJEXT) ui-dialog.$(OBJEXT) \
-	ui-slabel.$(OBJEXT) ui-spectrum.$(OBJEXT) mpris2.$(OBJEXT) \
-	main.$(OBJEXT)
+	ui-slabel.$(OBJEXT) ui-spectrum.$(OBJEXT) ui-style.$(OBJEXT) \
+	mpris2.$(OBJEXT) main.$(OBJEXT)
 RhythmCat2_OBJECTS = $(am_RhythmCat2_OBJECTS)
 DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
@@ -235,8 +235,8 @@ top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 RhythmCat2_SOURCES = ui-listmodel.c ui-player.c ui-listview.c ui-menu.c \
-    ui-dialog.c ui-slabel.c ui-spectrum.c mpris2.c ui-listmodel.h \
-    ui-listview.h ui-player.h ui-menu.h ui-dialog.h ui-slabel.h \
+    ui-dialog.c ui-slabel.c ui-spectrum.c ui-style.c mpris2.c ui-listmodel.h \
+    ui-listview.h ui-player.h ui-menu.h ui-dialog.h ui-slabel.h ui-style.h \
     ui-spectrum.h mpris2.h common.h ui-img-icon.xpm ui-img-nocov.xpm main.c
 
 RhythmCat2_DEPENDENCIES = @LIBOBJS@
@@ -342,6 +342,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ui-player.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ui-slabel.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ui-spectrum.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ui-style.Po@am__quote@
 
 .c.o:
 @am__fastdepCC_TRUE@	$(COMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<

@@ -34,6 +34,7 @@
 #include "rclib-player.h"
 #include "rclib-util.h"
 #include "rclib-lyric.h"
+#include "rclib-album.h"
 #include "rclib-settings.h"
 #include "rclib-dbus.h"
 

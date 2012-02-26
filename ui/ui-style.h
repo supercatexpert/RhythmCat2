@@ -1,7 +1,7 @@
 /*
- * RhythmCat UI Dialogs Header Declaration
+ * RhythmCat UI Style Header Declaration
  *
- * ui-dialog.h
+ * ui-style.h
  * This file is part of RhythmCat Music Player (GTK+ Version)
  *
  * Copyright (C) 2012 - SuperCat, license: GPL v3
@@ -22,27 +22,16 @@
  * Boston, MA  02110-1301  USA
  */
 
-#ifndef HAVE_RC_UI_DIALOG_H
-#define HAVE_RC_UI_DIALOG_H
+#ifndef HAVE_RC_UI_STYLE_H
+#define HAVE_RC_UI_STYLE_H
 
 #include <glib.h>
-#include <glib/gi18n.h>
 #include <gtk/gtk.h>
 #include <rclib.h>
 
 G_BEGIN_DECLS
 
-void rc_ui_dialog_about_player();
-void rc_ui_dialog_show_message(GtkMessageType type, const gchar *title,
-    const gchar *format, ...);
-void rc_ui_dialog_add_music();
-void rc_ui_dialog_add_directory();
-void rc_ui_dialog_load_playlist();
-void rc_ui_dialog_save_playlist();
-void rc_ui_dialog_save_all_playlist();
-void rc_ui_dialog_bind_lyric();
-void rc_ui_dialog_bind_album();
-void rc_ui_dialog_save_album();
+
 
 G_END_DECLS
 

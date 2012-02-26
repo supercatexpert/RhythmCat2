@@ -1,8 +1,8 @@
 bin_PROGRAMS = RhythmCat2
 
 RhythmCat2_SOURCES = ui-listmodel.c ui-player.c ui-listview.c ui-menu.c \
-    ui-dialog.c ui-slabel.c ui-spectrum.c mpris2.c ui-listmodel.h \
-    ui-listview.h ui-player.h ui-menu.h ui-dialog.h ui-slabel.h \
+    ui-dialog.c ui-slabel.c ui-spectrum.c ui-style.c mpris2.c ui-listmodel.h \
+    ui-listview.h ui-player.h ui-menu.h ui-dialog.h ui-slabel.h ui-style.h \
     ui-spectrum.h mpris2.h common.h ui-img-icon.xpm ui-img-nocov.xpm main.c
 
 RhythmCat2_DEPENDENCIES = @LIBOBJS@

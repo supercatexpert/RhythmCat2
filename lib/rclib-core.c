@@ -128,7 +128,6 @@ struct RCLibCoreEQData
 };
 
 static GObject *core_instance = NULL;
-static gboolean core_startup = FALSE;
 static gint core_signals[SIGNAL_LAST] = {0};
 
 static GQuark rclib_core_error_quark()
@@ -1208,7 +1207,6 @@ gboolean rclib_core_init(gint *argc, gchar **argv[], GError **error)
         return FALSE;
     }
     gst_init(argc, argv);
-    core_startup = TRUE;
     flag = FALSE;
     G_STMT_START
     {
@@ -1340,8 +1338,8 @@ gboolean rclib_core_init(gint *argc, gchar **argv[], GError **error)
     core_instance = g_object_new(RCLIB_CORE_TYPE, NULL);
     priv = RCLIB_CORE_GET_PRIVATE(RCLIB_CORE(core_instance));
     g_object_set(G_OBJECT(videosink), "sync", TRUE, NULL);
-    g_object_set(G_OBJECT(playbin), "audio-sink", audiobin, NULL);
-    g_object_set(G_OBJECT(playbin), "video-sink", videosink, NULL);
+    g_object_set(G_OBJECT(playbin), "audio-sink", audiobin, "video-sink",
+        videosink, NULL);
     bzero(&(priv->metadata), sizeof(RCLibCoreMetadata));
     priv->playbin = playbin;
     priv->effectbin = effectbin;

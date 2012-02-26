@@ -27,6 +27,7 @@
 #include "rclib-marshal.h"
 #include "rclib-core.h"
 #include "rclib-tag.h"
+#include "rclib-db.h"
 
 /**
  * SECTION: rclib-lyric
@@ -62,6 +63,7 @@ typedef struct RCLibLyricPrivate
     RCLibLyricParsedData parsed_data1;
     RCLibLyricParsedData parsed_data2;
     gulong tag_found_handler;
+    gulong uri_changed_handler;
 }RCLibLyricPrivate;
 
 enum
@@ -132,18 +134,50 @@ static void rclib_lyric_tag_found_cb(RCLibCore *core,
     lyric = RCLIB_LYRIC(data);
     priv = RCLIB_LYRIC_GET_PRIVATE(RCLIB_LYRIC(lyric));
     if(priv==NULL) return;
-    lyric_path = rclib_lyric_search_lyric(uri, metadata->title, metadata->artist);
-    if(lyric_path!=NULL)
+    if(priv->parsed_data1.filename==NULL)
     {
-        if(priv->parsed_data1.filename==NULL)
-        rclib_lyric_load_file(lyric_path, 0);
-        g_free(lyric_path);
+        lyric_path = rclib_lyric_search_lyric(uri, metadata->title,
+            metadata->artist);
+        if(lyric_path!=NULL)
+        {
+            rclib_lyric_load_file(lyric_path, 0);
+            g_free(lyric_path);
+        }
     }
+}
+
+static void rclib_lyric_uri_changed_cb(RCLibCore *core, const gchar *uri,
+    gpointer data)
+{
+    GSequenceIter *iter = NULL;
+    gchar *lyric_path = NULL;
+    gchar *lyric_sec_path = NULL;
+    rclib_lyric_clean(0);
+    rclib_lyric_clean(1);
+    iter = rclib_core_get_db_reference();
+    if(iter!=NULL)
+    {
+        lyric_path = g_strdup(rclib_db_playlist_get_lyric_bind(iter));
+        lyric_sec_path = g_strdup(
+            rclib_db_playlist_get_lyric_secondary_bind(iter));
+    }
+    if(lyric_path==NULL)
+        lyric_path = rclib_lyric_search_lyric(uri, NULL, NULL);
+    if(lyric_path!=NULL)
+        rclib_lyric_load_file(lyric_path, 0);
+    if(lyric_sec_path!=NULL)
+        rclib_lyric_load_file(lyric_sec_path, 1);
+    g_free(lyric_path);
+    g_free(lyric_sec_path);
 }
 
 static void rclib_lyric_finalize(GObject *object)
 {
     RCLibLyricPrivate *priv = RCLIB_LYRIC_GET_PRIVATE(RCLIB_LYRIC(object));
+    if(priv->tag_found_handler>0)
+        rclib_core_signal_disconnect(priv->tag_found_handler);
+    if(priv->uri_changed_handler>0)
+        rclib_core_signal_disconnect(priv->uri_changed_handler);
     if(priv->regex!=NULL) g_regex_unref(priv->regex);
     g_free(priv->search_dir);
     g_free(priv->encoding);
@@ -160,8 +194,6 @@ static void rclib_lyric_finalize(GObject *object)
     g_free(priv->parsed_data2.album);
     g_free(priv->parsed_data2.author);
     g_source_remove(priv->timer);
-    if(priv->tag_found_handler>0)
-        rclib_core_signal_disconnect(priv->tag_found_handler);
 }
 
 static void rclib_lyric_class_init(RCLibLyricClass *klass)
@@ -231,6 +263,8 @@ static void rclib_lyric_instance_init(RCLibLyric *lyric)
         NULL);
     priv->tag_found_handler = rclib_core_signal_connect("tag-found",
         G_CALLBACK(rclib_lyric_tag_found_cb), lyric);
+    priv->uri_changed_handler = rclib_core_signal_connect("uri-changed",
+        G_CALLBACK(rclib_lyric_uri_changed_cb), lyric);
 }
 
 GType rclib_lyric_get_type()
