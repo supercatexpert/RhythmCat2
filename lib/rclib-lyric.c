@@ -24,6 +24,7 @@
  */
 
 #include "rclib-lyric.h"
+#include "rclib-common.h"
 #include "rclib-marshal.h"
 #include "rclib-core.h"
 #include "rclib-tag.h"
@@ -75,6 +76,7 @@ enum
 };
 
 static GObject *lyric_instance = NULL;
+static gpointer rclib_lyric_parent_class = NULL;
 static gint lyric_signals[SIGNAL_LAST] = {0};
 
 static gint rclib_lyric_time_compare_func(gconstpointer a, gconstpointer b,
@@ -194,11 +196,13 @@ static void rclib_lyric_finalize(GObject *object)
     g_free(priv->parsed_data2.album);
     g_free(priv->parsed_data2.author);
     g_source_remove(priv->timer);
+    G_OBJECT_CLASS(rclib_lyric_parent_class)->finalize(object);
 }
 
 static void rclib_lyric_class_init(RCLibLyricClass *klass)
 {
     GObjectClass *object_class = (GObjectClass *)klass;
+    rclib_lyric_parent_class = g_type_class_peek_parent(klass);
     object_class->finalize = rclib_lyric_finalize;
     g_type_class_add_private(klass, sizeof(RCLibLyricPrivate));
     
@@ -269,7 +273,8 @@ static void rclib_lyric_instance_init(RCLibLyric *lyric)
 
 GType rclib_lyric_get_type()
 {
-    static GType lyric_type = 0;
+    static volatile gsize g_define_type_id__volatile = 0;
+    GType g_define_type_id;
     static const GTypeInfo lyric_info = {
         .class_size = sizeof(RCLibLyricClass),
         .base_init = NULL,
@@ -281,12 +286,13 @@ GType rclib_lyric_get_type()
         .n_preallocs = 0,
         .instance_init = (GInstanceInitFunc)rclib_lyric_instance_init
     };
-    if(!lyric_type)
+    if(g_once_init_enter(&g_define_type_id__volatile))
     {
-        lyric_type = g_type_register_static(G_TYPE_OBJECT, "RCLibLyric",
-            &lyric_info, 0);
+        g_define_type_id = g_type_register_static(G_TYPE_OBJECT,
+            g_intern_static_string("RCLibLyric"), &lyric_info, 0);
+        g_once_init_leave(&g_define_type_id__volatile, g_define_type_id);
     }
-    return lyric_type;
+    return g_define_type_id__volatile;
 }
 
 /**

@@ -24,6 +24,7 @@
  */
 
 #include "rclib-album.h"
+#include "rclib-common.h"
 #include "rclib-core.h"
 #include "rclib-db.h"
 #include "rclib-util.h"
@@ -59,6 +60,7 @@ enum
 };
 
 static GObject *album_instance = NULL;
+static gpointer rclib_album_parent_class = NULL;
 static gint album_signals[SIGNAL_LAST] = {0};
 
 static void rclib_album_tag_found_cb(RCLibCore *core,
@@ -136,11 +138,13 @@ static void rclib_album_finalize(GObject *object)
         rclib_core_signal_disconnect(priv->tag_found_handler);
     if(priv->uri_changed_handler>0)
         rclib_core_signal_disconnect(priv->uri_changed_handler);
+    G_OBJECT_CLASS(rclib_album_parent_class)->finalize(object);
 }
 
 static void rclib_album_class_init(RCLibAlbumClass *klass)
 {
     GObjectClass *object_class = (GObjectClass *)klass;
+    rclib_album_parent_class = g_type_class_peek_parent(klass);
     object_class->finalize = rclib_album_finalize;
     g_type_class_add_private(klass, sizeof(RCLibAlbumPrivate));
     
@@ -187,7 +191,8 @@ static void rclib_album_instance_init(RCLibAlbum *album)
 
 GType rclib_album_get_type()
 {
-    static GType album_type = 0;
+    static volatile gsize g_define_type_id__volatile = 0;
+    GType g_define_type_id;
     static const GTypeInfo album_info = {
         .class_size = sizeof(RCLibAlbumClass),
         .base_init = NULL,
@@ -199,12 +204,13 @@ GType rclib_album_get_type()
         .n_preallocs = 0,
         .instance_init = (GInstanceInitFunc)rclib_album_instance_init
     };
-    if(!album_type)
+    if(g_once_init_enter(&g_define_type_id__volatile))
     {
-        album_type = g_type_register_static(G_TYPE_OBJECT, "RCLibAlbum",
-            &album_info, 0);
+        g_define_type_id = g_type_register_static(G_TYPE_OBJECT,
+            g_intern_static_string("RCLibAlbum"), &album_info, 0);
+        g_once_init_leave(&g_define_type_id__volatile, g_define_type_id);
     }
-    return album_type;
+    return g_define_type_id__volatile;
 }
 
 /**

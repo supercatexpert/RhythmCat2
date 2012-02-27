@@ -8,7 +8,7 @@ RhythmCat2_SOURCES = ui-listmodel.c ui-player.c ui-listview.c ui-menu.c \
 RhythmCat2_DEPENDENCIES = @LIBOBJS@
 
 INCLUDES = @GLIB2_CFLAGS@ @GTK_CFLAGS@ @GSTREAMER_CFLAGS@ @JSON_CFLAGS@ \
-    -DLOCALEDIR=\"$(localedir)\" -I$(top_builddir)/lib
+    -DLOCALEDIR=\"$(localedir)\" -I$(top_srcdir)/lib
 
 RhythmCat2_LDADD = @LIBOBJS@ @GLIB2_LIBS@ @GTK_LIBS@ @GSTREAMER_LIBS@ \
     @JSON_LIBS@ $(top_builddir)/lib/librhythmcat-2.0.la

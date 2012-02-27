@@ -24,6 +24,7 @@
  */
 
 #include "rclib-tag.h"
+#include "rclib-common.h"
 
 /**
  * SECTION: rclib-tag

@@ -89,6 +89,7 @@ GType rclib_album_get_type();
 
 /*< public >*/
 void rclib_album_init();
+void rclib_album_exit();
 GObject *rclib_album_get_instance();
 gulong rclib_album_signal_connect(const gchar *name,
     GCallback callback, gpointer data);

@@ -24,6 +24,7 @@
  */
 
 #include "rclib.h"
+#include "rclib-common.h"
 
 /**
  * SECTION: rclib
@@ -37,9 +38,6 @@
  * update the metadata in the database. If you do not want to initialize
  * the modules by yourself, just using function rclib_init().
  */
-
-#define PACKAGE "LibRhythmCat"
-#define GETTEXT_PACKAGE "LibRhythmCat"
 
 const guint rclib_major_version = 1;
 const guint rclib_minor_version = 9;
@@ -138,7 +136,9 @@ gboolean rclib_init(gint *argc, gchar **argv[], const gchar *dir,
     bindtextdomain(GETTEXT_PACKAGE, LOCALEDIR);
     bind_textdomain_codeset(GETTEXT_PACKAGE, "UTF-8");
     textdomain(GETTEXT_PACKAGE);
-    if(!rclib_core_init(argc, argv, error))
+    if(!gst_init_check(argc, argv, error))
+        return FALSE;
+    if(!rclib_core_init(error))
         return FALSE;
     db_file = g_build_filename(dir, "library.db", NULL);
     if(!rclib_db_init(db_file))

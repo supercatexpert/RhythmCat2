@@ -104,6 +104,7 @@ typedef struct RCUiPlayerPrivate
 }RCUiPlayerPrivate;
 
 static GObject *ui_player_instance = NULL;
+static gpointer rc_ui_player_parent_class = NULL;
 static GtkApplication *ui_player_app = NULL;
 
 static inline void rc_ui_player_title_label_set_value(
@@ -1100,11 +1101,13 @@ static void rc_ui_player_finalize(GObject *object)
         rclib_album_signal_disconnect(priv->album_none_id);
     if(priv->main_window!=NULL) gtk_widget_destroy(priv->main_window);
     g_object_unref(priv->app);
+    G_OBJECT_CLASS(rc_ui_player_parent_class)->finalize(object);
 }
 
 static void rc_ui_player_class_init(RCUiPlayerClass *klass)
 {
     GObjectClass *object_class = (GObjectClass *)klass;
+    rc_ui_player_parent_class = g_type_class_peek_parent(klass);
     object_class->finalize = rc_ui_player_finalize;
     g_type_class_add_private(klass, sizeof(RCUiPlayerPrivate));
 }
@@ -1275,7 +1278,8 @@ static void rc_ui_player_instance_init(RCUiPlayer *ui)
 
 GType rc_ui_player_get_type()
 {
-    static GType ui_type = 0;
+    static volatile gsize g_define_type_id__volatile = 0;
+    GType g_define_type_id;
     static const GTypeInfo ui_info = {
         .class_size = sizeof(RCUiPlayerClass),
         .base_init = NULL,
@@ -1287,12 +1291,13 @@ GType rc_ui_player_get_type()
         .n_preallocs = 0,
         .instance_init = (GInstanceInitFunc)rc_ui_player_instance_init
     };
-    if(!ui_type)
+    if(g_once_init_enter(&g_define_type_id__volatile))
     {
-        ui_type = g_type_register_static(G_TYPE_OBJECT, "RCUiPlayer",
-            &ui_info, 0);
+        g_define_type_id = g_type_register_static(G_TYPE_OBJECT,
+            g_intern_static_string("RCUiPlayer"), &ui_info, 0);
+        g_once_init_leave(&g_define_type_id__volatile, g_define_type_id);
     }
-    return ui_type;
+    return g_define_type_id__volatile;
 }
 
 /**

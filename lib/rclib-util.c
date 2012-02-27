@@ -28,6 +28,7 @@
 #endif
 
 #include "rclib-util.h"
+#include "rclib-common.h"
 #include "rclib-tag.h"
 
 /**

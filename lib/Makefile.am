@@ -6,10 +6,10 @@ librhythmcat_2_0_la_SOURCES = \
     rclib-util.c rclib-lyric.c rclib-settings.c rclib-dbus.c rclib-album.c \
     rclib.c rclib-core.h rclib-cue.h rclib-db.h rclib-tag.h rclib-util.h \
     rclib-player.h rclib-lyric.h rclib-settings.h rclib-dbus.h rclib-album.h \
-    rclib.h rclib-marshal.list
+    rclib.h rclib-common.h rclib-marshal.list
 
 INCLUDES = @GLIB2_CFLAGS@ @GSTREAMER_CFLAGS@ @JSON_CFLAGS@ \
-    -DLOCALEDIR=\"$(localedir)\" -DG_LOG_DOMAIN=\"LibRhythmCat\"
+    -DLOCALEDIR=\"$(localedir)\"
 
 librhythmcat_2_0_la_LIBADD = @GLIB2_LIBS@ @GSTREAMER_LIBS@ @JSON_LIBS@
 

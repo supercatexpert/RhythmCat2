@@ -1,0 +1,18 @@
+- Plug-in support system
+- Custom window bar
+- New menus
+- Settings (UI)
+- Themes & Styles support
+
+Long-term:
+- Command Line Interface (CLI), based on ncurses
+- Mini mode
+- More plug-ins
+- Non-Unix platform support
+- Music Library
+- More interfaces in MPRIS v2.1 support
+- Python3 plugin support
+
+Other ideas:
+
+

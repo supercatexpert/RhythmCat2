@@ -24,6 +24,7 @@
  */
 
 #include "rclib-dbus.h"
+#include "rclib-common.h"
 #include "rclib-core.h"
 #include "rclib-db.h"
 #include "rclib-player.h"
@@ -85,6 +86,7 @@ enum
 };
 
 static GObject *dbus_instance = NULL;
+static gpointer rclib_dbus_parent_class = NULL;
 static gint dbus_signals[SIGNAL_LAST] = {0};
 static gchar *dbus_app_name = NULL;
 static const gchar *dbus_mpris2_introspection_xml =
@@ -805,7 +807,8 @@ static void rclib_dbus_finalize(GObject *object)
     if(priv->mpris_name_own_id>0)
         g_bus_unown_name(priv->mpris_name_own_id);
     if(priv->connection!=NULL)
-        g_object_unref(priv->connection);        
+        g_object_unref(priv->connection);
+    G_OBJECT_CLASS(rclib_dbus_parent_class)->finalize(object);
 }
 
 static void rclib_dbus_set_can_quit(RCLibDBus *dbus, gboolean value)
@@ -1023,6 +1026,7 @@ static void rclib_dbus_get_property(GObject *object,
 static void rclib_dbus_class_init(RCLibDBusClass *klass)
 {
     GObjectClass *object_class = (GObjectClass *)klass;
+    rclib_dbus_parent_class = g_type_class_peek_parent(klass);
     object_class->finalize = rclib_dbus_finalize;
     object_class->set_property = rclib_dbus_set_property;
     object_class->get_property = rclib_dbus_get_property;
@@ -1217,7 +1221,8 @@ static void rclib_dbus_instance_init(RCLibDBus *db)
 
 GType rclib_dbus_get_type()
 {
-    static GType dbus_type = 0;
+    static volatile gsize g_define_type_id__volatile = 0;
+    GType g_define_type_id;
     static const GTypeInfo dbus_info = {
         .class_size = sizeof(RCLibDBusClass),
         .base_init = NULL,
@@ -1229,12 +1234,13 @@ GType rclib_dbus_get_type()
         .n_preallocs = 0,
         .instance_init = (GInstanceInitFunc)rclib_dbus_instance_init
     };
-    if(!dbus_type)
+    if(g_once_init_enter(&g_define_type_id__volatile))
     {
-        dbus_type = g_type_register_static(G_TYPE_OBJECT, "RCLibDBus",
-            &dbus_info, 0);
+        g_define_type_id = g_type_register_static(G_TYPE_OBJECT,
+            g_intern_static_string("RCLibDBus"), &dbus_info, 0);
+        g_once_init_leave(&g_define_type_id__volatile, g_define_type_id);
     }
-    return dbus_type;
+    return g_define_type_id__volatile;
 }
 
 /**

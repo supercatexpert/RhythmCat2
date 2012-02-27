@@ -43,18 +43,30 @@ DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in \
 	$(srcdir)/version.xml.in $(top_srcdir)/gtk-doc.make
 subdir = docs/reference/lib
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
-am__aclocal_m4_deps = $(top_srcdir)/configure.in
+am__aclocal_m4_deps = $(top_srcdir)/m4/gettext.m4 \
+	$(top_srcdir)/m4/gtk-doc.m4 $(top_srcdir)/m4/iconv.m4 \
+	$(top_srcdir)/m4/lib-ld.m4 $(top_srcdir)/m4/lib-link.m4 \
+	$(top_srcdir)/m4/lib-prefix.m4 $(top_srcdir)/m4/nls.m4 \
+	$(top_srcdir)/m4/po.m4 $(top_srcdir)/m4/progtest.m4 \
+	$(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
 mkinstalldirs = $(install_sh) -d
 CONFIG_HEADER = $(top_builddir)/config.h
 CONFIG_CLEAN_FILES = version.xml
 CONFIG_CLEAN_VPATH_FILES =
+AM_V_GEN = $(am__v_GEN_$(V))
+am__v_GEN_ = $(am__v_GEN_$(AM_DEFAULT_VERBOSITY))
+am__v_GEN_0 = @echo "  GEN   " $@;
+AM_V_at = $(am__v_at_$(V))
+am__v_at_ = $(am__v_at_$(AM_DEFAULT_VERBOSITY))
+am__v_at_0 = @
 SOURCES =
 DIST_SOURCES =
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 ACLOCAL = ${SHELL} /home/supercat/Project/RhythmCat/Sources2/missing --run aclocal-1.11
 AMTAR = $${TAR-tar}
+AM_DEFAULT_VERBOSITY = 0
 AR = ar
 AUTOCONF = ${SHELL} /home/supercat/Project/RhythmCat/Sources2/missing --run autoconf
 AUTOHEADER = ${SHELL} /home/supercat/Project/RhythmCat/Sources2/missing --run autoheader
@@ -93,8 +105,6 @@ GREP = /bin/grep
 GSTREAMER_CFLAGS = -pthread -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include -I/usr/include/gstreamer-0.10 -I/usr/include/libxml2  
 GSTREAMER_LIBS = -pthread -lgstpbutils-0.10 -lgstfft-0.10 -lm -lgstreamer-0.10 -lgobject-2.0 -lgmodule-2.0 -lxml2 -lgthread-2.0 -lrt -lglib-2.0  
 GTKDOC_CHECK = /usr/bin/gtkdoc-check
-GTKDOC_DEPS_CFLAGS = -pthread -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include  
-GTKDOC_DEPS_LIBS = -pthread -lgobject-2.0 -lgthread-2.0 -lrt -lglib-2.0  
 GTKDOC_MKPDF = /usr/bin/gtkdoc-mkpdf
 GTKDOC_REBASE = /usr/bin/gtkdoc-rebase
 GTK_CFLAGS = -DGSEAL_ENABLE -pthread -I/usr/include/gtk-3.0 -I/usr/include/atk-1.0 -I/usr/include/gdk-pixbuf-2.0 -I/usr/include/pango-1.0 -I/usr/include/gio-unix-2.0/ -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include -I/usr/include/pixman-1 -I/usr/include/freetype2 -I/usr/include/libpng12 -I/usr/include/cairo  
@@ -139,10 +149,10 @@ OTOOL64 =
 PACKAGE = RhythmCat
 PACKAGE_BUGREPORT = https://github.com/supercatexpert/RhythmCat2/issues/
 PACKAGE_NAME = RhythmCat
-PACKAGE_STRING = RhythmCat 1.9.0
+PACKAGE_STRING = RhythmCat 1.9.1
 PACKAGE_TARNAME = rhythmcat
 PACKAGE_URL = 
-PACKAGE_VERSION = 1.9.0
+PACKAGE_VERSION = 1.9.1
 PATH_SEPARATOR = :
 PKG_CONFIG = /usr/bin/pkg-config
 PKG_CONFIG_LIBDIR = 
@@ -155,13 +165,13 @@ RANLIB = ranlib
 RC_MAJOR_VERSION = 1
 RC_MICRO_VERSION = 
 RC_MINOR_VERSION = 9
-RC_VERSION = 1.9.0
+RC_VERSION = 1.9.1
 SED = /bin/sed
 SET_MAKE = 
 SHELL = /bin/bash
 STRIP = strip
 USE_NLS = yes
-VERSION = 1.9.0
+VERSION = 1.9.1
 XGETTEXT = /usr/bin/xgettext
 XGETTEXT_015 = /usr/bin/xgettext
 XGETTEXT_EXTRA_OPTIONS = 

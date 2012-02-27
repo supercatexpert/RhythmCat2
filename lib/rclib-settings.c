@@ -24,6 +24,7 @@
  */
 
 #include "rclib-settings.h"
+#include "rclib-common.h"
 #include "rclib-core.h"
 #include "rclib-player.h"
 
@@ -228,7 +229,6 @@ void rclib_settings_apply()
 void rclib_settings_update()
 {
     gint ivalue;
-    gdouble dvalue;
     gdouble eq_array[10] = {0.0};
     ivalue = rclib_player_get_repeat_mode();
     rclib_settings_set_integer("Player", "RepeatMode", ivalue);

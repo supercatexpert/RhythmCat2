@@ -1,1 +1,1 @@
-SUBDIRS = Monochrome AeroBlue
+SUBDIRS = Monochrome

@@ -46,6 +46,8 @@ typedef struct RCUiSpectrumWidgetPrivate
     gfloat *magnitudes;
 }RCUiSpectrumWidgetPrivate;
 
+static gpointer rc_ui_spectrum_widget_parent_class = NULL;
+
 static void rc_ui_spectrum_widget_realize(GtkWidget *widget)
 {
     RCUiSpectrumWidget *spectrum;
@@ -178,26 +180,29 @@ static void rc_ui_spectrum_widget_finalize(GObject *object)
     RCUiSpectrumWidgetPrivate *priv;
     priv = RC_UI_SPECTRUM_WIDGET_GET_PRIVATE(spectrum);
     g_free(priv->magnitudes);
+    G_OBJECT_CLASS(rc_ui_spectrum_widget_parent_class)->finalize(object);
 }
 
-static void rc_ui_spectrum_widget_class_init(RCUiSpectrumWidgetClass *class)
+static void rc_ui_spectrum_widget_class_init(RCUiSpectrumWidgetClass *klass)
 {
     GObjectClass *object_class;
     GtkWidgetClass *widget_class;
-    object_class = (GObjectClass *)class;
-    widget_class = (GtkWidgetClass *)class;
+    rc_ui_spectrum_widget_parent_class = g_type_class_peek_parent(klass);
+    object_class = (GObjectClass *)klass;
+    widget_class = (GtkWidgetClass *)klass;
     object_class->set_property = NULL;
     object_class->get_property = NULL;
     object_class->finalize = rc_ui_spectrum_widget_finalize;
     widget_class->realize = rc_ui_spectrum_widget_realize;
     widget_class->size_allocate = rc_ui_spectrum_widget_size_allocate;
-    g_type_class_add_private(class, sizeof(RCUiSpectrumWidgetPrivate));
     widget_class->draw = rc_ui_spectrum_widget_draw;
+    g_type_class_add_private(klass, sizeof(RCUiSpectrumWidgetPrivate));
 }
 
 GType rc_ui_spectrum_widget_get_type()
 {
-    static GType object_type = 0;
+    static volatile gsize g_define_type_id__volatile = 0;
+    GType g_define_type_id;
     static const GTypeInfo object_info = {
         .class_size = sizeof(RCUiSpectrumWidgetClass),
         .base_init = NULL,
@@ -209,12 +214,13 @@ GType rc_ui_spectrum_widget_get_type()
         .n_preallocs = 0,
         .instance_init = (GInstanceInitFunc)rc_ui_spectrum_widget_init
     };
-    if(!object_type)
+    if(g_once_init_enter(&g_define_type_id__volatile))
     {
-        object_type = g_type_register_static(GTK_TYPE_WIDGET,
-            "RCUiSpectrumWidget", &object_info, 0);
+        g_define_type_id = g_type_register_static(GTK_TYPE_WIDGET,
+            g_intern_static_string("RCUiSpectrumWidget"), &object_info, 0);
+        g_once_init_leave(&g_define_type_id__volatile, g_define_type_id);
     }
-    return object_type;
+    return g_define_type_id__volatile;
 }
 
 /**

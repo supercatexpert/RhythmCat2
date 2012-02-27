@@ -25,6 +25,7 @@
 
 
 #include "rclib-cue.h"
+#include "rclib-common.h"
 
 /**
  * SECTION: rclib-cue

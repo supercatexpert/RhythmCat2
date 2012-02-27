@@ -4,7 +4,7 @@
  * rclib-core.h
  * This file is part of RhythmCat Library (LibRhythmCat)
  *
- * Copyright (C) 2011 - SuperCat, license: GPL v3
+ * Copyright (C) 2012 - SuperCat, license: GPL v3
  *
  * RhythmCat is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -189,7 +189,7 @@ struct _RCLibCoreClass {
 GType rclib_core_get_type();
 
 /*< public >*/
-gboolean rclib_core_init(gint *argc, gchar **argv[], GError **error);
+gboolean rclib_core_init(GError **error);
 void rclib_core_exit();
 GObject *rclib_core_get_instance();
 gulong rclib_core_signal_connect(const gchar *name,

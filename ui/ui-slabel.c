@@ -56,6 +56,8 @@ enum
     PROP_PERCENT
 };
 
+static gpointer rc_ui_scrollable_label_parent_class = NULL;
+
 static void rc_ui_scrollable_label_set_property(GObject *object,
     guint prop_id, const GValue *value, GParamSpec *pspec)
 {
@@ -220,23 +222,25 @@ static void rc_ui_scrollable_label_finalize(GObject *object)
     if(priv->text!=NULL) g_free(priv->text);
     if(priv->layout!=NULL) g_object_unref(priv->layout);
     if(priv->attrs!=NULL) pango_attr_list_unref(priv->attrs);
+    G_OBJECT_CLASS(rc_ui_scrollable_label_parent_class)->finalize(object);
 }
 
-static void rc_ui_scrollable_label_class_init(RCUiScrollableLabelClass *class)
+static void rc_ui_scrollable_label_class_init(RCUiScrollableLabelClass *klass)
 {
     GObjectClass *object_class;
     GtkWidgetClass *widget_class;
-    object_class = (GObjectClass *)class;
-    widget_class = (GtkWidgetClass *)class;
+    rc_ui_scrollable_label_parent_class = g_type_class_peek_parent(klass);
+    object_class = (GObjectClass *)klass;
+    widget_class = (GtkWidgetClass *)klass;
     object_class->set_property = rc_ui_scrollable_label_set_property;
     object_class->get_property = rc_ui_scrollable_label_get_property;
     object_class->finalize = rc_ui_scrollable_label_finalize;
     widget_class->realize = rc_ui_scrollable_label_realize;
     widget_class->size_allocate = rc_ui_scrollable_label_size_allocate;
-    g_type_class_add_private(class, sizeof(RCUiScrollableLabelPrivate));
     widget_class->draw = rc_ui_scrollable_label_draw;
     widget_class->get_preferred_height =
         rc_ui_scrollable_label_get_preferred_height;
+    g_type_class_add_private(klass, sizeof(RCUiScrollableLabelPrivate));
 
     /**
      * RCUiScrollableLabel:text:
@@ -279,7 +283,8 @@ static void rc_ui_scrollable_label_class_init(RCUiScrollableLabelClass *class)
 
 GType rc_ui_scrollable_label_get_type()
 {
-    static GType object_type = 0;
+    static volatile gsize g_define_type_id__volatile = 0;
+    GType g_define_type_id;
     static const GTypeInfo object_info = {
         .class_size = sizeof(RCUiScrollableLabelClass),
         .base_init = NULL,
@@ -291,12 +296,13 @@ GType rc_ui_scrollable_label_get_type()
         .n_preallocs = 0,
         .instance_init = (GInstanceInitFunc)rc_ui_scrollable_label_init
     };
-    if(!object_type)
+    if(g_once_init_enter(&g_define_type_id__volatile))
     {
-        object_type = g_type_register_static(GTK_TYPE_WIDGET,
-            "RCUiScrollableLabel", &object_info, 0);
+        g_define_type_id = g_type_register_static(GTK_TYPE_WIDGET,
+            g_intern_static_string("RCUiScrollableLabel"), &object_info, 0);
+        g_once_init_leave(&g_define_type_id__volatile, g_define_type_id);
     }
-    return object_type;
+    return g_define_type_id__volatile;
 }
 
 /**

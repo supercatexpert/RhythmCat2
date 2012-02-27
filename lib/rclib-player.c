@@ -24,6 +24,7 @@
  */
 
 #include "rclib-player.h"
+#include "rclib-common.h"
 #include "rclib-db.h"
 #include "rclib-core.h"
 
@@ -56,6 +57,7 @@ enum
 };
 
 static GObject *player_instance = NULL;
+static gpointer rclib_player_parent_class = NULL;
 static gint player_signals[SIGNAL_LAST] = {0};
 
 static void rclib_player_random_all_play()
@@ -166,11 +168,13 @@ static void rclib_player_finalize(GObject *object)
 {
     RCLibPlayerPrivate *priv = RCLIB_PLAYER_GET_PRIVATE(RCLIB_PLAYER(object));
     rclib_core_signal_disconnect(priv->eos_handler);
+    G_OBJECT_CLASS(rclib_player_parent_class)->finalize(object);
 }
 
 static void rclib_player_class_init(RCLibPlayerClass *klass)
 {
     GObjectClass *object_class = (GObjectClass *)klass;
+    rclib_player_parent_class = g_type_class_peek_parent(klass);
     object_class->finalize = rclib_player_finalize;
     g_type_class_add_private(klass, sizeof(RCLibPlayerPrivate));
     
@@ -212,7 +216,8 @@ static void rclib_player_instance_init(RCLibPlayer *player)
 
 GType rclib_player_get_type()
 {
-    static GType player_type = 0;
+    static volatile gsize g_define_type_id__volatile = 0;
+    GType g_define_type_id;
     static const GTypeInfo player_info = {
         .class_size = sizeof(RCLibPlayerClass),
         .base_init = NULL,
@@ -224,12 +229,13 @@ GType rclib_player_get_type()
         .n_preallocs = 0,
         .instance_init = (GInstanceInitFunc)rclib_player_instance_init
     };
-    if(!player_type)
+    if(g_once_init_enter(&g_define_type_id__volatile))
     {
-        player_type = g_type_register_static(G_TYPE_OBJECT, "RCLibPlayer",
-            &player_info, 0);
+        g_define_type_id = g_type_register_static(G_TYPE_OBJECT,
+            g_intern_static_string("RCLibPlayer"), &player_info, 0);
+        g_once_init_leave(&g_define_type_id__volatile, g_define_type_id);
     }
-    return player_type;
+    return g_define_type_id__volatile;
 }
 
 /**

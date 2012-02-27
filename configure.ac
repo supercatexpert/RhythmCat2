@@ -3,14 +3,16 @@
 
 m4_define([rc_major_version], [1])
 m4_define([rc_minor_version], [9])
-m4_define([rc_micro_version], [0])
+m4_define([rc_micro_version], [1])
 m4_define([rc_version], [rc_major_version.rc_minor_version.rc_micro_version])
 
 AC_PREREQ([2.61])
 AC_INIT([RhythmCat], [rc_version], [https://github.com/supercatexpert/RhythmCat2/issues/])
-AM_INIT_AUTOMAKE([RhythmCat], [1.9.0])
+AM_INIT_AUTOMAKE([RhythmCat], [1.9.1])
 AC_CONFIG_SRCDIR([Makefile.am])
 AC_CONFIG_HEADERS([config.h])
+
+m4_ifdef([AM_SILENT_RULES],[AM_SILENT_RULES([yes])])
 
 RC_MAJOR_VERSION=rc_major_version
 RC_MINOR_VERSION=rc_minor_version

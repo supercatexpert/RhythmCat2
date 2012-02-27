@@ -49,6 +49,8 @@ typedef struct RCUiPlaylistStorePrivate {
 }RCUiPlaylistStorePrivate;
 
 static GtkTreeModel *catalog_model = NULL;
+static gpointer rc_ui_catalog_store_parent_class = NULL;
+static gpointer rc_ui_playlist_store_parent_class = NULL;
 
 static GtkTreeModelFlags rc_ui_catalog_store_get_flags(GtkTreeModel *model)
 {
@@ -722,10 +724,8 @@ static void rc_ui_playlist_store_tree_model_init(GtkTreeModelIface *iface)
 
 static void rc_ui_catalog_store_finalize(GObject *object)
 {
-    RCUiCatalogStorePrivate *priv;
     g_return_if_fail(RC_UI_IS_CATALOG_STORE(object));
-    priv = RC_UI_CATALOG_STORE_GET_PRIVATE(object);
-    g_return_if_fail(priv!=NULL);
+    G_OBJECT_CLASS(rc_ui_catalog_store_parent_class)->finalize(object);
 }
 
 static void rc_ui_playlist_store_finalize(GObject *object)
@@ -733,13 +733,14 @@ static void rc_ui_playlist_store_finalize(GObject *object)
     RCUiPlaylistStorePrivate *priv;
     g_return_if_fail(RC_UI_IS_PLAYLIST_STORE(object));
     priv = RC_UI_PLAYLIST_STORE_GET_PRIVATE(object);
-    g_return_if_fail(priv!=NULL);
     g_free(priv->format);
+    G_OBJECT_CLASS(rc_ui_playlist_store_parent_class)->finalize(object);
 }
 
 static void rc_ui_catalog_store_class_init(RCUiCatalogStoreClass *klass)
 {
     GObjectClass *object_class = (GObjectClass *)klass;
+    rc_ui_catalog_store_parent_class = g_type_class_peek_parent(klass);
     object_class->finalize = rc_ui_catalog_store_finalize;
     g_type_class_add_private(klass, sizeof(RCUiCatalogStorePrivate));
 }
@@ -747,6 +748,7 @@ static void rc_ui_catalog_store_class_init(RCUiCatalogStoreClass *klass)
 static void rc_ui_playlist_store_class_init(RCUiPlaylistStoreClass *klass)
 {
     GObjectClass *object_class = (GObjectClass *)klass;
+    rc_ui_playlist_store_parent_class = g_type_class_peek_parent(klass);
     object_class->finalize = rc_ui_playlist_store_finalize;
     g_type_class_add_private(klass, sizeof(RCUiPlaylistStorePrivate));
 }
@@ -777,7 +779,8 @@ static void rc_ui_playlist_store_init(RCUiPlaylistStore *store)
 
 GType rc_ui_catalog_store_get_type()
 {
-    static GType store_type = 0;
+    static volatile gsize g_define_type_id__volatile = 0;
+    GType g_define_type_id;
     static const GTypeInfo type_info = {
         .class_size = sizeof(RCUiCatalogStoreClass),
         .base_init =  NULL,
@@ -795,19 +798,21 @@ GType rc_ui_catalog_store_get_type()
         .interface_finalize = NULL,
         .interface_data = NULL
     };
-    if(!store_type)
+    if(g_once_init_enter(&g_define_type_id__volatile))
     {
-        store_type = g_type_register_static(G_TYPE_OBJECT,
-            "RCUiCatalogStore", &type_info, (GTypeFlags)0);
-        g_type_add_interface_static(store_type, GTK_TYPE_TREE_MODEL,
+        g_define_type_id = g_type_register_static(G_TYPE_OBJECT,
+            g_intern_static_string("RCUiCatalogStore"), &type_info, 0);
+        g_type_add_interface_static(g_define_type_id, GTK_TYPE_TREE_MODEL,
             &tree_model_info);
+        g_once_init_leave(&g_define_type_id__volatile, g_define_type_id);
     }
-    return store_type;
+    return g_define_type_id__volatile;
 }
 
 GType rc_ui_playlist_store_get_type()
 {
-    static GType store_type = 0;
+    static volatile gsize g_define_type_id__volatile = 0;
+    GType g_define_type_id;
     static const GTypeInfo type_info = {
         .class_size = sizeof(RCUiPlaylistStoreClass),
         .base_init =  NULL,
@@ -825,14 +830,15 @@ GType rc_ui_playlist_store_get_type()
         .interface_finalize = NULL,
         .interface_data = NULL
     };
-    if(!store_type)
+    if(g_once_init_enter(&g_define_type_id__volatile))
     {
-        store_type = g_type_register_static(G_TYPE_OBJECT,
-            "RCUiPlaylistStore", &type_info, (GTypeFlags)0);
-        g_type_add_interface_static(store_type, GTK_TYPE_TREE_MODEL,
+        g_define_type_id = g_type_register_static(G_TYPE_OBJECT,
+            g_intern_static_string("RCUiPlaylistStore"), &type_info, 0);
+        g_type_add_interface_static(g_define_type_id, GTK_TYPE_TREE_MODEL,
             &tree_model_info);
+        g_once_init_leave(&g_define_type_id__volatile, g_define_type_id);
     }
-    return store_type;
+    return g_define_type_id__volatile;
 }
 
 static void rc_ui_list_model_catalog_added_cb(RCLibDb *db,

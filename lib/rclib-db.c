@@ -24,6 +24,7 @@
  */
 
 #include "rclib-db.h"
+#include "rclib-common.h"
 #include "rclib-marshal.h"
 #include "rclib-tag.h"
 #include "rclib-cue.h"
@@ -107,6 +108,7 @@ enum
 };
 
 static GObject *db_instance = NULL;
+static gpointer rclib_db_parent_class = NULL;
 static gint db_signals[SIGNAL_LAST] = {0};
 static gint db_import_depth = 5;
 
@@ -915,11 +917,13 @@ static void rclib_db_finalize(GObject *object)
     priv->import_queue = NULL;
     priv->refresh_queue = NULL;
     priv->catalog = NULL;
+    G_OBJECT_CLASS(rclib_db_parent_class)->finalize(object);
 }
 
 static void rclib_db_class_init(RCLibDbClass *klass)
 {
     GObjectClass *object_class = (GObjectClass *)klass;
+    rclib_db_parent_class = g_type_class_peek_parent(klass);
     object_class->finalize = rclib_db_finalize;
     g_type_class_add_private(klass, sizeof(RCLibDbPrivate));
     
@@ -1080,7 +1084,8 @@ static void rclib_db_instance_init(RCLibDb *db)
 
 GType rclib_db_get_type()
 {
-    static GType db_type = 0;
+    static volatile gsize g_define_type_id__volatile = 0;
+    GType g_define_type_id;
     static const GTypeInfo db_info = {
         .class_size = sizeof(RCLibDbClass),
         .base_init = NULL,
@@ -1092,12 +1097,13 @@ GType rclib_db_get_type()
         .n_preallocs = 0,
         .instance_init = (GInstanceInitFunc)rclib_db_instance_init
     };
-    if(!db_type)
+    if(g_once_init_enter(&g_define_type_id__volatile))
     {
-        db_type = g_type_register_static(G_TYPE_OBJECT, "RCLibDb",
-            &db_info, 0);
+        g_define_type_id = g_type_register_static(G_TYPE_OBJECT,
+            g_intern_static_string("RCLibDb"), &db_info, 0);
+        g_once_init_leave(&g_define_type_id__volatile, g_define_type_id);
     }
-    return db_type;
+    return g_define_type_id__volatile;
 }
 
 /**
