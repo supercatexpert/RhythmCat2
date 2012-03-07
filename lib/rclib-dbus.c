@@ -38,12 +38,21 @@
 #define DBUS_MPRIS_TRACKLIST_INTERFACE "org.mpris.MediaPlayer2.TrackList"
 #define DBUS_MPRIS_PLAYLISTS_INTERFACE "org.mpris.MediaPlayer2.Playlists"
 
+#define DBUS_MEDIAKEY_NAME "org.gnome.SettingsDaemon"
+#define DBUS_MEDIAKEY_OBJECT_PATH "/org/gnome/SettingsDaemon/MediaKeys"
+#define DBUS_MEDIAKEY_INTERFACE "org.gnome.SettingsDaemon.MediaKeys"
+
+#define DBUS_MEDIAKEY_FBACK_NAME "org.gnome.SettingsDaemon"
+#define DBUS_MEDIAKEY_FBACK_OBJECT_PATH "/org/gnome/SettingsDaemon"
+#define DBUS_MEDIAKEY_FBACK_INTERFACE "org.gnome.SettingsDaemon"
+
 #define RCLIB_DBUS_GET_PRIVATE(obj) G_TYPE_INSTANCE_GET_PRIVATE((obj), \
     RCLIB_DBUS_TYPE, RCLibDBusPrivate)
 
 typedef struct RCLibDBusPrivate
 {
     GDBusConnection *connection;
+    GDBusProxy *mediakey_proxy;
     guint mpris_name_own_id;
     guint mpris_root_id;
     guint mpris_player_id;
@@ -89,6 +98,8 @@ static GObject *dbus_instance = NULL;
 static gpointer rclib_dbus_parent_class = NULL;
 static gint dbus_signals[SIGNAL_LAST] = {0};
 static gchar *dbus_app_name = NULL;
+static gboolean dbus_mpris_enabled = TRUE;
+static gboolean dbus_mediakey_enabled = TRUE;
 static const gchar *dbus_mpris2_introspection_xml =
     "<node>"
     "  <interface name='org.mpris.MediaPlayer2'>"
@@ -170,8 +181,7 @@ static void rclib_dbus_emit_property_changes(RCLibDBusPrivate *priv,
         "PropertiesChanged", parameters, &error);
     if(error!=NULL)
     {
-        g_log(G_LOG_DOMAIN, G_LOG_LEVEL_WARNING,
-            "Unable to send MPRIS2 property changes for %s: %s",
+        g_warning("Unable to send MPRIS2 property changes for %s: %s",
             interface, error->message);
         g_clear_error(&error);
     }
@@ -279,6 +289,7 @@ static void rclib_dbus_mpris_root_method_call_cb(
 {
     RCLibDBusPrivate *priv = (RCLibDBusPrivate *)data;
     if(data==NULL) return;
+    if(!dbus_mpris_enabled) return;
     if(g_strcmp0(object_path, DBUS_MPRIS_OBJECT_NAME)!= 0 ||
         g_strcmp0(interface_name, DBUS_MPRIS_ROOT_INTERFACE)!=0)
     {
@@ -312,6 +323,7 @@ static GVariant *rclib_dbus_mpris_get_root_property(
 {
     RCLibDBusPrivate *priv = (RCLibDBusPrivate *)data;
     if(data==NULL) return NULL;
+    if(!dbus_mpris_enabled) return NULL;
     if(g_strcmp0(object_path, DBUS_MPRIS_OBJECT_NAME)!=0 ||
         g_strcmp0(interface_name, DBUS_MPRIS_ROOT_INTERFACE)!=0)
     {
@@ -368,6 +380,7 @@ static void rclib_dbus_mpris_player_method_call_cb(
     gpointer track_id;
     gchar *uri;
     if(data==NULL) return;
+    if(!dbus_mpris_enabled) return;
     if(g_strcmp0(object_path, DBUS_MPRIS_OBJECT_NAME)!= 0 ||
         g_strcmp0(interface_name, DBUS_MPRIS_PLAYER_INTERFACE)!=0)
     {
@@ -486,6 +499,7 @@ static GVariant *rclib_dbus_mpris_get_player_property(
     const RCLibCoreMetadata *metadata;
     GVariant *variant;
     if(data==NULL) return NULL;
+    if(!dbus_mpris_enabled) return NULL;
     if(g_strcmp0(object_path, DBUS_MPRIS_OBJECT_NAME)!=0 ||
         g_strcmp0(interface_name, DBUS_MPRIS_PLAYER_INTERFACE)!=0)
     {
@@ -610,6 +624,7 @@ static gboolean rclib_dbus_mpris_set_player_property(
     const gchar *string;
     gdouble volume;
     if(data==NULL) return FALSE;
+    if(!dbus_mpris_enabled) return FALSE;
     if(g_strcmp0(object_path, DBUS_MPRIS_OBJECT_NAME)!=0 ||
         g_strcmp0(interface_name, DBUS_MPRIS_PLAYER_INTERFACE)!=0)
     {
@@ -673,15 +688,14 @@ static const GDBusInterfaceVTable rclib_dbus_mpris_player_vtable =
 static void rclib_dbus_mpris_name_acquired_cb(GDBusConnection *connection,
     const gchar *name, gpointer data)
 {
-    g_log(G_LOG_DOMAIN, G_LOG_LEVEL_DEBUG,
-        "Successfully acquired D-Bus name %s for MPRIS2 support.", name);
+    g_debug("Successfully acquired D-Bus name %s for MPRIS2 support.",
+        name);
 }
 
 static void rclib_dbus_mpris_name_lost_cb(GDBusConnection *connection,
     const gchar *name, gpointer data)
 {
-    g_log(G_LOG_DOMAIN, G_LOG_LEVEL_DEBUG,
-        "Successfully lost D-Bus name %s for MPRIS2 support.", name);
+    g_debug("Lost D-Bus name %s for MPRIS2 support.", name);
 }
 
 static void rclib_dbus_state_changed_cb(RCLibCore *core, GstState state,
@@ -691,6 +705,7 @@ static void rclib_dbus_state_changed_cb(RCLibCore *core, GstState state,
     const gchar *playback_status = "Stopped";
     gboolean can_pause = FALSE;
     if(data==NULL) return;
+    if(!dbus_mpris_enabled) return;
     switch(state)
     {
         case GST_STATE_PLAYING:
@@ -716,6 +731,7 @@ static void rclib_dbus_uri_changed_cb(RCLibCore *core, const gchar *uri,
     GVariant *metadata_variant;
     RCLibDBusPrivate *priv = (RCLibDBusPrivate *)data;
     if(data==NULL) return;
+    if(!dbus_mpris_enabled) return;
     reference = rclib_core_get_db_reference();
     if(reference!=NULL)
     {
@@ -735,6 +751,7 @@ static void rclib_dbus_metadata_found_cb(RCLibCore *core,
     RCLibDBusPrivate *priv = (RCLibDBusPrivate *)data;
     GVariant *metadata_variant;
     if(data==NULL) return;
+    if(!dbus_mpris_enabled) return;
     metadata_variant = rclib_dbus_mpris_get_metadata(uri, NULL, metadata);
     if(metadata_variant!=NULL)
     {
@@ -748,6 +765,7 @@ static void rclib_dbus_volume_changed_cb(RCLibCore *core, gdouble volume,
 {
     RCLibDBusPrivate *priv = (RCLibDBusPrivate *)data;
     if(data==NULL) return;
+    if(!dbus_mpris_enabled) return;
     rclib_dbus_player_add_property_change(priv, "Volume",
         g_variant_new_double(volume));
 }
@@ -758,6 +776,7 @@ static void rclib_dbus_repeat_mode_changed_cb(RCLibPlayer *player,
     RCLibDBusPrivate *priv = (RCLibDBusPrivate *)data;
     const gchar *mode_str = "None";
     if(data==NULL) return;
+    if(!dbus_mpris_enabled) return;
     switch(mode)
     {
         case RCLIB_PLAYER_REPEAT_SINGLE:
@@ -778,10 +797,69 @@ static void rclib_dbus_random_mode_changed_cb(RCLibPlayer *player,
 {
     RCLibDBusPrivate *priv = (RCLibDBusPrivate *)data;
     gboolean flag = FALSE;
+    if(data==NULL) return;
+    if(!dbus_mpris_enabled) return;
     if(mode>RCLIB_PLAYER_RANDOM_NONE)
         flag = TRUE;
     rclib_dbus_player_add_property_change(priv, "Shuffle",
         g_variant_new_boolean(flag)); 
+}
+
+static void rclib_dbus_mediakey_proxy_signal_cb(GDBusProxy *proxy,
+    gchar *sender_name, gchar *signal_name, GVariant *parameters,
+    gpointer data)
+{
+    gchar *application, *key;
+    GstState state;
+    gint64 pos, len;
+    RCLibPlayerRepeatMode repeat_mode;
+    RCLibPlayerRandomMode random_mode;
+    if(!dbus_mediakey_enabled) return;
+    g_variant_get(parameters, "(ss)", &application, &key);
+    if(g_strcmp0(application, "RhythmCat2")==0)
+    {
+        if(g_strcmp0("Play", key) == 0)
+        {
+            rclib_core_get_state(&state, NULL, GST_CLOCK_TIME_NONE);    
+            if(state==GST_STATE_PLAYING)
+                rclib_core_pause();
+            else
+                rclib_core_play();
+        }
+        else if(g_strcmp0("Previous", key)==0)
+            rclib_player_play_prev(FALSE, TRUE, FALSE);
+        else if(g_strcmp0("Next", key)==0)
+            rclib_player_play_next(FALSE, TRUE, FALSE);
+        else if(g_strcmp0("Stop", key)==0)
+            rclib_core_stop();
+        else if(g_strcmp0("Repeat", key)==0)
+        {
+            repeat_mode = rclib_player_get_repeat_mode();
+            rclib_player_set_repeat_mode(!repeat_mode);
+        }
+        else if(g_strcmp0("Shuffle", key)==0)
+        {
+            random_mode = rclib_player_get_random_mode();
+            rclib_player_set_random_mode(!random_mode);
+        }
+        else if(g_strcmp0("Rewind", key)==0)
+        {
+            pos = rclib_core_query_position();
+            if(pos>5 * GST_SECOND) pos -= 5 * GST_SECOND;
+            else pos = 0;
+            rclib_core_set_position(pos);
+        }
+        else if(g_strcmp0("FastForward", key)==0)
+        {
+            pos = rclib_core_query_position();
+            len = rclib_core_query_duration();
+            pos += 5 * GST_SECOND;
+            if(pos>len) pos = len;
+            rclib_core_set_position(pos);
+        }
+    }
+    g_free(application);
+    g_free(key);
 }
 
 static void rclib_dbus_finalize(GObject *object)
@@ -806,6 +884,8 @@ static void rclib_dbus_finalize(GObject *object)
     }
     if(priv->mpris_name_own_id>0)
         g_bus_unown_name(priv->mpris_name_own_id);
+    if(priv->mediakey_proxy!=NULL)
+        g_object_unref(priv->mediakey_proxy);
     if(priv->connection!=NULL)
         g_object_unref(priv->connection);
     G_OBJECT_CLASS(rclib_dbus_parent_class)->finalize(object);
@@ -948,9 +1028,7 @@ static void rclib_dbus_player_seeked(RCLibDBus *dbus, gint64 offset,
         "Seeked", g_variant_new("(x)", offset), &error);
     if(error!=NULL)
     {
-        g_log(G_LOG_DOMAIN, G_LOG_LEVEL_WARNING,
-            "Unable to set MPRIS Seeked signal: %s",
-            error->message);
+        g_warning("Unable to set MPRIS Seeked signal: %s", error->message);
         g_error_free(error);
     }
 }
@@ -1138,11 +1216,12 @@ static void rclib_dbus_instance_init(RCLibDBus *db)
     GDBusInterfaceInfo *ifaceinfo;
     gchar *mpris_full_name;
     GError *error = NULL;
+    GVariant *variant;
     priv->connection = g_bus_get_sync(G_BUS_TYPE_SESSION, NULL, &error);
     if(error!=NULL)
     {
-        g_log(G_LOG_DOMAIN, G_LOG_LEVEL_WARNING,
-            "Unable to connect to D-Bus session bus: %s", error->message);
+        g_warning("Unable to connect to D-Bus session bus: %s",
+            error->message);
         g_error_free(error);
         priv->connection = NULL;
         return;
@@ -1151,8 +1230,7 @@ static void rclib_dbus_instance_init(RCLibDBus *db)
         dbus_mpris2_introspection_xml, &error);
     if(error!=NULL)
     {
-        g_log(G_LOG_DOMAIN, G_LOG_LEVEL_WARNING,
-            "Unable to read MPRIS2 interface specificiation: %s",
+        g_warning("Unable to read MPRIS2 interface specificiation: %s",
             error->message);
         g_error_free(error);
         error = NULL;
@@ -1160,7 +1238,7 @@ static void rclib_dbus_instance_init(RCLibDBus *db)
     }
     if(mpris_node_info!=NULL)
     {
-        /* Register root interface. */
+        /* Register MPRIS root interface. */
         ifaceinfo = g_dbus_node_info_lookup_interface(mpris_node_info,
             DBUS_MPRIS_ROOT_INTERFACE);
         priv->mpris_root_id = g_dbus_connection_register_object(
@@ -1168,15 +1246,14 @@ static void rclib_dbus_instance_init(RCLibDBus *db)
             &rclib_dbus_mpris_root_vtable, priv, NULL, &error);
         if(error!=NULL)
         {
-            g_log(G_LOG_DOMAIN, G_LOG_LEVEL_WARNING,
-                "Unable to register MPRIS2 root interface: %s",
+            g_warning("Unable to register MPRIS2 root interface: %s",
                 error->message);
             g_error_free(error);
             error = NULL;
             priv->mpris_root_id = 0;
         }
         
-        /* Register player interface. */
+        /* Register MPRIS player interface. */
         ifaceinfo = g_dbus_node_info_lookup_interface(mpris_node_info,
             DBUS_MPRIS_PLAYER_INTERFACE);
         priv->mpris_player_id = g_dbus_connection_register_object(
@@ -1184,8 +1261,7 @@ static void rclib_dbus_instance_init(RCLibDBus *db)
             &rclib_dbus_mpris_player_vtable, priv, NULL, &error);
         if(error!=NULL)
         {
-            g_log(G_LOG_DOMAIN, G_LOG_LEVEL_WARNING,
-                "Unable to register MPRIS player interface: %s",
+            g_warning("Unable to register MPRIS player interface: %s",
                 error->message);
             g_error_free(error);
             error = NULL;
@@ -1201,6 +1277,49 @@ static void rclib_dbus_instance_init(RCLibDBus *db)
         rclib_dbus_mpris_name_acquired_cb, rclib_dbus_mpris_name_lost_cb,
         NULL, NULL);
     g_free(mpris_full_name);
+    
+    /* Connect to MediaKey Proxy. */
+    priv->mediakey_proxy = g_dbus_proxy_new_sync(priv->connection,
+        G_DBUS_PROXY_FLAGS_NONE, NULL, DBUS_MEDIAKEY_NAME,
+        DBUS_MEDIAKEY_OBJECT_PATH, DBUS_MEDIAKEY_INTERFACE, NULL, NULL);
+    if(priv->mediakey_proxy==NULL)
+    {
+        priv->mediakey_proxy = g_dbus_proxy_new_sync(priv->connection,
+            G_DBUS_PROXY_FLAGS_NONE, NULL, DBUS_MEDIAKEY_FBACK_NAME,
+            DBUS_MEDIAKEY_FBACK_OBJECT_PATH, DBUS_MEDIAKEY_FBACK_INTERFACE,
+            NULL, &error);
+        if(error!=NULL)
+        {
+            g_warning("Unable to connect MediaKey proxy: %s",
+                error->message);
+            g_error_free(error);
+            error = NULL;
+            priv->mediakey_proxy = NULL; 
+        }
+    }    
+    if(priv->mediakey_proxy!=NULL)
+    {
+        variant = g_dbus_proxy_call_sync(priv->mediakey_proxy,
+            "GrabMediaPlayerKeys", g_variant_new("(su)", "RhythmCat2", 0),
+            G_DBUS_CALL_FLAGS_NONE, -1, NULL, &error);
+        if(variant!=NULL) g_variant_unref(variant);
+        else
+        {
+            g_warning("Unable to call method GrabMediaPlayerKeys: %s",
+                error->message);
+            g_error_free(error);
+            error = NULL;
+            g_object_unref(priv->mediakey_proxy);
+            priv->mediakey_proxy = NULL; 
+        }
+    }
+    if(priv->mediakey_proxy!=NULL)
+    {
+        g_signal_connect(priv->mediakey_proxy, "g-signal",
+            G_CALLBACK(rclib_dbus_mediakey_proxy_signal_cb), NULL);
+        g_debug("Connected to GNOME Multimedia Key support interface.");
+    }
+
     rclib_dbus_signal_connect("seeked",
         G_CALLBACK(rclib_dbus_player_seeked), NULL);
     priv->state_changed_id = rclib_core_signal_connect("state-changed",
@@ -1258,12 +1377,10 @@ gboolean rclib_dbus_init(const gchar *app_name,
     const gchar *first_property_name, ...)
 {
     va_list var_args;
-    g_log(G_LOG_DOMAIN, G_LOG_LEVEL_MESSAGE,
-        "Loading D-Bus support....");
+    g_message("Loading D-Bus support....");
     if(dbus_instance!=NULL)
     {
-        g_log(G_LOG_DOMAIN, G_LOG_LEVEL_WARNING,
-            "D-Bus Support is already enabled!");
+        g_warning("D-Bus Support is already enabled!");
         return FALSE;
     }
     if(app_name==NULL) return FALSE;
@@ -1277,7 +1394,7 @@ gboolean rclib_dbus_init(const gchar *app_name,
             first_property_name, var_args);
         va_end(var_args);
     }
-    g_log(G_LOG_DOMAIN, G_LOG_LEVEL_MESSAGE, "D-Bus support loaded.");
+    g_message("D-Bus support loaded.");
     return TRUE;
 }
 
@@ -1291,7 +1408,7 @@ void rclib_dbus_exit()
 {
     if(dbus_instance!=NULL) g_object_unref(dbus_instance);
     dbus_instance = NULL;
-    g_log(G_LOG_DOMAIN, G_LOG_LEVEL_MESSAGE, "D-Bus support exited.");
+    g_message("D-Bus support exited.");
 }
 
 /**

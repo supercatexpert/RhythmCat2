@@ -4,9 +4,9 @@ lib_LTLIBRARIES = librhythmcat-2.0.la
 librhythmcat_2_0_la_SOURCES = \
     rclib-core.c  rclib-cue.c rclib-db.c  rclib-tag.c rclib-player.c \
     rclib-util.c rclib-lyric.c rclib-settings.c rclib-dbus.c rclib-album.c \
-    rclib.c rclib-core.h rclib-cue.h rclib-db.h rclib-tag.h rclib-util.h \
-    rclib-player.h rclib-lyric.h rclib-settings.h rclib-dbus.h rclib-album.h \
-    rclib.h rclib-common.h rclib-marshal.list
+    rclib-plugin.c rclib.c rclib-core.h rclib-cue.h rclib-db.h rclib-tag.h \
+    rclib-util.h rclib-player.h rclib-lyric.h rclib-settings.h rclib-dbus.h \
+    rclib-album.h rclib-plugin.h rclib.h rclib-common.h rclib-marshal.list
 
 INCLUDES = @GLIB2_CFLAGS@ @GSTREAMER_CFLAGS@ @JSON_CFLAGS@ \
     -DLOCALEDIR=\"$(localedir)\"

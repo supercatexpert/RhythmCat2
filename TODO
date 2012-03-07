@@ -1,8 +1,9 @@
-- Plug-in support system
+- Plug-in support system (W.I.P)
 - Custom window bar
 - New menus
 - Settings (UI)
 - Themes & Styles support
+- Command line arguments process
 
 Long-term:
 - Command Line Interface (CLI), based on ncurses

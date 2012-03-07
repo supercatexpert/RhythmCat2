@@ -652,18 +652,17 @@ static gboolean rclib_db_load_library_db(GSequence *catalog,
     gsize json_size;
     if(!g_file_get_contents(file, &json_data, &json_size, &error))
     {
-        g_log(G_LOG_DOMAIN, G_LOG_LEVEL_WARNING, "Cannot load playlist: %s",
-            error->message);
+        g_warning("Cannot load playlist: %s", error->message);
         g_error_free(error);
         return FALSE;
     }
     else
-        g_log(G_LOG_DOMAIN, G_LOG_LEVEL_MESSAGE, "Loading playlist....");
+        g_message("Loading playlist....");
     root_object = json_tokener_parse(json_data);
     g_free(json_data);
     if(root_object==NULL)
     {
-        g_log(G_LOG_DOMAIN, G_LOG_LEVEL_WARNING, "Cannot parse playlist!");
+        g_warning("Cannot parse playlist!");
         return FALSE;
     }
     G_STMT_START
@@ -769,7 +768,7 @@ static gboolean rclib_db_load_library_db(GSequence *catalog,
     }
     G_STMT_END;
     json_object_put(root_object);
-    g_log(G_LOG_DOMAIN, G_LOG_LEVEL_MESSAGE, "Playlist loaded.");
+    g_message("Playlist loaded.");
     if(dirty_flag!=NULL) *dirty_flag = FALSE;
     return TRUE;
 }
@@ -872,14 +871,13 @@ static gboolean rclib_db_save_library_db(GSequence *catalog,
     {
         if(!g_file_set_contents(file, json_data, -1, &error))
         {
-            g_log(G_LOG_DOMAIN, G_LOG_LEVEL_WARNING,
-                "Cannot save playlist: %s", error->message);
+            g_warning("Cannot save playlist: %s", error->message);
             g_error_free(error);
             json_object_put(root_object);
             return FALSE;
         }
         else
-            g_log(G_LOG_DOMAIN, G_LOG_LEVEL_MESSAGE, "Playlist saved.");
+            g_message("Playlist saved.");
     }
     json_object_put(root_object);
     if(dirty_flag!=NULL) *dirty_flag = FALSE;
@@ -1118,12 +1116,10 @@ GType rclib_db_get_type()
 gboolean rclib_db_init(const gchar *file)
 {
     RCLibDbPrivate *priv;
-    g_log(G_LOG_DOMAIN, G_LOG_LEVEL_MESSAGE,
-        "Loading music library database....");
+    g_message("Loading music library database....");
     if(db_instance!=NULL)
     {
-        g_log(G_LOG_DOMAIN, G_LOG_LEVEL_WARNING,
-            "The database is already initialized!");
+        g_warning("The database is already initialized!");
         return FALSE;
     }
     db_instance = g_object_new(RCLIB_DB_TYPE, NULL);
@@ -1133,13 +1129,12 @@ gboolean rclib_db_init(const gchar *file)
     {
         g_object_unref(db_instance);
         db_instance = NULL;
-        g_log(G_LOG_DOMAIN, G_LOG_LEVEL_WARNING,
-            "Failed to load database!");
+        g_warning("Failed to load database!");
         return FALSE;
     }
     rclib_db_load_library_db(priv->catalog, file, &(priv->dirty_flag));
     priv->filename = g_strdup(file);
-    g_log(G_LOG_DOMAIN, G_LOG_LEVEL_MESSAGE, "Database loaded.");
+    g_message("Database loaded.");
     return TRUE;
 }
 
@@ -1153,7 +1148,7 @@ void rclib_db_exit()
 {
     if(db_instance!=NULL) g_object_unref(db_instance);
     db_instance = NULL;
-    g_log(G_LOG_DOMAIN, G_LOG_LEVEL_MESSAGE, "Database exited.");
+    g_message("Database exited.");
 }
 
 /**

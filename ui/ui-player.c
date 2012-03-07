@@ -184,8 +184,7 @@ static gboolean rc_ui_player_cover_image_set_pixbuf(RCUiPlayerPrivate *priv,
         GDK_INTERP_HYPER);
     if(album_new_pixbuf==NULL)
     {
-        g_log(G_LOG_DOMAIN, G_LOG_LEVEL_WARNING,
-            "Cannot convert pixbuf for cover image!");
+        g_warning("Cannot convert pixbuf for cover image!");
         return FALSE;
     }
     gtk_image_set_from_pixbuf(GTK_IMAGE(priv->album_image),
@@ -205,8 +204,8 @@ static gboolean rc_ui_player_cover_image_set_gst_buffer(
     loader = gdk_pixbuf_loader_new();
     if(!gdk_pixbuf_loader_write(loader, buf->data, buf->size, &error))
     {
-        g_log(G_LOG_DOMAIN, G_LOG_LEVEL_WARNING,
-            "Cannot load cover image from GstBuffer: %s", error->message);
+        g_warning("Cannot load cover image from GstBuffer: %s",
+            error->message);
         g_error_free(error);
         g_object_unref(loader);
         return FALSE;
@@ -1273,7 +1272,7 @@ static void rc_ui_player_instance_init(RCUiPlayer *ui)
     settings = gtk_settings_get_default();
     g_object_set(settings, "gtk-application-prefer-dark-theme", TRUE, NULL);
     gtk_widget_show_all(priv->main_window);
-    gtk_widget_set_visible(priv->progress_eventbox, FALSE);
+    gtk_widget_set_visible(priv->progress_eventbox, FALSE);    
 }
 
 GType rc_ui_player_get_type()
@@ -1309,17 +1308,16 @@ GType rc_ui_player_get_type()
 
 void rc_ui_player_init(GtkApplication *app)
 {
-    g_log(G_LOG_DOMAIN, G_LOG_LEVEL_MESSAGE, "Loading main UI....");
+    g_message("Loading main UI....");
     if(ui_player_instance!=NULL)
     {
-        g_log(G_LOG_DOMAIN, G_LOG_LEVEL_WARNING,
-            "Main UI is already initialized!");
+        g_warning("Main UI is already initialized!");
         return;
     }
     ui_player_app = app;
     ui_player_instance = g_object_new(RC_UI_PLAYER_TYPE, NULL);
     rc_ui_menu_state_refresh();
-    g_log(G_LOG_DOMAIN, G_LOG_LEVEL_MESSAGE, "Main UI loaded.");
+    g_message("Main UI loaded.");
 }
 
 /**
@@ -1332,7 +1330,7 @@ void rc_ui_player_exit()
 {
     g_object_unref(ui_player_instance);
     ui_player_instance = NULL;
-    g_log(G_LOG_DOMAIN, G_LOG_LEVEL_MESSAGE, "Main UI exited.");
+    g_message("Main UI exited.");
 }
 
 /**

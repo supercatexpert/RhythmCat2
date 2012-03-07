@@ -221,11 +221,9 @@ GType rclib_album_get_type()
 
 void rclib_album_init()
 {
-    g_log(G_LOG_DOMAIN, G_LOG_LEVEL_MESSAGE,
-        "Loading album image processor....");
+    g_message("Loading album image processor....");
     album_instance = g_object_new(RCLIB_ALBUM_TYPE, NULL);
-    g_log(G_LOG_DOMAIN, G_LOG_LEVEL_MESSAGE,
-        "Album processor loaded.");
+    g_message("Album processor loaded.");
 }
 
 /**
@@ -238,7 +236,7 @@ void rclib_album_exit()
 {
     if(album_instance!=NULL) g_object_unref(album_instance);
     album_instance = NULL;
-    g_log(G_LOG_DOMAIN, G_LOG_LEVEL_MESSAGE, "Album processor exited.");
+    g_message("Album processor exited.");
 }
 
 /**
@@ -338,8 +336,7 @@ gboolean rclib_album_save_file(const gchar *filename)
             buffer->size, &error);
         if(!flag)
         {
-            g_log(G_LOG_DOMAIN, G_LOG_LEVEL_WARNING,
-                "Cannot save album data: %s", error->message);
+            g_warning("Cannot save album data: %s", error->message);
             g_error_free(error);
         }
         return flag;
@@ -358,8 +355,7 @@ gboolean rclib_album_save_file(const gchar *filename)
             NULL, NULL, &error);
         if(!flag)
         {
-            g_log(G_LOG_DOMAIN, G_LOG_LEVEL_WARNING,
-                "Cannot save album file: %s", error->message);
+            g_warning("Cannot save album file: %s", error->message);
             g_error_free(error);
         }
         return flag;

@@ -687,8 +687,7 @@ void rc_ui_menu_init()
     if(!gtk_ui_manager_add_ui_from_string(ui_manager, ui_menu_info, -1,
         &error))
     {
-        g_log(G_LOG_DOMAIN, G_LOG_LEVEL_WARNING, "Cannot load menu: %s",
-            error->message);
+        g_warning("Cannot load menu: %s", error->message);
         g_error_free(error);
     }
     catalog_selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(

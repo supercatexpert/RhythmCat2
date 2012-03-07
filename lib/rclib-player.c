@@ -246,17 +246,14 @@ GType rclib_player_get_type()
 
 void rclib_player_init()
 {
-    g_log(G_LOG_DOMAIN, G_LOG_LEVEL_MESSAGE,
-        "Loading player scheduler....");
+    g_message("Loading player scheduler....");
     if(player_instance!=NULL)
     {
-        g_log(G_LOG_DOMAIN, G_LOG_LEVEL_WARNING,
-            "Player scheduler is already loaded!");
+        g_warning("Player scheduler is already loaded!");
         return;
     }
     player_instance = g_object_new(RCLIB_PLAYER_TYPE, NULL);
-    g_log(G_LOG_DOMAIN, G_LOG_LEVEL_MESSAGE,
-        "Player scheduler loaded.");
+    g_message("Player scheduler loaded.");
 }
 
 /**
@@ -269,7 +266,7 @@ void rclib_player_exit()
 {
     if(player_instance!=NULL) g_object_unref(player_instance);
     player_instance = NULL;
-    g_log(G_LOG_DOMAIN, G_LOG_LEVEL_MESSAGE, "Player scheduler exited.");
+    g_message("Player scheduler exited.");
 }
 
 /**

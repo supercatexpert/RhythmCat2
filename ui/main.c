@@ -12,6 +12,7 @@ static void rc_main_app_activate_cb(GApplication *application,
     rc_ui_player_init(GTK_APPLICATION(application));
     rclib_settings_apply();
     rc_mpris2_init();
+    rclib_plugin_init();
 }
 
 int main(int argc, char *argv[])
@@ -26,8 +27,7 @@ int main(int argc, char *argv[])
     app = gtk_application_new("org.rhythmcat.RhythmCat2", 0);
     if(!g_application_register(G_APPLICATION(app), NULL, &error))
     {
-        g_log(G_LOG_DOMAIN, G_LOG_LEVEL_WARNING,
-            "Cannot register player: %s", error->message);
+        g_warning("Cannot register player: %s", error->message);
         g_error_free(error);
         error = NULL;
     }
@@ -35,8 +35,7 @@ int main(int argc, char *argv[])
     {
         if(g_application_get_is_remote(G_APPLICATION(app)))
         {
-            g_log(G_LOG_DOMAIN, G_LOG_LEVEL_MESSAGE,
-                "This player is running already!");
+            g_message("This player is running already!");
             exit(0);
         }
     }
@@ -46,22 +45,23 @@ int main(int argc, char *argv[])
     data_dir = g_build_filename(home_dir, ".RhythmCat2", NULL);
     if(!rclib_init(&argc, &argv, data_dir, &error))
     {
-        g_log(G_LOG_DOMAIN, G_LOG_LEVEL_ERROR,
-            "Cannot load core: %s", error->message);
+        g_error("Cannot load core: %s", error->message);
         g_error_free(error);
         g_free(data_dir);
         return 1;
     }
     gdk_threads_init();
-    g_printf("LibRhythmCat loaded. Version: %d.%d.%d, build date: %s\n",
+    g_print("LibRhythmCat loaded. Version: %d.%d.%d, build date: %s\n",
         rclib_major_version, rclib_minor_version, rclib_micro_version,
         rclib_build_date);
     g_signal_connect(app, "activate", G_CALLBACK(rc_main_app_activate_cb),
         NULL);
     status = g_application_run(G_APPLICATION(app), argc, argv);
     g_object_unref(app);
+    rclib_plugin_exit();
     rc_mpris2_exit();
     rclib_exit();
     g_free(data_dir);
     return status;
 }
+

@@ -26,6 +26,7 @@
 #define HAVE_RCLIB_PLAYER_H
 
 #include <glib.h>
+#include <glib-object.h>
 #include <gst/gst.h>
 
 G_BEGIN_DECLS

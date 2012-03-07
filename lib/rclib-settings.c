@@ -51,41 +51,40 @@ static gboolean settings_dirty = FALSE;
 
 static gboolean rclib_settings_load(const gchar *filename)
 {
-    gboolean flag;
+    GError *error = NULL;
     if(settings_keyfile==NULL || filename==NULL) return FALSE;
-    flag = g_key_file_load_from_file(settings_keyfile, filename,
-        G_KEY_FILE_NONE, NULL);
-    if(flag)
+    if(g_key_file_load_from_file(settings_keyfile, filename,
+        G_KEY_FILE_NONE, &error))
     {
         settings_dirty = FALSE;
-        g_log(G_LOG_DOMAIN, G_LOG_LEVEL_MESSAGE,
-            "Settings file has been loaded.");
+        g_message("Settings file has been loaded.");
+        return TRUE;
     }
     else
     {
-        g_log(G_LOG_DOMAIN, G_LOG_LEVEL_WARNING,
-            "Settings file cannot be loaded!");
+        g_warning("Settings file cannot be loaded: %s", error->message);
+        g_error_free(error);
+        return FALSE;
     }
-    return flag;
 }
 
 static void rclib_settings_save(const gchar *filename)
 {
+    GError *error = NULL;
     gchar *settings_data = NULL;
     gsize settings_data_length;
     if(settings_keyfile==NULL || filename==NULL) return;
     settings_data = g_key_file_to_data(settings_keyfile,
         &settings_data_length, NULL);
     if(g_file_set_contents(filename, settings_data, settings_data_length,
-        NULL))
+        &error))
     {
-        g_log(G_LOG_DOMAIN, G_LOG_LEVEL_MESSAGE,
-            "Settings file has been saved.");
+        g_message("Settings file has been saved.");
     }
     else
     {
-        g_log(G_LOG_DOMAIN, G_LOG_LEVEL_WARNING,
-            "Settings file cannot be saved!");
+        g_warning("Settings file cannot be saved: %s", error->message);
+        g_error_free(error);
     }
     g_free(settings_data);
     settings_dirty = FALSE;
@@ -105,11 +104,10 @@ gboolean rclib_settings_init()
     gdouble eq_array[10] = {0.0};
     if(settings_keyfile!=NULL)
     {
-        g_log(G_LOG_DOMAIN, G_LOG_LEVEL_WARNING,
-            "Settings module is already loaded!");
+        g_warning("Settings module is already loaded!");
         return FALSE;
     }
-    g_log(G_LOG_DOMAIN, G_LOG_LEVEL_MESSAGE, "Loading settings module....");
+    g_message("Loading settings module....");
     settings_keyfile = g_key_file_new();
     if(settings_keyfile==NULL) return FALSE;
     rclib_settings_set_boolean("Player", "AutoPlay", FALSE);
@@ -117,12 +115,13 @@ gboolean rclib_settings_init()
         RCLIB_PLAYER_REPEAT_ALL);
     rclib_settings_set_integer("Player", "RandomMode",
         RCLIB_PLAYER_RANDOM_NONE);
+    rclib_settings_set_double("Player", "Volume", 1.0);
     rclib_settings_set_integer("SoundEffect", "EQStyle",
         RCLIB_CORE_EQ_TYPE_NONE);
     rclib_settings_set_double_list("SoundEffect", "EQ", eq_array, 10);
     rclib_settings_set_boolean("Playlist", "AutoEncodingDetect", TRUE);
     settings_dirty = FALSE;
-    g_log(G_LOG_DOMAIN, G_LOG_LEVEL_MESSAGE, "Settings module loaded.");
+    g_message("Settings module loaded.");
     return TRUE;
 }
 
@@ -143,7 +142,7 @@ void rclib_settings_exit()
     if(settings_keyfile!=NULL)
         g_key_file_free(settings_keyfile);
     settings_keyfile = NULL;
-    g_log(G_LOG_DOMAIN, G_LOG_LEVEL_MESSAGE, "Settings module exited.");
+    g_message("Settings module exited.");
 }
 
 /**
@@ -175,6 +174,7 @@ void rclib_settings_apply()
 {
     GError *error = NULL;
     gint ivalue;
+    gdouble dvalue;
     gdouble *darray;
     gsize size;
     ivalue = rclib_settings_get_integer("Player", "RepeatMode", &error);
@@ -197,6 +197,8 @@ void rclib_settings_apply()
         g_error_free(error);
         error = NULL;
     }
+    dvalue = rclib_settings_get_double("Player", "Volume", &error);
+    rclib_core_set_volume(dvalue);
     ivalue = rclib_settings_get_integer("SoundEffect", "EQStyle", &error);
     if(error==NULL)
     {
@@ -229,11 +231,14 @@ void rclib_settings_apply()
 void rclib_settings_update()
 {
     gint ivalue;
+    gdouble dvalue;
     gdouble eq_array[10] = {0.0};
     ivalue = rclib_player_get_repeat_mode();
     rclib_settings_set_integer("Player", "RepeatMode", ivalue);
     ivalue = rclib_player_get_random_mode();
     rclib_settings_set_integer("Player", "RandomMode", ivalue);
+    if(rclib_core_get_volume(&dvalue))
+        rclib_settings_set_double("Player", "Volume", dvalue);
     if(rclib_core_get_eq((RCLibCoreEQType *)&ivalue, eq_array))
     {
         rclib_settings_set_integer("SoundEffect", "EQStyle", ivalue);

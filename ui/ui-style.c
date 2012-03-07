@@ -34,17 +34,15 @@ static void rc_ui_style_css_set_file(const gchar *filename)
     GdkScreen *screen = gdk_screen_get_default();
     if(filename==NULL)
     {
-        g_log(G_LOG_DOMAIN, G_LOG_LEVEL_WARNING,
-            "Invalid CSS Style file name!");
+        g_warning("Invalid CSS Style file name!");
         return;
     }
     file = g_file_new_for_path(filename);
-    g_log(G_LOG_DOMAIN, G_LOG_LEVEL_MESSAGE, "Loading CSS Style: %s",
+    g_message("Loading CSS Style: %s",
         filename);
     if(file==NULL)
     {
-        g_log(G_LOG_DOMAIN, G_LOG_LEVEL_WARNING,
-            "Cannot open CSS Style: %s", filename);
+        g_warning("Cannot open CSS Style: %s", filename);
         return;
     }
     if(style_css_provider!=NULL)
@@ -52,8 +50,7 @@ static void rc_ui_style_css_set_file(const gchar *filename)
     if(!gtk_css_provider_load_from_file(style_css_provider, file,
         &error))
     {
-        g_log(G_LOG_DOMAIN, G_LOG_LEVEL_WARNING,
-            "Cannot open CSS Style: %s", error->message);
+        g_warning("Cannot open CSS Style: %s", error->message);
         g_error_free(error);
         g_object_unref(file);
         return;
@@ -63,7 +60,7 @@ static void rc_ui_style_css_set_file(const gchar *filename)
         GTK_STYLE_PROVIDER(style_css_provider),
         GTK_STYLE_PROVIDER_PRIORITY_USER);
     gtk_style_context_reset_widgets(screen);
-    g_log(G_LOG_DOMAIN, G_LOG_LEVEL_MESSAGE, "Loaded new CSS Style.");
+    g_message("Loaded new CSS Style.");
 }
 
 static void rc_ui_style_css_set_data(const gchar *data, gssize length)
@@ -72,8 +69,7 @@ static void rc_ui_style_css_set_data(const gchar *data, gssize length)
     GdkScreen *screen = gdk_screen_get_default();
     if(data==NULL)
     {
-        g_log(G_LOG_DOMAIN, G_LOG_LEVEL_WARNING,
-            "Invalid CSS Style data!");
+        g_warning("Invalid CSS Style data!");
         return;
     }
     if(style_css_provider!=NULL)
@@ -81,8 +77,7 @@ static void rc_ui_style_css_set_data(const gchar *data, gssize length)
     if(!gtk_css_provider_load_from_data(style_css_provider, data, length,
         &error))
     {
-        g_log(G_LOG_DOMAIN, G_LOG_LEVEL_WARNING,
-            "Cannot open CSS Style: %s", error->message);
+        g_warning("Cannot open CSS Style: %s", error->message);
         g_error_free(error);
         return;
     }
@@ -90,7 +85,7 @@ static void rc_ui_style_css_set_data(const gchar *data, gssize length)
         GTK_STYLE_PROVIDER(style_css_provider),
         GTK_STYLE_PROVIDER_PRIORITY_USER);
     gtk_style_context_reset_widgets(screen);
-    g_log(G_LOG_DOMAIN, G_LOG_LEVEL_MESSAGE, "Loaded new CSS Style.");
+    g_message("Loaded new CSS Style.");
 }
 
 static void rc_ui_style_css_unset()
@@ -104,7 +99,6 @@ static void rc_ui_style_css_unset()
         style_css_provider = NULL;
     }
     gtk_style_context_reset_widgets(screen);
-    g_log(G_LOG_DOMAIN, G_LOG_LEVEL_MESSAGE,
-        "Custom CSS Style has been removed.");
+    g_message("Custom CSS Style has been removed.");
 }
 

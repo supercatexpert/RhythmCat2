@@ -1034,8 +1034,7 @@ gboolean rc_ui_list_model_init()
     catalog_seq = rclib_db_get_catalog();
     if(catalog_seq==NULL)
     {
-        g_log(G_LOG_DOMAIN, G_LOG_LEVEL_ERROR,
-            "Cannot load catalog from music database!");
+        g_warning("Cannot load catalog from music database!");
         return FALSE;
     }
     catalog_model = GTK_TREE_MODEL(g_object_new(

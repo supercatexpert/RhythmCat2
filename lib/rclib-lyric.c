@@ -304,32 +304,27 @@ GType rclib_lyric_get_type()
 void rclib_lyric_init()
 {
     RCLibLyricPrivate *priv;
-    g_log(G_LOG_DOMAIN, G_LOG_LEVEL_MESSAGE,
-        "Loading lyric processor....");
+    g_message("Loading lyric processor....");
     if(lyric_instance!=NULL)
     {
-        g_log(G_LOG_DOMAIN, G_LOG_LEVEL_WARNING,
-            "Lyric processor is already loaded!");
+        g_warning("Lyric processor is already loaded!");
         return;
     }
     lyric_instance = g_object_new(RCLIB_LYRIC_TYPE, NULL);
     priv = RCLIB_LYRIC_GET_PRIVATE(lyric_instance);
     if(priv->parsed_data1.seq==NULL || priv->parsed_data2.seq==NULL)
     {
-        g_log(G_LOG_DOMAIN, G_LOG_LEVEL_WARNING,
-            "Cannot load lyric sequence!");
+        g_warning("Cannot load lyric sequence!");
         g_object_unref(lyric_instance);
         return;
     }
     if(priv->regex==NULL)
     {
-        g_log(G_LOG_DOMAIN, G_LOG_LEVEL_WARNING,
-            "Cannot load lyric regex!");
+        g_warning("Cannot load lyric regex!");
         g_object_unref(lyric_instance);
         return;
     }
-    g_log(G_LOG_DOMAIN, G_LOG_LEVEL_MESSAGE,
-        "Lyric processor loaded.");
+    g_message("Lyric processor loaded.");
 }
 
 /**
@@ -342,7 +337,7 @@ void rclib_lyric_exit()
 {
     if(lyric_instance!=NULL) g_object_unref(lyric_instance);
     lyric_instance = NULL;
-    g_log(G_LOG_DOMAIN, G_LOG_LEVEL_MESSAGE, "Lyric processor exited.");
+    g_message("Lyric processor exited.");
 }
 
 /**

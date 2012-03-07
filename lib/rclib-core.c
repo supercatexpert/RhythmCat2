@@ -916,8 +916,7 @@ static gboolean rclib_core_bus_callback(GstBus *bus, GstMessage *msg,
                     priv->last_state = state;
                     g_signal_emit(object, core_signals[SIGNAL_STATE_CHANGED],
                         0, state);
-                    g_log(G_LOG_DOMAIN, G_LOG_LEVEL_DEBUG,
-                        "Core state changed to: %s",
+                    g_debug("Core state changed to: %s",
                         gst_element_state_get_name(state));
                 }
             }
@@ -934,8 +933,7 @@ static gboolean rclib_core_bus_callback(GstBus *bus, GstMessage *msg,
         case GST_MESSAGE_BUFFERING:
             break;
         case GST_MESSAGE_NEW_CLOCK:
-            g_log(G_LOG_DOMAIN, G_LOG_LEVEL_DEBUG,
-                "A new clock was selected.");
+            g_debug("A new clock was selected.");
             if(priv->start_time>0)
             {
                 gst_element_seek_simple(priv->playbin, GST_FORMAT_TIME,
@@ -965,8 +963,7 @@ static gboolean rclib_core_bus_callback(GstBus *bus, GstMessage *msg,
             break;
         case GST_MESSAGE_ERROR:
             gst_message_parse_error(msg, &error, &error_msg);
-            g_log(G_LOG_DOMAIN, G_LOG_LEVEL_WARNING, "%s\nDEBUG: %s",
-                error->message, error_msg);
+            g_debug("%s\nDEBUG: %s", error->message, error_msg);
             g_error_free(error);
             g_signal_emit(object, core_signals[SIGNAL_ERROR], 0);
             if(!gst_element_post_message(priv->playbin,
@@ -1019,8 +1016,8 @@ static gboolean rclib_core_pad_buffer_probe_cb(GstPad *pad, GstBuffer *buf,
             msg = gst_message_new_eos(GST_OBJECT(priv->playbin));
             if(!gst_element_post_message(priv->playbin, msg))
                 rclib_core_stop();
-            g_log(G_LOG_DOMAIN, G_LOG_LEVEL_MESSAGE, "Reached CUE ending "
-                "time, EOS message has been emitted.");
+            g_debug("Reached CUE ending time, EOS message has been "
+                "emitted.");
         }
     }
     else if(len>0 && pos-len-priv->start_time>2*GST_SECOND)
@@ -1028,8 +1025,7 @@ static gboolean rclib_core_pad_buffer_probe_cb(GstPad *pad, GstBuffer *buf,
         msg = gst_message_new_eos(GST_OBJECT(priv->playbin));
         if(!gst_element_post_message(priv->playbin, msg))
             rclib_core_stop(); 
-        g_log(G_LOG_DOMAIN, G_LOG_LEVEL_MESSAGE, "Out of the duration, "
-            "EOS message has been emitted.");  
+        g_debug("Out of the duration, EOS message has been emitted.");
     }
     caps = gst_pad_get_negotiated_caps(pad);
     if(caps==NULL) return TRUE;
@@ -1147,11 +1143,11 @@ static void rclib_core_source_notify_cb(GObject *object, GParamSpec *spec,
         priv->ext_reference = NULL;
     else
         priv->ext_reference = priv->ext_reference_pre;
-    g_log(G_LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "Source changed.");
+    g_debug("Source changed.");
     g_object_get(object, "uri", &uri, NULL);
     g_signal_emit(core_instance, core_signals[SIGNAL_URI_CHANGED], 0,
         uri);
-    g_log(G_LOG_DOMAIN, G_LOG_LEVEL_DEBUG, "New URI is set: %s", uri);
+    g_debug("New URI is set: %s", uri);
     g_free(uri);
 }
 
@@ -1176,8 +1172,7 @@ static void rclib_core_instance_init(RCLibCore *core)
         playbin = gst_element_factory_make("playbin2", "rclib-playbin");
         if(playbin==NULL)
         {
-            g_log(G_LOG_DOMAIN, G_LOG_LEVEL_WARNING,
-                "Cannot load necessary plugin: %s", "playbin2");
+            g_warning("Cannot load necessary plugin: %s", "playbin2");
             g_set_error(&error, RCLIB_CORE_ERROR,
                 RCLIB_CORE_ERROR_MISSING_CORE_PLUGIN,
                 _("Cannot load necessary plugin: %s"), "playbin2");
@@ -1186,8 +1181,7 @@ static void rclib_core_instance_init(RCLibCore *core)
         videosink = gst_element_factory_make("fakesink", "rclib-videosink");
         if(videosink==NULL)
         {
-            g_log(G_LOG_DOMAIN, G_LOG_LEVEL_WARNING,
-                "Cannot load necessary plugin: %s", "fakesink");
+            g_warning("Cannot load necessary plugin: %s", "fakesink");
             g_set_error(&error, RCLIB_CORE_ERROR,
                 RCLIB_CORE_ERROR_MISSING_CORE_PLUGIN,
                 _("Cannot load necessary plugin: %s"), "fakesink");
@@ -1197,8 +1191,7 @@ static void rclib_core_instance_init(RCLibCore *core)
             "rclib-audiosink");
         if(audiosink==NULL)
         {
-            g_log(G_LOG_DOMAIN, G_LOG_LEVEL_WARNING,
-                "Cannot load necessary plugin: %s", "autoaudiosink");
+            g_warning("Cannot load necessary plugin: %s", "autoaudiosink");
             g_set_error(&error, RCLIB_CORE_ERROR,
                 RCLIB_CORE_ERROR_MISSING_CORE_PLUGIN,
                 _("Cannot load necessary plugin: %s"), "autoaudiosink");
@@ -1208,8 +1201,7 @@ static void rclib_core_instance_init(RCLibCore *core)
             "effect-audioconvert");
         if(audioconvert==NULL)
         {
-            g_log(G_LOG_DOMAIN, G_LOG_LEVEL_WARNING,
-                "Cannot load necessary plugin: %s", "audioconvert");
+            g_warning("Cannot load necessary plugin: %s", "audioconvert");
             g_set_error(&error, RCLIB_CORE_ERROR,
                 RCLIB_CORE_ERROR_MISSING_CORE_PLUGIN,
                 _("Cannot load necessary plugin: %s"), "audioconvert");
@@ -1219,8 +1211,7 @@ static void rclib_core_instance_init(RCLibCore *core)
             "effect-identity");
         if(identity==NULL)
         {
-            g_log(G_LOG_DOMAIN, G_LOG_LEVEL_WARNING,
-                "Cannot load necessary plugin: %s", "identify");
+            g_warning("Cannot load necessary plugin: %s", "identify");
             g_set_error(&error, RCLIB_CORE_ERROR,
                 RCLIB_CORE_ERROR_MISSING_CORE_PLUGIN,
                 _("Cannot load necessary plugin: %s"), "identity");
@@ -1229,8 +1220,7 @@ static void rclib_core_instance_init(RCLibCore *core)
         effectbin = gst_bin_new("rclib-effectbin");
         if(effectbin==NULL)
         {
-            g_log(G_LOG_DOMAIN, G_LOG_LEVEL_WARNING,
-                "Cannot create bin: %s", "effectbin");
+            g_warning("Cannot create bin: %s", "effectbin");
             g_set_error(&error, RCLIB_CORE_ERROR,
                 RCLIB_CORE_ERROR_CREATE_BIN_FAILED,
                 _("Cannot create bin: %s"), "effectbin");
@@ -1239,8 +1229,7 @@ static void rclib_core_instance_init(RCLibCore *core)
         gst_bin_add_many(GST_BIN(effectbin), audioconvert, identity, NULL);
         if(!gst_element_link(audioconvert, identity))
         {
-            g_log(G_LOG_DOMAIN, G_LOG_LEVEL_WARNING,
-                "Cannot link elements!");
+            g_warning("Cannot link elements!");
             g_set_error(&error, RCLIB_CORE_ERROR,
                 RCLIB_CORE_ERROR_LINK_FAILED,
                 _("Cannot link elements!"));
@@ -1255,8 +1244,7 @@ static void rclib_core_instance_init(RCLibCore *core)
         audiobin = gst_bin_new("rclib-audiobin");
         if(audiobin==NULL)
         {
-            g_log(G_LOG_DOMAIN, G_LOG_LEVEL_WARNING,
-                "Cannot create bin: %s", "audiobin");
+            g_warning("Cannot create bin: %s", "audiobin");
             g_set_error(&error, RCLIB_CORE_ERROR,
                 RCLIB_CORE_ERROR_CREATE_BIN_FAILED,
                 _("Cannot create bin: %s"), "audiobin");
@@ -1265,8 +1253,7 @@ static void rclib_core_instance_init(RCLibCore *core)
         gst_bin_add_many(GST_BIN(audiobin), effectbin, audiosink, NULL);
         if(!gst_element_link_many(effectbin, audiosink, NULL))
         {
-            g_log(G_LOG_DOMAIN, G_LOG_LEVEL_WARNING,
-                "Cannot link elements!");
+            g_warning("Cannot link elements!");
             g_set_error(&error, RCLIB_CORE_ERROR,
                 RCLIB_CORE_ERROR_LINK_FAILED,
                 _("Cannot link elements!"));
@@ -1375,11 +1362,10 @@ GType rclib_core_get_type()
 gboolean rclib_core_init(GError **error)
 {
     RCLibCorePrivate *priv;
-    g_log(G_LOG_DOMAIN, G_LOG_LEVEL_MESSAGE, "Loading core....");
+    g_message("Loading core....");
     if(core_instance!=NULL)
     {
-        g_log(G_LOG_DOMAIN, G_LOG_LEVEL_WARNING,
-            "The core is already initialized!");
+        g_warning("The core is already initialized!");
         g_set_error(error, RCLIB_CORE_ERROR, RCLIB_CORE_ERROR_ALREADY_INIT,
             _("The core is already initialized!"));
         return FALSE;
@@ -1393,7 +1379,7 @@ gboolean rclib_core_init(GError **error)
         core_instance = NULL;
         return FALSE;
     }
-    g_log(G_LOG_DOMAIN, G_LOG_LEVEL_MESSAGE, "Core loaded.");
+    g_message("Core loaded.");
     return TRUE;
 }
 
@@ -1407,7 +1393,7 @@ void rclib_core_exit()
 {
     if(core_instance!=NULL) g_object_unref(core_instance);
     core_instance = NULL;
-    g_log(G_LOG_DOMAIN, G_LOG_LEVEL_MESSAGE, "Core exited.");
+    g_message("Core exited.");
 }
 
 /**
@@ -1849,7 +1835,11 @@ gboolean rclib_core_stop()
     priv = RCLIB_CORE_GET_PRIVATE(RCLIB_CORE(core_instance));
     gst_element_set_state(priv->playbin, GST_STATE_NULL);
     flag = gst_element_set_state(priv->playbin, GST_STATE_READY);
-    if(flag) rclib_core_set_position(0);
+    if(flag)
+    {
+        rclib_core_set_position(0);
+        rclib_core_metadata_free(&(priv->metadata));
+    }
     return flag;
 }
 
