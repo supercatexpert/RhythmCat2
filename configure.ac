@@ -87,8 +87,10 @@ AC_ARG_ENABLE(debug, AS_HELP_STRING([--enable-debug], [enable debug mode]), \
     enable_debug=yes,)
 AM_CONDITIONAL(DEBUG_MODE, test "x$enable_debug" = "xyes")
 
-AC_CONFIG_FILES([rhythmcat-2.0.pc])
+AC_CONFIG_FILES([lib/librhythmcat-2.0.pc ui/rhythmcat-2.0.pc])
 AC_OUTPUT([Makefile lib/Makefile ui/Makefile \
+    plugins/Makefile plugins/base/Makefile plugins/extra/Makefile \
+    plugins/devel/Makefile \
     docs/Makefile docs/reference/Makefile docs/reference/lib/Makefile \
     docs/reference/lib/version.xml \
     po/Makefile.in po/Makefile])

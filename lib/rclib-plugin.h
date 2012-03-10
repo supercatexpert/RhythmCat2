@@ -106,7 +106,7 @@ typedef struct _RCLibPluginClass RCLibPluginClass;
  * @major_version: the major version of the plug-in support module, should
  * be equal to #RCLIB_PLUGIN_MAJOR_VERSION
  * @minjor_verison: the minor version of the plug-in support module, should
- * be equal to #RCLIB_PLUGIN_MINJOR_VERSION
+ * be equal to #RCLIB_PLUGIN_MINOR_VERSION
  * @type: the type of the plug-in
  * @id: the ID of the plug-in, should be unique
  * @name: the name of the plug-in
@@ -197,6 +197,8 @@ struct _RCLibPluginClass {
     /*< private >*/
     GObjectClass parent_class;
     void (*registered)(RCLibPlugin *plugin, const RCLibPluginData *data);
+    void (*loaded)(RCLibPlugin *plugin, const RCLibPluginData *data);
+    void (*unloaded)(RCLibPlugin *plugin, const RCLibPluginData *data);
 };
 
 /*< private >*/
@@ -214,6 +216,13 @@ gboolean rclib_plugin_register(RCLibPluginData *plugin);
 RCLibPluginData *rclib_plugin_data_ref(RCLibPluginData *plugin);
 void rclib_plugin_data_unref(RCLibPluginData *plugin);
 guint rclib_plugin_load_from_dir(const gchar *dirname);
+gboolean rclib_plugin_load(RCLibPluginData *plugin);
+gboolean rclib_plugin_unload(RCLibPluginData *plugin);
+gboolean rclib_plugin_reload(RCLibPluginData *plugin);
+gboolean rclib_plugin_is_loaded(RCLibPluginData *plugin);
+void rclib_plugin_destroy(RCLibPluginData *plugin);
+void rclib_plugin_foreach(GHFunc func, gpointer data);
+RCLibPluginData *rclib_plugin_lookup(const gchar *id);
 
 G_END_DECLS
 

@@ -1,11 +1,19 @@
 bin_PROGRAMS = RhythmCat2
 
-RhythmCat2_SOURCES = ui-listmodel.c ui-player.c ui-listview.c ui-menu.c \
-    ui-dialog.c ui-slabel.c ui-spectrum.c ui-style.c mpris2.c ui-listmodel.h \
-    ui-listview.h ui-player.h ui-menu.h ui-dialog.h ui-slabel.h ui-style.h \
-    ui-spectrum.h mpris2.h common.h ui-img-icon.xpm ui-img-nocov.xpm main.c
+RhythmCat2_SOURCES = \
+    ui-listmodel.c ui-player.c ui-listview.c ui-menu.c ui-dialog.c \
+    ui-slabel.c ui-spectrum.c ui-style.c mpris2.c main.c
+
+RhythmCat2_headers = \
+    ui-listmodel.h ui-listview.h ui-player.h ui-menu.h ui-dialog.h \
+    ui-slabel.h ui-style.h ui-spectrum.h mpris2.h common.h \
+    ui-img-icon.xpm ui-img-nocov.xpm
+
+RhythmCat2includedir=$(includedir)/ui
+RhythmCat2include_HEADERS = $(RhythmCat2_headers)
 
 RhythmCat2_DEPENDENCIES = @LIBOBJS@
+RhythmCat2_LDFLAGS = -export-dynamic
 
 INCLUDES = @GLIB2_CFLAGS@ @GTK_CFLAGS@ @GSTREAMER_CFLAGS@ @JSON_CFLAGS@ \
     -DLOCALEDIR=\"$(localedir)\" -I$(top_srcdir)/lib
@@ -13,4 +21,9 @@ INCLUDES = @GLIB2_CFLAGS@ @GTK_CFLAGS@ @GSTREAMER_CFLAGS@ @JSON_CFLAGS@ \
 RhythmCat2_LDADD = @LIBOBJS@ @GLIB2_LIBS@ @GTK_LIBS@ @GSTREAMER_LIBS@ \
     @JSON_LIBS@ $(top_builddir)/lib/librhythmcat-2.0.la
 
+EXTRA_DIST = \
+    rhythmcat-2.0.pc.in
+    
+pkgconfigdir = $(libdir)/pkgconfig
+pkgconfig_DATA = rhythmcat-2.0.pc
 

@@ -9,10 +9,18 @@
 static void rc_main_app_activate_cb(GApplication *application,
     gpointer data)
 {
+    const gchar *home_dir = NULL;
+    gchar *plugin_dir;
     rc_ui_player_init(GTK_APPLICATION(application));
     rclib_settings_apply();
     rc_mpris2_init();
     rclib_plugin_init();
+    home_dir = g_getenv("HOME");
+    if(home_dir==NULL)
+        home_dir = g_get_home_dir();
+    plugin_dir = g_build_filename(home_dir, ".RhythmCat2", "Plugins", NULL);
+    rclib_plugin_load_from_dir(plugin_dir);
+    g_free(plugin_dir);
 }
 
 int main(int argc, char *argv[])

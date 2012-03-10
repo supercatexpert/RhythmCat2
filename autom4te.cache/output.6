@@ -15345,9 +15345,9 @@ else
 fi
 
 
-ac_config_files="$ac_config_files rhythmcat-2.0.pc"
+ac_config_files="$ac_config_files lib/librhythmcat-2.0.pc ui/rhythmcat-2.0.pc"
 
-ac_config_files="$ac_config_files Makefile lib/Makefile ui/Makefile docs/Makefile docs/reference/Makefile docs/reference/lib/Makefile docs/reference/lib/version.xml po/Makefile.in po/Makefile"
+ac_config_files="$ac_config_files Makefile lib/Makefile ui/Makefile plugins/Makefile plugins/base/Makefile plugins/extra/Makefile plugins/devel/Makefile docs/Makefile docs/reference/Makefile docs/reference/lib/Makefile docs/reference/lib/version.xml po/Makefile.in po/Makefile"
 
 cat >confcache <<\_ACEOF
 # This file is a shell script that caches the results of configure
@@ -16392,10 +16392,15 @@ do
     "libtool") CONFIG_COMMANDS="$CONFIG_COMMANDS libtool" ;;
     "default-1") CONFIG_COMMANDS="$CONFIG_COMMANDS default-1" ;;
     "po-directories") CONFIG_COMMANDS="$CONFIG_COMMANDS po-directories" ;;
-    "rhythmcat-2.0.pc") CONFIG_FILES="$CONFIG_FILES rhythmcat-2.0.pc" ;;
+    "lib/librhythmcat-2.0.pc") CONFIG_FILES="$CONFIG_FILES lib/librhythmcat-2.0.pc" ;;
+    "ui/rhythmcat-2.0.pc") CONFIG_FILES="$CONFIG_FILES ui/rhythmcat-2.0.pc" ;;
     "Makefile") CONFIG_FILES="$CONFIG_FILES Makefile" ;;
     "lib/Makefile") CONFIG_FILES="$CONFIG_FILES lib/Makefile" ;;
     "ui/Makefile") CONFIG_FILES="$CONFIG_FILES ui/Makefile" ;;
+    "plugins/Makefile") CONFIG_FILES="$CONFIG_FILES plugins/Makefile" ;;
+    "plugins/base/Makefile") CONFIG_FILES="$CONFIG_FILES plugins/base/Makefile" ;;
+    "plugins/extra/Makefile") CONFIG_FILES="$CONFIG_FILES plugins/extra/Makefile" ;;
+    "plugins/devel/Makefile") CONFIG_FILES="$CONFIG_FILES plugins/devel/Makefile" ;;
     "docs/Makefile") CONFIG_FILES="$CONFIG_FILES docs/Makefile" ;;
     "docs/reference/Makefile") CONFIG_FILES="$CONFIG_FILES docs/reference/Makefile" ;;
     "docs/reference/lib/Makefile") CONFIG_FILES="$CONFIG_FILES docs/reference/lib/Makefile" ;;

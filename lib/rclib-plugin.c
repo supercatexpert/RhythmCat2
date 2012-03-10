@@ -43,12 +43,14 @@
 typedef struct RCLibPluginPrivate
 {
     GHashTable *plugin_table;
-    gint dummy;
+    GHashTable *loader_table;
 }RCLibPluginPrivate;
 
 enum
 {
     SIGNAL_REGISTERED,
+    SIGNAL_LOADED,
+    SIGNAL_UNLOADED,
     SIGNAL_LAST
 };
 
@@ -73,7 +75,14 @@ static gboolean rclib_plugin_is_native(const char *filename)
 
 static void rclib_plugin_data_free(RCLibPluginData *plugin)
 {
+    gboolean (*plugin_destroy)(RCLibPluginData *plugin) = NULL;
+    gpointer unpunned = NULL;
     if(plugin==NULL) return;
+    if(g_module_symbol(plugin->handle, "rcplugin_destroy", &unpunned))
+    {
+        plugin_destroy = unpunned;
+        plugin_destroy(plugin);
+    }
     g_free(plugin->error);
     g_free(plugin->path);
     if(plugin->info!=NULL)
@@ -98,6 +107,8 @@ static void rclib_plugin_finalize(GObject *object)
         object));
     if(priv->plugin_table!=NULL)
         g_hash_table_unref(priv->plugin_table);
+    if(priv->loader_table!=NULL)
+        g_hash_table_unref(priv->loader_table);
     G_OBJECT_CLASS(rclib_plugin_parent_class)->finalize(object);
 }
 
@@ -120,6 +131,32 @@ static void rclib_plugin_class_init(RCLibPluginClass *klass)
         G_STRUCT_OFFSET(RCLibPluginClass, registered), NULL, NULL,
         g_cclosure_marshal_VOID__POINTER, G_TYPE_NONE, 1, G_TYPE_POINTER,
         NULL);
+        
+    /**
+     * RCLibPlugin::loaded:
+     * @plugin: the #RCLibPlugin that received the signal
+     * @data: the plug-in data (#RCLibPluginData)
+     *
+     * The ::loaded signal is emitted when a plug-in is loaded.
+     */
+    plugin_signals[SIGNAL_LOADED] = g_signal_new("loaded",
+        RCLIB_PLUGIN_TYPE, G_SIGNAL_RUN_FIRST,
+        G_STRUCT_OFFSET(RCLibPluginClass, loaded), NULL, NULL,
+        g_cclosure_marshal_VOID__POINTER, G_TYPE_NONE, 1, G_TYPE_POINTER,
+        NULL);
+        
+    /**
+     * RCLibPlugin::unloaded:
+     * @plugin: the #RCLibPlugin that received the signal
+     * @data: the plug-in data (#RCLibPluginData)
+     *
+     * The ::unloaded signal is emitted when a plug-in is unloaded.
+     */
+    plugin_signals[SIGNAL_UNLOADED] = g_signal_new("unloaded",
+        RCLIB_PLUGIN_TYPE, G_SIGNAL_RUN_FIRST,
+        G_STRUCT_OFFSET(RCLibPluginClass, unloaded), NULL, NULL,
+        g_cclosure_marshal_VOID__POINTER, G_TYPE_NONE, 1, G_TYPE_POINTER,
+        NULL);
 }
 
 static void rclib_plugin_instance_init(RCLibPlugin *plugin)
@@ -128,6 +165,8 @@ static void rclib_plugin_instance_init(RCLibPlugin *plugin)
     bzero(priv, sizeof(RCLibPluginPrivate));
     priv->plugin_table = g_hash_table_new_full(g_str_hash, g_str_equal,
         g_free, (GDestroyNotify)rclib_plugin_data_free);
+    priv->loader_table = g_hash_table_new_full(g_str_hash, g_str_equal,
+        g_free, (GDestroyNotify)NULL);
 }
 
 GType rclib_plugin_get_type()
@@ -426,32 +465,188 @@ guint rclib_plugin_load_from_dir(const gchar *dirname)
         g_error_free(error);
         return 0;
     }
+    g_message("Searching plug-ins in directory: %s", dirname);
     while((filename=g_dir_read_name(gdir))!=NULL)
     {
         path = g_build_filename(dirname, filename, NULL);
-        if(rclib_plugin_is_native(filename)) /* Native C/C++ plug-in */
+        plugin_data = rclib_plugin_probe(path);
+        if(plugin_data!=NULL)
         {
-            plugin_data = rclib_plugin_probe(path);
-            if(plugin_data!=NULL)
+            if(plugin_data->handle!=NULL && !plugin_data->unloadable)
             {
-                if(plugin_data->handle!=NULL && !plugin_data->unloadable)
+                if(rclib_plugin_register(plugin_data))
                 {
-                    if(rclib_plugin_register(plugin_data))
-                    {
-                        g_message("Plug-in: %s initialized.",
-                            plugin_data->info->id);
-                    }
+                    g_message("Plug-in: %s initialized.",
+                        plugin_data->info->id);
                 }
-                rclib_plugin_data_unref(plugin_data);
             }
-        }
-        else /* Other plug-in type */
-        {
+            rclib_plugin_data_unref(plugin_data);
         }
         g_free(path);
     }
     g_dir_close(gdir);
+    g_message("Found %u plug-ins in the directory.", number);
     return number;
+}
+
+/**
+ * rclib_plugin_load:
+ * @plugin: the plug-in data
+ *
+ * Load and run the plug-in.
+ *
+ * Returns: Whether the plug-in is loaded successfully.
+ */
+
+gboolean rclib_plugin_load(RCLibPluginData *plugin)
+{
+    g_return_val_if_fail(plugin!=NULL, FALSE);
+    if(plugin->loaded) return TRUE;
+    if(plugin->unloadable) return FALSE;
+    if(plugin->error!=NULL) return FALSE;
+    if(plugin->info==NULL) return FALSE;
+    
+    /* Remember to check the dependent list HERE! (to be implemented) */
+    
+    if(plugin->native) /* Native C/C++ plug-in */
+    {
+        if(plugin->info->load==NULL) return FALSE;
+        if(!plugin->info->load(plugin)) return FALSE;
+    }
+    else /* Use loaders to load the plug-in */
+    {
+    
+    
+        return FALSE;
+    }
+    plugin->loaded = TRUE;
+    return TRUE;
+}
+
+/**
+ * rclib_plugin_unload:
+ * @plugin: the plug-in data
+ *
+ * Stop and unload the plug-in.
+ *
+ * Returns: Whether the plug-in is unloaded successfully.
+ */
+
+gboolean rclib_plugin_unload(RCLibPluginData *plugin)
+{
+    g_return_val_if_fail(plugin!=NULL, FALSE);
+    if(plugin->loaded) return TRUE;
+    if(plugin->unloadable) return FALSE;
+    if(plugin->error!=NULL) return FALSE;
+    if(plugin->info==NULL) return FALSE;
+    
+    /* Remember to check the dependent list HERE! (to be implemented) */
+    
+    if(plugin->native) /* Native C/C++ plug-in */
+    {
+        if(plugin->info->unload==NULL) return FALSE;
+        if(!plugin->info->unload(plugin)) return FALSE;
+    }
+    else /* Use loaders to load the plug-in */
+    {
+    
+    
+        return FALSE;
+    }
+    plugin->loaded = FALSE;
+    return TRUE;
+}
+
+/**
+ * rclib_plugin_reload:
+ * @plugin: the plug-in data
+ *
+ * Reload and restart the plug-in.
+ *
+ * Returns: Whether the plug-in is reloaded successfully.
+ */
+
+gboolean rclib_plugin_reload(RCLibPluginData *plugin)
+{
+    if(plugin==NULL) return FALSE;
+    if(!plugin->loaded) return FALSE;
+    if(!rclib_plugin_unload(plugin)) return FALSE;
+    if(!rclib_plugin_load(plugin)) return FALSE;
+    return TRUE;
+}
+
+/**
+ * rclib_plugin_is_loaded:
+ * @plugin: the plug-in data
+ *
+ * Check whether the plug-in is loaded.
+ *
+ * Returns: Whether hte plug-in is loaded.
+ */
+
+gboolean rclib_plugin_is_loaded(RCLibPluginData *plugin)
+{
+    if(plugin==NULL) return FALSE;
+    return plugin->loaded;
+}
+
+/**
+ * rclib_plugin_destroy:
+ * @plugin: the plug-in data
+ *
+ * Exit the plug-in and destroy the plug-in data.
+ */
+
+void rclib_plugin_destroy(RCLibPluginData *plugin)
+{
+    RCLibPluginPrivate *priv;
+    if(plugin==NULL) return;
+    if(plugin_instance==NULL) return;
+    priv = RCLIB_PLUGIN_GET_PRIVATE(plugin_instance);
+    if(priv==NULL || priv->plugin_table==NULL) return;
+    if(plugin->loaded) rclib_plugin_unload(plugin);
+    g_hash_table_remove(priv->plugin_table, plugin->info->id);
+    
+    
+    rclib_plugin_data_free(plugin);
+}
+
+/**
+ * rclib_plugin_foreach:
+ * @func: the function to call for each key/value pair
+ * @data: user data to pass to the function
+ *
+ * Calls the given function for each of the key/value pairs in the
+ * #GHashTable which contains the plug-in data.
+ */
+
+void rclib_plugin_foreach(GHFunc func, gpointer data)
+{
+    RCLibPluginPrivate *priv;
+    if(func==NULL) return;
+    if(plugin_instance==NULL) return;
+    priv = RCLIB_PLUGIN_GET_PRIVATE(plugin_instance);
+    if(priv==NULL || priv->plugin_table==NULL) return;
+    g_hash_table_foreach(priv->plugin_table, func, data);
+}
+
+/**
+ * rclib_plugin_lookup:
+ * @id: the ID of the plug-in
+ *
+ * Lookup a plug-in in the registered plug-in table by the given ID.
+ *
+ * Returns: The plug-in data, #NULL if not found.
+ */
+
+RCLibPluginData *rclib_plugin_lookup(const gchar *id)
+{
+    RCLibPluginPrivate *priv;
+    if(id==NULL) return NULL;
+    if(plugin_instance==NULL) return NULL;
+    priv = RCLIB_PLUGIN_GET_PRIVATE(plugin_instance);
+    if(priv==NULL || priv->plugin_table==NULL) return NULL;
+    return g_hash_table_lookup(priv->plugin_table, id);
 }
 
 

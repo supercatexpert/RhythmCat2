@@ -330,14 +330,13 @@ static void rclib_core_spectrum_reset_state(RCLibCorePrivate *priv)
 static void rclib_core_finalize(GObject *object)
 {
     RCLibCorePrivate *priv = RCLIB_CORE_GET_PRIVATE(RCLIB_CORE(object));
+    if(priv->playbin!=NULL)
+        gst_element_set_state(priv->playbin, GST_STATE_NULL);
     if(priv->extra_plugin_list!=NULL)
         g_list_free(priv->extra_plugin_list);
     rclib_core_spectrum_reset_state(priv);
     if(priv->playbin!=NULL)
-    {
-        gst_element_set_state(priv->playbin, GST_STATE_NULL);
         gst_object_unref(priv->playbin);
-    }
     G_OBJECT_CLASS(rclib_core_parent_class)->finalize(object);
 }
 
