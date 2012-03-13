@@ -34,6 +34,13 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
+@WITH_NATIVE_PLUGINS_TRUE@am__append_1 = \
+@WITH_NATIVE_PLUGINS_TRUE@    helloworld.la
+
+@WITH_PYTHON3_PLUGINS_TRUE@am__append_2 = \
+@WITH_PYTHON3_PLUGINS_TRUE@    python3.la
+
+@WITH_PYTHON3_PLUGINS_TRUE@am__append_3 = @PYTHON3_CFLAGS@
 subdir = plugins/devel
 DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
@@ -79,7 +86,8 @@ am__uninstall_files_from_dir = { \
 am__installdirs = "$(DESTDIR)$(plugindir)"
 LTLIBRARIES = $(noinst_LTLIBRARIES) $(plugin_LTLIBRARIES)
 helloworld_la_DEPENDENCIES =
-am_helloworld_la_OBJECTS = helloworld.lo
+am__helloworld_la_SOURCES_DIST = helloworld.c
+@WITH_NATIVE_PLUGINS_TRUE@am_helloworld_la_OBJECTS = helloworld.lo
 helloworld_la_OBJECTS = $(am_helloworld_la_OBJECTS)
 AM_V_lt = $(am__v_lt_@AM_V@)
 am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
@@ -87,6 +95,15 @@ am__v_lt_0 = --silent
 helloworld_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
 	$(helloworld_la_LDFLAGS) $(LDFLAGS) -o $@
+@WITH_NATIVE_PLUGINS_TRUE@am_helloworld_la_rpath = -rpath $(plugindir)
+python3_la_DEPENDENCIES =
+am__python3_la_SOURCES_DIST = python3.c
+@WITH_PYTHON3_PLUGINS_TRUE@am_python3_la_OBJECTS = python3.lo
+python3_la_OBJECTS = $(am_python3_la_OBJECTS)
+python3_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
+	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
+	$(python3_la_LDFLAGS) $(LDFLAGS) -o $@
+@WITH_PYTHON3_PLUGINS_TRUE@am_python3_la_rpath = -rpath $(plugindir)
 DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__depfiles_maybe = depfiles
@@ -113,8 +130,9 @@ am__v_CCLD_0 = @echo "  CCLD  " $@;
 AM_V_GEN = $(am__v_GEN_@AM_V@)
 am__v_GEN_ = $(am__v_GEN_@AM_DEFAULT_V@)
 am__v_GEN_0 = @echo "  GEN   " $@;
-SOURCES = $(helloworld_la_SOURCES)
-DIST_SOURCES = $(helloworld_la_SOURCES)
+SOURCES = $(helloworld_la_SOURCES) $(python3_la_SOURCES)
+DIST_SOURCES = $(am__helloworld_la_SOURCES_DIST) \
+	$(am__python3_la_SOURCES_DIST)
 ETAGS = etags
 CTAGS = ctags
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
@@ -215,6 +233,8 @@ POFILES = @POFILES@
 POSUB = @POSUB@
 PO_IN_DATADIR_FALSE = @PO_IN_DATADIR_FALSE@
 PO_IN_DATADIR_TRUE = @PO_IN_DATADIR_TRUE@
+PYTHON3_CFLAGS = @PYTHON3_CFLAGS@
+PYTHON3_LIBS = @PYTHON3_LIBS@
 RANLIB = @RANLIB@
 RC_MAJOR_VERSION = @RC_MAJOR_VERSION@
 RC_MICRO_VERSION = @RC_MICRO_VERSION@
@@ -283,15 +303,16 @@ top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 plugindir = $(libdir)/RhythmCat2
 helloworld_la_LDFLAGS = -module -avoid-version -export-dynamic -O2
-plugin_LTLIBRARIES = \
-    helloworld.la
-
+python3_la_LDFLAGS = -module -avoid-version -export-dynamic -O2
+plugin_LTLIBRARIES = $(am__append_1) $(am__append_2)
 noinst_LTLIBRARIES = 
-helloworld_la_SOURCES = helloworld.c
-helloworld_la_LIBADD = @GLIB2_LIBS@ @GTK_LIBS@ @GSTREAMER_LIBS@ @JSON_LIBS@
-INCLUDES = @GLIB2_CFLAGS@ @GSTREAMER_CFLAGS@ @GTK_CFLAGS@ @JSON_CFLAGS@ \
-    -DLOCALEDIR=\"$(localedir)\" -I$(top_srcdir)/lib -I$(top_srcdir)/ui
-
+INCLUDES = @GLIB2_CFLAGS@ @GSTREAMER_CFLAGS@ @GTK_CFLAGS@ \
+	@JSON_CFLAGS@ -DLOCALEDIR=\"$(localedir)\" -I$(top_srcdir)/lib \
+	-I$(top_srcdir)/ui $(am__append_3)
+@WITH_NATIVE_PLUGINS_TRUE@helloworld_la_SOURCES = helloworld.c
+@WITH_NATIVE_PLUGINS_TRUE@helloworld_la_LIBADD = @GLIB2_LIBS@ @GTK_LIBS@ @GSTREAMER_LIBS@ @JSON_LIBS@
+@WITH_PYTHON3_PLUGINS_TRUE@python3_la_SOURCES = python3.c
+@WITH_PYTHON3_PLUGINS_TRUE@python3_la_LIBADD = @GLIB2_LIBS@ @GSTREAMER_LIBS@ @JSON_LIBS@ @PYTHON3_LIBS@
 SUFFIXES = .c .so
 all: all-am
 
@@ -368,7 +389,9 @@ clean-pluginLTLIBRARIES:
 	  rm -f "$${dir}/so_locations"; \
 	done
 helloworld.la: $(helloworld_la_OBJECTS) $(helloworld_la_DEPENDENCIES) $(EXTRA_helloworld_la_DEPENDENCIES) 
-	$(AM_V_CCLD)$(helloworld_la_LINK) -rpath $(plugindir) $(helloworld_la_OBJECTS) $(helloworld_la_LIBADD) $(LIBS)
+	$(AM_V_CCLD)$(helloworld_la_LINK) $(am_helloworld_la_rpath) $(helloworld_la_OBJECTS) $(helloworld_la_LIBADD) $(LIBS)
+python3.la: $(python3_la_OBJECTS) $(python3_la_DEPENDENCIES) $(EXTRA_python3_la_DEPENDENCIES) 
+	$(AM_V_CCLD)$(python3_la_LINK) $(am_python3_la_rpath) $(python3_la_OBJECTS) $(python3_la_LIBADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
@@ -377,6 +400,7 @@ distclean-compile:
 	-rm -f *.tab.c
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/helloworld.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/python3.Plo@am__quote@
 
 .c.o:
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(COMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<

@@ -83,9 +83,27 @@ AM_GNU_GETTEXT_VERSION([0.18.1])
 AM_GNU_GETTEXT([external])
 
 # Checks for features
-AC_ARG_ENABLE(debug, AS_HELP_STRING([--enable-debug], [enable debug mode]), \
-    enable_debug=yes,)
+AC_ARG_ENABLE(debug, AS_HELP_STRING([--enable-debug], \
+    [enable debug mode [default=no]]), enable_debug=yes, enable_debug=no)
 AM_CONDITIONAL(DEBUG_MODE, test "x$enable_debug" = "xyes")
+
+AC_ARG_WITH(native-plugins, AS_HELP_STRING([--with-native-plugins], \
+    [compile native plug-ins]), with_native_plugins=yes, \
+    with_native_plugins=no)
+AM_CONDITIONAL(WITH_NATIVE_PLUGINS, test "x$with_native_plugins" = "xyes") 
+
+AC_ARG_WITH(python3-plugins, AS_HELP_STRING([--with-python3-plugins], \
+    [compile Python3 plug-ins]), with_python3_plugins=yes,\
+    with_python3_plugins=no)
+if test "x$with_python3_plugins" = "xyes"; then
+    PKG_CHECK_MODULES([PYTHON3], [python3 >= 3.1], have_python3=yes, \
+        have_python3=no)
+    if test "x$have_python3" != "xyes"; then
+        with_python3_plugins="no"
+        echo "Please install Python3 support before enable python plug-ins!"
+    fi
+fi
+AM_CONDITIONAL(WITH_PYTHON3_PLUGINS, test "x$with_python3_plugins" = "xyes")
 
 AC_CONFIG_FILES([lib/librhythmcat-2.0.pc ui/rhythmcat-2.0.pc])
 AC_OUTPUT([Makefile lib/Makefile ui/Makefile \
@@ -96,4 +114,22 @@ AC_OUTPUT([Makefile lib/Makefile ui/Makefile \
     po/Makefile.in po/Makefile])
 
 AC_CONFIG_MACRO_DIR(m4)
+
+AC_OUTPUT
+echo
+echo $PACKAGE $VERSION
+
+echo
+#echo Build GTK+ 3 UI............. : $with_gtk_ui
+#echo Build console UI............ : $with_console_ui
+echo
+echo Enable DEBUG.................: $enable_debug
+echo
+echo With Native Plug-ins.........: $with_native_plugins
+echo With Python3 Plug-ins........: $with_python3_plugins
+echo
+echo configure complete, now type \'make\'
+echo
+
+
 

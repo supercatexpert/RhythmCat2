@@ -44,6 +44,8 @@ typedef struct RCLibPluginPrivate
 {
     GHashTable *plugin_table;
     GHashTable *loader_table;
+    GKeyFile *keyfile;
+    gchar *configure_path;
 }RCLibPluginPrivate;
 
 enum
@@ -73,24 +75,50 @@ static gboolean rclib_plugin_is_native(const char *filename)
     return flag;
 }
 
+static RCLibPluginLoaderInfo *rclib_plugin_find_loader_for_plugin(
+    const RCLibPluginData *plugin)
+{
+    const gchar *ext;
+    gchar *little_case;
+    RCLibPluginLoaderInfo *loader = NULL;
+    RCLibPluginPrivate *priv;
+    g_return_val_if_fail(plugin!=NULL, NULL);
+    g_return_val_if_fail(plugin_instance!=NULL, NULL);
+    priv = RCLIB_PLUGIN_GET_PRIVATE(plugin_instance);
+    g_return_val_if_fail(priv!=NULL, NULL);
+    if(priv->loader_table==NULL) return NULL;
+    ext = strrchr(plugin->path, '.');
+    if(ext==NULL) return NULL;
+    if(strlen(ext)<1) return NULL;
+    ext++;
+    little_case = g_ascii_strdown(ext, -1);
+    if(little_case==NULL) return NULL;
+    loader = g_hash_table_lookup(priv->loader_table, little_case);
+    g_free(little_case);
+    return loader;
+}
+
 static void rclib_plugin_data_free(RCLibPluginData *plugin)
 {
-    gboolean (*plugin_destroy)(RCLibPluginData *plugin) = NULL;
-    gpointer unpunned = NULL;
+    RCLibPluginLoaderInfo *loader;
     if(plugin==NULL) return;
-    if(g_module_symbol(plugin->handle, "rcplugin_destroy", &unpunned))
+    if(plugin->native)
     {
-        plugin_destroy = unpunned;
-        plugin_destroy(plugin);
+        if(plugin->info->destroy!=NULL)
+            plugin->info->destroy(plugin);
+        if(plugin->handle!=NULL)
+            g_module_close(plugin->handle);
+    }
+    else
+    {
+        loader = rclib_plugin_find_loader_for_plugin(plugin);
+        if(loader!=NULL && loader->destroy!=NULL)
+            loader->destroy(plugin);
     }
     g_free(plugin->error);
     g_free(plugin->path);
-    if(plugin->info!=NULL)
-        ;
     if(plugin->dependent_list!=NULL)
-        g_list_free(plugin->dependent_list);
-    if(plugin->handle!=NULL)
-        g_module_close(plugin->handle);
+        g_slist_free(plugin->dependent_list);
     g_free(plugin);
 }
 
@@ -103,12 +131,40 @@ static inline RCLibPluginData *rclib_pliugin_data_new()
 
 static void rclib_plugin_finalize(GObject *object)
 {
+    gchar *conf_data;
+    gsize conf_size;
+    GError *error = NULL;
     RCLibPluginPrivate *priv = RCLIB_PLUGIN_GET_PRIVATE(RCLIB_PLUGIN(
         object));
+    if(priv->keyfile!=NULL && priv->configure_path!=NULL)
+    {
+        conf_data = g_key_file_to_data(priv->keyfile, &conf_size, &error);
+        if(conf_data!=NULL)
+        {
+            if(!g_file_set_contents(priv->configure_path, conf_data,
+                conf_size, &error))
+            {
+                g_warning("Cannot save plug-in configure data to file: %s",
+                    error->message);
+                g_error_free(error);
+            }
+            g_free(conf_data);
+        }
+        else
+        {
+            g_warning("Cannot save plug-in configure data: %s",
+                error->message);
+            g_error_free(error);
+        }
+    }
+    g_free(priv->configure_path);
+    rclib_plugin_destroy_all();
     if(priv->plugin_table!=NULL)
         g_hash_table_unref(priv->plugin_table);
     if(priv->loader_table!=NULL)
         g_hash_table_unref(priv->loader_table);
+    if(priv->keyfile!=NULL)
+        g_key_file_free(priv->keyfile);
     G_OBJECT_CLASS(rclib_plugin_parent_class)->finalize(object);
 }
 
@@ -164,9 +220,10 @@ static void rclib_plugin_instance_init(RCLibPlugin *plugin)
     RCLibPluginPrivate *priv = RCLIB_PLUGIN_GET_PRIVATE(plugin);
     bzero(priv, sizeof(RCLibPluginPrivate));
     priv->plugin_table = g_hash_table_new_full(g_str_hash, g_str_equal,
-        g_free, (GDestroyNotify)rclib_plugin_data_free);
+        g_free, (GDestroyNotify)rclib_plugin_data_unref);
     priv->loader_table = g_hash_table_new_full(g_str_hash, g_str_equal,
         g_free, (GDestroyNotify)NULL);
+    priv->keyfile = g_key_file_new();
 }
 
 GType rclib_plugin_get_type()
@@ -195,16 +252,34 @@ GType rclib_plugin_get_type()
 
 /**
  * rclib_plugin_init:
+ * @file: the configure file path
  *
  * Initialize the plug-in support system instance.
  *
  * Returns: Whether the initialization succeeded.
  */
 
-gboolean rclib_plugin_init()
+gboolean rclib_plugin_init(const gchar *file)
 {
+    RCLibPluginPrivate *priv;
+    GError *error = NULL;
     g_message("Loading plug-in support system....");
     plugin_instance = g_object_new(RCLIB_PLUGIN_TYPE, NULL);
+    if(file!=NULL)
+    {
+        priv = RCLIB_PLUGIN_GET_PRIVATE(plugin_instance);
+        if(g_file_test(file, G_FILE_TEST_EXISTS))
+        {
+            if(!g_key_file_load_from_file(priv->keyfile, file,
+                G_KEY_FILE_NONE, &error))
+            {
+                g_warning("Cannot open plug-in configure file: %s",
+                    error->message);
+                g_error_free(error);
+            }
+        }
+        priv->configure_path = g_strdup(file);
+    }
     g_message("Plug-in support system loaded.");
     return TRUE;
 }
@@ -282,6 +357,7 @@ void rclib_plugin_signal_disconnect(gulong handler_id)
 RCLibPluginData *rclib_plugin_probe(const gchar *filename)
 {
     RCLibPluginData *plugin = NULL;
+    RCLibPluginLoaderInfo *loader = NULL;
     gboolean (*plugin_init)(RCLibPluginData *plugin) = NULL;
     gpointer unpunned;
     gboolean native;
@@ -295,7 +371,7 @@ RCLibPluginData *rclib_plugin_probe(const gchar *filename)
     if(native) /* Native C/C++ plug-in */
     {
         plugin->native = TRUE;
-        plugin->handle = g_module_open(filename, G_MODULE_BIND_LOCAL);
+        plugin->handle = g_module_open(filename, 0);
         if(plugin->handle==NULL)
         {
             error_msg = g_module_error();
@@ -305,8 +381,7 @@ RCLibPluginData *rclib_plugin_probe(const gchar *filename)
                 plugin->error = g_strdup(_("Unknown error!"));
             g_warning("Error when loading plug-in %s: %s", filename,
                 plugin->error);
-            plugin->handle = g_module_open(filename, G_MODULE_BIND_LAZY |
-                G_MODULE_BIND_LOCAL);
+            plugin->handle = g_module_open(filename, G_MODULE_BIND_LAZY);
             plugin->unloadable = TRUE;
             if(plugin->handle==NULL)
                 return plugin;
@@ -328,24 +403,37 @@ RCLibPluginData *rclib_plugin_probe(const gchar *filename)
     }
     else /* Other plug-in types */
     {
-    
-    
+        plugin->native = FALSE;
+        loader = rclib_plugin_find_loader_for_plugin(plugin);
+        if(loader==NULL || loader->probe==NULL)
+        {
+            plugin->unloadable = TRUE;
+            return plugin;
+        }
+        plugin_init = loader->probe;
     }
     if(plugin_init==NULL)
     {
         plugin->unloadable = TRUE;
         return plugin;
     }
-    if(!(plugin_init(plugin)) || plugin->info==NULL)
+    if(!plugin_init(plugin))
     {
-        plugin->error = g_strdup(_("This plugin does not have info data!"));
+        plugin->error = g_strdup(_("Cannot initialize the plug-in!"));
+        g_warning("Plugin %s cannot be initialized!", filename);
+        plugin->unloadable = TRUE;
+        return plugin;
+    }
+    if(plugin->info==NULL)
+    {
+        plugin->error = g_strdup(_("This plug-in does not have info data!"));
         g_warning("Plugin %s does not have info data!", filename);
         plugin->unloadable = TRUE;
         return plugin;
     }
     if(plugin->info->id==NULL || strlen(plugin->info->id)==0)
     {
-        plugin->error = g_strdup(_("This plugin has not defined an ID!"));
+        plugin->error = g_strdup(_("This plug-in has not defined an ID!"));
         g_warning("Plugin %s has not defined an ID!", filename);
         plugin->unloadable = TRUE;
         return plugin;
@@ -364,7 +452,7 @@ RCLibPluginData *rclib_plugin_probe(const gchar *filename)
             "(need %d.%d.x)"), plugin->info->major_version,
             plugin->info->minor_version, RCLIB_PLUGIN_MAJOR_VERSION,
             RCLIB_PLUGIN_MINOR_VERSION);
-        g_warning("Plugin %s is not loadable: ABI version mismatch %d.%d.x "
+        g_warning("Plug-in %s is not loadable: ABI version mismatch %d.%d.x "
             "(need %d.%d.x)", filename, plugin->info->major_version,
             plugin->info->minor_version, RCLIB_PLUGIN_MAJOR_VERSION,
             RCLIB_PLUGIN_MINOR_VERSION);
@@ -386,6 +474,8 @@ RCLibPluginData *rclib_plugin_probe(const gchar *filename)
 gboolean rclib_plugin_register(RCLibPluginData *plugin)
 {
     RCLibPluginPrivate *priv;
+    RCLibPluginLoaderInfo *loader;
+    const gchar * const *exts;
     g_return_val_if_fail(plugin!=NULL, FALSE);
     g_return_val_if_fail(plugin_instance!=NULL, FALSE);
     priv = RCLIB_PLUGIN_GET_PRIVATE(plugin_instance);
@@ -399,7 +489,23 @@ gboolean rclib_plugin_register(RCLibPluginData *plugin)
         return TRUE;
     if(plugin->info->type==RCLIB_PLUGIN_TYPE_LOADER)
     {
-    
+        if(plugin->info->extra_info==NULL) return FALSE;
+        loader = plugin->info->extra_info;
+        if(loader->extensions==NULL) return FALSE;
+        for(exts=loader->extensions;*exts!=NULL;exts++)
+        {
+            g_hash_table_insert(priv->loader_table, g_strdup(*exts),
+                loader);
+        }
+    }
+    if(priv->keyfile!=NULL)
+    {
+        if(!g_key_file_has_key(priv->keyfile, plugin->info->id, "Enabled",
+            NULL))
+        {
+            g_key_file_set_boolean(priv->keyfile, plugin->info->id,
+                "Enabled", FALSE);
+        }
     }
     g_hash_table_insert(priv->plugin_table, g_strdup(plugin->info->id),
         rclib_plugin_data_ref(plugin));
@@ -456,6 +562,7 @@ guint rclib_plugin_load_from_dir(const gchar *dirname)
     GError *error = NULL;
     const gchar *filename;
     gchar *path;
+    GSList *np_list = NULL, *foreach;
     RCLibPluginData *plugin_data;
     if(dirname==NULL) return 0;
     gdir = g_dir_open(dirname, 0, &error);
@@ -469,6 +576,33 @@ guint rclib_plugin_load_from_dir(const gchar *dirname)
     while((filename=g_dir_read_name(gdir))!=NULL)
     {
         path = g_build_filename(dirname, filename, NULL);
+        if(rclib_plugin_is_native(filename))
+        {
+            plugin_data = rclib_plugin_probe(path);
+            if(plugin_data!=NULL)
+            {
+                if(plugin_data->handle!=NULL && !plugin_data->unloadable)
+                {
+                    if(rclib_plugin_register(plugin_data))
+                    {
+                        g_message("Plug-in: %s initialized.",
+                            plugin_data->info->id);
+                        number++;
+                    }
+                }
+                rclib_plugin_data_unref(plugin_data);
+            }
+        }
+        else /* Non-native plug-in should be loaded later */
+        {
+            np_list = g_slist_prepend(np_list, g_strdup(path));
+        }   
+        g_free(path);
+    }
+    g_dir_close(gdir);
+    for(foreach=np_list;foreach!=NULL;foreach=g_slist_next(foreach))
+    {
+        path = foreach->data;
         plugin_data = rclib_plugin_probe(path);
         if(plugin_data!=NULL)
         {
@@ -478,13 +612,13 @@ guint rclib_plugin_load_from_dir(const gchar *dirname)
                 {
                     g_message("Plug-in: %s initialized.",
                         plugin_data->info->id);
+                    number++;
                 }
             }
             rclib_plugin_data_unref(plugin_data);
         }
-        g_free(path);
     }
-    g_dir_close(gdir);
+    g_slist_free_full(np_list, g_free);
     g_message("Found %u plug-ins in the directory.", number);
     return number;
 }
@@ -500,26 +634,86 @@ guint rclib_plugin_load_from_dir(const gchar *dirname)
 
 gboolean rclib_plugin_load(RCLibPluginData *plugin)
 {
+    RCLibPluginPrivate *priv;
+    RCLibPluginLoaderInfo *loader;
+    RCLibPluginData *dep_plugin;
+    gchar **deps;
+    GSList *dep_list = NULL, *foreach = NULL;
     g_return_val_if_fail(plugin!=NULL, FALSE);
     if(plugin->loaded) return TRUE;
     if(plugin->unloadable) return FALSE;
     if(plugin->error!=NULL) return FALSE;
     if(plugin->info==NULL) return FALSE;
+
+    /* Check if depended plug-ins are registered already */
+    for(deps=plugin->info->depends;deps!=NULL && *deps!=NULL;deps++)
+    {
+        dep_plugin = rclib_plugin_lookup(*deps);
+        if(dep_plugin==NULL)
+        {
+            if(dep_list!=NULL) g_slist_free(dep_list);
+            g_warning("Necessary plug-in for plug-in %s is missing!",
+                plugin->info->id);
+            return FALSE;
+        }
+        dep_list = g_slist_prepend(dep_list, dep_plugin);
+    }
     
-    /* Remember to check the dependent list HERE! (to be implemented) */
+    /* Load all depended plug-ins */
+    for(foreach=dep_list;foreach!=NULL;foreach=g_slist_next(foreach))
+    {
+        dep_plugin = foreach->data;
+        if(dep_plugin==NULL) continue;
+        if(dep_plugin->loaded) continue;
+        if(dep_plugin!=plugin) /* Prevent self infinity loop */
+        {
+            if(!rclib_plugin_load(dep_plugin))
+            {
+                g_slist_free(dep_list);
+                g_warning("Cannot load necessary plug-in for plug-in %s!",
+                    plugin->info->id);
+                return FALSE;
+            }
+        }
+    }
+    
+    /* Note depended plug-ins that this plug-in needs it */
+    for(foreach=dep_list;foreach!=NULL;foreach=g_slist_next(foreach))
+    {
+        dep_plugin = foreach->data;
+        if(dep_plugin==NULL) continue;
+        dep_plugin->dependent_list = g_slist_prepend(
+            dep_plugin->dependent_list, plugin->info->id);
+    }
+    if(dep_list!=NULL) g_slist_free(dep_list);
     
     if(plugin->native) /* Native C/C++ plug-in */
     {
-        if(plugin->info->load==NULL) return FALSE;
+        /*
+         * If load function does not exist, therefore the load operation
+         * is successful directly.
+         */
+        if(plugin->info->load==NULL) return TRUE;
         if(!plugin->info->load(plugin)) return FALSE;
     }
     else /* Use loaders to load the plug-in */
     {
-    
-    
-        return FALSE;
+        loader = rclib_plugin_find_loader_for_plugin(plugin);
+        if(loader==NULL || loader->load==NULL) return FALSE;
+        if(!loader->load(plugin)) return FALSE;
     }
     plugin->loaded = TRUE;
+    if(plugin_instance!=NULL)
+    {
+        priv = RCLIB_PLUGIN_GET_PRIVATE(plugin_instance);
+        if(priv!=NULL && priv->keyfile!=NULL)
+        {
+            g_key_file_set_boolean(priv->keyfile, plugin->info->id,
+                "Enabled", TRUE);
+        }
+    }
+    g_signal_emit(plugin_instance, plugin_signals[SIGNAL_LOADED], 0,
+        plugin);
     return TRUE;
 }
 
@@ -534,26 +728,69 @@ gboolean rclib_plugin_load(RCLibPluginData *plugin)
 
 gboolean rclib_plugin_unload(RCLibPluginData *plugin)
 {
+    RCLibPluginPrivate *priv;
+    RCLibPluginLoaderInfo *loader;
+    RCLibPluginData *dep_plugin;
+    GSList *foreach = NULL;
+    gchar **deps;
     g_return_val_if_fail(plugin!=NULL, FALSE);
-    if(plugin->loaded) return TRUE;
+    if(!plugin->loaded) return TRUE;
     if(plugin->unloadable) return FALSE;
     if(plugin->error!=NULL) return FALSE;
     if(plugin->info==NULL) return FALSE;
     
-    /* Remember to check the dependent list HERE! (to be implemented) */
+    /* Unload plug-ins that depend on this plug-in */
+    for(foreach=plugin->dependent_list;foreach!=NULL;
+        foreach=g_slist_next(foreach))
+    {
+        dep_plugin = foreach->data;
+        if(dep_plugin==NULL) continue;
+        if(!rclib_plugin_unload(dep_plugin))
+        {
+            g_warning("Unable to unload plug-ins which depend on plugin: %s!",
+                plugin->info->id);
+            return FALSE;
+        }
+    }
+    
+    /* Remove this plug-in from each dependency's dependent list */
+    for(deps=plugin->info->depends;deps!=NULL && *deps!=NULL;deps++)
+    {
+        dep_plugin = rclib_plugin_lookup(*deps);
+        if(dep_plugin!=NULL)
+        {
+            dep_plugin->dependent_list = g_slist_remove(
+                dep_plugin->dependent_list, plugin->info->id);
+        }
+    }
     
     if(plugin->native) /* Native C/C++ plug-in */
     {
-        if(plugin->info->unload==NULL) return FALSE;
+        /*
+         * If unload function does not exist, therefore the unload operation
+         * is successful directly.
+         */
+        if(plugin->info->unload==NULL) return TRUE;
         if(!plugin->info->unload(plugin)) return FALSE;
     }
     else /* Use loaders to load the plug-in */
     {
-    
-    
-        return FALSE;
+        loader = rclib_plugin_find_loader_for_plugin(plugin);
+        if(loader==NULL || loader->unload==NULL) return FALSE;
+        if(!loader->unload(plugin)) return FALSE;
     }
     plugin->loaded = FALSE;
+    if(plugin_instance!=NULL)
+    {
+        priv = RCLIB_PLUGIN_GET_PRIVATE(plugin_instance);
+        if(priv!=NULL && priv->keyfile!=NULL)
+        {
+            g_key_file_set_boolean(priv->keyfile, plugin->info->id,
+                "Enabled", FALSE);
+        }
+    }
+    g_signal_emit(plugin_instance, plugin_signals[SIGNAL_UNLOADED], 0,
+        plugin);
     return TRUE;
 }
 
@@ -581,7 +818,7 @@ gboolean rclib_plugin_reload(RCLibPluginData *plugin)
  *
  * Check whether the plug-in is loaded.
  *
- * Returns: Whether hte plug-in is loaded.
+ * Returns: Whether the plug-in is loaded.
  */
 
 gboolean rclib_plugin_is_loaded(RCLibPluginData *plugin)
@@ -600,14 +837,24 @@ gboolean rclib_plugin_is_loaded(RCLibPluginData *plugin)
 void rclib_plugin_destroy(RCLibPluginData *plugin)
 {
     RCLibPluginPrivate *priv;
+    RCLibPluginLoaderInfo *loader;
+    const gchar * const *exts;
     if(plugin==NULL) return;
     if(plugin_instance==NULL) return;
     priv = RCLIB_PLUGIN_GET_PRIVATE(plugin_instance);
     if(priv==NULL || priv->plugin_table==NULL) return;
     if(plugin->loaded) rclib_plugin_unload(plugin);
+    if(plugin->info!=NULL && priv->loader_table!=NULL &&
+        plugin->info->type==RCLIB_PLUGIN_TYPE_LOADER &&
+        plugin->info->extra_info!=NULL)
+    {
+        loader = plugin->info->extra_info;
+        for(exts=loader->extensions;exts!=NULL && *exts!=NULL;exts++)
+        {
+            g_hash_table_remove(priv->loader_table, *exts);
+        }
+    }
     g_hash_table_remove(priv->plugin_table, plugin->info->id);
-    
-    
     rclib_plugin_data_free(plugin);
 }
 
@@ -649,5 +896,85 @@ RCLibPluginData *rclib_plugin_lookup(const gchar *id)
     return g_hash_table_lookup(priv->plugin_table, id);
 }
 
+/**
+ * rclib_plugin_destroy_all:
+ *
+ * Destroy all plug-ins in the player.
+ */
 
+void rclib_plugin_destroy_all()
+{
+    RCLibPluginPrivate *priv;
+    RCLibPluginData *plugin_data;
+    GHashTableIter iter;
+    GSList *native_list = NULL, *non_native_list = NULL;
+    GSList *loader_list = NULL;
+    if(plugin_instance==NULL) return;
+    priv = RCLIB_PLUGIN_GET_PRIVATE(plugin_instance);
+    if(priv==NULL || priv->plugin_table==NULL) return;
+    g_hash_table_iter_init(&iter, priv->plugin_table);
+    while(g_hash_table_iter_next(&iter, NULL, (gpointer *)&plugin_data))
+    {
+        if(plugin_data==NULL) continue;
+        if(plugin_data->native)
+        {
+            if(plugin_data->info->type==RCLIB_PLUGIN_TYPE_LOADER)
+                loader_list = g_slist_prepend(loader_list,
+                    rclib_plugin_data_ref(plugin_data));
+            else
+                native_list = g_slist_prepend(native_list,
+                    rclib_plugin_data_ref(plugin_data));
+        }
+        else
+            non_native_list = g_slist_prepend(non_native_list,
+                rclib_plugin_data_ref(plugin_data));
+    }
+    g_hash_table_remove_all(priv->plugin_table);
+    g_slist_free_full(non_native_list, (GDestroyNotify)rclib_plugin_destroy);
+    g_slist_free_full(native_list, (GDestroyNotify)rclib_plugin_destroy);
+    g_slist_free_full(loader_list, (GDestroyNotify)rclib_plugin_destroy);
+}
+
+/**
+ * rclib_plugin_load_from_configure:
+ *
+ * Load registered plug-ins enabled in the configure file.
+ */
+
+void rclib_plugin_load_from_configure()
+{
+    RCLibPluginPrivate *priv;
+    gchar *key;
+    RCLibPluginData *plugin_data;
+    GHashTableIter iter;
+    gboolean flag;
+    if(plugin_instance==NULL) return;
+    priv = RCLIB_PLUGIN_GET_PRIVATE(plugin_instance);
+    if(priv==NULL || priv->keyfile==NULL) return;
+    g_hash_table_iter_init(&iter, priv->plugin_table);
+    while(g_hash_table_iter_next(&iter, (gpointer *)&key,
+        (gpointer *)&plugin_data))
+    {
+        if(key==NULL || plugin_data==NULL) continue;
+        flag = g_key_file_get_boolean(priv->keyfile, key, "Enabled", NULL);
+        if(flag) rclib_plugin_load(plugin_data);
+    }
+}
+
+/**
+ * rclib_plugin_get_keyfile:
+ *
+ * Get the #GKeyFile configure data of the plug-ins.
+ *
+ * Returns: The configure data.
+ */
+
+GKeyFile *rclib_plugin_get_keyfile()
+{
+    RCLibPluginPrivate *priv;
+    if(plugin_instance==NULL) return NULL;
+    priv = RCLIB_PLUGIN_GET_PRIVATE(plugin_instance);
+    if(priv==NULL) return NULL;
+    return priv->keyfile;
+}
 

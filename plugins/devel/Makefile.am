@@ -1,18 +1,34 @@
 plugindir = $(libdir)/RhythmCat2
 
 helloworld_la_LDFLAGS = -module -avoid-version -export-dynamic -O2
+python3_la_LDFLAGS = -module -avoid-version -export-dynamic -O2
 
-plugin_LTLIBRARIES = \
-    helloworld.la
-    
+plugin_LTLIBRARIES =
 noinst_LTLIBRARIES =
-
-helloworld_la_SOURCES = helloworld.c
-
-helloworld_la_LIBADD = @GLIB2_LIBS@ @GTK_LIBS@ @GSTREAMER_LIBS@ @JSON_LIBS@
 
 INCLUDES = @GLIB2_CFLAGS@ @GSTREAMER_CFLAGS@ @GTK_CFLAGS@ @JSON_CFLAGS@ \
     -DLOCALEDIR=\"$(localedir)\" -I$(top_srcdir)/lib -I$(top_srcdir)/ui
+
+if WITH_NATIVE_PLUGINS
+
+plugin_LTLIBRARIES += \
+    helloworld.la
+    
+helloworld_la_SOURCES = helloworld.c
+helloworld_la_LIBADD = @GLIB2_LIBS@ @GTK_LIBS@ @GSTREAMER_LIBS@ @JSON_LIBS@
+
+endif
+
+if WITH_PYTHON3_PLUGINS
+
+plugin_LTLIBRARIES += \
+    python3.la
+
+python3_la_SOURCES = python3.c
+python3_la_LIBADD = @GLIB2_LIBS@ @GSTREAMER_LIBS@ @JSON_LIBS@ @PYTHON3_LIBS@
+INCLUDES += @PYTHON3_CFLAGS@
+
+endif
 
 SUFFIXES = .c .so
 .c.so:

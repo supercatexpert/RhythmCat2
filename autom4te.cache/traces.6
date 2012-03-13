@@ -5972,15 +5972,44 @@ m4trace:configure.ac:88: -1- m4_pattern_allow([^DEBUG_MODE_TRUE$])
 m4trace:configure.ac:88: -1- m4_pattern_allow([^DEBUG_MODE_FALSE$])
 m4trace:configure.ac:88: -1- _AM_SUBST_NOTMAKE([DEBUG_MODE_TRUE])
 m4trace:configure.ac:88: -1- _AM_SUBST_NOTMAKE([DEBUG_MODE_FALSE])
-m4trace:configure.ac:91: -1- _m4_warn([obsolete], [AC_OUTPUT should be used without arguments.
+m4trace:configure.ac:93: -1- AM_CONDITIONAL([WITH_NATIVE_PLUGINS], [test "x$with_native_plugins" = "xyes"])
+m4trace:configure.ac:93: -1- m4_pattern_allow([^WITH_NATIVE_PLUGINS_TRUE$])
+m4trace:configure.ac:93: -1- m4_pattern_allow([^WITH_NATIVE_PLUGINS_FALSE$])
+m4trace:configure.ac:93: -1- _AM_SUBST_NOTMAKE([WITH_NATIVE_PLUGINS_TRUE])
+m4trace:configure.ac:93: -1- _AM_SUBST_NOTMAKE([WITH_NATIVE_PLUGINS_FALSE])
+m4trace:configure.ac:99: -1- PKG_CHECK_MODULES([PYTHON3], [python3 >= 3.1], [have_python3=yes], [\
+        have_python3=no])
+m4trace:configure.ac:99: -1- m4_pattern_allow([^PYTHON3_CFLAGS$])
+m4trace:configure.ac:99: -1- m4_pattern_allow([^PYTHON3_LIBS$])
+m4trace:configure.ac:99: -1- PKG_CHECK_EXISTS([python3 >= 3.1], [pkg_cv_[]PYTHON3_CFLAGS=`$PKG_CONFIG --[]cflags "python3 >= 3.1" 2>/dev/null`
+		      test "x$?" != "x0" && pkg_failed=yes ], [pkg_failed=yes])
+m4trace:configure.ac:99: -1- PKG_CHECK_EXISTS([python3 >= 3.1], [pkg_cv_[]PYTHON3_LIBS=`$PKG_CONFIG --[]libs "python3 >= 3.1" 2>/dev/null`
+		      test "x$?" != "x0" && pkg_failed=yes ], [pkg_failed=yes])
+m4trace:configure.ac:99: -1- _PKG_SHORT_ERRORS_SUPPORTED
+m4trace:configure.ac:106: -1- AM_CONDITIONAL([WITH_PYTHON3_PLUGINS], [test "x$with_python3_plugins" = "xyes"])
+m4trace:configure.ac:106: -1- m4_pattern_allow([^WITH_PYTHON3_PLUGINS_TRUE$])
+m4trace:configure.ac:106: -1- m4_pattern_allow([^WITH_PYTHON3_PLUGINS_FALSE$])
+m4trace:configure.ac:106: -1- _AM_SUBST_NOTMAKE([WITH_PYTHON3_PLUGINS_TRUE])
+m4trace:configure.ac:106: -1- _AM_SUBST_NOTMAKE([WITH_PYTHON3_PLUGINS_FALSE])
+m4trace:configure.ac:109: -1- _m4_warn([obsolete], [AC_OUTPUT should be used without arguments.
 You should run autoupdate.], [])
-m4trace:configure.ac:91: -1- m4_pattern_allow([^LIB@&t@OBJS$])
-m4trace:configure.ac:91: -1- m4_pattern_allow([^LTLIBOBJS$])
-m4trace:configure.ac:91: -1- AM_CONDITIONAL([am__EXEEXT], [test -n "$EXEEXT"])
-m4trace:configure.ac:91: -1- m4_pattern_allow([^am__EXEEXT_TRUE$])
-m4trace:configure.ac:91: -1- m4_pattern_allow([^am__EXEEXT_FALSE$])
-m4trace:configure.ac:91: -1- _AM_SUBST_NOTMAKE([am__EXEEXT_TRUE])
-m4trace:configure.ac:91: -1- _AM_SUBST_NOTMAKE([am__EXEEXT_FALSE])
-m4trace:configure.ac:91: -1- _AC_AM_CONFIG_HEADER_HOOK(["$ac_file"])
-m4trace:configure.ac:91: -1- _AM_OUTPUT_DEPENDENCY_COMMANDS
-m4trace:configure.ac:91: -1- _LT_PROG_LTMAIN
+m4trace:configure.ac:109: -1- m4_pattern_allow([^LIB@&t@OBJS$])
+m4trace:configure.ac:109: -1- m4_pattern_allow([^LTLIBOBJS$])
+m4trace:configure.ac:109: -1- AM_CONDITIONAL([am__EXEEXT], [test -n "$EXEEXT"])
+m4trace:configure.ac:109: -1- m4_pattern_allow([^am__EXEEXT_TRUE$])
+m4trace:configure.ac:109: -1- m4_pattern_allow([^am__EXEEXT_FALSE$])
+m4trace:configure.ac:109: -1- _AM_SUBST_NOTMAKE([am__EXEEXT_TRUE])
+m4trace:configure.ac:109: -1- _AM_SUBST_NOTMAKE([am__EXEEXT_FALSE])
+m4trace:configure.ac:109: -1- _AC_AM_CONFIG_HEADER_HOOK(["$ac_file"])
+m4trace:configure.ac:109: -1- _AM_OUTPUT_DEPENDENCY_COMMANDS
+m4trace:configure.ac:109: -1- _LT_PROG_LTMAIN
+m4trace:configure.ac:118: -1- m4_pattern_allow([^LIB@&t@OBJS$])
+m4trace:configure.ac:118: -1- m4_pattern_allow([^LTLIBOBJS$])
+m4trace:configure.ac:118: -1- AM_CONDITIONAL([am__EXEEXT], [test -n "$EXEEXT"])
+m4trace:configure.ac:118: -1- m4_pattern_allow([^am__EXEEXT_TRUE$])
+m4trace:configure.ac:118: -1- m4_pattern_allow([^am__EXEEXT_FALSE$])
+m4trace:configure.ac:118: -1- _AM_SUBST_NOTMAKE([am__EXEEXT_TRUE])
+m4trace:configure.ac:118: -1- _AM_SUBST_NOTMAKE([am__EXEEXT_FALSE])
+m4trace:configure.ac:118: -1- _AC_AM_CONFIG_HEADER_HOOK(["$ac_file"])
+m4trace:configure.ac:118: -1- _AM_OUTPUT_DEPENDENCY_COMMANDS
+m4trace:configure.ac:118: -1- _LT_PROG_LTMAIN

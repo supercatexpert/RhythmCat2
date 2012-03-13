@@ -67,20 +67,6 @@ G_BEGIN_DECLS
     }
 
 /**
- * RCPLUGIN_DESTROY_PLUGIN:
- * @exitfunc: the exit function for the plug-in, the
- * function take an argument of the pointer of #RCLibPluginData.
- *
- * The macro for declare plug-in destroy function more easily.
- */
-
-#define RCPLUGIN_DESTROY_PLUGIN(exitfunc) \
-    G_MODULE_EXPORT void rcplugin_destroy(RCLibPluginData *plugin) \
-    { \
-        exitfunc(plugin); \
-    }
-
-/**
  * RCLibPluginType:
  * @RCLIB_PLUGIN_TYPE_UNKNOWN: unknown plug-in type
  * @RCLIB_PLUGIN_TYPE_MODULE: normal plug-in type
@@ -96,6 +82,7 @@ typedef enum {
 }RCLibPluginType;
 
 typedef struct _RCLibPluginInfo RCLibPluginInfo;
+typedef struct _RCLibPluginLoaderInfo RCLibPluginLoaderInfo;
 typedef struct _RCLibPluginData RCLibPluginData;
 typedef struct _RCLibPlugin RCLibPlugin;
 typedef struct _RCLibPluginClass RCLibPluginClass;
@@ -116,7 +103,10 @@ typedef struct _RCLibPluginClass RCLibPluginClass;
  * @homepage: the homepage URL of the plug-in
  * @load: the load function of the plug-in
  * @unload: the unload function of the plug-in
+ * @destroy: the destroy function of the plug-in
  * @configure: the configure function of the plug-in
+ * @depends: the depend array of the plug-in
+ * @extra_info: the extra information data
  */
 
 struct _RCLibPluginInfo {
@@ -124,17 +114,36 @@ struct _RCLibPluginInfo {
     guint32 major_version;
     guint32 minor_version;
     RCLibPluginType type;
-    
     gchar *id;
     gchar *name;
     gchar *version;
     gchar *description;
     gchar *author;
     gchar *homepage;
-    
     gboolean (*load)(RCLibPluginData *plugin);
     gboolean (*unload)(RCLibPluginData *plugin);
+    void (*destroy)(RCLibPluginData *plugin);
     gboolean (*configure)(RCLibPluginData *plugin);
+    gchar **depends;
+    gpointer extra_info;
+};
+
+/**
+ * RCLibPluginLoaderInfo:
+ * @extensions: a string list for the extension of plug-in files
+ * which will be supported by the loader
+ * @probe: the probe function for the loader
+ * @load: the load function for the loader
+ * @unload: the unload function for the loader
+ * @destroy: the destroy function for the loader
+ */
+
+struct _RCLibPluginLoaderInfo {
+    const gchar * const *extensions;
+    gboolean (*probe)(RCLibPluginData *plugin);
+    gboolean (*load)(RCLibPluginData *plugin);
+    gboolean (*unload)(RCLibPluginData *plugin);
+    void (*destroy)(RCLibPluginData *plugin);
 };
 
 /**
@@ -145,10 +154,10 @@ struct _RCLibPluginInfo {
  * @path: the file path of the plug-in
  * @info: the information data (#RCLibPluginInfo) of the plug-in
  * @error: the error message in the initialization progress
- * @ipc_data: (not used now)
- * @extra: extra data
  * @unloadable: whether the plug-in is not loadable
- * @dependent_list: the dependent list
+ * @dependent_list: a list of the dependent plug-ins
+ * @extra: extra data
+ * @ipc_data: (not used now)
  *
  * The plug-in data.
  */
@@ -164,10 +173,10 @@ struct _RCLibPluginData {
     gchar *path;
     RCLibPluginInfo *info;
     gchar *error;
-    gpointer ipc_data;
-    gpointer extra;
     gboolean unloadable;
-    GList *dependent_list;
+    GSList *dependent_list;
+    gpointer extra;
+    gpointer ipc_data;
 
     void (*_rclib_plugin_reserved1)(void);
     void (*_rclib_plugin_reserved2)(void);
@@ -205,7 +214,7 @@ struct _RCLibPluginClass {
 GType rclib_plugin_get_type();
 
 /*< public >*/
-gboolean rclib_plugin_init();
+gboolean rclib_plugin_init(const gchar *file);
 void rclib_plugin_exit();
 GObject *rclib_plugin_get_instance();
 gulong rclib_plugin_signal_connect(const gchar *name,
@@ -223,6 +232,9 @@ gboolean rclib_plugin_is_loaded(RCLibPluginData *plugin);
 void rclib_plugin_destroy(RCLibPluginData *plugin);
 void rclib_plugin_foreach(GHFunc func, gpointer data);
 RCLibPluginData *rclib_plugin_lookup(const gchar *id);
+void rclib_plugin_destroy_all();
+void rclib_plugin_load_from_configure();
+GKeyFile *rclib_plugin_get_keyfile();
 
 G_END_DECLS
 

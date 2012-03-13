@@ -632,7 +632,7 @@ static void rclib_core_class_init(RCLibCoreClass *klass)
      */
     core_signals[SIGNAL_STATE_CHANGED] = g_signal_new("state-changed",
         RCLIB_CORE_TYPE, G_SIGNAL_RUN_FIRST, G_STRUCT_OFFSET(RCLibCoreClass,
-        state_changed), NULL, NULL, g_cclosure_marshal_VOID__ENUM,
+        state_changed), NULL, NULL, g_cclosure_marshal_VOID__INT,
         G_TYPE_NONE, 1, G_TYPE_INT, NULL);
 
     /**

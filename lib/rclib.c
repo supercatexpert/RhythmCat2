@@ -131,6 +131,7 @@ gboolean rclib_init(gint *argc, gchar **argv[], const gchar *dir,
 {
     gchar *lyric_dir, *album_dir;
     gchar *settings_file;
+    if(dir==NULL) return FALSE;
     if(!g_thread_supported()) g_thread_init(NULL);
     g_type_init();
     bindtextdomain(GETTEXT_PACKAGE, LOCALEDIR);
@@ -140,6 +141,7 @@ gboolean rclib_init(gint *argc, gchar **argv[], const gchar *dir,
         return FALSE;
     if(!rclib_core_init(error))
         return FALSE;
+    g_mkdir_with_parents(dir, 0700);
     db_file = g_build_filename(dir, "library.db", NULL);
     if(!rclib_db_init(db_file))
     {
@@ -151,9 +153,11 @@ gboolean rclib_init(gint *argc, gchar **argv[], const gchar *dir,
     rclib_album_init();
     rclib_settings_init();
     lyric_dir = g_build_filename(dir, "Lyrics", NULL);
+    g_mkdir_with_parents(lyric_dir, 0700);
     rclib_lyric_set_search_dir(lyric_dir);
     g_free(lyric_dir);
     album_dir = g_build_filename(dir, "AlbumImages", NULL);
+    g_mkdir_with_parents(album_dir, 0700);
     rclib_util_set_cover_search_dir(album_dir);
     g_free(album_dir);
     settings_file = g_build_filename(dir, "settings.conf", NULL);

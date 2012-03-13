@@ -46,9 +46,10 @@ static RCLibPluginInfo rcplugin_info = {
     .homepage = "http://supercat-lab.org/",
     .load = hw_load,
     .unload = hw_unload,
-    .configure = NULL
+    .configure = NULL,
+    .destroy = hw_destroy,
+    .extra_info = NULL
 };
 
 RCPLUGIN_INIT_PLUGIN("rc2-devel-hello-world", hw_init, rcplugin_info);
-RCPLUGIN_DESTROY_PLUGIN(hw_destroy);
 
