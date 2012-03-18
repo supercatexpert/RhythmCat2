@@ -1,7 +1,7 @@
 /*
- * RhythmCat UI Menu Header Declaration
+ * RhythmCat MPRIS 2.1 Support Declaration
  *
- * ui-menu.h
+ * rc-mpris2.h
  * This file is part of RhythmCat Music Player (GTK+ Version)
  *
  * Copyright (C) 2012 - SuperCat, license: GPL v3
@@ -22,18 +22,18 @@
  * Boston, MA  02110-1301  USA
  */
 
-#ifndef HAVE_RC_UI_MENU_H
-#define HAVE_RC_UI_MENU_H
+#ifndef HAVE_RC_MPRIS2_H
+#define HAVE_RC_MPRIS2_H
 
 #include <glib.h>
+#include <glib/gi18n.h>
 #include <gtk/gtk.h>
 #include <rclib.h>
 
 G_BEGIN_DECLS
 
-void rc_ui_menu_init();
-GtkUIManager *rc_ui_menu_get_ui_manager();
-void rc_ui_menu_state_refresh();
+gboolean rc_mpris2_init();
+void rc_mpris2_exit();
 
 G_END_DECLS
 

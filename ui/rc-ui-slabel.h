@@ -2,7 +2,7 @@
  * RhythmCat UI Scrollable Label Widget Declaration
  * A scrollable label widget in the player.
  *
- * ui-slabel.h
+ * rc-ui-slabel.h
  * This file is part of RhythmCat Music Player (GTK+ Version)
  *
  * Copyright (C) 2012 - SuperCat, license: GPL v3

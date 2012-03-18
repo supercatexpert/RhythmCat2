@@ -2,7 +2,7 @@
  * RhythmCat MPRIS 2.1 Support Declaration
  * Show dialogs in the player.
  *
- * mpris2.c
+ * rc-mpris2.c
  * This file is part of RhythmCat Music Player (GTK+ Version)
  *
  * Copyright (C) 2012 - SuperCat, license: GPL v3
@@ -23,8 +23,8 @@
  * Boston, MA  02110-1301  USA
  */
  
-#include "mpris2.h"
-#include "ui-player.h"
+#include "rc-mpris2.h"
+#include "rc-ui-player.h"
 
 static gchar *rc_mpris2_supported_uri_schemes[] = {"file", "http", NULL};
 static gchar *rc_mpris2_supported_mime_types[] = {"application/ogg",

@@ -1,13 +1,15 @@
 bin_PROGRAMS = RhythmCat2
 
 RhythmCat2_SOURCES = \
-    ui-listmodel.c ui-player.c ui-listview.c ui-menu.c ui-dialog.c \
-    ui-slabel.c ui-spectrum.c ui-style.c mpris2.c main.c
+    rc-ui-listmodel.c rc-ui-player.c rc-ui-listview.c rc-ui-menu.c \
+    rc-ui-dialog.c rc-ui-slabel.c rc-ui-spectrum.c rc-ui-style.c \
+    rc-mpris2.c rc-main.c
 
 RhythmCat2_headers = \
-    ui-listmodel.h ui-listview.h ui-player.h ui-menu.h ui-dialog.h \
-    ui-slabel.h ui-style.h ui-spectrum.h mpris2.h common.h \
-    ui-img-icon.xpm ui-img-nocov.xpm
+    rc-ui-listmodel.h rc-ui-listview.h rc-ui-player.h rc-ui-menu.h \
+    rc-ui-dialog.h rc-ui-slabel.h rc-ui-style.h rc-ui-spectrum.h \
+    rc-mpris2.h rc-common.h rc-ui-css.h rc-ui-img-icon.xpm \
+    rc-ui-img-nocov.xpm
 
 RhythmCat2includedir=$(includedir)/ui
 RhythmCat2include_HEADERS = $(RhythmCat2_headers)

@@ -2,7 +2,7 @@
  * RhythmCat UI Spectrum Widget Module
  * A spectrum show widget in the player.
  *
- * ui-spectrum.c
+ * rc-ui-spectrum.c
  * This file is part of RhythmCat Music Player (GTK+ Version)
  *
  * Copyright (C) 2012 - SuperCat, license: GPL v3
@@ -23,7 +23,7 @@
  * Boston, MA  02110-1301  USA
  */
  
-#include "ui-spectrum.h"
+#include "rc-ui-spectrum.h"
 
 /**
  * SECTION: RCUiSpectrumWidget

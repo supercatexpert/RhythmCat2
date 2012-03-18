@@ -1,9 +1,8 @@
-- Plug-in support system (W.I.P)
-- Custom window bar
-- New menus
+- New menus (W.I.P)
 - Settings (UI)
-- Themes & Styles support
-- Command line arguments process
+- Themes & Styles support (W.I.P)
+- Bug Report Interface
+
 
 Long-term:
 - Command Line Interface (CLI), based on ncurses
@@ -12,7 +11,6 @@ Long-term:
 - Non-Unix platform support
 - Music Library
 - More interfaces in MPRIS v2.1 support
-- Python3 plugin support
 
 Other ideas:
 

@@ -11,7 +11,7 @@ implemented.
 Developing platform:
 
 Operating System: Debian Wheezy (Testing) for AMD64
-Compiler: gcc 4.6.2
+Compiler: gcc 4.6.3
 Programming Language: C
 Dependent Libraries: glib-2.0 (>=2.30) gtk+-3.0(>=3.0) libjson0 (>=0.9)
     gstreamer-0.10 (>=0.10.30) gstreamer-plugins-base-0.10 (>=0.10.30)
@@ -38,18 +38,19 @@ Get the latest version from Github:
 
 git clone git://github.com/supercatexpert/RhythmCat2.git
 
-We now provide source code and binaries for Linux on both i386 and AMD64 (you
-can find the package of source code and binaries in the Downloads page).
-Binaries can be executed directly in most of desktop distributions of Linux.
-If you cannot run the program, you should check if the needed libraries are
-installed. Notice that if you downloaded the source code, you should compile
-it, then you can use this program. Before you compile it, you should check the
-developing environment, and the libraries which this program depends. In
+Now only source code is available, you should compile it, then you can
+use this program. Before you compile it, you should check the
+developing environment, and the libraries which this program depends. On
 Debian/Ubuntu, you can run the commands below to help you install the packages
-that the compiling needed: 
+that the compilation needed: 
 
 sudo apt-get install build-essential libgtk-3-dev libgstreamer0.10-dev \
     libgstreamer-plugins-base0.10-dev libjson-glib-dev
+
+If you want to compile Python3 loader and use Python3 plug-ins, install
+package python3-dev:
+
+sudo apt-get install python3-dev
 
 If you want to play MP3 or other Restricted Format, please install Gstreamer
 Bad & Ugly plugins. In Debian/Ubuntu, you can just run:
@@ -58,9 +59,12 @@ sudo apt-get install gstreamer0.10-plugins-bad gstreamer0.10-plugins-ugly
 
 Then you can try to compile it:
 
-./configure
+./configure #(add argument --with-native-plugins/--with-python3-plugins if \
+    you want native plug-ins/Python3 plug-ins)
 make
 sudo make install
+
+then just run /usr/local/bin/RhythmCat2, feel happy with it!
 
 This program is in experimental stage now. We provide no WARRANTY. 
 If you found any bugs, please send an e-mail to me, and report the bugs you

@@ -2,7 +2,7 @@
  * RhythmCat UI Style Module
  * Manage the styles and themes used in the player.
  *
- * ui-style.c
+ * rc-ui-style.c
  * This file is part of RhythmCat Music Player (GTK+ Version)
  *
  * Copyright (C) 2012 - SuperCat, license: GPL v3
@@ -23,11 +23,11 @@
  * Boston, MA  02110-1301  USA
  */
  
-#include "ui-style.h"
+#include "rc-ui-style.h"
 
 static GtkCssProvider *style_css_provider = NULL;
 
-static void rc_ui_style_css_set_file(const gchar *filename)
+void rc_ui_style_css_set_file(const gchar *filename)
 {
     GFile *file;
     GError *error = NULL;
@@ -45,7 +45,7 @@ static void rc_ui_style_css_set_file(const gchar *filename)
         g_warning("Cannot open CSS Style: %s", filename);
         return;
     }
-    if(style_css_provider!=NULL)
+    if(style_css_provider==NULL)
         style_css_provider = gtk_css_provider_new();
     if(!gtk_css_provider_load_from_file(style_css_provider, file,
         &error))
@@ -63,7 +63,7 @@ static void rc_ui_style_css_set_file(const gchar *filename)
     g_message("Loaded new CSS Style.");
 }
 
-static void rc_ui_style_css_set_data(const gchar *data, gssize length)
+void rc_ui_style_css_set_data(const gchar *data, gssize length)
 {
     GError *error = NULL;
     GdkScreen *screen = gdk_screen_get_default();
@@ -72,7 +72,7 @@ static void rc_ui_style_css_set_data(const gchar *data, gssize length)
         g_warning("Invalid CSS Style data!");
         return;
     }
-    if(style_css_provider!=NULL)
+    if(style_css_provider==NULL)
         style_css_provider = gtk_css_provider_new();
     if(!gtk_css_provider_load_from_data(style_css_provider, data, length,
         &error))
@@ -88,7 +88,7 @@ static void rc_ui_style_css_set_data(const gchar *data, gssize length)
     g_message("Loaded new CSS Style.");
 }
 
-static void rc_ui_style_css_unset()
+void rc_ui_style_css_unset()
 {
     GdkScreen *screen = gdk_screen_get_default();
     if(style_css_provider!=NULL)

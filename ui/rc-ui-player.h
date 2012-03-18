@@ -1,7 +1,7 @@
 /*
  * RhythmCat UI Player Header Declaration
  *
- * ui-player.h
+ * rc-ui-player.h
  * This file is part of RhythmCat Music Player (GTK+ Version)
  *
  * Copyright (C) 2012 - SuperCat, license: GPL v3

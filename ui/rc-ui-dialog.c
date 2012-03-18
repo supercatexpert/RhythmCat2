@@ -23,10 +23,10 @@
  * Boston, MA  02110-1301  USA
  */
 
-#include "ui-dialog.h"
-#include "ui-listview.h"
-#include "ui-player.h"
-#include "common.h"
+#include "rc-ui-dialog.h"
+#include "rc-ui-listview.h"
+#include "rc-ui-player.h"
+#include "rc-common.h"
 
 static const gchar *dialog_about_license =
     "RhythmCat is free software; you can redistribute it\n"
@@ -703,7 +703,92 @@ void rc_ui_dialog_save_album()
     gtk_widget_destroy(file_chooser);
 }
 
+/**
+ * rc_ui_dialog_open_music:
+ *
+ * Show a open dialog for open and play the music.
+ */
 
+void rc_ui_dialog_open_music()
+{
+    GtkTreeIter iter;
+    GtkWidget *file_chooser;
+    GtkFileFilter *file_filter1;
+    gint result = 0;
+    gchar *uri = NULL;
+    gchar *dialog_title = NULL;
+    const gchar *home_dir;
+    if(!rc_ui_listview_catalog_get_cursor(&iter)) return;
+    if(iter.user_data==NULL) return;
+    file_filter1 = gtk_file_filter_new();
+    gtk_file_filter_set_name(file_filter1,
+        _("All supported music files(*.FLAC;*.OGG;*.MP3;*.WAV;*.WMA...)"));
+    gtk_file_filter_add_custom(file_filter1, GTK_FILE_FILTER_DISPLAY_NAME,
+        rc_ui_dialog_music_file_filter, NULL, NULL);
+    dialog_title = _("Select the music you want to add...");
+    file_chooser = gtk_file_chooser_dialog_new(dialog_title, NULL,
+        GTK_FILE_CHOOSER_ACTION_OPEN, GTK_STOCK_OPEN, GTK_RESPONSE_ACCEPT,
+        GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL, NULL);
+    home_dir = g_getenv("HOME");
+    if(home_dir==NULL)
+        home_dir = g_get_home_dir();
+    gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(file_chooser),
+        home_dir);
+    gtk_file_chooser_add_filter(GTK_FILE_CHOOSER(file_chooser), file_filter1);
+    result = gtk_dialog_run(GTK_DIALOG(file_chooser));
+    switch(result)
+    {
+        case GTK_RESPONSE_ACCEPT:
+            uri = gtk_file_chooser_get_uri(
+                GTK_FILE_CHOOSER(file_chooser));
+            if(uri!=NULL)
+            {
+                rclib_core_set_uri(uri, NULL, NULL);
+                rclib_core_play();
+            }
+            g_free(uri);
+            break;
+        case GTK_RESPONSE_CANCEL:
+            break;
+        default: break;
+    }
+    gtk_widget_destroy(file_chooser);
+}
 
+/**
+ * rc_ui_dialog_open_location:
+ *
+ * Show a dialog for open and play the location.
+ */
+
+void rc_ui_dialog_open_location()
+{
+    GtkWidget *dialog;
+    GtkWidget *vbox;
+    GtkWidget *label;
+    GtkWidget *entry;
+    const gchar *uri;
+    gint ret;
+    dialog = gtk_dialog_new_with_buttons(_("Open Location"),
+        GTK_WINDOW(rc_ui_player_get_main_window()), GTK_DIALOG_MODAL |
+        GTK_DIALOG_DESTROY_WITH_PARENT, GTK_STOCK_OPEN, GTK_RESPONSE_ACCEPT,
+        GTK_STOCK_CANCEL, GTK_RESPONSE_REJECT, NULL);
+    vbox = gtk_dialog_get_content_area(GTK_DIALOG(dialog));
+    label = gtk_label_new(_("Enter the URL of the file you "
+        "would like to open:"));
+    entry = gtk_entry_new();
+    gtk_box_pack_start(GTK_BOX(vbox), label, FALSE, FALSE, 2);
+    gtk_box_pack_start(GTK_BOX(vbox), entry, TRUE, FALSE, 2);
+    gtk_widget_set_size_request(dialog, 300, -1);
+    gtk_widget_show_all(vbox);
+    ret = gtk_dialog_run(GTK_DIALOG(dialog));
+    if(ret==GTK_RESPONSE_ACCEPT)
+    {
+        uri = gtk_entry_get_text(GTK_ENTRY(entry));
+        rclib_core_set_uri(uri, NULL, NULL);
+        rclib_core_play();
+    }
+    gtk_widget_destroy(dialog);
+}
 
 

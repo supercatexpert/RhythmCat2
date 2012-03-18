@@ -2,7 +2,7 @@
  * RhythmCat UI Player Module
  * The main UI for the player.
  *
- * ui-player.c
+ * rc-ui-player.c
  * This file is part of RhythmCat Music Player (GTK+ Version)
  *
  * Copyright (C) 2012 - SuperCat, license: GPL v3
@@ -23,15 +23,15 @@
  * Boston, MA  02110-1301  USA
  */
 
-#include "ui-player.h"
-#include "ui-listview.h"
-#include "ui-menu.h"
-#include "ui-dialog.h"
-#include "ui-slabel.h"
-#include "ui-spectrum.h"
-#include "ui-img-icon.xpm"
-#include "ui-img-nocov.xpm"
-#include "common.h"
+#include "rc-ui-player.h"
+#include "rc-ui-listview.h"
+#include "rc-ui-menu.h"
+#include "rc-ui-dialog.h"
+#include "rc-ui-slabel.h"
+#include "rc-ui-spectrum.h"
+#include "rc-ui-img-icon.xpm"
+#include "rc-ui-img-nocov.xpm"
+#include "rc-common.h"
 
 #define RC_UI_PLAYER_GET_PRIVATE(obj) G_TYPE_INSTANCE_GET_PRIVATE((obj), \
     RC_UI_PLAYER_TYPE, RCUiPlayerPrivate)
@@ -735,24 +735,6 @@ static void rc_ui_player_tray_icon_activated(GtkStatusIcon *icon,
 
 }
 
-static void rc_ui_player_main_popup_menu_position_func(GtkMenu *menu,
-    gint *x, gint *y, gboolean *push_in, gpointer data)
-{
-    GtkWidget *widget;
-    GdkWindow *window;
-    GtkAllocation allocation, menu_allocation;
-    gint wx, wy;
-    widget = GTK_WIDGET(data);
-    if(widget==NULL) return;
-    window = gtk_widget_get_window(widget);
-    gtk_widget_get_allocation(widget, &allocation);
-    gtk_widget_get_allocation(GTK_WIDGET(menu), &menu_allocation);
-    gdk_window_get_origin(window, &wx, &wy);
-    *x = wx + allocation.x;
-    *y = wy + allocation.y - menu_allocation.height;
-    *push_in = TRUE;
-}
-
 static void rc_ui_player_progress_popup_menu_position_func(GtkMenu *menu,
     gint *x, gint *y, gboolean *push_in, gpointer data)
 {
@@ -782,17 +764,6 @@ static gboolean rc_ui_player_album_menu_popup(GtkWidget *widget,
     return FALSE;
 }
 
-static gboolean rc_ui_player_main_menu_popup(GtkWidget *widget,
-    GdkEventButton *event, gpointer data)  
-{
-    RCUiPlayerPrivate *priv = (RCUiPlayerPrivate *)data;
-    if(data==NULL) return FALSE;
-    gtk_menu_popup(GTK_MENU(gtk_ui_manager_get_widget(priv->ui_manager,
-        "/RC2MainPopupMenu")), NULL, NULL,
-        rc_ui_player_main_popup_menu_position_func, widget, 1, event->time);
-    return FALSE;
-}
-
 static gboolean rc_ui_player_progress_menu_popup(GtkWidget *widget,
     GdkEventButton *event, gpointer data)  
 {
@@ -805,12 +776,44 @@ static gboolean rc_ui_player_progress_menu_popup(GtkWidget *widget,
     return FALSE;
 }
 
+static gboolean rc_ui_player_window_state_event_cb(GtkWidget *widget,
+    GdkEvent *event, gpointer data)
+{
+    GdkEventWindowState *window_state;
+    RCUiPlayerPrivate *priv = (RCUiPlayerPrivate *)data;
+    if(data==NULL) return FALSE;
+    if(event->type!=GDK_WINDOW_STATE) return FALSE;
+    window_state = &(event->window_state);
+    if(window_state->new_window_state & GDK_WINDOW_STATE_ABOVE)
+    {
+        gtk_toggle_action_set_active(GTK_TOGGLE_ACTION(
+            gtk_ui_manager_get_action(priv->ui_manager,
+            "/RC2MenuBar/ViewMenu/ViewAlwaysOnTop")), TRUE);
+        gtk_toggle_action_set_active(GTK_TOGGLE_ACTION(
+            gtk_ui_manager_get_action(priv->ui_manager,
+            "/TrayPopupMenu/TrayAlwaysOnTop")), TRUE);
+    }
+    else
+    {
+        gtk_toggle_action_set_active(GTK_TOGGLE_ACTION(
+            gtk_ui_manager_get_action(priv->ui_manager,
+            "/RC2MenuBar/ViewMenu/ViewAlwaysOnTop")), FALSE);
+        gtk_toggle_action_set_active(GTK_TOGGLE_ACTION(
+            gtk_ui_manager_get_action(priv->ui_manager,
+            "/TrayPopupMenu/TrayAlwaysOnTop")), FALSE);
+    }
+    return FALSE;
+}
+
 static void rc_ui_player_destroy(GtkWidget *widget, gpointer data)
 {
     RCUiPlayerPrivate *priv = (RCUiPlayerPrivate *)data;
     if(priv!=NULL)
         gtk_widget_destroyed(priv->main_window, &(priv->main_window));
-    gtk_main_quit();
+    if(priv->app!=NULL)
+        g_application_release(G_APPLICATION(priv->app));
+    else
+        gtk_main_quit();
 }
 
 static void rc_ui_player_set_default_style(RCUiPlayerPrivate *priv)
@@ -818,11 +821,10 @@ static void rc_ui_player_set_default_style(RCUiPlayerPrivate *priv)
     PangoAttrList *title_attr_list, *artist_attr_list, *album_attr_list;
     PangoAttrList *time_attr_list, *length_attr_list, *info_attr_list;
     PangoAttrList *catalog_attr_list, *playlist_attr_list;
-    PangoAttrList *lyric_attr_list, *progress_attr_list, *menu_attr_list;
+    PangoAttrList *lyric_attr_list;
     PangoAttribute *title_attr[2], *artist_attr[2], *album_attr[2];
     PangoAttribute *time_attr[2], *length_attr[2], *info_attr[2];
     PangoAttribute *catalog_attr[2], *playlist_attr[2], *lyric_attr[2];
-    PangoAttribute *progress_attr[2], *menu_attr[2];
     title_attr_list = pango_attr_list_new();
     artist_attr_list = pango_attr_list_new();
     album_attr_list = pango_attr_list_new();
@@ -832,8 +834,6 @@ static void rc_ui_player_set_default_style(RCUiPlayerPrivate *priv)
     catalog_attr_list = pango_attr_list_new();
     playlist_attr_list = pango_attr_list_new();
     lyric_attr_list = pango_attr_list_new();
-    progress_attr_list = pango_attr_list_new();
-    menu_attr_list = pango_attr_list_new();
     title_attr[0] = pango_attr_size_new_absolute(17 * PANGO_SCALE);
     title_attr[1] = pango_attr_weight_new(PANGO_WEIGHT_BOLD);
     artist_attr[0] = pango_attr_size_new_absolute(14 * PANGO_SCALE);
@@ -852,10 +852,6 @@ static void rc_ui_player_set_default_style(RCUiPlayerPrivate *priv)
     playlist_attr[1] = pango_attr_weight_new(PANGO_WEIGHT_NORMAL);
     lyric_attr[0] = pango_attr_size_new_absolute(13 * PANGO_SCALE);
     lyric_attr[1] = pango_attr_weight_new(PANGO_WEIGHT_NORMAL);
-    progress_attr[0] = pango_attr_size_new_absolute(13 * PANGO_SCALE);
-    progress_attr[1] = pango_attr_weight_new(PANGO_WEIGHT_NORMAL);
-    menu_attr[0] = pango_attr_size_new_absolute(13 * PANGO_SCALE);
-    menu_attr[1] = pango_attr_weight_new(PANGO_WEIGHT_NORMAL);
     pango_attr_list_insert(title_attr_list, title_attr[0]);
     pango_attr_list_insert(title_attr_list, title_attr[1]);
     pango_attr_list_insert(artist_attr_list, artist_attr[0]);
@@ -874,10 +870,6 @@ static void rc_ui_player_set_default_style(RCUiPlayerPrivate *priv)
     pango_attr_list_insert(playlist_attr_list, playlist_attr[1]);
     pango_attr_list_insert(lyric_attr_list, lyric_attr[0]);
     pango_attr_list_insert(lyric_attr_list, lyric_attr[1]);
-    pango_attr_list_insert(progress_attr_list, progress_attr[0]);
-    pango_attr_list_insert(progress_attr_list, progress_attr[1]);
-    pango_attr_list_insert(menu_attr_list, menu_attr[0]);
-    pango_attr_list_insert(menu_attr_list, menu_attr[1]);
     gtk_label_set_attributes(GTK_LABEL(priv->title_label),
         title_attr_list);
     pango_attr_list_unref(title_attr_list);
@@ -905,12 +897,6 @@ static void rc_ui_player_set_default_style(RCUiPlayerPrivate *priv)
     rc_ui_scrollable_label_set_attributes(RC_UI_SCROLLABLE_LABEL(
         priv->lyric2_slabel), lyric_attr_list);
     pango_attr_list_unref(lyric_attr_list);
-    gtk_label_set_attributes(GTK_LABEL(priv->progress_label),
-        progress_attr_list);
-    pango_attr_list_unref(progress_attr_list);
-    gtk_label_set_attributes(GTK_LABEL(priv->menu_label),
-        menu_attr_list);
-    pango_attr_list_unref(menu_attr_list);
     gtk_widget_set_size_request(priv->time_scale, -1, 20);
     gtk_widget_set_size_request(gtk_scrolled_window_get_vscrollbar(
         GTK_SCROLLED_WINDOW(priv->catalog_scr_window)), 15, -1);
@@ -928,9 +914,6 @@ static void rc_ui_player_layout_init(RCUiPlayerPrivate *priv)
     GtkWidget *lyric_vbox;
     GtkWidget *ctrl_button_hbox;
     GtkWidget *player_vbox;
-    GtkWidget *buttom_hbox;
-    GtkWidget *progress_hbox;
-    GtkWidget *menu_hbox;
     player_vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
     panel_hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 2);
     panel_vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
@@ -938,10 +921,7 @@ static void rc_ui_player_layout_init(RCUiPlayerPrivate *priv)
     time_vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 2);
     lyric_vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
     info_hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 2);
-    progress_hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 2);
-    menu_hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 2);
     ctrl_button_hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
-    buttom_hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
     gtk_container_add(GTK_CONTAINER(priv->catalog_scr_window),
         priv->catalog_listview);
     gtk_container_add(GTK_CONTAINER(priv->playlist_scr_window),
@@ -954,20 +934,8 @@ static void rc_ui_player_layout_init(RCUiPlayerPrivate *priv)
         priv->catalog_scr_window, "resize", FALSE, "shrink", FALSE, NULL);
     gtk_container_add(GTK_CONTAINER(priv->album_eventbox), priv->album_image);
     gtk_container_add(GTK_CONTAINER(priv->album_frame), priv->album_eventbox);
-    gtk_box_pack_start(GTK_BOX(menu_hbox), priv->menu_image, FALSE,
-        FALSE, 0);
-    gtk_box_pack_start(GTK_BOX(menu_hbox), priv->menu_label, FALSE,
-        FALSE, 0);
-    gtk_box_pack_start(GTK_BOX(progress_hbox), priv->progress_spinner, FALSE,
-        FALSE, 0);
-    gtk_box_pack_start(GTK_BOX(progress_hbox), priv->progress_label, FALSE,
-        FALSE, 0);
-    gtk_container_add(GTK_CONTAINER(priv->menu_button), menu_hbox);
-    gtk_container_add(GTK_CONTAINER(priv->progress_eventbox), progress_hbox);
-    gtk_box_pack_start(GTK_BOX(buttom_hbox), priv->menu_button, FALSE,
-        FALSE, 1);
-    gtk_box_pack_end(GTK_BOX(buttom_hbox), priv->progress_eventbox, FALSE,
-        FALSE, 2);
+    gtk_container_add(GTK_CONTAINER(priv->progress_eventbox),
+        priv->progress_spinner);
     gtk_box_pack_start(GTK_BOX(mmd_vbox), priv->title_label, FALSE, TRUE, 0);
     gtk_box_pack_start(GTK_BOX(mmd_vbox), priv->artist_label, FALSE, TRUE, 0);
     gtk_box_pack_start(GTK_BOX(mmd_vbox), priv->album_label, FALSE, TRUE, 0);
@@ -984,6 +952,8 @@ static void rc_ui_player_layout_init(RCUiPlayerPrivate *priv)
         FALSE, FALSE, 0);
     gtk_box_pack_start(GTK_BOX(ctrl_button_hbox), priv->time_scale, TRUE,
         TRUE, 0);
+    gtk_box_pack_start(GTK_BOX(ctrl_button_hbox), priv->progress_eventbox,
+        FALSE, FALSE, 6);
     gtk_box_pack_end(GTK_BOX(ctrl_button_hbox), priv->volume_button, FALSE,
         FALSE, 0);
     gtk_box_pack_start(GTK_BOX(info_hbox), mmd_vbox, TRUE, TRUE, 0);
@@ -1005,9 +975,9 @@ static void rc_ui_player_layout_init(RCUiPlayerPrivate *priv)
         FALSE, 0);
     gtk_box_pack_start(GTK_BOX(player_vbox), priv->list_paned, TRUE,
         TRUE, 0);
+    gtk_box_pack_start(GTK_BOX(priv->main_vbox), gtk_ui_manager_get_widget(
+        priv->ui_manager, "/RC2MenuBar"), FALSE, FALSE, 0);
     gtk_box_pack_start(GTK_BOX(priv->main_vbox), player_vbox, TRUE, TRUE, 0);
-    gtk_box_pack_end(GTK_BOX(priv->main_vbox), buttom_hbox, FALSE,
-        FALSE, 0);
     gtk_container_add(GTK_CONTAINER(priv->main_window), priv->main_vbox);
 }
 
@@ -1027,8 +997,6 @@ static void rc_ui_player_signal_bind(RCUiPlayerPrivate *priv)
         G_CALLBACK(rc_ui_player_open_button_clicked_cb), priv);
     g_signal_connect(G_OBJECT(priv->album_eventbox), "button-release-event",
         G_CALLBACK(rc_ui_player_album_menu_popup), priv);
-    g_signal_connect(G_OBJECT(priv->menu_button), "button-press-event",
-        G_CALLBACK(rc_ui_player_main_menu_popup), priv);
     g_signal_connect(G_OBJECT(priv->progress_eventbox), "button-press-event",
         G_CALLBACK(rc_ui_player_progress_menu_popup), priv);
     g_signal_connect(G_OBJECT(priv->volume_button), "value-changed",
@@ -1045,6 +1013,8 @@ static void rc_ui_player_signal_bind(RCUiPlayerPrivate *priv)
         G_CALLBACK(rc_ui_player_tray_icon_activated), priv);
     g_signal_connect(GTK_STATUS_ICON(priv->tray_icon), "popup-menu",
         G_CALLBACK(rc_ui_player_tray_icon_popup), priv);
+    g_signal_connect(G_OBJECT(priv->main_window), "window-state-event",
+        G_CALLBACK(rc_ui_player_window_state_event_cb), priv);
     g_signal_connect(G_OBJECT(priv->main_window), "destroy",
         G_CALLBACK(rc_ui_player_destroy), priv);
     priv->tag_found_id = rclib_core_signal_connect("tag-found",
@@ -1099,7 +1069,7 @@ static void rc_ui_player_finalize(GObject *object)
     if(priv->album_none_id>0)
         rclib_album_signal_disconnect(priv->album_none_id);
     if(priv->main_window!=NULL) gtk_widget_destroy(priv->main_window);
-    g_object_unref(priv->app);
+    if(priv->app!=NULL) g_object_unref(priv->app);
     G_OBJECT_CLASS(rc_ui_player_parent_class)->finalize(object);
 }
 
@@ -1131,6 +1101,7 @@ static void rc_ui_player_instance_init(RCUiPlayer *ui)
         (const gchar **)&ui_image_icon);
     priv->menu_pixbuf = gdk_pixbuf_scale_simple(priv->icon_pixbuf, 24, 24,
         GDK_INTERP_HYPER);
+    gtk_icon_theme_add_builtin_icon("RhythmCat", 128, priv->icon_pixbuf);
     main_window_hints.min_width = 500;
     main_window_hints.min_height = 360;
     main_window_hints.base_width = 600;
@@ -1189,8 +1160,7 @@ static void rc_ui_player_instance_init(RCUiPlayer *ui)
     priv->playlist_listview = rc_ui_listview_get_playlist_widget();
     priv->catalog_scr_window = gtk_scrolled_window_new(NULL, NULL);
     priv->playlist_scr_window = gtk_scrolled_window_new(NULL, NULL);
-    rc_ui_menu_init();
-    priv->ui_manager = rc_ui_menu_get_ui_manager();
+    priv->ui_manager = rc_ui_menu_init();
     gtk_window_add_accel_group(GTK_WINDOW(priv->main_window), 
         gtk_ui_manager_get_accel_group(priv->ui_manager));
     priv->list_paned = gtk_paned_new(GTK_ORIENTATION_HORIZONTAL);
@@ -1219,6 +1189,8 @@ static void rc_ui_player_instance_init(RCUiPlayer *ui)
     g_object_set(priv->lyric1_slabel, "name", "RC2Lyric1ScrollableLabel",
         NULL);
     g_object_set(priv->lyric2_slabel, "name", "RC2Lyric2ScrollableLabel",
+        NULL);
+    g_object_set(priv->spectrum_widget, "name", "RC2SpectrumWidget",
         NULL);
     g_object_set(priv->album_image, "name", "RC2AlbumImage", NULL);
     g_object_set(priv->menu_image, "name", "RC2MainMenuImage", NULL);
@@ -1328,7 +1300,7 @@ void rc_ui_player_init(GtkApplication *app)
 
 void rc_ui_player_exit()
 {
-    g_object_unref(ui_player_instance);
+    if(ui_player_instance!=NULL) g_object_unref(ui_player_instance);
     ui_player_instance = NULL;
     g_message("Main UI exited.");
 }

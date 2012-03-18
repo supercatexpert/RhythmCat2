@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-RC2Py3PluginInfo = dict({
+RC2Py3PluginInfo = {
     'magic': 0x20120103,
     'major_version': 2,
     'minor_version': 0,
@@ -10,7 +10,7 @@ RC2Py3PluginInfo = dict({
     'description': 'A hello world plug-in in Python3',
     'author': 'SuperCat',
     'homepage': 'http://supercat-lab.org/'
-})
+}
 
 def Probe():
     print('Hello World: Probe!')

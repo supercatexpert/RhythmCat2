@@ -2,7 +2,7 @@
  * RhythmCat UI List View Module
  * Show music catalog & library in list views.
  *
- * ui-listview.c
+ * rc-ui-listview.c
  * This file is part of RhythmCat Music Player (GTK+ Version)
  *
  * Copyright (C) 2012 - SuperCat, license: GPL v3
@@ -23,10 +23,10 @@
  * Boston, MA  02110-1301  USA
  */
 
-#include "ui-listview.h"
-#include "ui-listmodel.h"
-#include "ui-menu.h"
-#include "common.h"
+#include "rc-ui-listview.h"
+#include "rc-ui-listmodel.h"
+#include "rc-ui-menu.h"
+#include "rc-common.h"
 
 enum
 {
@@ -613,7 +613,8 @@ void rc_ui_listview_init()
     GtkTreeModel *catalog_model;
     GtkTreeModel *playlist_model;
     GtkTreeSelection *catalog_selection;
-    GtkTreeIter iter;
+    GtkTreeSelection *playlist_selection;
+    GtkTreeIter catalog_iter, playlist_iter;
     catalog_listview = gtk_tree_view_new();
     playlist_listview = gtk_tree_view_new();
     rc_ui_list_model_init();
@@ -624,14 +625,23 @@ void rc_ui_listview_init()
     {
         gtk_tree_view_set_model(GTK_TREE_VIEW(catalog_listview),
             catalog_model);
-        if(gtk_tree_model_get_iter_first(catalog_model, &iter))
+        if(gtk_tree_model_get_iter_first(catalog_model, &catalog_iter))
         {
-            playlist_model = rc_ui_list_model_get_playlist_store(&iter);
+            playlist_model = rc_ui_list_model_get_playlist_store(
+                &catalog_iter);
+            gtk_tree_selection_select_iter(catalog_selection, &catalog_iter);
             if(playlist_model!=NULL)
             {
                 gtk_tree_view_set_model(GTK_TREE_VIEW(playlist_listview),
                     playlist_model);
-                gtk_tree_selection_select_iter(catalog_selection, &iter);
+                playlist_selection = gtk_tree_view_get_selection(
+                    GTK_TREE_VIEW(playlist_listview));
+                if(gtk_tree_model_get_iter_first(playlist_model,
+                    &playlist_iter))
+                {
+                    gtk_tree_selection_select_iter(playlist_selection,
+                        &playlist_iter);
+                }
             }
         }
     }

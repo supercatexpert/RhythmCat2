@@ -41,11 +41,6 @@ AC_PROG_LN_S
 AM_PROG_LIBTOOL
 CFLAGS="-Wall -O3 -DINSTALL_PATH=\\\"$datadir/RhythmCat/\\\""
 
-AC_PATH_PROG(DBUSBINDINGTOOL, dbus-binding-tool, no)
-if test "$DBUSBINDINGTOOL" = no; then
-    AC_MSG_ERROR([dbus-binding-tool not found!])
-fi
-
 AC_PATH_PROG(GLIB_GENMARSHAL, glib-genmarshal, no)
 if test "$GLIB_GENMARSHAL" = no; then
     AC_MSG_ERROR([glib-genmarshal not found!])

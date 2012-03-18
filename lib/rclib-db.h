@@ -199,6 +199,8 @@ void rclib_db_catalog_set_type(GSequenceIter *iter, RCLibDbCatalogType type);
 void rclib_db_catalog_reorder(gint *new_order);
 void rclib_db_playlist_add_music(GSequenceIter *iter,
     GSequenceIter *insert_iter, const gchar *uri);
+void rclib_db_playlist_add_music_and_play(GSequenceIter *iter,
+    GSequenceIter *insert_iter, const gchar *uri);
 void rclib_db_playlist_delete(GSequenceIter *iter);
 void rclib_db_playlist_update_metadata(GSequenceIter *iter,
     const RCLibDbPlaylistData *data);

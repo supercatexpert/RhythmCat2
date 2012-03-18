@@ -56,10 +56,11 @@ CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)" "$(DESTDIR)$(pkgconfigdir)" \
 	"$(DESTDIR)$(RhythmCat2includedir)"
 PROGRAMS = $(bin_PROGRAMS)
-am_RhythmCat2_OBJECTS = ui-listmodel.$(OBJEXT) ui-player.$(OBJEXT) \
-	ui-listview.$(OBJEXT) ui-menu.$(OBJEXT) ui-dialog.$(OBJEXT) \
-	ui-slabel.$(OBJEXT) ui-spectrum.$(OBJEXT) ui-style.$(OBJEXT) \
-	mpris2.$(OBJEXT) main.$(OBJEXT)
+am_RhythmCat2_OBJECTS = rc-ui-listmodel.$(OBJEXT) \
+	rc-ui-player.$(OBJEXT) rc-ui-listview.$(OBJEXT) \
+	rc-ui-menu.$(OBJEXT) rc-ui-dialog.$(OBJEXT) \
+	rc-ui-slabel.$(OBJEXT) rc-ui-spectrum.$(OBJEXT) \
+	rc-ui-style.$(OBJEXT) rc-mpris2.$(OBJEXT) rc-main.$(OBJEXT)
 RhythmCat2_OBJECTS = $(am_RhythmCat2_OBJECTS)
 AM_V_lt = $(am__v_lt_@AM_V@)
 am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
@@ -144,7 +145,6 @@ CPP = @CPP@
 CPPFLAGS = @CPPFLAGS@
 CYGPATH_W = @CYGPATH_W@
 DATADIRNAME = @DATADIRNAME@
-DBUSBINDINGTOOL = @DBUSBINDINGTOOL@
 DEFS = @DEFS@
 DEPDIR = @DEPDIR@
 DLLTOOL = @DLLTOOL@
@@ -293,13 +293,15 @@ top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 RhythmCat2_SOURCES = \
-    ui-listmodel.c ui-player.c ui-listview.c ui-menu.c ui-dialog.c \
-    ui-slabel.c ui-spectrum.c ui-style.c mpris2.c main.c
+    rc-ui-listmodel.c rc-ui-player.c rc-ui-listview.c rc-ui-menu.c \
+    rc-ui-dialog.c rc-ui-slabel.c rc-ui-spectrum.c rc-ui-style.c \
+    rc-mpris2.c rc-main.c
 
 RhythmCat2_headers = \
-    ui-listmodel.h ui-listview.h ui-player.h ui-menu.h ui-dialog.h \
-    ui-slabel.h ui-style.h ui-spectrum.h mpris2.h common.h \
-    ui-img-icon.xpm ui-img-nocov.xpm
+    rc-ui-listmodel.h rc-ui-listview.h rc-ui-player.h rc-ui-menu.h \
+    rc-ui-dialog.h rc-ui-slabel.h rc-ui-style.h rc-ui-spectrum.h \
+    rc-mpris2.h rc-common.h rc-ui-css.h rc-ui-img-icon.xpm \
+    rc-ui-img-nocov.xpm
 
 RhythmCat2includedir = $(includedir)/ui
 RhythmCat2include_HEADERS = $(RhythmCat2_headers)
@@ -405,16 +407,16 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/main.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mpris2.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ui-dialog.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ui-listmodel.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ui-listview.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ui-menu.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ui-player.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ui-slabel.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ui-spectrum.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ui-style.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rc-main.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rc-mpris2.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rc-ui-dialog.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rc-ui-listmodel.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rc-ui-listview.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rc-ui-menu.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rc-ui-player.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rc-ui-slabel.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rc-ui-spectrum.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rc-ui-style.Po@am__quote@
 
 .c.o:
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(COMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<

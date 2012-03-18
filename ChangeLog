@@ -5,3 +5,10 @@
 2012-02-26  SuperCat    <supercatexpert@gmail.com>
 
     * Version 1.9.1 released.
+    
+2012-03-13  SuperCat    <supercatexpert@gmail.com>
+
+    * Added plug-in support system.
+    * Added Python3 plug-in loader.
+    
+

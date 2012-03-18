@@ -1,7 +1,7 @@
 /*
  * RhythmCat UI List Model Header Declaration
  *
- * ui-listmodel.h
+ * rc-ui-listmodel.h
  * This file is part of RhythmCat Music Player (GTK+ Version)
  *
  * Copyright (C) 2012 - SuperCat, license: GPL v3

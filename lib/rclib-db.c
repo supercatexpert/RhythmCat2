@@ -67,6 +67,7 @@ typedef struct RCLibDbPlaylistImportData
     GSequenceIter *iter;
     GSequenceIter *insert_iter;
     gchar *uri;
+    gboolean play_flag;
 }RCLibDbPlaylistImportData;
 
 typedef struct RCLibDbPlaylistImportIdleData
@@ -75,6 +76,7 @@ typedef struct RCLibDbPlaylistImportIdleData
     GSequenceIter *insert_iter;
     RCLibTagMetadata *mmd;
     RCLibDbPlaylistType type;
+    gboolean play_flag;
 }RCLibDbPlaylistImportIdleData;
 
 typedef struct RCLibDbPlaylistRefreshData
@@ -388,6 +390,8 @@ static gpointer rclib_db_playlist_import_thread_cb(gpointer data)
                         idle_data->iter = import_data->iter;
                         idle_data->insert_iter = import_data->insert_iter;
                         idle_data->mmd = mmd;
+                        if(i==0)
+                            idle_data->play_flag = import_data->play_flag;
                         idle_data->type = RCLIB_DB_PLAYLIST_TYPE_CUE;
                         g_idle_add(rclib_db_playlist_import_idle_cb,
                             idle_data);
@@ -419,6 +423,7 @@ static gpointer rclib_db_playlist_import_thread_cb(gpointer data)
                             idle_data->insert_iter =
                                 import_data->insert_iter;
                             idle_data->mmd = mmd;
+                            idle_data->play_flag = import_data->play_flag;
                             idle_data->type = RCLIB_DB_PLAYLIST_TYPE_CUE;
                             g_idle_add(rclib_db_playlist_import_idle_cb,
                                 idle_data);
@@ -455,6 +460,7 @@ static gpointer rclib_db_playlist_import_thread_cb(gpointer data)
                             idle_data->insert_iter =
                                 import_data->insert_iter;
                             idle_data->mmd = mmd;
+                            idle_data->play_flag = import_data->play_flag;
                             idle_data->type = RCLIB_DB_PLAYLIST_TYPE_CUE;
                             g_idle_add(rclib_db_playlist_import_idle_cb,
                                 idle_data);
@@ -472,6 +478,8 @@ static gpointer rclib_db_playlist_import_thread_cb(gpointer data)
                             idle_data->iter = import_data->iter;
                             idle_data->insert_iter = import_data->insert_iter;
                             idle_data->mmd = mmd;
+                            if(i==0)
+                                idle_data->play_flag = import_data->play_flag;
                             idle_data->type = RCLIB_DB_PLAYLIST_TYPE_CUE;
                             g_idle_add(rclib_db_playlist_import_idle_cb,
                                 idle_data);
@@ -484,6 +492,7 @@ static gpointer rclib_db_playlist_import_thread_cb(gpointer data)
             idle_data->iter = import_data->iter;
             idle_data->insert_iter = import_data->insert_iter;
             idle_data->mmd = mmd;
+            idle_data->play_flag = import_data->play_flag;
             idle_data->type = RCLIB_DB_PLAYLIST_TYPE_MUSIC;
             g_idle_add(rclib_db_playlist_import_idle_cb, idle_data);
         }
@@ -1530,6 +1539,33 @@ void rclib_db_playlist_add_music(GSequenceIter *iter,
     import_data->uri = g_strdup(uri);
     g_async_queue_push(priv->import_queue, import_data);
 }
+
+/**
+ * rclib_db_playlist_add_music_and_play:
+ * @iter: the catalog iter
+ * @insert_iter: insert the music before this iter
+ * @uri: the URI of the music
+ *
+ * Add music to the music library by given catalog iter, and then play it
+ * if the add operation succeeds.
+ */
+
+
+void rclib_db_playlist_add_music_and_play(GSequenceIter *iter,
+    GSequenceIter *insert_iter, const gchar *uri)
+{
+    RCLibDbPlaylistImportData *import_data;
+    RCLibDbPrivate *priv;
+    if(uri==NULL || iter==NULL || db_instance==NULL) return;
+    priv = RCLIB_DB_GET_PRIVATE(RCLIB_DB(db_instance));
+    priv->import_work_flag = TRUE;
+    import_data = g_new0(RCLibDbPlaylistImportData, 1);
+    import_data->iter = iter;
+    import_data->insert_iter = insert_iter;
+    import_data->uri = g_strdup(uri);
+    import_data->play_flag = TRUE;
+    g_async_queue_push(priv->import_queue, import_data);
+} 
 
 /**
  * rclib_db_playlist_delete:

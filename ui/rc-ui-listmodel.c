@@ -2,7 +2,7 @@
  * RhythmCat UI List Model Module
  * Show music catalog & library.
  *
- * ui-listmodel.c
+ * rc-ui-listmodel.c
  * This file is part of RhythmCat Music Player (GTK+ Version)
  *
  * Copyright (C) 2012 - SuperCat, license: GPL v3
@@ -23,8 +23,8 @@
  * Boston, MA  02110-1301  USA
  */
 
-#include "ui-listmodel.h"
-#include "common.h"
+#include "rc-ui-listmodel.h"
+#include "rc-common.h"
 
 #define RC_UI_CATALOG_STORE_GET_PRIVATE(o) \
     (G_TYPE_INSTANCE_GET_PRIVATE((o), RC_UI_TYPE_CATALOG_STORE, \

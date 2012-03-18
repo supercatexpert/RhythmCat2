@@ -81,7 +81,6 @@ CPP = gcc -E
 CPPFLAGS = 
 CYGPATH_W = echo
 DATADIRNAME = share
-DBUSBINDINGTOOL = /usr/bin/dbus-binding-tool
 DEFS = -DHAVE_CONFIG_H
 DEPDIR = .deps
 DLLTOOL = false

@@ -1,7 +1,7 @@
 /*
  * RhythmCat UI Spectrum Widget Header Declaration
  *
- * ui-menu.h
+ * rc-ui-spectrum.h
  * This file is part of RhythmCat Music Player (GTK+ Version)
  *
  * Copyright (C) 2012 - SuperCat, license: GPL v3
