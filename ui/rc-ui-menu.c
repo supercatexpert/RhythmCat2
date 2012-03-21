@@ -26,6 +26,9 @@
 #include "rc-ui-menu.h"
 #include "rc-ui-listview.h"
 #include "rc-ui-dialog.h"
+#include "rc-ui-plugin.h"
+#include "rc-ui-settings.h"
+#include "rc-ui-effect.h"
 #include "rc-common.h"
 #include "rc-ui-player.h"
 
@@ -234,6 +237,10 @@ static GtkActionEntry ui_menu_entries[] =
       N_("Bind Al_bum File"), NULL,
       N_("Bind album file to the selected music"),
       G_CALLBACK(rc_ui_dialog_bind_album) },
+    { "ViewEffect", NULL,
+      N_("_Audio Effects"), "<control>E",
+      N_("Adjust the audio effects"),
+      G_CALLBACK(rc_ui_effect_window_show) },      
     { "ViewMiniMode", NULL,
       N_("_Mini Mode"), "<control><alt>M",
       N_("Enable mini mode"),
@@ -311,11 +318,11 @@ static GtkActionEntry ui_menu_entries[] =
       N_("Select all music in the playlist"),
       G_CALLBACK(rc_ui_listview_playlist_select_all) },
     { "PlaylistPBindLyric", NULL,
-      N_("Bind _lyric file"), NULL,
+      N_("Bind _Lyric File"), NULL,
       N_("Bind lyric file to the selected music"),
       G_CALLBACK(rc_ui_dialog_bind_lyric) },
     { "PlaylistPBindAlbum", NULL,
-      N_("Bind al_bum file"), NULL,
+      N_("Bind Al_bum File"), NULL,
       N_("Bind album file to the selected music"),
       G_CALLBACK(rc_ui_dialog_bind_album) },
     { "PlaylistPRemoveMusic", GTK_STOCK_REMOVE,
@@ -486,6 +493,8 @@ static const gchar *ui_menu_info =
     "      </menu>"
     "    </menu>"
     "    <menu action='ViewMenu'>"
+    "      <menuitem action='ViewEffect'/>"
+    "        <separator name='ViewSep1'/>"
     "      <menuitem action='ViewAlwaysOnTop'/>"
     "      <menuitem action='ViewMiniMode'/>"
     "    </menu>"

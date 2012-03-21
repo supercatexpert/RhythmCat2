@@ -1303,9 +1303,16 @@ static void rclib_core_instance_init(RCLibCore *core)
     if(priv->eq_plugin!=NULL)
         rclib_core_effect_add_element_nonblock(effectbin, priv->eq_plugin);
     if(priv->bal_plugin!=NULL)
+    {
+        g_object_set(priv->bal_plugin, "method", 1, NULL);
         rclib_core_effect_add_element_nonblock(effectbin, priv->bal_plugin);
+    }
     if(priv->echo_plugin!=NULL)
+    {
+        g_object_set(G_OBJECT(priv->echo_plugin), "max-delay",
+            1 * GST_SECOND, NULL);
         rclib_core_effect_add_element_nonblock(effectbin, priv->echo_plugin);
+    }
     priv->extra_plugin_list = NULL;
     bus = gst_pipeline_get_bus(GST_PIPELINE(playbin));
     gst_bus_add_watch(bus, (GstBusFunc)rclib_core_bus_callback,
@@ -2014,8 +2021,6 @@ gboolean rclib_core_get_balance(gfloat *balance)
 /**
  * rclib_core_set_echo:
  * @delay: the delay of the echo in nanoseconds
- * @max_delay: the maximum delay of the echo in nanoseconds
- * (can't be changed in PLAYING or PAUSED state)
  * @feedback: the amount of feedback
  * @intensity: the intensity of the echo
  *
@@ -2024,15 +2029,15 @@ gboolean rclib_core_get_balance(gfloat *balance)
  * Returns: Whether the properties of the echo effect are set successfully.
  */
 
-gboolean rclib_core_set_echo(guint64 delay, guint64 max_delay,
-    gfloat feedback, gfloat intensity)
+gboolean rclib_core_set_echo(guint64 delay, gfloat feedback,
+    gfloat intensity)
 {
     RCLibCorePrivate *priv;
     if(core_instance==NULL) return FALSE;
     priv = RCLIB_CORE_GET_PRIVATE(RCLIB_CORE(core_instance));
     if(priv->echo_plugin==NULL) return FALSE;
-    g_object_set(G_OBJECT(priv->echo_plugin), "delay", delay, "max-delay",
-        max_delay, "feedback", feedback, "intensity", intensity, NULL);
+    g_object_set(G_OBJECT(priv->echo_plugin), "delay", delay, "feedback",
+        feedback, "intensity", intensity, NULL);
     g_signal_emit(core_instance, core_signals[SIGNAL_ECHO_CHANGED], 0);
     return TRUE;
 }

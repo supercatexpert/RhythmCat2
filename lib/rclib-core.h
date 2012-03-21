@@ -219,8 +219,8 @@ gboolean rclib_core_get_eq(RCLibCoreEQType *type, gdouble *band);
 const gchar *rclib_core_get_eq_name(RCLibCoreEQType type);
 gboolean rclib_core_set_balance(gfloat balance);
 gboolean rclib_core_get_balance(gfloat *balance);
-gboolean rclib_core_set_echo(guint64 delay, guint64 max_delay,
-    gfloat feedback, gfloat intensity);
+gboolean rclib_core_set_echo(guint64 delay, gfloat feedback,
+    gfloat intensity);
 gboolean rclib_core_get_echo(guint64 *delay, guint64 *max_delay,
     gfloat *feedback, gfloat *intensity);
 gboolean rclib_core_effect_plugin_add(GstElement *element);

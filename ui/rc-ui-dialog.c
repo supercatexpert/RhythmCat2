@@ -369,11 +369,12 @@ void rc_ui_dialog_bind_lyric()
     GtkWidget *dialog;
     GtkWidget *vbox;
     GtkWidget *frame1, *frame2;
-    GtkWidget *vbox2, *vbox3;
+    GtkWidget *grid1, *grid2;
     GtkWidget *radio_buttons[4];
     GtkWidget *filebutton[2];
     GtkTreeIter iter;
     gint ret;
+    gint i;
     const gchar *home_dir;
     const gchar *lyric_file1 = NULL;
     const gchar *lyric_file2 = NULL;
@@ -409,8 +410,14 @@ void rc_ui_dialog_bind_lyric()
     frame1 = gtk_frame_new(_("The first lyric file binding"));
     frame2 = gtk_frame_new(_("The second lyric file binding"));
     vbox = gtk_dialog_get_content_area(GTK_DIALOG(dialog));
-    vbox2 = gtk_box_new(GTK_ORIENTATION_VERTICAL, 2);
-    vbox3 = gtk_box_new(GTK_ORIENTATION_VERTICAL, 2);
+    grid1 = gtk_grid_new();
+    grid2 = gtk_grid_new();
+    gtk_grid_set_row_spacing(GTK_GRID(grid1), 2);
+    gtk_grid_set_row_spacing(GTK_GRID(grid2), 2);
+    for(i=0;i<4;i++)
+        gtk_widget_set_hexpand(radio_buttons[i], TRUE);
+    for(i=0;i<2;i++)
+        gtk_widget_set_hexpand(filebutton[i], TRUE);
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(radio_buttons[1]), TRUE);
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(radio_buttons[3]), TRUE);
     home_dir = g_getenv("HOME");
@@ -450,14 +457,14 @@ void rc_ui_dialog_bind_lyric()
         gtk_file_chooser_set_filename(GTK_FILE_CHOOSER(filebutton[1]),
             lyric_file2);
     }
-    gtk_box_pack_start(GTK_BOX(vbox2), radio_buttons[0], FALSE, FALSE, 2);
-    gtk_box_pack_start(GTK_BOX(vbox2), filebutton[0], FALSE, FALSE, 2);
-    gtk_box_pack_start(GTK_BOX(vbox2), radio_buttons[1], FALSE, FALSE, 2);
-    gtk_box_pack_start(GTK_BOX(vbox3), radio_buttons[2], FALSE, FALSE, 2);
-    gtk_box_pack_start(GTK_BOX(vbox3), filebutton[1], FALSE, FALSE, 2);
-    gtk_box_pack_start(GTK_BOX(vbox3), radio_buttons[3], FALSE, FALSE, 2);
-    gtk_container_add(GTK_CONTAINER(frame1), vbox2);
-    gtk_container_add(GTK_CONTAINER(frame2), vbox3);
+    gtk_grid_attach(GTK_GRID(grid1), radio_buttons[0], 0, 0, 1, 1);
+    gtk_grid_attach(GTK_GRID(grid1), filebutton[0], 0, 1, 1, 1);
+    gtk_grid_attach(GTK_GRID(grid1), radio_buttons[1], 0, 2, 1, 1);
+    gtk_grid_attach(GTK_GRID(grid2), radio_buttons[2], 0, 0, 1, 1);
+    gtk_grid_attach(GTK_GRID(grid2), filebutton[1], 0, 1, 1, 1);
+    gtk_grid_attach(GTK_GRID(grid2), radio_buttons[3], 0, 2, 1, 1);
+    gtk_container_add(GTK_CONTAINER(frame1), grid1);
+    gtk_container_add(GTK_CONTAINER(frame2), grid2);
     gtk_box_pack_start(GTK_BOX(vbox), frame1, FALSE, FALSE, 2);
     gtk_box_pack_start(GTK_BOX(vbox), frame2, FALSE, FALSE, 2);
     gtk_widget_set_size_request(dialog, 300, -1);
@@ -558,7 +565,7 @@ void rc_ui_dialog_bind_album()
 {
     GtkWidget *dialog;
     GtkWidget *vbox;
-    GtkWidget *vbox2;
+    GtkWidget *grid;
     GtkWidget *radio_buttons[2];
     GtkWidget *filebutton;
     GtkTreeIter iter;
@@ -588,7 +595,8 @@ void rc_ui_dialog_bind_album()
     filebutton = gtk_file_chooser_button_new(_("Select a album image file"),
         GTK_FILE_CHOOSER_ACTION_OPEN);
     vbox = gtk_dialog_get_content_area(GTK_DIALOG(dialog));
-    vbox2 = gtk_box_new(GTK_ORIENTATION_VERTICAL, 2);
+    grid = gtk_grid_new();
+    gtk_grid_set_row_spacing(GTK_GRID(grid), 2);
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(radio_buttons[1]), TRUE);
     file_filter = gtk_file_filter_new();
     gtk_file_filter_set_name(file_filter,
@@ -612,10 +620,11 @@ void rc_ui_dialog_bind_album()
         gtk_file_chooser_set_filename(GTK_FILE_CHOOSER(filebutton),
             album_file);
     }
-    gtk_box_pack_start(GTK_BOX(vbox2), radio_buttons[0], FALSE, FALSE, 2);
-    gtk_box_pack_start(GTK_BOX(vbox2), filebutton, FALSE, FALSE, 2);
-    gtk_box_pack_start(GTK_BOX(vbox), vbox2, FALSE, FALSE, 2);
-    gtk_box_pack_start(GTK_BOX(vbox), radio_buttons[1], FALSE, FALSE, 2);
+    gtk_widget_set_hexpand(radio_buttons[0], TRUE);
+    gtk_grid_attach(GTK_GRID(grid), radio_buttons[0], 0, 0, 1, 1);
+    gtk_grid_attach(GTK_GRID(grid), filebutton, 0, 1, 1, 1);
+    gtk_grid_attach(GTK_GRID(grid), radio_buttons[1], 0, 2, 1, 1);
+    gtk_box_pack_start(GTK_BOX(vbox), grid, FALSE, FALSE, 2);
     gtk_widget_set_size_request(dialog, 300, -1);
     gtk_widget_show_all(vbox);
     ret = gtk_dialog_run(GTK_DIALOG(dialog));

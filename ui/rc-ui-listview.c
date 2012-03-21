@@ -645,8 +645,8 @@ void rc_ui_listview_init()
             }
         }
     }
-    gtk_widget_set_name(catalog_listview, "RCUiCatalogListview");
-    gtk_widget_set_name(playlist_listview, "RCUiPlaylistListview");
+    gtk_widget_set_name(catalog_listview, "RC2CatalogListView");
+    gtk_widget_set_name(playlist_listview, "RC2PlaylistListView");
     gtk_tree_view_columns_autosize(GTK_TREE_VIEW(catalog_listview));
     gtk_tree_view_columns_autosize(GTK_TREE_VIEW(playlist_listview));
     catalog_state_renderer = gtk_cell_renderer_pixbuf_new();

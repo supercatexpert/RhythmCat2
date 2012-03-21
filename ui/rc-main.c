@@ -7,6 +7,7 @@
 #include "rc-mpris2.h"
 #include "rc-common.h"
 #include "rc-ui-style.h"
+#include "rc-ui-effect.h"
 #include "rc-ui-css.h"
 
 static gchar main_app_id[] = "org.rhythmcat.RhythmCat2";
@@ -26,6 +27,7 @@ static void rc_main_app_activate_cb(GApplication *application,
     gchar *uri;
     gint i;
     rc_ui_player_init(GTK_APPLICATION(application));
+    rc_ui_effect_window_init();
     rclib_settings_apply();
     rc_mpris2_init();
     home_dir = g_getenv("HOME");
@@ -201,6 +203,7 @@ int main(int argc, char *argv[])
         NULL);
     g_signal_connect(app, "open", G_CALLBACK(rc_main_app_open_cb), NULL);
     status = g_application_run(G_APPLICATION(app), argc, argv);
+    rc_ui_effect_window_destroy();
     rc_ui_player_exit();
     g_object_unref(app);
     rclib_plugin_exit();

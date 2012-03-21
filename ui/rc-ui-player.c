@@ -41,7 +41,7 @@ typedef struct RCUiPlayerPrivate
     GtkApplication *app;
     GtkUIManager *ui_manager;
     GtkWidget *main_window;
-    GtkWidget *main_vbox;
+    GtkWidget *main_grid;
     GtkWidget *title_label;
     GtkWidget *artist_label;
     GtkWidget *album_label;
@@ -64,9 +64,6 @@ typedef struct RCUiPlayerPrivate
     GtkWidget *ctrl_prev_button;
     GtkWidget *ctrl_next_button;
     GtkWidget *ctrl_open_button;
-    GtkWidget *menu_image;
-    GtkWidget *menu_label;
-    GtkWidget *menu_button;
     GtkWidget *volume_button;
     GtkWidget *time_scale;
     GtkWidget *catalog_listview;
@@ -75,7 +72,6 @@ typedef struct RCUiPlayerPrivate
     GtkWidget *playlist_scr_window;
     GtkWidget *list_paned;
     GtkWidget *progress_spinner;
-    GtkWidget *progress_label;
     GtkWidget *progress_eventbox;
     GdkPixbuf *cover_default_pixbuf;
     GdkPixbuf *icon_pixbuf;
@@ -906,22 +902,34 @@ static void rc_ui_player_set_default_style(RCUiPlayerPrivate *priv)
 
 static void rc_ui_player_layout_init(RCUiPlayerPrivate *priv)
 {
-    GtkWidget *panel_hbox;
-    GtkWidget *panel_vbox;
-    GtkWidget *info_hbox;
-    GtkWidget *mmd_vbox;
-    GtkWidget *time_vbox;
-    GtkWidget *lyric_vbox;
-    GtkWidget *ctrl_button_hbox;
-    GtkWidget *player_vbox;
-    player_vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
-    panel_hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 2);
-    panel_vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
-    mmd_vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 1);
-    time_vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 2);
-    lyric_vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
-    info_hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 2);
-    ctrl_button_hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
+    GtkWidget *panel_grid;
+    GtkWidget *panel_right_grid;
+    GtkWidget *info_grid;
+    GtkWidget *mmd_grid;
+    GtkWidget *time_grid;
+    GtkWidget *lyric_grid;
+    GtkWidget *ctrl_button_grid;
+    GtkWidget *player_grid;
+    player_grid = gtk_grid_new();
+    panel_grid = gtk_grid_new();
+    panel_right_grid = gtk_grid_new();
+    mmd_grid = gtk_grid_new();
+    time_grid = gtk_grid_new();
+    lyric_grid = gtk_grid_new();
+    info_grid = gtk_grid_new();
+    ctrl_button_grid = gtk_grid_new();
+    g_object_set(priv->album_frame, "margin-left", 1, "margin-right", 2,
+        NULL);
+    g_object_set(info_grid, "column-spacing", 2, NULL);
+    g_object_set(mmd_grid, "row-spacing", 1, "hexpand-set", TRUE,
+        "hexpand", TRUE, "vexpand-set", TRUE, "vexpand", FALSE, NULL);
+    g_object_set(time_grid, "row-spacing", 2, NULL);
+    g_object_set(lyric_grid, "margin-top", 2, "margin-bottom", 2, NULL);
+    g_object_set(panel_grid, "column-spacing", 2, "hexpand-set", TRUE,
+        "hexpand", NULL);
+    g_object_set(player_grid, "expand", TRUE, NULL);
+    g_object_set(panel_right_grid, "hexpand-set", TRUE, "hexpand", TRUE,
+        "vexpand-set", TRUE, "vexpand", FALSE, NULL);
     gtk_container_add(GTK_CONTAINER(priv->catalog_scr_window),
         priv->catalog_listview);
     gtk_container_add(GTK_CONTAINER(priv->playlist_scr_window),
@@ -935,50 +943,44 @@ static void rc_ui_player_layout_init(RCUiPlayerPrivate *priv)
     gtk_container_add(GTK_CONTAINER(priv->album_eventbox), priv->album_image);
     gtk_container_add(GTK_CONTAINER(priv->album_frame), priv->album_eventbox);
     gtk_container_add(GTK_CONTAINER(priv->progress_eventbox),
-        priv->progress_spinner);
-    gtk_box_pack_start(GTK_BOX(mmd_vbox), priv->title_label, FALSE, TRUE, 0);
-    gtk_box_pack_start(GTK_BOX(mmd_vbox), priv->artist_label, FALSE, TRUE, 0);
-    gtk_box_pack_start(GTK_BOX(mmd_vbox), priv->album_label, FALSE, TRUE, 0);
-    gtk_box_pack_start(GTK_BOX(mmd_vbox), priv->info_label, FALSE, TRUE, 0);
-    gtk_box_pack_start(GTK_BOX(time_vbox), priv->time_label, FALSE, FALSE, 0);
-    gtk_box_pack_start(GTK_BOX(time_vbox), priv->length_label, FALSE, FALSE, 0);
-    gtk_box_pack_start(GTK_BOX(ctrl_button_hbox), priv->ctrl_prev_button,
-        FALSE, FALSE, 0);
-    gtk_box_pack_start(GTK_BOX(ctrl_button_hbox), priv->ctrl_play_button,
-        FALSE, FALSE, 0);
-    gtk_box_pack_start(GTK_BOX(ctrl_button_hbox), priv->ctrl_stop_button,
-        FALSE, FALSE, 0);
-    gtk_box_pack_start(GTK_BOX(ctrl_button_hbox), priv->ctrl_next_button,
-        FALSE, FALSE, 0);
-    gtk_box_pack_start(GTK_BOX(ctrl_button_hbox), priv->time_scale, TRUE,
-        TRUE, 0);
-    gtk_box_pack_start(GTK_BOX(ctrl_button_hbox), priv->progress_eventbox,
-        FALSE, FALSE, 6);
-    gtk_box_pack_end(GTK_BOX(ctrl_button_hbox), priv->volume_button, FALSE,
-        FALSE, 0);
-    gtk_box_pack_start(GTK_BOX(info_hbox), mmd_vbox, TRUE, TRUE, 0);
-    gtk_box_pack_start(GTK_BOX(info_hbox), time_vbox, FALSE, FALSE, 0);
-    gtk_box_pack_start(GTK_BOX(lyric_vbox), priv->lyric1_slabel, FALSE,
-        FALSE, 0);
-    gtk_box_pack_start(GTK_BOX(lyric_vbox), priv->lyric2_slabel, FALSE,
-        FALSE, 0);
-    gtk_box_pack_start(GTK_BOX(panel_vbox), info_hbox, FALSE,
-        FALSE, 0);
-    gtk_box_pack_start(GTK_BOX(panel_vbox), lyric_vbox, FALSE, FALSE, 4);
-    gtk_box_pack_end(GTK_BOX(panel_vbox), priv->spectrum_widget, TRUE,
-        TRUE, 8);
-    gtk_box_pack_start(GTK_BOX(panel_hbox), priv->album_frame, FALSE,
-        FALSE, 2);
-    gtk_box_pack_start(GTK_BOX(panel_hbox), panel_vbox, TRUE, TRUE, 2);
-    gtk_box_pack_start(GTK_BOX(player_vbox), panel_hbox, FALSE, TRUE, 4);
-    gtk_box_pack_start(GTK_BOX(player_vbox), ctrl_button_hbox, FALSE,
-        FALSE, 0);
-    gtk_box_pack_start(GTK_BOX(player_vbox), priv->list_paned, TRUE,
-        TRUE, 0);
-    gtk_box_pack_start(GTK_BOX(priv->main_vbox), gtk_ui_manager_get_widget(
-        priv->ui_manager, "/RC2MenuBar"), FALSE, FALSE, 0);
-    gtk_box_pack_start(GTK_BOX(priv->main_vbox), player_vbox, TRUE, TRUE, 0);
-    gtk_container_add(GTK_CONTAINER(priv->main_window), priv->main_vbox);
+        priv->progress_spinner);  
+    gtk_grid_attach(GTK_GRID(mmd_grid), priv->title_label, 0, 0, 1, 1);
+    gtk_grid_attach(GTK_GRID(mmd_grid), priv->artist_label, 0, 1, 1, 1);
+    gtk_grid_attach(GTK_GRID(mmd_grid), priv->album_label, 0, 2, 1, 1);
+    gtk_grid_attach(GTK_GRID(mmd_grid), priv->info_label, 0, 3, 1, 1);
+    gtk_grid_attach(GTK_GRID(time_grid), priv->time_label, 0, 0, 1, 1);
+    gtk_grid_attach(GTK_GRID(time_grid), priv->length_label, 0, 1, 1, 1);   
+    gtk_grid_attach(GTK_GRID(ctrl_button_grid), priv->ctrl_prev_button,
+        0, 0, 1, 1);
+    gtk_grid_attach(GTK_GRID(ctrl_button_grid), priv->ctrl_play_button,
+        1, 0, 1, 1);
+    gtk_grid_attach(GTK_GRID(ctrl_button_grid), priv->ctrl_stop_button,
+        2, 0, 1, 1);
+    gtk_grid_attach(GTK_GRID(ctrl_button_grid), priv->ctrl_next_button,
+        3, 0, 1, 1);
+    gtk_grid_attach(GTK_GRID(ctrl_button_grid), priv->time_scale,
+        4, 0, 1, 1);        
+    gtk_grid_attach(GTK_GRID(ctrl_button_grid), priv->progress_eventbox,
+        5, 0, 1, 1);
+    gtk_grid_attach(GTK_GRID(ctrl_button_grid), priv->volume_button,
+        6, 0, 1, 1); 
+    gtk_grid_attach(GTK_GRID(info_grid), mmd_grid, 0, 0, 1, 1);
+    gtk_grid_attach(GTK_GRID(info_grid), time_grid, 1, 0, 1, 1);
+    gtk_grid_attach(GTK_GRID(lyric_grid), priv->lyric1_slabel, 0, 0, 1, 1);
+    gtk_grid_attach(GTK_GRID(lyric_grid), priv->lyric2_slabel, 0, 1, 1, 1); 
+    gtk_grid_attach(GTK_GRID(panel_right_grid), info_grid, 0, 0, 1, 1);
+    gtk_grid_attach(GTK_GRID(panel_right_grid), lyric_grid, 0, 1, 1, 1);
+    gtk_grid_attach(GTK_GRID(panel_right_grid), priv->spectrum_widget, 0, 2,
+        1, 1);
+    gtk_grid_attach(GTK_GRID(panel_grid), priv->album_frame, 0, 0, 1, 1);
+    gtk_grid_attach(GTK_GRID(panel_grid), panel_right_grid, 1, 0, 1, 1);   
+    gtk_grid_attach(GTK_GRID(player_grid), panel_grid, 0, 0, 1, 1);
+    gtk_grid_attach(GTK_GRID(player_grid), ctrl_button_grid, 0, 1, 1, 1);
+    gtk_grid_attach(GTK_GRID(player_grid), priv->list_paned, 0, 2, 1, 1);
+    gtk_grid_attach(GTK_GRID(priv->main_grid), gtk_ui_manager_get_widget(
+        priv->ui_manager, "/RC2MenuBar"), 0, 0, 1, 1);
+    gtk_grid_attach(GTK_GRID(priv->main_grid), player_grid, 0, 1, 1, 1);
+    gtk_container_add(GTK_CONTAINER(priv->main_window), priv->main_grid);
 }
 
 static void rc_ui_player_signal_bind(RCUiPlayerPrivate *priv)
@@ -1125,8 +1127,6 @@ static void rc_ui_player_instance_init(RCUiPlayer *ui)
     priv->info_label = gtk_label_new(_("Unknown Format"));
     priv->time_label = gtk_label_new("--:--");
     priv->length_label = gtk_label_new("00:00");
-    priv->progress_label = gtk_label_new(_("Working"));
-    priv->menu_label = gtk_label_new("RhythmCat2");
     priv->album_image = gtk_image_new_from_pixbuf(priv->cover_default_pixbuf);
     priv->album_eventbox = gtk_event_box_new();
     priv->album_frame = gtk_frame_new(NULL);
@@ -1145,13 +1145,11 @@ static void rc_ui_player_instance_init(RCUiPlayer *ui)
         GTK_STOCK_MEDIA_NEXT, GTK_ICON_SIZE_SMALL_TOOLBAR);
     priv->ctrl_open_image = gtk_image_new_from_stock(
         GTK_STOCK_OPEN, GTK_ICON_SIZE_SMALL_TOOLBAR);
-    priv->menu_image = gtk_image_new_from_pixbuf(priv->menu_pixbuf);
     priv->ctrl_play_button = gtk_button_new();
     priv->ctrl_stop_button = gtk_button_new();
     priv->ctrl_prev_button = gtk_button_new();
     priv->ctrl_next_button = gtk_button_new();
     priv->ctrl_open_button = gtk_button_new();
-    priv->menu_button = gtk_button_new();
     priv->progress_eventbox = gtk_event_box_new();
     priv->time_scale = gtk_scale_new(GTK_ORIENTATION_HORIZONTAL,
         position_adjustment);
@@ -1164,7 +1162,7 @@ static void rc_ui_player_instance_init(RCUiPlayer *ui)
     gtk_window_add_accel_group(GTK_WINDOW(priv->main_window), 
         gtk_ui_manager_get_accel_group(priv->ui_manager));
     priv->list_paned = gtk_paned_new(GTK_ORIENTATION_HORIZONTAL);
-    priv->main_vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);    
+    priv->main_grid = gtk_grid_new();
     g_object_set(priv->main_window, "name", "RC2MainWindow", "title",
         "RhythmCat2 Music Player", "icon", priv->icon_pixbuf,
         "window-position", GTK_WIN_POS_CENTER, "default-width", 600,
@@ -1173,30 +1171,34 @@ static void rc_ui_player_instance_init(RCUiPlayer *ui)
         GTK_WIDGET(priv->main_window), &main_window_hints,
         GDK_HINT_MIN_SIZE);
     g_object_set(priv->title_label, "name", "RC2TitleLabel", "xalign", 0.0,
-        "yalign", 0.5, "ellipsize", PANGO_ELLIPSIZE_END, NULL);
+        "yalign", 0.5, "ellipsize", PANGO_ELLIPSIZE_END, "hexpand-set", TRUE,
+        "hexpand", TRUE, "vexpand-set", TRUE, "vexpand", FALSE, NULL);
     g_object_set(priv->artist_label, "name", "RC2ArtistLabel", "xalign", 0.0,
-        "yalign", 0.5, "ellipsize", PANGO_ELLIPSIZE_END, NULL);
+        "yalign", 0.5, "ellipsize", PANGO_ELLIPSIZE_END, "hexpand-set", TRUE,
+        "hexpand", TRUE, "vexpand-set", TRUE, "vexpand", FALSE, NULL);
     g_object_set(priv->album_label, "name", "RC2AlbumLabel", "xalign", 0.0,
-        "yalign", 0.5, "ellipsize", PANGO_ELLIPSIZE_END, NULL);
+        "yalign", 0.5, "ellipsize", PANGO_ELLIPSIZE_END, "hexpand-set", TRUE,
+        "hexpand", TRUE, "vexpand-set", TRUE, "vexpand", FALSE, NULL);
     g_object_set(priv->info_label, "name", "RC2InfoLabel", "xalign", 0.0,
-        "yalign", 0.5, "ellipsize", PANGO_ELLIPSIZE_END, NULL);    
+        "yalign", 0.5, "ellipsize", PANGO_ELLIPSIZE_END, "hexpand-set", TRUE,
+        "hexpand", TRUE, "vexpand-set", TRUE, "vexpand", FALSE, NULL);
     g_object_set(priv->time_label, "name", "RC2TimeLabel", "xalign", 1.0,
         "yalign", 0.5, "justify", GTK_JUSTIFY_RIGHT, NULL);  
     g_object_set(priv->length_label, "name", "RC2LengthLabel", "xalign", 1.0,
         "yalign", 0.5, "justify", GTK_JUSTIFY_RIGHT, NULL); 
-    g_object_set(priv->menu_label, "name", "RC2MenuLabel", NULL);
-    g_object_set(priv->progress_label, "name", "RC2ProgressLabel", NULL);
     g_object_set(priv->lyric1_slabel, "name", "RC2Lyric1ScrollableLabel",
-        NULL);
+        "hexpand-set", TRUE, "hexpand", TRUE, "vexpand-set", TRUE, "vexpand",
+        FALSE, NULL);
     g_object_set(priv->lyric2_slabel, "name", "RC2Lyric2ScrollableLabel",
-        NULL);
+        "hexpand-set", TRUE, "hexpand", TRUE, "vexpand-set", TRUE, "vexpand",
+        FALSE, NULL);
     g_object_set(priv->spectrum_widget, "name", "RC2SpectrumWidget",
-        NULL);
+        "expand", TRUE, "margin-top", 4, NULL);
     g_object_set(priv->album_image, "name", "RC2AlbumImage", NULL);
-    g_object_set(priv->menu_image, "name", "RC2MainMenuImage", NULL);
     g_object_set(priv->progress_spinner, "name", "RC2ProgressSpinner", NULL);
-    g_object_set(priv->time_scale, "name", "RCTimeScalerBar", "can-focus",
-        FALSE, "draw-value", FALSE, NULL);
+    g_object_set(priv->time_scale, "name", "RC2TimeScale", "can-focus",
+        FALSE, "draw-value", FALSE, "hexpand-set", TRUE, "hexpand", TRUE,
+        NULL);
     g_object_set(priv->ctrl_play_button, "name", "RC2ControlButton",
         "relief", GTK_RELIEF_NONE, "can-focus", FALSE, NULL);
     g_object_set(priv->ctrl_stop_button, "name", "RC2ControlButton",
@@ -1210,22 +1212,20 @@ static void rc_ui_player_instance_init(RCUiPlayer *ui)
     if(!rclib_core_get_volume(&volume)) volume = 1.0;
     g_object_set(priv->volume_button, "name", "RC2VolumeButton", "can-focus",
         FALSE, "size", GTK_ICON_SIZE_SMALL_TOOLBAR, "relief",
-        GTK_RELIEF_NONE, "value", volume, NULL);
-    g_object_set(priv->catalog_scr_window, "name", "RC2ListScrolledWindow",
+        GTK_RELIEF_NONE, "use-symbolic", TRUE, "value", volume, NULL);
+    g_object_set(priv->catalog_scr_window, "name", "RC2CatalogScrolledWindow",
         "hscrollbar-policy", GTK_POLICY_NEVER, "vscrollbar-policy",
         GTK_POLICY_AUTOMATIC, NULL);
-    g_object_set(priv->playlist_scr_window, "name", "RC2ListScrolledWindow",
+    g_object_set(priv->playlist_scr_window, "name", "RC2PlaylistScrolledWindow",
         "hscrollbar-policy", GTK_POLICY_NEVER, "vscrollbar-policy",
         GTK_POLICY_AUTOMATIC, NULL);
     g_object_set(priv->list_paned, "name", "RC2ListPaned", "border-width", 0,
-        "position-set", TRUE, "position", 160, NULL);        
+        "position-set", TRUE, "position", 160, "expand", TRUE, NULL);        
     g_object_set(priv->tray_icon, "has-tooltip", TRUE,
         "tooltip-text", "RhythmCat2 Music Player", "title",
         "RhythmCat2", NULL);
-    g_object_set(priv->menu_button, "name", "RC2MenuButton", "relief",
-        GTK_RELIEF_NONE, NULL);
     g_object_set(priv->progress_eventbox, "name", "RC2ProgressEventbox",
-        NULL);
+        "margin-left", 6, "margin-right", 6, NULL);
     gtk_widget_set_size_request(priv->album_image, priv->cover_image_width,
         priv->cover_image_height);
     gtk_container_add(GTK_CONTAINER(priv->ctrl_play_button),
