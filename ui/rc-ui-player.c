@@ -1087,7 +1087,13 @@ static void rc_ui_player_instance_init(RCUiPlayer *ui)
 {
     RCUiPlayerPrivate *priv = NULL;
     GtkSettings *settings;
-    GdkGeometry main_window_hints = {0};
+    GdkGeometry main_window_hints =
+    {
+        .min_width = 500,
+        .min_height = 360,
+        .base_width = 600,
+        .base_height = 400
+    };
     GtkAdjustment *position_adjustment;
     gdouble volume = 1.0;
     GList *window_list = NULL;
@@ -1104,12 +1110,7 @@ static void rc_ui_player_instance_init(RCUiPlayer *ui)
     priv->menu_pixbuf = gdk_pixbuf_scale_simple(priv->icon_pixbuf, 24, 24,
         GDK_INTERP_HYPER);
     gtk_icon_theme_add_builtin_icon("RhythmCat", 128, priv->icon_pixbuf);
-    main_window_hints.min_width = 500;
-    main_window_hints.min_height = 360;
-    main_window_hints.base_width = 600;
-    main_window_hints.base_height = 400;
-    position_adjustment = GTK_ADJUSTMENT(gtk_adjustment_new(0.0, 0.0, 100.0,
-        1.0, 2.0, 0.0));
+    position_adjustment = gtk_adjustment_new(0.0, 0.0, 100.0, 1.0, 2.0, 0.0);
     priv->tray_icon = gtk_status_icon_new_from_pixbuf(priv->icon_pixbuf);
     if(priv->app!=NULL)
         window_list = gtk_application_get_windows(priv->app);

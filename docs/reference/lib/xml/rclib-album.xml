@@ -1,0 +1,182 @@
+<?xml version="1.0"?>
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
+               "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd"
+[
+  <!ENTITY % local.common.attrib "xmlns:xi  CDATA  #FIXED 'http://www.w3.org/2003/XInclude'">
+]>
+<refentry id="LibRhythmCat-RCLibAlbum">
+<refmeta>
+<refentrytitle role="top_of_page" id="LibRhythmCat-RCLibAlbum.top_of_page">RCLibAlbum</refentrytitle>
+<manvolnum>3</manvolnum>
+<refmiscinfo>
+  LIBRHYTHMCAT Library
+</refmiscinfo>
+</refmeta>
+<refnamediv>
+<refname>RCLibAlbum</refname>
+<refpurpose>The album image processor</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv id="LibRhythmCat-RCLibAlbum.synopsis" role="synopsis">
+<title role="synopsis.title">Synopsis</title>
+
+<synopsis>
+#include &lt;rclib-album.h&gt;
+
+#define             <link linkend="RCLIB-ALBUM-TYPE:CAPS">RCLIB_ALBUM_TYPE</link>
+struct              <link linkend="RCLibAlbum">RCLibAlbum</link>;
+struct              <link linkend="RCLibAlbumClass">RCLibAlbumClass</link>;
+enum                <link linkend="RCLibAlbumType">RCLibAlbumType</link>;
+<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rclib-album-exit">rclib_album_exit</link>                    ();
+<link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            <link linkend="rclib-album-get-album-data">rclib_album_get_album_data</link>          (<parameter><link linkend="RCLibAlbumType"><type>RCLibAlbumType</type></link> *type</parameter>,
+                                                         <parameter><link linkend="gpointer"><type>gpointer</type></link> *data</parameter>);
+<link linkend="GObject"><returnvalue>GObject</returnvalue></link> *           <link linkend="rclib-album-get-instance">rclib_album_get_instance</link>            ();
+<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rclib-album-init">rclib_album_init</link>                    ();
+<link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            <link linkend="rclib-album-save-file">rclib_album_save_file</link>               (<parameter>const <link linkend="gchar"><type>gchar</type></link> *filename</parameter>);
+<link linkend="gulong"><returnvalue>gulong</returnvalue></link>              <link linkend="rclib-album-signal-connect">rclib_album_signal_connect</link>          (<parameter>const <link linkend="gchar"><type>gchar</type></link> *name</parameter>,
+                                                         <parameter><link linkend="GCallback"><type>GCallback</type></link> callback</parameter>,
+                                                         <parameter><link linkend="gpointer"><type>gpointer</type></link> data</parameter>);
+<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rclib-album-signal-disconnect">rclib_album_signal_disconnect</link>       (<parameter><link linkend="gulong"><type>gulong</type></link> handler_id</parameter>);
+</synopsis>
+</refsynopsisdiv>
+
+<refsect1 id="LibRhythmCat-RCLibAlbum.description" role="desc">
+<title role="desc.title">Description</title>
+<para>
+The <link linkend="RCLibAlbum"><type>RCLibAlbum</type></link> is a class which processes the album image. It can read
+album image from image files, or get the data from the metadata, and then
+send signals so that anyone who connected to the class can get the data.
+</para>
+</refsect1>
+<refsect1 id="LibRhythmCat-RCLibAlbum.details" role="details">
+<title role="details.title">Details</title>
+<refsect2 id="RCLIB-ALBUM-TYPE:CAPS" role="macro">
+<title>RCLIB_ALBUM_TYPE</title>
+<indexterm zone="RCLIB-ALBUM-TYPE:CAPS"><primary>RCLIB_ALBUM_TYPE</primary></indexterm>
+<programlisting>#define RCLIB_ALBUM_TYPE (rclib_album_get_type())
+</programlisting>
+</refsect2>
+<refsect2 id="RCLibAlbum" role="struct">
+<title>struct RCLibAlbum</title>
+<indexterm zone="RCLibAlbum"><primary>RCLibAlbum</primary></indexterm>
+<programlisting>struct RCLibAlbum {
+};
+</programlisting>
+<para>
+The album processor. The contents of the <link linkend="RCLibAlbum"><type>RCLibAlbum</type></link> structure are
+private and should only be accessed via the provided API.
+</para></refsect2>
+<refsect2 id="RCLibAlbumClass" role="struct">
+<title>struct RCLibAlbumClass</title>
+<indexterm zone="RCLibAlbumClass"><primary>RCLibAlbumClass</primary></indexterm>
+<programlisting>struct RCLibAlbumClass {
+};
+</programlisting>
+<para>
+<link linkend="RCLibAlbum"><type>RCLibAlbum</type></link> class.
+</para></refsect2>
+<refsect2 id="RCLibAlbumType" role="enum">
+<title>enum RCLibAlbumType</title>
+<indexterm zone="RCLibAlbumType"><primary>RCLibAlbumType</primary></indexterm>
+<programlisting>typedef enum {
+    RCLIB_ALBUM_TYPE_FILENAME,
+    RCLIB_ALBUM_TYPE_BUFFER
+} RCLibAlbumType;
+</programlisting>
+<para>
+The enum type for the album data type.
+</para><variablelist role="enum">
+<varlistentry id="RCLIB-ALBUM-TYPE-FILENAME:CAPS" role="constant">
+<term><literal>RCLIB_ALBUM_TYPE_FILENAME</literal></term>
+<listitem><simpara>the data is a filename (string)
+</simpara></listitem>
+</varlistentry>
+<varlistentry id="RCLIB-ALBUM-TYPE-BUFFER:CAPS" role="constant">
+<term><literal>RCLIB_ALBUM_TYPE_BUFFER</literal></term>
+<listitem><simpara>the data is in <link linkend="GstBuffer"><type>GstBuffer</type></link> type
+</simpara></listitem>
+</varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rclib-album-exit" role="function">
+<title>rclib_album_exit ()</title>
+<indexterm zone="rclib-album-exit"><primary>rclib_album_exit</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rclib_album_exit                    ();</programlisting>
+<para>
+Unload the album process instance.
+</para></refsect2>
+<refsect2 id="rclib-album-get-album-data" role="function">
+<title>rclib_album_get_album_data ()</title>
+<indexterm zone="rclib-album-get-album-data"><primary>rclib_album_get_album_data</primary></indexterm>
+<programlisting><link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            rclib_album_get_album_data          (<parameter><link linkend="RCLibAlbumType"><type>RCLibAlbumType</type></link> *type</parameter>,
+                                                         <parameter><link linkend="gpointer"><type>gpointer</type></link> *data</parameter>);</programlisting>
+<para>
+Get the album data.
+</para><variablelist role="params">
+<varlistentry><term><parameter>type</parameter>&#160;:</term>
+<listitem><simpara>(out) (allow-none) the album data type</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>data</parameter>&#160;:</term>
+<listitem><simpara>(out) (allow-none) the album data</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara>Whether the album data is set.</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rclib-album-get-instance" role="function">
+<title>rclib_album_get_instance ()</title>
+<indexterm zone="rclib-album-get-instance"><primary>rclib_album_get_instance</primary></indexterm>
+<programlisting><link linkend="GObject"><returnvalue>GObject</returnvalue></link> *           rclib_album_get_instance            ();</programlisting>
+<para>
+Get the running <link linkend="RCLibAlbum"><type>RCLibAlbum</type></link> instance.
+</para><variablelist role="params">
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara>The running instance.</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rclib-album-init" role="function">
+<title>rclib_album_init ()</title>
+<indexterm zone="rclib-album-init"><primary>rclib_album_init</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rclib_album_init                    ();</programlisting>
+<para>
+Initialize the album process instance.
+</para></refsect2>
+<refsect2 id="rclib-album-save-file" role="function">
+<title>rclib_album_save_file ()</title>
+<indexterm zone="rclib-album-save-file"><primary>rclib_album_save_file</primary></indexterm>
+<programlisting><link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            rclib_album_save_file               (<parameter>const <link linkend="gchar"><type>gchar</type></link> *filename</parameter>);</programlisting>
+<para>
+Save the album image to a new image file.
+</para><variablelist role="params">
+<varlistentry><term><parameter>filename</parameter>&#160;:</term>
+<listitem><simpara>the filename for the new album image</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara>Whether the operation is successful.</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rclib-album-signal-connect" role="function">
+<title>rclib_album_signal_connect ()</title>
+<indexterm zone="rclib-album-signal-connect"><primary>rclib_album_signal_connect</primary></indexterm>
+<programlisting><link linkend="gulong"><returnvalue>gulong</returnvalue></link>              rclib_album_signal_connect          (<parameter>const <link linkend="gchar"><type>gchar</type></link> *name</parameter>,
+                                                         <parameter><link linkend="GCallback"><type>GCallback</type></link> callback</parameter>,
+                                                         <parameter><link linkend="gpointer"><type>gpointer</type></link> data</parameter>);</programlisting>
+<para>
+Connect the GCallback function to the given signal for the running
+instance of <link linkend="RCLibAlbum"><type>RCLibAlbum</type></link> object.
+</para><variablelist role="params">
+<varlistentry><term><parameter>name</parameter>&#160;:</term>
+<listitem><simpara>the name of the signal</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>callback</parameter>&#160;:</term>
+<listitem><simpara>the the <link linkend="GCallback"><type>GCallback</type></link> to connect</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>data</parameter>&#160;:</term>
+<listitem><simpara>the user data</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara>The handler ID.</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rclib-album-signal-disconnect" role="function">
+<title>rclib_album_signal_disconnect ()</title>
+<indexterm zone="rclib-album-signal-disconnect"><primary>rclib_album_signal_disconnect</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rclib_album_signal_disconnect       (<parameter><link linkend="gulong"><type>gulong</type></link> handler_id</parameter>);</programlisting>
+<para>
+Disconnects a handler from the running <link linkend="RCLibAlbum"><type>RCLibAlbum</type></link> instance so it
+will not be called during any future or currently ongoing emissions
+of the signal it has been connected to. The <link linkend="handler-id"><type>handler_id</type></link> becomes
+invalid and may be reused.
+</para><variablelist role="params">
+<varlistentry><term><parameter>handler_id</parameter>&#160;:</term>
+<listitem><simpara>handler id of the handler to be disconnected</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+
+</refsect1>
+
+</refentry>

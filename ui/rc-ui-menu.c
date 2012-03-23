@@ -176,11 +176,11 @@ static GtkActionEntry ui_menu_entries[] =
     { "RhythmCatPreferences", GTK_STOCK_PREFERENCES,
       N_("_Preferences"), "F8",
       N_("Configure the player"),
-      G_CALLBACK(NULL) },  
+      G_CALLBACK(rc_ui_settings_window_show) },  
     { "RhythmCatPlugin", GTK_STOCK_EXECUTE,
       N_("Plu_gins"), "F11",
       N_("Configure plugins"),
-      G_CALLBACK(NULL) },
+      G_CALLBACK(rc_ui_plugin_window_show) },
     { "RhythmCatQuit", GTK_STOCK_QUIT,
       N_("_Quit"), "<control>Q",
       N_("Quit this player"),
@@ -792,10 +792,6 @@ GtkUIManager *rc_ui_menu_init()
         "/ProgressPopupMenu/ProgressRefreshCancel"), FALSE);
         
     /* Seal the menus that are not available now */
-    gtk_action_set_sensitive(gtk_ui_manager_get_action(ui_manager,
-        "/RC2MenuBar/RhythmCatMenu/RhythmCatPreferences"), FALSE);
-    gtk_action_set_sensitive(gtk_ui_manager_get_action(ui_manager,
-        "/RC2MenuBar/RhythmCatMenu/RhythmCatPlugin"), FALSE);
     gtk_action_set_sensitive(gtk_ui_manager_get_action(ui_manager,
         "/RC2MenuBar/ViewMenu/ViewMiniMode"), FALSE);
     gtk_action_set_sensitive(gtk_ui_manager_get_action(ui_manager,

@@ -6,7 +6,7 @@
 <meta name="generator" content="DocBook XSL Stylesheets V1.76.1">
 <link rel="home" href="index.html" title="LibRhythmCat Reference Manual">
 <link rel="up" href="ch01.html" title="LibRhythmCat">
-<link rel="prev" href="RCLibPlayer.html" title="RCLibPlayer">
+<link rel="prev" href="LibRhythmCat-RCLibAlbum.html" title="RCLibAlbum">
 <link rel="next" href="LibRhythmCat-Cue-Parser.html" title="Cue Parser">
 <meta name="generator" content="GTK-Doc V1.18 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
@@ -14,7 +14,7 @@
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2">
 <tr valign="middle">
-<td><a accesskey="p" href="RCLibPlayer.html"><img src="left.png" width="24" height="24" border="0" alt="Prev"></a></td>
+<td><a accesskey="p" href="LibRhythmCat-RCLibAlbum.html"><img src="left.png" width="24" height="24" border="0" alt="Prev"></a></td>
 <td><a accesskey="u" href="ch01.html"><img src="up.png" width="24" height="24" border="0" alt="Up"></a></td>
 <td><a accesskey="h" href="index.html"><img src="home.png" width="24" height="24" border="0" alt="Home"></a></td>
 <th width="100%" align="center">LibRhythmCat Reference Manual</th>
@@ -48,26 +48,26 @@
 struct              <a class="link" href="RCLibLyric.html#RCLibLyric-struct" title="struct RCLibLyric">RCLibLyric</a>;
 struct              <a class="link" href="RCLibLyric.html#RCLibLyricClass" title="struct RCLibLyricClass">RCLibLyricClass</a>;
 struct              <a class="link" href="RCLibLyric.html#RCLibLyricData" title="struct RCLibLyricData">RCLibLyricData</a>;
-<span class="returnvalue">void</span>                <a class="link" href="RCLibLyric.html#rclib-lyric-init" title="rclib_lyric_init ()">rclib_lyric_init</a>                    ();
+<span class="returnvalue">void</span>                <a class="link" href="RCLibLyric.html#rclib-lyric-clean" title="rclib_lyric_clean ()">rclib_lyric_clean</a>                   (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> index</code></em>);
 <span class="returnvalue">void</span>                <a class="link" href="RCLibLyric.html#rclib-lyric-exit" title="rclib_lyric_exit ()">rclib_lyric_exit</a>                    ();
+const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *       <a class="link" href="RCLibLyric.html#rclib-lyric-get-fallback-encoding" title="rclib_lyric_get_fallback_encoding ()">rclib_lyric_get_fallback_encoding</a>   ();
 <a href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GObject"><span class="returnvalue">GObject</span></a> *           <a class="link" href="RCLibLyric.html#rclib-lyric-get-instance" title="rclib_lyric_get_instance ()">rclib_lyric_get_instance</a>            ();
+const <a class="link" href="RCLibLyric.html#RCLibLyricData" title="struct RCLibLyricData"><span class="returnvalue">RCLibLyricData</span></a> * <a class="link" href="RCLibLyric.html#rclib-lyric-get-line" title="rclib_lyric_get_line ()">rclib_lyric_get_line</a>             (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> index</code></em>,
+                                                         <em class="parameter"><code><span class="type">gint64</span> time</code></em>);
+const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *       <a class="link" href="RCLibLyric.html#rclib-lyric-get-search-dir" title="rclib_lyric_get_search_dir ()">rclib_lyric_get_search_dir</a>          ();
+<span class="returnvalue">void</span>                <a class="link" href="RCLibLyric.html#rclib-lyric-init" title="rclib_lyric_init ()">rclib_lyric_init</a>                    ();
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RCLibLyric.html#rclib-lyric-is-available" title="rclib_lyric_is_available ()">rclib_lyric_is_available</a>            (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> index</code></em>);
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RCLibLyric.html#rclib-lyric-load-file" title="rclib_lyric_load_file ()">rclib_lyric_load_file</a>               (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *filename</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> index</code></em>);
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *             <a class="link" href="RCLibLyric.html#rclib-lyric-search-lyric" title="rclib_lyric_search_lyric ()">rclib_lyric_search_lyric</a>            (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *uri</code></em>,
+                                                         <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *title</code></em>,
+                                                         <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *artist</code></em>);
+<span class="returnvalue">void</span>                <a class="link" href="RCLibLyric.html#rclib-lyric-set-fallback-encoding" title="rclib_lyric_set_fallback_encoding ()">rclib_lyric_set_fallback_encoding</a>   (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *encoding</code></em>);
+<span class="returnvalue">void</span>                <a class="link" href="RCLibLyric.html#rclib-lyric-set-search-dir" title="rclib_lyric_set_search_dir ()">rclib_lyric_set_search_dir</a>          (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *dir</code></em>);
 <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gulong"><span class="returnvalue">gulong</span></a>              <a class="link" href="RCLibLyric.html#rclib-lyric-signal-connect" title="rclib_lyric_signal_connect ()">rclib_lyric_signal_connect</a>          (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *name</code></em>,
                                                          <em class="parameter"><code><a href="/usr/share/gtk-doc/html/gobject/gobject-Closures.html#GCallback"><span class="type">GCallback</span></a> callback</code></em>,
                                                          <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> data</code></em>);
 <span class="returnvalue">void</span>                <a class="link" href="RCLibLyric.html#rclib-lyric-signal-disconnect" title="rclib_lyric_signal_disconnect ()">rclib_lyric_signal_disconnect</a>       (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gulong"><span class="type">gulong</span></a> handler_id</code></em>);
-<span class="returnvalue">void</span>                <a class="link" href="RCLibLyric.html#rclib-lyric-set-fallback-encoding" title="rclib_lyric_set_fallback_encoding ()">rclib_lyric_set_fallback_encoding</a>   (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *encoding</code></em>);
-const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *       <a class="link" href="RCLibLyric.html#rclib-lyric-get-fallback-encoding" title="rclib_lyric_get_fallback_encoding ()">rclib_lyric_get_fallback_encoding</a>   ();
-<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RCLibLyric.html#rclib-lyric-load-file" title="rclib_lyric_load_file ()">rclib_lyric_load_file</a>               (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *filename</code></em>,
-                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> index</code></em>);
-<span class="returnvalue">void</span>                <a class="link" href="RCLibLyric.html#rclib-lyric-clean" title="rclib_lyric_clean ()">rclib_lyric_clean</a>                   (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> index</code></em>);
-const <a class="link" href="RCLibLyric.html#RCLibLyricData" title="struct RCLibLyricData"><span class="returnvalue">RCLibLyricData</span></a> * <a class="link" href="RCLibLyric.html#rclib-lyric-get-line" title="rclib_lyric_get_line ()">rclib_lyric_get_line</a>             (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> index</code></em>,
-                                                         <em class="parameter"><code><span class="type">gint64</span> time</code></em>);
-<span class="returnvalue">void</span>                <a class="link" href="RCLibLyric.html#rclib-lyric-set-search-dir" title="rclib_lyric_set_search_dir ()">rclib_lyric_set_search_dir</a>          (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *dir</code></em>);
-const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *       <a class="link" href="RCLibLyric.html#rclib-lyric-get-search-dir" title="rclib_lyric_get_search_dir ()">rclib_lyric_get_search_dir</a>          ();
-<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *             <a class="link" href="RCLibLyric.html#rclib-lyric-search-lyric" title="rclib_lyric_search_lyric ()">rclib_lyric_search_lyric</a>            (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *uri</code></em>,
-                                                         <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *title</code></em>,
-                                                         <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *artist</code></em>);
-<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RCLibLyric.html#rclib-lyric-is-available" title="rclib_lyric_is_available ()">rclib_lyric_is_available</a>            (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> index</code></em>);
 </pre>
 </div>
 <div class="refsect1">
@@ -151,11 +151,18 @@ The structure for lyric data.
 </div>
 <hr>
 <div class="refsect2">
-<a name="rclib-lyric-init"></a><h3>rclib_lyric_init ()</h3>
-<pre class="programlisting"><span class="returnvalue">void</span>                rclib_lyric_init                    ();</pre>
+<a name="rclib-lyric-clean"></a><h3>rclib_lyric_clean ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rclib_lyric_clean                   (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> index</code></em>);</pre>
 <p>
-Initialize the lyric process instance.
+Clean the lyric data in the running lyric prcessor instance.
 </p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><em class="parameter"><code>index</code></em> :</span></p></td>
+<td>the lyric track index</td>
+</tr></tbody>
+</table></div>
 </div>
 <hr>
 <div class="refsect2">
@@ -164,6 +171,21 @@ Initialize the lyric process instance.
 <p>
 Unload the lyric process instance.
 </p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-lyric-get-fallback-encoding"></a><h3>rclib_lyric_get_fallback_encoding ()</h3>
+<pre class="programlisting">const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *       rclib_lyric_get_fallback_encoding   ();</pre>
+<p>
+Get the fallback encoding for the lyric parser, NULL if it is no set.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>The fallback encoding, do not free or modify it.</td>
+</tr></tbody>
+</table></div>
 </div>
 <hr>
 <div class="refsect2">
@@ -177,6 +199,163 @@ Get the running <a class="link" href="RCLibLyric.html" title="RCLibLyric"><span 
 <tbody><tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
 <td>The running instance.</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-lyric-get-line"></a><h3>rclib_lyric_get_line ()</h3>
+<pre class="programlisting">const <a class="link" href="RCLibLyric.html#RCLibLyricData" title="struct RCLibLyricData"><span class="returnvalue">RCLibLyricData</span></a> * rclib_lyric_get_line             (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> index</code></em>,
+                                                         <em class="parameter"><code><span class="type">gint64</span> time</code></em>);</pre>
+<p>
+Find the lyric line which matches to the given time (in nanoseconds).
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>time</code></em> :</span></p></td>
+<td>the time to search</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>index</code></em> :</span></p></td>
+<td>the lyric track index</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>The matched line data, NULL if not found.</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-lyric-get-search-dir"></a><h3>rclib_lyric_get_search_dir ()</h3>
+<pre class="programlisting">const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *       rclib_lyric_get_search_dir          ();</pre>
+<p>
+Get the directory for searching the lyric files.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>The directory path.</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-lyric-init"></a><h3>rclib_lyric_init ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rclib_lyric_init                    ();</pre>
+<p>
+Initialize the lyric process instance.
+</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-lyric-is-available"></a><h3>rclib_lyric_is_available ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rclib_lyric_is_available            (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> index</code></em>);</pre>
+<p>
+Check whether the lyric in the given track index is available.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>index</code></em> :</span></p></td>
+<td>the lyric track index</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>Whether the lyric is available.</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-lyric-load-file"></a><h3>rclib_lyric_load_file ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rclib_lyric_load_file               (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *filename</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> index</code></em>);</pre>
+<p>
+Load lyric file and then parse it.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>filename</code></em> :</span></p></td>
+<td>the lyric file to load</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>index</code></em> :</span></p></td>
+<td>the lyric track index (0 or 1)</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>Whether the file is loaded and parsed.</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-lyric-search-lyric"></a><h3>rclib_lyric_search_lyric ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *             rclib_lyric_search_lyric            (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *uri</code></em>,
+                                                         <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *title</code></em>,
+                                                         <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *artist</code></em>);</pre>
+<p>
+Search the lyric file by given information.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>uri</code></em> :</span></p></td>
+<td>the URI</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>title</code></em> :</span></p></td>
+<td>the title</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>artist</code></em> :</span></p></td>
+<td>the artist</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>The lyric file path, NULL if not found.</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-lyric-set-fallback-encoding"></a><h3>rclib_lyric_set_fallback_encoding ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rclib_lyric_set_fallback_encoding   (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *encoding</code></em>);</pre>
+<p>
+Set the fallback encoding for the lyric parser.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><em class="parameter"><code>encoding</code></em> :</span></p></td>
+<td>the fallback encoding, set to NULL if not used</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-lyric-set-search-dir"></a><h3>rclib_lyric_set_search_dir ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rclib_lyric_set_search_dir          (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *dir</code></em>);</pre>
+<p>
+Set the directory for searching the lyric files.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><em class="parameter"><code>dir</code></em> :</span></p></td>
+<td>the directory to set</td>
 </tr></tbody>
 </table></div>
 </div>
@@ -228,185 +407,6 @@ invalid and may be reused.
 <td><p><span class="term"><em class="parameter"><code>handler_id</code></em> :</span></p></td>
 <td>handler id of the handler to be disconnected</td>
 </tr></tbody>
-</table></div>
-</div>
-<hr>
-<div class="refsect2">
-<a name="rclib-lyric-set-fallback-encoding"></a><h3>rclib_lyric_set_fallback_encoding ()</h3>
-<pre class="programlisting"><span class="returnvalue">void</span>                rclib_lyric_set_fallback_encoding   (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *encoding</code></em>);</pre>
-<p>
-Set the fallback encoding for the lyric parser.
-</p>
-<div class="variablelist"><table border="0">
-<col align="left" valign="top">
-<tbody><tr>
-<td><p><span class="term"><em class="parameter"><code>encoding</code></em> :</span></p></td>
-<td>the fallback encoding, set to NULL if not used</td>
-</tr></tbody>
-</table></div>
-</div>
-<hr>
-<div class="refsect2">
-<a name="rclib-lyric-get-fallback-encoding"></a><h3>rclib_lyric_get_fallback_encoding ()</h3>
-<pre class="programlisting">const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *       rclib_lyric_get_fallback_encoding   ();</pre>
-<p>
-Get the fallback encoding for the lyric parser, NULL if it is no set.
-</p>
-<div class="variablelist"><table border="0">
-<col align="left" valign="top">
-<tbody><tr>
-<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>The fallback encoding, do not free or modify it.</td>
-</tr></tbody>
-</table></div>
-</div>
-<hr>
-<div class="refsect2">
-<a name="rclib-lyric-load-file"></a><h3>rclib_lyric_load_file ()</h3>
-<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rclib_lyric_load_file               (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *filename</code></em>,
-                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> index</code></em>);</pre>
-<p>
-Load lyric file and then parse it.
-</p>
-<div class="variablelist"><table border="0">
-<col align="left" valign="top">
-<tbody>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>filename</code></em> :</span></p></td>
-<td>the lyric file to load</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>index</code></em> :</span></p></td>
-<td>the lyric track index (0 or 1)</td>
-</tr>
-<tr>
-<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>Whether the file is loaded and parsed.</td>
-</tr>
-</tbody>
-</table></div>
-</div>
-<hr>
-<div class="refsect2">
-<a name="rclib-lyric-clean"></a><h3>rclib_lyric_clean ()</h3>
-<pre class="programlisting"><span class="returnvalue">void</span>                rclib_lyric_clean                   (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> index</code></em>);</pre>
-<p>
-Clean the lyric data in the running lyric prcessor instance.
-</p>
-<div class="variablelist"><table border="0">
-<col align="left" valign="top">
-<tbody><tr>
-<td><p><span class="term"><em class="parameter"><code>index</code></em> :</span></p></td>
-<td>the lyric track index</td>
-</tr></tbody>
-</table></div>
-</div>
-<hr>
-<div class="refsect2">
-<a name="rclib-lyric-get-line"></a><h3>rclib_lyric_get_line ()</h3>
-<pre class="programlisting">const <a class="link" href="RCLibLyric.html#RCLibLyricData" title="struct RCLibLyricData"><span class="returnvalue">RCLibLyricData</span></a> * rclib_lyric_get_line             (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> index</code></em>,
-                                                         <em class="parameter"><code><span class="type">gint64</span> time</code></em>);</pre>
-<p>
-Find the lyric line which matches to the given time (in nanoseconds).
-</p>
-<div class="variablelist"><table border="0">
-<col align="left" valign="top">
-<tbody>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>time</code></em> :</span></p></td>
-<td>the time to search</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>index</code></em> :</span></p></td>
-<td>the lyric track index</td>
-</tr>
-<tr>
-<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>The matched line data, NULL if not found.</td>
-</tr>
-</tbody>
-</table></div>
-</div>
-<hr>
-<div class="refsect2">
-<a name="rclib-lyric-set-search-dir"></a><h3>rclib_lyric_set_search_dir ()</h3>
-<pre class="programlisting"><span class="returnvalue">void</span>                rclib_lyric_set_search_dir          (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *dir</code></em>);</pre>
-<p>
-Set the directory for searching the lyric files.
-</p>
-<div class="variablelist"><table border="0">
-<col align="left" valign="top">
-<tbody><tr>
-<td><p><span class="term"><em class="parameter"><code>dir</code></em> :</span></p></td>
-<td>the directory to set</td>
-</tr></tbody>
-</table></div>
-</div>
-<hr>
-<div class="refsect2">
-<a name="rclib-lyric-get-search-dir"></a><h3>rclib_lyric_get_search_dir ()</h3>
-<pre class="programlisting">const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *       rclib_lyric_get_search_dir          ();</pre>
-<p>
-Get the directory for searching the lyric files.
-</p>
-<div class="variablelist"><table border="0">
-<col align="left" valign="top">
-<tbody><tr>
-<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>The directory path.</td>
-</tr></tbody>
-</table></div>
-</div>
-<hr>
-<div class="refsect2">
-<a name="rclib-lyric-search-lyric"></a><h3>rclib_lyric_search_lyric ()</h3>
-<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *             rclib_lyric_search_lyric            (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *uri</code></em>,
-                                                         <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *title</code></em>,
-                                                         <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *artist</code></em>);</pre>
-<p>
-Search the lyric file by given information.
-</p>
-<div class="variablelist"><table border="0">
-<col align="left" valign="top">
-<tbody>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>uri</code></em> :</span></p></td>
-<td>the URI</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>title</code></em> :</span></p></td>
-<td>the title</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>artist</code></em> :</span></p></td>
-<td>the artist</td>
-</tr>
-<tr>
-<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>The lyric file path, NULL if not found.</td>
-</tr>
-</tbody>
-</table></div>
-</div>
-<hr>
-<div class="refsect2">
-<a name="rclib-lyric-is-available"></a><h3>rclib_lyric_is_available ()</h3>
-<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rclib_lyric_is_available            (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> index</code></em>);</pre>
-<p>
-Check whether the lyric in the given track index is available.
-</p>
-<div class="variablelist"><table border="0">
-<col align="left" valign="top">
-<tbody>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>index</code></em> :</span></p></td>
-<td>the lyric track index</td>
-</tr>
-<tr>
-<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>Whether the lyric is available.</td>
-</tr>
-</tbody>
 </table></div>
 </div>
 </div>

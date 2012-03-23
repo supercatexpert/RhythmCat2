@@ -8,7 +8,7 @@
   <bookinfo>
     <title>LibRhythmCat Reference Manual</title>
     <releaseinfo>
-      for LibRhythmCat 1.9.0.
+      for LibRhythmCat 1.9.1.
       The latest version of this documentation can be found on-line at
       <ulink role="online-location" url="https://github.com/supercatexpert/RhythmCat2/">https://github.com/supercatexpert/RhythmCat2/</ulink>.
     </releaseinfo>
@@ -19,9 +19,12 @@
     <xi:include href="xml/rclib-core.xml"/>
     <xi:include href="xml/rclib-db.xml"/>
     <xi:include href="xml/rclib-player.xml"/>
+    <xi:include href="xml/rclib-dbus.xml"/>
+    <xi:include href="xml/rclib-album.xml"/>
     <xi:include href="xml/rclib-lyric.xml"/>
     <xi:include href="xml/rclib-cue.xml"/>
     <xi:include href="xml/rclib-tag.xml"/>
+    <xi:include href="xml/rclib-plugin.xml"/>
     <xi:include href="xml/rclib-util.xml"/>
     <xi:include href="xml/rclib-settings.xml"/>
     <xi:include href="xml/rclib.xml"/>

@@ -1,4 +1,16 @@
 <MACRO>
+<NAME>G_LOG_DOMAIN</NAME>
+#define G_LOG_DOMAIN "LibRhythmCat2"
+</MACRO>
+<MACRO>
+<NAME>GETTEXT_PACKAGE</NAME>
+#define GETTEXT_PACKAGE "LibRhythmCat2"
+</MACRO>
+<MACRO>
+<NAME>PACKAGE</NAME>
+#define PACKAGE "LibRhythmCat2"
+</MACRO>
+<MACRO>
 <NAME>RCLIB_CORE_TYPE</NAME>
 #define RCLIB_CORE_TYPE (rclib_core_get_type())
 </MACRO>
@@ -25,6 +37,15 @@
 #define RCLIB_CORE_GET_CLASS(o) (G_TYPE_INSTANCE_GET_CLASS((o), \
     RCLIB_CORE_TYPE, RCLibCoreClass))
 </MACRO>
+<ENUM>
+<NAME>RCLibCoreSourceType</NAME>
+typedef enum {
+    RCLIB_CORE_SOURCE_NONE = 0,
+    RCLIB_CORE_SOURCE_NORMAL = 1,
+    RCLIB_CORE_SOURCE_CUE = 2,
+    RCLIB_CORE_SOURCE_EMBEDED_CUE = 3
+}RCLibCoreSourceType;
+</ENUM>
 <ENUM>
 <NAME>RCLibCoreErrorCode</NAME>
 typedef enum {
@@ -83,11 +104,9 @@ struct _RCLibCoreClass {
     void (*state_changed)(RCLibCore *core, GstState state);
     void (*eos)(RCLibCore *core);
     void (*tag_found)(RCLibCore *core, const RCLibCoreMetadata *metadata,
-        gpointer reference);
-    void (*new_duration)(RCLibCore *core, gint64 duration,
-        gpointer reference);
-    void (*uri_changed)(RCLibCore *core, const gchar *uri,
-        gpointer reference);
+        const gchar *uri);
+    void (*new_duration)(RCLibCore *core, gint64 duration);
+    void (*uri_changed)(RCLibCore *core, const gchar *uri);
     void (*volume_changed)(RCLibCore *core, gdouble volume);
     void (*eq_changed)(RCLibCore *core, RCLibCoreEQType type,
         gdouble *values);
@@ -95,7 +114,7 @@ struct _RCLibCoreClass {
     void (*echo_changed)(RCLibCore *core);
     void (*spectrum_updated)(RCLibCore *core, guint rate, guint bands,
         const GValue *magnitudes);
-    void (*error)(RCLibCore *core, gpointer reference);
+    void (*error)(RCLibCore *core);
 };
 </STRUCT>
 <FUNCTION>
@@ -106,7 +125,7 @@ struct _RCLibCoreClass {
 <FUNCTION>
 <NAME>rclib_core_init</NAME>
 <RETURNS>gboolean  </RETURNS>
-gint *argc, gchar **argv[], GError **error 
+GError **error 
 </FUNCTION>
 <FUNCTION>
 <NAME>rclib_core_exit</NAME>
@@ -131,12 +150,17 @@ gulong handler_id
 <FUNCTION>
 <NAME>rclib_core_set_uri</NAME>
 <RETURNS>void  </RETURNS>
-const gchar *uri, gpointer reference 
+const gchar *uri, GSequenceIter *db_reference, gpointer external_reference 
 </FUNCTION>
 <FUNCTION>
-<NAME>rclib_core_set_reference</NAME>
+<NAME>rclib_core_update_db_reference</NAME>
 <RETURNS>void  </RETURNS>
-gpointer reference 
+GSequenceIter *new_ref 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_core_update_external_reference</NAME>
+<RETURNS>void  </RETURNS>
+gpointer new_ref 
 </FUNCTION>
 <FUNCTION>
 <NAME>rclib_core_get_uri</NAME>
@@ -144,8 +168,23 @@ gpointer reference
  
 </FUNCTION>
 <FUNCTION>
-<NAME>rclib_core_get_reference</NAME>
+<NAME>rclib_core_get_db_reference</NAME>
+<RETURNS>GSequenceIter  *</RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_core_get_external_reference</NAME>
 <RETURNS>gpointer  </RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_core_get_source_type</NAME>
+<RETURNS>RCLibCoreSourceType  </RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_core_get_metadata</NAME>
+<RETURNS>const RCLibCoreMetadata  *</RETURNS>
  
 </FUNCTION>
 <FUNCTION>
@@ -221,7 +260,7 @@ gfloat *balance
 <FUNCTION>
 <NAME>rclib_core_set_echo</NAME>
 <RETURNS>gboolean  </RETURNS>
-guint64 delay, guint64 max_delay, gfloat feedback, gfloat intensity 
+guint64 delay, gfloat feedback, gfloat intensity 
 </FUNCTION>
 <FUNCTION>
 <NAME>rclib_core_get_echo</NAME>
@@ -242,6 +281,98 @@ GstElement *element
 <NAME>rclib_core_effect_plugin_get_list</NAME>
 <RETURNS>GList  *</RETURNS>
  
+</FUNCTION>
+<MACRO>
+<NAME>RCLIB_ALBUM_TYPE</NAME>
+#define RCLIB_ALBUM_TYPE (rclib_album_get_type())
+</MACRO>
+<MACRO>
+<NAME>RCLIB_ALBUM</NAME>
+#define RCLIB_ALBUM(obj) (G_TYPE_CHECK_INSTANCE_CAST((obj), \
+    RCLIB_ALBUM_TYPE, RCLibAlbum))
+</MACRO>
+<MACRO>
+<NAME>RCLIB_ALBUM_CLASS</NAME>
+#define RCLIB_ALBUM_CLASS(k) (G_TYPE_CHECK_CLASS_CAST((k), \
+    RCLIB_ALBUM_TYPE, RCLibAlbumClass))
+</MACRO>
+<MACRO>
+<NAME>RCLIB_IS_ALBUM</NAME>
+#define RCLIB_IS_ALBUM(o) (G_TYPE_CHECK_INSTANCE_TYPE((o), \
+    RCLIB_ALBUM_TYPE))
+</MACRO>
+<MACRO>
+<NAME>RCLIB_IS_ALBUM_CLASS</NAME>
+#define RCLIB_IS_ALBUM_CLASS(k) (G_TYPE_CHECK_CLASS_TYPE((k), \
+    RCLIB_ALBUM_TYPE))
+</MACRO>
+<MACRO>
+<NAME>RCLIB_ALBUM_GET_CLASS</NAME>
+#define RCLIB_ALBUM_GET_CLASS(o) (G_TYPE_INSTANCE_GET_CLASS((o), \
+    RCLIB_ALBUM_TYPE, RCLibAlbumClass))
+</MACRO>
+<ENUM>
+<NAME>RCLibAlbumType</NAME>
+typedef enum {
+    RCLIB_ALBUM_TYPE_FILENAME,
+    RCLIB_ALBUM_TYPE_BUFFER
+}RCLibAlbumType;
+</ENUM>
+<STRUCT>
+<NAME>RCLibAlbum</NAME>
+struct _RCLibAlbum {
+    /*< private >*/
+    GObject parent;
+};
+</STRUCT>
+<STRUCT>
+<NAME>RCLibAlbumClass</NAME>
+struct _RCLibAlbumClass {
+    /*< private >*/
+    GObjectClass parent_class;
+    void (*album_found)(RCLibAlbum *album, guint type, gpointer album_data);
+    void (*album_none)(RCLibAlbum *album);
+};
+</STRUCT>
+<FUNCTION>
+<NAME>rclib_album_get_type</NAME>
+<RETURNS>GType  </RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_album_init</NAME>
+<RETURNS>void  </RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_album_exit</NAME>
+<RETURNS>void  </RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_album_get_instance</NAME>
+<RETURNS>GObject  *</RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_album_signal_connect</NAME>
+<RETURNS>gulong  </RETURNS>
+const gchar *name, GCallback callback, gpointer data 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_album_signal_disconnect</NAME>
+<RETURNS>void  </RETURNS>
+gulong handler_id 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_album_get_album_data</NAME>
+<RETURNS>gboolean  </RETURNS>
+RCLibAlbumType *type, gpointer *data 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_album_save_file</NAME>
+<RETURNS>gboolean  </RETURNS>
+const gchar *filename 
 </FUNCTION>
 <MACRO>
 <NAME>RCLIB_LYRIC_TYPE</NAME>
@@ -420,6 +551,243 @@ const gchar *encoding
 <FUNCTION>
 <NAME>rclib_tag_get_fallback_encoding</NAME>
 <RETURNS>const gchar  *</RETURNS>
+ 
+</FUNCTION>
+<MACRO>
+<NAME>RCLIB_PLUGIN_MAGIC</NAME>
+#define RCLIB_PLUGIN_MAGIC 0x20120103
+</MACRO>
+<MACRO>
+<NAME>RCLIB_PLUGIN_MAJOR_VERSION</NAME>
+#define RCLIB_PLUGIN_MAJOR_VERSION 2
+</MACRO>
+<MACRO>
+<NAME>RCLIB_PLUGIN_MINOR_VERSION</NAME>
+#define RCLIB_PLUGIN_MINOR_VERSION 0
+</MACRO>
+<MACRO>
+<NAME>RCLIB_PLUGIN_TYPE</NAME>
+#define RCLIB_PLUGIN_TYPE (rclib_plugin_get_type())
+</MACRO>
+<MACRO>
+<NAME>RCLIB_PLUGIN</NAME>
+#define RCLIB_PLUGIN(obj) (G_TYPE_CHECK_INSTANCE_CAST((obj), \
+    RCLIB_PLUGIN_TYPE, RCLibPlugin))
+</MACRO>
+<MACRO>
+<NAME>RCLIB_PLUGIN_CLASS</NAME>
+#define RCLIB_PLUGIN_CLASS(k) (G_TYPE_CHECK_CLASS_CAST((k), \
+    RCLIB_PLUGIN_TYPE, RCLibPluginClass))
+</MACRO>
+<MACRO>
+<NAME>RCLIB_IS_PLUGIN</NAME>
+#define RCLIB_IS_PLUGIN(o) (G_TYPE_CHECK_INSTANCE_TYPE((o), \
+    RCLIB_PLUGIN_TYPE))
+</MACRO>
+<MACRO>
+<NAME>RCLIB_IS_PLUGIN_CLASS</NAME>
+#define RCLIB_IS_PLUGIN_CLASS(k) (G_TYPE_CHECK_CLASS_TYPE((k), \
+    RCLIB_PLUGIN_TYPE))
+</MACRO>
+<MACRO>
+<NAME>RCLIB_PLUGIN_GET_CLASS</NAME>
+#define RCLIB_PLUGIN_GET_CLASS(o) (G_TYPE_INSTANCE_GET_CLASS((o), \
+    RCLIB_PLUGIN_TYPE, RCLibPluginClass))
+</MACRO>
+<MACRO>
+<NAME>RCPLUGIN_INIT_PLUGIN</NAME>
+#define RCPLUGIN_INIT_PLUGIN(pluginname, initfunc, plugininfo) \
+    G_MODULE_EXPORT gboolean rcplugin_init(RCLibPluginData *plugin) \
+    { \
+        plugin->info = &(plugininfo); \
+        return initfunc((plugin)); \
+    }
+</MACRO>
+<ENUM>
+<NAME>RCLibPluginType</NAME>
+typedef enum {
+    RCLIB_PLUGIN_TYPE_UNKNOWN = 0,
+    RCLIB_PLUGIN_TYPE_MODULE = 1,
+    RCLIB_PLUGIN_TYPE_LOADER = 2
+}RCLibPluginType;
+</ENUM>
+<STRUCT>
+<NAME>RCLibPluginInfo</NAME>
+struct _RCLibPluginInfo {
+    guint32 magic;
+    guint32 major_version;
+    guint32 minor_version;
+    RCLibPluginType type;
+    gchar *id;
+    gchar *name;
+    gchar *version;
+    gchar *description;
+    gchar *author;
+    gchar *homepage;
+    gboolean (*load)(RCLibPluginData *plugin);
+    gboolean (*unload)(RCLibPluginData *plugin);
+    void (*destroy)(RCLibPluginData *plugin);
+    gboolean (*configure)(RCLibPluginData *plugin);
+    gchar **depends;
+    gpointer extra_info;
+};
+</STRUCT>
+<STRUCT>
+<NAME>RCLibPluginLoaderInfo</NAME>
+struct _RCLibPluginLoaderInfo {
+    const gchar * const *extensions;
+    gboolean (*probe)(RCLibPluginData *plugin);
+    gboolean (*load)(RCLibPluginData *plugin);
+    gboolean (*unload)(RCLibPluginData *plugin);
+    void (*destroy)(RCLibPluginData *plugin);
+};
+</STRUCT>
+<STRUCT>
+<NAME>RCLibPluginData</NAME>
+struct _RCLibPluginData {
+    /*< private >*/
+    gint ref_count;
+    
+    /*< public >*/
+    gboolean native;
+    gboolean loaded;
+    gpointer handle;
+    gchar *path;
+    RCLibPluginInfo *info;
+    gchar *error;
+    gboolean unloadable;
+    GSList *dependent_list;
+    gpointer extra;
+    gpointer ipc_data;
+
+    /*< private >*/
+    void (*_rclib_plugin_reserved1)(void);
+    void (*_rclib_plugin_reserved2)(void);
+    void (*_rclib_plugin_reserved3)(void);
+    void (*_rclib_plugin_reserved4)(void);
+};
+</STRUCT>
+<STRUCT>
+<NAME>RCLibPlugin</NAME>
+struct _RCLibPlugin {
+    /*< private >*/
+    GObject parent;
+};
+</STRUCT>
+<STRUCT>
+<NAME>RCLibPluginClass</NAME>
+struct _RCLibPluginClass {
+    /*< private >*/
+    GObjectClass parent_class;
+    void (*registered)(RCLibPlugin *plugin, const RCLibPluginData *data);
+    void (*loaded)(RCLibPlugin *plugin, const RCLibPluginData *data);
+    void (*unloaded)(RCLibPlugin *plugin, const RCLibPluginData *data);
+    void (*unregistered)(RCLibPlugin *plugin, const gchar *id);
+};
+</STRUCT>
+<FUNCTION>
+<NAME>rclib_plugin_get_type</NAME>
+<RETURNS>GType  </RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_plugin_init</NAME>
+<RETURNS>gboolean  </RETURNS>
+const gchar *file 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_plugin_exit</NAME>
+<RETURNS>void  </RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_plugin_get_instance</NAME>
+<RETURNS>GObject  *</RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_plugin_signal_connect</NAME>
+<RETURNS>gulong  </RETURNS>
+const gchar *name, GCallback callback, gpointer data 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_plugin_signal_disconnect</NAME>
+<RETURNS>void  </RETURNS>
+gulong handler_id 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_plugin_probe</NAME>
+<RETURNS>RCLibPluginData  *</RETURNS>
+const gchar *filename 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_plugin_register</NAME>
+<RETURNS>gboolean  </RETURNS>
+RCLibPluginData *plugin 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_plugin_data_ref</NAME>
+<RETURNS>RCLibPluginData  *</RETURNS>
+RCLibPluginData *plugin 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_plugin_data_unref</NAME>
+<RETURNS>void  </RETURNS>
+RCLibPluginData *plugin 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_plugin_load_from_dir</NAME>
+<RETURNS>guint  </RETURNS>
+const gchar *dirname 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_plugin_load</NAME>
+<RETURNS>gboolean  </RETURNS>
+RCLibPluginData *plugin 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_plugin_unload</NAME>
+<RETURNS>gboolean  </RETURNS>
+RCLibPluginData *plugin 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_plugin_reload</NAME>
+<RETURNS>gboolean  </RETURNS>
+RCLibPluginData *plugin 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_plugin_is_loaded</NAME>
+<RETURNS>gboolean  </RETURNS>
+RCLibPluginData *plugin 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_plugin_destroy</NAME>
+<RETURNS>void  </RETURNS>
+RCLibPluginData *plugin 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_plugin_foreach</NAME>
+<RETURNS>void  </RETURNS>
+GHFunc func, gpointer data 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_plugin_lookup</NAME>
+<RETURNS>RCLibPluginData  *</RETURNS>
+const gchar *id 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_plugin_destroy_all</NAME>
+<RETURNS>void  </RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_plugin_load_from_configure</NAME>
+<RETURNS>void  </RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_plugin_get_keyfile</NAME>
+<RETURNS>GKeyFile  *</RETURNS>
  
 </FUNCTION>
 <MACRO>
@@ -761,6 +1129,80 @@ const gchar *encoding
  
 </FUNCTION>
 <MACRO>
+<NAME>RCLIB_DBUS_TYPE</NAME>
+#define RCLIB_DBUS_TYPE (rclib_dbus_get_type())
+</MACRO>
+<MACRO>
+<NAME>RCLIB_DBUS</NAME>
+#define RCLIB_DBUS(obj) (G_TYPE_CHECK_INSTANCE_CAST((obj), RCLIB_DBUS_TYPE, \
+    RCLibDBus))
+</MACRO>
+<MACRO>
+<NAME>RCLIB_DBUS_CLASS</NAME>
+#define RCLIB_DBUS_CLASS(k) (G_TYPE_CHECK_CLASS_CAST((k), RCLIB_DBUS_TYPE, \
+    RCLibDBusClass))
+</MACRO>
+<MACRO>
+<NAME>RCLIB_IS_DBUS</NAME>
+#define RCLIB_IS_DBUS(o) (G_TYPE_CHECK_INSTANCE_TYPE((o), RCLIB_DBUS_TYPE))
+</MACRO>
+<MACRO>
+<NAME>RCLIB_IS_DBUS_CLASS</NAME>
+#define RCLIB_IS_DBUS_CLASS(k) (G_TYPE_CHECK_CLASS_TYPE((k), RCLIB_DBUS_TYPE))
+</MACRO>
+<MACRO>
+<NAME>RCLIB_DBUS_GET_CLASS</NAME>
+#define RCLIB_DBUS_GET_CLASS(o) (G_TYPE_INSTANCE_GET_CLASS((o), \
+    RCLIB_DBUS_TYPE, RCLibDBusClass))
+</MACRO>
+<STRUCT>
+<NAME>RCLibDBus</NAME>
+struct _RCLibDBus {
+    /*< private >*/
+    GObject parent;
+};
+</STRUCT>
+<STRUCT>
+<NAME>RCLibDBusClass</NAME>
+struct _RCLibDBusClass {
+    /*< private >*/
+    GObjectClass parent_class;
+    void (*quit)(RCLibDBus *dbus);
+    void (*raise)(RCLibDBus *dbus);
+    void (*seeked)(RCLibDBus *bus, gint64 offset);
+};
+</STRUCT>
+<FUNCTION>
+<NAME>rclib_dbus_get_type</NAME>
+<RETURNS>GType  </RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_dbus_init</NAME>
+<RETURNS>gboolean  </RETURNS>
+const gchar *app_name, const gchar *first_property_name, ... 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_dbus_exit</NAME>
+<RETURNS>void  </RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_dbus_get_instance</NAME>
+<RETURNS>GObject  *</RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_dbus_signal_connect</NAME>
+<RETURNS>gulong  </RETURNS>
+const gchar *name, GCallback callback, gpointer data 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_dbus_signal_disconnect</NAME>
+<RETURNS>void  </RETURNS>
+gulong handler_id 
+</FUNCTION>
+<MACRO>
 <NAME>RCLIB_DB_TYPE</NAME>
 #define RCLIB_DB_TYPE (rclib_db_get_type())
 </MACRO>
@@ -804,6 +1246,10 @@ typedef enum {
 <STRUCT>
 <NAME>RCLibDbCatalogData</NAME>
 struct _RCLibDbCatalogData {
+    /*< private >*/
+    gint ref_count;
+    
+    /*< public >*/
     GSequence *playlist;
     gchar *name;
     RCLibDbCatalogType type;
@@ -813,6 +1259,10 @@ struct _RCLibDbCatalogData {
 <STRUCT>
 <NAME>RCLibDbPlaylistData</NAME>
 struct _RCLibDbPlaylistData {
+    /*< private >*/
+    gint ref_count;
+
+    /*< public >*/
     GSequenceIter *catalog;
     RCLibDbPlaylistType type;
     gchar *uri;
@@ -885,6 +1335,46 @@ const gchar *name, GCallback callback, gpointer data
 gulong handler_id 
 </FUNCTION>
 <FUNCTION>
+<NAME>rclib_db_catalog_data_new</NAME>
+<RETURNS>RCLibDbCatalogData  *</RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_db_catalog_data_ref</NAME>
+<RETURNS>RCLibDbCatalogData  *</RETURNS>
+RCLibDbCatalogData *data 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_db_catalog_data_unref</NAME>
+<RETURNS>void  </RETURNS>
+RCLibDbCatalogData *data 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_db_catalog_data_free</NAME>
+<RETURNS>void  </RETURNS>
+RCLibDbCatalogData *data 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_db_playlist_data_new</NAME>
+<RETURNS>RCLibDbPlaylistData  *</RETURNS>
+ 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_db_playlist_data_ref</NAME>
+<RETURNS>RCLibDbPlaylistData  *</RETURNS>
+RCLibDbPlaylistData *data 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_db_playlist_data_unref</NAME>
+<RETURNS>void  </RETURNS>
+RCLibDbPlaylistData *data 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_db_playlist_data_free</NAME>
+<RETURNS>void  </RETURNS>
+RCLibDbPlaylistData *data 
+</FUNCTION>
+<FUNCTION>
 <NAME>rclib_db_catalog_add</NAME>
 <RETURNS>GSequenceIter  *</RETURNS>
 const gchar *name, GSequenceIter *iter, gint type 
@@ -916,6 +1406,11 @@ gint *new_order
 </FUNCTION>
 <FUNCTION>
 <NAME>rclib_db_playlist_add_music</NAME>
+<RETURNS>void  </RETURNS>
+GSequenceIter *iter, GSequenceIter *insert_iter, const gchar *uri 
+</FUNCTION>
+<FUNCTION>
+<NAME>rclib_db_playlist_add_music_and_play</NAME>
 <RETURNS>void  </RETURNS>
 GSequenceIter *iter, GSequenceIter *insert_iter, const gchar *uri 
 </FUNCTION>

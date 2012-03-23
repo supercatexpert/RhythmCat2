@@ -1,0 +1,191 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>RCLibDBus</title>
+<meta name="generator" content="DocBook XSL Stylesheets V1.76.1">
+<link rel="home" href="index.html" title="LibRhythmCat Reference Manual">
+<link rel="up" href="ch01.html" title="LibRhythmCat">
+<link rel="prev" href="RCLibPlayer.html" title="RCLibPlayer">
+<link rel="next" href="LibRhythmCat-RCLibAlbum.html" title="RCLibAlbum">
+<meta name="generator" content="GTK-Doc V1.18 (XML mode)">
+<link rel="stylesheet" href="style.css" type="text/css">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2">
+<tr valign="middle">
+<td><a accesskey="p" href="RCLibPlayer.html"><img src="left.png" width="24" height="24" border="0" alt="Prev"></a></td>
+<td><a accesskey="u" href="ch01.html"><img src="up.png" width="24" height="24" border="0" alt="Up"></a></td>
+<td><a accesskey="h" href="index.html"><img src="home.png" width="24" height="24" border="0" alt="Home"></a></td>
+<th width="100%" align="center">LibRhythmCat Reference Manual</th>
+<td><a accesskey="n" href="LibRhythmCat-RCLibAlbum.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
+</tr>
+<tr><td colspan="5" class="shortcuts">
+<a href="#LibRhythmCat-RCLibDBus.synopsis" class="shortcut">Top</a>
+                   | 
+                  <a href="#LibRhythmCat-RCLibDBus.description" class="shortcut">Description</a>
+</td></tr>
+</table>
+<div class="refentry">
+<a name="LibRhythmCat-RCLibDBus"></a><div class="titlepage"></div>
+<div class="refnamediv"><table width="100%"><tr>
+<td valign="top">
+<h2><span class="refentrytitle"><a name="LibRhythmCat-RCLibDBus.top_of_page"></a>RCLibDBus</span></h2>
+<p>RCLibDBus</p>
+</td>
+<td valign="top" align="right"></td>
+</tr></table></div>
+<div class="refsynopsisdiv">
+<a name="LibRhythmCat-RCLibDBus.synopsis"></a><h2>Synopsis</h2>
+<pre class="synopsis">#define             <a class="link" href="LibRhythmCat-RCLibDBus.html#RCLIB-DBUS-TYPE:CAPS" title="RCLIB_DBUS_TYPE">RCLIB_DBUS_TYPE</a>
+struct              <a class="link" href="LibRhythmCat-RCLibDBus.html#RCLibDBus" title="struct RCLibDBus">RCLibDBus</a>;
+struct              <a class="link" href="LibRhythmCat-RCLibDBus.html#RCLibDBusClass" title="struct RCLibDBusClass">RCLibDBusClass</a>;
+<span class="returnvalue">void</span>                <a class="link" href="LibRhythmCat-RCLibDBus.html#rclib-dbus-exit" title="rclib_dbus_exit ()">rclib_dbus_exit</a>                     ();
+<a href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GObject"><span class="returnvalue">GObject</span></a> *           <a class="link" href="LibRhythmCat-RCLibDBus.html#rclib-dbus-get-instance" title="rclib_dbus_get_instance ()">rclib_dbus_get_instance</a>             ();
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="LibRhythmCat-RCLibDBus.html#rclib-dbus-init" title="rclib_dbus_init ()">rclib_dbus_init</a>                     (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *app_name</code></em>,
+                                                         <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *first_property_name</code></em>,
+                                                         <em class="parameter"><code>...</code></em>);
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gulong"><span class="returnvalue">gulong</span></a>              <a class="link" href="LibRhythmCat-RCLibDBus.html#rclib-dbus-signal-connect" title="rclib_dbus_signal_connect ()">rclib_dbus_signal_connect</a>           (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *name</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/gobject/gobject-Closures.html#GCallback"><span class="type">GCallback</span></a> callback</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> data</code></em>);
+<span class="returnvalue">void</span>                <a class="link" href="LibRhythmCat-RCLibDBus.html#rclib-dbus-signal-disconnect" title="rclib_dbus_signal_disconnect ()">rclib_dbus_signal_disconnect</a>        (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gulong"><span class="type">gulong</span></a> handler_id</code></em>);
+</pre>
+</div>
+<div class="refsect1">
+<a name="LibRhythmCat-RCLibDBus.description"></a><h2>Description</h2>
+</div>
+<div class="refsect1">
+<a name="LibRhythmCat-RCLibDBus.details"></a><h2>Details</h2>
+<div class="refsect2">
+<a name="RCLIB-DBUS-TYPE:CAPS"></a><h3>RCLIB_DBUS_TYPE</h3>
+<pre class="programlisting">#define RCLIB_DBUS_TYPE (rclib_dbus_get_type())
+</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="RCLibDBus"></a><h3>struct RCLibDBus</h3>
+<pre class="programlisting">struct RCLibDBus {
+};
+</pre>
+<p>
+The D-Bus support. The contents of the <a class="link" href="LibRhythmCat-RCLibDBus.html#RCLibDBus" title="struct RCLibDBus"><span class="type">RCLibDBus</span></a> structure are
+private and should only be accessed via the provided API.
+</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="RCLibDBusClass"></a><h3>struct RCLibDBusClass</h3>
+<pre class="programlisting">struct RCLibDBusClass {
+};
+</pre>
+<p>
+<a class="link" href="LibRhythmCat-RCLibDBus.html#RCLibDBus" title="struct RCLibDBus"><span class="type">RCLibDBus</span></a> class.
+</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-dbus-exit"></a><h3>rclib_dbus_exit ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rclib_dbus_exit                     ();</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-dbus-get-instance"></a><h3>rclib_dbus_get_instance ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GObject"><span class="returnvalue">GObject</span></a> *           rclib_dbus_get_instance             ();</pre>
+<p>
+Get the running <a class="link" href="LibRhythmCat-RCLibDBus.html#RCLibDBus" title="struct RCLibDBus"><span class="type">RCLibDBus</span></a> instance.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>The running instance.</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-dbus-init"></a><h3>rclib_dbus_init ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rclib_dbus_init                     (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *app_name</code></em>,
+                                                         <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *first_property_name</code></em>,
+                                                         <em class="parameter"><code>...</code></em>);</pre>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>app_name</code></em> :</span></p></td>
+<td>the name of the application for register in the D-Bus</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>first_property_name</code></em> :</span></p></td>
+<td>the name of the first property</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>...</code></em> :</span></p></td>
+<td>the value of the first property, followed optionally by more
+name/value pairs, followed by <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>
+Initialize the D-Bus support module.</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>Whether the initialization succeeded.</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-dbus-signal-connect"></a><h3>rclib_dbus_signal_connect ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gulong"><span class="returnvalue">gulong</span></a>              rclib_dbus_signal_connect           (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *name</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/gobject/gobject-Closures.html#GCallback"><span class="type">GCallback</span></a> callback</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> data</code></em>);</pre>
+<p>
+Connect the GCallback function to the given signal for the running
+instance of <a class="link" href="LibRhythmCat-RCLibDBus.html#RCLibDBus" title="struct RCLibDBus"><span class="type">RCLibDBus</span></a> object.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>name</code></em> :</span></p></td>
+<td>the name of the signal</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>callback</code></em> :</span></p></td>
+<td>the the <a href="/usr/share/gtk-doc/html/gobject/gobject-Closures.html#GCallback"><span class="type">GCallback</span></a> to connect</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>data</code></em> :</span></p></td>
+<td>the user data</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>The handler ID.</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-dbus-signal-disconnect"></a><h3>rclib_dbus_signal_disconnect ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rclib_dbus_signal_disconnect        (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gulong"><span class="type">gulong</span></a> handler_id</code></em>);</pre>
+<p>
+Disconnects a handler from the running dbus instance so it will
+not be called during any future or currently ongoing emissions
+of the signal it has been connected to. The <span class="type">handler_id</span> becomes
+invalid and may be reused.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><em class="parameter"><code>handler_id</code></em> :</span></p></td>
+<td>handler id of the handler to be disconnected</td>
+</tr></tbody>
+</table></div>
+</div>
+</div>
+</div>
+<div class="footer">
+<hr>
+          Generated by GTK-Doc V1.18</div>
+</body>
+</html>

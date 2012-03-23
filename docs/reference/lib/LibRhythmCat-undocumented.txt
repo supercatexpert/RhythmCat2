@@ -1,14 +1,31 @@
-97% symbol docs coverage.
-204 symbols documented.
+92% symbol docs coverage.
+277 symbols documented.
 1 symbols incomplete.
-6 not documented.
+23 not documented.
 
 
+GETTEXT_PACKAGE
+G_LOG_DOMAIN
+PACKAGE
+RCLIB_ALBUM_TYPE
 RCLIB_CORE_TYPE
+RCLIB_DBUS_TYPE
 RCLIB_DB_TYPE
 RCLIB_LYRIC_TYPE
 RCLIB_PLAYER_TYPE
+RCLIB_PLUGIN_MAGIC
+RCLIB_PLUGIN_MAJOR_VERSION
+RCLIB_PLUGIN_MINOR_VERSION
+RCLIB_PLUGIN_TYPE
+RCLibPluginInfo
+RCLibPluginLoaderInfo
 rclib_db_playlist_sync
+rclib_dbus_exit
+rclib_dbus_init
 rclib_player_play_uri (<parameters>)
 
 
+rclib-common:Long_Description
+rclib-common:Short_Description
+rclib-dbus:Long_Description
+rclib-dbus:Short_Description

@@ -53,6 +53,7 @@ enum
     SIGNAL_REGISTERED,
     SIGNAL_LOADED,
     SIGNAL_UNLOADED,
+    SIGNAL_UNREGISTERED,
     SIGNAL_LAST
 };
 
@@ -212,6 +213,19 @@ static void rclib_plugin_class_init(RCLibPluginClass *klass)
         RCLIB_PLUGIN_TYPE, G_SIGNAL_RUN_FIRST,
         G_STRUCT_OFFSET(RCLibPluginClass, unloaded), NULL, NULL,
         g_cclosure_marshal_VOID__POINTER, G_TYPE_NONE, 1, G_TYPE_POINTER,
+        NULL);
+        
+    /**
+     * RCLibPlugin::unregistered:
+     * @plugin: the #RCLibPlugin that received the signal
+     * @id: the ID of the plug-in
+     *
+     * The ::unregistered signal is emitted when a plug-in is unregistered.
+     */    
+    plugin_signals[SIGNAL_UNREGISTERED] = g_signal_new("unregistered",
+        RCLIB_PLUGIN_TYPE, G_SIGNAL_RUN_FIRST,
+        G_STRUCT_OFFSET(RCLibPluginClass, unregistered), NULL, NULL,
+        g_cclosure_marshal_VOID__STRING, G_TYPE_NONE, 1, G_TYPE_STRING,
         NULL);
 }
 
@@ -839,6 +853,7 @@ void rclib_plugin_destroy(RCLibPluginData *plugin)
     RCLibPluginPrivate *priv;
     RCLibPluginLoaderInfo *loader;
     const gchar * const *exts;
+    gchar *id;
     if(plugin==NULL) return;
     if(plugin_instance==NULL) return;
     priv = RCLIB_PLUGIN_GET_PRIVATE(plugin_instance);
@@ -854,7 +869,11 @@ void rclib_plugin_destroy(RCLibPluginData *plugin)
             g_hash_table_remove(priv->loader_table, *exts);
         }
     }
+    id = g_strdup(plugin->info->id);
     g_hash_table_remove(priv->plugin_table, plugin->info->id);
+    g_signal_emit(plugin_instance, plugin_signals[SIGNAL_UNREGISTERED], 0,
+        id);
+    g_free(id);
     rclib_plugin_data_free(plugin);
 }
 

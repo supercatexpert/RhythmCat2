@@ -1,0 +1,514 @@
+<?xml version="1.0"?>
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
+               "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd"
+[
+  <!ENTITY % local.common.attrib "xmlns:xi  CDATA  #FIXED 'http://www.w3.org/2003/XInclude'">
+]>
+<refentry id="LibRhythmCat-RCLibPlugin">
+<refmeta>
+<refentrytitle role="top_of_page" id="LibRhythmCat-RCLibPlugin.top_of_page">RCLibPlugin</refentrytitle>
+<manvolnum>3</manvolnum>
+<refmiscinfo>
+  LIBRHYTHMCAT Library
+</refmiscinfo>
+</refmeta>
+<refnamediv>
+<refname>RCLibPlugin</refname>
+<refpurpose>The plug-in support system</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv id="LibRhythmCat-RCLibPlugin.synopsis" role="synopsis">
+<title role="synopsis.title">Synopsis</title>
+
+<synopsis>
+#include &lt;rclib-plugin.h&gt;
+
+#define             <link linkend="RCLIB-PLUGIN-MAGIC:CAPS">RCLIB_PLUGIN_MAGIC</link>
+#define             <link linkend="RCLIB-PLUGIN-MAJOR-VERSION:CAPS">RCLIB_PLUGIN_MAJOR_VERSION</link>
+#define             <link linkend="RCLIB-PLUGIN-MINOR-VERSION:CAPS">RCLIB_PLUGIN_MINOR_VERSION</link>
+#define             <link linkend="RCLIB-PLUGIN-TYPE:CAPS">RCLIB_PLUGIN_TYPE</link>
+struct              <link linkend="RCLibPlugin">RCLibPlugin</link>;
+struct              <link linkend="RCLibPluginClass">RCLibPluginClass</link>;
+struct              <link linkend="RCLibPluginData">RCLibPluginData</link>;
+struct              <link linkend="RCLibPluginInfo">RCLibPluginInfo</link>;
+struct              <link linkend="RCLibPluginLoaderInfo">RCLibPluginLoaderInfo</link>;
+enum                <link linkend="RCLibPluginType">RCLibPluginType</link>;
+<link linkend="RCLibPluginData"><returnvalue>RCLibPluginData</returnvalue></link> *   <link linkend="rclib-plugin-data-ref">rclib_plugin_data_ref</link>               (<parameter><link linkend="RCLibPluginData"><type>RCLibPluginData</type></link> *plugin</parameter>);
+<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rclib-plugin-data-unref">rclib_plugin_data_unref</link>             (<parameter><link linkend="RCLibPluginData"><type>RCLibPluginData</type></link> *plugin</parameter>);
+<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rclib-plugin-destroy">rclib_plugin_destroy</link>                (<parameter><link linkend="RCLibPluginData"><type>RCLibPluginData</type></link> *plugin</parameter>);
+<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rclib-plugin-destroy-all">rclib_plugin_destroy_all</link>            ();
+<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rclib-plugin-exit">rclib_plugin_exit</link>                   ();
+<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rclib-plugin-foreach">rclib_plugin_foreach</link>                (<parameter><link linkend="GHFunc"><type>GHFunc</type></link> func</parameter>,
+                                                         <parameter><link linkend="gpointer"><type>gpointer</type></link> data</parameter>);
+<link linkend="GObject"><returnvalue>GObject</returnvalue></link> *           <link linkend="rclib-plugin-get-instance">rclib_plugin_get_instance</link>           ();
+<link linkend="GKeyFile"><returnvalue>GKeyFile</returnvalue></link> *          <link linkend="rclib-plugin-get-keyfile">rclib_plugin_get_keyfile</link>            ();
+<link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            <link linkend="rclib-plugin-init">rclib_plugin_init</link>                   (<parameter>const <link linkend="gchar"><type>gchar</type></link> *file</parameter>);
+<link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            <link linkend="rclib-plugin-is-loaded">rclib_plugin_is_loaded</link>              (<parameter><link linkend="RCLibPluginData"><type>RCLibPluginData</type></link> *plugin</parameter>);
+<link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            <link linkend="rclib-plugin-load">rclib_plugin_load</link>                   (<parameter><link linkend="RCLibPluginData"><type>RCLibPluginData</type></link> *plugin</parameter>);
+<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rclib-plugin-load-from-configure">rclib_plugin_load_from_configure</link>    ();
+<link linkend="guint"><returnvalue>guint</returnvalue></link>               <link linkend="rclib-plugin-load-from-dir">rclib_plugin_load_from_dir</link>          (<parameter>const <link linkend="gchar"><type>gchar</type></link> *dirname</parameter>);
+<link linkend="RCLibPluginData"><returnvalue>RCLibPluginData</returnvalue></link> *   <link linkend="rclib-plugin-lookup">rclib_plugin_lookup</link>                 (<parameter>const <link linkend="gchar"><type>gchar</type></link> *id</parameter>);
+<link linkend="RCLibPluginData"><returnvalue>RCLibPluginData</returnvalue></link> *   <link linkend="rclib-plugin-probe">rclib_plugin_probe</link>                  (<parameter>const <link linkend="gchar"><type>gchar</type></link> *filename</parameter>);
+<link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            <link linkend="rclib-plugin-register">rclib_plugin_register</link>               (<parameter><link linkend="RCLibPluginData"><type>RCLibPluginData</type></link> *plugin</parameter>);
+<link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            <link linkend="rclib-plugin-reload">rclib_plugin_reload</link>                 (<parameter><link linkend="RCLibPluginData"><type>RCLibPluginData</type></link> *plugin</parameter>);
+<link linkend="gulong"><returnvalue>gulong</returnvalue></link>              <link linkend="rclib-plugin-signal-connect">rclib_plugin_signal_connect</link>         (<parameter>const <link linkend="gchar"><type>gchar</type></link> *name</parameter>,
+                                                         <parameter><link linkend="GCallback"><type>GCallback</type></link> callback</parameter>,
+                                                         <parameter><link linkend="gpointer"><type>gpointer</type></link> data</parameter>);
+<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rclib-plugin-signal-disconnect">rclib_plugin_signal_disconnect</link>      (<parameter><link linkend="gulong"><type>gulong</type></link> handler_id</parameter>);
+<link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            <link linkend="rclib-plugin-unload">rclib_plugin_unload</link>                 (<parameter><link linkend="RCLibPluginData"><type>RCLibPluginData</type></link> *plugin</parameter>);
+</synopsis>
+</refsynopsisdiv>
+
+<refsect1 id="LibRhythmCat-RCLibPlugin.description" role="desc">
+<title role="desc.title">Description</title>
+<para>
+The <link linkend="RCLibPlugin"><type>RCLibPlugin</type></link> is a class which provides plug-in support. It manages
+all the plug-ins and plug-in loaders, and makes them usable in the
+player.
+</para>
+</refsect1>
+<refsect1 id="LibRhythmCat-RCLibPlugin.details" role="details">
+<title role="details.title">Details</title>
+<refsect2 id="RCLIB-PLUGIN-MAGIC:CAPS" role="macro">
+<title>RCLIB_PLUGIN_MAGIC</title>
+<indexterm zone="RCLIB-PLUGIN-MAGIC:CAPS"><primary>RCLIB_PLUGIN_MAGIC</primary></indexterm>
+<programlisting>#define RCLIB_PLUGIN_MAGIC 0x20120103
+</programlisting>
+</refsect2>
+<refsect2 id="RCLIB-PLUGIN-MAJOR-VERSION:CAPS" role="macro">
+<title>RCLIB_PLUGIN_MAJOR_VERSION</title>
+<indexterm zone="RCLIB-PLUGIN-MAJOR-VERSION:CAPS"><primary>RCLIB_PLUGIN_MAJOR_VERSION</primary></indexterm>
+<programlisting>#define RCLIB_PLUGIN_MAJOR_VERSION 2
+</programlisting>
+</refsect2>
+<refsect2 id="RCLIB-PLUGIN-MINOR-VERSION:CAPS" role="macro">
+<title>RCLIB_PLUGIN_MINOR_VERSION</title>
+<indexterm zone="RCLIB-PLUGIN-MINOR-VERSION:CAPS"><primary>RCLIB_PLUGIN_MINOR_VERSION</primary></indexterm>
+<programlisting>#define RCLIB_PLUGIN_MINOR_VERSION 0
+</programlisting>
+</refsect2>
+<refsect2 id="RCLIB-PLUGIN-TYPE:CAPS" role="macro">
+<title>RCLIB_PLUGIN_TYPE</title>
+<indexterm zone="RCLIB-PLUGIN-TYPE:CAPS"><primary>RCLIB_PLUGIN_TYPE</primary></indexterm>
+<programlisting>#define RCLIB_PLUGIN_TYPE (rclib_plugin_get_type())
+</programlisting>
+</refsect2>
+<refsect2 id="RCLibPlugin" role="struct">
+<title>struct RCLibPlugin</title>
+<indexterm zone="RCLibPlugin"><primary>RCLibPlugin</primary></indexterm>
+<programlisting>struct RCLibPlugin {
+};
+</programlisting>
+<para>
+The plug-in support system. The contents of the <link linkend="RCLibPlugin"><type>RCLibPlugin</type></link> structure
+are private and should only be accessed via the provided API.
+</para></refsect2>
+<refsect2 id="RCLibPluginClass" role="struct">
+<title>struct RCLibPluginClass</title>
+<indexterm zone="RCLibPluginClass"><primary>RCLibPluginClass</primary></indexterm>
+<programlisting>struct RCLibPluginClass {
+};
+</programlisting>
+<para>
+<link linkend="RCLibPlugin"><type>RCLibPlugin</type></link> class.
+</para></refsect2>
+<refsect2 id="RCLibPluginData" role="struct">
+<title>struct RCLibPluginData</title>
+<indexterm zone="RCLibPluginData"><primary>RCLibPluginData</primary></indexterm>
+<programlisting>struct RCLibPluginData {
+    gboolean native;
+    gboolean loaded;
+    gpointer handle;
+    gchar *path;
+    RCLibPluginInfo *info;
+    gchar *error;
+    gboolean unloadable;
+    GSList *dependent_list;
+    gpointer extra;
+    gpointer ipc_data;
+};
+</programlisting>
+<para>
+The plug-in data.
+</para><variablelist role="struct">
+<varlistentry><term><link linkend="gboolean"><type>gboolean</type></link>&#160;<structfield id="RCLibPluginData.native">native</structfield>;</term>
+<listitem><simpara>whether the plug-in is a native C/C++ module</simpara></listitem>
+</varlistentry>
+<varlistentry><term><link linkend="gboolean"><type>gboolean</type></link>&#160;<structfield id="RCLibPluginData.loaded">loaded</structfield>;</term>
+<listitem><simpara>whether the plug-in is loaded</simpara></listitem>
+</varlistentry>
+<varlistentry><term><link linkend="gpointer"><type>gpointer</type></link>&#160;<structfield id="RCLibPluginData.handle">handle</structfield>;</term>
+<listitem><simpara>the handle of the plug-in</simpara></listitem>
+</varlistentry>
+<varlistentry><term><link linkend="gchar"><type>gchar</type></link>&#160;*<structfield id="RCLibPluginData.path">path</structfield>;</term>
+<listitem><simpara>the file path of the plug-in</simpara></listitem>
+</varlistentry>
+<varlistentry><term><link linkend="RCLibPluginInfo"><type>RCLibPluginInfo</type></link>&#160;*<structfield id="RCLibPluginData.info">info</structfield>;</term>
+<listitem><simpara>the information data (<link linkend="RCLibPluginInfo"><type>RCLibPluginInfo</type></link>) of the plug-in</simpara></listitem>
+</varlistentry>
+<varlistentry><term><link linkend="gchar"><type>gchar</type></link>&#160;*<structfield id="RCLibPluginData.error">error</structfield>;</term>
+<listitem><simpara>the error message in the initialization progress</simpara></listitem>
+</varlistentry>
+<varlistentry><term><link linkend="gboolean"><type>gboolean</type></link>&#160;<structfield id="RCLibPluginData.unloadable">unloadable</structfield>;</term>
+<listitem><simpara>whether the plug-in is not loadable</simpara></listitem>
+</varlistentry>
+<varlistentry><term><link linkend="GSList"><type>GSList</type></link>&#160;*<structfield id="RCLibPluginData.dependent-list">dependent_list</structfield>;</term>
+<listitem><simpara>a list of the dependent plug-ins</simpara></listitem>
+</varlistentry>
+<varlistentry><term><link linkend="gpointer"><type>gpointer</type></link>&#160;<structfield id="RCLibPluginData.extra">extra</structfield>;</term>
+<listitem><simpara>extra data</simpara></listitem>
+</varlistentry>
+<varlistentry><term><link linkend="gpointer"><type>gpointer</type></link>&#160;<structfield id="RCLibPluginData.ipc-data">ipc_data</structfield>;</term>
+<listitem><simpara>(not used now)</simpara></listitem>
+</varlistentry>
+</variablelist></refsect2>
+<refsect2 id="RCLibPluginInfo" role="struct">
+<title>struct RCLibPluginInfo</title>
+<indexterm zone="RCLibPluginInfo"><primary>RCLibPluginInfo</primary></indexterm>
+<programlisting>struct RCLibPluginInfo {
+    guint32 magic;
+    guint32 major_version;
+    guint32 minor_version;
+    RCLibPluginType type;
+    gchar *id;
+    gchar *name;
+    gchar *version;
+    gchar *description;
+    gchar *author;
+    gchar *homepage;
+    gboolean (*load)(RCLibPluginData *plugin);
+    gboolean (*unload)(RCLibPluginData *plugin);
+    void (*destroy)(RCLibPluginData *plugin);
+    gboolean (*configure)(RCLibPluginData *plugin);
+    gchar **depends;
+    gpointer extra_info;
+};
+</programlisting>
+<variablelist role="struct">
+<varlistentry><term><link linkend="guint32"><type>guint32</type></link>&#160;<structfield id="RCLibPluginInfo.magic">magic</structfield>;</term>
+<listitem><simpara>the magic number, should be equal to <link linkend="RCLIB-PLUGIN-MAGIC:CAPS"><type>RCLIB_PLUGIN_MAGIC</type></link></simpara></listitem>
+</varlistentry>
+<varlistentry><term><link linkend="guint32"><type>guint32</type></link>&#160;<structfield id="RCLibPluginInfo.major-version">major_version</structfield>;</term>
+<listitem><simpara>the major version of the plug-in support module, should
+be equal to <link linkend="RCLIB-PLUGIN-MAJOR-VERSION:CAPS"><type>RCLIB_PLUGIN_MAJOR_VERSION</type></link></simpara></listitem>
+</varlistentry>
+<varlistentry><term><link linkend="guint32"><type>guint32</type></link>&#160;<structfield id="RCLibPluginInfo.minor-version">minor_version</structfield>;</term>
+<listitem><simpara>the minor version of the plug-in support module, should
+be equal to <link linkend="RCLIB-PLUGIN-MINOR-VERSION:CAPS"><type>RCLIB_PLUGIN_MINOR_VERSION</type></link></simpara></listitem>
+</varlistentry>
+<varlistentry><term><link linkend="RCLibPluginType"><type>RCLibPluginType</type></link>&#160;<structfield id="RCLibPluginInfo.type">type</structfield>;</term>
+<listitem><simpara>the type of the plug-in</simpara></listitem>
+</varlistentry>
+<varlistentry><term><link linkend="gchar"><type>gchar</type></link>&#160;*<structfield id="RCLibPluginInfo.id">id</structfield>;</term>
+<listitem><simpara>the ID of the plug-in, should be unique</simpara></listitem>
+</varlistentry>
+<varlistentry><term><link linkend="gchar"><type>gchar</type></link>&#160;*<structfield id="RCLibPluginInfo.name">name</structfield>;</term>
+<listitem><simpara>the name of the plug-in</simpara></listitem>
+</varlistentry>
+<varlistentry><term><link linkend="gchar"><type>gchar</type></link>&#160;*<structfield id="RCLibPluginInfo.version">version</structfield>;</term>
+<listitem><simpara>the version of the plug-in</simpara></listitem>
+</varlistentry>
+<varlistentry><term><link linkend="gchar"><type>gchar</type></link>&#160;*<structfield id="RCLibPluginInfo.description">description</structfield>;</term>
+<listitem><simpara>the description of the plug-in</simpara></listitem>
+</varlistentry>
+<varlistentry><term><link linkend="gchar"><type>gchar</type></link>&#160;*<structfield id="RCLibPluginInfo.author">author</structfield>;</term>
+<listitem><simpara>the author of the plug-in</simpara></listitem>
+</varlistentry>
+<varlistentry><term><link linkend="gchar"><type>gchar</type></link>&#160;*<structfield id="RCLibPluginInfo.homepage">homepage</structfield>;</term>
+<listitem><simpara>the homepage URL of the plug-in</simpara></listitem>
+</varlistentry>
+<varlistentry><term><structfield id="RCLibPluginInfo.load">load</structfield>&#160;()</term>
+<listitem><simpara>the load function of the plug-in</simpara></listitem>
+</varlistentry>
+<varlistentry><term><structfield id="RCLibPluginInfo.unload">unload</structfield>&#160;()</term>
+<listitem><simpara>the unload function of the plug-in</simpara></listitem>
+</varlistentry>
+<varlistentry><term><structfield id="RCLibPluginInfo.destroy">destroy</structfield>&#160;()</term>
+<listitem><simpara>the destroy function of the plug-in</simpara></listitem>
+</varlistentry>
+<varlistentry><term><structfield id="RCLibPluginInfo.configure">configure</structfield>&#160;()</term>
+<listitem><simpara>the configure function of the plug-in</simpara></listitem>
+</varlistentry>
+<varlistentry><term><link linkend="gchar"><type>gchar</type></link>&#160;**<structfield id="RCLibPluginInfo.depends">depends</structfield>;</term>
+<listitem><simpara>the depend array of the plug-in</simpara></listitem>
+</varlistentry>
+<varlistentry><term><link linkend="gpointer"><type>gpointer</type></link>&#160;<structfield id="RCLibPluginInfo.extra-info">extra_info</structfield>;</term>
+<listitem><simpara>the extra information data</simpara></listitem>
+</varlistentry>
+</variablelist></refsect2>
+<refsect2 id="RCLibPluginLoaderInfo" role="struct">
+<title>struct RCLibPluginLoaderInfo</title>
+<indexterm zone="RCLibPluginLoaderInfo"><primary>RCLibPluginLoaderInfo</primary></indexterm>
+<programlisting>struct RCLibPluginLoaderInfo {
+    const gchar * const *extensions;
+    gboolean (*probe)(RCLibPluginData *plugin);
+    gboolean (*load)(RCLibPluginData *plugin);
+    gboolean (*unload)(RCLibPluginData *plugin);
+    void (*destroy)(RCLibPluginData *plugin);
+};
+</programlisting>
+<variablelist role="struct">
+<varlistentry><term>const&#160;<link linkend="gchar"><type>gchar</type></link>&#160;*&#160;const&#160;&#160;*<structfield id="RCLibPluginLoaderInfo.extensions">extensions</structfield>;</term>
+<listitem><simpara>a string list for the extension of plug-in files
+which will be supported by the loader</simpara></listitem>
+</varlistentry>
+<varlistentry><term><structfield id="RCLibPluginLoaderInfo.probe">probe</structfield>&#160;()</term>
+<listitem><simpara>the probe function for the loader</simpara></listitem>
+</varlistentry>
+<varlistentry><term><structfield id="RCLibPluginLoaderInfo.load">load</structfield>&#160;()</term>
+<listitem><simpara>the load function for the loader</simpara></listitem>
+</varlistentry>
+<varlistentry><term><structfield id="RCLibPluginLoaderInfo.unload">unload</structfield>&#160;()</term>
+<listitem><simpara>the unload function for the loader</simpara></listitem>
+</varlistentry>
+<varlistentry><term><structfield id="RCLibPluginLoaderInfo.destroy">destroy</structfield>&#160;()</term>
+<listitem><simpara>the destroy function for the loader</simpara></listitem>
+</varlistentry>
+</variablelist></refsect2>
+<refsect2 id="RCLibPluginType" role="enum">
+<title>enum RCLibPluginType</title>
+<indexterm zone="RCLibPluginType"><primary>RCLibPluginType</primary></indexterm>
+<programlisting>typedef enum {
+    RCLIB_PLUGIN_TYPE_UNKNOWN = 0,
+    RCLIB_PLUGIN_TYPE_MODULE = 1,
+    RCLIB_PLUGIN_TYPE_LOADER = 2
+} RCLibPluginType;
+</programlisting>
+<para>
+The enum type for plug-in type.
+</para><variablelist role="enum">
+<varlistentry id="RCLIB-PLUGIN-TYPE-UNKNOWN:CAPS" role="constant">
+<term><literal>RCLIB_PLUGIN_TYPE_UNKNOWN</literal></term>
+<listitem><simpara>unknown plug-in type
+</simpara></listitem>
+</varlistentry>
+<varlistentry id="RCLIB-PLUGIN-TYPE-MODULE:CAPS" role="constant">
+<term><literal>RCLIB_PLUGIN_TYPE_MODULE</literal></term>
+<listitem><simpara>normal plug-in type
+</simpara></listitem>
+</varlistentry>
+<varlistentry id="RCLIB-PLUGIN-TYPE-LOADER:CAPS" role="constant">
+<term><literal>RCLIB_PLUGIN_TYPE_LOADER</literal></term>
+<listitem><simpara>plug-in loader type
+</simpara></listitem>
+</varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rclib-plugin-data-ref" role="function">
+<title>rclib_plugin_data_ref ()</title>
+<indexterm zone="rclib-plugin-data-ref"><primary>rclib_plugin_data_ref</primary></indexterm>
+<programlisting><link linkend="RCLibPluginData"><returnvalue>RCLibPluginData</returnvalue></link> *   rclib_plugin_data_ref               (<parameter><link linkend="RCLibPluginData"><type>RCLibPluginData</type></link> *plugin</parameter>);</programlisting>
+<para>
+Increase the reference count of plug-data by 1.
+</para><variablelist role="params">
+<varlistentry><term><parameter>plugin</parameter>&#160;:</term>
+<listitem><simpara>the plug-in data</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara>The plug-in data.</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rclib-plugin-data-unref" role="function">
+<title>rclib_plugin_data_unref ()</title>
+<indexterm zone="rclib-plugin-data-unref"><primary>rclib_plugin_data_unref</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rclib_plugin_data_unref             (<parameter><link linkend="RCLibPluginData"><type>RCLibPluginData</type></link> *plugin</parameter>);</programlisting>
+<para>
+Decrease the reference count of plug-data by 1, if the reference
+count down to zero, the data will be freed.
+</para><variablelist role="params">
+<varlistentry><term><parameter>plugin</parameter>&#160;:</term>
+<listitem><simpara>the plug-in data</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rclib-plugin-destroy" role="function">
+<title>rclib_plugin_destroy ()</title>
+<indexterm zone="rclib-plugin-destroy"><primary>rclib_plugin_destroy</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rclib_plugin_destroy                (<parameter><link linkend="RCLibPluginData"><type>RCLibPluginData</type></link> *plugin</parameter>);</programlisting>
+<para>
+Exit the plug-in and destroy the plug-in data.
+</para><variablelist role="params">
+<varlistentry><term><parameter>plugin</parameter>&#160;:</term>
+<listitem><simpara>the plug-in data</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rclib-plugin-destroy-all" role="function">
+<title>rclib_plugin_destroy_all ()</title>
+<indexterm zone="rclib-plugin-destroy-all"><primary>rclib_plugin_destroy_all</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rclib_plugin_destroy_all            ();</programlisting>
+<para>
+Destroy all plug-ins in the player.
+</para></refsect2>
+<refsect2 id="rclib-plugin-exit" role="function">
+<title>rclib_plugin_exit ()</title>
+<indexterm zone="rclib-plugin-exit"><primary>rclib_plugin_exit</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rclib_plugin_exit                   ();</programlisting>
+<para>
+Unload the plug-in support system instance.
+</para></refsect2>
+<refsect2 id="rclib-plugin-foreach" role="function">
+<title>rclib_plugin_foreach ()</title>
+<indexterm zone="rclib-plugin-foreach"><primary>rclib_plugin_foreach</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rclib_plugin_foreach                (<parameter><link linkend="GHFunc"><type>GHFunc</type></link> func</parameter>,
+                                                         <parameter><link linkend="gpointer"><type>gpointer</type></link> data</parameter>);</programlisting>
+<para>
+Calls the given function for each of the key/value pairs in the
+<link linkend="GHashTable"><type>GHashTable</type></link> which contains the plug-in data.
+</para><variablelist role="params">
+<varlistentry><term><parameter>func</parameter>&#160;:</term>
+<listitem><simpara>the function to call for each key/value pair</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>data</parameter>&#160;:</term>
+<listitem><simpara>user data to pass to the function</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rclib-plugin-get-instance" role="function">
+<title>rclib_plugin_get_instance ()</title>
+<indexterm zone="rclib-plugin-get-instance"><primary>rclib_plugin_get_instance</primary></indexterm>
+<programlisting><link linkend="GObject"><returnvalue>GObject</returnvalue></link> *           rclib_plugin_get_instance           ();</programlisting>
+<para>
+Get the running <link linkend="RCLibPlugin"><type>RCLibPlugin</type></link> instance.
+</para><variablelist role="params">
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara>The running instance.</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rclib-plugin-get-keyfile" role="function">
+<title>rclib_plugin_get_keyfile ()</title>
+<indexterm zone="rclib-plugin-get-keyfile"><primary>rclib_plugin_get_keyfile</primary></indexterm>
+<programlisting><link linkend="GKeyFile"><returnvalue>GKeyFile</returnvalue></link> *          rclib_plugin_get_keyfile            ();</programlisting>
+<para>
+Get the <link linkend="GKeyFile"><type>GKeyFile</type></link> configure data of the plug-ins.
+</para><variablelist role="params">
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara>The configure data.</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rclib-plugin-init" role="function">
+<title>rclib_plugin_init ()</title>
+<indexterm zone="rclib-plugin-init"><primary>rclib_plugin_init</primary></indexterm>
+<programlisting><link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            rclib_plugin_init                   (<parameter>const <link linkend="gchar"><type>gchar</type></link> *file</parameter>);</programlisting>
+<para>
+Initialize the plug-in support system instance.
+</para><variablelist role="params">
+<varlistentry><term><parameter>file</parameter>&#160;:</term>
+<listitem><simpara>the configure file path</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara>Whether the initialization succeeded.</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rclib-plugin-is-loaded" role="function">
+<title>rclib_plugin_is_loaded ()</title>
+<indexterm zone="rclib-plugin-is-loaded"><primary>rclib_plugin_is_loaded</primary></indexterm>
+<programlisting><link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            rclib_plugin_is_loaded              (<parameter><link linkend="RCLibPluginData"><type>RCLibPluginData</type></link> *plugin</parameter>);</programlisting>
+<para>
+Check whether the plug-in is loaded.
+</para><variablelist role="params">
+<varlistentry><term><parameter>plugin</parameter>&#160;:</term>
+<listitem><simpara>the plug-in data</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara>Whether the plug-in is loaded.</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rclib-plugin-load" role="function">
+<title>rclib_plugin_load ()</title>
+<indexterm zone="rclib-plugin-load"><primary>rclib_plugin_load</primary></indexterm>
+<programlisting><link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            rclib_plugin_load                   (<parameter><link linkend="RCLibPluginData"><type>RCLibPluginData</type></link> *plugin</parameter>);</programlisting>
+<para>
+Load and run the plug-in.
+</para><variablelist role="params">
+<varlistentry><term><parameter>plugin</parameter>&#160;:</term>
+<listitem><simpara>the plug-in data</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara>Whether the plug-in is loaded successfully.</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rclib-plugin-load-from-configure" role="function">
+<title>rclib_plugin_load_from_configure ()</title>
+<indexterm zone="rclib-plugin-load-from-configure"><primary>rclib_plugin_load_from_configure</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rclib_plugin_load_from_configure    ();</programlisting>
+<para>
+Load registered plug-ins enabled in the configure file.
+</para></refsect2>
+<refsect2 id="rclib-plugin-load-from-dir" role="function">
+<title>rclib_plugin_load_from_dir ()</title>
+<indexterm zone="rclib-plugin-load-from-dir"><primary>rclib_plugin_load_from_dir</primary></indexterm>
+<programlisting><link linkend="guint"><returnvalue>guint</returnvalue></link>               rclib_plugin_load_from_dir          (<parameter>const <link linkend="gchar"><type>gchar</type></link> *dirname</parameter>);</programlisting>
+<para>
+Load plug-in files from given directory path, and register them.
+</para><variablelist role="params">
+<varlistentry><term><parameter>dirname</parameter>&#160;:</term>
+<listitem><simpara>the path of the directory which contains the plug-in files</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara>Loaded plug-in number.</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rclib-plugin-lookup" role="function">
+<title>rclib_plugin_lookup ()</title>
+<indexterm zone="rclib-plugin-lookup"><primary>rclib_plugin_lookup</primary></indexterm>
+<programlisting><link linkend="RCLibPluginData"><returnvalue>RCLibPluginData</returnvalue></link> *   rclib_plugin_lookup                 (<parameter>const <link linkend="gchar"><type>gchar</type></link> *id</parameter>);</programlisting>
+<para>
+Lookup a plug-in in the registered plug-in table by the given ID.
+</para><variablelist role="params">
+<varlistentry><term><parameter>id</parameter>&#160;:</term>
+<listitem><simpara>the ID of the plug-in</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara>The plug-in data, <link linkend="NULL:CAPS"><type>NULL</type></link> if not found.</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rclib-plugin-probe" role="function">
+<title>rclib_plugin_probe ()</title>
+<indexterm zone="rclib-plugin-probe"><primary>rclib_plugin_probe</primary></indexterm>
+<programlisting><link linkend="RCLibPluginData"><returnvalue>RCLibPluginData</returnvalue></link> *   rclib_plugin_probe                  (<parameter>const <link linkend="gchar"><type>gchar</type></link> *filename</parameter>);</programlisting>
+<para>
+Probe the plug-in file.
+</para><variablelist role="params">
+<varlistentry><term><parameter>filename</parameter>&#160;:</term>
+<listitem><simpara>file path to the plug-in file</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara>The plug-in data, <link linkend="NULL:CAPS"><type>NULL</type></link> if the probe operation failed.</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rclib-plugin-register" role="function">
+<title>rclib_plugin_register ()</title>
+<indexterm zone="rclib-plugin-register"><primary>rclib_plugin_register</primary></indexterm>
+<programlisting><link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            rclib_plugin_register               (<parameter><link linkend="RCLibPluginData"><type>RCLibPluginData</type></link> *plugin</parameter>);</programlisting>
+<para>
+Register the plug-in to the player.
+</para><variablelist role="params">
+<varlistentry><term><parameter>plugin</parameter>&#160;:</term>
+<listitem><simpara>the plug-in data</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara>Whether the register operation succeeded.</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rclib-plugin-reload" role="function">
+<title>rclib_plugin_reload ()</title>
+<indexterm zone="rclib-plugin-reload"><primary>rclib_plugin_reload</primary></indexterm>
+<programlisting><link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            rclib_plugin_reload                 (<parameter><link linkend="RCLibPluginData"><type>RCLibPluginData</type></link> *plugin</parameter>);</programlisting>
+<para>
+Reload and restart the plug-in.
+</para><variablelist role="params">
+<varlistentry><term><parameter>plugin</parameter>&#160;:</term>
+<listitem><simpara>the plug-in data</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara>Whether the plug-in is reloaded successfully.</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rclib-plugin-signal-connect" role="function">
+<title>rclib_plugin_signal_connect ()</title>
+<indexterm zone="rclib-plugin-signal-connect"><primary>rclib_plugin_signal_connect</primary></indexterm>
+<programlisting><link linkend="gulong"><returnvalue>gulong</returnvalue></link>              rclib_plugin_signal_connect         (<parameter>const <link linkend="gchar"><type>gchar</type></link> *name</parameter>,
+                                                         <parameter><link linkend="GCallback"><type>GCallback</type></link> callback</parameter>,
+                                                         <parameter><link linkend="gpointer"><type>gpointer</type></link> data</parameter>);</programlisting>
+<para>
+Connect the GCallback function to the given signal for the running
+instance of <link linkend="RCLibPlugin"><type>RCLibPlugin</type></link> object.
+</para><variablelist role="params">
+<varlistentry><term><parameter>name</parameter>&#160;:</term>
+<listitem><simpara>the name of the signal</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>callback</parameter>&#160;:</term>
+<listitem><simpara>the the <link linkend="GCallback"><type>GCallback</type></link> to connect</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>data</parameter>&#160;:</term>
+<listitem><simpara>the user data</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara>The handler ID.</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rclib-plugin-signal-disconnect" role="function">
+<title>rclib_plugin_signal_disconnect ()</title>
+<indexterm zone="rclib-plugin-signal-disconnect"><primary>rclib_plugin_signal_disconnect</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rclib_plugin_signal_disconnect      (<parameter><link linkend="gulong"><type>gulong</type></link> handler_id</parameter>);</programlisting>
+<para>
+Disconnects a handler from the running <link linkend="RCLibPlugin"><type>RCLibPlugin</type></link> instance so it
+will not be called during any future or currently ongoing emissions
+of the signal it has been connected to. The <link linkend="handler-id"><type>handler_id</type></link> becomes
+invalid and may be reused.
+</para><variablelist role="params">
+<varlistentry><term><parameter>handler_id</parameter>&#160;:</term>
+<listitem><simpara>handler id of the handler to be disconnected</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rclib-plugin-unload" role="function">
+<title>rclib_plugin_unload ()</title>
+<indexterm zone="rclib-plugin-unload"><primary>rclib_plugin_unload</primary></indexterm>
+<programlisting><link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            rclib_plugin_unload                 (<parameter><link linkend="RCLibPluginData"><type>RCLibPluginData</type></link> *plugin</parameter>);</programlisting>
+<para>
+Stop and unload the plug-in.
+</para><variablelist role="params">
+<varlistentry><term><parameter>plugin</parameter>&#160;:</term>
+<listitem><simpara>the plug-in data</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara>Whether the plug-in is unloaded successfully.</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+
+</refsect1>
+
+</refentry>

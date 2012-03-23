@@ -7,7 +7,7 @@
 <link rel="home" href="index.html" title="LibRhythmCat Reference Manual">
 <link rel="up" href="ch01.html" title="LibRhythmCat">
 <link rel="prev" href="LibRhythmCat-Cue-Parser.html" title="Cue Parser">
-<link rel="next" href="LibRhythmCat-Utilities.html" title="Utilities">
+<link rel="next" href="LibRhythmCat-RCLibPlugin.html" title="RCLibPlugin">
 <meta name="generator" content="GTK-Doc V1.18 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
@@ -18,7 +18,7 @@
 <td><a accesskey="u" href="ch01.html"><img src="up.png" width="24" height="24" border="0" alt="Up"></a></td>
 <td><a accesskey="h" href="index.html"><img src="home.png" width="24" height="24" border="0" alt="Home"></a></td>
 <th width="100%" align="center">LibRhythmCat Reference Manual</th>
-<td><a accesskey="n" href="LibRhythmCat-Utilities.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
+<td><a accesskey="n" href="LibRhythmCat-RCLibPlugin.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
 </tr>
 <tr><td colspan="5" class="shortcuts">
 <a href="#LibRhythmCat-Tag-Processor.synopsis" class="shortcut">Top</a>
@@ -41,11 +41,11 @@
 #include &lt;rclib-tag.h&gt;
 
 struct              <a class="link" href="LibRhythmCat-Tag-Processor.html#RCLibTagMetadata" title="struct RCLibTagMetadata">RCLibTagMetadata</a>;
-<a class="link" href="LibRhythmCat-Tag-Processor.html#RCLibTagMetadata" title="struct RCLibTagMetadata"><span class="returnvalue">RCLibTagMetadata</span></a> *  <a class="link" href="LibRhythmCat-Tag-Processor.html#rclib-tag-read-metadata" title="rclib_tag_read_metadata ()">rclib_tag_read_metadata</a>             (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *uri</code></em>);
 <span class="returnvalue">void</span>                <a class="link" href="LibRhythmCat-Tag-Processor.html#rclib-tag-free" title="rclib_tag_free ()">rclib_tag_free</a>                      (<em class="parameter"><code><a class="link" href="LibRhythmCat-Tag-Processor.html#RCLibTagMetadata" title="struct RCLibTagMetadata"><span class="type">RCLibTagMetadata</span></a> *mmd</code></em>);
-<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *             <a class="link" href="LibRhythmCat-Tag-Processor.html#rclib-tag-get-name-from-fpath" title="rclib_tag_get_name_from_fpath ()">rclib_tag_get_name_from_fpath</a>       (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *filename</code></em>);
-<span class="returnvalue">void</span>                <a class="link" href="LibRhythmCat-Tag-Processor.html#rclib-tag-set-fallback-encoding" title="rclib_tag_set_fallback_encoding ()">rclib_tag_set_fallback_encoding</a>     (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *encoding</code></em>);
 const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *       <a class="link" href="LibRhythmCat-Tag-Processor.html#rclib-tag-get-fallback-encoding" title="rclib_tag_get_fallback_encoding ()">rclib_tag_get_fallback_encoding</a>     ();
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *             <a class="link" href="LibRhythmCat-Tag-Processor.html#rclib-tag-get-name-from-fpath" title="rclib_tag_get_name_from_fpath ()">rclib_tag_get_name_from_fpath</a>       (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *filename</code></em>);
+<a class="link" href="LibRhythmCat-Tag-Processor.html#RCLibTagMetadata" title="struct RCLibTagMetadata"><span class="returnvalue">RCLibTagMetadata</span></a> *  <a class="link" href="LibRhythmCat-Tag-Processor.html#rclib-tag-read-metadata" title="rclib_tag_read_metadata ()">rclib_tag_read_metadata</a>             (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *uri</code></em>);
+<span class="returnvalue">void</span>                <a class="link" href="LibRhythmCat-Tag-Processor.html#rclib-tag-set-fallback-encoding" title="rclib_tag_set_fallback_encoding ()">rclib_tag_set_fallback_encoding</a>     (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *encoding</code></em>);
 </pre>
 </div>
 <div class="refsect1">
@@ -163,28 +163,6 @@ The structure for storing the music metadata.
 </div>
 <hr>
 <div class="refsect2">
-<a name="rclib-tag-read-metadata"></a><h3>rclib_tag_read_metadata ()</h3>
-<pre class="programlisting"><a class="link" href="LibRhythmCat-Tag-Processor.html#RCLibTagMetadata" title="struct RCLibTagMetadata"><span class="returnvalue">RCLibTagMetadata</span></a> *  rclib_tag_read_metadata             (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *uri</code></em>);</pre>
-<p>
-Read tag (metadata) from given URI.
-</p>
-<div class="variablelist"><table border="0">
-<col align="left" valign="top">
-<tbody>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>uri</code></em> :</span></p></td>
-<td>the URI of the music file</td>
-</tr>
-<tr>
-<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>The Metadata of the music, NULL if the file is not a music file,
-free after usage.</td>
-</tr>
-</tbody>
-</table></div>
-</div>
-<hr>
-<div class="refsect2">
 <a name="rclib-tag-free"></a><h3>rclib_tag_free ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>                rclib_tag_free                      (<em class="parameter"><code><a class="link" href="LibRhythmCat-Tag-Processor.html#RCLibTagMetadata" title="struct RCLibTagMetadata"><span class="type">RCLibTagMetadata</span></a> *mmd</code></em>);</pre>
 <p>
@@ -195,6 +173,21 @@ Free the memory allocated for metadata struct (RCLibTagMetadata).
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>mmd</code></em> :</span></p></td>
 <td>the metadata</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-tag-get-fallback-encoding"></a><h3>rclib_tag_get_fallback_encoding ()</h3>
+<pre class="programlisting">const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *       rclib_tag_get_fallback_encoding     ();</pre>
+<p>
+Get the fallback encoding for the tag reading.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>The fallback encoding.</td>
 </tr></tbody>
 </table></div>
 </div>
@@ -221,6 +214,28 @@ Return the base-name without extension from a full path or file name.
 </div>
 <hr>
 <div class="refsect2">
+<a name="rclib-tag-read-metadata"></a><h3>rclib_tag_read_metadata ()</h3>
+<pre class="programlisting"><a class="link" href="LibRhythmCat-Tag-Processor.html#RCLibTagMetadata" title="struct RCLibTagMetadata"><span class="returnvalue">RCLibTagMetadata</span></a> *  rclib_tag_read_metadata             (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *uri</code></em>);</pre>
+<p>
+Read tag (metadata) from given URI.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>uri</code></em> :</span></p></td>
+<td>the URI of the music file</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>The Metadata of the music, NULL if the file is not a music file,
+free after usage.</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
 <a name="rclib-tag-set-fallback-encoding"></a><h3>rclib_tag_set_fallback_encoding ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>                rclib_tag_set_fallback_encoding     (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *encoding</code></em>);</pre>
 <p>
@@ -233,21 +248,6 @@ in the Core module.
 <tbody><tr>
 <td><p><span class="term"><em class="parameter"><code>encoding</code></em> :</span></p></td>
 <td>the fallback encoding to set</td>
-</tr></tbody>
-</table></div>
-</div>
-<hr>
-<div class="refsect2">
-<a name="rclib-tag-get-fallback-encoding"></a><h3>rclib_tag_get_fallback_encoding ()</h3>
-<pre class="programlisting">const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *       rclib_tag_get_fallback_encoding     ();</pre>
-<p>
-Get the fallback encoding for the tag reading.
-</p>
-<div class="variablelist"><table border="0">
-<col align="left" valign="top">
-<tbody><tr>
-<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>The fallback encoding.</td>
 </tr></tbody>
 </table></div>
 </div>

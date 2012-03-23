@@ -23,18 +23,18 @@
 <synopsis>
 #include &lt;rclib-util.h&gt;
 
+<link linkend="gchar"><returnvalue>gchar</returnvalue></link> *             <link linkend="rclib-util-detect-encoding-by-locale">rclib_util_detect_encoding_by_locale</link>
+                                                        ();
+const <link linkend="gchar"><returnvalue>gchar</returnvalue></link> *       <link linkend="rclib-util-get-cover-search-dir">rclib_util_get_cover_search_dir</link>     ();
 <link linkend="gchar"><returnvalue>gchar</returnvalue></link> *             <link linkend="rclib-util-get-data-dir">rclib_util_get_data_dir</link>             (<parameter>const <link linkend="gchar"><type>gchar</type></link> *name</parameter>,
                                                          <parameter>const <link linkend="gchar"><type>gchar</type></link> *arg0</parameter>);
-<link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            <link linkend="rclib-util-is-supported-media">rclib_util_is_supported_media</link>       (<parameter>const <link linkend="gchar"><type>gchar</type></link> *file</parameter>);
 <link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            <link linkend="rclib-util-is-supported-list">rclib_util_is_supported_list</link>        (<parameter>const <link linkend="gchar"><type>gchar</type></link> *file</parameter>);
-<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rclib-util-set-cover-search-dir">rclib_util_set_cover_search_dir</link>     (<parameter>const <link linkend="gchar"><type>gchar</type></link> *dir</parameter>);
-const <link linkend="gchar"><returnvalue>gchar</returnvalue></link> *       <link linkend="rclib-util-get-cover-search-dir">rclib_util_get_cover_search_dir</link>     ();
+<link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            <link linkend="rclib-util-is-supported-media">rclib_util_is_supported_media</link>       (<parameter>const <link linkend="gchar"><type>gchar</type></link> *file</parameter>);
 <link linkend="gchar"><returnvalue>gchar</returnvalue></link> *             <link linkend="rclib-util-search-cover">rclib_util_search_cover</link>             (<parameter>const <link linkend="gchar"><type>gchar</type></link> *uri</parameter>,
                                                          <parameter>const <link linkend="gchar"><type>gchar</type></link> *title</parameter>,
                                                          <parameter>const <link linkend="gchar"><type>gchar</type></link> *artist</parameter>,
                                                          <parameter>const <link linkend="gchar"><type>gchar</type></link> *album</parameter>);
-<link linkend="gchar"><returnvalue>gchar</returnvalue></link> *             <link linkend="rclib-util-detect-encoding-by-locale">rclib_util_detect_encoding_by_locale</link>
-                                                        ();
+<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rclib-util-set-cover-search-dir">rclib_util_set_cover_search_dir</link>     (<parameter>const <link linkend="gchar"><type>gchar</type></link> *dir</parameter>);
 </synopsis>
 </refsynopsisdiv>
 
@@ -46,6 +46,26 @@ Some utility API for the player.
 </refsect1>
 <refsect1 id="LibRhythmCat-Utilities.details" role="details">
 <title role="details.title">Details</title>
+<refsect2 id="rclib-util-detect-encoding-by-locale" role="function">
+<title>rclib_util_detect_encoding_by_locale ()</title>
+<indexterm zone="rclib-util-detect-encoding-by-locale"><primary>rclib_util_detect_encoding_by_locale</primary></indexterm>
+<programlisting><link linkend="gchar"><returnvalue>gchar</returnvalue></link> *             rclib_util_detect_encoding_by_locale
+                                                        ();</programlisting>
+<para>
+Get the most possible encoding by current locale settings.
+</para><variablelist role="params">
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara>The encoding, NULL if the encoding cannot be detected.
+Free it after usage.</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rclib-util-get-cover-search-dir" role="function">
+<title>rclib_util_get_cover_search_dir ()</title>
+<indexterm zone="rclib-util-get-cover-search-dir"><primary>rclib_util_get_cover_search_dir</primary></indexterm>
+<programlisting>const <link linkend="gchar"><returnvalue>gchar</returnvalue></link> *       rclib_util_get_cover_search_dir     ();</programlisting>
+<para>
+Get the directory for searching the album cover image files.
+</para><variablelist role="params">
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara>The directory path.</simpara></listitem></varlistentry>
+</variablelist></refsect2>
 <refsect2 id="rclib-util-get-data-dir" role="function">
 <title>rclib_util_get_data_dir ()</title>
 <indexterm zone="rclib-util-get-data-dir"><primary>rclib_util_get_data_dir</primary></indexterm>
@@ -60,17 +80,6 @@ Get the data directory of the program.
 <listitem><simpara>the first argument from the main function (argv[0])</simpara></listitem></varlistentry>
 <varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara>The data directory path.</simpara></listitem></varlistentry>
 </variablelist></refsect2>
-<refsect2 id="rclib-util-is-supported-media" role="function">
-<title>rclib_util_is_supported_media ()</title>
-<indexterm zone="rclib-util-is-supported-media"><primary>rclib_util_is_supported_media</primary></indexterm>
-<programlisting><link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            rclib_util_is_supported_media       (<parameter>const <link linkend="gchar"><type>gchar</type></link> *file</parameter>);</programlisting>
-<para>
-Check whether the given media file is supported by the player.
-</para><variablelist role="params">
-<varlistentry><term><parameter>file</parameter>&#160;:</term>
-<listitem><simpara>the filename to check</simpara></listitem></varlistentry>
-<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara>Whether the file is supported.</simpara></listitem></varlistentry>
-</variablelist></refsect2>
 <refsect2 id="rclib-util-is-supported-list" role="function">
 <title>rclib_util_is_supported_list ()</title>
 <indexterm zone="rclib-util-is-supported-list"><primary>rclib_util_is_supported_list</primary></indexterm>
@@ -82,24 +91,16 @@ Check whether the given playlist file is supported by the player.
 <listitem><simpara>the filename to check</simpara></listitem></varlistentry>
 <varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara>Whether the file is supported.</simpara></listitem></varlistentry>
 </variablelist></refsect2>
-<refsect2 id="rclib-util-set-cover-search-dir" role="function">
-<title>rclib_util_set_cover_search_dir ()</title>
-<indexterm zone="rclib-util-set-cover-search-dir"><primary>rclib_util_set_cover_search_dir</primary></indexterm>
-<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rclib_util_set_cover_search_dir     (<parameter>const <link linkend="gchar"><type>gchar</type></link> *dir</parameter>);</programlisting>
+<refsect2 id="rclib-util-is-supported-media" role="function">
+<title>rclib_util_is_supported_media ()</title>
+<indexterm zone="rclib-util-is-supported-media"><primary>rclib_util_is_supported_media</primary></indexterm>
+<programlisting><link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            rclib_util_is_supported_media       (<parameter>const <link linkend="gchar"><type>gchar</type></link> *file</parameter>);</programlisting>
 <para>
-Set the directory for searching the album cover image files.
+Check whether the given media file is supported by the player.
 </para><variablelist role="params">
-<varlistentry><term><parameter>dir</parameter>&#160;:</term>
-<listitem><simpara>the directory to set</simpara></listitem></varlistentry>
-</variablelist></refsect2>
-<refsect2 id="rclib-util-get-cover-search-dir" role="function">
-<title>rclib_util_get_cover_search_dir ()</title>
-<indexterm zone="rclib-util-get-cover-search-dir"><primary>rclib_util_get_cover_search_dir</primary></indexterm>
-<programlisting>const <link linkend="gchar"><returnvalue>gchar</returnvalue></link> *       rclib_util_get_cover_search_dir     ();</programlisting>
-<para>
-Get the directory for searching the album cover image files.
-</para><variablelist role="params">
-<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara>The directory path.</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>file</parameter>&#160;:</term>
+<listitem><simpara>the filename to check</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara>Whether the file is supported.</simpara></listitem></varlistentry>
 </variablelist></refsect2>
 <refsect2 id="rclib-util-search-cover" role="function">
 <title>rclib_util_search_cover ()</title>
@@ -121,16 +122,15 @@ Search the album cover image file by given information.
 <listitem><simpara>the album</simpara></listitem></varlistentry>
 <varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara>The album cover image file path, NULL if not found.</simpara></listitem></varlistentry>
 </variablelist></refsect2>
-<refsect2 id="rclib-util-detect-encoding-by-locale" role="function">
-<title>rclib_util_detect_encoding_by_locale ()</title>
-<indexterm zone="rclib-util-detect-encoding-by-locale"><primary>rclib_util_detect_encoding_by_locale</primary></indexterm>
-<programlisting><link linkend="gchar"><returnvalue>gchar</returnvalue></link> *             rclib_util_detect_encoding_by_locale
-                                                        ();</programlisting>
+<refsect2 id="rclib-util-set-cover-search-dir" role="function">
+<title>rclib_util_set_cover_search_dir ()</title>
+<indexterm zone="rclib-util-set-cover-search-dir"><primary>rclib_util_set_cover_search_dir</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rclib_util_set_cover_search_dir     (<parameter>const <link linkend="gchar"><type>gchar</type></link> *dir</parameter>);</programlisting>
 <para>
-Get the most possible encoding by current locale settings.
+Set the directory for searching the album cover image files.
 </para><variablelist role="params">
-<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara>The encoding, NULL if the encoding cannot be detected.
-Free it after usage.</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>dir</parameter>&#160;:</term>
+<listitem><simpara>the directory to set</simpara></listitem></varlistentry>
 </variablelist></refsect2>
 
 </refsect1>

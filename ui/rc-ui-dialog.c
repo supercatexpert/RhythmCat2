@@ -56,31 +56,18 @@ static const gchar const *dialog_about_artists[] = {"SuperCat", NULL};
 void rc_ui_dialog_about_player()
 {
     GtkWidget *about_dialog;
-    about_dialog = gtk_about_dialog_new();
     gchar *version;
+    about_dialog = gtk_about_dialog_new();
     version = g_strdup_printf("LibRhythmCat %d.%d.%d - build date: %s",
         rclib_major_version, rclib_minor_version, rclib_micro_version,
         rclib_build_date);
-    gtk_about_dialog_set_program_name(GTK_ABOUT_DIALOG(about_dialog),
-        "RhythmCat2 Music Player");
-    gtk_about_dialog_set_logo(GTK_ABOUT_DIALOG(about_dialog),
-        (GdkPixbuf *)rc_ui_player_get_icon_image());
-    gtk_about_dialog_set_authors(GTK_ABOUT_DIALOG(about_dialog),
-        dialog_about_authors);
-    gtk_about_dialog_set_documenters(GTK_ABOUT_DIALOG(about_dialog),
-        dialog_about_documenters);
-    gtk_about_dialog_set_artists(GTK_ABOUT_DIALOG(about_dialog),
-        dialog_about_artists);
-    gtk_about_dialog_set_comments(GTK_ABOUT_DIALOG(about_dialog),
-        _("A music player based on GTK+ 3.0 & GStreamer 0.10"));
-    gtk_about_dialog_set_website(GTK_ABOUT_DIALOG(about_dialog),
-        "http://supercat-lab.org");
-    gtk_about_dialog_set_license_type(GTK_ABOUT_DIALOG(about_dialog),
-        GTK_LICENSE_GPL_3_0);
-    gtk_about_dialog_set_license(GTK_ABOUT_DIALOG(about_dialog),
-        dialog_about_license);
-    gtk_about_dialog_set_version(GTK_ABOUT_DIALOG(about_dialog),
-        version);
+    g_object_set(about_dialog, "program-name", "RhythmCat2 Music Player",
+        "logo", rc_ui_player_get_icon_image(), "authors",
+        dialog_about_authors, "documenters", dialog_about_documenters,
+        "artists", dialog_about_artists, "comments",
+        _("A music player based on GTK+ 3.0 & GStreamer 0.10"), "website",
+        "http://supercat-lab.org", "license-type", GTK_LICENSE_GPL_3_0,
+        "license", dialog_about_license, "version", version, NULL);
     g_free(version);
     gtk_dialog_run(GTK_DIALOG(about_dialog));
     gtk_widget_destroy(about_dialog);  

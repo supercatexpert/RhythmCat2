@@ -28,25 +28,25 @@ struct              <link linkend="RCLibPlayer-struct">RCLibPlayer</link>;
 struct              <link linkend="RCLibPlayerClass">RCLibPlayerClass</link>;
 enum                <link linkend="RCLibPlayerRandomMode">RCLibPlayerRandomMode</link>;
 enum                <link linkend="RCLibPlayerRepeatMode">RCLibPlayerRepeatMode</link>;
-<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rclib-player-init">rclib_player_init</link>                   ();
 <link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rclib-player-exit">rclib_player_exit</link>                   ();
 <link linkend="GObject"><returnvalue>GObject</returnvalue></link> *           <link linkend="rclib-player-get-instance">rclib_player_get_instance</link>           ();
+<link linkend="RCLibPlayerRandomMode"><returnvalue>RCLibPlayerRandomMode</returnvalue></link> <link linkend="rclib-player-get-random-mode">rclib_player_get_random_mode</link>      ();
+<link linkend="RCLibPlayerRepeatMode"><returnvalue>RCLibPlayerRepeatMode</returnvalue></link> <link linkend="rclib-player-get-repeat-mode">rclib_player_get_repeat_mode</link>      ();
+<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rclib-player-init">rclib_player_init</link>                   ();
+<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rclib-player-play-db">rclib_player_play_db</link>                (<parameter><link linkend="GSequenceIter"><type>GSequenceIter</type></link> *iter</parameter>);
+<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rclib-player-play-next">rclib_player_play_next</link>              (<parameter><link linkend="gboolean"><type>gboolean</type></link> jump</parameter>,
+                                                         <parameter><link linkend="gboolean"><type>gboolean</type></link> repeat</parameter>,
+                                                         <parameter><link linkend="gboolean"><type>gboolean</type></link> loop</parameter>);
+<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rclib-player-play-prev">rclib_player_play_prev</link>              (<parameter><link linkend="gboolean"><type>gboolean</type></link> jump</parameter>,
+                                                         <parameter><link linkend="gboolean"><type>gboolean</type></link> repeat</parameter>,
+                                                         <parameter><link linkend="gboolean"><type>gboolean</type></link> loop</parameter>);
+<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rclib-player-play-uri">rclib_player_play_uri</link>               (<parameter>const <link linkend="gchar"><type>gchar</type></link> *uri</parameter>);
+<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rclib-player-set-random-mode">rclib_player_set_random_mode</link>        (<parameter><link linkend="RCLibPlayerRandomMode"><type>RCLibPlayerRandomMode</type></link> mode</parameter>);
+<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rclib-player-set-repeat-mode">rclib_player_set_repeat_mode</link>        (<parameter><link linkend="RCLibPlayerRepeatMode"><type>RCLibPlayerRepeatMode</type></link> mode</parameter>);
 <link linkend="gulong"><returnvalue>gulong</returnvalue></link>              <link linkend="rclib-player-signal-connect">rclib_player_signal_connect</link>         (<parameter>const <link linkend="gchar"><type>gchar</type></link> *name</parameter>,
                                                          <parameter><link linkend="GCallback"><type>GCallback</type></link> callback</parameter>,
                                                          <parameter><link linkend="gpointer"><type>gpointer</type></link> data</parameter>);
 <link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rclib-player-signal-disconnect">rclib_player_signal_disconnect</link>      (<parameter><link linkend="gulong"><type>gulong</type></link> handler_id</parameter>);
-<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rclib-player-play-db">rclib_player_play_db</link>                (<parameter><link linkend="GSequenceIter"><type>GSequenceIter</type></link> *iter</parameter>);
-<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rclib-player-play-uri">rclib_player_play_uri</link>               (<parameter>const <link linkend="gchar"><type>gchar</type></link> *uri</parameter>);
-<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rclib-player-play-prev">rclib_player_play_prev</link>              (<parameter><link linkend="gboolean"><type>gboolean</type></link> jump</parameter>,
-                                                         <parameter><link linkend="gboolean"><type>gboolean</type></link> repeat</parameter>,
-                                                         <parameter><link linkend="gboolean"><type>gboolean</type></link> loop</parameter>);
-<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rclib-player-play-next">rclib_player_play_next</link>              (<parameter><link linkend="gboolean"><type>gboolean</type></link> jump</parameter>,
-                                                         <parameter><link linkend="gboolean"><type>gboolean</type></link> repeat</parameter>,
-                                                         <parameter><link linkend="gboolean"><type>gboolean</type></link> loop</parameter>);
-<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rclib-player-set-repeat-mode">rclib_player_set_repeat_mode</link>        (<parameter><link linkend="RCLibPlayerRepeatMode"><type>RCLibPlayerRepeatMode</type></link> mode</parameter>);
-<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rclib-player-set-random-mode">rclib_player_set_random_mode</link>        (<parameter><link linkend="RCLibPlayerRandomMode"><type>RCLibPlayerRandomMode</type></link> mode</parameter>);
-<link linkend="RCLibPlayerRepeatMode"><returnvalue>RCLibPlayerRepeatMode</returnvalue></link> <link linkend="rclib-player-get-repeat-mode">rclib_player_get_repeat_mode</link>      ();
-<link linkend="RCLibPlayerRandomMode"><returnvalue>RCLibPlayerRandomMode</returnvalue></link> <link linkend="rclib-player-get-random-mode">rclib_player_get_random_mode</link>      ();
 </synopsis>
 </refsynopsisdiv>
 <refsect1 id="RCLibPlayer.object-hierarchy" role="object_hierarchy">
@@ -159,13 +159,6 @@ The enum type for repeat playing mode type.
 </simpara></listitem>
 </varlistentry>
 </variablelist></refsect2>
-<refsect2 id="rclib-player-init" role="function">
-<title>rclib_player_init ()</title>
-<indexterm zone="rclib-player-init"><primary>rclib_player_init</primary></indexterm>
-<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rclib_player_init                   ();</programlisting>
-<para>
-Initialize the player scheduler.
-</para></refsect2>
 <refsect2 id="rclib-player-exit" role="function">
 <title>rclib_player_exit ()</title>
 <indexterm zone="rclib-player-exit"><primary>rclib_player_exit</primary></indexterm>
@@ -181,6 +174,104 @@ Unload the running player scheduler instance.
 Get the running <link linkend="RCLibPlayer"><type>RCLibPlayer</type></link> instance.
 </para><variablelist role="params">
 <varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara>The running instance.</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rclib-player-get-random-mode" role="function">
+<title>rclib_player_get_random_mode ()</title>
+<indexterm zone="rclib-player-get-random-mode"><primary>rclib_player_get_random_mode</primary></indexterm>
+<programlisting><link linkend="RCLibPlayerRandomMode"><returnvalue>RCLibPlayerRandomMode</returnvalue></link> rclib_player_get_random_mode      ();</programlisting>
+<para>
+Get the random mode using now in the player.
+</para><variablelist role="params">
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara>The random mode.</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rclib-player-get-repeat-mode" role="function">
+<title>rclib_player_get_repeat_mode ()</title>
+<indexterm zone="rclib-player-get-repeat-mode"><primary>rclib_player_get_repeat_mode</primary></indexterm>
+<programlisting><link linkend="RCLibPlayerRepeatMode"><returnvalue>RCLibPlayerRepeatMode</returnvalue></link> rclib_player_get_repeat_mode      ();</programlisting>
+<para>
+Get the repeat mode using now in the player.
+</para><variablelist role="params">
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara>The repeat mode.</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rclib-player-init" role="function">
+<title>rclib_player_init ()</title>
+<indexterm zone="rclib-player-init"><primary>rclib_player_init</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rclib_player_init                   ();</programlisting>
+<para>
+Initialize the player scheduler.
+</para></refsect2>
+<refsect2 id="rclib-player-play-db" role="function">
+<title>rclib_player_play_db ()</title>
+<indexterm zone="rclib-player-play-db"><primary>rclib_player_play_db</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rclib_player_play_db                (<parameter><link linkend="GSequenceIter"><type>GSequenceIter</type></link> *iter</parameter>);</programlisting>
+<para>
+Play the iter to the playlist in the music database.
+</para><variablelist role="params">
+<varlistentry><term><parameter>iter</parameter>&#160;:</term>
+<listitem><simpara>the iter to the playlist</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rclib-player-play-next" role="function">
+<title>rclib_player_play_next ()</title>
+<indexterm zone="rclib-player-play-next"><primary>rclib_player_play_next</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rclib_player_play_next              (<parameter><link linkend="gboolean"><type>gboolean</type></link> jump</parameter>,
+                                                         <parameter><link linkend="gboolean"><type>gboolean</type></link> repeat</parameter>,
+                                                         <parameter><link linkend="gboolean"><type>gboolean</type></link> loop</parameter>);</programlisting>
+<para>
+Play the next music.
+</para><variablelist role="params">
+<varlistentry><term><parameter>jump</parameter>&#160;:</term>
+<listitem><simpara>whether the player should be jump to the next playlist
+if the playing music is the last one in current playlist</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>repeat</parameter>&#160;:</term>
+<listitem><simpara>whether repeat playing the current music if there is no
+next one</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>loop</parameter>&#160;:</term>
+<listitem><simpara>whether the player should be jump to the first playlist
+if the playing one is the last</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rclib-player-play-prev" role="function">
+<title>rclib_player_play_prev ()</title>
+<indexterm zone="rclib-player-play-prev"><primary>rclib_player_play_prev</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rclib_player_play_prev              (<parameter><link linkend="gboolean"><type>gboolean</type></link> jump</parameter>,
+                                                         <parameter><link linkend="gboolean"><type>gboolean</type></link> repeat</parameter>,
+                                                         <parameter><link linkend="gboolean"><type>gboolean</type></link> loop</parameter>);</programlisting>
+<para>
+Play the previous music.
+</para><variablelist role="params">
+<varlistentry><term><parameter>jump</parameter>&#160;:</term>
+<listitem><simpara>whether the player should be jump to the previous playlist
+if the playing music is the first one in current playlist</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>repeat</parameter>&#160;:</term>
+<listitem><simpara>whether repeat playing the current music if there is no
+previous one</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>loop</parameter>&#160;:</term>
+<listitem><simpara>whether the player should be jump to the last playlist
+if the playing one is the first</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rclib-player-play-uri" role="function">
+<title>rclib_player_play_uri ()</title>
+<indexterm zone="rclib-player-play-uri"><primary>rclib_player_play_uri</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rclib_player_play_uri               (<parameter>const <link linkend="gchar"><type>gchar</type></link> *uri</parameter>);</programlisting>
+</refsect2>
+<refsect2 id="rclib-player-set-random-mode" role="function">
+<title>rclib_player_set_random_mode ()</title>
+<indexterm zone="rclib-player-set-random-mode"><primary>rclib_player_set_random_mode</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rclib_player_set_random_mode        (<parameter><link linkend="RCLibPlayerRandomMode"><type>RCLibPlayerRandomMode</type></link> mode</parameter>);</programlisting>
+<para>
+Set the random mode for the player.
+</para><variablelist role="params">
+<varlistentry><term><parameter>mode</parameter>&#160;:</term>
+<listitem><simpara>the new random mode to set</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rclib-player-set-repeat-mode" role="function">
+<title>rclib_player_set_repeat_mode ()</title>
+<indexterm zone="rclib-player-set-repeat-mode"><primary>rclib_player_set_repeat_mode</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rclib_player_set_repeat_mode        (<parameter><link linkend="RCLibPlayerRepeatMode"><type>RCLibPlayerRepeatMode</type></link> mode</parameter>);</programlisting>
+<para>
+Set the repeat mode for the player.
+</para><variablelist role="params">
+<varlistentry><term><parameter>mode</parameter>&#160;:</term>
+<listitem><simpara>the new repeat mode to set</simpara></listitem></varlistentry>
 </variablelist></refsect2>
 <refsect2 id="rclib-player-signal-connect" role="function">
 <title>rclib_player_signal_connect ()</title>
@@ -212,97 +303,6 @@ invalid and may be reused.
 </para><variablelist role="params">
 <varlistentry><term><parameter>handler_id</parameter>&#160;:</term>
 <listitem><simpara>handler id of the handler to be disconnected</simpara></listitem></varlistentry>
-</variablelist></refsect2>
-<refsect2 id="rclib-player-play-db" role="function">
-<title>rclib_player_play_db ()</title>
-<indexterm zone="rclib-player-play-db"><primary>rclib_player_play_db</primary></indexterm>
-<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rclib_player_play_db                (<parameter><link linkend="GSequenceIter"><type>GSequenceIter</type></link> *iter</parameter>);</programlisting>
-<para>
-Play the iter to the playlist in the music database.
-</para><variablelist role="params">
-<varlistentry><term><parameter>iter</parameter>&#160;:</term>
-<listitem><simpara>the iter to the playlist</simpara></listitem></varlistentry>
-</variablelist></refsect2>
-<refsect2 id="rclib-player-play-uri" role="function">
-<title>rclib_player_play_uri ()</title>
-<indexterm zone="rclib-player-play-uri"><primary>rclib_player_play_uri</primary></indexterm>
-<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rclib_player_play_uri               (<parameter>const <link linkend="gchar"><type>gchar</type></link> *uri</parameter>);</programlisting>
-</refsect2>
-<refsect2 id="rclib-player-play-prev" role="function">
-<title>rclib_player_play_prev ()</title>
-<indexterm zone="rclib-player-play-prev"><primary>rclib_player_play_prev</primary></indexterm>
-<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rclib_player_play_prev              (<parameter><link linkend="gboolean"><type>gboolean</type></link> jump</parameter>,
-                                                         <parameter><link linkend="gboolean"><type>gboolean</type></link> repeat</parameter>,
-                                                         <parameter><link linkend="gboolean"><type>gboolean</type></link> loop</parameter>);</programlisting>
-<para>
-Play the previous music.
-</para><variablelist role="params">
-<varlistentry><term><parameter>jump</parameter>&#160;:</term>
-<listitem><simpara>whether the player should be jump to the previous playlist
-if the playing music is the first one in current playlist</simpara></listitem></varlistentry>
-<varlistentry><term><parameter>repeat</parameter>&#160;:</term>
-<listitem><simpara>whether repeat playing the current music if there is no
-previous one</simpara></listitem></varlistentry>
-<varlistentry><term><parameter>loop</parameter>&#160;:</term>
-<listitem><simpara>whether the player should be jump to the last playlist
-if the playing one is the first</simpara></listitem></varlistentry>
-</variablelist></refsect2>
-<refsect2 id="rclib-player-play-next" role="function">
-<title>rclib_player_play_next ()</title>
-<indexterm zone="rclib-player-play-next"><primary>rclib_player_play_next</primary></indexterm>
-<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rclib_player_play_next              (<parameter><link linkend="gboolean"><type>gboolean</type></link> jump</parameter>,
-                                                         <parameter><link linkend="gboolean"><type>gboolean</type></link> repeat</parameter>,
-                                                         <parameter><link linkend="gboolean"><type>gboolean</type></link> loop</parameter>);</programlisting>
-<para>
-Play the next music.
-</para><variablelist role="params">
-<varlistentry><term><parameter>jump</parameter>&#160;:</term>
-<listitem><simpara>whether the player should be jump to the next playlist
-if the playing music is the last one in current playlist</simpara></listitem></varlistentry>
-<varlistentry><term><parameter>repeat</parameter>&#160;:</term>
-<listitem><simpara>whether repeat playing the current music if there is no
-next one</simpara></listitem></varlistentry>
-<varlistentry><term><parameter>loop</parameter>&#160;:</term>
-<listitem><simpara>whether the player should be jump to the first playlist
-if the playing one is the last</simpara></listitem></varlistentry>
-</variablelist></refsect2>
-<refsect2 id="rclib-player-set-repeat-mode" role="function">
-<title>rclib_player_set_repeat_mode ()</title>
-<indexterm zone="rclib-player-set-repeat-mode"><primary>rclib_player_set_repeat_mode</primary></indexterm>
-<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rclib_player_set_repeat_mode        (<parameter><link linkend="RCLibPlayerRepeatMode"><type>RCLibPlayerRepeatMode</type></link> mode</parameter>);</programlisting>
-<para>
-Set the repeat mode for the player.
-</para><variablelist role="params">
-<varlistentry><term><parameter>mode</parameter>&#160;:</term>
-<listitem><simpara>the new repeat mode to set</simpara></listitem></varlistentry>
-</variablelist></refsect2>
-<refsect2 id="rclib-player-set-random-mode" role="function">
-<title>rclib_player_set_random_mode ()</title>
-<indexterm zone="rclib-player-set-random-mode"><primary>rclib_player_set_random_mode</primary></indexterm>
-<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rclib_player_set_random_mode        (<parameter><link linkend="RCLibPlayerRandomMode"><type>RCLibPlayerRandomMode</type></link> mode</parameter>);</programlisting>
-<para>
-Set the random mode for the player.
-</para><variablelist role="params">
-<varlistentry><term><parameter>mode</parameter>&#160;:</term>
-<listitem><simpara>the new random mode to set</simpara></listitem></varlistentry>
-</variablelist></refsect2>
-<refsect2 id="rclib-player-get-repeat-mode" role="function">
-<title>rclib_player_get_repeat_mode ()</title>
-<indexterm zone="rclib-player-get-repeat-mode"><primary>rclib_player_get_repeat_mode</primary></indexterm>
-<programlisting><link linkend="RCLibPlayerRepeatMode"><returnvalue>RCLibPlayerRepeatMode</returnvalue></link> rclib_player_get_repeat_mode      ();</programlisting>
-<para>
-Get the repeat mode using now in the player.
-</para><variablelist role="params">
-<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara>The repeat mode.</simpara></listitem></varlistentry>
-</variablelist></refsect2>
-<refsect2 id="rclib-player-get-random-mode" role="function">
-<title>rclib_player_get_random_mode ()</title>
-<indexterm zone="rclib-player-get-random-mode"><primary>rclib_player_get_random_mode</primary></indexterm>
-<programlisting><link linkend="RCLibPlayerRandomMode"><returnvalue>RCLibPlayerRandomMode</returnvalue></link> rclib_player_get_random_mode      ();</programlisting>
-<para>
-Get the random mode using now in the player.
-</para><variablelist role="params">
-<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara>The random mode.</simpara></listitem></varlistentry>
 </variablelist></refsect2>
 
 </refsect1>

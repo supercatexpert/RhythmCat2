@@ -23,12 +23,8 @@
 <synopsis>
 #include &lt;rclib-settings.h&gt;
 
-<link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            <link linkend="rclib-settings-init">rclib_settings_init</link>                 ();
-<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rclib-settings-exit">rclib_settings_exit</link>                 ();
-<link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            <link linkend="rclib-settings-load-from-file">rclib_settings_load_from_file</link>       (<parameter>const <link linkend="gchar"><type>gchar</type></link> *filename</parameter>);
 <link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rclib-settings-apply">rclib_settings_apply</link>                ();
-<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rclib-settings-sync">rclib_settings_sync</link>                 ();
-<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rclib-settings-update">rclib_settings_update</link>               ();
+<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rclib-settings-exit">rclib_settings_exit</link>                 ();
 <link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            <link linkend="rclib-settings-get-boolean">rclib_settings_get_boolean</link>          (<parameter>const <link linkend="gchar"><type>gchar</type></link> *group_name</parameter>,
                                                          <parameter>const <link linkend="gchar"><type>gchar</type></link> *key</parameter>,
                                                          <parameter><link linkend="GError"><type>GError</type></link> **error</parameter>);
@@ -60,6 +56,8 @@
 <link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            <link linkend="rclib-settings-has-key">rclib_settings_has_key</link>              (<parameter>const <link linkend="gchar"><type>gchar</type></link> *group_name</parameter>,
                                                          <parameter><link linkend="gchar"><type>gchar</type></link> *key</parameter>,
                                                          <parameter><link linkend="GError"><type>GError</type></link> **error</parameter>);
+<link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            <link linkend="rclib-settings-init">rclib_settings_init</link>                 ();
+<link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            <link linkend="rclib-settings-load-from-file">rclib_settings_load_from_file</link>       (<parameter>const <link linkend="gchar"><type>gchar</type></link> *filename</parameter>);
 <link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rclib-settings-set-boolean">rclib_settings_set_boolean</link>          (<parameter>const <link linkend="gchar"><type>gchar</type></link> *group_name</parameter>,
                                                          <parameter>const <link linkend="gchar"><type>gchar</type></link> *key</parameter>,
                                                          <parameter><link linkend="gboolean"><type>gboolean</type></link> value</parameter>);
@@ -88,6 +86,8 @@
                                                          <parameter>const <link linkend="gchar"><type>gchar</type></link> *key</parameter>,
                                                          <parameter>const <link linkend="gchar"><type>gchar</type></link> * const list[]</parameter>,
                                                          <parameter><link linkend="gsize"><type>gsize</type></link> length</parameter>);
+<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rclib-settings-sync">rclib_settings_sync</link>                 ();
+<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rclib-settings-update">rclib_settings_update</link>               ();
 </synopsis>
 </refsynopsisdiv>
 
@@ -108,35 +108,6 @@ save them in this module.
 </refsect1>
 <refsect1 id="LibRhythmCat-Settings.details" role="details">
 <title role="details.title">Details</title>
-<refsect2 id="rclib-settings-init" role="function">
-<title>rclib_settings_init ()</title>
-<indexterm zone="rclib-settings-init"><primary>rclib_settings_init</primary></indexterm>
-<programlisting><link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            rclib_settings_init                 ();</programlisting>
-<para>
-Initialize the settings module.
-</para><variablelist role="params">
-<varlistentry><term><parameter>filename</parameter>&#160;:</term>
-<listitem><simpara>the path of the settings file</simpara></listitem></varlistentry>
-<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara>Whether the initialization succeeded.</simpara></listitem></varlistentry>
-</variablelist></refsect2>
-<refsect2 id="rclib-settings-exit" role="function">
-<title>rclib_settings_exit ()</title>
-<indexterm zone="rclib-settings-exit"><primary>rclib_settings_exit</primary></indexterm>
-<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rclib_settings_exit                 ();</programlisting>
-<para>
-Unload the setings module and save the settings to the settings file.
-</para></refsect2>
-<refsect2 id="rclib-settings-load-from-file" role="function">
-<title>rclib_settings_load_from_file ()</title>
-<indexterm zone="rclib-settings-load-from-file"><primary>rclib_settings_load_from_file</primary></indexterm>
-<programlisting><link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            rclib_settings_load_from_file       (<parameter>const <link linkend="gchar"><type>gchar</type></link> *filename</parameter>);</programlisting>
-<para>
-Load settings from file.
-</para><variablelist role="params">
-<varlistentry><term><parameter>filename</parameter>&#160;:</term>
-<listitem><simpara>the path of the settings file</simpara></listitem></varlistentry>
-<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara>Whether the settings are loaded successfully.</simpara></listitem></varlistentry>
-</variablelist></refsect2>
 <refsect2 id="rclib-settings-apply" role="function">
 <title>rclib_settings_apply ()</title>
 <indexterm zone="rclib-settings-apply"><primary>rclib_settings_apply</primary></indexterm>
@@ -144,19 +115,12 @@ Load settings from file.
 <para>
 Apply the settings to the modules in library.
 </para></refsect2>
-<refsect2 id="rclib-settings-sync" role="function">
-<title>rclib_settings_sync ()</title>
-<indexterm zone="rclib-settings-sync"><primary>rclib_settings_sync</primary></indexterm>
-<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rclib_settings_sync                 ();</programlisting>
+<refsect2 id="rclib-settings-exit" role="function">
+<title>rclib_settings_exit ()</title>
+<indexterm zone="rclib-settings-exit"><primary>rclib_settings_exit</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rclib_settings_exit                 ();</programlisting>
 <para>
-Save the settings to file if they are changed (become dirty).
-</para></refsect2>
-<refsect2 id="rclib-settings-update" role="function">
-<title>rclib_settings_update ()</title>
-<indexterm zone="rclib-settings-update"><primary>rclib_settings_update</primary></indexterm>
-<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rclib_settings_update               ();</programlisting>
-<para>
-Update settings from the modules in the library.
+Unload the setings module and save the settings to the settings file.
 </para></refsect2>
 <refsect2 id="rclib-settings-get-boolean" role="function">
 <title>rclib_settings_get_boolean ()</title>
@@ -332,6 +296,28 @@ Looks whether the key file has the key in the group.
 <listitem><simpara>return location for a GError</simpara></listitem></varlistentry>
 <varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara>TRUE if key is a part of group_name, FALSE otherwise.</simpara></listitem></varlistentry>
 </variablelist></refsect2>
+<refsect2 id="rclib-settings-init" role="function">
+<title>rclib_settings_init ()</title>
+<indexterm zone="rclib-settings-init"><primary>rclib_settings_init</primary></indexterm>
+<programlisting><link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            rclib_settings_init                 ();</programlisting>
+<para>
+Initialize the settings module.
+</para><variablelist role="params">
+<varlistentry><term><parameter>filename</parameter>&#160;:</term>
+<listitem><simpara>the path of the settings file</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara>Whether the initialization succeeded.</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rclib-settings-load-from-file" role="function">
+<title>rclib_settings_load_from_file ()</title>
+<indexterm zone="rclib-settings-load-from-file"><primary>rclib_settings_load_from_file</primary></indexterm>
+<programlisting><link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            rclib_settings_load_from_file       (<parameter>const <link linkend="gchar"><type>gchar</type></link> *filename</parameter>);</programlisting>
+<para>
+Load settings from file.
+</para><variablelist role="params">
+<varlistentry><term><parameter>filename</parameter>&#160;:</term>
+<listitem><simpara>the path of the settings file</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara>Whether the settings are loaded successfully.</simpara></listitem></varlistentry>
+</variablelist></refsect2>
 <refsect2 id="rclib-settings-set-boolean" role="function">
 <title>rclib_settings_set_boolean ()</title>
 <indexterm zone="rclib-settings-set-boolean"><primary>rclib_settings_set_boolean</primary></indexterm>
@@ -488,6 +474,20 @@ it is created.
 <varlistentry><term><parameter>length</parameter>&#160;:</term>
 <listitem><simpara>number of string values in list</simpara></listitem></varlistentry>
 </variablelist></refsect2>
+<refsect2 id="rclib-settings-sync" role="function">
+<title>rclib_settings_sync ()</title>
+<indexterm zone="rclib-settings-sync"><primary>rclib_settings_sync</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rclib_settings_sync                 ();</programlisting>
+<para>
+Save the settings to file if they are changed (become dirty).
+</para></refsect2>
+<refsect2 id="rclib-settings-update" role="function">
+<title>rclib_settings_update ()</title>
+<indexterm zone="rclib-settings-update"><primary>rclib_settings_update</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rclib_settings_update               ();</programlisting>
+<para>
+Update settings from the modules in the library.
+</para></refsect2>
 
 </refsect1>
 

@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
+               "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd"
+[
+  <!ENTITY % local.common.attrib "xmlns:xi  CDATA  #FIXED 'http://www.w3.org/2003/XInclude'">
+]>
+<refentry id="LibRhythmCat-rclib-common">
+<refmeta>
+<refentrytitle role="top_of_page" id="LibRhythmCat-rclib-common.top_of_page">rclib-common</refentrytitle>
+<manvolnum>3</manvolnum>
+<refmiscinfo>
+  LIBRHYTHMCAT Library
+</refmiscinfo>
+</refmeta>
+<refnamediv>
+<refname>rclib-common</refname>
+<refpurpose></refpurpose>
+</refnamediv>
+
+<refsynopsisdiv id="LibRhythmCat-rclib-common.synopsis" role="synopsis">
+<title role="synopsis.title">Synopsis</title>
+
+<synopsis>#define             <link linkend="GETTEXT-PACKAGE:CAPS">GETTEXT_PACKAGE</link>
+#define             <link linkend="G-LOG-DOMAIN:CAPS">G_LOG_DOMAIN</link>
+#define             <link linkend="PACKAGE:CAPS">PACKAGE</link>
+</synopsis>
+</refsynopsisdiv>
+
+<refsect1 id="LibRhythmCat-rclib-common.description" role="desc">
+<title role="desc.title">Description</title>
+
+</refsect1>
+<refsect1 id="LibRhythmCat-rclib-common.details" role="details">
+<title role="details.title">Details</title>
+<refsect2 id="GETTEXT-PACKAGE:CAPS" role="macro">
+<title>GETTEXT_PACKAGE</title>
+<indexterm zone="GETTEXT-PACKAGE:CAPS"><primary>GETTEXT_PACKAGE</primary></indexterm>
+<programlisting>#define GETTEXT_PACKAGE "LibRhythmCat2"
+</programlisting>
+</refsect2>
+<refsect2 id="G-LOG-DOMAIN:CAPS" role="macro">
+<title>G_LOG_DOMAIN</title>
+<indexterm zone="G-LOG-DOMAIN:CAPS"><primary>G_LOG_DOMAIN</primary></indexterm>
+<programlisting>#define G_LOG_DOMAIN "LibRhythmCat2"
+</programlisting>
+</refsect2>
+<refsect2 id="PACKAGE:CAPS" role="macro">
+<title>PACKAGE</title>
+<indexterm zone="PACKAGE:CAPS"><primary>PACKAGE</primary></indexterm>
+<programlisting>#define PACKAGE "LibRhythmCat2"
+</programlisting>
+</refsect2>
+
+</refsect1>
+
+</refentry>

@@ -34,7 +34,6 @@ gpointer  arg2
 <RETURNS>void</RETURNS>
 <FLAGS>f</FLAGS>
 RCLibCore *rclibcore
-gpointer  arg1
 </SIGNAL>
 
 <SIGNAL>
@@ -43,7 +42,6 @@ gpointer  arg1
 <FLAGS>f</FLAGS>
 RCLibCore *rclibcore
 gint64  arg1
-gpointer  arg2
 </SIGNAL>
 
 <SIGNAL>
@@ -71,7 +69,7 @@ gint  arg1
 <FLAGS>f</FLAGS>
 RCLibCore *rclibcore
 gpointer  arg1
-gpointer  arg2
+gchar *arg2
 </SIGNAL>
 
 <SIGNAL>
@@ -80,7 +78,6 @@ gpointer  arg2
 <FLAGS>f</FLAGS>
 RCLibCore *rclibcore
 gchar *arg1
-gpointer  arg2
 </SIGNAL>
 
 <SIGNAL>

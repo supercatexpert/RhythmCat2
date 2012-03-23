@@ -281,14 +281,14 @@ static void rc_ui_effect_eq_load_setting()
 
 static void rc_ui_effect_window_destroy_cb(GtkWidget *widget, gpointer data)
 {
-    if(effect_priv.eq_id>0)
-        rclib_core_signal_disconnect(effect_priv.eq_id);
-    if(effect_priv.balance_id>0)
-        rclib_core_signal_disconnect(effect_priv.balance_id);
-    if(effect_priv.echo_id>0)
-        rclib_core_signal_disconnect(effect_priv.echo_id);
-    gtk_widget_destroyed(effect_priv.effect_window,
-        &(effect_priv.effect_window));
+    RCUiAudioEffectPrivate *priv = &effect_priv;
+    if(priv->eq_id>0)
+        rclib_core_signal_disconnect(priv->eq_id);
+    if(priv->balance_id>0)
+        rclib_core_signal_disconnect(priv->balance_id);
+    if(priv->echo_id>0)
+        rclib_core_signal_disconnect(priv->echo_id);
+    gtk_widget_destroyed(priv->effect_window, &(priv->effect_window));
 }
 
 /**
@@ -411,7 +411,7 @@ void rc_ui_effect_window_init()
         GTK_POS_RIGHT);
     eq_button_hbox = gtk_button_box_new(GTK_ORIENTATION_HORIZONTAL);
     g_object_set(eq_button_hbox, "layout-style", GTK_BUTTONBOX_END,
-        "hexpand-set", TRUE, "hexpand", TRUE, NULL);
+        "hexpand-set", TRUE, "hexpand", TRUE, "spacing", 4, NULL);
     for(i=RCLIB_CORE_EQ_TYPE_NONE;i<=RCLIB_CORE_EQ_TYPE_CUSTOM;i++)
     {
         gtk_list_store_append(store, &iter);
@@ -436,7 +436,7 @@ void rc_ui_effect_window_init()
     gtk_grid_set_row_spacing(GTK_GRID(echo_main_grid), 4);
     g_object_set(priv->effect_window, "title", _("Audio Effects"),
         "window-position", GTK_WIN_POS_CENTER, "has-resize-grip", FALSE,
-        NULL);
+        "type-hint", GDK_WINDOW_TYPE_HINT_DIALOG, NULL);
     gtk_box_pack_start(GTK_BOX(eq_button_hbox), eq_save_button, FALSE,
         FALSE, 2);
     gtk_box_pack_start(GTK_BOX(eq_button_hbox), eq_open_button, FALSE,

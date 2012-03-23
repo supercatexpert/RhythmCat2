@@ -24,11 +24,11 @@
 #include &lt;rclib-tag.h&gt;
 
 struct              <link linkend="RCLibTagMetadata">RCLibTagMetadata</link>;
-<link linkend="RCLibTagMetadata"><returnvalue>RCLibTagMetadata</returnvalue></link> *  <link linkend="rclib-tag-read-metadata">rclib_tag_read_metadata</link>             (<parameter>const <link linkend="gchar"><type>gchar</type></link> *uri</parameter>);
 <link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rclib-tag-free">rclib_tag_free</link>                      (<parameter><link linkend="RCLibTagMetadata"><type>RCLibTagMetadata</type></link> *mmd</parameter>);
-<link linkend="gchar"><returnvalue>gchar</returnvalue></link> *             <link linkend="rclib-tag-get-name-from-fpath">rclib_tag_get_name_from_fpath</link>       (<parameter>const <link linkend="gchar"><type>gchar</type></link> *filename</parameter>);
-<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rclib-tag-set-fallback-encoding">rclib_tag_set_fallback_encoding</link>     (<parameter>const <link linkend="gchar"><type>gchar</type></link> *encoding</parameter>);
 const <link linkend="gchar"><returnvalue>gchar</returnvalue></link> *       <link linkend="rclib-tag-get-fallback-encoding">rclib_tag_get_fallback_encoding</link>     ();
+<link linkend="gchar"><returnvalue>gchar</returnvalue></link> *             <link linkend="rclib-tag-get-name-from-fpath">rclib_tag_get_name_from_fpath</link>       (<parameter>const <link linkend="gchar"><type>gchar</type></link> *filename</parameter>);
+<link linkend="RCLibTagMetadata"><returnvalue>RCLibTagMetadata</returnvalue></link> *  <link linkend="rclib-tag-read-metadata">rclib_tag_read_metadata</link>             (<parameter>const <link linkend="gchar"><type>gchar</type></link> *uri</parameter>);
+<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rclib-tag-set-fallback-encoding">rclib_tag_set_fallback_encoding</link>     (<parameter>const <link linkend="gchar"><type>gchar</type></link> *encoding</parameter>);
 </synopsis>
 </refsynopsisdiv>
 
@@ -123,18 +123,6 @@ The structure for storing the music metadata.
 <listitem><simpara>the user data</simpara></listitem>
 </varlistentry>
 </variablelist></refsect2>
-<refsect2 id="rclib-tag-read-metadata" role="function">
-<title>rclib_tag_read_metadata ()</title>
-<indexterm zone="rclib-tag-read-metadata"><primary>rclib_tag_read_metadata</primary></indexterm>
-<programlisting><link linkend="RCLibTagMetadata"><returnvalue>RCLibTagMetadata</returnvalue></link> *  rclib_tag_read_metadata             (<parameter>const <link linkend="gchar"><type>gchar</type></link> *uri</parameter>);</programlisting>
-<para>
-Read tag (metadata) from given URI.
-</para><variablelist role="params">
-<varlistentry><term><parameter>uri</parameter>&#160;:</term>
-<listitem><simpara>the URI of the music file</simpara></listitem></varlistentry>
-<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara>The Metadata of the music, NULL if the file is not a music file,
-free after usage.</simpara></listitem></varlistentry>
-</variablelist></refsect2>
 <refsect2 id="rclib-tag-free" role="function">
 <title>rclib_tag_free ()</title>
 <indexterm zone="rclib-tag-free"><primary>rclib_tag_free</primary></indexterm>
@@ -144,6 +132,15 @@ Free the memory allocated for metadata struct (RCLibTagMetadata).
 </para><variablelist role="params">
 <varlistentry><term><parameter>mmd</parameter>&#160;:</term>
 <listitem><simpara>the metadata</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rclib-tag-get-fallback-encoding" role="function">
+<title>rclib_tag_get_fallback_encoding ()</title>
+<indexterm zone="rclib-tag-get-fallback-encoding"><primary>rclib_tag_get_fallback_encoding</primary></indexterm>
+<programlisting>const <link linkend="gchar"><returnvalue>gchar</returnvalue></link> *       rclib_tag_get_fallback_encoding     ();</programlisting>
+<para>
+Get the fallback encoding for the tag reading.
+</para><variablelist role="params">
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara>The fallback encoding.</simpara></listitem></varlistentry>
 </variablelist></refsect2>
 <refsect2 id="rclib-tag-get-name-from-fpath" role="function">
 <title>rclib_tag_get_name_from_fpath ()</title>
@@ -156,6 +153,18 @@ Return the base-name without extension from a full path or file name.
 <listitem><simpara>the full path or file name</simpara></listitem></varlistentry>
 <varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara>The base-name without extension.</simpara></listitem></varlistentry>
 </variablelist></refsect2>
+<refsect2 id="rclib-tag-read-metadata" role="function">
+<title>rclib_tag_read_metadata ()</title>
+<indexterm zone="rclib-tag-read-metadata"><primary>rclib_tag_read_metadata</primary></indexterm>
+<programlisting><link linkend="RCLibTagMetadata"><returnvalue>RCLibTagMetadata</returnvalue></link> *  rclib_tag_read_metadata             (<parameter>const <link linkend="gchar"><type>gchar</type></link> *uri</parameter>);</programlisting>
+<para>
+Read tag (metadata) from given URI.
+</para><variablelist role="params">
+<varlistentry><term><parameter>uri</parameter>&#160;:</term>
+<listitem><simpara>the URI of the music file</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara>The Metadata of the music, NULL if the file is not a music file,
+free after usage.</simpara></listitem></varlistentry>
+</variablelist></refsect2>
 <refsect2 id="rclib-tag-set-fallback-encoding" role="function">
 <title>rclib_tag_set_fallback_encoding ()</title>
 <indexterm zone="rclib-tag-set-fallback-encoding"><primary>rclib_tag_set_fallback_encoding</primary></indexterm>
@@ -167,15 +176,6 @@ in the Core module.
 </para><variablelist role="params">
 <varlistentry><term><parameter>encoding</parameter>&#160;:</term>
 <listitem><simpara>the fallback encoding to set</simpara></listitem></varlistentry>
-</variablelist></refsect2>
-<refsect2 id="rclib-tag-get-fallback-encoding" role="function">
-<title>rclib_tag_get_fallback_encoding ()</title>
-<indexterm zone="rclib-tag-get-fallback-encoding"><primary>rclib_tag_get_fallback_encoding</primary></indexterm>
-<programlisting>const <link linkend="gchar"><returnvalue>gchar</returnvalue></link> *       rclib_tag_get_fallback_encoding     ();</programlisting>
-<para>
-Get the fallback encoding for the tag reading.
-</para><variablelist role="params">
-<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara>The fallback encoding.</simpara></listitem></varlistentry>
 </variablelist></refsect2>
 
 </refsect1>

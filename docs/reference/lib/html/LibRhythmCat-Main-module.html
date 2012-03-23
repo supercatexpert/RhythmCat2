@@ -40,16 +40,16 @@
 <pre class="synopsis">
 #include &lt;rclib.h&gt;
 
-extern const guint  <a class="link" href="LibRhythmCat-Main-module.html#rclib-major-version" title="rclib_major_version">rclib_major_version</a>;
-extern const guint  <a class="link" href="LibRhythmCat-Main-module.html#rclib-micro-version" title="rclib_micro_version">rclib_micro_version</a>;
-extern const guint  <a class="link" href="LibRhythmCat-Main-module.html#rclib-minor-version" title="rclib_minor_version">rclib_minor_version</a>;
 extern const gchar *<a class="link" href="LibRhythmCat-Main-module.html#rclib-build-date" title="rclib_build_date">rclib_build_date</a>;
 extern const gchar *<a class="link" href="LibRhythmCat-Main-module.html#rclib-build-time" title="rclib_build_time">rclib_build_time</a>;
+<span class="returnvalue">void</span>                <a class="link" href="LibRhythmCat-Main-module.html#rclib-exit" title="rclib_exit ()">rclib_exit</a>                          ();
 <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="LibRhythmCat-Main-module.html#rclib-init" title="rclib_init ()">rclib_init</a>                          (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> *argc</code></em>,
                                                          <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> **argv[]</code></em>,
                                                          <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *dir</code></em>,
                                                          <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Error-Reporting.html#GError"><span class="type">GError</span></a> **error</code></em>);
-<span class="returnvalue">void</span>                <a class="link" href="LibRhythmCat-Main-module.html#rclib-exit" title="rclib_exit ()">rclib_exit</a>                          ();
+extern const guint  <a class="link" href="LibRhythmCat-Main-module.html#rclib-major-version" title="rclib_major_version">rclib_major_version</a>;
+extern const guint  <a class="link" href="LibRhythmCat-Main-module.html#rclib-micro-version" title="rclib_micro_version">rclib_micro_version</a>;
+extern const guint  <a class="link" href="LibRhythmCat-Main-module.html#rclib-minor-version" title="rclib_minor_version">rclib_minor_version</a>;
 </pre>
 </div>
 <div class="refsect1">
@@ -65,33 +65,6 @@ the modules by yourself, just using function <a class="link" href="LibRhythmCat-
 <div class="refsect1">
 <a name="LibRhythmCat-Main-module.details"></a><h2>Details</h2>
 <div class="refsect2">
-<a name="rclib-major-version"></a><h3>rclib_major_version</h3>
-<pre class="programlisting">extern const guint rclib_major_version;
-</pre>
-<p>
-The major version of LibRhythmCat.
-</p>
-</div>
-<hr>
-<div class="refsect2">
-<a name="rclib-micro-version"></a><h3>rclib_micro_version</h3>
-<pre class="programlisting">extern const guint rclib_micro_version;
-</pre>
-<p>
-The micro version of LibRhythmCat.
-</p>
-</div>
-<hr>
-<div class="refsect2">
-<a name="rclib-minor-version"></a><h3>rclib_minor_version</h3>
-<pre class="programlisting">extern const guint rclib_minor_version;
-</pre>
-<p>
-The minor version of LibRhythmCat.
-</p>
-</div>
-<hr>
-<div class="refsect2">
 <a name="rclib-build-date"></a><h3>rclib_build_date</h3>
 <pre class="programlisting">extern const gchar *rclib_build_date;
 </pre>
@@ -106,6 +79,14 @@ The build (complied) date of LibRhythmCat.
 </pre>
 <p>
 The build (complied) time of LibRhythmCat.
+</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-exit"></a><h3>rclib_exit ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rclib_exit                          ();</pre>
+<p>
+Exit and unload the library.
 </p>
 </div>
 <hr>
@@ -154,10 +135,29 @@ any arguments were handled. <span class="annotation">[<acronym title="Parameter 
 </div>
 <hr>
 <div class="refsect2">
-<a name="rclib-exit"></a><h3>rclib_exit ()</h3>
-<pre class="programlisting"><span class="returnvalue">void</span>                rclib_exit                          ();</pre>
+<a name="rclib-major-version"></a><h3>rclib_major_version</h3>
+<pre class="programlisting">extern const guint rclib_major_version;
+</pre>
 <p>
-Exit and unload the library.
+The major version of LibRhythmCat.
+</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-micro-version"></a><h3>rclib_micro_version</h3>
+<pre class="programlisting">extern const guint rclib_micro_version;
+</pre>
+<p>
+The micro version of LibRhythmCat.
+</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-minor-version"></a><h3>rclib_minor_version</h3>
+<pre class="programlisting">extern const guint rclib_minor_version;
+</pre>
+<p>
+The minor version of LibRhythmCat.
 </p>
 </div>
 </div>

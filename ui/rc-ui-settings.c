@@ -26,13 +26,63 @@
 #include "rc-ui-settings.h"
 #include "rc-common.h"
 
+typedef struct RCUiSettingsPrivate
+{
+    GtkWidget *settings_window;
+}RCUiSettingsPrivate;
+
+static RCUiSettingsPrivate settings_priv = {0};
+
+static void rc_ui_settings_window_destroy_cb(GtkWidget *widget, gpointer data)
+{
+    RCUiSettingsPrivate *priv = &settings_priv;
+    gtk_widget_destroyed(priv->settings_window, &(priv->settings_window));
+}
+
+static inline void rc_ui_settings_window_init()
+{
+    RCUiSettingsPrivate *priv = &settings_priv;
+    priv->settings_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+    
+    g_object_set(priv->settings_window, "title", _("Player Preferences"),
+        "window-position", GTK_WIN_POS_CENTER, "has-resize-grip", FALSE,
+        "default-width", 350, "default-height", 300, "icon-name",
+        GTK_STOCK_PREFERENCES, "type-hint", GDK_WINDOW_TYPE_HINT_DIALOG,
+        NULL);   
+
+    g_signal_connect(G_OBJECT(priv->settings_window), "destroy",
+        G_CALLBACK(rc_ui_settings_window_destroy_cb), NULL);
+    gtk_widget_show_all(priv->settings_window);
+}
 
 
+/**
+ * rc_ui_plugin_window_show:
+ *
+ * Show a player configuration window.
+ */
 
+void rc_ui_settings_window_show()
+{
+    RCUiSettingsPrivate *priv = &settings_priv;
+    if(priv->settings_window==NULL)
+        rc_ui_settings_window_init();
+    else
+        gtk_window_present(GTK_WINDOW(priv->settings_window));
+}
 
+/**
+ * rc_ui_settings_window_destroy:
+ *
+ * Destroy the player configuration window.
+ */
 
-
-
+void rc_ui_settings_window_destroy()
+{
+    RCUiSettingsPrivate *priv = &settings_priv;
+    if(priv->settings_window!=NULL)
+        gtk_widget_destroy(priv->settings_window);
+}
 
 
 

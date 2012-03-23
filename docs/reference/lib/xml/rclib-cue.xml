@@ -26,15 +26,15 @@
 struct              <link linkend="RCLibCueData">RCLibCueData</link>;
 enum                <link linkend="RCLibCueInputType">RCLibCueInputType</link>;
 struct              <link linkend="RCLibCueTrack">RCLibCueTrack</link>;
-<link linkend="guint"><returnvalue>guint</returnvalue></link>               <link linkend="rclib-cue-read-data">rclib_cue_read_data</link>                 (<parameter>const <link linkend="gchar"><type>gchar</type></link> *input</parameter>,
-                                                         <parameter><link linkend="RCLibCueInputType"><type>RCLibCueInputType</type></link> type</parameter>,
-                                                         <parameter><link linkend="RCLibCueData"><type>RCLibCueData</type></link> *data</parameter>);
 <link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rclib-cue-free">rclib_cue_free</link>                      (<parameter><link linkend="RCLibCueData"><type>RCLibCueData</type></link> *data</parameter>);
+const <link linkend="gchar"><returnvalue>gchar</returnvalue></link> *       <link linkend="rclib-cue-get-fallback-encoding">rclib_cue_get_fallback_encoding</link>     ();
 <link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            <link linkend="rclib-cue-get-track-num">rclib_cue_get_track_num</link>             (<parameter>const <link linkend="gchar"><type>gchar</type></link> *path</parameter>,
                                                          <parameter><link linkend="gchar"><type>gchar</type></link> **cue_path</parameter>,
                                                          <parameter><link linkend="gint"><type>gint</type></link> *track_num</parameter>);
+<link linkend="guint"><returnvalue>guint</returnvalue></link>               <link linkend="rclib-cue-read-data">rclib_cue_read_data</link>                 (<parameter>const <link linkend="gchar"><type>gchar</type></link> *input</parameter>,
+                                                         <parameter><link linkend="RCLibCueInputType"><type>RCLibCueInputType</type></link> type</parameter>,
+                                                         <parameter><link linkend="RCLibCueData"><type>RCLibCueData</type></link> *data</parameter>);
 <link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rclib-cue-set-fallback-encoding">rclib_cue_set_fallback_encoding</link>     (<parameter>const <link linkend="gchar"><type>gchar</type></link> *encoding</parameter>);
-const <link linkend="gchar"><returnvalue>gchar</returnvalue></link> *       <link linkend="rclib-cue-get-fallback-encoding">rclib_cue_get_fallback_encoding</link>     ();
 </synopsis>
 </refsynopsisdiv>
 
@@ -139,23 +139,6 @@ The track data structure of CUE data.
 <listitem><simpara>the INDEX 01 time (start time)</simpara></listitem>
 </varlistentry>
 </variablelist></refsect2>
-<refsect2 id="rclib-cue-read-data" role="function">
-<title>rclib_cue_read_data ()</title>
-<indexterm zone="rclib-cue-read-data"><primary>rclib_cue_read_data</primary></indexterm>
-<programlisting><link linkend="guint"><returnvalue>guint</returnvalue></link>               rclib_cue_read_data                 (<parameter>const <link linkend="gchar"><type>gchar</type></link> *input</parameter>,
-                                                         <parameter><link linkend="RCLibCueInputType"><type>RCLibCueInputType</type></link> type</parameter>,
-                                                         <parameter><link linkend="RCLibCueData"><type>RCLibCueData</type></link> *data</parameter>);</programlisting>
-<para>
-Read and parse data from CUE file or string.
-</para><variablelist role="params">
-<varlistentry><term><parameter>input</parameter>&#160;:</term>
-<listitem><simpara>the input data</simpara></listitem></varlistentry>
-<varlistentry><term><parameter>type</parameter>&#160;:</term>
-<listitem><simpara>the data type of the input data</simpara></listitem></varlistentry>
-<varlistentry><term><parameter>data</parameter>&#160;:</term>
-<listitem><simpara>the parsed CUE data</simpara></listitem></varlistentry>
-<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara>The track number, 0 if the CUE data is incorrect.</simpara></listitem></varlistentry>
-</variablelist></refsect2>
 <refsect2 id="rclib-cue-free" role="function">
 <title>rclib_cue_free ()</title>
 <indexterm zone="rclib-cue-free"><primary>rclib_cue_free</primary></indexterm>
@@ -167,6 +150,13 @@ Notice that the pointer itself will not be free.
 <varlistentry><term><parameter>data</parameter>&#160;:</term>
 <listitem><simpara>the CUE data to free</simpara></listitem></varlistentry>
 </variablelist></refsect2>
+<refsect2 id="rclib-cue-get-fallback-encoding" role="function">
+<title>rclib_cue_get_fallback_encoding ()</title>
+<indexterm zone="rclib-cue-get-fallback-encoding"><primary>rclib_cue_get_fallback_encoding</primary></indexterm>
+<programlisting>const <link linkend="gchar"><returnvalue>gchar</returnvalue></link> *       rclib_cue_get_fallback_encoding     ();</programlisting>
+<para>
+Get the fallback encoding used in the CUE parser, NULL if not set.
+</para></refsect2>
 <refsect2 id="rclib-cue-get-track-num" role="function">
 <title>rclib_cue_get_track_num ()</title>
 <indexterm zone="rclib-cue-get-track-num"><primary>rclib_cue_get_track_num</primary></indexterm>
@@ -188,6 +178,23 @@ path "/home/test/1.cue", and track number 1.
 <listitem><simpara>the track number</simpara></listitem></varlistentry>
 <varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara>Whether the path/URI is valid.</simpara></listitem></varlistentry>
 </variablelist></refsect2>
+<refsect2 id="rclib-cue-read-data" role="function">
+<title>rclib_cue_read_data ()</title>
+<indexterm zone="rclib-cue-read-data"><primary>rclib_cue_read_data</primary></indexterm>
+<programlisting><link linkend="guint"><returnvalue>guint</returnvalue></link>               rclib_cue_read_data                 (<parameter>const <link linkend="gchar"><type>gchar</type></link> *input</parameter>,
+                                                         <parameter><link linkend="RCLibCueInputType"><type>RCLibCueInputType</type></link> type</parameter>,
+                                                         <parameter><link linkend="RCLibCueData"><type>RCLibCueData</type></link> *data</parameter>);</programlisting>
+<para>
+Read and parse data from CUE file or string.
+</para><variablelist role="params">
+<varlistentry><term><parameter>input</parameter>&#160;:</term>
+<listitem><simpara>the input data</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>type</parameter>&#160;:</term>
+<listitem><simpara>the data type of the input data</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>data</parameter>&#160;:</term>
+<listitem><simpara>the parsed CUE data</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara>The track number, 0 if the CUE data is incorrect.</simpara></listitem></varlistentry>
+</variablelist></refsect2>
 <refsect2 id="rclib-cue-set-fallback-encoding" role="function">
 <title>rclib_cue_set_fallback_encoding ()</title>
 <indexterm zone="rclib-cue-set-fallback-encoding"><primary>rclib_cue_set_fallback_encoding</primary></indexterm>
@@ -198,13 +205,6 @@ Set the fallback encoding for CUE parser.
 <varlistentry><term><parameter>encoding</parameter>&#160;:</term>
 <listitem><simpara>the new fallback encoding</simpara></listitem></varlistentry>
 </variablelist></refsect2>
-<refsect2 id="rclib-cue-get-fallback-encoding" role="function">
-<title>rclib_cue_get_fallback_encoding ()</title>
-<indexterm zone="rclib-cue-get-fallback-encoding"><primary>rclib_cue_get_fallback_encoding</primary></indexterm>
-<programlisting>const <link linkend="gchar"><returnvalue>gchar</returnvalue></link> *       rclib_cue_get_fallback_encoding     ();</programlisting>
-<para>
-Get the fallback encoding used in the CUE parser, NULL if not set.
-</para></refsect2>
 
 </refsect1>
 

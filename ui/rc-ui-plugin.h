@@ -32,12 +32,8 @@
 
 G_BEGIN_DECLS
 
-
-
-
-
-
-
+void rc_ui_plugin_window_show();
+void rc_ui_plugin_window_destroy();
 
 G_END_DECLS
 

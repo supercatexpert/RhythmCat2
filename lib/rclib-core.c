@@ -1567,8 +1567,7 @@ void rclib_core_update_db_reference(GSequenceIter *new_ref)
 
 /**
  * rclib_core_update_external_reference:
- * @reference: the new databse reference to set,
- * set to NULL if not used
+ * @new_ref: the new databse reference to set, set to NULL if not used
  *
  * Update the external reference.
  */

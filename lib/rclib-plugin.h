@@ -92,7 +92,7 @@ typedef struct _RCLibPluginClass RCLibPluginClass;
  * @magic: the magic number, should be equal to #RCLIB_PLUGIN_MAGIC
  * @major_version: the major version of the plug-in support module, should
  * be equal to #RCLIB_PLUGIN_MAJOR_VERSION
- * @minjor_verison: the minor version of the plug-in support module, should
+ * @minor_version: the minor version of the plug-in support module, should
  * be equal to #RCLIB_PLUGIN_MINOR_VERSION
  * @type: the type of the plug-in
  * @id: the ID of the plug-in, should be unique
@@ -178,6 +178,7 @@ struct _RCLibPluginData {
     gpointer extra;
     gpointer ipc_data;
 
+    /*< private >*/
     void (*_rclib_plugin_reserved1)(void);
     void (*_rclib_plugin_reserved2)(void);
     void (*_rclib_plugin_reserved3)(void);
@@ -208,6 +209,7 @@ struct _RCLibPluginClass {
     void (*registered)(RCLibPlugin *plugin, const RCLibPluginData *data);
     void (*loaded)(RCLibPlugin *plugin, const RCLibPluginData *data);
     void (*unloaded)(RCLibPlugin *plugin, const RCLibPluginData *data);
+    void (*unregistered)(RCLibPlugin *plugin, const gchar *id);
 };
 
 /*< private >*/

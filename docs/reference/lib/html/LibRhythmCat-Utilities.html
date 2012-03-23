@@ -6,7 +6,7 @@
 <meta name="generator" content="DocBook XSL Stylesheets V1.76.1">
 <link rel="home" href="index.html" title="LibRhythmCat Reference Manual">
 <link rel="up" href="ch01.html" title="LibRhythmCat">
-<link rel="prev" href="LibRhythmCat-Tag-Processor.html" title="Tag Processor">
+<link rel="prev" href="LibRhythmCat-RCLibPlugin.html" title="RCLibPlugin">
 <link rel="next" href="LibRhythmCat-Settings.html" title="Settings">
 <meta name="generator" content="GTK-Doc V1.18 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
@@ -14,7 +14,7 @@
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2">
 <tr valign="middle">
-<td><a accesskey="p" href="LibRhythmCat-Tag-Processor.html"><img src="left.png" width="24" height="24" border="0" alt="Prev"></a></td>
+<td><a accesskey="p" href="LibRhythmCat-RCLibPlugin.html"><img src="left.png" width="24" height="24" border="0" alt="Prev"></a></td>
 <td><a accesskey="u" href="ch01.html"><img src="up.png" width="24" height="24" border="0" alt="Up"></a></td>
 <td><a accesskey="h" href="index.html"><img src="home.png" width="24" height="24" border="0" alt="Home"></a></td>
 <th width="100%" align="center">LibRhythmCat Reference Manual</th>
@@ -40,18 +40,18 @@
 <pre class="synopsis">
 #include &lt;rclib-util.h&gt;
 
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *             <a class="link" href="LibRhythmCat-Utilities.html#rclib-util-detect-encoding-by-locale" title="rclib_util_detect_encoding_by_locale ()">rclib_util_detect_encoding_by_locale</a>
+                                                        ();
+const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *       <a class="link" href="LibRhythmCat-Utilities.html#rclib-util-get-cover-search-dir" title="rclib_util_get_cover_search_dir ()">rclib_util_get_cover_search_dir</a>     ();
 <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *             <a class="link" href="LibRhythmCat-Utilities.html#rclib-util-get-data-dir" title="rclib_util_get_data_dir ()">rclib_util_get_data_dir</a>             (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *name</code></em>,
                                                          <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *arg0</code></em>);
-<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="LibRhythmCat-Utilities.html#rclib-util-is-supported-media" title="rclib_util_is_supported_media ()">rclib_util_is_supported_media</a>       (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *file</code></em>);
 <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="LibRhythmCat-Utilities.html#rclib-util-is-supported-list" title="rclib_util_is_supported_list ()">rclib_util_is_supported_list</a>        (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *file</code></em>);
-<span class="returnvalue">void</span>                <a class="link" href="LibRhythmCat-Utilities.html#rclib-util-set-cover-search-dir" title="rclib_util_set_cover_search_dir ()">rclib_util_set_cover_search_dir</a>     (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *dir</code></em>);
-const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *       <a class="link" href="LibRhythmCat-Utilities.html#rclib-util-get-cover-search-dir" title="rclib_util_get_cover_search_dir ()">rclib_util_get_cover_search_dir</a>     ();
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="LibRhythmCat-Utilities.html#rclib-util-is-supported-media" title="rclib_util_is_supported_media ()">rclib_util_is_supported_media</a>       (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *file</code></em>);
 <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *             <a class="link" href="LibRhythmCat-Utilities.html#rclib-util-search-cover" title="rclib_util_search_cover ()">rclib_util_search_cover</a>             (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *uri</code></em>,
                                                          <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *title</code></em>,
                                                          <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *artist</code></em>,
                                                          <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *album</code></em>);
-<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *             <a class="link" href="LibRhythmCat-Utilities.html#rclib-util-detect-encoding-by-locale" title="rclib_util_detect_encoding_by_locale ()">rclib_util_detect_encoding_by_locale</a>
-                                                        ();
+<span class="returnvalue">void</span>                <a class="link" href="LibRhythmCat-Utilities.html#rclib-util-set-cover-search-dir" title="rclib_util_set_cover_search_dir ()">rclib_util_set_cover_search_dir</a>     (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *dir</code></em>);
 </pre>
 </div>
 <div class="refsect1">
@@ -62,6 +62,38 @@ Some utility API for the player.
 </div>
 <div class="refsect1">
 <a name="LibRhythmCat-Utilities.details"></a><h2>Details</h2>
+<div class="refsect2">
+<a name="rclib-util-detect-encoding-by-locale"></a><h3>rclib_util_detect_encoding_by_locale ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *             rclib_util_detect_encoding_by_locale
+                                                        ();</pre>
+<p>
+Get the most possible encoding by current locale settings.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>The encoding, NULL if the encoding cannot be detected.
+Free it after usage.</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-util-get-cover-search-dir"></a><h3>rclib_util_get_cover_search_dir ()</h3>
+<pre class="programlisting">const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *       rclib_util_get_cover_search_dir     ();</pre>
+<p>
+Get the directory for searching the album cover image files.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>The directory path.</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
 <div class="refsect2">
 <a name="rclib-util-get-data-dir"></a><h3>rclib_util_get_data_dir ()</h3>
 <pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *             rclib_util_get_data_dir             (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *name</code></em>,
@@ -89,27 +121,6 @@ Get the data directory of the program.
 </div>
 <hr>
 <div class="refsect2">
-<a name="rclib-util-is-supported-media"></a><h3>rclib_util_is_supported_media ()</h3>
-<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rclib_util_is_supported_media       (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *file</code></em>);</pre>
-<p>
-Check whether the given media file is supported by the player.
-</p>
-<div class="variablelist"><table border="0">
-<col align="left" valign="top">
-<tbody>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>file</code></em> :</span></p></td>
-<td>the filename to check</td>
-</tr>
-<tr>
-<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>Whether the file is supported.</td>
-</tr>
-</tbody>
-</table></div>
-</div>
-<hr>
-<div class="refsect2">
 <a name="rclib-util-is-supported-list"></a><h3>rclib_util_is_supported_list ()</h3>
 <pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rclib_util_is_supported_list        (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *file</code></em>);</pre>
 <p>
@@ -131,32 +142,23 @@ Check whether the given playlist file is supported by the player.
 </div>
 <hr>
 <div class="refsect2">
-<a name="rclib-util-set-cover-search-dir"></a><h3>rclib_util_set_cover_search_dir ()</h3>
-<pre class="programlisting"><span class="returnvalue">void</span>                rclib_util_set_cover_search_dir     (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *dir</code></em>);</pre>
+<a name="rclib-util-is-supported-media"></a><h3>rclib_util_is_supported_media ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rclib_util_is_supported_media       (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *file</code></em>);</pre>
 <p>
-Set the directory for searching the album cover image files.
+Check whether the given media file is supported by the player.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
-<tbody><tr>
-<td><p><span class="term"><em class="parameter"><code>dir</code></em> :</span></p></td>
-<td>the directory to set</td>
-</tr></tbody>
-</table></div>
-</div>
-<hr>
-<div class="refsect2">
-<a name="rclib-util-get-cover-search-dir"></a><h3>rclib_util_get_cover_search_dir ()</h3>
-<pre class="programlisting">const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *       rclib_util_get_cover_search_dir     ();</pre>
-<p>
-Get the directory for searching the album cover image files.
-</p>
-<div class="variablelist"><table border="0">
-<col align="left" valign="top">
-<tbody><tr>
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>file</code></em> :</span></p></td>
+<td>the filename to check</td>
+</tr>
+<tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>The directory path.</td>
-</tr></tbody>
+<td>Whether the file is supported.</td>
+</tr>
+</tbody>
 </table></div>
 </div>
 <hr>
@@ -197,18 +199,16 @@ Search the album cover image file by given information.
 </div>
 <hr>
 <div class="refsect2">
-<a name="rclib-util-detect-encoding-by-locale"></a><h3>rclib_util_detect_encoding_by_locale ()</h3>
-<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *             rclib_util_detect_encoding_by_locale
-                                                        ();</pre>
+<a name="rclib-util-set-cover-search-dir"></a><h3>rclib_util_set_cover_search_dir ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rclib_util_set_cover_search_dir     (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *dir</code></em>);</pre>
 <p>
-Get the most possible encoding by current locale settings.
+Set the directory for searching the album cover image files.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
 <tbody><tr>
-<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>The encoding, NULL if the encoding cannot be detected.
-Free it after usage.</td>
+<td><p><span class="term"><em class="parameter"><code>dir</code></em> :</span></p></td>
+<td>the directory to set</td>
 </tr></tbody>
 </table></div>
 </div>

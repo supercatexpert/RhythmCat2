@@ -27,26 +27,26 @@
 struct              <link linkend="RCLibLyric-struct">RCLibLyric</link>;
 struct              <link linkend="RCLibLyricClass">RCLibLyricClass</link>;
 struct              <link linkend="RCLibLyricData">RCLibLyricData</link>;
-<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rclib-lyric-init">rclib_lyric_init</link>                    ();
+<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rclib-lyric-clean">rclib_lyric_clean</link>                   (<parameter><link linkend="guint"><type>guint</type></link> index</parameter>);
 <link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rclib-lyric-exit">rclib_lyric_exit</link>                    ();
+const <link linkend="gchar"><returnvalue>gchar</returnvalue></link> *       <link linkend="rclib-lyric-get-fallback-encoding">rclib_lyric_get_fallback_encoding</link>   ();
 <link linkend="GObject"><returnvalue>GObject</returnvalue></link> *           <link linkend="rclib-lyric-get-instance">rclib_lyric_get_instance</link>            ();
+const <link linkend="RCLibLyricData"><returnvalue>RCLibLyricData</returnvalue></link> * <link linkend="rclib-lyric-get-line">rclib_lyric_get_line</link>             (<parameter><link linkend="guint"><type>guint</type></link> index</parameter>,
+                                                         <parameter><link linkend="gint64"><type>gint64</type></link> time</parameter>);
+const <link linkend="gchar"><returnvalue>gchar</returnvalue></link> *       <link linkend="rclib-lyric-get-search-dir">rclib_lyric_get_search_dir</link>          ();
+<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rclib-lyric-init">rclib_lyric_init</link>                    ();
+<link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            <link linkend="rclib-lyric-is-available">rclib_lyric_is_available</link>            (<parameter><link linkend="guint"><type>guint</type></link> index</parameter>);
+<link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            <link linkend="rclib-lyric-load-file">rclib_lyric_load_file</link>               (<parameter>const <link linkend="gchar"><type>gchar</type></link> *filename</parameter>,
+                                                         <parameter><link linkend="guint"><type>guint</type></link> index</parameter>);
+<link linkend="gchar"><returnvalue>gchar</returnvalue></link> *             <link linkend="rclib-lyric-search-lyric">rclib_lyric_search_lyric</link>            (<parameter>const <link linkend="gchar"><type>gchar</type></link> *uri</parameter>,
+                                                         <parameter>const <link linkend="gchar"><type>gchar</type></link> *title</parameter>,
+                                                         <parameter>const <link linkend="gchar"><type>gchar</type></link> *artist</parameter>);
+<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rclib-lyric-set-fallback-encoding">rclib_lyric_set_fallback_encoding</link>   (<parameter>const <link linkend="gchar"><type>gchar</type></link> *encoding</parameter>);
+<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rclib-lyric-set-search-dir">rclib_lyric_set_search_dir</link>          (<parameter>const <link linkend="gchar"><type>gchar</type></link> *dir</parameter>);
 <link linkend="gulong"><returnvalue>gulong</returnvalue></link>              <link linkend="rclib-lyric-signal-connect">rclib_lyric_signal_connect</link>          (<parameter>const <link linkend="gchar"><type>gchar</type></link> *name</parameter>,
                                                          <parameter><link linkend="GCallback"><type>GCallback</type></link> callback</parameter>,
                                                          <parameter><link linkend="gpointer"><type>gpointer</type></link> data</parameter>);
 <link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rclib-lyric-signal-disconnect">rclib_lyric_signal_disconnect</link>       (<parameter><link linkend="gulong"><type>gulong</type></link> handler_id</parameter>);
-<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rclib-lyric-set-fallback-encoding">rclib_lyric_set_fallback_encoding</link>   (<parameter>const <link linkend="gchar"><type>gchar</type></link> *encoding</parameter>);
-const <link linkend="gchar"><returnvalue>gchar</returnvalue></link> *       <link linkend="rclib-lyric-get-fallback-encoding">rclib_lyric_get_fallback_encoding</link>   ();
-<link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            <link linkend="rclib-lyric-load-file">rclib_lyric_load_file</link>               (<parameter>const <link linkend="gchar"><type>gchar</type></link> *filename</parameter>,
-                                                         <parameter><link linkend="guint"><type>guint</type></link> index</parameter>);
-<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rclib-lyric-clean">rclib_lyric_clean</link>                   (<parameter><link linkend="guint"><type>guint</type></link> index</parameter>);
-const <link linkend="RCLibLyricData"><returnvalue>RCLibLyricData</returnvalue></link> * <link linkend="rclib-lyric-get-line">rclib_lyric_get_line</link>             (<parameter><link linkend="guint"><type>guint</type></link> index</parameter>,
-                                                         <parameter><link linkend="gint64"><type>gint64</type></link> time</parameter>);
-<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rclib-lyric-set-search-dir">rclib_lyric_set_search_dir</link>          (<parameter>const <link linkend="gchar"><type>gchar</type></link> *dir</parameter>);
-const <link linkend="gchar"><returnvalue>gchar</returnvalue></link> *       <link linkend="rclib-lyric-get-search-dir">rclib_lyric_get_search_dir</link>          ();
-<link linkend="gchar"><returnvalue>gchar</returnvalue></link> *             <link linkend="rclib-lyric-search-lyric">rclib_lyric_search_lyric</link>            (<parameter>const <link linkend="gchar"><type>gchar</type></link> *uri</parameter>,
-                                                         <parameter>const <link linkend="gchar"><type>gchar</type></link> *title</parameter>,
-                                                         <parameter>const <link linkend="gchar"><type>gchar</type></link> *artist</parameter>);
-<link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            <link linkend="rclib-lyric-is-available">rclib_lyric_is_available</link>            (<parameter><link linkend="guint"><type>guint</type></link> index</parameter>);
 </synopsis>
 </refsynopsisdiv>
 <refsect1 id="RCLibLyric.object-hierarchy" role="object_hierarchy">
@@ -120,13 +120,16 @@ The structure for lyric data.
 <listitem><simpara>the lyric text</simpara></listitem>
 </varlistentry>
 </variablelist></refsect2>
-<refsect2 id="rclib-lyric-init" role="function">
-<title>rclib_lyric_init ()</title>
-<indexterm zone="rclib-lyric-init"><primary>rclib_lyric_init</primary></indexterm>
-<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rclib_lyric_init                    ();</programlisting>
+<refsect2 id="rclib-lyric-clean" role="function">
+<title>rclib_lyric_clean ()</title>
+<indexterm zone="rclib-lyric-clean"><primary>rclib_lyric_clean</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rclib_lyric_clean                   (<parameter><link linkend="guint"><type>guint</type></link> index</parameter>);</programlisting>
 <para>
-Initialize the lyric process instance.
-</para></refsect2>
+Clean the lyric data in the running lyric prcessor instance.
+</para><variablelist role="params">
+<varlistentry><term><parameter>index</parameter>&#160;:</term>
+<listitem><simpara>the lyric track index</simpara></listitem></varlistentry>
+</variablelist></refsect2>
 <refsect2 id="rclib-lyric-exit" role="function">
 <title>rclib_lyric_exit ()</title>
 <indexterm zone="rclib-lyric-exit"><primary>rclib_lyric_exit</primary></indexterm>
@@ -134,6 +137,15 @@ Initialize the lyric process instance.
 <para>
 Unload the lyric process instance.
 </para></refsect2>
+<refsect2 id="rclib-lyric-get-fallback-encoding" role="function">
+<title>rclib_lyric_get_fallback_encoding ()</title>
+<indexterm zone="rclib-lyric-get-fallback-encoding"><primary>rclib_lyric_get_fallback_encoding</primary></indexterm>
+<programlisting>const <link linkend="gchar"><returnvalue>gchar</returnvalue></link> *       rclib_lyric_get_fallback_encoding   ();</programlisting>
+<para>
+Get the fallback encoding for the lyric parser, NULL if it is no set.
+</para><variablelist role="params">
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara>The fallback encoding, do not free or modify it.</simpara></listitem></varlistentry>
+</variablelist></refsect2>
 <refsect2 id="rclib-lyric-get-instance" role="function">
 <title>rclib_lyric_get_instance ()</title>
 <indexterm zone="rclib-lyric-get-instance"><primary>rclib_lyric_get_instance</primary></indexterm>
@@ -142,6 +154,98 @@ Unload the lyric process instance.
 Get the running <link linkend="RCLibLyric"><type>RCLibLyric</type></link> instance.
 </para><variablelist role="params">
 <varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara>The running instance.</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rclib-lyric-get-line" role="function">
+<title>rclib_lyric_get_line ()</title>
+<indexterm zone="rclib-lyric-get-line"><primary>rclib_lyric_get_line</primary></indexterm>
+<programlisting>const <link linkend="RCLibLyricData"><returnvalue>RCLibLyricData</returnvalue></link> * rclib_lyric_get_line             (<parameter><link linkend="guint"><type>guint</type></link> index</parameter>,
+                                                         <parameter><link linkend="gint64"><type>gint64</type></link> time</parameter>);</programlisting>
+<para>
+Find the lyric line which matches to the given time (in nanoseconds).
+</para><variablelist role="params">
+<varlistentry><term><parameter>time</parameter>&#160;:</term>
+<listitem><simpara>the time to search</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>index</parameter>&#160;:</term>
+<listitem><simpara>the lyric track index</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara>The matched line data, NULL if not found.</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rclib-lyric-get-search-dir" role="function">
+<title>rclib_lyric_get_search_dir ()</title>
+<indexterm zone="rclib-lyric-get-search-dir"><primary>rclib_lyric_get_search_dir</primary></indexterm>
+<programlisting>const <link linkend="gchar"><returnvalue>gchar</returnvalue></link> *       rclib_lyric_get_search_dir          ();</programlisting>
+<para>
+Get the directory for searching the lyric files.
+</para><variablelist role="params">
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara>The directory path.</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rclib-lyric-init" role="function">
+<title>rclib_lyric_init ()</title>
+<indexterm zone="rclib-lyric-init"><primary>rclib_lyric_init</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rclib_lyric_init                    ();</programlisting>
+<para>
+Initialize the lyric process instance.
+</para></refsect2>
+<refsect2 id="rclib-lyric-is-available" role="function">
+<title>rclib_lyric_is_available ()</title>
+<indexterm zone="rclib-lyric-is-available"><primary>rclib_lyric_is_available</primary></indexterm>
+<programlisting><link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            rclib_lyric_is_available            (<parameter><link linkend="guint"><type>guint</type></link> index</parameter>);</programlisting>
+<para>
+Check whether the lyric in the given track index is available.
+</para><variablelist role="params">
+<varlistentry><term><parameter>index</parameter>&#160;:</term>
+<listitem><simpara>the lyric track index</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara>Whether the lyric is available.</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rclib-lyric-load-file" role="function">
+<title>rclib_lyric_load_file ()</title>
+<indexterm zone="rclib-lyric-load-file"><primary>rclib_lyric_load_file</primary></indexterm>
+<programlisting><link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            rclib_lyric_load_file               (<parameter>const <link linkend="gchar"><type>gchar</type></link> *filename</parameter>,
+                                                         <parameter><link linkend="guint"><type>guint</type></link> index</parameter>);</programlisting>
+<para>
+Load lyric file and then parse it.
+</para><variablelist role="params">
+<varlistentry><term><parameter>filename</parameter>&#160;:</term>
+<listitem><simpara>the lyric file to load</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>index</parameter>&#160;:</term>
+<listitem><simpara>the lyric track index (0 or 1)</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara>Whether the file is loaded and parsed.</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rclib-lyric-search-lyric" role="function">
+<title>rclib_lyric_search_lyric ()</title>
+<indexterm zone="rclib-lyric-search-lyric"><primary>rclib_lyric_search_lyric</primary></indexterm>
+<programlisting><link linkend="gchar"><returnvalue>gchar</returnvalue></link> *             rclib_lyric_search_lyric            (<parameter>const <link linkend="gchar"><type>gchar</type></link> *uri</parameter>,
+                                                         <parameter>const <link linkend="gchar"><type>gchar</type></link> *title</parameter>,
+                                                         <parameter>const <link linkend="gchar"><type>gchar</type></link> *artist</parameter>);</programlisting>
+<para>
+Search the lyric file by given information.
+</para><variablelist role="params">
+<varlistentry><term><parameter>uri</parameter>&#160;:</term>
+<listitem><simpara>the URI</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>title</parameter>&#160;:</term>
+<listitem><simpara>the title</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>artist</parameter>&#160;:</term>
+<listitem><simpara>the artist</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara>The lyric file path, NULL if not found.</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rclib-lyric-set-fallback-encoding" role="function">
+<title>rclib_lyric_set_fallback_encoding ()</title>
+<indexterm zone="rclib-lyric-set-fallback-encoding"><primary>rclib_lyric_set_fallback_encoding</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rclib_lyric_set_fallback_encoding   (<parameter>const <link linkend="gchar"><type>gchar</type></link> *encoding</parameter>);</programlisting>
+<para>
+Set the fallback encoding for the lyric parser.
+</para><variablelist role="params">
+<varlistentry><term><parameter>encoding</parameter>&#160;:</term>
+<listitem><simpara>the fallback encoding, set to NULL if not used</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rclib-lyric-set-search-dir" role="function">
+<title>rclib_lyric_set_search_dir ()</title>
+<indexterm zone="rclib-lyric-set-search-dir"><primary>rclib_lyric_set_search_dir</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rclib_lyric_set_search_dir          (<parameter>const <link linkend="gchar"><type>gchar</type></link> *dir</parameter>);</programlisting>
+<para>
+Set the directory for searching the lyric files.
+</para><variablelist role="params">
+<varlistentry><term><parameter>dir</parameter>&#160;:</term>
+<listitem><simpara>the directory to set</simpara></listitem></varlistentry>
 </variablelist></refsect2>
 <refsect2 id="rclib-lyric-signal-connect" role="function">
 <title>rclib_lyric_signal_connect ()</title>
@@ -173,110 +277,6 @@ invalid and may be reused.
 </para><variablelist role="params">
 <varlistentry><term><parameter>handler_id</parameter>&#160;:</term>
 <listitem><simpara>handler id of the handler to be disconnected</simpara></listitem></varlistentry>
-</variablelist></refsect2>
-<refsect2 id="rclib-lyric-set-fallback-encoding" role="function">
-<title>rclib_lyric_set_fallback_encoding ()</title>
-<indexterm zone="rclib-lyric-set-fallback-encoding"><primary>rclib_lyric_set_fallback_encoding</primary></indexterm>
-<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rclib_lyric_set_fallback_encoding   (<parameter>const <link linkend="gchar"><type>gchar</type></link> *encoding</parameter>);</programlisting>
-<para>
-Set the fallback encoding for the lyric parser.
-</para><variablelist role="params">
-<varlistentry><term><parameter>encoding</parameter>&#160;:</term>
-<listitem><simpara>the fallback encoding, set to NULL if not used</simpara></listitem></varlistentry>
-</variablelist></refsect2>
-<refsect2 id="rclib-lyric-get-fallback-encoding" role="function">
-<title>rclib_lyric_get_fallback_encoding ()</title>
-<indexterm zone="rclib-lyric-get-fallback-encoding"><primary>rclib_lyric_get_fallback_encoding</primary></indexterm>
-<programlisting>const <link linkend="gchar"><returnvalue>gchar</returnvalue></link> *       rclib_lyric_get_fallback_encoding   ();</programlisting>
-<para>
-Get the fallback encoding for the lyric parser, NULL if it is no set.
-</para><variablelist role="params">
-<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara>The fallback encoding, do not free or modify it.</simpara></listitem></varlistentry>
-</variablelist></refsect2>
-<refsect2 id="rclib-lyric-load-file" role="function">
-<title>rclib_lyric_load_file ()</title>
-<indexterm zone="rclib-lyric-load-file"><primary>rclib_lyric_load_file</primary></indexterm>
-<programlisting><link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            rclib_lyric_load_file               (<parameter>const <link linkend="gchar"><type>gchar</type></link> *filename</parameter>,
-                                                         <parameter><link linkend="guint"><type>guint</type></link> index</parameter>);</programlisting>
-<para>
-Load lyric file and then parse it.
-</para><variablelist role="params">
-<varlistentry><term><parameter>filename</parameter>&#160;:</term>
-<listitem><simpara>the lyric file to load</simpara></listitem></varlistentry>
-<varlistentry><term><parameter>index</parameter>&#160;:</term>
-<listitem><simpara>the lyric track index (0 or 1)</simpara></listitem></varlistentry>
-<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara>Whether the file is loaded and parsed.</simpara></listitem></varlistentry>
-</variablelist></refsect2>
-<refsect2 id="rclib-lyric-clean" role="function">
-<title>rclib_lyric_clean ()</title>
-<indexterm zone="rclib-lyric-clean"><primary>rclib_lyric_clean</primary></indexterm>
-<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rclib_lyric_clean                   (<parameter><link linkend="guint"><type>guint</type></link> index</parameter>);</programlisting>
-<para>
-Clean the lyric data in the running lyric prcessor instance.
-</para><variablelist role="params">
-<varlistentry><term><parameter>index</parameter>&#160;:</term>
-<listitem><simpara>the lyric track index</simpara></listitem></varlistentry>
-</variablelist></refsect2>
-<refsect2 id="rclib-lyric-get-line" role="function">
-<title>rclib_lyric_get_line ()</title>
-<indexterm zone="rclib-lyric-get-line"><primary>rclib_lyric_get_line</primary></indexterm>
-<programlisting>const <link linkend="RCLibLyricData"><returnvalue>RCLibLyricData</returnvalue></link> * rclib_lyric_get_line             (<parameter><link linkend="guint"><type>guint</type></link> index</parameter>,
-                                                         <parameter><link linkend="gint64"><type>gint64</type></link> time</parameter>);</programlisting>
-<para>
-Find the lyric line which matches to the given time (in nanoseconds).
-</para><variablelist role="params">
-<varlistentry><term><parameter>time</parameter>&#160;:</term>
-<listitem><simpara>the time to search</simpara></listitem></varlistentry>
-<varlistentry><term><parameter>index</parameter>&#160;:</term>
-<listitem><simpara>the lyric track index</simpara></listitem></varlistentry>
-<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara>The matched line data, NULL if not found.</simpara></listitem></varlistentry>
-</variablelist></refsect2>
-<refsect2 id="rclib-lyric-set-search-dir" role="function">
-<title>rclib_lyric_set_search_dir ()</title>
-<indexterm zone="rclib-lyric-set-search-dir"><primary>rclib_lyric_set_search_dir</primary></indexterm>
-<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rclib_lyric_set_search_dir          (<parameter>const <link linkend="gchar"><type>gchar</type></link> *dir</parameter>);</programlisting>
-<para>
-Set the directory for searching the lyric files.
-</para><variablelist role="params">
-<varlistentry><term><parameter>dir</parameter>&#160;:</term>
-<listitem><simpara>the directory to set</simpara></listitem></varlistentry>
-</variablelist></refsect2>
-<refsect2 id="rclib-lyric-get-search-dir" role="function">
-<title>rclib_lyric_get_search_dir ()</title>
-<indexterm zone="rclib-lyric-get-search-dir"><primary>rclib_lyric_get_search_dir</primary></indexterm>
-<programlisting>const <link linkend="gchar"><returnvalue>gchar</returnvalue></link> *       rclib_lyric_get_search_dir          ();</programlisting>
-<para>
-Get the directory for searching the lyric files.
-</para><variablelist role="params">
-<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara>The directory path.</simpara></listitem></varlistentry>
-</variablelist></refsect2>
-<refsect2 id="rclib-lyric-search-lyric" role="function">
-<title>rclib_lyric_search_lyric ()</title>
-<indexterm zone="rclib-lyric-search-lyric"><primary>rclib_lyric_search_lyric</primary></indexterm>
-<programlisting><link linkend="gchar"><returnvalue>gchar</returnvalue></link> *             rclib_lyric_search_lyric            (<parameter>const <link linkend="gchar"><type>gchar</type></link> *uri</parameter>,
-                                                         <parameter>const <link linkend="gchar"><type>gchar</type></link> *title</parameter>,
-                                                         <parameter>const <link linkend="gchar"><type>gchar</type></link> *artist</parameter>);</programlisting>
-<para>
-Search the lyric file by given information.
-</para><variablelist role="params">
-<varlistentry><term><parameter>uri</parameter>&#160;:</term>
-<listitem><simpara>the URI</simpara></listitem></varlistentry>
-<varlistentry><term><parameter>title</parameter>&#160;:</term>
-<listitem><simpara>the title</simpara></listitem></varlistentry>
-<varlistentry><term><parameter>artist</parameter>&#160;:</term>
-<listitem><simpara>the artist</simpara></listitem></varlistentry>
-<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara>The lyric file path, NULL if not found.</simpara></listitem></varlistentry>
-</variablelist></refsect2>
-<refsect2 id="rclib-lyric-is-available" role="function">
-<title>rclib_lyric_is_available ()</title>
-<indexterm zone="rclib-lyric-is-available"><primary>rclib_lyric_is_available</primary></indexterm>
-<programlisting><link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            rclib_lyric_is_available            (<parameter><link linkend="guint"><type>guint</type></link> index</parameter>);</programlisting>
-<para>
-Check whether the lyric in the given track index is available.
-</para><variablelist role="params">
-<varlistentry><term><parameter>index</parameter>&#160;:</term>
-<listitem><simpara>the lyric track index</simpara></listitem></varlistentry>
-<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara>Whether the lyric is available.</simpara></listitem></varlistentry>
 </variablelist></refsect2>
 
 </refsect1>

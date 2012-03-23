@@ -23,16 +23,16 @@
 <synopsis>
 #include &lt;rclib.h&gt;
 
-extern const guint  <link linkend="rclib-major-version">rclib_major_version</link>;
-extern const guint  <link linkend="rclib-micro-version">rclib_micro_version</link>;
-extern const guint  <link linkend="rclib-minor-version">rclib_minor_version</link>;
 extern const gchar *<link linkend="rclib-build-date">rclib_build_date</link>;
 extern const gchar *<link linkend="rclib-build-time">rclib_build_time</link>;
+<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rclib-exit">rclib_exit</link>                          ();
 <link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            <link linkend="rclib-init">rclib_init</link>                          (<parameter><link linkend="gint"><type>gint</type></link> *argc</parameter>,
                                                          <parameter><link linkend="gchar"><type>gchar</type></link> **argv[]</parameter>,
                                                          <parameter>const <link linkend="gchar"><type>gchar</type></link> *dir</parameter>,
                                                          <parameter><link linkend="GError"><type>GError</type></link> **error</parameter>);
-<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rclib-exit">rclib_exit</link>                          ();
+extern const guint  <link linkend="rclib-major-version">rclib_major_version</link>;
+extern const guint  <link linkend="rclib-micro-version">rclib_micro_version</link>;
+extern const guint  <link linkend="rclib-minor-version">rclib_minor_version</link>;
 </synopsis>
 </refsynopsisdiv>
 
@@ -48,30 +48,6 @@ the modules by yourself, just using function <link linkend="rclib-init"><functio
 </refsect1>
 <refsect1 id="LibRhythmCat-Main-module.details" role="details">
 <title role="details.title">Details</title>
-<refsect2 id="rclib-major-version" role="variable">
-<title>rclib_major_version</title>
-<indexterm zone="rclib-major-version"><primary>rclib_major_version</primary></indexterm>
-<programlisting>extern const guint rclib_major_version;
-</programlisting>
-<para>
-The major version of LibRhythmCat.
-</para></refsect2>
-<refsect2 id="rclib-micro-version" role="variable">
-<title>rclib_micro_version</title>
-<indexterm zone="rclib-micro-version"><primary>rclib_micro_version</primary></indexterm>
-<programlisting>extern const guint rclib_micro_version;
-</programlisting>
-<para>
-The micro version of LibRhythmCat.
-</para></refsect2>
-<refsect2 id="rclib-minor-version" role="variable">
-<title>rclib_minor_version</title>
-<indexterm zone="rclib-minor-version"><primary>rclib_minor_version</primary></indexterm>
-<programlisting>extern const guint rclib_minor_version;
-</programlisting>
-<para>
-The minor version of LibRhythmCat.
-</para></refsect2>
 <refsect2 id="rclib-build-date" role="variable">
 <title>rclib_build_date</title>
 <indexterm zone="rclib-build-date"><primary>rclib_build_date</primary></indexterm>
@@ -87,6 +63,13 @@ The build (complied) date of LibRhythmCat.
 </programlisting>
 <para>
 The build (complied) time of LibRhythmCat.
+</para></refsect2>
+<refsect2 id="rclib-exit" role="function">
+<title>rclib_exit ()</title>
+<indexterm zone="rclib-exit"><primary>rclib_exit</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rclib_exit                          ();</programlisting>
+<para>
+Exit and unload the library.
 </para></refsect2>
 <refsect2 id="rclib-init" role="function">
 <title>rclib_init ()</title>
@@ -113,12 +96,29 @@ any arguments were handled. <emphasis role="annotation">[<acronym>inout</acronym
 <listitem><simpara>return location for a GError, or <link linkend="NULL:CAPS"><literal>NULL</literal></link></simpara></listitem></varlistentry>
 <varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara>Whether the initializion succeeded.</simpara></listitem></varlistentry>
 </variablelist></refsect2>
-<refsect2 id="rclib-exit" role="function">
-<title>rclib_exit ()</title>
-<indexterm zone="rclib-exit"><primary>rclib_exit</primary></indexterm>
-<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rclib_exit                          ();</programlisting>
+<refsect2 id="rclib-major-version" role="variable">
+<title>rclib_major_version</title>
+<indexterm zone="rclib-major-version"><primary>rclib_major_version</primary></indexterm>
+<programlisting>extern const guint rclib_major_version;
+</programlisting>
 <para>
-Exit and unload the library.
+The major version of LibRhythmCat.
+</para></refsect2>
+<refsect2 id="rclib-micro-version" role="variable">
+<title>rclib_micro_version</title>
+<indexterm zone="rclib-micro-version"><primary>rclib_micro_version</primary></indexterm>
+<programlisting>extern const guint rclib_micro_version;
+</programlisting>
+<para>
+The micro version of LibRhythmCat.
+</para></refsect2>
+<refsect2 id="rclib-minor-version" role="variable">
+<title>rclib_minor_version</title>
+<indexterm zone="rclib-minor-version"><primary>rclib_minor_version</primary></indexterm>
+<programlisting>extern const guint rclib_minor_version;
+</programlisting>
+<para>
+The minor version of LibRhythmCat.
 </para></refsect2>
 
 </refsect1>

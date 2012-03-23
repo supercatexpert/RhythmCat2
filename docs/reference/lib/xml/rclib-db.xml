@@ -30,70 +30,82 @@ enum                <link linkend="RCLibDbCatalogType">RCLibDbCatalogType</link>
 struct              <link linkend="RCLibDbClass">RCLibDbClass</link>;
 struct              <link linkend="RCLibDbPlaylistData">RCLibDbPlaylistData</link>;
 enum                <link linkend="RCLibDbPlaylistType">RCLibDbPlaylistType</link>;
-<link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            <link linkend="rclib-db-init">rclib_db_init</link>                       (<parameter>const <link linkend="gchar"><type>gchar</type></link> *file</parameter>);
-<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rclib-db-exit">rclib_db_exit</link>                       ();
-<link linkend="GObject"><returnvalue>GObject</returnvalue></link> *           <link linkend="rclib-db-get-instance">rclib_db_get_instance</link>               ();
-<link linkend="gulong"><returnvalue>gulong</returnvalue></link>              <link linkend="rclib-db-signal-connect">rclib_db_signal_connect</link>             (<parameter>const <link linkend="gchar"><type>gchar</type></link> *name</parameter>,
-                                                         <parameter><link linkend="GCallback"><type>GCallback</type></link> callback</parameter>,
-                                                         <parameter><link linkend="gpointer"><type>gpointer</type></link> data</parameter>);
-<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rclib-db-signal-disconnect">rclib_db_signal_disconnect</link>          (<parameter><link linkend="gulong"><type>gulong</type></link> handler_id</parameter>);
 <link linkend="GSequenceIter"><returnvalue>GSequenceIter</returnvalue></link> *     <link linkend="rclib-db-catalog-add">rclib_db_catalog_add</link>                (<parameter>const <link linkend="gchar"><type>gchar</type></link> *name</parameter>,
                                                          <parameter><link linkend="GSequenceIter"><type>GSequenceIter</type></link> *iter</parameter>,
                                                          <parameter><link linkend="gint"><type>gint</type></link> type</parameter>);
-<link linkend="GSequence"><returnvalue>GSequence</returnvalue></link> *         <link linkend="rclib-db-get-catalog">rclib_db_get_catalog</link>                ();
+<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rclib-db-catalog-data-free">rclib_db_catalog_data_free</link>          (<parameter><link linkend="RCLibDbCatalogData"><type>RCLibDbCatalogData</type></link> *data</parameter>);
+<link linkend="RCLibDbCatalogData"><returnvalue>RCLibDbCatalogData</returnvalue></link> * <link linkend="rclib-db-catalog-data-new">rclib_db_catalog_data_new</link>          ();
+<link linkend="RCLibDbCatalogData"><returnvalue>RCLibDbCatalogData</returnvalue></link> * <link linkend="rclib-db-catalog-data-ref">rclib_db_catalog_data_ref</link>          (<parameter><link linkend="RCLibDbCatalogData"><type>RCLibDbCatalogData</type></link> *data</parameter>);
+<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rclib-db-catalog-data-unref">rclib_db_catalog_data_unref</link>         (<parameter><link linkend="RCLibDbCatalogData"><type>RCLibDbCatalogData</type></link> *data</parameter>);
+<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rclib-db-catalog-delete">rclib_db_catalog_delete</link>             (<parameter><link linkend="GSequenceIter"><type>GSequenceIter</type></link> *iter</parameter>);
+<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rclib-db-catalog-reorder">rclib_db_catalog_reorder</link>            (<parameter><link linkend="gint"><type>gint</type></link> *new_order</parameter>);
 <link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rclib-db-catalog-set-name">rclib_db_catalog_set_name</link>           (<parameter><link linkend="GSequenceIter"><type>GSequenceIter</type></link> *iter</parameter>,
                                                          <parameter>const <link linkend="gchar"><type>gchar</type></link> *name</parameter>);
 <link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rclib-db-catalog-set-type">rclib_db_catalog_set_type</link>           (<parameter><link linkend="GSequenceIter"><type>GSequenceIter</type></link> *iter</parameter>,
                                                          <parameter><link linkend="RCLibDbCatalogType"><type>RCLibDbCatalogType</type></link> type</parameter>);
-<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rclib-db-catalog-delete">rclib_db_catalog_delete</link>             (<parameter><link linkend="GSequenceIter"><type>GSequenceIter</type></link> *iter</parameter>);
-<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rclib-db-catalog-reorder">rclib_db_catalog_reorder</link>            (<parameter><link linkend="gint"><type>gint</type></link> *new_order</parameter>);
-<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rclib-db-playlist-add-music">rclib_db_playlist_add_music</link>         (<parameter><link linkend="GSequenceIter"><type>GSequenceIter</type></link> *iter</parameter>,
-                                                         <parameter><link linkend="GSequenceIter"><type>GSequenceIter</type></link> *insert_iter</parameter>,
-                                                         <parameter>const <link linkend="gchar"><type>gchar</type></link> *uri</parameter>);
-<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rclib-db-playlist-add-m3u-file">rclib_db_playlist_add_m3u_file</link>      (<parameter><link linkend="GSequenceIter"><type>GSequenceIter</type></link> *iter</parameter>,
-                                                         <parameter><link linkend="GSequenceIter"><type>GSequenceIter</type></link> *insert_iter</parameter>,
-                                                         <parameter>const <link linkend="gchar"><type>gchar</type></link> *filename</parameter>);
+<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rclib-db-exit">rclib_db_exit</link>                       ();
+<link linkend="GSequence"><returnvalue>GSequence</returnvalue></link> *         <link linkend="rclib-db-get-catalog">rclib_db_get_catalog</link>                ();
+<link linkend="GObject"><returnvalue>GObject</returnvalue></link> *           <link linkend="rclib-db-get-instance">rclib_db_get_instance</link>               ();
+<link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            <link linkend="rclib-db-init">rclib_db_init</link>                       (<parameter>const <link linkend="gchar"><type>gchar</type></link> *file</parameter>);
 <link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rclib-db-playlist-add-directory">rclib_db_playlist_add_directory</link>     (<parameter><link linkend="GSequenceIter"><type>GSequenceIter</type></link> *iter</parameter>,
                                                          <parameter><link linkend="GSequenceIter"><type>GSequenceIter</type></link> *insert_iter</parameter>,
                                                          <parameter>const <link linkend="gchar"><type>gchar</type></link> *dir</parameter>);
+<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rclib-db-playlist-add-m3u-file">rclib_db_playlist_add_m3u_file</link>      (<parameter><link linkend="GSequenceIter"><type>GSequenceIter</type></link> *iter</parameter>,
+                                                         <parameter><link linkend="GSequenceIter"><type>GSequenceIter</type></link> *insert_iter</parameter>,
+                                                         <parameter>const <link linkend="gchar"><type>gchar</type></link> *filename</parameter>);
+<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rclib-db-playlist-add-music">rclib_db_playlist_add_music</link>         (<parameter><link linkend="GSequenceIter"><type>GSequenceIter</type></link> *iter</parameter>,
+                                                         <parameter><link linkend="GSequenceIter"><type>GSequenceIter</type></link> *insert_iter</parameter>,
+                                                         <parameter>const <link linkend="gchar"><type>gchar</type></link> *uri</parameter>);
+<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rclib-db-playlist-add-music-and-play">rclib_db_playlist_add_music_and_play</link>
+                                                        (<parameter><link linkend="GSequenceIter"><type>GSequenceIter</type></link> *iter</parameter>,
+                                                         <parameter><link linkend="GSequenceIter"><type>GSequenceIter</type></link> *insert_iter</parameter>,
+                                                         <parameter>const <link linkend="gchar"><type>gchar</type></link> *uri</parameter>);
+<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rclib-db-playlist-data-free">rclib_db_playlist_data_free</link>         (<parameter><link linkend="RCLibDbPlaylistData"><type>RCLibDbPlaylistData</type></link> *data</parameter>);
+<link linkend="RCLibDbPlaylistData"><returnvalue>RCLibDbPlaylistData</returnvalue></link> * <link linkend="rclib-db-playlist-data-new">rclib_db_playlist_data_new</link>        ();
+<link linkend="RCLibDbPlaylistData"><returnvalue>RCLibDbPlaylistData</returnvalue></link> * <link linkend="rclib-db-playlist-data-ref">rclib_db_playlist_data_ref</link>        (<parameter><link linkend="RCLibDbPlaylistData"><type>RCLibDbPlaylistData</type></link> *data</parameter>);
+<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rclib-db-playlist-data-unref">rclib_db_playlist_data_unref</link>        (<parameter><link linkend="RCLibDbPlaylistData"><type>RCLibDbPlaylistData</type></link> *data</parameter>);
+<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rclib-db-playlist-delete">rclib_db_playlist_delete</link>            (<parameter><link linkend="GSequenceIter"><type>GSequenceIter</type></link> *iter</parameter>);
 <link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            <link linkend="rclib-db-playlist-export-all-m3u-files">rclib_db_playlist_export_all_m3u_files</link>
                                                         (<parameter>const <link linkend="gchar"><type>gchar</type></link> *dir</parameter>);
 <link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            <link linkend="rclib-db-playlist-export-m3u-file">rclib_db_playlist_export_m3u_file</link>   (<parameter><link linkend="GSequenceIter"><type>GSequenceIter</type></link> *iter</parameter>,
                                                          <parameter>const <link linkend="gchar"><type>gchar</type></link> *sfilename</parameter>);
-<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rclib-db-playlist-delete">rclib_db_playlist_delete</link>            (<parameter><link linkend="GSequenceIter"><type>GSequenceIter</type></link> *iter</parameter>);
-<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rclib-db-playlist-update-metadata">rclib_db_playlist_update_metadata</link>   (<parameter><link linkend="GSequenceIter"><type>GSequenceIter</type></link> *iter</parameter>,
-                                                         <parameter>const <link linkend="RCLibDbPlaylistData"><type>RCLibDbPlaylistData</type></link> *data</parameter>);
-<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rclib-db-playlist-update-length">rclib_db_playlist_update_length</link>     (<parameter><link linkend="GSequenceIter"><type>GSequenceIter</type></link> *iter</parameter>,
-                                                         <parameter><link linkend="gint64"><type>gint64</type></link> length</parameter>);
-<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rclib-db-playlist-set-type">rclib_db_playlist_set_type</link>          (<parameter><link linkend="GSequenceIter"><type>GSequenceIter</type></link> *iter</parameter>,
-                                                         <parameter><link linkend="RCLibDbPlaylistType"><type>RCLibDbPlaylistType</type></link> type</parameter>);
-<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rclib-db-playlist-set-rating">rclib_db_playlist_set_rating</link>        (<parameter><link linkend="GSequenceIter"><type>GSequenceIter</type></link> *iter</parameter>,
-                                                         <parameter><link linkend="gint"><type>gint</type></link> rating</parameter>);
-<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rclib-db-playlist-set-lyric-bind">rclib_db_playlist_set_lyric_bind</link>    (<parameter><link linkend="GSequenceIter"><type>GSequenceIter</type></link> *iter</parameter>,
-                                                         <parameter>const <link linkend="gchar"><type>gchar</type></link> *filename</parameter>);
-<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rclib-db-playlist-set-lyric-secondary-bind">rclib_db_playlist_set_lyric_secondary_bind</link>
-                                                        (<parameter><link linkend="GSequenceIter"><type>GSequenceIter</type></link> *iter</parameter>,
-                                                         <parameter>const <link linkend="gchar"><type>gchar</type></link> *filename</parameter>);
-<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rclib-db-playlist-set-album-bind">rclib_db_playlist_set_album_bind</link>    (<parameter><link linkend="GSequenceIter"><type>GSequenceIter</type></link> *iter</parameter>,
-                                                         <parameter>const <link linkend="gchar"><type>gchar</type></link> *filename</parameter>);
+const <link linkend="gchar"><returnvalue>gchar</returnvalue></link> *       <link linkend="rclib-db-playlist-get-album-bind">rclib_db_playlist_get_album_bind</link>    (<parameter><link linkend="GSequenceIter"><type>GSequenceIter</type></link> *iter</parameter>);
 const <link linkend="gchar"><returnvalue>gchar</returnvalue></link> *       <link linkend="rclib-db-playlist-get-lyric-bind">rclib_db_playlist_get_lyric_bind</link>    (<parameter><link linkend="GSequenceIter"><type>GSequenceIter</type></link> *iter</parameter>);
 const <link linkend="gchar"><returnvalue>gchar</returnvalue></link> *       <link linkend="rclib-db-playlist-get-lyric-secondary-bind">rclib_db_playlist_get_lyric_secondary_bind</link>
                                                         (<parameter><link linkend="GSequenceIter"><type>GSequenceIter</type></link> *iter</parameter>);
-const <link linkend="gchar"><returnvalue>gchar</returnvalue></link> *       <link linkend="rclib-db-playlist-get-album-bind">rclib_db_playlist_get_album_bind</link>    (<parameter><link linkend="GSequenceIter"><type>GSequenceIter</type></link> *iter</parameter>);
-<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rclib-db-playlist-reorder">rclib_db_playlist_reorder</link>           (<parameter><link linkend="GSequenceIter"><type>GSequenceIter</type></link> *iter</parameter>,
-                                                         <parameter><link linkend="gint"><type>gint</type></link> *new_order</parameter>);
+<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rclib-db-playlist-import-cancel">rclib_db_playlist_import_cancel</link>     ();
+<link linkend="gint"><returnvalue>gint</returnvalue></link>                <link linkend="rclib-db-playlist-import-queue-get-length">rclib_db_playlist_import_queue_get_length</link>
+                                                        ();
 <link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rclib-db-playlist-move-to-another-catalog">rclib_db_playlist_move_to_another_catalog</link>
                                                         (<parameter><link linkend="GSequenceIter"><type>GSequenceIter</type></link> **iters</parameter>,
                                                          <parameter><link linkend="guint"><type>guint</type></link> num</parameter>,
                                                          <parameter><link linkend="GSequenceIter"><type>GSequenceIter</type></link> *catalog_iter</parameter>);
 <link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rclib-db-playlist-refresh">rclib_db_playlist_refresh</link>           (<parameter><link linkend="GSequenceIter"><type>GSequenceIter</type></link> *iter</parameter>);
-<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rclib-db-playlist-import-cancel">rclib_db_playlist_import_cancel</link>     ();
 <link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rclib-db-playlist-refresh-cancel">rclib_db_playlist_refresh_cancel</link>    ();
-<link linkend="gint"><returnvalue>gint</returnvalue></link>                <link linkend="rclib-db-playlist-import-queue-get-length">rclib_db_playlist_import_queue_get_length</link>
-                                                        ();
 <link linkend="gint"><returnvalue>gint</returnvalue></link>                <link linkend="rclib-db-playlist-refresh-queue-get-length">rclib_db_playlist_refresh_queue_get_length</link>
                                                         ();
+<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rclib-db-playlist-reorder">rclib_db_playlist_reorder</link>           (<parameter><link linkend="GSequenceIter"><type>GSequenceIter</type></link> *iter</parameter>,
+                                                         <parameter><link linkend="gint"><type>gint</type></link> *new_order</parameter>);
+<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rclib-db-playlist-set-album-bind">rclib_db_playlist_set_album_bind</link>    (<parameter><link linkend="GSequenceIter"><type>GSequenceIter</type></link> *iter</parameter>,
+                                                         <parameter>const <link linkend="gchar"><type>gchar</type></link> *filename</parameter>);
+<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rclib-db-playlist-set-lyric-bind">rclib_db_playlist_set_lyric_bind</link>    (<parameter><link linkend="GSequenceIter"><type>GSequenceIter</type></link> *iter</parameter>,
+                                                         <parameter>const <link linkend="gchar"><type>gchar</type></link> *filename</parameter>);
+<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rclib-db-playlist-set-lyric-secondary-bind">rclib_db_playlist_set_lyric_secondary_bind</link>
+                                                        (<parameter><link linkend="GSequenceIter"><type>GSequenceIter</type></link> *iter</parameter>,
+                                                         <parameter>const <link linkend="gchar"><type>gchar</type></link> *filename</parameter>);
+<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rclib-db-playlist-set-rating">rclib_db_playlist_set_rating</link>        (<parameter><link linkend="GSequenceIter"><type>GSequenceIter</type></link> *iter</parameter>,
+                                                         <parameter><link linkend="gint"><type>gint</type></link> rating</parameter>);
+<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rclib-db-playlist-set-type">rclib_db_playlist_set_type</link>          (<parameter><link linkend="GSequenceIter"><type>GSequenceIter</type></link> *iter</parameter>,
+                                                         <parameter><link linkend="RCLibDbPlaylistType"><type>RCLibDbPlaylistType</type></link> type</parameter>);
 <link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            <link linkend="rclib-db-playlist-sync">rclib_db_playlist_sync</link>              ();
+<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rclib-db-playlist-update-length">rclib_db_playlist_update_length</link>     (<parameter><link linkend="GSequenceIter"><type>GSequenceIter</type></link> *iter</parameter>,
+                                                         <parameter><link linkend="gint64"><type>gint64</type></link> length</parameter>);
+<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rclib-db-playlist-update-metadata">rclib_db_playlist_update_metadata</link>   (<parameter><link linkend="GSequenceIter"><type>GSequenceIter</type></link> *iter</parameter>,
+                                                         <parameter>const <link linkend="RCLibDbPlaylistData"><type>RCLibDbPlaylistData</type></link> *data</parameter>);
+<link linkend="gulong"><returnvalue>gulong</returnvalue></link>              <link linkend="rclib-db-signal-connect">rclib_db_signal_connect</link>             (<parameter>const <link linkend="gchar"><type>gchar</type></link> *name</parameter>,
+                                                         <parameter><link linkend="GCallback"><type>GCallback</type></link> callback</parameter>,
+                                                         <parameter><link linkend="gpointer"><type>gpointer</type></link> data</parameter>);
+<link linkend="void"><returnvalue>void</returnvalue></link>                <link linkend="rclib-db-signal-disconnect">rclib_db_signal_disconnect</link>          (<parameter><link linkend="gulong"><type>gulong</type></link> handler_id</parameter>);
 </synopsis>
 </refsynopsisdiv>
 <refsect1 id="RCLibDb.object-hierarchy" role="object_hierarchy">
@@ -291,6 +303,140 @@ The enum type for playlist type.
 </simpara></listitem>
 </varlistentry>
 </variablelist></refsect2>
+<refsect2 id="rclib-db-catalog-add" role="function">
+<title>rclib_db_catalog_add ()</title>
+<indexterm zone="rclib-db-catalog-add"><primary>rclib_db_catalog_add</primary></indexterm>
+<programlisting><link linkend="GSequenceIter"><returnvalue>GSequenceIter</returnvalue></link> *     rclib_db_catalog_add                (<parameter>const <link linkend="gchar"><type>gchar</type></link> *name</parameter>,
+                                                         <parameter><link linkend="GSequenceIter"><type>GSequenceIter</type></link> *iter</parameter>,
+                                                         <parameter><link linkend="gint"><type>gint</type></link> type</parameter>);</programlisting>
+<para>
+Add a new playlist to the catalog before the <link linkend="iter"><type>iter</type></link>, if the <link linkend="iter"><type>iter</type></link>
+is <link linkend="NULL:CAPS"><type>NULL</type></link>, it will be added to the end.
+</para><variablelist role="params">
+<varlistentry><term><parameter>name</parameter>&#160;:</term>
+<listitem><simpara>the name for the new playlist</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>iter</parameter>&#160;:</term>
+<listitem><simpara>insert position (before this <link linkend="iter"><type>iter</type></link>)</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>type</parameter>&#160;:</term>
+<listitem><simpara>the type of the new playlist</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara>The iter to the new playlist in the catalog.</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rclib-db-catalog-data-free" role="function">
+<title>rclib_db_catalog_data_free ()</title>
+<indexterm zone="rclib-db-catalog-data-free"><primary>rclib_db_catalog_data_free</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rclib_db_catalog_data_free          (<parameter><link linkend="RCLibDbCatalogData"><type>RCLibDbCatalogData</type></link> *data</parameter>);</programlisting>
+<para>
+Free the <link linkend="RCLibDbCatalogData"><type>RCLibDbCatalogData</type></link> structure.
+</para><variablelist role="params">
+<varlistentry><term><parameter>data</parameter>&#160;:</term>
+<listitem><simpara>the data to free</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rclib-db-catalog-data-new" role="function">
+<title>rclib_db_catalog_data_new ()</title>
+<indexterm zone="rclib-db-catalog-data-new"><primary>rclib_db_catalog_data_new</primary></indexterm>
+<programlisting><link linkend="RCLibDbCatalogData"><returnvalue>RCLibDbCatalogData</returnvalue></link> * rclib_db_catalog_data_new          ();</programlisting>
+<para>
+Create a new empty <link linkend="RCLibDbCatalogData"><type>RCLibDbCatalogData</type></link> structure,
+and set the reference count to 1.
+</para><variablelist role="params">
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara>The new empty allocated <link linkend="RCLibCatalogData"><type>RCLibCatalogData</type></link> structure.</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rclib-db-catalog-data-ref" role="function">
+<title>rclib_db_catalog_data_ref ()</title>
+<indexterm zone="rclib-db-catalog-data-ref"><primary>rclib_db_catalog_data_ref</primary></indexterm>
+<programlisting><link linkend="RCLibDbCatalogData"><returnvalue>RCLibDbCatalogData</returnvalue></link> * rclib_db_catalog_data_ref          (<parameter><link linkend="RCLibDbCatalogData"><type>RCLibDbCatalogData</type></link> *data</parameter>);</programlisting>
+<para>
+Increase the reference of <link linkend="RCLibDbCatalogData"><type>RCLibDbCatalogData</type></link> by 1.
+</para><variablelist role="params">
+<varlistentry><term><parameter>data</parameter>&#160;:</term>
+<listitem><simpara>the <link linkend="RCLibDbCatalogData"><type>RCLibDbCatalogData</type></link> structure</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara>The <link linkend="RCLibDbCatalogData"><type>RCLibDbCatalogData</type></link> structure.</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rclib-db-catalog-data-unref" role="function">
+<title>rclib_db_catalog_data_unref ()</title>
+<indexterm zone="rclib-db-catalog-data-unref"><primary>rclib_db_catalog_data_unref</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rclib_db_catalog_data_unref         (<parameter><link linkend="RCLibDbCatalogData"><type>RCLibDbCatalogData</type></link> *data</parameter>);</programlisting>
+<para>
+Decrease the reference of <link linkend="RCLibDbCatalogData"><type>RCLibDbCatalogData</type></link> by 1.
+If the reference down to zero, the structure will be freed.
+</para><variablelist role="params">
+<varlistentry><term><parameter>data</parameter>&#160;:</term>
+<listitem><simpara>the <link linkend="RCLibDbCatalogData"><type>RCLibDbCatalogData</type></link> structure</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara>The <link linkend="RCLibDbCatalogData"><type>RCLibDbCatalogData</type></link> structure.</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rclib-db-catalog-delete" role="function">
+<title>rclib_db_catalog_delete ()</title>
+<indexterm zone="rclib-db-catalog-delete"><primary>rclib_db_catalog_delete</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rclib_db_catalog_delete             (<parameter><link linkend="GSequenceIter"><type>GSequenceIter</type></link> *iter</parameter>);</programlisting>
+<para>
+Delete the catalog pointed to by <link linkend="iter"><type>iter</type></link>.
+</para><variablelist role="params">
+<varlistentry><term><parameter>iter</parameter>&#160;:</term>
+<listitem><simpara>the iter to the catalog</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rclib-db-catalog-reorder" role="function">
+<title>rclib_db_catalog_reorder ()</title>
+<indexterm zone="rclib-db-catalog-reorder"><primary>rclib_db_catalog_reorder</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rclib_db_catalog_reorder            (<parameter><link linkend="gint"><type>gint</type></link> *new_order</parameter>);</programlisting>
+<para>
+Reorder the catalog to follow the order indicated by <parameter>new_order</parameter>.
+</para><variablelist role="params">
+<varlistentry><term><parameter>new_order</parameter>&#160;:</term>
+<listitem><simpara>an array of integers mapping the new position of
+each child to its old position before the re-ordering,
+i.e. <parameter>new_order</parameter><literal>[newpos] = oldpos</literal>. <emphasis role="annotation">[<acronym>array</acronym>]</emphasis></simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rclib-db-catalog-set-name" role="function">
+<title>rclib_db_catalog_set_name ()</title>
+<indexterm zone="rclib-db-catalog-set-name"><primary>rclib_db_catalog_set_name</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rclib_db_catalog_set_name           (<parameter><link linkend="GSequenceIter"><type>GSequenceIter</type></link> *iter</parameter>,
+                                                         <parameter>const <link linkend="gchar"><type>gchar</type></link> *name</parameter>);</programlisting>
+<para>
+Set the name of the catalog pointed to by <link linkend="iter"><type>iter</type></link>.
+</para><variablelist role="params">
+<varlistentry><term><parameter>iter</parameter>&#160;:</term>
+<listitem><simpara>the iter to the catalog</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>name</parameter>&#160;:</term>
+<listitem><simpara>the new name for the catalog</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rclib-db-catalog-set-type" role="function">
+<title>rclib_db_catalog_set_type ()</title>
+<indexterm zone="rclib-db-catalog-set-type"><primary>rclib_db_catalog_set_type</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rclib_db_catalog_set_type           (<parameter><link linkend="GSequenceIter"><type>GSequenceIter</type></link> *iter</parameter>,
+                                                         <parameter><link linkend="RCLibDbCatalogType"><type>RCLibDbCatalogType</type></link> type</parameter>);</programlisting>
+<para>
+Set the type of the catalog pointed to by <link linkend="iter"><type>iter</type></link>.
+</para><variablelist role="params">
+<varlistentry><term><parameter>iter</parameter>&#160;:</term>
+<listitem><simpara>the iter to the catalog</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>type</parameter>&#160;:</term>
+<listitem><simpara>the new type for the catalog</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rclib-db-exit" role="function">
+<title>rclib_db_exit ()</title>
+<indexterm zone="rclib-db-exit"><primary>rclib_db_exit</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rclib_db_exit                       ();</programlisting>
+<para>
+Unload D-Bus support module.
+</para></refsect2>
+<refsect2 id="rclib-db-get-catalog" role="function">
+<title>rclib_db_get_catalog ()</title>
+<indexterm zone="rclib-db-get-catalog"><primary>rclib_db_get_catalog</primary></indexterm>
+<programlisting><link linkend="GSequence"><returnvalue>GSequence</returnvalue></link> *         rclib_db_get_catalog                ();</programlisting>
+<para>
+Get the catalog.
+</para><variablelist role="params">
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara>The catalog, NULL if the catalog does not exist.</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rclib-db-get-instance" role="function">
+<title>rclib_db_get_instance ()</title>
+<indexterm zone="rclib-db-get-instance"><primary>rclib_db_get_instance</primary></indexterm>
+<programlisting><link linkend="GObject"><returnvalue>GObject</returnvalue></link> *           rclib_db_get_instance               ();</programlisting>
+<para>
+Get the running <link linkend="RCLibDb"><type>RCLibDb</type></link> instance.
+</para><variablelist role="params">
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara>The running instance.</simpara></listitem></varlistentry>
+</variablelist></refsect2>
 <refsect2 id="rclib-db-init" role="function">
 <title>rclib_db_init ()</title>
 <indexterm zone="rclib-db-init"><primary>rclib_db_init</primary></indexterm>
@@ -302,21 +448,368 @@ Initialize the music library database.
 <listitem><simpara>the file of the music library database to load</simpara></listitem></varlistentry>
 <varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara>Whether the initialization succeeded.</simpara></listitem></varlistentry>
 </variablelist></refsect2>
-<refsect2 id="rclib-db-exit" role="function">
-<title>rclib_db_exit ()</title>
-<indexterm zone="rclib-db-exit"><primary>rclib_db_exit</primary></indexterm>
-<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rclib_db_exit                       ();</programlisting>
+<refsect2 id="rclib-db-playlist-add-directory" role="function">
+<title>rclib_db_playlist_add_directory ()</title>
+<indexterm zone="rclib-db-playlist-add-directory"><primary>rclib_db_playlist_add_directory</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rclib_db_playlist_add_directory     (<parameter><link linkend="GSequenceIter"><type>GSequenceIter</type></link> *iter</parameter>,
+                                                         <parameter><link linkend="GSequenceIter"><type>GSequenceIter</type></link> *insert_iter</parameter>,
+                                                         <parameter>const <link linkend="gchar"><type>gchar</type></link> *dir</parameter>);</programlisting>
 <para>
-Unload the music library database.
-</para></refsect2>
-<refsect2 id="rclib-db-get-instance" role="function">
-<title>rclib_db_get_instance ()</title>
-<indexterm zone="rclib-db-get-instance"><primary>rclib_db_get_instance</primary></indexterm>
-<programlisting><link linkend="GObject"><returnvalue>GObject</returnvalue></link> *           rclib_db_get_instance               ();</programlisting>
-<para>
-Get the running <link linkend="RCLibDb"><type>RCLibDb</type></link> instance.
+Add all music in the directory to the catalog pointed to by <link linkend="iter"><type>iter</type></link>.
 </para><variablelist role="params">
-<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara>The running instance.</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>iter</parameter>&#160;:</term>
+<listitem><simpara>the catalog iter</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>insert_iter</parameter>&#160;:</term>
+<listitem><simpara>insert the music before this iter</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>dir</parameter>&#160;:</term>
+<listitem><simpara>the directory path</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rclib-db-playlist-add-m3u-file" role="function">
+<title>rclib_db_playlist_add_m3u_file ()</title>
+<indexterm zone="rclib-db-playlist-add-m3u-file"><primary>rclib_db_playlist_add_m3u_file</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rclib_db_playlist_add_m3u_file      (<parameter><link linkend="GSequenceIter"><type>GSequenceIter</type></link> *iter</parameter>,
+                                                         <parameter><link linkend="GSequenceIter"><type>GSequenceIter</type></link> *insert_iter</parameter>,
+                                                         <parameter>const <link linkend="gchar"><type>gchar</type></link> *filename</parameter>);</programlisting>
+<para>
+Load a m3u playlist file, and add all music inside to
+the catalog pointed to by <link linkend="iter"><type>iter</type></link>.
+</para><variablelist role="params">
+<varlistentry><term><parameter>iter</parameter>&#160;:</term>
+<listitem><simpara>the catalog iter</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>insert_iter</parameter>&#160;:</term>
+<listitem><simpara>insert the music before this iter</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>filename</parameter>&#160;:</term>
+<listitem><simpara>the path of the playlist file</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rclib-db-playlist-add-music" role="function">
+<title>rclib_db_playlist_add_music ()</title>
+<indexterm zone="rclib-db-playlist-add-music"><primary>rclib_db_playlist_add_music</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rclib_db_playlist_add_music         (<parameter><link linkend="GSequenceIter"><type>GSequenceIter</type></link> *iter</parameter>,
+                                                         <parameter><link linkend="GSequenceIter"><type>GSequenceIter</type></link> *insert_iter</parameter>,
+                                                         <parameter>const <link linkend="gchar"><type>gchar</type></link> *uri</parameter>);</programlisting>
+<para>
+Add music to the music library by given catalog iter.
+</para><variablelist role="params">
+<varlistentry><term><parameter>iter</parameter>&#160;:</term>
+<listitem><simpara>the catalog iter</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>insert_iter</parameter>&#160;:</term>
+<listitem><simpara>insert the music before this iter</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>uri</parameter>&#160;:</term>
+<listitem><simpara>the URI of the music</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rclib-db-playlist-add-music-and-play" role="function">
+<title>rclib_db_playlist_add_music_and_play ()</title>
+<indexterm zone="rclib-db-playlist-add-music-and-play"><primary>rclib_db_playlist_add_music_and_play</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rclib_db_playlist_add_music_and_play
+                                                        (<parameter><link linkend="GSequenceIter"><type>GSequenceIter</type></link> *iter</parameter>,
+                                                         <parameter><link linkend="GSequenceIter"><type>GSequenceIter</type></link> *insert_iter</parameter>,
+                                                         <parameter>const <link linkend="gchar"><type>gchar</type></link> *uri</parameter>);</programlisting>
+<para>
+Add music to the music library by given catalog iter, and then play it
+if the add operation succeeds.
+</para><variablelist role="params">
+<varlistentry><term><parameter>iter</parameter>&#160;:</term>
+<listitem><simpara>the catalog iter</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>insert_iter</parameter>&#160;:</term>
+<listitem><simpara>insert the music before this iter</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>uri</parameter>&#160;:</term>
+<listitem><simpara>the URI of the music</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rclib-db-playlist-data-free" role="function">
+<title>rclib_db_playlist_data_free ()</title>
+<indexterm zone="rclib-db-playlist-data-free"><primary>rclib_db_playlist_data_free</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rclib_db_playlist_data_free         (<parameter><link linkend="RCLibDbPlaylistData"><type>RCLibDbPlaylistData</type></link> *data</parameter>);</programlisting>
+<para>
+Free the <link linkend="RCLibDbPlaylistData"><type>RCLibDbPlaylistData</type></link> structure.
+</para><variablelist role="params">
+<varlistentry><term><parameter>data</parameter>&#160;:</term>
+<listitem><simpara>the data to free</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rclib-db-playlist-data-new" role="function">
+<title>rclib_db_playlist_data_new ()</title>
+<indexterm zone="rclib-db-playlist-data-new"><primary>rclib_db_playlist_data_new</primary></indexterm>
+<programlisting><link linkend="RCLibDbPlaylistData"><returnvalue>RCLibDbPlaylistData</returnvalue></link> * rclib_db_playlist_data_new        ();</programlisting>
+<para>
+Create a new empty <link linkend="RCLibDbPlaylistData"><type>RCLibDbPlaylistData</type></link> structure,
+and set the reference count to 1.
+</para><variablelist role="params">
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara>The new empty allocated <link linkend="RCLibPlaylistData"><type>RCLibPlaylistData</type></link> structure.</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rclib-db-playlist-data-ref" role="function">
+<title>rclib_db_playlist_data_ref ()</title>
+<indexterm zone="rclib-db-playlist-data-ref"><primary>rclib_db_playlist_data_ref</primary></indexterm>
+<programlisting><link linkend="RCLibDbPlaylistData"><returnvalue>RCLibDbPlaylistData</returnvalue></link> * rclib_db_playlist_data_ref        (<parameter><link linkend="RCLibDbPlaylistData"><type>RCLibDbPlaylistData</type></link> *data</parameter>);</programlisting>
+<para>
+Increase the reference of <link linkend="RCLibDbPlaylistData"><type>RCLibDbPlaylistData</type></link> by 1.
+</para><variablelist role="params">
+<varlistentry><term><parameter>data</parameter>&#160;:</term>
+<listitem><simpara>the <link linkend="RCLibDbPlaylistData"><type>RCLibDbPlaylistData</type></link> structure</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara>The <link linkend="RCLibDbPlaylistData"><type>RCLibDbPlaylistData</type></link> structure.</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rclib-db-playlist-data-unref" role="function">
+<title>rclib_db_playlist_data_unref ()</title>
+<indexterm zone="rclib-db-playlist-data-unref"><primary>rclib_db_playlist_data_unref</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rclib_db_playlist_data_unref        (<parameter><link linkend="RCLibDbPlaylistData"><type>RCLibDbPlaylistData</type></link> *data</parameter>);</programlisting>
+<para>
+Decrease the reference of <link linkend="RCLibDbPlaylistData"><type>RCLibDbPlaylistData</type></link> by 1.
+If the reference down to zero, the structure will be freed.
+</para><variablelist role="params">
+<varlistentry><term><parameter>data</parameter>&#160;:</term>
+<listitem><simpara>the <link linkend="RCLibDbPlaylistData"><type>RCLibDbPlaylistData</type></link> structure</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara>The <link linkend="RCLibDbPlaylistData"><type>RCLibDbPlaylistData</type></link> structure.</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rclib-db-playlist-delete" role="function">
+<title>rclib_db_playlist_delete ()</title>
+<indexterm zone="rclib-db-playlist-delete"><primary>rclib_db_playlist_delete</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rclib_db_playlist_delete            (<parameter><link linkend="GSequenceIter"><type>GSequenceIter</type></link> *iter</parameter>);</programlisting>
+<para>
+Delete the playlist data pointed to by <link linkend="iter"><type>iter</type></link>.
+</para><variablelist role="params">
+<varlistentry><term><parameter>iter</parameter>&#160;:</term>
+<listitem><simpara>the iter to the playlist data</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rclib-db-playlist-export-all-m3u-files" role="function">
+<title>rclib_db_playlist_export_all_m3u_files ()</title>
+<indexterm zone="rclib-db-playlist-export-all-m3u-files"><primary>rclib_db_playlist_export_all_m3u_files</primary></indexterm>
+<programlisting><link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            rclib_db_playlist_export_all_m3u_files
+                                                        (<parameter>const <link linkend="gchar"><type>gchar</type></link> *dir</parameter>);</programlisting>
+<para>
+Export all playlists in the catalog to playlist files.
+</para><variablelist role="params">
+<varlistentry><term><parameter>dir</parameter>&#160;:</term>
+<listitem><simpara>the directory to save playlist files</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara>Whether the operation succeeded.</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rclib-db-playlist-export-m3u-file" role="function">
+<title>rclib_db_playlist_export_m3u_file ()</title>
+<indexterm zone="rclib-db-playlist-export-m3u-file"><primary>rclib_db_playlist_export_m3u_file</primary></indexterm>
+<programlisting><link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            rclib_db_playlist_export_m3u_file   (<parameter><link linkend="GSequenceIter"><type>GSequenceIter</type></link> *iter</parameter>,
+                                                         <parameter>const <link linkend="gchar"><type>gchar</type></link> *sfilename</parameter>);</programlisting>
+<para>
+Export the catalog pointed to by <link linkend="iter"><type>iter</type></link> to a new playlist file.
+</para><variablelist role="params">
+<varlistentry><term><parameter>iter</parameter>&#160;:</term>
+<listitem><simpara>the catalog iter</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>sfilename</parameter>&#160;:</term>
+<listitem><simpara>the new playlist file path</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara>Whether the operation succeeded.</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rclib-db-playlist-get-album-bind" role="function">
+<title>rclib_db_playlist_get_album_bind ()</title>
+<indexterm zone="rclib-db-playlist-get-album-bind"><primary>rclib_db_playlist_get_album_bind</primary></indexterm>
+<programlisting>const <link linkend="gchar"><returnvalue>gchar</returnvalue></link> *       rclib_db_playlist_get_album_bind    (<parameter><link linkend="GSequenceIter"><type>GSequenceIter</type></link> *iter</parameter>);</programlisting>
+<para>
+Get the album image file bound to the music in the playlist pointed
+to by <link linkend="iter"><type>iter</type></link>.
+</para><variablelist role="params">
+<varlistentry><term><parameter>iter</parameter>&#160;:</term>
+<listitem><simpara>the iter to the playlist</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara>The album image file path.</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rclib-db-playlist-get-lyric-bind" role="function">
+<title>rclib_db_playlist_get_lyric_bind ()</title>
+<indexterm zone="rclib-db-playlist-get-lyric-bind"><primary>rclib_db_playlist_get_lyric_bind</primary></indexterm>
+<programlisting>const <link linkend="gchar"><returnvalue>gchar</returnvalue></link> *       rclib_db_playlist_get_lyric_bind    (<parameter><link linkend="GSequenceIter"><type>GSequenceIter</type></link> *iter</parameter>);</programlisting>
+<para>
+Get the lyric file bound to the music in the playlist pointed
+to by <link linkend="iter"><type>iter</type></link>.
+</para><variablelist role="params">
+<varlistentry><term><parameter>iter</parameter>&#160;:</term>
+<listitem><simpara>the iter to the playlist</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara>The lyric file path.</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rclib-db-playlist-get-lyric-secondary-bind" role="function">
+<title>rclib_db_playlist_get_lyric_secondary_bind ()</title>
+<indexterm zone="rclib-db-playlist-get-lyric-secondary-bind"><primary>rclib_db_playlist_get_lyric_secondary_bind</primary></indexterm>
+<programlisting>const <link linkend="gchar"><returnvalue>gchar</returnvalue></link> *       rclib_db_playlist_get_lyric_secondary_bind
+                                                        (<parameter><link linkend="GSequenceIter"><type>GSequenceIter</type></link> *iter</parameter>);</programlisting>
+<para>
+Get the secondary lyric file bound to the music in the playlist pointed
+to by <link linkend="iter"><type>iter</type></link>.
+</para><variablelist role="params">
+<varlistentry><term><parameter>iter</parameter>&#160;:</term>
+<listitem><simpara>the iter to the playlist</simpara></listitem></varlistentry>
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara>The lyric file path.</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rclib-db-playlist-import-cancel" role="function">
+<title>rclib_db_playlist_import_cancel ()</title>
+<indexterm zone="rclib-db-playlist-import-cancel"><primary>rclib_db_playlist_import_cancel</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rclib_db_playlist_import_cancel     ();</programlisting>
+<para>
+Cancel all remaining import jobs in the queue.
+</para></refsect2>
+<refsect2 id="rclib-db-playlist-import-queue-get-length" role="function">
+<title>rclib_db_playlist_import_queue_get_length ()</title>
+<indexterm zone="rclib-db-playlist-import-queue-get-length"><primary>rclib_db_playlist_import_queue_get_length</primary></indexterm>
+<programlisting><link linkend="gint"><returnvalue>gint</returnvalue></link>                rclib_db_playlist_import_queue_get_length
+                                                        ();</programlisting>
+<para>
+Get the number of remaining jobs in the import queue.
+</para><variablelist role="params">
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara>The number of remaining jobs.</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rclib-db-playlist-move-to-another-catalog" role="function">
+<title>rclib_db_playlist_move_to_another_catalog ()</title>
+<indexterm zone="rclib-db-playlist-move-to-another-catalog"><primary>rclib_db_playlist_move_to_another_catalog</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rclib_db_playlist_move_to_another_catalog
+                                                        (<parameter><link linkend="GSequenceIter"><type>GSequenceIter</type></link> **iters</parameter>,
+                                                         <parameter><link linkend="guint"><type>guint</type></link> num</parameter>,
+                                                         <parameter><link linkend="GSequenceIter"><type>GSequenceIter</type></link> *catalog_iter</parameter>);</programlisting>
+<para>
+Move the playlist data pointed to by <link linkend="iters"><type>iters</type></link> to another catalog
+pointed to by <link linkend="catalog-iter"><type>catalog_iter</type></link>.
+</para><variablelist role="params">
+<varlistentry><term><parameter>iters</parameter>&#160;:</term>
+<listitem><simpara>an iter array</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>num</parameter>&#160;:</term>
+<listitem><simpara>the size of the iter array</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>catalog_iter</parameter>&#160;:</term>
+<listitem><simpara>the iter for the catalog</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rclib-db-playlist-refresh" role="function">
+<title>rclib_db_playlist_refresh ()</title>
+<indexterm zone="rclib-db-playlist-refresh"><primary>rclib_db_playlist_refresh</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rclib_db_playlist_refresh           (<parameter><link linkend="GSequenceIter"><type>GSequenceIter</type></link> *iter</parameter>);</programlisting>
+<para>
+Refresh the metadata of the music in the playlist pointed to
+by the given catalog <link linkend="iter"><type>iter</type></link>.
+</para><variablelist role="params">
+<varlistentry><term><parameter>iter</parameter>&#160;:</term>
+<listitem><simpara>the catalog iter</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rclib-db-playlist-refresh-cancel" role="function">
+<title>rclib_db_playlist_refresh_cancel ()</title>
+<indexterm zone="rclib-db-playlist-refresh-cancel"><primary>rclib_db_playlist_refresh_cancel</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rclib_db_playlist_refresh_cancel    ();</programlisting>
+<para>
+Cancel all remaining refresh jobs in the queue.
+</para></refsect2>
+<refsect2 id="rclib-db-playlist-refresh-queue-get-length" role="function">
+<title>rclib_db_playlist_refresh_queue_get_length ()</title>
+<indexterm zone="rclib-db-playlist-refresh-queue-get-length"><primary>rclib_db_playlist_refresh_queue_get_length</primary></indexterm>
+<programlisting><link linkend="gint"><returnvalue>gint</returnvalue></link>                rclib_db_playlist_refresh_queue_get_length
+                                                        ();</programlisting>
+<para>
+Get the number of remaining jobs in the refresh queue.
+</para><variablelist role="params">
+<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara>The number of remaining jobs.</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rclib-db-playlist-reorder" role="function">
+<title>rclib_db_playlist_reorder ()</title>
+<indexterm zone="rclib-db-playlist-reorder"><primary>rclib_db_playlist_reorder</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rclib_db_playlist_reorder           (<parameter><link linkend="GSequenceIter"><type>GSequenceIter</type></link> *iter</parameter>,
+                                                         <parameter><link linkend="gint"><type>gint</type></link> *new_order</parameter>);</programlisting>
+<para>
+Reorder the playlist to follow the order indicated by <parameter>new_order</parameter>.
+</para><variablelist role="params">
+<varlistentry><term><parameter>iter</parameter>&#160;:</term>
+<listitem><simpara>the iter pointed to catalog</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>new_order</parameter>&#160;:</term>
+<listitem><simpara>an array of integers mapping the new position of
+each child to its old position before the re-ordering,
+i.e. <parameter>new_order</parameter><literal>[newpos] = oldpos</literal>. <emphasis role="annotation">[<acronym>array</acronym>]</emphasis></simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rclib-db-playlist-set-album-bind" role="function">
+<title>rclib_db_playlist_set_album_bind ()</title>
+<indexterm zone="rclib-db-playlist-set-album-bind"><primary>rclib_db_playlist_set_album_bind</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rclib_db_playlist_set_album_bind    (<parameter><link linkend="GSequenceIter"><type>GSequenceIter</type></link> *iter</parameter>,
+                                                         <parameter>const <link linkend="gchar"><type>gchar</type></link> *filename</parameter>);</programlisting>
+<para>
+Bind the album image file to the music in the playlist pointed
+to by <link linkend="iter"><type>iter</type></link>.
+</para><variablelist role="params">
+<varlistentry><term><parameter>iter</parameter>&#160;:</term>
+<listitem><simpara>the iter to the playlist</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>filename</parameter>&#160;:</term>
+<listitem><simpara>the path of the album image file</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rclib-db-playlist-set-lyric-bind" role="function">
+<title>rclib_db_playlist_set_lyric_bind ()</title>
+<indexterm zone="rclib-db-playlist-set-lyric-bind"><primary>rclib_db_playlist_set_lyric_bind</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rclib_db_playlist_set_lyric_bind    (<parameter><link linkend="GSequenceIter"><type>GSequenceIter</type></link> *iter</parameter>,
+                                                         <parameter>const <link linkend="gchar"><type>gchar</type></link> *filename</parameter>);</programlisting>
+<para>
+Bind the lyric file to the music in the playlist pointed to by <link linkend="iter"><type>iter</type></link>.
+</para><variablelist role="params">
+<varlistentry><term><parameter>iter</parameter>&#160;:</term>
+<listitem><simpara>the iter to the playlist</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>filename</parameter>&#160;:</term>
+<listitem><simpara>the path of the lyric file</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rclib-db-playlist-set-lyric-secondary-bind" role="function">
+<title>rclib_db_playlist_set_lyric_secondary_bind ()</title>
+<indexterm zone="rclib-db-playlist-set-lyric-secondary-bind"><primary>rclib_db_playlist_set_lyric_secondary_bind</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rclib_db_playlist_set_lyric_secondary_bind
+                                                        (<parameter><link linkend="GSequenceIter"><type>GSequenceIter</type></link> *iter</parameter>,
+                                                         <parameter>const <link linkend="gchar"><type>gchar</type></link> *filename</parameter>);</programlisting>
+<para>
+Bind the secondary lyric file to the music in the playlist pointed
+to by <link linkend="iter"><type>iter</type></link>.
+</para><variablelist role="params">
+<varlistentry><term><parameter>iter</parameter>&#160;:</term>
+<listitem><simpara>the iter to the playlist</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>filename</parameter>&#160;:</term>
+<listitem><simpara>the path of the lyric file</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rclib-db-playlist-set-rating" role="function">
+<title>rclib_db_playlist_set_rating ()</title>
+<indexterm zone="rclib-db-playlist-set-rating"><primary>rclib_db_playlist_set_rating</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rclib_db_playlist_set_rating        (<parameter><link linkend="GSequenceIter"><type>GSequenceIter</type></link> *iter</parameter>,
+                                                         <parameter><link linkend="gint"><type>gint</type></link> rating</parameter>);</programlisting>
+<para>
+Set the rating in the playlist pointed to by <link linkend="iter"><type>iter</type></link>.
+</para><variablelist role="params">
+<varlistentry><term><parameter>iter</parameter>&#160;:</term>
+<listitem><simpara>the iter to the playlist</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>rating</parameter>&#160;:</term>
+<listitem><simpara>the new rating to set</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rclib-db-playlist-set-type" role="function">
+<title>rclib_db_playlist_set_type ()</title>
+<indexterm zone="rclib-db-playlist-set-type"><primary>rclib_db_playlist_set_type</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rclib_db_playlist_set_type          (<parameter><link linkend="GSequenceIter"><type>GSequenceIter</type></link> *iter</parameter>,
+                                                         <parameter><link linkend="RCLibDbPlaylistType"><type>RCLibDbPlaylistType</type></link> type</parameter>);</programlisting>
+<para>
+Set the type information in the playlist pointed to by <link linkend="iter"><type>iter</type></link>.
+</para><variablelist role="params">
+<varlistentry><term><parameter>iter</parameter>&#160;:</term>
+<listitem><simpara>the iter to the playlist</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>type</parameter>&#160;:</term>
+<listitem><simpara>the new type to set</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rclib-db-playlist-sync" role="function">
+<title>rclib_db_playlist_sync ()</title>
+<indexterm zone="rclib-db-playlist-sync"><primary>rclib_db_playlist_sync</primary></indexterm>
+<programlisting><link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            rclib_db_playlist_sync              ();</programlisting>
+</refsect2>
+<refsect2 id="rclib-db-playlist-update-length" role="function">
+<title>rclib_db_playlist_update_length ()</title>
+<indexterm zone="rclib-db-playlist-update-length"><primary>rclib_db_playlist_update_length</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rclib_db_playlist_update_length     (<parameter><link linkend="GSequenceIter"><type>GSequenceIter</type></link> *iter</parameter>,
+                                                         <parameter><link linkend="gint64"><type>gint64</type></link> length</parameter>);</programlisting>
+<para>
+Update the length (duration) information in the playlist pointed to
+by <link linkend="iter"><type>iter</type></link>.
+</para><variablelist role="params">
+<varlistentry><term><parameter>iter</parameter>&#160;:</term>
+<listitem><simpara>the iter to the playlist</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>length</parameter>&#160;:</term>
+<listitem><simpara>the new length (duration)</simpara></listitem></varlistentry>
+</variablelist></refsect2>
+<refsect2 id="rclib-db-playlist-update-metadata" role="function">
+<title>rclib_db_playlist_update_metadata ()</title>
+<indexterm zone="rclib-db-playlist-update-metadata"><primary>rclib_db_playlist_update_metadata</primary></indexterm>
+<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rclib_db_playlist_update_metadata   (<parameter><link linkend="GSequenceIter"><type>GSequenceIter</type></link> *iter</parameter>,
+                                                         <parameter>const <link linkend="RCLibDbPlaylistData"><type>RCLibDbPlaylistData</type></link> *data</parameter>);</programlisting>
+<para>
+Update the metadata in the playlist pointed to by <link linkend="iter"><type>iter</type></link>.
+Title, artist, album, file type, track number, year information
+will be updated.
+</para><variablelist role="params">
+<varlistentry><term><parameter>iter</parameter>&#160;:</term>
+<listitem><simpara>the iter to the playlist</simpara></listitem></varlistentry>
+<varlistentry><term><parameter>data</parameter>&#160;:</term>
+<listitem><simpara>the new metadata</simpara></listitem></varlistentry>
 </variablelist></refsect2>
 <refsect2 id="rclib-db-signal-connect" role="function">
 <title>rclib_db_signal_connect ()</title>
@@ -349,383 +842,6 @@ invalid and may be reused.
 <varlistentry><term><parameter>handler_id</parameter>&#160;:</term>
 <listitem><simpara>handler id of the handler to be disconnected</simpara></listitem></varlistentry>
 </variablelist></refsect2>
-<refsect2 id="rclib-db-catalog-add" role="function">
-<title>rclib_db_catalog_add ()</title>
-<indexterm zone="rclib-db-catalog-add"><primary>rclib_db_catalog_add</primary></indexterm>
-<programlisting><link linkend="GSequenceIter"><returnvalue>GSequenceIter</returnvalue></link> *     rclib_db_catalog_add                (<parameter>const <link linkend="gchar"><type>gchar</type></link> *name</parameter>,
-                                                         <parameter><link linkend="GSequenceIter"><type>GSequenceIter</type></link> *iter</parameter>,
-                                                         <parameter><link linkend="gint"><type>gint</type></link> type</parameter>);</programlisting>
-<para>
-Add a new playlist to the catalog before the <link linkend="iter"><type>iter</type></link>, if the <link linkend="iter"><type>iter</type></link>
-is <link linkend="NULL:CAPS"><type>NULL</type></link>, it will be added to the end.
-</para><variablelist role="params">
-<varlistentry><term><parameter>name</parameter>&#160;:</term>
-<listitem><simpara>the name for the new playlist</simpara></listitem></varlistentry>
-<varlistentry><term><parameter>iter</parameter>&#160;:</term>
-<listitem><simpara>insert position (before this <link linkend="iter"><type>iter</type></link>)</simpara></listitem></varlistentry>
-<varlistentry><term><parameter>type</parameter>&#160;:</term>
-<listitem><simpara>the type of the new playlist</simpara></listitem></varlistentry>
-<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara>The iter to the new playlist in the catalog.</simpara></listitem></varlistentry>
-</variablelist></refsect2>
-<refsect2 id="rclib-db-get-catalog" role="function">
-<title>rclib_db_get_catalog ()</title>
-<indexterm zone="rclib-db-get-catalog"><primary>rclib_db_get_catalog</primary></indexterm>
-<programlisting><link linkend="GSequence"><returnvalue>GSequence</returnvalue></link> *         rclib_db_get_catalog                ();</programlisting>
-<para>
-Get the catalog.
-</para><variablelist role="params">
-<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara>The catalog, NULL if the catalog does not exist.</simpara></listitem></varlistentry>
-</variablelist></refsect2>
-<refsect2 id="rclib-db-catalog-set-name" role="function">
-<title>rclib_db_catalog_set_name ()</title>
-<indexterm zone="rclib-db-catalog-set-name"><primary>rclib_db_catalog_set_name</primary></indexterm>
-<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rclib_db_catalog_set_name           (<parameter><link linkend="GSequenceIter"><type>GSequenceIter</type></link> *iter</parameter>,
-                                                         <parameter>const <link linkend="gchar"><type>gchar</type></link> *name</parameter>);</programlisting>
-<para>
-Set the name of the catalog pointed to by <link linkend="iter"><type>iter</type></link>.
-</para><variablelist role="params">
-<varlistentry><term><parameter>iter</parameter>&#160;:</term>
-<listitem><simpara>the iter to the catalog</simpara></listitem></varlistentry>
-<varlistentry><term><parameter>name</parameter>&#160;:</term>
-<listitem><simpara>the new name for the catalog</simpara></listitem></varlistentry>
-</variablelist></refsect2>
-<refsect2 id="rclib-db-catalog-set-type" role="function">
-<title>rclib_db_catalog_set_type ()</title>
-<indexterm zone="rclib-db-catalog-set-type"><primary>rclib_db_catalog_set_type</primary></indexterm>
-<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rclib_db_catalog_set_type           (<parameter><link linkend="GSequenceIter"><type>GSequenceIter</type></link> *iter</parameter>,
-                                                         <parameter><link linkend="RCLibDbCatalogType"><type>RCLibDbCatalogType</type></link> type</parameter>);</programlisting>
-<para>
-Set the type of the catalog pointed to by <link linkend="iter"><type>iter</type></link>.
-</para><variablelist role="params">
-<varlistentry><term><parameter>iter</parameter>&#160;:</term>
-<listitem><simpara>the iter to the catalog</simpara></listitem></varlistentry>
-<varlistentry><term><parameter>type</parameter>&#160;:</term>
-<listitem><simpara>the new type for the catalog</simpara></listitem></varlistentry>
-</variablelist></refsect2>
-<refsect2 id="rclib-db-catalog-delete" role="function">
-<title>rclib_db_catalog_delete ()</title>
-<indexterm zone="rclib-db-catalog-delete"><primary>rclib_db_catalog_delete</primary></indexterm>
-<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rclib_db_catalog_delete             (<parameter><link linkend="GSequenceIter"><type>GSequenceIter</type></link> *iter</parameter>);</programlisting>
-<para>
-Delete the catalog pointed to by <link linkend="iter"><type>iter</type></link>.
-</para><variablelist role="params">
-<varlistentry><term><parameter>iter</parameter>&#160;:</term>
-<listitem><simpara>the iter to the catalog</simpara></listitem></varlistentry>
-</variablelist></refsect2>
-<refsect2 id="rclib-db-catalog-reorder" role="function">
-<title>rclib_db_catalog_reorder ()</title>
-<indexterm zone="rclib-db-catalog-reorder"><primary>rclib_db_catalog_reorder</primary></indexterm>
-<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rclib_db_catalog_reorder            (<parameter><link linkend="gint"><type>gint</type></link> *new_order</parameter>);</programlisting>
-<para>
-Reorder the catalog to follow the order indicated by <parameter>new_order</parameter>.
-</para><variablelist role="params">
-<varlistentry><term><parameter>new_order</parameter>&#160;:</term>
-<listitem><simpara>an array of integers mapping the new position of
-each child to its old position before the re-ordering,
-i.e. <parameter>new_order</parameter><literal>[newpos] = oldpos</literal>. <emphasis role="annotation">[<acronym>array</acronym>]</emphasis></simpara></listitem></varlistentry>
-</variablelist></refsect2>
-<refsect2 id="rclib-db-playlist-add-music" role="function">
-<title>rclib_db_playlist_add_music ()</title>
-<indexterm zone="rclib-db-playlist-add-music"><primary>rclib_db_playlist_add_music</primary></indexterm>
-<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rclib_db_playlist_add_music         (<parameter><link linkend="GSequenceIter"><type>GSequenceIter</type></link> *iter</parameter>,
-                                                         <parameter><link linkend="GSequenceIter"><type>GSequenceIter</type></link> *insert_iter</parameter>,
-                                                         <parameter>const <link linkend="gchar"><type>gchar</type></link> *uri</parameter>);</programlisting>
-<para>
-Add music to the music library by given catalog iter.
-</para><variablelist role="params">
-<varlistentry><term><parameter>iter</parameter>&#160;:</term>
-<listitem><simpara>the catalog iter</simpara></listitem></varlistentry>
-<varlistentry><term><parameter>insert_iter</parameter>&#160;:</term>
-<listitem><simpara>insert the music before this iter</simpara></listitem></varlistentry>
-<varlistentry><term><parameter>uri</parameter>&#160;:</term>
-<listitem><simpara>the URI of the music</simpara></listitem></varlistentry>
-</variablelist></refsect2>
-<refsect2 id="rclib-db-playlist-add-m3u-file" role="function">
-<title>rclib_db_playlist_add_m3u_file ()</title>
-<indexterm zone="rclib-db-playlist-add-m3u-file"><primary>rclib_db_playlist_add_m3u_file</primary></indexterm>
-<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rclib_db_playlist_add_m3u_file      (<parameter><link linkend="GSequenceIter"><type>GSequenceIter</type></link> *iter</parameter>,
-                                                         <parameter><link linkend="GSequenceIter"><type>GSequenceIter</type></link> *insert_iter</parameter>,
-                                                         <parameter>const <link linkend="gchar"><type>gchar</type></link> *filename</parameter>);</programlisting>
-<para>
-Load a m3u playlist file, and add all music inside to
-the catalog pointed to by <link linkend="iter"><type>iter</type></link>.
-</para><variablelist role="params">
-<varlistentry><term><parameter>iter</parameter>&#160;:</term>
-<listitem><simpara>the catalog iter</simpara></listitem></varlistentry>
-<varlistentry><term><parameter>insert_iter</parameter>&#160;:</term>
-<listitem><simpara>insert the music before this iter</simpara></listitem></varlistentry>
-<varlistentry><term><parameter>filename</parameter>&#160;:</term>
-<listitem><simpara>the path of the playlist file</simpara></listitem></varlistentry>
-</variablelist></refsect2>
-<refsect2 id="rclib-db-playlist-add-directory" role="function">
-<title>rclib_db_playlist_add_directory ()</title>
-<indexterm zone="rclib-db-playlist-add-directory"><primary>rclib_db_playlist_add_directory</primary></indexterm>
-<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rclib_db_playlist_add_directory     (<parameter><link linkend="GSequenceIter"><type>GSequenceIter</type></link> *iter</parameter>,
-                                                         <parameter><link linkend="GSequenceIter"><type>GSequenceIter</type></link> *insert_iter</parameter>,
-                                                         <parameter>const <link linkend="gchar"><type>gchar</type></link> *dir</parameter>);</programlisting>
-<para>
-Add all music in the directory to the catalog pointed to by <link linkend="iter"><type>iter</type></link>.
-</para><variablelist role="params">
-<varlistentry><term><parameter>iter</parameter>&#160;:</term>
-<listitem><simpara>the catalog iter</simpara></listitem></varlistentry>
-<varlistentry><term><parameter>insert_iter</parameter>&#160;:</term>
-<listitem><simpara>insert the music before this iter</simpara></listitem></varlistentry>
-<varlistentry><term><parameter>dir</parameter>&#160;:</term>
-<listitem><simpara>the directory path</simpara></listitem></varlistentry>
-</variablelist></refsect2>
-<refsect2 id="rclib-db-playlist-export-all-m3u-files" role="function">
-<title>rclib_db_playlist_export_all_m3u_files ()</title>
-<indexterm zone="rclib-db-playlist-export-all-m3u-files"><primary>rclib_db_playlist_export_all_m3u_files</primary></indexterm>
-<programlisting><link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            rclib_db_playlist_export_all_m3u_files
-                                                        (<parameter>const <link linkend="gchar"><type>gchar</type></link> *dir</parameter>);</programlisting>
-<para>
-Export all playlists in the catalog to playlist files.
-</para><variablelist role="params">
-<varlistentry><term><parameter>dir</parameter>&#160;:</term>
-<listitem><simpara>the directory to save playlist files</simpara></listitem></varlistentry>
-<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara>Whether the operation succeeded.</simpara></listitem></varlistentry>
-</variablelist></refsect2>
-<refsect2 id="rclib-db-playlist-export-m3u-file" role="function">
-<title>rclib_db_playlist_export_m3u_file ()</title>
-<indexterm zone="rclib-db-playlist-export-m3u-file"><primary>rclib_db_playlist_export_m3u_file</primary></indexterm>
-<programlisting><link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            rclib_db_playlist_export_m3u_file   (<parameter><link linkend="GSequenceIter"><type>GSequenceIter</type></link> *iter</parameter>,
-                                                         <parameter>const <link linkend="gchar"><type>gchar</type></link> *sfilename</parameter>);</programlisting>
-<para>
-Export the catalog pointed to by <link linkend="iter"><type>iter</type></link> to a new playlist file.
-</para><variablelist role="params">
-<varlistentry><term><parameter>iter</parameter>&#160;:</term>
-<listitem><simpara>the catalog iter</simpara></listitem></varlistentry>
-<varlistentry><term><parameter>sfilename</parameter>&#160;:</term>
-<listitem><simpara>the new playlist file path</simpara></listitem></varlistentry>
-<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara>Whether the operation succeeded.</simpara></listitem></varlistentry>
-</variablelist></refsect2>
-<refsect2 id="rclib-db-playlist-delete" role="function">
-<title>rclib_db_playlist_delete ()</title>
-<indexterm zone="rclib-db-playlist-delete"><primary>rclib_db_playlist_delete</primary></indexterm>
-<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rclib_db_playlist_delete            (<parameter><link linkend="GSequenceIter"><type>GSequenceIter</type></link> *iter</parameter>);</programlisting>
-<para>
-Delete the playlist data pointed to by <link linkend="iter"><type>iter</type></link>.
-</para><variablelist role="params">
-<varlistentry><term><parameter>iter</parameter>&#160;:</term>
-<listitem><simpara>the iter to the playlist data</simpara></listitem></varlistentry>
-</variablelist></refsect2>
-<refsect2 id="rclib-db-playlist-update-metadata" role="function">
-<title>rclib_db_playlist_update_metadata ()</title>
-<indexterm zone="rclib-db-playlist-update-metadata"><primary>rclib_db_playlist_update_metadata</primary></indexterm>
-<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rclib_db_playlist_update_metadata   (<parameter><link linkend="GSequenceIter"><type>GSequenceIter</type></link> *iter</parameter>,
-                                                         <parameter>const <link linkend="RCLibDbPlaylistData"><type>RCLibDbPlaylistData</type></link> *data</parameter>);</programlisting>
-<para>
-Update the metadata in the playlist pointed to by <link linkend="iter"><type>iter</type></link>.
-Title, artist, album, file type, track number, year information
-will be updated.
-</para><variablelist role="params">
-<varlistentry><term><parameter>iter</parameter>&#160;:</term>
-<listitem><simpara>the iter to the playlist</simpara></listitem></varlistentry>
-<varlistentry><term><parameter>data</parameter>&#160;:</term>
-<listitem><simpara>the new metadata</simpara></listitem></varlistentry>
-</variablelist></refsect2>
-<refsect2 id="rclib-db-playlist-update-length" role="function">
-<title>rclib_db_playlist_update_length ()</title>
-<indexterm zone="rclib-db-playlist-update-length"><primary>rclib_db_playlist_update_length</primary></indexterm>
-<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rclib_db_playlist_update_length     (<parameter><link linkend="GSequenceIter"><type>GSequenceIter</type></link> *iter</parameter>,
-                                                         <parameter><link linkend="gint64"><type>gint64</type></link> length</parameter>);</programlisting>
-<para>
-Update the length (duration) information in the playlist pointed to
-by <link linkend="iter"><type>iter</type></link>.
-</para><variablelist role="params">
-<varlistentry><term><parameter>iter</parameter>&#160;:</term>
-<listitem><simpara>the iter to the playlist</simpara></listitem></varlistentry>
-<varlistentry><term><parameter>length</parameter>&#160;:</term>
-<listitem><simpara>the new length (duration)</simpara></listitem></varlistentry>
-</variablelist></refsect2>
-<refsect2 id="rclib-db-playlist-set-type" role="function">
-<title>rclib_db_playlist_set_type ()</title>
-<indexterm zone="rclib-db-playlist-set-type"><primary>rclib_db_playlist_set_type</primary></indexterm>
-<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rclib_db_playlist_set_type          (<parameter><link linkend="GSequenceIter"><type>GSequenceIter</type></link> *iter</parameter>,
-                                                         <parameter><link linkend="RCLibDbPlaylistType"><type>RCLibDbPlaylistType</type></link> type</parameter>);</programlisting>
-<para>
-Set the type information in the playlist pointed to by <link linkend="iter"><type>iter</type></link>.
-</para><variablelist role="params">
-<varlistentry><term><parameter>iter</parameter>&#160;:</term>
-<listitem><simpara>the iter to the playlist</simpara></listitem></varlistentry>
-<varlistentry><term><parameter>type</parameter>&#160;:</term>
-<listitem><simpara>the new type to set</simpara></listitem></varlistentry>
-</variablelist></refsect2>
-<refsect2 id="rclib-db-playlist-set-rating" role="function">
-<title>rclib_db_playlist_set_rating ()</title>
-<indexterm zone="rclib-db-playlist-set-rating"><primary>rclib_db_playlist_set_rating</primary></indexterm>
-<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rclib_db_playlist_set_rating        (<parameter><link linkend="GSequenceIter"><type>GSequenceIter</type></link> *iter</parameter>,
-                                                         <parameter><link linkend="gint"><type>gint</type></link> rating</parameter>);</programlisting>
-<para>
-Set the rating in the playlist pointed to by <link linkend="iter"><type>iter</type></link>.
-</para><variablelist role="params">
-<varlistentry><term><parameter>iter</parameter>&#160;:</term>
-<listitem><simpara>the iter to the playlist</simpara></listitem></varlistentry>
-<varlistentry><term><parameter>rating</parameter>&#160;:</term>
-<listitem><simpara>the new rating to set</simpara></listitem></varlistentry>
-</variablelist></refsect2>
-<refsect2 id="rclib-db-playlist-set-lyric-bind" role="function">
-<title>rclib_db_playlist_set_lyric_bind ()</title>
-<indexterm zone="rclib-db-playlist-set-lyric-bind"><primary>rclib_db_playlist_set_lyric_bind</primary></indexterm>
-<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rclib_db_playlist_set_lyric_bind    (<parameter><link linkend="GSequenceIter"><type>GSequenceIter</type></link> *iter</parameter>,
-                                                         <parameter>const <link linkend="gchar"><type>gchar</type></link> *filename</parameter>);</programlisting>
-<para>
-Bind the lyric file to the music in the playlist pointed to by <link linkend="iter"><type>iter</type></link>.
-</para><variablelist role="params">
-<varlistentry><term><parameter>iter</parameter>&#160;:</term>
-<listitem><simpara>the iter to the playlist</simpara></listitem></varlistentry>
-<varlistentry><term><parameter>filename</parameter>&#160;:</term>
-<listitem><simpara>the path of the lyric file</simpara></listitem></varlistentry>
-</variablelist></refsect2>
-<refsect2 id="rclib-db-playlist-set-lyric-secondary-bind" role="function">
-<title>rclib_db_playlist_set_lyric_secondary_bind ()</title>
-<indexterm zone="rclib-db-playlist-set-lyric-secondary-bind"><primary>rclib_db_playlist_set_lyric_secondary_bind</primary></indexterm>
-<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rclib_db_playlist_set_lyric_secondary_bind
-                                                        (<parameter><link linkend="GSequenceIter"><type>GSequenceIter</type></link> *iter</parameter>,
-                                                         <parameter>const <link linkend="gchar"><type>gchar</type></link> *filename</parameter>);</programlisting>
-<para>
-Bind the secondary lyric file to the music in the playlist pointed
-to by <link linkend="iter"><type>iter</type></link>.
-</para><variablelist role="params">
-<varlistentry><term><parameter>iter</parameter>&#160;:</term>
-<listitem><simpara>the iter to the playlist</simpara></listitem></varlistentry>
-<varlistentry><term><parameter>filename</parameter>&#160;:</term>
-<listitem><simpara>the path of the lyric file</simpara></listitem></varlistentry>
-</variablelist></refsect2>
-<refsect2 id="rclib-db-playlist-set-album-bind" role="function">
-<title>rclib_db_playlist_set_album_bind ()</title>
-<indexterm zone="rclib-db-playlist-set-album-bind"><primary>rclib_db_playlist_set_album_bind</primary></indexterm>
-<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rclib_db_playlist_set_album_bind    (<parameter><link linkend="GSequenceIter"><type>GSequenceIter</type></link> *iter</parameter>,
-                                                         <parameter>const <link linkend="gchar"><type>gchar</type></link> *filename</parameter>);</programlisting>
-<para>
-Bind the album image file to the music in the playlist pointed
-to by <link linkend="iter"><type>iter</type></link>.
-</para><variablelist role="params">
-<varlistentry><term><parameter>iter</parameter>&#160;:</term>
-<listitem><simpara>the iter to the playlist</simpara></listitem></varlistentry>
-<varlistentry><term><parameter>filename</parameter>&#160;:</term>
-<listitem><simpara>the path of the album image file</simpara></listitem></varlistentry>
-</variablelist></refsect2>
-<refsect2 id="rclib-db-playlist-get-lyric-bind" role="function">
-<title>rclib_db_playlist_get_lyric_bind ()</title>
-<indexterm zone="rclib-db-playlist-get-lyric-bind"><primary>rclib_db_playlist_get_lyric_bind</primary></indexterm>
-<programlisting>const <link linkend="gchar"><returnvalue>gchar</returnvalue></link> *       rclib_db_playlist_get_lyric_bind    (<parameter><link linkend="GSequenceIter"><type>GSequenceIter</type></link> *iter</parameter>);</programlisting>
-<para>
-Get the lyric file bound to the music in the playlist pointed
-to by <link linkend="iter"><type>iter</type></link>.
-</para><variablelist role="params">
-<varlistentry><term><parameter>iter</parameter>&#160;:</term>
-<listitem><simpara>the iter to the playlist</simpara></listitem></varlistentry>
-<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara>The lyric file path.</simpara></listitem></varlistentry>
-</variablelist></refsect2>
-<refsect2 id="rclib-db-playlist-get-lyric-secondary-bind" role="function">
-<title>rclib_db_playlist_get_lyric_secondary_bind ()</title>
-<indexterm zone="rclib-db-playlist-get-lyric-secondary-bind"><primary>rclib_db_playlist_get_lyric_secondary_bind</primary></indexterm>
-<programlisting>const <link linkend="gchar"><returnvalue>gchar</returnvalue></link> *       rclib_db_playlist_get_lyric_secondary_bind
-                                                        (<parameter><link linkend="GSequenceIter"><type>GSequenceIter</type></link> *iter</parameter>);</programlisting>
-<para>
-Get the secondary lyric file bound to the music in the playlist pointed
-to by <link linkend="iter"><type>iter</type></link>.
-</para><variablelist role="params">
-<varlistentry><term><parameter>iter</parameter>&#160;:</term>
-<listitem><simpara>the iter to the playlist</simpara></listitem></varlistentry>
-<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara>The lyric file path.</simpara></listitem></varlistentry>
-</variablelist></refsect2>
-<refsect2 id="rclib-db-playlist-get-album-bind" role="function">
-<title>rclib_db_playlist_get_album_bind ()</title>
-<indexterm zone="rclib-db-playlist-get-album-bind"><primary>rclib_db_playlist_get_album_bind</primary></indexterm>
-<programlisting>const <link linkend="gchar"><returnvalue>gchar</returnvalue></link> *       rclib_db_playlist_get_album_bind    (<parameter><link linkend="GSequenceIter"><type>GSequenceIter</type></link> *iter</parameter>);</programlisting>
-<para>
-Get the album image file bound to the music in the playlist pointed
-to by <link linkend="iter"><type>iter</type></link>.
-</para><variablelist role="params">
-<varlistentry><term><parameter>iter</parameter>&#160;:</term>
-<listitem><simpara>the iter to the playlist</simpara></listitem></varlistentry>
-<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara>The album image file path.</simpara></listitem></varlistentry>
-</variablelist></refsect2>
-<refsect2 id="rclib-db-playlist-reorder" role="function">
-<title>rclib_db_playlist_reorder ()</title>
-<indexterm zone="rclib-db-playlist-reorder"><primary>rclib_db_playlist_reorder</primary></indexterm>
-<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rclib_db_playlist_reorder           (<parameter><link linkend="GSequenceIter"><type>GSequenceIter</type></link> *iter</parameter>,
-                                                         <parameter><link linkend="gint"><type>gint</type></link> *new_order</parameter>);</programlisting>
-<para>
-Reorder the playlist to follow the order indicated by <parameter>new_order</parameter>.
-</para><variablelist role="params">
-<varlistentry><term><parameter>iter</parameter>&#160;:</term>
-<listitem><simpara>the iter pointed to catalog</simpara></listitem></varlistentry>
-<varlistentry><term><parameter>new_order</parameter>&#160;:</term>
-<listitem><simpara>an array of integers mapping the new position of
-each child to its old position before the re-ordering,
-i.e. <parameter>new_order</parameter><literal>[newpos] = oldpos</literal>. <emphasis role="annotation">[<acronym>array</acronym>]</emphasis></simpara></listitem></varlistentry>
-</variablelist></refsect2>
-<refsect2 id="rclib-db-playlist-move-to-another-catalog" role="function">
-<title>rclib_db_playlist_move_to_another_catalog ()</title>
-<indexterm zone="rclib-db-playlist-move-to-another-catalog"><primary>rclib_db_playlist_move_to_another_catalog</primary></indexterm>
-<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rclib_db_playlist_move_to_another_catalog
-                                                        (<parameter><link linkend="GSequenceIter"><type>GSequenceIter</type></link> **iters</parameter>,
-                                                         <parameter><link linkend="guint"><type>guint</type></link> num</parameter>,
-                                                         <parameter><link linkend="GSequenceIter"><type>GSequenceIter</type></link> *catalog_iter</parameter>);</programlisting>
-<para>
-Move the playlist data pointed to by <link linkend="iters"><type>iters</type></link> to another catalog
-pointed to by <link linkend="catalog-iter"><type>catalog_iter</type></link>.
-</para><variablelist role="params">
-<varlistentry><term><parameter>iters</parameter>&#160;:</term>
-<listitem><simpara>an iter array</simpara></listitem></varlistentry>
-<varlistentry><term><parameter>num</parameter>&#160;:</term>
-<listitem><simpara>the size of the iter array</simpara></listitem></varlistentry>
-<varlistentry><term><parameter>catalog_iter</parameter>&#160;:</term>
-<listitem><simpara>the iter for the catalog</simpara></listitem></varlistentry>
-</variablelist></refsect2>
-<refsect2 id="rclib-db-playlist-refresh" role="function">
-<title>rclib_db_playlist_refresh ()</title>
-<indexterm zone="rclib-db-playlist-refresh"><primary>rclib_db_playlist_refresh</primary></indexterm>
-<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rclib_db_playlist_refresh           (<parameter><link linkend="GSequenceIter"><type>GSequenceIter</type></link> *iter</parameter>);</programlisting>
-<para>
-Refresh the metadata of the music in the playlist pointed to
-by the given catalog <link linkend="iter"><type>iter</type></link>.
-</para><variablelist role="params">
-<varlistentry><term><parameter>iter</parameter>&#160;:</term>
-<listitem><simpara>the catalog iter</simpara></listitem></varlistentry>
-</variablelist></refsect2>
-<refsect2 id="rclib-db-playlist-import-cancel" role="function">
-<title>rclib_db_playlist_import_cancel ()</title>
-<indexterm zone="rclib-db-playlist-import-cancel"><primary>rclib_db_playlist_import_cancel</primary></indexterm>
-<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rclib_db_playlist_import_cancel     ();</programlisting>
-<para>
-Cancel all remaining import jobs in the queue.
-</para></refsect2>
-<refsect2 id="rclib-db-playlist-refresh-cancel" role="function">
-<title>rclib_db_playlist_refresh_cancel ()</title>
-<indexterm zone="rclib-db-playlist-refresh-cancel"><primary>rclib_db_playlist_refresh_cancel</primary></indexterm>
-<programlisting><link linkend="void"><returnvalue>void</returnvalue></link>                rclib_db_playlist_refresh_cancel    ();</programlisting>
-<para>
-Cancel all remaining refresh jobs in the queue.
-</para></refsect2>
-<refsect2 id="rclib-db-playlist-import-queue-get-length" role="function">
-<title>rclib_db_playlist_import_queue_get_length ()</title>
-<indexterm zone="rclib-db-playlist-import-queue-get-length"><primary>rclib_db_playlist_import_queue_get_length</primary></indexterm>
-<programlisting><link linkend="gint"><returnvalue>gint</returnvalue></link>                rclib_db_playlist_import_queue_get_length
-                                                        ();</programlisting>
-<para>
-Get the number of remaining jobs in the import queue.
-</para><variablelist role="params">
-<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara>The number of remaining jobs.</simpara></listitem></varlistentry>
-</variablelist></refsect2>
-<refsect2 id="rclib-db-playlist-refresh-queue-get-length" role="function">
-<title>rclib_db_playlist_refresh_queue_get_length ()</title>
-<indexterm zone="rclib-db-playlist-refresh-queue-get-length"><primary>rclib_db_playlist_refresh_queue_get_length</primary></indexterm>
-<programlisting><link linkend="gint"><returnvalue>gint</returnvalue></link>                rclib_db_playlist_refresh_queue_get_length
-                                                        ();</programlisting>
-<para>
-Get the number of remaining jobs in the refresh queue.
-</para><variablelist role="params">
-<varlistentry><term><emphasis>Returns</emphasis>&#160;:</term><listitem><simpara>The number of remaining jobs.</simpara></listitem></varlistentry>
-</variablelist></refsect2>
-<refsect2 id="rclib-db-playlist-sync" role="function">
-<title>rclib_db_playlist_sync ()</title>
-<indexterm zone="rclib-db-playlist-sync"><primary>rclib_db_playlist_sync</primary></indexterm>
-<programlisting><link linkend="gboolean"><returnvalue>gboolean</returnvalue></link>            rclib_db_playlist_sync              ();</programlisting>
-</refsect2>
 
 </refsect1>
 <refsect1 id="RCLibDb.signal-details" role="signals">

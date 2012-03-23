@@ -40,12 +40,8 @@
 <pre class="synopsis">
 #include &lt;rclib-settings.h&gt;
 
-<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="LibRhythmCat-Settings.html#rclib-settings-init" title="rclib_settings_init ()">rclib_settings_init</a>                 ();
-<span class="returnvalue">void</span>                <a class="link" href="LibRhythmCat-Settings.html#rclib-settings-exit" title="rclib_settings_exit ()">rclib_settings_exit</a>                 ();
-<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="LibRhythmCat-Settings.html#rclib-settings-load-from-file" title="rclib_settings_load_from_file ()">rclib_settings_load_from_file</a>       (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *filename</code></em>);
 <span class="returnvalue">void</span>                <a class="link" href="LibRhythmCat-Settings.html#rclib-settings-apply" title="rclib_settings_apply ()">rclib_settings_apply</a>                ();
-<span class="returnvalue">void</span>                <a class="link" href="LibRhythmCat-Settings.html#rclib-settings-sync" title="rclib_settings_sync ()">rclib_settings_sync</a>                 ();
-<span class="returnvalue">void</span>                <a class="link" href="LibRhythmCat-Settings.html#rclib-settings-update" title="rclib_settings_update ()">rclib_settings_update</a>               ();
+<span class="returnvalue">void</span>                <a class="link" href="LibRhythmCat-Settings.html#rclib-settings-exit" title="rclib_settings_exit ()">rclib_settings_exit</a>                 ();
 <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="LibRhythmCat-Settings.html#rclib-settings-get-boolean" title="rclib_settings_get_boolean ()">rclib_settings_get_boolean</a>          (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *group_name</code></em>,
                                                          <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *key</code></em>,
                                                          <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Error-Reporting.html#GError"><span class="type">GError</span></a> **error</code></em>);
@@ -77,6 +73,8 @@
 <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="LibRhythmCat-Settings.html#rclib-settings-has-key" title="rclib_settings_has_key ()">rclib_settings_has_key</a>              (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *group_name</code></em>,
                                                          <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *key</code></em>,
                                                          <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Error-Reporting.html#GError"><span class="type">GError</span></a> **error</code></em>);
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="LibRhythmCat-Settings.html#rclib-settings-init" title="rclib_settings_init ()">rclib_settings_init</a>                 ();
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="LibRhythmCat-Settings.html#rclib-settings-load-from-file" title="rclib_settings_load_from_file ()">rclib_settings_load_from_file</a>       (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *filename</code></em>);
 <span class="returnvalue">void</span>                <a class="link" href="LibRhythmCat-Settings.html#rclib-settings-set-boolean" title="rclib_settings_set_boolean ()">rclib_settings_set_boolean</a>          (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *group_name</code></em>,
                                                          <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *key</code></em>,
                                                          <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> value</code></em>);
@@ -105,6 +103,8 @@
                                                          <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *key</code></em>,
                                                          <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> * const list[]</code></em>,
                                                          <em class="parameter"><code><span class="type">gsize</span> length</code></em>);
+<span class="returnvalue">void</span>                <a class="link" href="LibRhythmCat-Settings.html#rclib-settings-sync" title="rclib_settings_sync ()">rclib_settings_sync</a>                 ();
+<span class="returnvalue">void</span>                <a class="link" href="LibRhythmCat-Settings.html#rclib-settings-update" title="rclib_settings_update ()">rclib_settings_update</a>               ();
 </pre>
 </div>
 <div class="refsect1">
@@ -125,56 +125,6 @@ save them in this module.
 <div class="refsect1">
 <a name="LibRhythmCat-Settings.details"></a><h2>Details</h2>
 <div class="refsect2">
-<a name="rclib-settings-init"></a><h3>rclib_settings_init ()</h3>
-<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rclib_settings_init                 ();</pre>
-<p>
-Initialize the settings module.
-</p>
-<div class="variablelist"><table border="0">
-<col align="left" valign="top">
-<tbody>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>filename</code></em> :</span></p></td>
-<td>the path of the settings file</td>
-</tr>
-<tr>
-<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>Whether the initialization succeeded.</td>
-</tr>
-</tbody>
-</table></div>
-</div>
-<hr>
-<div class="refsect2">
-<a name="rclib-settings-exit"></a><h3>rclib_settings_exit ()</h3>
-<pre class="programlisting"><span class="returnvalue">void</span>                rclib_settings_exit                 ();</pre>
-<p>
-Unload the setings module and save the settings to the settings file.
-</p>
-</div>
-<hr>
-<div class="refsect2">
-<a name="rclib-settings-load-from-file"></a><h3>rclib_settings_load_from_file ()</h3>
-<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rclib_settings_load_from_file       (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *filename</code></em>);</pre>
-<p>
-Load settings from file.
-</p>
-<div class="variablelist"><table border="0">
-<col align="left" valign="top">
-<tbody>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>filename</code></em> :</span></p></td>
-<td>the path of the settings file</td>
-</tr>
-<tr>
-<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>Whether the settings are loaded successfully.</td>
-</tr>
-</tbody>
-</table></div>
-</div>
-<hr>
-<div class="refsect2">
 <a name="rclib-settings-apply"></a><h3>rclib_settings_apply ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>                rclib_settings_apply                ();</pre>
 <p>
@@ -183,18 +133,10 @@ Apply the settings to the modules in library.
 </div>
 <hr>
 <div class="refsect2">
-<a name="rclib-settings-sync"></a><h3>rclib_settings_sync ()</h3>
-<pre class="programlisting"><span class="returnvalue">void</span>                rclib_settings_sync                 ();</pre>
+<a name="rclib-settings-exit"></a><h3>rclib_settings_exit ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rclib_settings_exit                 ();</pre>
 <p>
-Save the settings to file if they are changed (become dirty).
-</p>
-</div>
-<hr>
-<div class="refsect2">
-<a name="rclib-settings-update"></a><h3>rclib_settings_update ()</h3>
-<pre class="programlisting"><span class="returnvalue">void</span>                rclib_settings_update               ();</pre>
-<p>
-Update settings from the modules in the library.
+Unload the setings module and save the settings to the settings file.
 </p>
 </div>
 <hr>
@@ -507,6 +449,48 @@ Looks whether the key file has the key in the group.
 </div>
 <hr>
 <div class="refsect2">
+<a name="rclib-settings-init"></a><h3>rclib_settings_init ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rclib_settings_init                 ();</pre>
+<p>
+Initialize the settings module.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>filename</code></em> :</span></p></td>
+<td>the path of the settings file</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>Whether the initialization succeeded.</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-settings-load-from-file"></a><h3>rclib_settings_load_from_file ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rclib_settings_load_from_file       (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *filename</code></em>);</pre>
+<p>
+Load settings from file.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>filename</code></em> :</span></p></td>
+<td>the path of the settings file</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>Whether the settings are loaded successfully.</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
 <a name="rclib-settings-set-boolean"></a><h3>rclib_settings_set_boolean ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>                rclib_settings_set_boolean          (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *group_name</code></em>,
                                                          <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *key</code></em>,
@@ -756,6 +740,22 @@ it is created.
 </tr>
 </tbody>
 </table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-settings-sync"></a><h3>rclib_settings_sync ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rclib_settings_sync                 ();</pre>
+<p>
+Save the settings to file if they are changed (become dirty).
+</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-settings-update"></a><h3>rclib_settings_update ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rclib_settings_update               ();</pre>
+<p>
+Update settings from the modules in the library.
+</p>
 </div>
 </div>
 </div>
