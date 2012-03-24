@@ -24,10 +24,28 @@
  */
  
 #include "rc-ui-style.h"
+#include "rc-ui-css.h"
+#include "rc-main.h"
 
 static GtkCssProvider *style_css_provider = NULL;
+static RCUiStyleEmbededTheme style_embeded_themes[] = {
+    {
+        .name = "Monochrome",
+        .data = rc_ui_css_monochrome,
+        .length = sizeof(rc_ui_css_monochrome)
+    }
+};
 
-void rc_ui_style_css_set_file(const gchar *filename)
+/**
+ * rc_ui_style_css_set_file:
+ * @filename: the CSS file path
+ *
+ * Apply the CSS style file to the player.
+ *
+ * Returns: Whether the operation succeeded.
+ */
+
+gboolean rc_ui_style_css_set_file(const gchar *filename)
 {
     GFile *file;
     GError *error = NULL;
@@ -35,7 +53,7 @@ void rc_ui_style_css_set_file(const gchar *filename)
     if(filename==NULL)
     {
         g_warning("Invalid CSS Style file name!");
-        return;
+        return FALSE;
     }
     file = g_file_new_for_path(filename);
     g_message("Loading CSS Style: %s",
@@ -43,7 +61,7 @@ void rc_ui_style_css_set_file(const gchar *filename)
     if(file==NULL)
     {
         g_warning("Cannot open CSS Style: %s", filename);
-        return;
+        return FALSE;
     }
     if(style_css_provider==NULL)
         style_css_provider = gtk_css_provider_new();
@@ -53,7 +71,7 @@ void rc_ui_style_css_set_file(const gchar *filename)
         g_warning("Cannot open CSS Style: %s", error->message);
         g_error_free(error);
         g_object_unref(file);
-        return;
+        return FALSE;
     }
     g_object_unref(file);
     gtk_style_context_add_provider_for_screen(screen,
@@ -61,16 +79,27 @@ void rc_ui_style_css_set_file(const gchar *filename)
         GTK_STYLE_PROVIDER_PRIORITY_USER);
     gtk_style_context_reset_widgets(screen);
     g_message("Loaded new CSS Style.");
+    return TRUE;
 }
 
-void rc_ui_style_css_set_data(const gchar *data, gssize length)
+/**
+ * rc_ui_style_css_set_data:
+ * @data: the CSS data in the buffer
+ * @length: the length of the data
+ *
+ * Apply the CSS style data to the player.
+ *
+ * Returns: Whether the operation succeeded.
+ */
+
+gboolean rc_ui_style_css_set_data(const gchar *data, gssize length)
 {
     GError *error = NULL;
     GdkScreen *screen = gdk_screen_get_default();
     if(data==NULL)
     {
         g_warning("Invalid CSS Style data!");
-        return;
+        return FALSE;
     }
     if(style_css_provider==NULL)
         style_css_provider = gtk_css_provider_new();
@@ -79,14 +108,21 @@ void rc_ui_style_css_set_data(const gchar *data, gssize length)
     {
         g_warning("Cannot open CSS Style: %s", error->message);
         g_error_free(error);
-        return;
+        return FALSE;
     }
     gtk_style_context_add_provider_for_screen(screen,
         GTK_STYLE_PROVIDER(style_css_provider),
         GTK_STYLE_PROVIDER_PRIORITY_USER);
     gtk_style_context_reset_widgets(screen);
     g_message("Loaded new CSS Style.");
+    return TRUE;
 }
+
+/**
+ * rc_ui_style_css_unset:
+ *
+ * Remove CSS style used before.
+ */
 
 void rc_ui_style_css_unset()
 {
@@ -100,5 +136,79 @@ void rc_ui_style_css_unset()
     }
     gtk_style_context_reset_widgets(screen);
     g_message("Custom CSS Style has been removed.");
+}
+
+/**
+ * rc_ui_style_get_embeded_theme:
+ * @number: the theme number
+ *
+ * Get the embeded theme in the player.
+ *
+ * Returns: An array of embeded theme data.
+ */
+
+const RCUiStyleEmbededTheme *rc_ui_style_get_embeded_theme(guint *number)
+{
+    if(number!=NULL)
+        *number = sizeof(style_embeded_themes)/sizeof(RCUiStyleEmbededTheme);
+    return style_embeded_themes;
+}
+
+/**
+ * rc_ui_style_search_theme_paths:
+ *
+ * Get a list of theme paths, which contains theme files.
+ *
+ * Returns: A list of theme paths.
+ */
+
+GSList *rc_ui_style_search_theme_paths()
+{
+    GSList *list = NULL;
+    gchar *path = NULL;
+    GDir *dir = NULL;
+    const gchar *path_name = NULL;
+    gchar *theme_path = NULL;
+    gchar *theme_file = NULL;
+    path = g_build_filename(rc_main_get_data_dir(), "themes", NULL);
+    dir = g_dir_open(path, 0, NULL);
+    if(dir!=NULL)
+    {
+        path_name = g_dir_read_name(dir);
+        while(path_name!=NULL)
+        {
+            theme_path = g_build_filename(path, path_name, NULL);
+            if(g_file_test(theme_path, G_FILE_TEST_IS_DIR))
+                list = g_slist_append(list, theme_path);
+            else
+                g_free(theme_path);
+            path_name = g_dir_read_name(dir);
+        }
+        g_dir_close(dir);
+    }
+    g_free(path);
+    path = g_build_filename(rc_main_get_user_dir(), "Themes", NULL);
+    dir = g_dir_open(path, 0, NULL);
+    if(dir!=NULL)
+    {
+        path_name = g_dir_read_name(dir);
+        while(path_name!=NULL)
+        {
+            theme_path = g_build_filename(path, path_name, NULL);
+            theme_file = g_build_filename(theme_path, "gtk3.css", NULL);
+            if(g_file_test(theme_path, G_FILE_TEST_IS_DIR) &&
+                g_file_test(theme_file, G_FILE_TEST_IS_REGULAR))
+            {
+                list = g_slist_append(list, theme_path);
+            }
+            else
+                g_free(theme_path);
+            g_free(theme_file);
+            path_name = g_dir_read_name(dir);
+        }
+        g_dir_close(dir);
+    }
+    g_free(path);
+    return list;
 }
 

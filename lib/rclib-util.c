@@ -133,7 +133,7 @@ gchar *rclib_util_get_data_dir(const gchar *name, const gchar *arg0)
         }
         if(data_dir==NULL)
         {
-                data_dir = g_get_current_dir();
+            data_dir = g_get_current_dir();
         }
     #endif
     return data_dir;

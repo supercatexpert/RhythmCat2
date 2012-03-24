@@ -728,7 +728,27 @@ static void rc_ui_player_tray_icon_popup(GtkStatusIcon *icon, guint button,
 static void rc_ui_player_tray_icon_activated(GtkStatusIcon *icon,
     gpointer data)
 {
-
+    RCUiPlayerPrivate *priv = (RCUiPlayerPrivate *)data;
+    gboolean visible;
+    if(priv==NULL) return;
+    if(!rclib_settings_get_boolean("MainUI", "MinimizeToTray", NULL))
+    {
+        gtk_window_present(GTK_WINDOW(priv->main_window));
+        return;
+    }
+    g_object_get(priv->main_window, "visible", &visible, NULL);
+    if(visible)
+    {
+        gtk_widget_hide(priv->main_window);
+    }
+    else
+    {
+        gtk_window_set_skip_taskbar_hint(GTK_WINDOW(priv->main_window),
+            FALSE);
+        gtk_window_deiconify(GTK_WINDOW(priv->main_window));
+        gtk_window_present(GTK_WINDOW(priv->main_window));
+    }
+        
 }
 
 static void rc_ui_player_progress_popup_menu_position_func(GtkMenu *menu,
@@ -797,6 +817,27 @@ static gboolean rc_ui_player_window_state_event_cb(GtkWidget *widget,
         gtk_toggle_action_set_active(GTK_TOGGLE_ACTION(
             gtk_ui_manager_get_action(priv->ui_manager,
             "/TrayPopupMenu/TrayAlwaysOnTop")), FALSE);
+    }
+    if(rclib_settings_get_boolean("MainUI", "MinimizeToTray", NULL))
+    {
+        if(window_state->changed_mask==GDK_WINDOW_STATE_ICONIFIED && 
+            window_state->new_window_state==GDK_WINDOW_STATE_ICONIFIED)
+        {
+            gtk_window_set_skip_taskbar_hint(GTK_WINDOW(priv->main_window),
+                TRUE);
+            gtk_widget_hide(priv->main_window);
+        }
+    }
+    return FALSE;
+}
+
+static gboolean rc_ui_player_window_delete_event_cb(GtkWidget *widget,
+    GdkEvent *event, gpointer data)
+{
+    if(rclib_settings_get_boolean("MainUI", "MinimizeWhenClose", NULL))
+    {
+        gtk_window_iconify(GTK_WINDOW(widget));
+        return TRUE;
     }
     return FALSE;
 }
@@ -987,37 +1028,39 @@ static void rc_ui_player_signal_bind(RCUiPlayerPrivate *priv)
 {
     priv->update_timeout = g_timeout_add(250, (GSourceFunc)
         rc_ui_player_update_time_info, priv);
-    g_signal_connect(G_OBJECT(priv->ctrl_play_button), "clicked",
+    g_signal_connect(priv->ctrl_play_button, "clicked",
         G_CALLBACK(rc_ui_player_play_button_clicked_cb), priv);
-    g_signal_connect(G_OBJECT(priv->ctrl_stop_button), "clicked",
+    g_signal_connect(priv->ctrl_stop_button, "clicked",
         G_CALLBACK(rc_ui_player_stop_button_clicked_cb), priv);
-    g_signal_connect(G_OBJECT(priv->ctrl_prev_button), "clicked",
+    g_signal_connect(priv->ctrl_prev_button, "clicked",
         G_CALLBACK(rc_ui_player_prev_button_clicked_cb), priv);
-    g_signal_connect(G_OBJECT(priv->ctrl_next_button), "clicked",
+    g_signal_connect(priv->ctrl_next_button, "clicked",
         G_CALLBACK(rc_ui_player_next_button_clicked_cb), priv);
-    g_signal_connect(G_OBJECT(priv->ctrl_open_button), "clicked",
+    g_signal_connect(priv->ctrl_open_button, "clicked",
         G_CALLBACK(rc_ui_player_open_button_clicked_cb), priv);
-    g_signal_connect(G_OBJECT(priv->album_eventbox), "button-release-event",
+    g_signal_connect(priv->album_eventbox, "button-release-event",
         G_CALLBACK(rc_ui_player_album_menu_popup), priv);
-    g_signal_connect(G_OBJECT(priv->progress_eventbox), "button-press-event",
+    g_signal_connect(priv->progress_eventbox, "button-press-event",
         G_CALLBACK(rc_ui_player_progress_menu_popup), priv);
-    g_signal_connect(G_OBJECT(priv->volume_button), "value-changed",
+    g_signal_connect(priv->volume_button, "value-changed",
         G_CALLBACK(rc_ui_player_adjust_volume), priv);
-    g_signal_connect(G_OBJECT(priv->time_scale), "button-press-event",
+    g_signal_connect(priv->time_scale, "button-press-event",
         G_CALLBACK(rc_ui_player_seek_scale_button_pressed), priv);
-    g_signal_connect(G_OBJECT(priv->time_scale), "button-release-event",
+    g_signal_connect(priv->time_scale, "button-release-event",
         G_CALLBACK(rc_ui_player_seek_scale_button_released), priv);
-    g_signal_connect(G_OBJECT(priv->time_scale), "scroll-event",
+    g_signal_connect(priv->time_scale, "scroll-event",
         G_CALLBACK(gtk_true), priv);
-    g_signal_connect(G_OBJECT(priv->time_scale), "value-changed",
+    g_signal_connect(priv->time_scale, "value-changed",
         G_CALLBACK(rc_ui_player_seek_scale_value_changed), priv);
-    g_signal_connect(GTK_STATUS_ICON(priv->tray_icon), "activate", 
+    g_signal_connect(priv->tray_icon, "activate", 
         G_CALLBACK(rc_ui_player_tray_icon_activated), priv);
-    g_signal_connect(GTK_STATUS_ICON(priv->tray_icon), "popup-menu",
+    g_signal_connect(priv->tray_icon, "popup-menu",
         G_CALLBACK(rc_ui_player_tray_icon_popup), priv);
-    g_signal_connect(G_OBJECT(priv->main_window), "window-state-event",
+    g_signal_connect(priv->main_window, "window-state-event",
         G_CALLBACK(rc_ui_player_window_state_event_cb), priv);
-    g_signal_connect(G_OBJECT(priv->main_window), "destroy",
+    g_signal_connect(priv->main_window, "delete-event",
+        G_CALLBACK(rc_ui_player_window_delete_event_cb), priv);
+    g_signal_connect(priv->main_window, "destroy",
         G_CALLBACK(rc_ui_player_destroy), priv);
     priv->tag_found_id = rclib_core_signal_connect("tag-found",
         G_CALLBACK(rc_ui_player_tag_found_cb), priv);

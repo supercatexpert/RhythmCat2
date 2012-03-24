@@ -27,6 +27,10 @@
 #include "rclib-common.h"
 #include "rclib-core.h"
 #include "rclib-player.h"
+#include "rclib-util.h"
+#include "rclib-lyric.h"
+#include "rclib-tag.h"
+#include "rclib-db.h"
 
 /**
  * SECTION: rclib-settings
@@ -116,11 +120,16 @@ gboolean rclib_settings_init()
     rclib_settings_set_integer("Player", "RandomMode",
         RCLIB_PLAYER_RANDOM_NONE);
     rclib_settings_set_double("Player", "Volume", 1.0);
+    rclib_settings_set_boolean("Player", "AutoPlayWhenStartup", FALSE);
+    rclib_settings_set_boolean("Player", "LoadLastPosition", FALSE);
+    rclib_settings_set_integer("Player", "LastPlayedCatalog", 0);
+    rclib_settings_set_integer("Player", "LastPlayedMusic", 0);
     rclib_settings_set_integer("SoundEffect", "EQStyle",
         RCLIB_CORE_EQ_TYPE_NONE);
     rclib_settings_set_double_list("SoundEffect", "EQ", eq_array, 10);
     rclib_settings_set_double("SoundEffect", "Balance", 0.0);
     rclib_settings_set_boolean("Playlist", "AutoEncodingDetect", TRUE);
+    rclib_settings_set_boolean("Metadata", "AutoDetectEncoding", TRUE);
     settings_dirty = FALSE;
     g_message("Settings module loaded.");
     return TRUE;
@@ -174,12 +183,14 @@ gboolean rclib_settings_load_from_file(const gchar *filename)
 void rclib_settings_apply()
 {
     GError *error = NULL;
+    gboolean bvalue;
     gint ivalue;
     gdouble dvalue;
     gdouble *darray;
     gsize size;
     guint64 delay;
     gfloat intensity, feedback;
+    gchar *encoding, *id3_encoding;
     ivalue = rclib_settings_get_integer("Player", "RepeatMode", &error);
     if(error==NULL)
     {
@@ -237,6 +248,35 @@ void rclib_settings_apply()
     feedback = rclib_settings_get_double("SoundEffect", "EchoFeedback", NULL);
     intensity = rclib_settings_get_double("SoundEffect", "EchoIntensity", NULL);
     rclib_core_set_echo(delay, feedback, intensity);
+    bvalue = rclib_settings_get_boolean("Metadata", "AutoDetectEncoding", NULL);
+    if(bvalue)
+    {
+        encoding = rclib_util_detect_encoding_by_locale();
+        if(encoding!=NULL && strlen(encoding)>0)
+        {
+            id3_encoding = g_strdup_printf("%s:UTF-8", encoding);
+            rclib_lyric_set_fallback_encoding(encoding);
+            rclib_settings_set_string("Metadata", "LyricEncoding", encoding);
+            rclib_tag_set_fallback_encoding(id3_encoding);
+            rclib_settings_set_string("Metadata", "ID3Encoding",
+                id3_encoding);
+            g_free(id3_encoding);
+        }
+        g_free(encoding);
+    }
+    else
+    {
+        id3_encoding = rclib_settings_get_string("Metadata", "ID3Encoding",
+            NULL);
+        if(id3_encoding!=NULL && strlen(id3_encoding)>0)
+            rclib_tag_set_fallback_encoding(id3_encoding);
+        g_free(id3_encoding);
+        encoding = rclib_settings_get_string("Metadata", "LyricEncoding",
+            NULL);
+        if(encoding!=NULL && strlen(encoding)>0)
+            rclib_tag_set_fallback_encoding(encoding);
+        g_free(encoding);
+    }
 }
 
 /**
@@ -253,6 +293,8 @@ void rclib_settings_update()
     guint64 delay;
     gfloat fvalue;
     gfloat intensity, feedback;
+    GSequenceIter *db_reference;
+    RCLibDbPlaylistData *playlist_data;
     ivalue = rclib_player_get_repeat_mode();
     rclib_settings_set_integer("Player", "RepeatMode", ivalue);
     ivalue = rclib_player_get_random_mode();
@@ -272,6 +314,19 @@ void rclib_settings_update()
             delay/GST_MSECOND);
         rclib_settings_set_double("SoundEffect", "EchoFeedback", feedback);
         rclib_settings_set_double("SoundEffect", "EchoIntensity", intensity);
+    }
+    db_reference = rclib_core_get_db_reference();
+    if(db_reference!=NULL)
+    {
+        playlist_data = g_sequence_get(db_reference);
+        if(playlist_data!=NULL)
+        {
+            ivalue = g_sequence_iter_get_position(db_reference);
+            rclib_settings_set_integer("Player", "LastPlayedMusic", ivalue);
+            ivalue = g_sequence_iter_get_position(playlist_data->catalog);
+            rclib_settings_set_integer("Player", "LastPlayedCatalog",
+                ivalue);
+        }
     }
 }
 

@@ -1,3 +1,28 @@
+/*
+ * RhythmCat Main Module
+ * The main module for the player.
+ *
+ * rc-main.c
+ * This file is part of RhythmCat Music Player (GTK+ Version)
+ *
+ * Copyright (C) 2012 - SuperCat, license: GPL v3
+ *
+ * RhythmCat is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * RhythmCat is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with RhythmCat; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, 
+ * Boston, MA  02110-1301  USA
+ */
+
 #include <glib.h>
 #include <gst/gst.h>
 #include <glib/gprintf.h>
@@ -8,26 +33,75 @@
 #include "rc-common.h"
 #include "rc-ui-style.h"
 #include "rc-ui-effect.h"
-#include "rc-ui-css.h"
 
 static gchar main_app_id[] = "org.rhythmcat.RhythmCat2";
 static gboolean main_debug_flag = FALSE;
 static gboolean main_malloc_flag = FALSE;
 static gchar **main_remaining_args = NULL;
+static gchar *main_data_dir = NULL;
+static gchar *main_user_dir = NULL;
+
+static inline void rc_main_settings_init()
+{
+    if(!rclib_settings_has_key("MainUI", "MinimizeToTray", NULL))
+        rclib_settings_set_boolean("MainUI", "MinimizeToTray", FALSE);
+    if(!rclib_settings_has_key("MainUI", "MinimizeWhenClose", NULL))
+        rclib_settings_set_boolean("MainUI", "MinimizeWhenClose", FALSE);
+}
 
 static void rc_main_app_activate_cb(GApplication *application,
     gpointer data)
 {
     const gchar *home_dir = NULL;
+    gchar *theme;
+    gchar *theme_file;
     gchar *plugin_dir;
     gchar *plugin_conf;
     GSequenceIter *catalog_iter = NULL;
-    GSequence *catalog;
+    GSequence *catalog = NULL;
+    RCLibDbCatalogData *catalog_data = NULL;
+    GSequenceIter *playlist_iter = NULL;
     GFile *file;
     gchar *uri;
     gint i;
+    gboolean theme_flag = FALSE;
+    const RCUiStyleEmbededTheme *theme_embeded;
+    guint theme_number;
     rc_ui_player_init(GTK_APPLICATION(application));
     rc_ui_effect_window_init();
+    theme_embeded = rc_ui_style_get_embeded_theme(&theme_number);
+    theme = rclib_settings_get_string("MainUI", "Theme", NULL);
+    if(theme!=NULL && strlen(theme)>0)
+    {
+        if(g_str_has_prefix(theme, "embeded-theme:"))
+        {
+            for(i=0;i<theme_number;i++)
+            {
+                if(g_strcmp0(theme+14, theme_embeded[i].name)==0)
+                {
+                    theme_flag = rc_ui_style_css_set_data(
+                        theme_embeded[i].data, theme_embeded[i].length);
+                }
+            }
+        }
+        else
+        {
+            theme_file = g_build_filename(theme, "gtk3.css", NULL);
+            theme_flag = rc_ui_style_css_set_file(theme_file);
+            g_free(theme_file);
+        }
+        if(!theme_flag)
+        {
+            rc_ui_style_css_set_data(theme_embeded[0].data,
+                theme_embeded[0].length);
+        }
+    }
+    else
+    {
+        rc_ui_style_css_set_data(theme_embeded[0].data,
+            theme_embeded[0].length);
+    }
+    g_free(theme);
     rclib_settings_apply();
     rc_mpris2_init();
     home_dir = g_getenv("HOME");
@@ -42,9 +116,44 @@ static void rc_main_app_activate_cb(GApplication *application,
     rclib_plugin_load_from_dir(plugin_dir);
     g_free(plugin_dir);
     rclib_plugin_load_from_configure();
+    catalog = rclib_db_get_catalog();
+    if(rclib_settings_get_boolean("Player", "LoadLastPosition", NULL) &&
+        catalog!=NULL)
+    {
+        catalog_iter = g_sequence_get_iter_at_pos(catalog,
+            rclib_settings_get_integer("Player", "LastPlayedCatalog", NULL));
+        if(catalog_iter!=NULL)
+            catalog_data = g_sequence_get(catalog_iter);
+        if(catalog_data!=NULL && catalog_data->playlist!=NULL)
+        {
+            playlist_iter = g_sequence_get_iter_at_pos(
+                catalog_data->playlist, rclib_settings_get_integer(
+                "Player", "LastPlayedMusic", NULL));
+        }
+        if(playlist_iter!=NULL)
+        {
+            rclib_player_play_db(playlist_iter);
+            if(!rclib_settings_get_boolean("Player", "AutoPlayWhenStartup",
+                NULL))
+                rclib_core_pause();
+        }
+        
+    }
+    else if(rclib_settings_get_boolean("Player", "AutoPlayWhenStartup",
+        NULL) && catalog!=NULL)
+    {
+        if(catalog!=NULL)
+            catalog_iter = g_sequence_get_begin_iter(catalog);
+        if(catalog_iter!=NULL)
+            catalog_data = g_sequence_get(catalog_iter);
+        if(catalog_data!=NULL && catalog_data->playlist!=NULL)
+            playlist_iter = g_sequence_get_begin_iter(
+                catalog_data->playlist);
+        if(playlist_iter!=NULL)
+            rclib_player_play_db(playlist_iter);
+    }
     if(main_remaining_args!=NULL)
     {
-        catalog = rclib_db_get_catalog();
         if(catalog!=NULL)
             catalog_iter = g_sequence_get_begin_iter(catalog);
         if(catalog_iter!=NULL)
@@ -62,8 +171,6 @@ static void rc_main_app_activate_cb(GApplication *application,
             }
         }
     }
-    
-    rc_ui_style_css_set_data(rc_ui_css_default, sizeof(rc_ui_css_default));
 }
 
 static void rc_main_app_open_cb(GApplication *application, GFile **files,
@@ -105,7 +212,7 @@ static gboolean rc_main_print_version(const gchar *option_name,
     return TRUE;
 }
 
-int main(int argc, char *argv[])
+gint rc_main_run(gint *argc, gchar **argv[])
 {
     static GOptionEntry options[] =
     {
@@ -124,7 +231,6 @@ int main(int argc, char *argv[])
     GtkApplication *app;
     GSequence *catalog;
     GError *error = NULL;
-    gchar *data_dir = NULL;
     const gchar *home_dir = NULL;
     gint status;
     GFile **remote_files;
@@ -135,10 +241,10 @@ int main(int argc, char *argv[])
     g_option_context_add_group(context, gst_init_get_option_group());
     g_option_context_add_group(context, gtk_get_option_group(TRUE));
     setlocale(LC_ALL, NULL);
-    if(!g_option_context_parse(context, &argc, &argv, &error))
+    if(!g_option_context_parse(context, argc, argv, &error))
     {
         g_print(_("%s\nRun '%s --help' to see a full list of available "
-            "command line options.\n"), error->message, argv[0]);
+            "command line options.\n"), error->message, *argv[0]);
         g_error_free(error);
         g_option_context_free(context);
         exit(1);
@@ -183,14 +289,17 @@ int main(int argc, char *argv[])
     home_dir = g_getenv("HOME");
     if(home_dir==NULL)
         home_dir = g_get_home_dir();
-    data_dir = g_build_filename(home_dir, ".RhythmCat2", NULL);
-    if(!rclib_init(&argc, &argv, data_dir, &error))
+    main_user_dir = g_build_filename(home_dir, ".RhythmCat2", NULL);
+    if(!rclib_init(argc, argv, main_user_dir, &error))
     {
         g_error("Cannot load core: %s", error->message);
         g_error_free(error);
-        g_free(data_dir);
+        g_free(main_user_dir);
+        main_user_dir = NULL;
         return 1;
     }
+    main_data_dir = rclib_util_get_data_dir("RhythmCat2", *argv[0]);
+    rc_main_settings_init();
     gdk_threads_init();
     g_print("LibRhythmCat loaded. Version: %d.%d.%d, build date: %s\n",
         rclib_major_version, rclib_minor_version, rclib_micro_version,
@@ -202,14 +311,53 @@ int main(int argc, char *argv[])
     g_signal_connect(app, "activate", G_CALLBACK(rc_main_app_activate_cb),
         NULL);
     g_signal_connect(app, "open", G_CALLBACK(rc_main_app_open_cb), NULL);
-    status = g_application_run(G_APPLICATION(app), argc, argv);
+    status = g_application_run(G_APPLICATION(app), *argc, *argv);
+    g_free(main_user_dir);
+    g_object_unref(app);
+    return status;
+}
+
+/**
+ * rc_main_exit:
+ *
+ * Exit from the player, save configure data and release all used resources.
+ */
+
+void rc_main_exit()
+{
     rc_ui_effect_window_destroy();
     rc_ui_player_exit();
-    g_object_unref(app);
     rclib_plugin_exit();
     rc_mpris2_exit();
     rclib_exit();
-    g_free(data_dir);
-    return status;
+    g_free(main_data_dir);
+    g_free(main_user_dir);
+}
+
+/**
+ * rc_main_get_data_dir:
+ *
+ * Get the program data directory path of the player.
+ *
+ * Returns: the program data directory path.
+ */
+
+const gchar *rc_main_get_data_dir()
+{
+    return main_data_dir;
+}
+
+/**
+ * rc_main_get_user_dir:
+ *
+ * Get the user data directory path of the player.
+ * (should be ~/.RhythmCat2)
+ *
+ * Returns: the user data directory path.
+ */
+
+const gchar *rc_main_get_user_dir()
+{
+    return main_user_dir;
 }
 

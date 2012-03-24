@@ -1,7 +1,8 @@
 /*
- * RhythmCat UI Style Header Declaration
+ * RhythmCat Main Function module
+ * Main function entry for the program.
  *
- * rc-ui-style.h
+ * main.c
  * This file is part of RhythmCat Music Player (GTK+ Version)
  *
  * Copyright (C) 2012 - SuperCat, license: GPL v3
@@ -21,37 +22,14 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, 
  * Boston, MA  02110-1301  USA
  */
-
-#ifndef HAVE_RC_UI_STYLE_H
-#define HAVE_RC_UI_STYLE_H
-
-#include <glib.h>
-#include <gtk/gtk.h>
-#include <rclib.h>
-
-G_BEGIN_DECLS
-
-typedef struct _RCUiStyleEmbededTheme RCUiStyleEmbededTheme;
-
-/**
- * RCUiStyleEmbededTheme:
- *
- * The embeded theme data in the player.
- */
  
-struct _RCUiStyleEmbededTheme {
-    const gchar *name;
-    const gchar *data;
-    gssize length;
-}; 
+#include "rc-main.h"
 
-gboolean rc_ui_style_css_set_file(const gchar *filename);
-gboolean rc_ui_style_css_set_data(const gchar *data, gssize length);
-void rc_ui_style_css_unset();
-const RCUiStyleEmbededTheme *rc_ui_style_get_embeded_theme(guint *number);
-GSList *rc_ui_style_search_theme_paths();
-
-G_END_DECLS
-
-#endif
+int main(int argc, char *argv[])
+{
+    gint ret;
+    ret = rc_main_run(&argc, &argv);
+    rc_main_exit();
+    return ret;
+}
 

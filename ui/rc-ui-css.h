@@ -25,7 +25,7 @@
 #ifndef HAVE_RC_UI_CSS_H
 #define HAVE_RC_UI_CSS_H
 
-gchar rc_ui_css_default[] = 
+gchar rc_ui_css_monochrome[] = 
     "@define-color rc_base_color #4f524f;\n"
     "@define-color rc_bg_color #363b3b;\n"
     "@define-color rc_text_color #eeeeec;\n"
