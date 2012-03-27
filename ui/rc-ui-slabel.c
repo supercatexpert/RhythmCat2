@@ -169,10 +169,8 @@ static void rc_ui_scrollable_label_get_preferred_height(GtkWidget *widget,
 
 static gboolean rc_ui_scrollable_label_draw(GtkWidget *widget, cairo_t *cr)
 {
-    const PangoFontDescription *fd;
     RCUiScrollableLabel *label;
     RCUiScrollableLabelPrivate *priv;
-    PangoLayout *layout;
     GtkAllocation allocation;
     gint width, height;
     GtkStyleContext *style_context;
@@ -181,15 +179,7 @@ static gboolean rc_ui_scrollable_label_draw(GtkWidget *widget, cairo_t *cr)
     label = RC_UI_SCROLLABLE_LABEL(widget);
     priv = RC_UI_SCROLLABLE_LABEL_GET_PRIVATE(label);
     style_context = gtk_widget_get_style_context(widget);
-    fd = gtk_style_context_get_font(style_context, GTK_STATE_FLAG_NORMAL);
-    layout = priv->layout;
-    pango_layout_set_font_description(layout, fd);
-    pango_layout_set_attributes(layout, priv->attrs);
-    if(priv->text!=NULL)
-        pango_layout_set_text(layout, priv->text, -1);
-    else
-        pango_layout_set_text(layout, "", -1);
-    pango_layout_get_pixel_size(layout, &width, &height);
+    pango_layout_get_pixel_size(priv->layout, &width, &height);
     gtk_widget_get_allocation(widget, &allocation);
     priv->current_width = width;
     if(width > allocation.width)
@@ -198,13 +188,15 @@ static gboolean rc_ui_scrollable_label_draw(GtkWidget *widget, cairo_t *cr)
     else
         priv->current_x = 0;
     gtk_render_layout(style_context, cr, priv->current_x,
-        (allocation.height - height) / 2, layout);
+        (allocation.height - height) / 2, priv->layout);
     return TRUE;
 }
 
 static void rc_ui_scrollable_label_init(RCUiScrollableLabel *object)
 {
     RCUiScrollableLabelPrivate *priv;
+    const PangoFontDescription *fd;
+    GtkStyleContext *style_context;
     priv = RC_UI_SCROLLABLE_LABEL_GET_PRIVATE(object);
     priv->percent = 0.0;
     priv->text = NULL;
@@ -212,6 +204,9 @@ static void rc_ui_scrollable_label_init(RCUiScrollableLabel *object)
     priv->layout = gtk_widget_create_pango_layout(GTK_WIDGET(object), NULL);
     priv->current_x = 0;
     priv->current_width = 0;
+    style_context = gtk_widget_get_style_context(GTK_WIDGET(object));
+    fd = gtk_style_context_get_font(style_context, GTK_STATE_FLAG_NORMAL);
+    pango_layout_set_font_description(priv->layout, fd);
 }
 
 static void rc_ui_scrollable_label_finalize(GObject *object)
@@ -341,7 +336,12 @@ void rc_ui_scrollable_label_set_text(RCUiScrollableLabel *widget,
         priv->text = NULL;
     }
     if(text!=NULL)
+    {
         priv->text = g_strdup(text);
+        pango_layout_set_text(priv->layout, text, -1);
+    }
+    else
+        pango_layout_set_text(priv->layout, "", -1);
     gtk_widget_queue_draw(GTK_WIDGET(widget));
 }
 

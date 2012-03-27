@@ -1383,4 +1383,20 @@ const GdkPixbuf *rc_ui_player_get_icon_image()
     return priv->icon_pixbuf;
 }
 
+/**
+ * rc_ui_player_get_tray_icon:
+ *
+ * Get the tray icon of this player.
+ *
+ * Returns: The tray icon.
+ */
+
+GtkStatusIcon *rc_ui_player_get_tray_icon()
+{
+    RCUiPlayerPrivate *priv = NULL;
+    if(ui_player_instance==NULL) return NULL;
+    priv = RC_UI_PLAYER_GET_PRIVATE(ui_player_instance);
+    if(priv==NULL) return NULL;
+    return priv->tray_icon;
+}
 

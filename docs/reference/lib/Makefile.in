@@ -241,7 +241,7 @@ AUTOMAKE_OPTIONS = 1.6
 DOC_MODULE = LibRhythmCat
 
 # Uncomment for versioned docs and specify the version of the module, e.g. '2'.
-DOC_MODULE_VERSION = 1.9.0
+DOC_MODULE_VERSION = 1.9.1
 
 # The top-level SGML file. You can change this if you want to.
 DOC_MAIN_SGML_FILE = $(DOC_MODULE)-docs.sgml
@@ -284,7 +284,7 @@ EXTRA_HFILES =
 
 # Header files to ignore when scanning. Use base file name, no paths
 # e.g. IGNORE_HFILES=gtkdebug.h gtkintl.h
-IGNORE_HFILES = rclib-marshal.h
+IGNORE_HFILES = rclib-marshal.h rclib-common.h
 
 # Images to copy into HTML directory.
 # e.g. HTML_IMAGES=$(top_srcdir)/gtk/stock-icons/stock_about_24.png

@@ -85,7 +85,8 @@ am__uninstall_files_from_dir = { \
   }
 am__installdirs = "$(DESTDIR)$(plugindir)"
 LTLIBRARIES = $(noinst_LTLIBRARIES) $(plugin_LTLIBRARIES)
-helloworld_la_DEPENDENCIES =
+@WITH_NATIVE_PLUGINS_TRUE@helloworld_la_DEPENDENCIES = $(top_builddir)/lib/librhythmcat-2.0.la \
+@WITH_NATIVE_PLUGINS_TRUE@	$(top_builddir)/ui/librhythmcat-ui-2.0.la
 am__helloworld_la_SOURCES_DIST = helloworld.c
 @WITH_NATIVE_PLUGINS_TRUE@am_helloworld_la_OBJECTS = helloworld.lo
 helloworld_la_OBJECTS = $(am_helloworld_la_OBJECTS)
@@ -309,7 +310,10 @@ INCLUDES = @GLIB2_CFLAGS@ @GSTREAMER_CFLAGS@ @GTK_CFLAGS@ \
 	@JSON_CFLAGS@ -DLOCALEDIR=\"$(localedir)\" -I$(top_srcdir)/lib \
 	-I$(top_srcdir)/ui $(am__append_3)
 @WITH_NATIVE_PLUGINS_TRUE@helloworld_la_SOURCES = helloworld.c
-@WITH_NATIVE_PLUGINS_TRUE@helloworld_la_LIBADD = @GLIB2_LIBS@ @GTK_LIBS@ @GSTREAMER_LIBS@ @JSON_LIBS@
+@WITH_NATIVE_PLUGINS_TRUE@helloworld_la_LIBADD = @GLIB2_LIBS@ @GTK_LIBS@ @GSTREAMER_LIBS@ @JSON_LIBS@ \
+@WITH_NATIVE_PLUGINS_TRUE@    $(top_builddir)/lib/librhythmcat-2.0.la \
+@WITH_NATIVE_PLUGINS_TRUE@    $(top_builddir)/ui/librhythmcat-ui-2.0.la
+
 @WITH_PYTHON3_PLUGINS_TRUE@python3_la_SOURCES = python3.c
 @WITH_PYTHON3_PLUGINS_TRUE@python3_la_LIBADD = @GLIB2_LIBS@ @GSTREAMER_LIBS@ @JSON_LIBS@ @PYTHON3_LIBS@
 SUFFIXES = .c .so

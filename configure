@@ -2934,8 +2934,8 @@ $as_echo "#define RC_MINOR_VERSION 9" >>confdefs.h
 $as_echo "#define RC_MICRO_VERSION 1" >>confdefs.h
 
 
-# Set of available languages.
-ALL_LINGUAS="zh_CN zh_TW ja_JP"
+# Set of available languages. (Obsoleted!)
+#ALL_LINGUAS="zh_CN zh_TW ja_JP"
 
 # Checks for programs.
 ac_ext=c
@@ -11514,7 +11514,7 @@ CC="$lt_save_CC"
 # Only expand once:
 
 
-CFLAGS="-Wall -O3 -DINSTALL_PATH=\\\"$datadir/RhythmCat/\\\""
+CFLAGS="-Wall -O3 -DINSTALL_PATH=\\\"$datadir/RhythmCat2/\\\""
 
 # Extract the first word of "glib-genmarshal", so it can be a program name with args.
 set dummy glib-genmarshal; ac_word=$2
@@ -15429,7 +15429,7 @@ fi
 
 ac_config_files="$ac_config_files lib/librhythmcat-2.0.pc ui/rhythmcat-2.0.pc"
 
-ac_config_files="$ac_config_files Makefile lib/Makefile ui/Makefile plugins/Makefile plugins/base/Makefile plugins/extra/Makefile plugins/devel/Makefile docs/Makefile docs/reference/Makefile docs/reference/lib/Makefile docs/reference/lib/version.xml po/Makefile.in po/Makefile"
+ac_config_files="$ac_config_files Makefile lib/Makefile ui/Makefile plugins/Makefile plugins/base/Makefile plugins/extra/Makefile plugins/devel/Makefile docs/Makefile docs/reference/Makefile docs/reference/lib/Makefile docs/reference/ui/Makefile docs/reference/lib/version.xml docs/reference/ui/version.xml po/Makefile.in po/Makefile"
 
 cat >confcache <<\_ACEOF
 # This file is a shell script that caches the results of configure
@@ -16494,7 +16494,9 @@ do
     "docs/Makefile") CONFIG_FILES="$CONFIG_FILES docs/Makefile" ;;
     "docs/reference/Makefile") CONFIG_FILES="$CONFIG_FILES docs/reference/Makefile" ;;
     "docs/reference/lib/Makefile") CONFIG_FILES="$CONFIG_FILES docs/reference/lib/Makefile" ;;
+    "docs/reference/ui/Makefile") CONFIG_FILES="$CONFIG_FILES docs/reference/ui/Makefile" ;;
     "docs/reference/lib/version.xml") CONFIG_FILES="$CONFIG_FILES docs/reference/lib/version.xml" ;;
+    "docs/reference/ui/version.xml") CONFIG_FILES="$CONFIG_FILES docs/reference/ui/version.xml" ;;
     "po/Makefile.in") CONFIG_FILES="$CONFIG_FILES po/Makefile.in" ;;
     "po/Makefile") CONFIG_FILES="$CONFIG_FILES po/Makefile" ;;
 
@@ -19042,7 +19044,9 @@ do
     "docs/Makefile") CONFIG_FILES="$CONFIG_FILES docs/Makefile" ;;
     "docs/reference/Makefile") CONFIG_FILES="$CONFIG_FILES docs/reference/Makefile" ;;
     "docs/reference/lib/Makefile") CONFIG_FILES="$CONFIG_FILES docs/reference/lib/Makefile" ;;
+    "docs/reference/ui/Makefile") CONFIG_FILES="$CONFIG_FILES docs/reference/ui/Makefile" ;;
     "docs/reference/lib/version.xml") CONFIG_FILES="$CONFIG_FILES docs/reference/lib/version.xml" ;;
+    "docs/reference/ui/version.xml") CONFIG_FILES="$CONFIG_FILES docs/reference/ui/version.xml" ;;
     "po/Makefile.in") CONFIG_FILES="$CONFIG_FILES po/Makefile.in" ;;
     "po/Makefile") CONFIG_FILES="$CONFIG_FILES po/Makefile" ;;
 

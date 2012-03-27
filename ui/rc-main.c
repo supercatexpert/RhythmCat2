@@ -67,7 +67,10 @@ static void rc_main_app_activate_cb(GApplication *application,
     gboolean theme_flag = FALSE;
     const RCUiStyleEmbededTheme *theme_embeded;
     guint theme_number;
-    rc_ui_player_init(GTK_APPLICATION(application));
+    if(application!=NULL)
+        rc_ui_player_init(GTK_APPLICATION(application));
+    else
+        rc_ui_player_init(NULL);    
     rc_ui_effect_window_init();
     theme_embeded = rc_ui_style_get_embeded_theme(&theme_number);
     theme = rclib_settings_get_string("MainUI", "Theme", NULL);
@@ -258,32 +261,35 @@ gint rc_main_run(gint *argc, gchar **argv[])
     g_set_application_name("RhythmCat2");
     g_set_prgname("RhythmCat2");
     app = gtk_application_new(main_app_id, G_APPLICATION_HANDLES_OPEN);
-    if(!g_application_register(G_APPLICATION(app), NULL, &error))
+    if(app!=NULL)
     {
-        g_warning("Cannot register player: %s", error->message);
-        g_error_free(error);
-        error = NULL;
-    }
-    if(g_application_get_is_registered(G_APPLICATION(app)))
-    {
-        if(g_application_get_is_remote(G_APPLICATION(app)))
+        if(!g_application_register(G_APPLICATION(app), NULL, &error))
         {
-            g_message("This player is running already!");
-            if(main_remaining_args==NULL) exit(0);
-            remote_file_num = g_strv_length(main_remaining_args);
-            if(remote_file_num<1) exit(0);
-            remote_files = g_new0(GFile *, remote_file_num);
-            for(i=0;main_remaining_args[i]!=NULL;i++)
+            g_warning("Cannot register player: %s", error->message);
+            g_error_free(error);
+            error = NULL;
+        }
+        if(g_application_get_is_registered(G_APPLICATION(app)))
+        {
+            if(g_application_get_is_remote(G_APPLICATION(app)))
             {
-                remote_files[i] = g_file_new_for_commandline_arg(
-                    main_remaining_args[i]);
+                g_message("This player is running already!");
+                if(main_remaining_args==NULL) exit(0);
+                remote_file_num = g_strv_length(main_remaining_args);
+                if(remote_file_num<1) exit(0);
+                remote_files = g_new0(GFile *, remote_file_num);
+                for(i=0;main_remaining_args[i]!=NULL;i++)
+                {
+                    remote_files[i] = g_file_new_for_commandline_arg(
+                        main_remaining_args[i]);
+                }
+                g_application_open(G_APPLICATION(app), remote_files,
+                    remote_file_num, "RhythmCat2::open");
+                for(i=0;i<remote_file_num;i++)
+                    g_object_unref(remote_files[i]);
+                g_free(remote_files);
+                exit(0);
             }
-            g_application_open(G_APPLICATION(app), remote_files,
-                remote_file_num, "RhythmCat2::open");
-            for(i=0;i<remote_file_num;i++)
-                g_object_unref(remote_files[i]);
-            g_free(remote_files);
-            exit(0);
         }
     }
     home_dir = g_getenv("HOME");
@@ -311,7 +317,15 @@ gint rc_main_run(gint *argc, gchar **argv[])
     g_signal_connect(app, "activate", G_CALLBACK(rc_main_app_activate_cb),
         NULL);
     g_signal_connect(app, "open", G_CALLBACK(rc_main_app_open_cb), NULL);
-    status = g_application_run(G_APPLICATION(app), *argc, *argv);
+    if(app!=NULL)
+        status = g_application_run(G_APPLICATION(app), *argc, *argv);
+    else /* If GtkApplication is not available, use fallback functions. */
+    {
+        gtk_init(argc, argv);
+        rc_main_run(NULL, NULL);
+        gtk_main();
+        status = 0;
+    }
     g_free(main_user_dir);
     g_object_unref(app);
     return status;

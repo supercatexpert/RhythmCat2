@@ -77,6 +77,7 @@ void rc_ui_player_init(GtkApplication *app);
 void rc_ui_player_exit();
 GtkWidget *rc_ui_player_get_main_window();
 const GdkPixbuf *rc_ui_player_get_icon_image();
+GtkStatusIcon *rc_ui_player_get_tray_icon();
 
 G_END_DECLS
 

@@ -1,7 +1,0 @@
-GObject
-  RCLibCore
-  RCLibDb
-  RCLibLyric
-  RCLibPlayer
-GInterface
-  GTypePlugin

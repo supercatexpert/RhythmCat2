@@ -31,15 +31,15 @@ AC_DEFINE(RC_MINOR_VERSION, [rc_minor_version],
 AC_DEFINE(RC_MICRO_VERSION, [rc_micro_version],
     [Define to the RhythmCat micro version])
 
-# Set of available languages.
-ALL_LINGUAS="zh_CN zh_TW ja_JP"
+# Set of available languages. (Obsoleted!)
+#ALL_LINGUAS="zh_CN zh_TW ja_JP"
 
 # Checks for programs.
 AC_PROG_CC
 AC_PROG_INSTALL
 AC_PROG_LN_S
 AM_PROG_LIBTOOL
-CFLAGS="-Wall -O3 -DINSTALL_PATH=\\\"$datadir/RhythmCat/\\\""
+CFLAGS="-Wall -O3 -DINSTALL_PATH=\\\"$datadir/RhythmCat2/\\\""
 
 AC_PATH_PROG(GLIB_GENMARSHAL, glib-genmarshal, no)
 if test "$GLIB_GENMARSHAL" = no; then
@@ -105,8 +105,8 @@ AC_OUTPUT([Makefile lib/Makefile ui/Makefile \
     plugins/Makefile plugins/base/Makefile plugins/extra/Makefile \
     plugins/devel/Makefile \
     docs/Makefile docs/reference/Makefile docs/reference/lib/Makefile \
-    docs/reference/lib/version.xml \
-    po/Makefile.in po/Makefile])
+    docs/reference/ui/Makefile docs/reference/lib/version.xml \
+    docs/reference/ui/version.xml po/Makefile.in po/Makefile])
 
 AC_CONFIG_MACRO_DIR(m4)
 

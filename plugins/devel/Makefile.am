@@ -15,7 +15,10 @@ plugin_LTLIBRARIES += \
     helloworld.la
     
 helloworld_la_SOURCES = helloworld.c
-helloworld_la_LIBADD = @GLIB2_LIBS@ @GTK_LIBS@ @GSTREAMER_LIBS@ @JSON_LIBS@
+
+helloworld_la_LIBADD = @GLIB2_LIBS@ @GTK_LIBS@ @GSTREAMER_LIBS@ @JSON_LIBS@ \
+    $(top_builddir)/lib/librhythmcat-2.0.la \
+    $(top_builddir)/ui/librhythmcat-ui-2.0.la
 
 endif
 

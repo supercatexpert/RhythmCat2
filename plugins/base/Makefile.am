@@ -1,12 +1,24 @@
 plugindir = $(libdir)/RhythmCat2
 
-plugin_LTLIBRARIES = 
+lyricshow_la_LDFLAGS = -module -avoid-version -export-dynamic -O2
 
-    
+plugin_LTLIBRARIES = 
 noinst_LTLIBRARIES =
 
 INCLUDES = @GLIB2_CFLAGS@ @GSTREAMER_CFLAGS@ @GTK_CFLAGS@ @JSON_CFLAGS@ \
     -DLOCALEDIR=\"$(localedir)\" -I$(top_srcdir)/lib -I$(top_srcdir)/ui
+
+if WITH_NATIVE_PLUGINS
+
+plugin_LTLIBRARIES += \
+    lyricshow.la
+
+lyricshow_la_SOURCES = lyricshow.c
+lyricshow_la_LIBADD = @GLIB2_LIBS@ @GTK_LIBS@ @GSTREAMER_LIBS@ @JSON_LIBS@ \
+    $(top_builddir)/lib/librhythmcat-2.0.la \
+    $(top_builddir)/ui/librhythmcat-ui-2.0.la
+
+endif
 
 SUFFIXES = .c .so
 .c.so:

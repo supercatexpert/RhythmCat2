@@ -1,0 +1,225 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>RCUiPlaylistStore</title>
+<meta name="generator" content="DocBook XSL Stylesheets V1.76.1">
+<link rel="home" href="index.html" title="RhythmCat Reference Manual">
+<link rel="up" href="ch01.html" title="[Insert title here]">
+<link rel="prev" href="RhythmCat-rc-ui-effect.html" title="rc-ui-effect">
+<link rel="next" href="RhythmCat-rc-ui-listview.html" title="rc-ui-listview">
+<meta name="generator" content="GTK-Doc V1.18 (XML mode)">
+<link rel="stylesheet" href="style.css" type="text/css">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2">
+<tr valign="middle">
+<td><a accesskey="p" href="RhythmCat-rc-ui-effect.html"><img src="left.png" width="24" height="24" border="0" alt="Prev"></a></td>
+<td><a accesskey="u" href="ch01.html"><img src="up.png" width="24" height="24" border="0" alt="Up"></a></td>
+<td><a accesskey="h" href="index.html"><img src="home.png" width="24" height="24" border="0" alt="Home"></a></td>
+<th width="100%" align="center">RhythmCat Reference Manual</th>
+<td><a accesskey="n" href="RhythmCat-rc-ui-listview.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
+</tr>
+<tr><td colspan="5" class="shortcuts">
+<a href="#RCUiPlaylistStore.synopsis" class="shortcut">Top</a>
+                   | 
+                  <a href="#RCUiPlaylistStore.description" class="shortcut">Description</a>
+                   | 
+                  <a href="#RCUiPlaylistStore.object-hierarchy" class="shortcut">Object Hierarchy</a>
+                   | 
+                  <a href="#RCUiPlaylistStore.implemented-interfaces" class="shortcut">Implemented Interfaces</a>
+</td></tr>
+</table>
+<div class="refentry">
+<a name="RCUiPlaylistStore"></a><div class="titlepage"></div>
+<div class="refnamediv"><table width="100%"><tr>
+<td valign="top">
+<h2><span class="refentrytitle"><a name="RCUiPlaylistStore.top_of_page"></a>RCUiPlaylistStore</span></h2>
+<p>RCUiPlaylistStore</p>
+</td>
+<td valign="top" align="right"></td>
+</tr></table></div>
+<div class="refsynopsisdiv">
+<a name="RCUiPlaylistStore.synopsis"></a><h2>Synopsis</h2>
+<a name="RCUiCatalogStore"></a><pre class="synopsis">enum                <a class="link" href="RCUiPlaylistStore.html#RCUiCatalogColumns" title="enum RCUiCatalogColumns">RCUiCatalogColumns</a>;
+struct              <a class="link" href="RCUiPlaylistStore.html#RCUiCatalogStore-struct" title="struct RCUiCatalogStore">RCUiCatalogStore</a>;
+struct              <a class="link" href="RCUiPlaylistStore.html#RCUiCatalogStoreClass" title="struct RCUiCatalogStoreClass">RCUiCatalogStoreClass</a>;
+enum                <a class="link" href="RCUiPlaylistStore.html#RCUiPlaylistColumns" title="enum RCUiPlaylistColumns">RCUiPlaylistColumns</a>;
+struct              <a class="link" href="RCUiPlaylistStore.html#RCUiPlaylistStore-struct" title="struct RCUiPlaylistStore">RCUiPlaylistStore</a>;
+struct              <a class="link" href="RCUiPlaylistStore.html#RCUiPlaylistStoreClass" title="struct RCUiPlaylistStoreClass">RCUiPlaylistStoreClass</a>;
+<span class="returnvalue">void</span>                <a class="link" href="RCUiPlaylistStore.html#rc-ui-list-model-exit" title="rc_ui_list_model_exit ()">rc_ui_list_model_exit</a>               ();
+<a href="/usr/share/gtk-doc/html/glib/glib-Sequences.html#GSequenceIter"><span class="returnvalue">GSequenceIter</span></a> *     <a class="link" href="RCUiPlaylistStore.html#rc-ui-list-model-get-catalog-by-model" title="rc_ui_list_model_get_catalog_by_model ()">rc_ui_list_model_get_catalog_by_model</a>
+                                                        (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/gtk/GtkTreeModel.html"><span class="type">GtkTreeModel</span></a> *model</code></em>);
+<a href="/usr/share/gtk-doc/html/gtk/GtkTreeModel.html"><span class="returnvalue">GtkTreeModel</span></a> *      <a class="link" href="RCUiPlaylistStore.html#rc-ui-list-model-get-catalog-store" title="rc_ui_list_model_get_catalog_store ()">rc_ui_list_model_get_catalog_store</a>  ();
+<a href="/usr/share/gtk-doc/html/gtk/GtkTreeModel.html"><span class="returnvalue">GtkTreeModel</span></a> *      <a class="link" href="RCUiPlaylistStore.html#rc-ui-list-model-get-playlist-store" title="rc_ui_list_model_get_playlist_store ()">rc_ui_list_model_get_playlist_store</a> (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/gtk/GtkTreeModel.html#GtkTreeIter"><span class="type">GtkTreeIter</span></a> *iter</code></em>);
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RCUiPlaylistStore.html#rc-ui-list-model-init" title="rc_ui_list_model_init ()">rc_ui_list_model_init</a>               ();
+</pre>
+</div>
+<div class="refsect1">
+<a name="RCUiPlaylistStore.object-hierarchy"></a><h2>Object Hierarchy</h2>
+<pre class="synopsis">
+  <a href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GObject">GObject</a>
+   +----RCUiCatalogStore
+</pre>
+<pre class="synopsis">
+  <a href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GObject">GObject</a>
+   +----RCUiPlaylistStore
+</pre>
+</div>
+<div class="refsect1">
+<a name="RCUiPlaylistStore.implemented-interfaces"></a><h2>Implemented Interfaces</h2>
+<p>
+RCUiCatalogStore implements
+ <a href="/usr/share/gtk-doc/html/gtk/GtkTreeModel.html">GtkTreeModel</a>.</p>
+<p>
+RCUiPlaylistStore implements
+ <a href="/usr/share/gtk-doc/html/gtk/GtkTreeModel.html">GtkTreeModel</a>.</p>
+</div>
+<div class="refsect1">
+<a name="RCUiPlaylistStore.description"></a><h2>Description</h2>
+</div>
+<div class="refsect1">
+<a name="RCUiPlaylistStore.details"></a><h2>Details</h2>
+<div class="refsect2">
+<a name="RCUiCatalogColumns"></a><h3>enum RCUiCatalogColumns</h3>
+<pre class="programlisting">typedef enum {
+    RC_UI_CATALOG_COLUMN_TYPE,
+    RC_UI_CATALOG_COLUMN_STATE,
+    RC_UI_CATALOG_COLUMN_NAME,
+    RC_UI_CATALOG_COLUMN_PLAYING_FLAG,
+    RC_UI_CATALOG_COLUMN_LAST
+} RCUiCatalogColumns;
+</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="RCUiCatalogStore-struct"></a><h3>struct RCUiCatalogStore</h3>
+<pre class="programlisting">struct RCUiCatalogStore;</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="RCUiCatalogStoreClass"></a><h3>struct RCUiCatalogStoreClass</h3>
+<pre class="programlisting">struct RCUiCatalogStoreClass {
+};
+</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="RCUiPlaylistColumns"></a><h3>enum RCUiPlaylistColumns</h3>
+<pre class="programlisting">typedef enum {
+    RC_UI_PLAYLIST_COLUMN_TYPE,
+    RC_UI_PLAYLIST_COLUMN_STATE,
+    RC_UI_PLAYLIST_COLUMN_FTITLE,
+    RC_UI_PLAYLIST_COLUMN_TITLE,
+    RC_UI_PLAYLIST_COLUMN_ARTIST,
+    RC_UI_PLAYLIST_COLUMN_ALBUM,
+    RC_UI_PLAYLIST_COLUMN_FTYPE,
+    RC_UI_PLAYLIST_COLUMN_LENGTH,
+    RC_UI_PLAYLIST_COLUMN_TRACK,
+    RC_UI_PLAYLIST_COLUMN_RATING,
+    RC_UI_PLAYLIST_COLUMN_YEAR,
+    RC_UI_PLAYLIST_COLUMN_PLAYING_FLAG,
+    RC_UI_PLAYLIST_COLUMN_LAST
+} RCUiPlaylistColumns;
+</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="RCUiPlaylistStore-struct"></a><h3>struct RCUiPlaylistStore</h3>
+<pre class="programlisting">struct RCUiPlaylistStore;</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="RCUiPlaylistStoreClass"></a><h3>struct RCUiPlaylistStoreClass</h3>
+<pre class="programlisting">struct RCUiPlaylistStoreClass {
+};
+</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rc-ui-list-model-exit"></a><h3>rc_ui_list_model_exit ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rc_ui_list_model_exit               ();</pre>
+<p>
+Unload the list model.
+</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rc-ui-list-model-get-catalog-by-model"></a><h3>rc_ui_list_model_get_catalog_by_model ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Sequences.html#GSequenceIter"><span class="returnvalue">GSequenceIter</span></a> *     rc_ui_list_model_get_catalog_by_model
+                                                        (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/gtk/GtkTreeModel.html"><span class="type">GtkTreeModel</span></a> *model</code></em>);</pre>
+<p>
+Get the catalog iter by given playlist store model.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>model</code></em> :</span></p></td>
+<td>the playlist store model</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>The catalog iter.</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rc-ui-list-model-get-catalog-store"></a><h3>rc_ui_list_model_get_catalog_store ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/gtk/GtkTreeModel.html"><span class="returnvalue">GtkTreeModel</span></a> *      rc_ui_list_model_get_catalog_store  ();</pre>
+<p>
+Get the catalog store.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>The catalog store.</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rc-ui-list-model-get-playlist-store"></a><h3>rc_ui_list_model_get_playlist_store ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/gtk/GtkTreeModel.html"><span class="returnvalue">GtkTreeModel</span></a> *      rc_ui_list_model_get_playlist_store (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/gtk/GtkTreeModel.html#GtkTreeIter"><span class="type">GtkTreeIter</span></a> *iter</code></em>);</pre>
+<p>
+Get the playlist store by the iter in the catalog.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>iter</code></em> :</span></p></td>
+<td>the iter for the playlist in the catalog</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>The playlist store, NULL if the iter is invalid.</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rc-ui-list-model-init"></a><h3>rc_ui_list_model_init ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rc_ui_list_model_init               ();</pre>
+<p>
+Initialize the list model (catalog model &amp; playlist model).
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>Whether the initialization succeeded.</td>
+</tr></tbody>
+</table></div>
+</div>
+</div>
+</div>
+<div class="footer">
+<hr>
+          Generated by GTK-Doc V1.18</div>
+</body>
+</html>

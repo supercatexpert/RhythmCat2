@@ -44,6 +44,7 @@ G_BEGIN_DECLS
     RCLIB_LYRIC_TYPE, RCLibLyricClass))
 
 typedef struct _RCLibLyricData RCLibLyricData;
+typedef struct _RCLibLyricParsedData RCLibLyricParsedData;
 typedef struct _RCLibLyric RCLibLyric;
 typedef struct _RCLibLyricClass RCLibLyricClass;
 
@@ -60,6 +61,29 @@ struct _RCLibLyricData {
     gint64 time;
     gint64 length;
     gchar *text;
+};
+
+/**
+ * RCLibLyricParsedData:
+ * @seq: the #GSequence which contains the lyric data
+ * @filename: the file path of the lyric file
+ * @title: the title
+ * @artist: the artist
+ * @album: the album
+ * @author: the author of the lyric file
+ * @offset: the offset time of the lyric data
+ *
+ * The structure for parsed lyric data.
+ */
+
+struct _RCLibLyricParsedData {
+    GSequence *seq;
+    gchar *filename;
+    gchar *title;
+    gchar *artist;
+    gchar *album;
+    gchar *author;
+    gint offset;
 };
 
 /**
@@ -105,11 +129,13 @@ const gchar *rclib_lyric_get_fallback_encoding();
 gboolean rclib_lyric_load_file(const gchar *filename, guint index);
 void rclib_lyric_clean(guint index);
 const RCLibLyricData *rclib_lyric_get_line(guint index, gint64 time);
+GSequenceIter *rclib_lyric_get_line_iter(guint index, gint64 time);
 void rclib_lyric_set_search_dir(const gchar *dir);
 const gchar *rclib_lyric_get_search_dir();
 gchar *rclib_lyric_search_lyric(const gchar *uri, const gchar *title,
     const gchar *artist);
 gboolean rclib_lyric_is_available(guint index);
+RCLibLyricParsedData *rclib_lyric_get_parsed_data(guint index);
 
 G_END_DECLS
 

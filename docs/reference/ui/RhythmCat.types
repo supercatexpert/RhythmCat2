@@ -1,0 +1,5 @@
+rc_ui_catalog_store_get_type
+rc_ui_player_get_type
+rc_ui_playlist_store_get_type
+rc_ui_scrollable_label_get_type
+rc_ui_spectrum_widget_get_type

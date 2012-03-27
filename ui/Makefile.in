@@ -17,6 +17,7 @@
 
 
 
+
 VPATH = @srcdir@
 pkgdatadir = $(datadir)/@PACKAGE@
 pkgincludedir = $(includedir)/@PACKAGE@
@@ -38,8 +39,9 @@ build_triplet = @build@
 host_triplet = @host@
 bin_PROGRAMS = RhythmCat2$(EXEEXT)
 subdir = ui
-DIST_COMMON = $(RhythmCat2include_HEADERS) $(srcdir)/Makefile.am \
-	$(srcdir)/Makefile.in $(srcdir)/rhythmcat-2.0.pc.in
+DIST_COMMON = $(librhythmcat_ui_2_0include_HEADERS) \
+	$(srcdir)/Makefile.am $(srcdir)/Makefile.in \
+	$(srcdir)/rhythmcat-2.0.pc.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/gettext.m4 \
 	$(top_srcdir)/m4/gtk-doc.m4 $(top_srcdir)/m4/iconv.m4 \
@@ -53,20 +55,27 @@ mkinstalldirs = $(install_sh) -d
 CONFIG_HEADER = $(top_builddir)/config.h
 CONFIG_CLEAN_FILES = rhythmcat-2.0.pc
 CONFIG_CLEAN_VPATH_FILES =
-am__installdirs = "$(DESTDIR)$(bindir)" "$(DESTDIR)$(pkgconfigdir)" \
-	"$(DESTDIR)$(RhythmCat2includedir)"
-PROGRAMS = $(bin_PROGRAMS)
-am_RhythmCat2_OBJECTS = rc-ui-listmodel.$(OBJEXT) \
-	rc-ui-player.$(OBJEXT) rc-ui-listview.$(OBJEXT) \
-	rc-ui-menu.$(OBJEXT) rc-ui-dialog.$(OBJEXT) \
-	rc-ui-slabel.$(OBJEXT) rc-ui-spectrum.$(OBJEXT) \
-	rc-ui-style.$(OBJEXT) rc-ui-plugin.$(OBJEXT) \
-	rc-ui-settings.$(OBJEXT) rc-ui-effect.$(OBJEXT) \
-	rc-mpris2.$(OBJEXT) rc-main.$(OBJEXT) main.$(OBJEXT)
-RhythmCat2_OBJECTS = $(am_RhythmCat2_OBJECTS)
+LTLIBRARIES = $(noinst_LTLIBRARIES)
+librhythmcat_ui_2_0_la_DEPENDENCIES = @LIBOBJS@ \
+	$(top_builddir)/lib/librhythmcat-2.0.la
+am__objects_1 = rc-ui-listmodel.lo rc-ui-player.lo rc-ui-listview.lo \
+	rc-ui-menu.lo rc-ui-dialog.lo rc-ui-slabel.lo \
+	rc-ui-spectrum.lo rc-ui-style.lo rc-ui-plugin.lo \
+	rc-ui-settings.lo rc-ui-effect.lo rc-mpris2.lo rc-main.lo
+am_librhythmcat_ui_2_0_la_OBJECTS = $(am__objects_1)
+librhythmcat_ui_2_0_la_OBJECTS = $(am_librhythmcat_ui_2_0_la_OBJECTS)
 AM_V_lt = $(am__v_lt_@AM_V@)
 am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
 am__v_lt_0 = --silent
+librhythmcat_ui_2_0_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC \
+	$(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link $(CCLD) \
+	$(AM_CFLAGS) $(CFLAGS) $(librhythmcat_ui_2_0_la_LDFLAGS) \
+	$(LDFLAGS) -o $@
+am__installdirs = "$(DESTDIR)$(bindir)" "$(DESTDIR)$(pkgconfigdir)" \
+	"$(DESTDIR)$(librhythmcat_ui_2_0includedir)"
+PROGRAMS = $(bin_PROGRAMS)
+am_RhythmCat2_OBJECTS = main.$(OBJEXT)
+RhythmCat2_OBJECTS = $(am_RhythmCat2_OBJECTS)
 RhythmCat2_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
 	$(RhythmCat2_LDFLAGS) $(LDFLAGS) -o $@
@@ -96,8 +105,8 @@ am__v_CCLD_0 = @echo "  CCLD  " $@;
 AM_V_GEN = $(am__v_GEN_@AM_V@)
 am__v_GEN_ = $(am__v_GEN_@AM_DEFAULT_V@)
 am__v_GEN_0 = @echo "  GEN   " $@;
-SOURCES = $(RhythmCat2_SOURCES)
-DIST_SOURCES = $(RhythmCat2_SOURCES)
+SOURCES = $(librhythmcat_ui_2_0_la_SOURCES) $(RhythmCat2_SOURCES)
+DIST_SOURCES = $(librhythmcat_ui_2_0_la_SOURCES) $(RhythmCat2_SOURCES)
 am__vpath_adj_setup = srcdirstrip=`echo "$(srcdir)" | sed 's|.|.|g'`;
 am__vpath_adj = case $$p in \
     $(srcdir)/*) f=`echo "$$p" | sed "s|^$$srcdirstrip/||"`;; \
@@ -126,7 +135,7 @@ am__uninstall_files_from_dir = { \
          $(am__cd) "$$dir" && rm -f $$files; }; \
   }
 DATA = $(pkgconfig_DATA)
-HEADERS = $(RhythmCat2include_HEADERS)
+HEADERS = $(librhythmcat_ui_2_0include_HEADERS)
 ETAGS = etags
 CTAGS = ctags
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
@@ -294,10 +303,22 @@ target_alias = @target_alias@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-RhythmCat2_SOURCES = \
+noinst_LTLIBRARIES = librhythmcat-ui-2.0.la
+NOINST_H_FILES = \
+    rc-ui-css.h rc-ui-img-icon.xpm rc-ui-img-nocov.xpm
+
+librhythmcat_ui_2_0_sources = \
     rc-ui-listmodel.c rc-ui-player.c rc-ui-listview.c rc-ui-menu.c \
     rc-ui-dialog.c rc-ui-slabel.c rc-ui-spectrum.c rc-ui-style.c \
-    rc-ui-plugin.c rc-ui-settings.c rc-ui-effect.c rc-mpris2.c rc-main.c \
+    rc-ui-plugin.c rc-ui-settings.c rc-ui-effect.c rc-mpris2.c rc-main.c
+
+librhythmcat_ui_2_0_headers = \
+    rc-ui-listmodel.h rc-ui-listview.h rc-ui-player.h rc-ui-menu.h \
+    rc-ui-dialog.h rc-ui-slabel.h rc-ui-style.h rc-ui-spectrum.h \
+    rc-ui-plugin.h rc-ui-settings.h rc-ui-effect.h rc-mpris2.h rc-main.h \
+    rc-common.h 
+
+RhythmCat2_SOURCES = \
     main.c
 
 RhythmCat2_headers = \
@@ -306,15 +327,24 @@ RhythmCat2_headers = \
     rc-ui-plugin.h rc-ui-settings.h rc-ui-effect.h rc-mpris2.h rc-main.h \
     rc-common.h rc-ui-css.h rc-ui-img-icon.xpm rc-ui-img-nocov.xpm
 
-RhythmCat2includedir = $(includedir)/ui
-RhythmCat2include_HEADERS = $(RhythmCat2_headers)
-RhythmCat2_DEPENDENCIES = @LIBOBJS@
-RhythmCat2_LDFLAGS = -export-dynamic
+librhythmcat_ui_2_0_la_SOURCES = \
+    $(librhythmcat_ui_2_0_sources)
+
+librhythmcat_ui_2_0includedir = $(includedir)/rhythmcat2
+librhythmcat_ui_2_0include_HEADERS = \
+    $(librhythmcat_ui_2_0_headers) $(NOINST_H_FILES)
+
+librhythmcat_ui_2_0_la_LDFLAGS = -export-dynamic -O2 -no-undefined -export-symbols-regex "^[[^_]].*"
+librhythmcat_ui_2_0_la_LIBADD = @LIBOBJS@ @GLIB2_LIBS@ @GTK_LIBS@ @GSTREAMER_LIBS@ \
+    @JSON_LIBS@ $(top_builddir)/lib/librhythmcat-2.0.la
+
+RhythmCat2_DEPENDENCIES = @LIBOBJS@ librhythmcat-ui-2.0.la
+RhythmCat2_LDFLAGS = -export-dynamic -no-undefined -export-symbols-regex "^[[^_]].*" -O2
 INCLUDES = @GLIB2_CFLAGS@ @GTK_CFLAGS@ @GSTREAMER_CFLAGS@ @JSON_CFLAGS@ \
     -DLOCALEDIR=\"$(localedir)\" -I$(top_srcdir)/lib
 
 RhythmCat2_LDADD = @LIBOBJS@ @GLIB2_LIBS@ @GTK_LIBS@ @GSTREAMER_LIBS@ \
-    @JSON_LIBS@ $(top_builddir)/lib/librhythmcat-2.0.la
+    @JSON_LIBS@ $(top_builddir)/lib/librhythmcat-2.0.la librhythmcat-ui-2.0.la
 
 EXTRA_DIST = \
     rhythmcat-2.0.pc.in
@@ -357,6 +387,17 @@ $(ACLOCAL_M4):  $(am__aclocal_m4_deps)
 $(am__aclocal_m4_deps):
 rhythmcat-2.0.pc: $(top_builddir)/config.status $(srcdir)/rhythmcat-2.0.pc.in
 	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
+
+clean-noinstLTLIBRARIES:
+	-test -z "$(noinst_LTLIBRARIES)" || rm -f $(noinst_LTLIBRARIES)
+	@list='$(noinst_LTLIBRARIES)'; for p in $$list; do \
+	  dir="`echo $$p | sed -e 's|/[^/]*$$||'`"; \
+	  test "$$dir" != "$$p" || dir=.; \
+	  echo "rm -f \"$${dir}/so_locations\""; \
+	  rm -f "$${dir}/so_locations"; \
+	done
+librhythmcat-ui-2.0.la: $(librhythmcat_ui_2_0_la_OBJECTS) $(librhythmcat_ui_2_0_la_DEPENDENCIES) $(EXTRA_librhythmcat_ui_2_0_la_DEPENDENCIES) 
+	$(AM_V_CCLD)$(librhythmcat_ui_2_0_la_LINK)  $(librhythmcat_ui_2_0_la_OBJECTS) $(librhythmcat_ui_2_0_la_LIBADD) $(LIBS)
 install-binPROGRAMS: $(bin_PROGRAMS)
 	@$(NORMAL_INSTALL)
 	test -z "$(bindir)" || $(MKDIR_P) "$(DESTDIR)$(bindir)"
@@ -411,19 +452,19 @@ distclean-compile:
 	-rm -f *.tab.c
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/main.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rc-main.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rc-mpris2.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rc-ui-dialog.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rc-ui-effect.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rc-ui-listmodel.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rc-ui-listview.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rc-ui-menu.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rc-ui-player.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rc-ui-plugin.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rc-ui-settings.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rc-ui-slabel.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rc-ui-spectrum.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rc-ui-style.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rc-main.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rc-mpris2.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rc-ui-dialog.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rc-ui-effect.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rc-ui-listmodel.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rc-ui-listview.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rc-ui-menu.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rc-ui-player.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rc-ui-plugin.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rc-ui-settings.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rc-ui-slabel.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rc-ui-spectrum.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rc-ui-style.Plo@am__quote@
 
 .c.o:
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(COMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
@@ -469,24 +510,24 @@ uninstall-pkgconfigDATA:
 	@list='$(pkgconfig_DATA)'; test -n "$(pkgconfigdir)" || list=; \
 	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
 	dir='$(DESTDIR)$(pkgconfigdir)'; $(am__uninstall_files_from_dir)
-install-RhythmCat2includeHEADERS: $(RhythmCat2include_HEADERS)
+install-librhythmcat_ui_2_0includeHEADERS: $(librhythmcat_ui_2_0include_HEADERS)
 	@$(NORMAL_INSTALL)
-	test -z "$(RhythmCat2includedir)" || $(MKDIR_P) "$(DESTDIR)$(RhythmCat2includedir)"
-	@list='$(RhythmCat2include_HEADERS)'; test -n "$(RhythmCat2includedir)" || list=; \
+	test -z "$(librhythmcat_ui_2_0includedir)" || $(MKDIR_P) "$(DESTDIR)$(librhythmcat_ui_2_0includedir)"
+	@list='$(librhythmcat_ui_2_0include_HEADERS)'; test -n "$(librhythmcat_ui_2_0includedir)" || list=; \
 	for p in $$list; do \
 	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
 	  echo "$$d$$p"; \
 	done | $(am__base_list) | \
 	while read files; do \
-	  echo " $(INSTALL_HEADER) $$files '$(DESTDIR)$(RhythmCat2includedir)'"; \
-	  $(INSTALL_HEADER) $$files "$(DESTDIR)$(RhythmCat2includedir)" || exit $$?; \
+	  echo " $(INSTALL_HEADER) $$files '$(DESTDIR)$(librhythmcat_ui_2_0includedir)'"; \
+	  $(INSTALL_HEADER) $$files "$(DESTDIR)$(librhythmcat_ui_2_0includedir)" || exit $$?; \
 	done
 
-uninstall-RhythmCat2includeHEADERS:
+uninstall-librhythmcat_ui_2_0includeHEADERS:
 	@$(NORMAL_UNINSTALL)
-	@list='$(RhythmCat2include_HEADERS)'; test -n "$(RhythmCat2includedir)" || list=; \
+	@list='$(librhythmcat_ui_2_0include_HEADERS)'; test -n "$(librhythmcat_ui_2_0includedir)" || list=; \
 	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
-	dir='$(DESTDIR)$(RhythmCat2includedir)'; $(am__uninstall_files_from_dir)
+	dir='$(DESTDIR)$(librhythmcat_ui_2_0includedir)'; $(am__uninstall_files_from_dir)
 
 ID: $(HEADERS) $(SOURCES) $(LISP) $(TAGS_FILES)
 	list='$(SOURCES) $(HEADERS) $(LISP) $(TAGS_FILES)'; \
@@ -572,9 +613,9 @@ distdir: $(DISTFILES)
 	done
 check-am: all-am
 check: check-am
-all-am: Makefile $(PROGRAMS) $(DATA) $(HEADERS)
+all-am: Makefile $(LTLIBRARIES) $(PROGRAMS) $(DATA) $(HEADERS)
 installdirs:
-	for dir in "$(DESTDIR)$(bindir)" "$(DESTDIR)$(pkgconfigdir)" "$(DESTDIR)$(RhythmCat2includedir)"; do \
+	for dir in "$(DESTDIR)$(bindir)" "$(DESTDIR)$(pkgconfigdir)" "$(DESTDIR)$(librhythmcat_ui_2_0includedir)"; do \
 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
 	done
 install: install-am
@@ -609,7 +650,8 @@ maintainer-clean-generic:
 	@echo "it deletes files that may require special tools to rebuild."
 clean: clean-am
 
-clean-am: clean-binPROGRAMS clean-generic clean-libtool mostlyclean-am
+clean-am: clean-binPROGRAMS clean-generic clean-libtool \
+	clean-noinstLTLIBRARIES mostlyclean-am
 
 distclean: distclean-am
 	-rm -rf ./$(DEPDIR)
@@ -629,7 +671,7 @@ info: info-am
 
 info-am:
 
-install-data-am: install-RhythmCat2includeHEADERS \
+install-data-am: install-librhythmcat_ui_2_0includeHEADERS \
 	install-pkgconfigDATA
 
 install-dvi: install-dvi-am
@@ -676,26 +718,29 @@ ps: ps-am
 
 ps-am:
 
-uninstall-am: uninstall-RhythmCat2includeHEADERS uninstall-binPROGRAMS \
+uninstall-am: uninstall-binPROGRAMS \
+	uninstall-librhythmcat_ui_2_0includeHEADERS \
 	uninstall-pkgconfigDATA
 
 .MAKE: install-am install-strip
 
 .PHONY: CTAGS GTAGS all all-am check check-am clean clean-binPROGRAMS \
-	clean-generic clean-libtool ctags distclean distclean-compile \
-	distclean-generic distclean-libtool distclean-tags distdir dvi \
-	dvi-am html html-am info info-am install \
-	install-RhythmCat2includeHEADERS install-am \
-	install-binPROGRAMS install-data install-data-am install-dvi \
-	install-dvi-am install-exec install-exec-am install-html \
-	install-html-am install-info install-info-am install-man \
+	clean-generic clean-libtool clean-noinstLTLIBRARIES ctags \
+	distclean distclean-compile distclean-generic \
+	distclean-libtool distclean-tags distdir dvi dvi-am html \
+	html-am info info-am install install-am install-binPROGRAMS \
+	install-data install-data-am install-dvi install-dvi-am \
+	install-exec install-exec-am install-html install-html-am \
+	install-info install-info-am \
+	install-librhythmcat_ui_2_0includeHEADERS install-man \
 	install-pdf install-pdf-am install-pkgconfigDATA install-ps \
 	install-ps-am install-strip installcheck installcheck-am \
 	installdirs maintainer-clean maintainer-clean-generic \
 	mostlyclean mostlyclean-compile mostlyclean-generic \
 	mostlyclean-libtool pdf pdf-am ps ps-am tags uninstall \
-	uninstall-RhythmCat2includeHEADERS uninstall-am \
-	uninstall-binPROGRAMS uninstall-pkgconfigDATA
+	uninstall-am uninstall-binPROGRAMS \
+	uninstall-librhythmcat_ui_2_0includeHEADERS \
+	uninstall-pkgconfigDATA
 
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.

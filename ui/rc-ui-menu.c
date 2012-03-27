@@ -494,7 +494,8 @@ static const gchar *ui_menu_info =
     "    </menu>"
     "    <menu action='ViewMenu'>"
     "      <menuitem action='ViewEffect'/>"
-    "        <separator name='ViewSep1'/>"
+    "      <separator name='ViewSep1'/>"
+    "      <separator name='ViewSep2'/>"
     "      <menuitem action='ViewAlwaysOnTop'/>"
     "      <menuitem action='ViewMiniMode'/>"
     "    </menu>"
@@ -852,4 +853,50 @@ void rc_ui_menu_state_refresh()
     if(rclib_core_get_volume(&volume))
         rc_ui_menu_volume_changed_cb(NULL, volume, NULL);
 }
+
+/**
+ * rc_ui_menu_add_menu_action:
+ * @action: the #GtkAction for the menu item
+ * @path: the path to append to
+ * @name: the name for the added UI element
+ * @action_name: the name of the action to be proxied
+ * @top: if TRUE, the UI element is added before its siblings,
+ * otherwise it is added after its siblings
+ *
+ * Add a menu item to the main menu of the player.
+ *
+ * Returns: The merge ID of the menu item. (Should be used to remove
+ * the menu when you do not need it.)
+ */
+
+guint rc_ui_menu_add_menu_action(GtkAction *action, const gchar *path,
+    const gchar *name, const gchar *action_name, gboolean top)
+{
+    guint id;
+    if(ui_manager==NULL || ui_actions==NULL || action==NULL || path==NULL ||
+        name==NULL) return 0;
+    id = gtk_ui_manager_new_merge_id(ui_manager);
+    gtk_ui_manager_add_ui(ui_manager, id, path, name, action_name,
+        GTK_UI_MANAGER_MENUITEM, top);
+    gtk_action_group_add_action(ui_actions, action);
+    return id;
+}
+
+/**
+ * rc_ui_menu_remove_menu_action:
+ * @action: the #GtkAction for the menu item
+ * @id: the merge ID of the menu item
+ *
+ * Remove the menu item by the given #GtkAction and merge ID.
+ */
+
+void rc_ui_menu_remove_menu_action(GtkAction *action, guint id)
+{
+    if(ui_manager==NULL || ui_actions==NULL) return;
+    if(action==NULL) return;
+    if(id>0)
+        gtk_ui_manager_remove_ui(ui_manager, id);
+    gtk_action_group_remove_action(ui_actions, action);
+}
+
 

@@ -43,17 +43,6 @@
 
 #define RCLIB_LYRIC_GET_PRIVATE(obj) G_TYPE_INSTANCE_GET_PRIVATE((obj), \
     RCLIB_LYRIC_TYPE, RCLibLyricPrivate)
-    
-typedef struct RCLibLyricParsedData
-{
-    GSequence *seq;
-    gchar *filename;
-    gchar *title;
-    gchar *artist;
-    gchar *album;
-    gchar *author;
-    gint offset;
-}RCLibLyricParsedData;
 
 typedef struct RCLibLyricPrivate
 {
@@ -469,38 +458,64 @@ static void rclib_lyric_add_line(RCLibLyricParsedData *parsed_data,
         }
         g_free(str);
         str = g_match_info_fetch_named(match_info, "title");
-        if(str!=NULL && strlen(str)>0)
+        if(str!=NULL)
+            tmp = g_strstr_len(str, -1, ":");
+        else
+            tmp = NULL;
+        if(tmp!=NULL && strlen(tmp)>2)
         {
+            tmp++;
             if(parsed_data->title==NULL)
-                parsed_data->title = g_strdup(str);
+                parsed_data->title = g_strndup(tmp, strlen(tmp)-1);
         }
         g_free(str);
         str = g_match_info_fetch_named(match_info, "artist");
-        if(str!=NULL && strlen(str)>0)
+        if(str!=NULL)
+            tmp = g_strstr_len(str, -1, ":");
+        else
+            tmp = NULL;
+        if(tmp!=NULL && strlen(tmp)>2)
         {
+            tmp++;
             if(parsed_data->artist==NULL)
-                parsed_data->artist = g_strdup(str);
+                parsed_data->artist = g_strndup(tmp, strlen(tmp)-1);
         }
         g_free(str);
         str = g_match_info_fetch_named(match_info, "album");
-        if(str!=NULL && strlen(str)>0)
+        if(str!=NULL)
+            tmp = g_strstr_len(str, -1, ":");
+        else
+            tmp = NULL;
+        if(tmp!=NULL && strlen(tmp)>2)
         {
+            tmp++;
             if(parsed_data->album==NULL)
-                parsed_data->album = g_strdup(str);
+                parsed_data->album = g_strndup(tmp, strlen(tmp)-1);
         }
         g_free(str);
         str = g_match_info_fetch_named(match_info, "author");
-        if(str!=NULL && strlen(str)>0)
+        if(str!=NULL)
+            tmp = g_strstr_len(str, -1, ":");
+        else
+            tmp = NULL;
+        if(tmp!=NULL && strlen(tmp)>2)
         {
+            tmp++;
             if(parsed_data->author==NULL)
-                parsed_data->author = g_strdup(str);
+                parsed_data->author = g_strndup(tmp, strlen(tmp)-1);
         }
         g_free(str);
         str = g_match_info_fetch_named(match_info, "offset");
-        if(str!=NULL && strlen(str)>0)
+        if(str!=NULL)
+            tmp = g_strstr_len(str, -1, ":");
+        else
+            tmp = NULL;
+        if(tmp!=NULL && strlen(tmp)>2)
         {
-            if(sscanf(str, "%d", &value)==1)
+            tmp++;
+            if(sscanf(tmp, "%d", &value)==1)
                 parsed_data->offset = value;
+            g_printf("str: %s %d\n", str, value);
         }
         g_free(str);
         str = g_match_info_fetch_named(match_info, "text");
@@ -647,10 +662,32 @@ void rclib_lyric_clean(guint index)
 
 const RCLibLyricData *rclib_lyric_get_line(guint index, gint64 time)
 {
+    RCLibLyricData *lyric_data = NULL;
+    GSequenceIter *iter;
+    iter = rclib_lyric_get_line_iter(index, time);
+    if(iter==NULL) return NULL;
+    lyric_data = g_sequence_get(iter);
+    return lyric_data;
+}
+
+/**
+ * rclib_lyric_get_line_iter:
+ * @time: the time to search
+ * @index: the lyric track index
+ * 
+ * Find iter of the lyric line which matches to the given time
+ * (in nanoseconds).
+ *
+ * Returns: The #GSequenceIter of the lyric line, NULL if not found.
+ */
+
+GSequenceIter *rclib_lyric_get_line_iter(guint index, gint64 time)
+{
     RCLibLyricParsedData *parsed_data;
     RCLibLyricPrivate *priv;
     RCLibLyricData *lyric_data = NULL;
     GSequenceIter *begin, *end, *iter;
+    gint64 offset;
     if(lyric_instance==NULL) return NULL;
     priv = RCLIB_LYRIC_GET_PRIVATE(lyric_instance);
     if(priv==NULL) return NULL;
@@ -662,28 +699,29 @@ const RCLibLyricData *rclib_lyric_get_line(guint index, gint64 time)
     end = g_sequence_get_end_iter(parsed_data->seq);
     if(begin==end) return NULL;
     lyric_data = g_sequence_get(begin);
+    offset = (gint64)parsed_data->offset * GST_MSECOND;
     if(lyric_data!=NULL)
     {
-        if(time<lyric_data->time) return NULL;
+        if(time<lyric_data->time+offset) return NULL;
     }
     do
     {
         iter = g_sequence_range_get_midpoint(begin, end);
         lyric_data = g_sequence_get(iter);
         if(lyric_data==NULL) break;
-        if(time<lyric_data->time)
+        if(time<lyric_data->time+offset)
         {
             end = iter;
         }
-        else if(time>=lyric_data->time && (lyric_data->length<0 ||
-            time<lyric_data->time+lyric_data->length))
+        else if(time>=lyric_data->time+offset && (lyric_data->length<0 ||
+            time<lyric_data->time+offset+lyric_data->length))
         {
             break;
         }
         else begin = iter;
     }
     while(begin!=end);
-    return lyric_data;
+    return iter;
 }
 
 /**
@@ -869,4 +907,26 @@ gboolean rclib_lyric_is_available(guint index)
     return (parsed_data->filename!=NULL);
 }
 
+/**
+ * rclib_lyric_get_parsed_data:
+ * @index: the lyric track index
+ *
+ * Get the parsed lyric data by the given track index.
+ *
+ * Returns: The parsed lyric data.
+ */
+
+RCLibLyricParsedData *rclib_lyric_get_parsed_data(guint index)
+{
+    RCLibLyricPrivate *priv;
+    RCLibLyricParsedData *parsed_data;
+    if(lyric_instance==NULL) return NULL;
+    priv = RCLIB_LYRIC_GET_PRIVATE(lyric_instance);
+    if(priv==NULL) return NULL;
+    if(index==1)
+        parsed_data = &(priv->parsed_data2);
+    else
+        parsed_data = &(priv->parsed_data1);
+    return parsed_data;
+}
 
