@@ -47,6 +47,8 @@ typedef struct RCPluginLrcshowPriv
     gint drag_to_linenum;
     gint drag_from_linenum;
     gint drag_height;
+    gint window_x;
+    gint window_y;
     GdkRGBA background;
     GdkRGBA text_color;
     GdkRGBA text_hilight;
@@ -64,8 +66,9 @@ static void rc_plugin_lrcshow_load_conf(RCPluginLrcshowPriv *priv)
 {
     gchar *string = NULL;
     gboolean bvalue;
+    gint ivalue;
     GError *error = NULL;
-    if(priv==NULL) return;
+    if(priv==NULL || priv->keyfile==NULL) return;
     string = g_key_file_get_string(priv->keyfile, LRCSHOW_ID, "Font",
         NULL);
     if(string!=NULL)
@@ -118,12 +121,32 @@ static void rc_plugin_lrcshow_load_conf(RCPluginLrcshowPriv *priv)
         g_error_free(error);
         error = NULL;
     }
+    ivalue = g_key_file_get_integer(priv->keyfile, LRCSHOW_ID,
+        "WindowPositionX", &error);
+    if(error==NULL)
+        priv->window_x = ivalue;
+    else
+    {
+        priv->window_x = -1;
+        g_error_free(error);
+        error = NULL;
+    }
+    ivalue = g_key_file_get_integer(priv->keyfile, LRCSHOW_ID,
+        "WindowPositionY", &error);
+    if(error==NULL)
+        priv->window_y = ivalue;
+    else
+    {
+        priv->window_y = -1;
+        g_error_free(error);
+        error = NULL;
+    }
 }
 
 static void rc_plugin_lrcshow_save_conf(RCPluginLrcshowPriv *priv)
 {
     gchar *string;
-    if(priv==NULL) return;
+    if(priv==NULL || priv->keyfile==NULL) return;
     g_key_file_set_string(priv->keyfile, LRCSHOW_ID, "Font",
         priv->font_string);
     g_key_file_set_integer(priv->keyfile, LRCSHOW_ID, "LineDistance",
@@ -142,6 +165,16 @@ static void rc_plugin_lrcshow_save_conf(RCPluginLrcshowPriv *priv)
     g_free(string);
     g_key_file_set_boolean(priv->keyfile, LRCSHOW_ID, "ShowWindow",
         priv->show_window);
+    if(priv->window_x>=0)
+    {
+        g_key_file_set_integer(priv->keyfile, LRCSHOW_ID,
+            "WindowPositionX", priv->window_x);
+    }
+    if(priv->window_y>=0)
+    {
+        g_key_file_set_integer(priv->keyfile, LRCSHOW_ID,
+            "WindowPositionY", priv->window_y);
+    }
 }
 
 static inline void rc_plugin_lrcshow_draw_bg(RCPluginLrcshowPriv *priv,
@@ -156,7 +189,6 @@ static void rc_plugin_lrcshow_show(GtkWidget *widget,
     RCPluginLrcshowPriv *priv, cairo_t *cr, gint64 pos, gint64 offset,
     GSequenceIter *iter, GSequenceIter *iter_begin)
 {
-    gint width = 400, height = 100;
     GtkAllocation allocation;
     GSequenceIter *iter_now, *iter_foreach;
     gchar *text;
@@ -167,20 +199,22 @@ static void rc_plugin_lrcshow_show(GtkWidget *widget,
     gfloat lrc_y_offset = 0.0;
     gfloat line_height;
     gfloat percent = 0.0;
+    gfloat text_percent = 0.0;
+    gfloat low, high;
     gint64 time_passed = 0;
-    gint index = 0, index_now = -1;
-    if(widget==NULL || priv==NULL || cr==NULL) return;
+    gint64 time_length = 0;
+    if(widget==NULL || priv==NULL || priv->layout==NULL || cr==NULL)
+        return;
     if(iter!=NULL)
         iter_now = iter;
     else
         iter_now = iter_begin;
     if(iter_now==NULL) return;
+    if(g_sequence_iter_is_end(iter_now)) return;
     gtk_widget_get_allocation(widget, &allocation);
-    width = allocation.width;
-    height = allocation.height;
     pango_layout_set_text(priv->layout, "FontSizeTest", -1);
-    pango_layout_get_size(priv->layout, &t_width, &t_height);
-    lrc_height = (gdouble)t_height / PANGO_SCALE;
+    pango_layout_get_pixel_size(priv->layout, &t_width, &t_height);
+    lrc_height = (gfloat)t_height;
     line_height = lrc_height + priv->line_distance;
     cairo_set_operator(cr, CAIRO_OPERATOR_OVER);
     if(priv->drag_action)
@@ -194,59 +228,105 @@ static void rc_plugin_lrcshow_show(GtkWidget *widget,
             priv->drag_to_linenum = g_sequence_iter_get_position(iter_now);
         else
             priv->drag_to_linenum = -1;
-        index_now = priv->drag_to_linenum;
     }
     else if(iter!=NULL)
     {
         lrc_data = g_sequence_get(iter);
         if(lrc_data!=NULL)
-            time_passed = pos - lrc_data->time+offset;
-        index_now = g_sequence_iter_get_position(iter);
+            time_passed = pos - (lrc_data->time+offset);
     }
-    if(lrc_data!=NULL && lrc_data->length>0 && !priv->drag_action)
+    if(lrc_data!=NULL && !priv->drag_action)
     {
-        percent = (gdouble)time_passed / lrc_data->length;
-        lrc_y_offset = line_height * percent;
-    }
-    iter_foreach = g_sequence_iter_move(iter_now,
-        -(gfloat)allocation.height/2/line_height);
-    index = g_sequence_iter_get_position(iter_foreach);
-    lrc_y = allocation.height/2 + line_height*(index-index_now-1);
-    lrc_y -= lrc_y_offset;
-    if(priv->drag_action) iter = iter_now;
-    for(;!g_sequence_iter_is_end(iter_foreach);
-        iter_foreach = g_sequence_iter_next(iter_foreach))
-    {
-        lrc_data = g_sequence_get(iter_foreach);
-        if(lrc_data==NULL) continue;
-        index = g_sequence_iter_get_position(iter_foreach);
-        pango_layout_set_text(priv->layout, lrc_data->text, -1);
-        pango_layout_get_size(priv->layout, &t_width, &t_height);
-        lrc_width = (gfloat)t_width/PANGO_SCALE;
-        lrc_x = (width - lrc_width) / 2;
-        if(iter_foreach==iter)
+        if(lrc_data->length>0)
+            percent = (gdouble)time_passed / lrc_data->length;
+        else
         {
-            if(lrc_width>width && !priv->drag_action)
-                lrc_x = 10 + (width-lrc_width-20)*percent;
+            time_length = rclib_core_query_duration() -
+                (lrc_data->time+offset);
+            if(time_length>0)
+                percent = (gdouble)time_passed / time_length;
+        }
+        lrc_y_offset = line_height * percent;
+    } 
+    lrc_data = g_sequence_get(iter_now);
+    lrc_y = (gfloat)allocation.height/2 - lrc_y_offset;
+    if(lrc_data!=NULL)
+    {
+        pango_layout_set_text(priv->layout, lrc_data->text, -1);
+        pango_layout_get_pixel_size(priv->layout, &t_width, &t_height);
+        lrc_width = (gfloat)t_width;
+        if(iter!=NULL)
+        {
+            if(lrc_width>allocation.width && !priv->drag_action)
+            {
+                low = (gfloat)allocation.width / lrc_width /2;
+                high = 1.0 - low;
+                if(percent<=low)
+                    text_percent = 0.0;
+                else if(percent<high)
+                    text_percent = (percent-low) / (high-low);
+                else
+                    text_percent = 1.0;
+                lrc_x = 10 + (allocation.width-lrc_width-20)*text_percent;
+            }
+            else
+                lrc_x = (allocation.width - lrc_width) / 2;
             cairo_move_to(cr, lrc_x, lrc_y);
             gdk_cairo_set_source_rgba(cr, &(priv->text_hilight));
         }
         else
         {
+            lrc_x = (allocation.width - lrc_width) / 2;
             cairo_move_to(cr, lrc_x, lrc_y);
             gdk_cairo_set_source_rgba(cr, &(priv->text_color));
         }
         pango_cairo_show_layout(cr, priv->layout);
-        lrc_y+=(gfloat)t_height / PANGO_SCALE+priv->line_distance;
-        if(lrc_y>height) break;
+        lrc_y+=(gfloat)t_height+priv->line_distance;
+    }
+    gdk_cairo_set_source_rgba(cr, &(priv->text_color));
+    iter_foreach = g_sequence_iter_next(iter_now);
+    for(;!g_sequence_iter_is_end(iter_foreach);
+        iter_foreach = g_sequence_iter_next(iter_foreach))
+    {
+        lrc_data = g_sequence_get(iter_foreach);
+        if(lrc_data==NULL) continue;
+        pango_layout_set_text(priv->layout, lrc_data->text, -1);
+        pango_layout_get_pixel_size(priv->layout, &t_width, &t_height);
+        lrc_width = (gfloat)t_width;
+        lrc_x = (allocation.width - lrc_width) / 2;
+        cairo_move_to(cr, lrc_x, lrc_y);
+        pango_cairo_show_layout(cr, priv->layout);
+        lrc_y+=(gfloat)t_height+priv->line_distance;
+        if(lrc_y>allocation.height) break;
+    }
+    if(!g_sequence_iter_is_begin(iter_now))
+    {
+        lrc_y = (gfloat)allocation.height/2 - lrc_y_offset;
+        iter_foreach = iter_now;
+        do
+        {
+            iter_foreach = g_sequence_iter_prev(iter_foreach);
+            lrc_data = g_sequence_get(iter_foreach);
+            if(lrc_data==NULL) continue;
+            pango_layout_set_text(priv->layout, lrc_data->text, -1);
+            pango_layout_get_pixel_size(priv->layout, &t_width, &t_height);
+            lrc_width = (gfloat)t_width;
+            lrc_x = (allocation.width - lrc_width) / 2;
+            lrc_y-=(gfloat)t_height + priv->line_distance;
+            cairo_move_to(cr, lrc_x, lrc_y);
+            pango_cairo_show_layout(cr, priv->layout);
+            if(lrc_y<0) break;
+        }
+        while(!g_sequence_iter_is_begin(iter_foreach));
     }
     if(priv->drag_action)
     {
-        cairo_move_to(cr, 0, height / 2);
+        cairo_move_to(cr, 0, (gfloat)allocation.height/2);
         cairo_set_source_rgba(cr, priv->text_color.red,
             priv->text_color.green, priv->text_color.blue,
             priv->text_color.alpha * 0.8);
-        cairo_line_to(cr, width, height / 2);
+        cairo_line_to(cr, (gfloat)allocation.width,
+            (gfloat)allocation.height/2);
         cairo_stroke(cr);
         lrc_data = g_sequence_get(iter_now);
         if(lrc_data!=NULL)
@@ -257,9 +337,9 @@ static void rc_plugin_lrcshow_show(GtkWidget *widget,
             (gint)time_passed%60);
         pango_layout_set_text(priv->layout, text, -1);
         g_free(text);
-        pango_layout_get_size(priv->layout, &t_width, &t_height);
-        cairo_move_to(cr, width - t_width/PANGO_SCALE,
-            height/2 - t_height/PANGO_SCALE);
+        pango_layout_get_pixel_size(priv->layout, &t_width, &t_height);
+        cairo_move_to(cr, allocation.width - t_width,
+            allocation.height/2 - t_height);
         pango_cairo_show_layout(cr, priv->layout);
     }
 }
@@ -285,7 +365,7 @@ static gboolean rc_plugin_lrcshow_drag(GtkWidget *widget, GdkEvent *event,
             case GDK_BUTTON_PRESS:
                 cursor = gdk_cursor_new(GDK_HAND1);
                 gdk_window_set_cursor(window, cursor);
-                gdk_cursor_unref(cursor);
+                g_object_unref(cursor);
                 priv->drag_action = TRUE;
                 sy = event->button.y;
                 pos = rclib_core_query_position();
@@ -299,7 +379,7 @@ static gboolean rc_plugin_lrcshow_drag(GtkWidget *widget, GdkEvent *event,
             case GDK_BUTTON_RELEASE:
                 cursor = gdk_cursor_new(GDK_ARROW);
                 gdk_window_set_cursor(window, cursor);
-                gdk_cursor_unref(cursor);
+                g_object_unref(cursor);
                 if(!priv->drag_action) break;
                 priv->drag_action = FALSE;
                 priv->drag_height = 0;
@@ -381,6 +461,17 @@ static gboolean rc_plugin_lrcshow_window_delete_event_cb(GtkWidget *widget,
     return TRUE;
 }
 
+static void rc_plugin_lrcshow_window_destroy_cb(GtkWidget *widget,
+    gpointer data)
+{
+    RCPluginLrcshowPriv *priv = (RCPluginLrcshowPriv *)data;
+    if(data==NULL) return;
+    gtk_window_get_position(GTK_WINDOW(widget),
+        &(priv->window_x), &(priv->window_y));
+    gtk_widget_destroyed(priv->lrc_window, &(priv->lrc_window));
+}
+
+
 static gboolean rc_plugin_lrcshow_update(gpointer data)
 {
     RCPluginLrcshowPriv *priv = (RCPluginLrcshowPriv *)data;
@@ -400,6 +491,18 @@ static void rc_plugin_lrcshow_lyric_ready_cb(RCLibLyric *lyric, guint index,
         else priv->track = 0;
     }
     else priv->track = 0;
+}
+
+static void rc_plugin_lrcshow_shutdown_cb(RCLibPlugin *plugin, gpointer data)
+{
+    RCPluginLrcshowPriv *priv = (RCPluginLrcshowPriv *)data;
+    if(data==NULL) return;
+    if(priv->lrc_window!=NULL)
+    {
+        gtk_window_get_position(GTK_WINDOW(priv->lrc_window),
+            &(priv->window_x), &(priv->window_y));
+    }
+    rc_plugin_lrcshow_save_conf(priv);
 }
 
 static gboolean rc_plugin_lrcshow_load(RCLibPluginData *plugin)
@@ -422,8 +525,14 @@ static gboolean rc_plugin_lrcshow_load(RCLibPluginData *plugin)
     priv->menu_id = rc_ui_menu_add_menu_action(GTK_ACTION(priv->action),
         "/RC2MenuBar/ViewMenu/ViewSep2", "RC2ViewPluginLyricShow",
         "RC2ViewPluginLyricShow", TRUE);
-    g_object_set(priv->lrc_window, "title", _("Lyric Show"), NULL);
+    g_object_set(priv->lrc_window, "title", _("Lyric Show"),
+        "window-position", GTK_WIN_POS_CENTER, NULL);
     gtk_container_add(GTK_CONTAINER(priv->lrc_window), priv->lrc_scene);
+    if(priv->window_x>=0 && priv->window_y>=0)
+    {
+        gtk_window_move(GTK_WINDOW(priv->lrc_window), priv->window_x,
+            priv->window_y);
+    }
     gtk_widget_show_all(priv->lrc_window);    
     g_signal_connect(priv->lrc_scene, "draw",
         G_CALLBACK(rc_plugin_lrcshow_draw), priv);
@@ -435,6 +544,8 @@ static gboolean rc_plugin_lrcshow_load(RCLibPluginData *plugin)
         G_CALLBACK(rc_plugin_lrcshow_drag), priv);
     g_signal_connect(priv->action, "toggled",
         G_CALLBACK(rc_plugin_lrcshow_view_menu_toggled), priv);
+    g_signal_connect(priv->lrc_window, "destroy",
+        G_CALLBACK(rc_plugin_lrcshow_window_destroy_cb), priv);
     g_signal_connect(priv->lrc_window, "delete-event",
         G_CALLBACK(rc_plugin_lrcshow_window_delete_event_cb), priv);
     priv->lyric_found_id = rclib_lyric_signal_connect("lyric-ready",
@@ -450,13 +561,20 @@ static gboolean rc_plugin_lrcshow_unload(RCLibPluginData *plugin)
 {
     RCPluginLrcshowPriv *priv = &lrcshow_priv;
     rc_ui_menu_remove_menu_action(GTK_ACTION(priv->action), priv->menu_id);
-    g_source_remove(priv->timeout_id);
+    if(priv->timeout_id>0)
+        g_source_remove(priv->timeout_id);
     if(priv->lyric_found_id>0)
+    {
         rclib_lyric_signal_disconnect(priv->lyric_found_id);
+        priv->lyric_found_id = 0;
+    }
     if(priv->layout!=NULL)
         g_object_unref(priv->layout);
     if(priv->lrc_window!=NULL)
+    {
         gtk_widget_destroy(priv->lrc_window);
+        priv->lrc_window = NULL;
+    }
     return TRUE;
 }
 
@@ -548,6 +666,8 @@ static gboolean rc_plugin_lrcshow_init(RCLibPluginData *plugin)
 {
     RCPluginLrcshowPriv *priv = &lrcshow_priv;
     priv->show_window = TRUE;
+    priv->window_x = -1;
+    priv->window_y = -1;
     gdk_rgba_parse(&(priv->background), "#3B5673");
     gdk_rgba_parse(&(priv->text_color), "#FFFFFF");
     gdk_rgba_parse(&(priv->text_hilight), "#5CA6D6");
@@ -555,13 +675,14 @@ static gboolean rc_plugin_lrcshow_init(RCLibPluginData *plugin)
     priv->drag_flag = TRUE;
     priv->keyfile = rclib_plugin_get_keyfile();
     rc_plugin_lrcshow_load_conf(priv);
+    rclib_plugin_signal_connect("shutdown",
+        G_CALLBACK(rc_plugin_lrcshow_shutdown_cb), priv);
     return TRUE;
 }
 
 static void rc_plugin_lrcshow_destroy(RCLibPluginData *plugin)
 {
     RCPluginLrcshowPriv *priv = &lrcshow_priv;
-    rc_plugin_lrcshow_save_conf(priv);
     g_free(priv->font_string);
 }
 

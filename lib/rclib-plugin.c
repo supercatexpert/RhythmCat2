@@ -54,6 +54,7 @@ enum
     SIGNAL_LOADED,
     SIGNAL_UNLOADED,
     SIGNAL_UNREGISTERED,
+    SIGNAL_SHUTDOWN,
     SIGNAL_LAST
 };
 
@@ -169,11 +170,23 @@ static void rclib_plugin_finalize(GObject *object)
     G_OBJECT_CLASS(rclib_plugin_parent_class)->finalize(object);
 }
 
+static GObject *rclib_plugin_constructor(GType type, guint n_construct_params,
+    GObjectConstructParam *construct_params)
+{
+    GObject *retval;
+    if(plugin_instance!=NULL) return plugin_instance;
+    retval = G_OBJECT_CLASS(rclib_plugin_parent_class)->constructor
+        (type, n_construct_params, construct_params);
+    plugin_instance = retval;
+    return retval;
+}
+
 static void rclib_plugin_class_init(RCLibPluginClass *klass)
 {
     GObjectClass *object_class = (GObjectClass *)klass;
     rclib_plugin_parent_class = g_type_class_peek_parent(klass);
     object_class->finalize = rclib_plugin_finalize;
+    object_class->constructor = rclib_plugin_constructor;
     g_type_class_add_private(klass, sizeof(RCLibPluginPrivate));
     
     /**
@@ -227,6 +240,19 @@ static void rclib_plugin_class_init(RCLibPluginClass *klass)
         G_STRUCT_OFFSET(RCLibPluginClass, unregistered), NULL, NULL,
         g_cclosure_marshal_VOID__STRING, G_TYPE_NONE, 1, G_TYPE_STRING,
         NULL);
+
+    /**
+     * RCLibPlugin::shutdown:
+     * @plugin: the #RCLibPlugin that received the signal
+     *
+     * The ::shutdown signal is emitted when the plug-in support module
+     * is going to be shut down, so plug-in should save their configure
+     * data when receive this signal.
+     */   
+    plugin_signals[SIGNAL_SHUTDOWN] = g_signal_new("shutdown",
+        RCLIB_PLUGIN_TYPE, G_SIGNAL_RUN_FIRST,
+        G_STRUCT_OFFSET(RCLibPluginClass, shutdown), NULL, NULL,
+        g_cclosure_marshal_VOID__VOID, G_TYPE_NONE, 0, G_TYPE_NONE, NULL);
 }
 
 static void rclib_plugin_instance_init(RCLibPlugin *plugin)
@@ -306,7 +332,14 @@ gboolean rclib_plugin_init(const gchar *file)
 
 void rclib_plugin_exit()
 {
-    if(plugin_instance!=NULL) g_object_unref(plugin_instance);
+    if(plugin_instance!=NULL)
+    {
+        g_signal_emit(plugin_instance, plugin_signals[SIGNAL_SHUTDOWN], 0);
+        g_signal_handlers_disconnect_matched(plugin_instance,
+            G_SIGNAL_MATCH_ID, plugin_signals[SIGNAL_SHUTDOWN], 0, NULL,
+            NULL, NULL);
+        g_object_unref(plugin_instance);
+    }
     plugin_instance = NULL;
     g_message("Plug-in support system exited.");
 }

@@ -38,7 +38,7 @@ static GtkActionGroup *ui_actions = NULL;
 static void rc_ui_menu_play_button_clicked_cb()
 {
     GstState state;
-    if(rclib_core_get_state(&state, NULL, GST_CLOCK_TIME_NONE))
+    if(rclib_core_get_state(&state, NULL, 0))
     {
         if(state==GST_STATE_PLAYING)
         {
@@ -618,126 +618,6 @@ static void rc_ui_menu_player_random_mode_changed_cb(RCLibPlayer *player,
         "/RC2MenuBar/ControlMenu/RandomMenu/RandomNoRandom")), mode);
 }
 
-static void rc_ui_menu_catalog_listview_selection_changed_cb(
-    GtkTreeSelection *selection, gpointer data)
-{
-    gint value = gtk_tree_selection_count_selected_rows(selection);
-    if(value>0)    
-    {
-        gtk_action_set_sensitive(gtk_ui_manager_get_action(ui_manager,
-            "/RC2MenuBar/PlaylistMenu/PlaylistRemoveList"), TRUE);
-        gtk_action_set_sensitive(gtk_ui_manager_get_action(ui_manager,
-            "/CatalogPopupMenu/CatalogRemoveList"), TRUE);
-    }
-    else
-    {
-        gtk_action_set_sensitive(gtk_ui_manager_get_action(ui_manager,
-            "/RC2MenuBar/PlaylistMenu/PlaylistRemoveList"), FALSE);
-        gtk_action_set_sensitive(gtk_ui_manager_get_action(ui_manager,
-            "/CatalogPopupMenu/CatalogRemoveList"), FALSE);
-    }
-    if(value==1)
-    {
-        gtk_action_set_sensitive(gtk_ui_manager_get_action(ui_manager,
-            "/RC2MenuBar/PlaylistMenu/PlaylistImportMusic"), TRUE);
-        gtk_action_set_sensitive(gtk_ui_manager_get_action(ui_manager,
-            "/RC2MenuBar/PlaylistMenu/PlaylistImportList"), TRUE);
-        gtk_action_set_sensitive(gtk_ui_manager_get_action(ui_manager,
-            "/RC2MenuBar/PlaylistMenu/PlaylistImportFolder"), TRUE);
-        gtk_action_set_sensitive(gtk_ui_manager_get_action(ui_manager,
-            "/RC2MenuBar/PlaylistMenu/PlaylistExportList"), TRUE);
-        gtk_action_set_sensitive(gtk_ui_manager_get_action(ui_manager,
-            "/RC2MenuBar/PlaylistMenu/PlaylistRenameList"), TRUE);
-        gtk_action_set_sensitive(gtk_ui_manager_get_action(ui_manager,
-            "/RC2MenuBar/PlaylistMenu/PlaylistSelectAll"), TRUE);
-        gtk_action_set_sensitive(gtk_ui_manager_get_action(ui_manager,
-            "/RC2MenuBar/PlaylistMenu/PlaylistRefreshList"), TRUE);
-        gtk_action_set_sensitive(gtk_ui_manager_get_action(ui_manager,
-            "/CatalogPopupMenu/CatalogRenameList"), TRUE);
-        gtk_action_set_sensitive(gtk_ui_manager_get_action(ui_manager,
-            "/CatalogPopupMenu/CatalogExportList"), TRUE);
-        gtk_action_set_sensitive(gtk_ui_manager_get_action(ui_manager,
-            "/PlaylistPopupMenu/PlaylistPImportMusic"), TRUE);
-        gtk_action_set_sensitive(gtk_ui_manager_get_action(ui_manager,
-            "/PlaylistPopupMenu/PlaylistPImportList"), TRUE);
-        gtk_action_set_sensitive(gtk_ui_manager_get_action(ui_manager,
-            "/PlaylistPopupMenu/PlaylistPRefreshList"), TRUE);
-        gtk_action_set_sensitive(gtk_ui_manager_get_action(ui_manager,
-            "/PlaylistPopupMenu/PlaylistPSelectAll"), TRUE);
-    }
-    else
-    {
-        gtk_action_set_sensitive(gtk_ui_manager_get_action(ui_manager,
-            "/RC2MenuBar/PlaylistMenu/PlaylistImportMusic"), FALSE);
-        gtk_action_set_sensitive(gtk_ui_manager_get_action(ui_manager,
-            "/RC2MenuBar/PlaylistMenu/PlaylistImportList"), FALSE);
-        gtk_action_set_sensitive(gtk_ui_manager_get_action(ui_manager,
-            "/RC2MenuBar/PlaylistMenu/PlaylistImportFolder"), FALSE);
-        gtk_action_set_sensitive(gtk_ui_manager_get_action(ui_manager,
-            "/RC2MenuBar/PlaylistMenu/PlaylistExportList"), FALSE);
-        gtk_action_set_sensitive(gtk_ui_manager_get_action(ui_manager,
-            "/RC2MenuBar/PlaylistMenu/PlaylistRenameList"), FALSE);
-        gtk_action_set_sensitive(gtk_ui_manager_get_action(ui_manager,
-            "/RC2MenuBar/PlaylistMenu/PlaylistSelectAll"), FALSE);
-        gtk_action_set_sensitive(gtk_ui_manager_get_action(ui_manager,
-            "/RC2MenuBar/PlaylistMenu/PlaylistRefreshList"), FALSE);
-        gtk_action_set_sensitive(gtk_ui_manager_get_action(ui_manager,
-            "/CatalogPopupMenu/CatalogRenameList"), FALSE);
-        gtk_action_set_sensitive(gtk_ui_manager_get_action(ui_manager,
-            "/CatalogPopupMenu/CatalogExportList"), FALSE);
-        gtk_action_set_sensitive(gtk_ui_manager_get_action(ui_manager,
-            "/PlaylistPopupMenu/PlaylistPImportMusic"), FALSE);
-        gtk_action_set_sensitive(gtk_ui_manager_get_action(ui_manager,
-            "/PlaylistPopupMenu/PlaylistPImportList"), FALSE);
-        gtk_action_set_sensitive(gtk_ui_manager_get_action(ui_manager,
-            "/PlaylistPopupMenu/PlaylistPRefreshList"), FALSE);
-        gtk_action_set_sensitive(gtk_ui_manager_get_action(ui_manager,
-            "/PlaylistPopupMenu/PlaylistPSelectAll"), FALSE);
-    }
-}
-
-static void rc_ui_menu_playlist_listview_selection_changed_cb(
-    GtkTreeSelection *selection, gpointer data)
-{
-    gint value = gtk_tree_selection_count_selected_rows(selection);
-    if(value>0)
-    {
-        gtk_action_set_sensitive(gtk_ui_manager_get_action(ui_manager,
-            "/RC2MenuBar/PlaylistMenu/PlaylistRemoveMusic"), TRUE);
-        gtk_action_set_sensitive(gtk_ui_manager_get_action(ui_manager,
-            "/PlaylistPopupMenu/PlaylistPRemoveMusic"), TRUE);
-    }
-    else
-    {
-        gtk_action_set_sensitive(gtk_ui_manager_get_action(ui_manager,
-            "/RC2MenuBar/PlaylistMenu/PlaylistRemoveMusic"), FALSE);
-        gtk_action_set_sensitive(gtk_ui_manager_get_action(ui_manager,
-            "/PlaylistPopupMenu/PlaylistPRemoveMusic"), FALSE);
-    }
-    if(value==1)
-    {
-        gtk_action_set_sensitive(gtk_ui_manager_get_action(ui_manager,
-            "/RC2MenuBar/PlaylistMenu/PlaylistBindLyric"), TRUE);
-        gtk_action_set_sensitive(gtk_ui_manager_get_action(ui_manager,
-            "/RC2MenuBar/PlaylistMenu/PlaylistBindAlbum"), TRUE);
-        gtk_action_set_sensitive(gtk_ui_manager_get_action(ui_manager,
-            "/PlaylistPopupMenu/PlaylistPBindLyric"), TRUE);
-        gtk_action_set_sensitive(gtk_ui_manager_get_action(ui_manager,
-            "/PlaylistPopupMenu/PlaylistPBindAlbum"), TRUE);
-    }
-    else
-    {
-        gtk_action_set_sensitive(gtk_ui_manager_get_action(ui_manager,
-            "/RC2MenuBar/PlaylistMenu/PlaylistBindLyric"), FALSE);
-        gtk_action_set_sensitive(gtk_ui_manager_get_action(ui_manager,
-            "/RC2MenuBar/PlaylistMenu/PlaylistBindAlbum"), FALSE);
-        gtk_action_set_sensitive(gtk_ui_manager_get_action(ui_manager,
-            "/PlaylistPopupMenu/PlaylistPBindLyric"), FALSE);
-        gtk_action_set_sensitive(gtk_ui_manager_get_action(ui_manager,
-            "/PlaylistPopupMenu/PlaylistPBindAlbum"), FALSE);
-    }
-}
-
 /**
  * rc_ui_menu_init:
  *
@@ -749,7 +629,7 @@ static void rc_ui_menu_playlist_listview_selection_changed_cb(
 GtkUIManager *rc_ui_menu_init()
 {
     GError *error = NULL;
-    GtkTreeSelection *catalog_selection, *playlist_selection;
+    gdouble volume;
     ui_manager = gtk_ui_manager_new();
     ui_actions = gtk_action_group_new("RC2Actions");
     gtk_action_group_set_translation_domain(ui_actions, GETTEXT_PACKAGE);
@@ -773,10 +653,6 @@ GtkUIManager *rc_ui_menu_init()
         ui_manager = NULL;
         return NULL;
     }
-    catalog_selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(
-        rc_ui_listview_get_catalog_widget()));
-    playlist_selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(
-        rc_ui_listview_get_playlist_widget()));
     gtk_action_set_sensitive(gtk_ui_manager_get_action(ui_manager,
         "/AlbumPopupMenu/AlbumSaveImage"), FALSE);
     gtk_action_set_sensitive(gtk_ui_manager_get_action(ui_manager,
@@ -811,11 +687,9 @@ GtkUIManager *rc_ui_menu_init()
     rclib_player_signal_connect("repeat-mode-changed",
         G_CALLBACK(rc_ui_menu_player_repeat_mode_changed_cb), NULL);
     rclib_player_signal_connect("random-mode-changed",
-        G_CALLBACK(rc_ui_menu_player_random_mode_changed_cb), NULL);    
-    g_signal_connect(G_OBJECT(catalog_selection), "changed",
-        G_CALLBACK(rc_ui_menu_catalog_listview_selection_changed_cb), NULL);
-    g_signal_connect(G_OBJECT(playlist_selection), "changed",
-        G_CALLBACK(rc_ui_menu_playlist_listview_selection_changed_cb), NULL);
+        G_CALLBACK(rc_ui_menu_player_random_mode_changed_cb), NULL);
+    if(rclib_core_get_volume(&volume))
+        rc_ui_menu_volume_changed_cb(NULL, volume, NULL);   
     return ui_manager;
 }
 
@@ -830,28 +704,6 @@ GtkUIManager *rc_ui_menu_init()
 GtkUIManager *rc_ui_menu_get_ui_manager()
 {
     return ui_manager;
-}
-
-/**
- * rc_ui_menu_state_refresh:
- *
- * Refresh the state of the menus.
- */
- 
-void rc_ui_menu_state_refresh()
-{
-    gdouble volume;
-    GtkTreeSelection *catalog_selection, *playlist_selection;
-    catalog_selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(
-        rc_ui_listview_get_catalog_widget()));
-    playlist_selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(
-        rc_ui_listview_get_playlist_widget()));
-    rc_ui_menu_catalog_listview_selection_changed_cb(catalog_selection,
-        NULL);
-    rc_ui_menu_playlist_listview_selection_changed_cb(playlist_selection,
-        NULL);
-    if(rclib_core_get_volume(&volume))
-        rc_ui_menu_volume_changed_cb(NULL, volume, NULL);
 }
 
 /**

@@ -1,4 +1,4 @@
-SUBDIRS = images icons themes
+SUBDIRS = images icons
 
 EXTRA_DIST = 
 

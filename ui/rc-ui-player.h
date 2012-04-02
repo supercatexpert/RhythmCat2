@@ -50,7 +50,7 @@ typedef struct _RCUiPlayerClass RCUiPlayerClass;
 /**
  * RCUiPlayer:
  *
- * The data structure used for RCLibCore class.
+ * The data structure used for #RCUiPlayer class.
  */
 
 struct _RCUiPlayer {
@@ -61,12 +61,15 @@ struct _RCUiPlayer {
 /**
  * RCUiPlayerClass:
  *
- * Provide signal process functions in the class.
+ * #RCUiPlayerClass class.
  */
 
 struct _RCUiPlayerClass {
     /*< private >*/
     GObjectClass parent_class;
+    void (*ready)(RCUiPlayer *player);
+    /* To be implemented! */
+    void (*keep_aboved)(RCUiPlayer *player, gboolean state);
 };
 
 /*< private >*/
@@ -75,9 +78,14 @@ GType rc_ui_player_get_type();
 /*< public >*/
 void rc_ui_player_init(GtkApplication *app);
 void rc_ui_player_exit();
+GObject *rc_ui_player_get_instance();
+gulong rc_ui_player_signal_connect(const gchar *name,
+    GCallback callback, gpointer data);
+void rc_ui_player_signal_disconnect(gulong handler_id);
 GtkWidget *rc_ui_player_get_main_window();
-const GdkPixbuf *rc_ui_player_get_icon_image();
+GdkPixbuf *rc_ui_player_get_icon_image();
 GtkStatusIcon *rc_ui_player_get_tray_icon();
+GdkPixbuf *rc_ui_player_get_default_cover_image();
 
 G_END_DECLS
 

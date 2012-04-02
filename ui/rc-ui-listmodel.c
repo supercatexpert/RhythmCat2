@@ -245,7 +245,7 @@ static void rc_ui_catalog_store_get_value(GtkTreeModel *model,
                 g_value_set_string(value, NULL);
                 break;
             }
-            if(!rclib_core_get_state(&state, NULL, GST_CLOCK_TIME_NONE))
+            if(!rclib_core_get_state(&state, NULL, 0))
             {
                 g_value_set_string(value, NULL);
                 break;
@@ -277,7 +277,7 @@ static void rc_ui_catalog_store_get_value(GtkTreeModel *model,
             {
                 break;
             }
-            if(!rclib_core_get_state(&state, NULL, GST_CLOCK_TIME_NONE))
+            if(!rclib_core_get_state(&state, NULL, 0))
                 break;
             if(state==GST_STATE_PLAYING || state==GST_STATE_PAUSED)
             {
@@ -331,7 +331,7 @@ static void rc_ui_playlist_store_get_value(GtkTreeModel *model,
                 g_value_set_string(value, NULL);
                 break;
             }
-            if(!rclib_core_get_state(&state, NULL, GST_CLOCK_TIME_NONE))
+            if(!rclib_core_get_state(&state, NULL, 0))
             {
                 g_value_set_string(value, NULL);
                 break;
@@ -448,7 +448,7 @@ static void rc_ui_playlist_store_get_value(GtkTreeModel *model,
             if(list_data->type==RCLIB_DB_PLAYLIST_TYPE_MISSING) break;
             reference = rclib_core_get_db_reference();
             if(reference!=seq_iter) break;
-            if(!rclib_core_get_state(&state, NULL, GST_CLOCK_TIME_NONE))
+            if(!rclib_core_get_state(&state, NULL, 0))
                 break;
             if(state==GST_STATE_PLAYING || state==GST_STATE_PAUSED)
                 g_value_set_boolean(value, TRUE);

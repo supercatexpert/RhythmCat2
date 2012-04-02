@@ -359,6 +359,7 @@ void rclib_settings_sync()
 gchar *rclib_settings_get_string(const gchar *group_name,
     const gchar *key, GError **error)
 {
+    if(settings_keyfile==NULL) return NULL;
     return g_key_file_get_string(settings_keyfile, group_name, key, error);
 }
 
@@ -377,6 +378,7 @@ gchar *rclib_settings_get_string(const gchar *group_name,
 gint rclib_settings_get_integer(const gchar *group_name,
     const gchar *key, GError **error)
 {
+    if(settings_keyfile==NULL) return 0;
     return g_key_file_get_integer(settings_keyfile, group_name, key, error);
 }
 
@@ -396,6 +398,7 @@ gint rclib_settings_get_integer(const gchar *group_name,
 gdouble rclib_settings_get_double(const gchar *group_name,
     const gchar *key, GError **error)
 {
+    if(settings_keyfile==NULL) return 0.0;
     return g_key_file_get_double(settings_keyfile, group_name, key, error);
 }
 
@@ -414,6 +417,7 @@ gdouble rclib_settings_get_double(const gchar *group_name,
 gboolean rclib_settings_get_boolean(const gchar *group_name,
     const gchar *key, GError **error)
 {
+    if(settings_keyfile==NULL) return FALSE;
     return g_key_file_get_boolean(settings_keyfile, group_name, key, error);
 }
 
@@ -433,6 +437,7 @@ gboolean rclib_settings_get_boolean(const gchar *group_name,
 gchar **rclib_settings_get_string_list(const gchar *group_name,
     const gchar *key, gsize *length, GError **error)
 {
+    if(settings_keyfile==NULL) return NULL;
     return g_key_file_get_string_list(settings_keyfile, group_name, key,
         length, error);
 }
@@ -453,6 +458,7 @@ gchar **rclib_settings_get_string_list(const gchar *group_name,
 gboolean *rclib_settings_get_boolean_list(const gchar *group_name,
     const gchar *key, gsize *length, GError **error)
 {
+    if(settings_keyfile==NULL) return NULL;
     return g_key_file_get_boolean_list(settings_keyfile, group_name, key,
         length, error);
 }
@@ -473,6 +479,7 @@ gboolean *rclib_settings_get_boolean_list(const gchar *group_name,
 gint *rclib_settings_get_integer_list(const gchar *group_name,
     const gchar *key, gsize *length, GError **error)
 {
+    if(settings_keyfile==NULL) return NULL;
     return g_key_file_get_integer_list(settings_keyfile, group_name, key,
         length, error);
 }
@@ -493,6 +500,7 @@ gint *rclib_settings_get_integer_list(const gchar *group_name,
 gdouble *rclib_settings_get_double_list(const gchar *group_name,
     const gchar *key, gsize *length, GError **error)
 {
+    if(settings_keyfile==NULL) return NULL;
     return g_key_file_get_double_list(settings_keyfile, group_name, key,
         length, error);
 }
@@ -512,6 +520,7 @@ void rclib_settings_set_string(const gchar *group_name,
     const gchar *key, const gchar *string)
 {
     settings_dirty = TRUE;
+    if(settings_keyfile==NULL) return;
     g_key_file_set_string(settings_keyfile, group_name, key, string);
 }
 
@@ -530,6 +539,7 @@ void rclib_settings_set_boolean(const gchar *group_name,
     const gchar *key, gboolean value)
 {
     settings_dirty = TRUE;
+    if(settings_keyfile==NULL) return;
     g_key_file_set_boolean(settings_keyfile, group_name, key, value);
 }
 
@@ -548,6 +558,7 @@ void rclib_settings_set_integer(const gchar *group_name,
     const gchar *key, gint value)
 {
     settings_dirty = TRUE;
+    if(settings_keyfile==NULL) return;
     g_key_file_set_integer(settings_keyfile, group_name, key, value);
 }
 
@@ -566,6 +577,7 @@ void rclib_settings_set_double(const gchar *group_name,
     const gchar *key, gdouble value)
 {
     settings_dirty = TRUE;
+    if(settings_keyfile==NULL) return;
     g_key_file_set_double(settings_keyfile, group_name, key, value);
 }
 
@@ -585,6 +597,7 @@ void rclib_settings_set_string_list(const gchar *group_name,
     const gchar *key, const gchar * const list[], gsize length)
 {
     settings_dirty = TRUE;
+    if(settings_keyfile==NULL) return;
     g_key_file_set_string_list(settings_keyfile, group_name, key,
         list, length);
 }
@@ -605,6 +618,7 @@ void rclib_settings_set_boolean_list(const gchar *group_name,
     const gchar *key, gboolean list[], gsize length)
 {
     settings_dirty = TRUE;
+    if(settings_keyfile==NULL) return;
     g_key_file_set_boolean_list(settings_keyfile, group_name, key,
         list, length);
 }
@@ -625,6 +639,7 @@ void rclib_settings_set_integer_list(const gchar *group_name,
     const gchar *key, gint list[], gsize length)
 {
     settings_dirty = TRUE;
+    if(settings_keyfile==NULL) return;
     g_key_file_set_integer_list(settings_keyfile, group_name, key,
         list, length);
 }
@@ -645,6 +660,7 @@ void rclib_settings_set_double_list(const gchar *group_name,
     const gchar *key, gdouble list[], gsize length)
 {
     settings_dirty = TRUE;
+    if(settings_keyfile==NULL) return;
     g_key_file_set_double_list(settings_keyfile, group_name, key,
         list, length);
 }
@@ -664,6 +680,7 @@ gboolean rclib_settings_has_key(const gchar *group_name, gchar *key,
     GError **error)
 {
     settings_dirty = TRUE;
+    if(settings_keyfile==NULL) return FALSE;
     return g_key_file_has_key(settings_keyfile, group_name, key, error);
 }
 

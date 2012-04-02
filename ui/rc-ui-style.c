@@ -26,6 +26,7 @@
 #include "rc-ui-style.h"
 #include "rc-ui-css.h"
 #include "rc-main.h"
+#include "rc-common.h"
 
 static GtkCssProvider *style_css_provider = NULL;
 static RCUiStyleEmbededTheme style_embeded_themes[] = {

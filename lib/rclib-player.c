@@ -171,11 +171,24 @@ static void rclib_player_finalize(GObject *object)
     G_OBJECT_CLASS(rclib_player_parent_class)->finalize(object);
 }
 
+static GObject *rclib_player_constructor(GType type, guint n_construct_params,
+    GObjectConstructParam *construct_params)
+{
+    GObject *retval;
+    if(player_instance!=NULL) return player_instance;
+    retval = G_OBJECT_CLASS(rclib_player_parent_class)->constructor
+        (type, n_construct_params, construct_params);
+    player_instance = retval;
+    g_object_add_weak_pointer(retval, (gpointer)&player_instance);
+    return retval;
+}
+
 static void rclib_player_class_init(RCLibPlayerClass *klass)
 {
     GObjectClass *object_class = (GObjectClass *)klass;
     rclib_player_parent_class = g_type_class_peek_parent(klass);
     object_class->finalize = rclib_player_finalize;
+    object_class->constructor = rclib_player_constructor;
     g_type_class_add_private(klass, sizeof(RCLibPlayerPrivate));
     
     /**

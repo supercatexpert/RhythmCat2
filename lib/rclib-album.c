@@ -141,11 +141,24 @@ static void rclib_album_finalize(GObject *object)
     G_OBJECT_CLASS(rclib_album_parent_class)->finalize(object);
 }
 
+static GObject *rclib_album_constructor(GType type, guint n_construct_params,
+    GObjectConstructParam *construct_params)
+{
+    GObject *retval;
+    if(album_instance!=NULL) return album_instance;
+    retval = G_OBJECT_CLASS(rclib_album_parent_class)->constructor
+        (type, n_construct_params, construct_params);
+    album_instance = retval;
+    g_object_add_weak_pointer(retval, (gpointer)&album_instance);
+    return retval;
+}
+
 static void rclib_album_class_init(RCLibAlbumClass *klass)
 {
     GObjectClass *object_class = (GObjectClass *)klass;
     rclib_album_parent_class = g_type_class_peek_parent(klass);
     object_class->finalize = rclib_album_finalize;
+    object_class->constructor = rclib_album_constructor;
     g_type_class_add_private(klass, sizeof(RCLibAlbumPrivate));
     
     /**

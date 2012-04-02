@@ -340,6 +340,18 @@ static void rclib_core_finalize(GObject *object)
     G_OBJECT_CLASS(rclib_core_parent_class)->finalize(object);
 }
 
+static GObject *rclib_core_constructor(GType type, guint n_construct_params,
+    GObjectConstructParam *construct_params)
+{
+    GObject *retval;
+    if(core_instance!=NULL) return core_instance;
+    retval = G_OBJECT_CLASS(rclib_core_parent_class)->constructor
+        (type, n_construct_params, construct_params);
+    core_instance = retval;
+    g_object_add_weak_pointer(retval, (gpointer)&core_instance);
+    return retval;
+}
+
 static void rclib_core_spectrum_input_data_mixed_float(const guint8 *_in,
     gfloat *out, guint len, guint channels, gfloat max_value, guint op,
     guint nfft)
@@ -620,6 +632,7 @@ static void rclib_core_class_init(RCLibCoreClass *klass)
     GObjectClass *object_class = (GObjectClass *)klass;
     rclib_core_parent_class = g_type_class_peek_parent(klass);
     object_class->finalize = rclib_core_finalize;
+    object_class->constructor = rclib_core_constructor;
     g_type_class_add_private(klass, sizeof(RCLibCorePrivate));
     
     /**
@@ -1789,7 +1802,7 @@ gboolean rclib_core_play()
     GstState state;
     if(core_instance==NULL) return FALSE;
     priv = RCLIB_CORE_GET_PRIVATE(RCLIB_CORE(core_instance));
-    gst_element_get_state(priv->playbin, &state, NULL, GST_CLOCK_TIME_NONE);
+    gst_element_get_state(priv->playbin, &state, NULL, 0);
     if(state!=GST_STATE_PAUSED && state!=GST_STATE_PLAYING &&
         state!=GST_STATE_READY && state!=GST_STATE_NULL)
     {

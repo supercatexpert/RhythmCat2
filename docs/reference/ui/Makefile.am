@@ -12,7 +12,7 @@ AUTOMAKE_OPTIONS = 1.6
 DOC_MODULE=RhythmCat
 
 # Uncomment for versioned docs and specify the version of the module, e.g. '2'.
-DOC_MODULE_VERSION=1.9.1
+DOC_MODULE_VERSION=@RC_VERSION@
 
 
 # The top-level SGML file. You can change this if you want to.

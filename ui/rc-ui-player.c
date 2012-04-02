@@ -99,9 +99,15 @@ typedef struct RCUiPlayerPrivate
     gulong album_none_id;  
 }RCUiPlayerPrivate;
 
+enum
+{
+    SIGNAL_READY,
+    SIGNAL_LAST
+};
+
 static GObject *ui_player_instance = NULL;
 static gpointer rc_ui_player_parent_class = NULL;
-static GtkApplication *ui_player_app = NULL;
+static gint ui_player_signals[SIGNAL_LAST] = {0};
 
 static inline void rc_ui_player_title_label_set_value(
     RCUiPlayerPrivate *priv, const gchar *uri, const gchar *title)
@@ -411,7 +417,7 @@ static void rc_ui_player_spectrum_updated_cb(RCLibCore *core, guint rate,
 static gboolean rc_ui_player_play_button_clicked_cb()
 {
     GstState state;
-    if(rclib_core_get_state(&state, NULL, GST_CLOCK_TIME_NONE))
+    if(rclib_core_get_state(&state, NULL, 0))
     {
         if(state==GST_STATE_PLAYING)
         {
@@ -507,10 +513,16 @@ static void rc_ui_player_volume_changed_cb(RCLibCore *core, gdouble volume,
 }
 
 static void rc_ui_player_lyric_timer_cb(RCLibLyric *lyric, guint index,
-    gint64 pos, const RCLibLyricData *lyric_data, gpointer data)
+    gint64 pos, const RCLibLyricData *lyric_data, gint64 offset,
+    gpointer data)
 {
     gint64 passed = 0, len = 0;
-    gdouble percent = 0.0;
+    gfloat percent = 0.0;
+    gfloat text_percent = 0.0;
+    gfloat low, high;
+    GtkWidget *lyric_slabel;
+    gint width;
+    GtkAllocation allocation;
     RCUiPlayerPrivate *priv = (RCUiPlayerPrivate *)data;
     if(data==NULL || priv==NULL) return;
     if(lyric_data==NULL)
@@ -528,24 +540,34 @@ static void rc_ui_player_lyric_timer_cb(RCLibLyric *lyric, guint index,
     else
     {
         len = rclib_core_query_duration();
-        if(len>0) len = len - lyric_data->time;
+        if(len>0) len = len - (lyric_data->time+offset);
     }
-    passed = pos - lyric_data->time;
-    if(len>0) percent = 1.2 * (gdouble)passed / len;
+    passed = pos - (lyric_data->time+offset);
+    if(len>0) percent = (gfloat)passed / len;
     if(index==0)
+        lyric_slabel = priv->lyric1_slabel;
+    else
+        lyric_slabel = priv->lyric2_slabel;
+    rc_ui_scrollable_label_set_text(RC_UI_SCROLLABLE_LABEL(lyric_slabel),
+        lyric_data->text);
+    width = rc_ui_scrollable_label_get_width(RC_UI_SCROLLABLE_LABEL(
+        lyric_slabel));
+    gtk_widget_get_allocation(lyric_slabel, &allocation);
+    if(width>allocation.width)
     {
-        rc_ui_scrollable_label_set_text(RC_UI_SCROLLABLE_LABEL(
-            priv->lyric1_slabel), lyric_data->text);
-        rc_ui_scrollable_label_set_percent(RC_UI_SCROLLABLE_LABEL(
-            priv->lyric1_slabel), percent);
+        low = (gfloat)allocation.width / width /2;
+        high = 1.0 - low;
+        if(percent<=low)
+            text_percent = 0.0;
+        else if(percent<high)
+            text_percent = (percent-low) / (high-low);
+        else
+            text_percent = 1.0;
     }
     else
-    {
-        rc_ui_scrollable_label_set_text(RC_UI_SCROLLABLE_LABEL(
-            priv->lyric2_slabel), lyric_data->text);
-        rc_ui_scrollable_label_set_percent(RC_UI_SCROLLABLE_LABEL(
-            priv->lyric2_slabel), percent);
-    } 
+        text_percent = 0.0;
+    rc_ui_scrollable_label_set_percent(RC_UI_SCROLLABLE_LABEL(lyric_slabel),
+        text_percent);
 }
 
 static gboolean rc_ui_player_seek_scale_button_pressed(GtkWidget *widget, 
@@ -606,7 +628,7 @@ static gboolean rc_ui_player_update_time_info(gpointer data)
     GstState state;
     RCUiPlayerPrivate *priv = (RCUiPlayerPrivate *)data;
     if(data==NULL) return TRUE;
-    rclib_core_get_state(&state, NULL, GST_CLOCK_TIME_NONE);
+    rclib_core_get_state(&state, NULL, 0);
     switch(state)
     {
         case GST_STATE_PLAYING:
@@ -835,22 +857,143 @@ static gboolean rc_ui_player_window_delete_event_cb(GtkWidget *widget,
     GdkEvent *event, gpointer data)
 {
     if(rclib_settings_get_boolean("MainUI", "MinimizeWhenClose", NULL))
-    {
         gtk_window_iconify(GTK_WINDOW(widget));
-        return TRUE;
-    }
-    return FALSE;
+    else
+        rc_ui_player_exit();
+    return TRUE;
 }
 
 static void rc_ui_player_destroy(GtkWidget *widget, gpointer data)
 {
     RCUiPlayerPrivate *priv = (RCUiPlayerPrivate *)data;
     if(priv!=NULL)
+    {
         gtk_widget_destroyed(priv->main_window, &(priv->main_window));
-    if(priv->app!=NULL)
-        g_application_release(G_APPLICATION(priv->app));
+    }
+}
+
+static void rc_ui_player_catalog_listview_selection_changed_cb(
+    GtkTreeSelection *selection, gpointer data)
+{
+    RCUiPlayerPrivate *priv = (RCUiPlayerPrivate *)data;
+    gint value = gtk_tree_selection_count_selected_rows(selection);
+    if(data==NULL) return;
+    if(value>0)    
+    {
+        gtk_action_set_sensitive(gtk_ui_manager_get_action(priv->ui_manager,
+            "/RC2MenuBar/PlaylistMenu/PlaylistRemoveList"), TRUE);
+        gtk_action_set_sensitive(gtk_ui_manager_get_action(priv->ui_manager,
+            "/CatalogPopupMenu/CatalogRemoveList"), TRUE);
+    }
     else
-        gtk_main_quit();
+    {
+        gtk_action_set_sensitive(gtk_ui_manager_get_action(priv->ui_manager,
+            "/RC2MenuBar/PlaylistMenu/PlaylistRemoveList"), FALSE);
+        gtk_action_set_sensitive(gtk_ui_manager_get_action(priv->ui_manager,
+            "/CatalogPopupMenu/CatalogRemoveList"), FALSE);
+    }
+    if(value==1)
+    {
+        gtk_action_set_sensitive(gtk_ui_manager_get_action(priv->ui_manager,
+            "/RC2MenuBar/PlaylistMenu/PlaylistImportMusic"), TRUE);
+        gtk_action_set_sensitive(gtk_ui_manager_get_action(priv->ui_manager,
+            "/RC2MenuBar/PlaylistMenu/PlaylistImportList"), TRUE);
+        gtk_action_set_sensitive(gtk_ui_manager_get_action(priv->ui_manager,
+            "/RC2MenuBar/PlaylistMenu/PlaylistImportFolder"), TRUE);
+        gtk_action_set_sensitive(gtk_ui_manager_get_action(priv->ui_manager,
+            "/RC2MenuBar/PlaylistMenu/PlaylistExportList"), TRUE);
+        gtk_action_set_sensitive(gtk_ui_manager_get_action(priv->ui_manager,
+            "/RC2MenuBar/PlaylistMenu/PlaylistRenameList"), TRUE);
+        gtk_action_set_sensitive(gtk_ui_manager_get_action(priv->ui_manager,
+            "/RC2MenuBar/PlaylistMenu/PlaylistSelectAll"), TRUE);
+        gtk_action_set_sensitive(gtk_ui_manager_get_action(priv->ui_manager,
+            "/RC2MenuBar/PlaylistMenu/PlaylistRefreshList"), TRUE);
+        gtk_action_set_sensitive(gtk_ui_manager_get_action(priv->ui_manager,
+            "/CatalogPopupMenu/CatalogRenameList"), TRUE);
+        gtk_action_set_sensitive(gtk_ui_manager_get_action(priv->ui_manager,
+            "/CatalogPopupMenu/CatalogExportList"), TRUE);
+        gtk_action_set_sensitive(gtk_ui_manager_get_action(priv->ui_manager,
+            "/PlaylistPopupMenu/PlaylistPImportMusic"), TRUE);
+        gtk_action_set_sensitive(gtk_ui_manager_get_action(priv->ui_manager,
+            "/PlaylistPopupMenu/PlaylistPImportList"), TRUE);
+        gtk_action_set_sensitive(gtk_ui_manager_get_action(priv->ui_manager,
+            "/PlaylistPopupMenu/PlaylistPRefreshList"), TRUE);
+        gtk_action_set_sensitive(gtk_ui_manager_get_action(priv->ui_manager,
+            "/PlaylistPopupMenu/PlaylistPSelectAll"), TRUE);
+    }
+    else
+    {
+        gtk_action_set_sensitive(gtk_ui_manager_get_action(priv->ui_manager,
+            "/RC2MenuBar/PlaylistMenu/PlaylistImportMusic"), FALSE);
+        gtk_action_set_sensitive(gtk_ui_manager_get_action(priv->ui_manager,
+            "/RC2MenuBar/PlaylistMenu/PlaylistImportList"), FALSE);
+        gtk_action_set_sensitive(gtk_ui_manager_get_action(priv->ui_manager,
+            "/RC2MenuBar/PlaylistMenu/PlaylistImportFolder"), FALSE);
+        gtk_action_set_sensitive(gtk_ui_manager_get_action(priv->ui_manager,
+            "/RC2MenuBar/PlaylistMenu/PlaylistExportList"), FALSE);
+        gtk_action_set_sensitive(gtk_ui_manager_get_action(priv->ui_manager,
+            "/RC2MenuBar/PlaylistMenu/PlaylistRenameList"), FALSE);
+        gtk_action_set_sensitive(gtk_ui_manager_get_action(priv->ui_manager,
+            "/RC2MenuBar/PlaylistMenu/PlaylistSelectAll"), FALSE);
+        gtk_action_set_sensitive(gtk_ui_manager_get_action(priv->ui_manager,
+            "/RC2MenuBar/PlaylistMenu/PlaylistRefreshList"), FALSE);
+        gtk_action_set_sensitive(gtk_ui_manager_get_action(priv->ui_manager,
+            "/CatalogPopupMenu/CatalogRenameList"), FALSE);
+        gtk_action_set_sensitive(gtk_ui_manager_get_action(priv->ui_manager,
+            "/CatalogPopupMenu/CatalogExportList"), FALSE);
+        gtk_action_set_sensitive(gtk_ui_manager_get_action(priv->ui_manager,
+            "/PlaylistPopupMenu/PlaylistPImportMusic"), FALSE);
+        gtk_action_set_sensitive(gtk_ui_manager_get_action(priv->ui_manager,
+            "/PlaylistPopupMenu/PlaylistPImportList"), FALSE);
+        gtk_action_set_sensitive(gtk_ui_manager_get_action(priv->ui_manager,
+            "/PlaylistPopupMenu/PlaylistPRefreshList"), FALSE);
+        gtk_action_set_sensitive(gtk_ui_manager_get_action(priv->ui_manager,
+            "/PlaylistPopupMenu/PlaylistPSelectAll"), FALSE);
+    }
+}
+
+static void rc_ui_player_playlist_listview_selection_changed_cb(
+    GtkTreeSelection *selection, gpointer data)
+{
+    RCUiPlayerPrivate *priv = (RCUiPlayerPrivate *)data;
+    gint value = gtk_tree_selection_count_selected_rows(selection);
+    if(data==NULL) return;
+    if(value>0)
+    {
+        gtk_action_set_sensitive(gtk_ui_manager_get_action(priv->ui_manager,
+            "/RC2MenuBar/PlaylistMenu/PlaylistRemoveMusic"), TRUE);
+        gtk_action_set_sensitive(gtk_ui_manager_get_action(priv->ui_manager,
+            "/PlaylistPopupMenu/PlaylistPRemoveMusic"), TRUE);
+    }
+    else
+    {
+        gtk_action_set_sensitive(gtk_ui_manager_get_action(priv->ui_manager,
+            "/RC2MenuBar/PlaylistMenu/PlaylistRemoveMusic"), FALSE);
+        gtk_action_set_sensitive(gtk_ui_manager_get_action(priv->ui_manager,
+            "/PlaylistPopupMenu/PlaylistPRemoveMusic"), FALSE);
+    }
+    if(value==1)
+    {
+        gtk_action_set_sensitive(gtk_ui_manager_get_action(priv->ui_manager,
+            "/RC2MenuBar/PlaylistMenu/PlaylistBindLyric"), TRUE);
+        gtk_action_set_sensitive(gtk_ui_manager_get_action(priv->ui_manager,
+            "/RC2MenuBar/PlaylistMenu/PlaylistBindAlbum"), TRUE);
+        gtk_action_set_sensitive(gtk_ui_manager_get_action(priv->ui_manager,
+            "/PlaylistPopupMenu/PlaylistPBindLyric"), TRUE);
+        gtk_action_set_sensitive(gtk_ui_manager_get_action(priv->ui_manager,
+            "/PlaylistPopupMenu/PlaylistPBindAlbum"), TRUE);
+    }
+    else
+    {
+        gtk_action_set_sensitive(gtk_ui_manager_get_action(priv->ui_manager,
+            "/RC2MenuBar/PlaylistMenu/PlaylistBindLyric"), FALSE);
+        gtk_action_set_sensitive(gtk_ui_manager_get_action(priv->ui_manager,
+            "/RC2MenuBar/PlaylistMenu/PlaylistBindAlbum"), FALSE);
+        gtk_action_set_sensitive(gtk_ui_manager_get_action(priv->ui_manager,
+            "/PlaylistPopupMenu/PlaylistPBindLyric"), FALSE);
+        gtk_action_set_sensitive(gtk_ui_manager_get_action(priv->ui_manager,
+            "/PlaylistPopupMenu/PlaylistPBindAlbum"), FALSE);
+    }
 }
 
 static void rc_ui_player_set_default_style(RCUiPlayerPrivate *priv)
@@ -962,7 +1105,7 @@ static void rc_ui_player_layout_init(RCUiPlayerPrivate *priv)
     g_object_set(priv->album_frame, "margin-left", 1, "margin-right", 2,
         NULL);
     g_object_set(info_grid, "column-spacing", 2, NULL);
-    g_object_set(mmd_grid, "row-spacing", 1, "hexpand-set", TRUE,
+    g_object_set(mmd_grid, "row-spacing", 2, "hexpand-set", TRUE,
         "hexpand", TRUE, "vexpand-set", TRUE, "vexpand", FALSE, NULL);
     g_object_set(time_grid, "row-spacing", 2, NULL);
     g_object_set(lyric_grid, "margin-top", 2, "margin-bottom", 2, NULL);
@@ -1026,6 +1169,11 @@ static void rc_ui_player_layout_init(RCUiPlayerPrivate *priv)
 
 static void rc_ui_player_signal_bind(RCUiPlayerPrivate *priv)
 {
+    GtkTreeSelection *catalog_selection, *playlist_selection;
+    catalog_selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(
+        priv->catalog_listview));
+    playlist_selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(
+        priv->playlist_listview));
     priv->update_timeout = g_timeout_add(250, (GSourceFunc)
         rc_ui_player_update_time_info, priv);
     g_signal_connect(priv->ctrl_play_button, "clicked",
@@ -1056,6 +1204,12 @@ static void rc_ui_player_signal_bind(RCUiPlayerPrivate *priv)
         G_CALLBACK(rc_ui_player_tray_icon_activated), priv);
     g_signal_connect(priv->tray_icon, "popup-menu",
         G_CALLBACK(rc_ui_player_tray_icon_popup), priv);
+    g_signal_connect(catalog_selection, "changed",
+        G_CALLBACK(rc_ui_player_catalog_listview_selection_changed_cb),
+        priv);
+    g_signal_connect(playlist_selection, "changed",
+        G_CALLBACK(rc_ui_player_playlist_listview_selection_changed_cb),
+        priv);
     g_signal_connect(priv->main_window, "window-state-event",
         G_CALLBACK(rc_ui_player_window_state_event_cb), priv);
     g_signal_connect(priv->main_window, "delete-event",
@@ -1089,6 +1243,7 @@ static void rc_ui_player_signal_bind(RCUiPlayerPrivate *priv)
 static void rc_ui_player_finalize(GObject *object)
 {
     RCUiPlayerPrivate *priv = RC_UI_PLAYER_GET_PRIVATE(RC_UI_PLAYER(object));
+    GList *window_list = NULL;
     if(priv->update_timeout>0)
         g_source_remove(priv->update_timeout);
     if(priv->tag_found_id>0)
@@ -1114,8 +1269,27 @@ static void rc_ui_player_finalize(GObject *object)
     if(priv->album_none_id>0)
         rclib_album_signal_disconnect(priv->album_none_id);
     if(priv->main_window!=NULL) gtk_widget_destroy(priv->main_window);
-    if(priv->app!=NULL) g_object_unref(priv->app);
+    if(priv->app!=NULL)
+    {
+        window_list = gtk_application_get_windows(priv->app);
+        g_list_foreach(window_list, (GFunc)gtk_widget_destroy, NULL);
+        g_object_unref(priv->app);
+    }
+    else
+        gtk_main_quit();
     G_OBJECT_CLASS(rc_ui_player_parent_class)->finalize(object);
+}
+
+static GObject *rc_ui_player_constructor(GType type,
+    guint n_construct_params, GObjectConstructParam *construct_params)
+{
+    GObject *retval;
+    if(ui_player_instance!=NULL) return ui_player_instance;
+    retval = G_OBJECT_CLASS(rc_ui_player_parent_class)->constructor
+        (type, n_construct_params, construct_params);
+    ui_player_instance = retval;
+    g_object_add_weak_pointer(retval, (gpointer)&ui_player_instance);
+    return retval;
 }
 
 static void rc_ui_player_class_init(RCUiPlayerClass *klass)
@@ -1123,7 +1297,19 @@ static void rc_ui_player_class_init(RCUiPlayerClass *klass)
     GObjectClass *object_class = (GObjectClass *)klass;
     rc_ui_player_parent_class = g_type_class_peek_parent(klass);
     object_class->finalize = rc_ui_player_finalize;
+    object_class->constructor = rc_ui_player_constructor;
     g_type_class_add_private(klass, sizeof(RCUiPlayerPrivate));
+    
+    /**
+     * RCUiPlayer::ready:
+     * @player: the #RCUiPlayer that received the signal
+     *
+     * The ::ready signal is emitted when the main UI is ready.
+     */
+    ui_player_signals[SIGNAL_READY] = g_signal_new("ready",
+        RC_UI_PLAYER_TYPE, G_SIGNAL_RUN_FIRST,
+        G_STRUCT_OFFSET(RCUiPlayerClass, ready), NULL, NULL,
+        g_cclosure_marshal_VOID__VOID, G_TYPE_NONE, 0, G_TYPE_NONE, NULL);
 }
 
 static void rc_ui_player_instance_init(RCUiPlayer *ui)
@@ -1139,9 +1325,8 @@ static void rc_ui_player_instance_init(RCUiPlayer *ui)
     };
     GtkAdjustment *position_adjustment;
     gdouble volume = 1.0;
-    GList *window_list = NULL;
+    GtkTreeSelection *catalog_selection, *playlist_selection;
     priv = RC_UI_PLAYER_GET_PRIVATE(ui);
-    priv->app = g_object_ref(ui_player_app);
     priv->cover_set_flag = FALSE;
     priv->update_seek_scale = TRUE;
     priv->cover_image_width = 160;
@@ -1155,16 +1340,7 @@ static void rc_ui_player_instance_init(RCUiPlayer *ui)
     gtk_icon_theme_add_builtin_icon("RhythmCat", 128, priv->icon_pixbuf);
     position_adjustment = gtk_adjustment_new(0.0, 0.0, 100.0, 1.0, 2.0, 0.0);
     priv->tray_icon = gtk_status_icon_new_from_pixbuf(priv->icon_pixbuf);
-    if(priv->app!=NULL)
-        window_list = gtk_application_get_windows(priv->app);
-    if(window_list!=NULL)
-        priv->main_window = GTK_WIDGET(window_list->data);
-    else
-    {
-        priv->main_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
-        gtk_window_set_application(GTK_WINDOW(priv->main_window),
-            priv->app);
-    }
+    priv->main_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
     priv->title_label = gtk_label_new(_("Unknown Title"));
     priv->artist_label = gtk_label_new(_("Unknown Artist"));
     priv->album_label = gtk_label_new(_("Unknown Album"));
@@ -1197,9 +1373,8 @@ static void rc_ui_player_instance_init(RCUiPlayer *ui)
     priv->progress_eventbox = gtk_event_box_new();
     priv->time_scale = gtk_scale_new(GTK_ORIENTATION_HORIZONTAL,
         position_adjustment);
-    rc_ui_listview_init();
-    priv->catalog_listview = rc_ui_listview_get_catalog_widget();
-    priv->playlist_listview = rc_ui_listview_get_playlist_widget();
+    rc_ui_listview_init(&(priv->catalog_listview),
+        &(priv->playlist_listview));
     priv->catalog_scr_window = gtk_scrolled_window_new(NULL, NULL);
     priv->playlist_scr_window = gtk_scrolled_window_new(NULL, NULL);
     priv->ui_manager = rc_ui_menu_init();
@@ -1282,13 +1457,22 @@ static void rc_ui_player_instance_init(RCUiPlayer *ui)
         priv->ctrl_next_image);
     gtk_container_add(GTK_CONTAINER(priv->ctrl_open_button),
         priv->ctrl_open_image);
+    catalog_selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(
+        priv->catalog_listview));
+    playlist_selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(
+        priv->playlist_listview));
     rc_ui_player_layout_init(priv);
     rc_ui_player_set_default_style(priv);
     rc_ui_player_signal_bind(priv);
     settings = gtk_settings_get_default();
     g_object_set(settings, "gtk-application-prefer-dark-theme", TRUE, NULL);
     gtk_widget_show_all(priv->main_window);
-    gtk_widget_set_visible(priv->progress_eventbox, FALSE);    
+    gtk_widget_set_visible(priv->progress_eventbox, FALSE);
+    rc_ui_player_catalog_listview_selection_changed_cb(catalog_selection,
+        NULL);
+    rc_ui_player_playlist_listview_selection_changed_cb(playlist_selection,
+        NULL);
+    g_signal_emit(ui, ui_player_signals[SIGNAL_READY], 0);
 }
 
 GType rc_ui_player_get_type()
@@ -1324,15 +1508,21 @@ GType rc_ui_player_get_type()
 
 void rc_ui_player_init(GtkApplication *app)
 {
+    RCUiPlayerPrivate *priv;
     g_message("Loading main UI....");
     if(ui_player_instance!=NULL)
     {
         g_warning("Main UI is already initialized!");
         return;
     }
-    ui_player_app = app;
     ui_player_instance = g_object_new(RC_UI_PLAYER_TYPE, NULL);
-    rc_ui_menu_state_refresh();
+    priv = RC_UI_PLAYER_GET_PRIVATE(ui_player_instance);
+    if(priv!=NULL && app!=NULL)
+    {
+        priv->app = g_object_ref(app);
+        gtk_window_set_application(GTK_WINDOW(priv->main_window),
+            priv->app);
+    }
     g_message("Main UI loaded.");
 }
 
@@ -1344,9 +1534,60 @@ void rc_ui_player_init(GtkApplication *app)
 
 void rc_ui_player_exit()
 {
-    if(ui_player_instance!=NULL) g_object_unref(ui_player_instance);
+    if(ui_player_instance!=NULL)
+        g_object_unref(ui_player_instance);
+    else
+        return;
     ui_player_instance = NULL;
     g_message("Main UI exited.");
+}
+
+/**
+ * rc_ui_player_get_instance:
+ *
+ * Get the running #RCUiPlayer instance.
+ *
+ * Returns: The running instance.
+ */
+
+GObject *rc_ui_player_get_instance()
+{
+    return ui_player_instance;
+}
+
+/**
+ * rc_ui_player_signal_connect:
+ * @name: the name of the signal
+ * @callback: the the #GCallback to connect
+ * @data: the user data
+ *
+ * Connect the GCallback function to the given signal for the running
+ * instance of #RCUiPlayer object.
+ *
+ * Returns: The handler ID.
+ */
+
+gulong rc_ui_player_signal_connect(const gchar *name,
+    GCallback callback, gpointer data)
+{
+    if(ui_player_instance==NULL) return 0;
+    return g_signal_connect(ui_player_instance, name, callback, data);
+}
+
+/**
+ * rc_ui_player_signal_disconnect:
+ * @handler_id: handler id of the handler to be disconnected
+ *
+ * Disconnects a handler from the running #RCUiPlayer instance so it
+ * will not be called during any future or currently ongoing emissions
+ * of the signal it has been connected to. The #handler_id becomes
+ * invalid and may be reused.
+ */
+
+void rc_ui_player_signal_disconnect(gulong handler_id)
+{
+    if(ui_player_instance==NULL) return;
+    g_signal_handler_disconnect(ui_player_instance, handler_id);
 }
 
 /**
@@ -1374,7 +1615,7 @@ GtkWidget *rc_ui_player_get_main_window()
  * Returns: The icon image of this player.
  */
 
-const GdkPixbuf *rc_ui_player_get_icon_image()
+GdkPixbuf *rc_ui_player_get_icon_image()
 {
     RCUiPlayerPrivate *priv = NULL;
     if(ui_player_instance==NULL) return NULL;
@@ -1398,5 +1639,22 @@ GtkStatusIcon *rc_ui_player_get_tray_icon()
     priv = RC_UI_PLAYER_GET_PRIVATE(ui_player_instance);
     if(priv==NULL) return NULL;
     return priv->tray_icon;
+}
+
+/**
+ * rc_ui_player_get_default_cover_image:
+ *
+ * Get the default cover image of the player.
+ *
+ * Returns: The default cover image.
+ */
+
+GdkPixbuf *rc_ui_player_get_default_cover_image()
+{
+    RCUiPlayerPrivate *priv = NULL;
+    if(ui_player_instance==NULL) return NULL;
+    priv = RC_UI_PLAYER_GET_PRIVATE(ui_player_instance);
+    if(priv==NULL) return NULL;
+    return priv->cover_default_pixbuf;
 }
 

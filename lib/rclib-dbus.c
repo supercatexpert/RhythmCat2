@@ -409,7 +409,7 @@ static void rclib_dbus_mpris_player_method_call_cb(
     }
     else if(g_strcmp0(method_name, "PlayPause")==0)
     {
-        rclib_core_get_state(&state, NULL, GST_CLOCK_TIME_NONE);
+        rclib_core_get_state(&state, NULL, 0);
         if(state==GST_STATE_PLAYING)
             flag = rclib_core_pause();
         else
@@ -435,7 +435,7 @@ static void rclib_dbus_mpris_player_method_call_cb(
     }
     else if(g_strcmp0(method_name, "Seek")==0)
     {
-        rclib_core_get_state(&state, NULL, GST_CLOCK_TIME_NONE);
+        rclib_core_get_state(&state, NULL, 0);
         if(state!=GST_STATE_PLAYING && state!=GST_STATE_PAUSED)
         {
             g_dbus_method_invocation_return_error_literal(invocation,
@@ -452,7 +452,7 @@ static void rclib_dbus_mpris_player_method_call_cb(
     }
     else if(g_strcmp0(method_name, "SetPosition")==0)
     {
-        rclib_core_get_state(&state, NULL, GST_CLOCK_TIME_NONE);
+        rclib_core_get_state(&state, NULL, 0);
         if(state!=GST_STATE_PLAYING && state!=GST_STATE_PAUSED)
         {
             g_dbus_method_invocation_return_error_literal(invocation,
@@ -510,7 +510,7 @@ static GVariant *rclib_dbus_mpris_get_player_property(
     }
     if(g_strcmp0(property_name, "PlaybackStatus")==0)
     {
-        rclib_core_get_state(&state, NULL, GST_CLOCK_TIME_NONE);
+        rclib_core_get_state(&state, NULL, 0);
         switch(state)
         {
             case GST_STATE_PLAYING:
@@ -591,7 +591,7 @@ static GVariant *rclib_dbus_mpris_get_player_property(
     }
     else if(g_strcmp0(property_name, "CanPause")==0)
     {
-        rclib_core_get_state(&state, NULL, GST_CLOCK_TIME_NONE);
+        rclib_core_get_state(&state, NULL, 0);
         if(state==GST_STATE_PLAYING)
             return g_variant_new_boolean(TRUE);
         else
@@ -599,7 +599,7 @@ static GVariant *rclib_dbus_mpris_get_player_property(
     }
     else if(g_strcmp0(property_name, "CanSeek")==0)
     {
-        rclib_core_get_state(&state, NULL, GST_CLOCK_TIME_NONE);
+        rclib_core_get_state(&state, NULL, 0);
         if(state==GST_STATE_PLAYING || state==GST_STATE_PAUSED)
             return g_variant_new_boolean(TRUE);
         else
@@ -820,7 +820,7 @@ static void rclib_dbus_mediakey_proxy_signal_cb(GDBusProxy *proxy,
     {
         if(g_strcmp0("Play", key) == 0)
         {
-            rclib_core_get_state(&state, NULL, GST_CLOCK_TIME_NONE);    
+            rclib_core_get_state(&state, NULL, 0);    
             if(state==GST_STATE_PLAYING)
                 rclib_core_pause();
             else
@@ -889,6 +889,18 @@ static void rclib_dbus_finalize(GObject *object)
     if(priv->connection!=NULL)
         g_object_unref(priv->connection);
     G_OBJECT_CLASS(rclib_dbus_parent_class)->finalize(object);
+}
+
+static GObject *rclib_dbus_constructor(GType type, guint n_construct_params,
+    GObjectConstructParam *construct_params)
+{
+    GObject *retval;
+    if(dbus_instance!=NULL) return dbus_instance;
+    retval = G_OBJECT_CLASS(rclib_dbus_parent_class)->constructor
+        (type, n_construct_params, construct_params);
+    dbus_instance = retval;
+    g_object_add_weak_pointer(retval, (gpointer)&dbus_instance);
+    return retval;
 }
 
 static void rclib_dbus_set_can_quit(RCLibDBus *dbus, gboolean value)
@@ -1106,6 +1118,7 @@ static void rclib_dbus_class_init(RCLibDBusClass *klass)
     GObjectClass *object_class = (GObjectClass *)klass;
     rclib_dbus_parent_class = g_type_class_peek_parent(klass);
     object_class->finalize = rclib_dbus_finalize;
+    object_class->constructor = rclib_dbus_constructor;
     object_class->set_property = rclib_dbus_set_property;
     object_class->get_property = rclib_dbus_get_property;
     g_type_class_add_private(klass, sizeof(RCLibDBusPrivate));

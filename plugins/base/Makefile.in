@@ -35,7 +35,9 @@ POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
 @WITH_NATIVE_PLUGINS_TRUE@am__append_1 = \
-@WITH_NATIVE_PLUGINS_TRUE@    lyricshow.la
+@WITH_NATIVE_PLUGINS_TRUE@    lyricshow.la \
+@WITH_NATIVE_PLUGINS_TRUE@    notify.la \
+@WITH_NATIVE_PLUGINS_TRUE@    desklrc.la
 
 subdir = plugins/base
 DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in
@@ -81,18 +83,39 @@ am__uninstall_files_from_dir = { \
   }
 am__installdirs = "$(DESTDIR)$(plugindir)"
 LTLIBRARIES = $(noinst_LTLIBRARIES) $(plugin_LTLIBRARIES)
-@WITH_NATIVE_PLUGINS_TRUE@lyricshow_la_DEPENDENCIES = $(top_builddir)/lib/librhythmcat-2.0.la \
+@WITH_NATIVE_PLUGINS_TRUE@desklrc_la_DEPENDENCIES = $(top_builddir)/lib/librhythmcat-2.0.la \
 @WITH_NATIVE_PLUGINS_TRUE@	$(top_builddir)/ui/librhythmcat-ui-2.0.la
-am__lyricshow_la_SOURCES_DIST = lyricshow.c
-@WITH_NATIVE_PLUGINS_TRUE@am_lyricshow_la_OBJECTS = lyricshow.lo
-lyricshow_la_OBJECTS = $(am_lyricshow_la_OBJECTS)
+am__desklrc_la_SOURCES_DIST = desklrc.c
+@WITH_NATIVE_PLUGINS_TRUE@am_desklrc_la_OBJECTS =  \
+@WITH_NATIVE_PLUGINS_TRUE@	desklrc_la-desklrc.lo
+desklrc_la_OBJECTS = $(am_desklrc_la_OBJECTS)
 AM_V_lt = $(am__v_lt_@AM_V@)
 am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
 am__v_lt_0 = --silent
-lyricshow_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
-	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
-	$(lyricshow_la_LDFLAGS) $(LDFLAGS) -o $@
+desklrc_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC \
+	$(desklrc_la_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link $(CCLD) \
+	$(AM_CFLAGS) $(CFLAGS) $(desklrc_la_LDFLAGS) $(LDFLAGS) -o $@
+@WITH_NATIVE_PLUGINS_TRUE@am_desklrc_la_rpath = -rpath $(plugindir)
+@WITH_NATIVE_PLUGINS_TRUE@lyricshow_la_DEPENDENCIES = $(top_builddir)/lib/librhythmcat-2.0.la \
+@WITH_NATIVE_PLUGINS_TRUE@	$(top_builddir)/ui/librhythmcat-ui-2.0.la
+am__lyricshow_la_SOURCES_DIST = lyricshow.c
+@WITH_NATIVE_PLUGINS_TRUE@am_lyricshow_la_OBJECTS =  \
+@WITH_NATIVE_PLUGINS_TRUE@	lyricshow_la-lyricshow.lo
+lyricshow_la_OBJECTS = $(am_lyricshow_la_OBJECTS)
+lyricshow_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC \
+	$(lyricshow_la_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link \
+	$(CCLD) $(AM_CFLAGS) $(CFLAGS) $(lyricshow_la_LDFLAGS) \
+	$(LDFLAGS) -o $@
 @WITH_NATIVE_PLUGINS_TRUE@am_lyricshow_la_rpath = -rpath $(plugindir)
+@WITH_NATIVE_PLUGINS_TRUE@notify_la_DEPENDENCIES = $(top_builddir)/lib/librhythmcat-2.0.la \
+@WITH_NATIVE_PLUGINS_TRUE@	$(top_builddir)/ui/librhythmcat-ui-2.0.la
+am__notify_la_SOURCES_DIST = notify.c
+@WITH_NATIVE_PLUGINS_TRUE@am_notify_la_OBJECTS = notify_la-notify.lo
+notify_la_OBJECTS = $(am_notify_la_OBJECTS)
+notify_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC \
+	$(notify_la_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link $(CCLD) \
+	$(AM_CFLAGS) $(CFLAGS) $(notify_la_LDFLAGS) $(LDFLAGS) -o $@
+@WITH_NATIVE_PLUGINS_TRUE@am_notify_la_rpath = -rpath $(plugindir)
 DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__depfiles_maybe = depfiles
@@ -119,8 +142,10 @@ am__v_CCLD_0 = @echo "  CCLD  " $@;
 AM_V_GEN = $(am__v_GEN_@AM_V@)
 am__v_GEN_ = $(am__v_GEN_@AM_DEFAULT_V@)
 am__v_GEN_0 = @echo "  GEN   " $@;
-SOURCES = $(lyricshow_la_SOURCES)
-DIST_SOURCES = $(am__lyricshow_la_SOURCES_DIST)
+SOURCES = $(desklrc_la_SOURCES) $(lyricshow_la_SOURCES) \
+	$(notify_la_SOURCES)
+DIST_SOURCES = $(am__desklrc_la_SOURCES_DIST) \
+	$(am__lyricshow_la_SOURCES_DIST) $(am__notify_la_SOURCES_DIST)
 ETAGS = etags
 CTAGS = ctags
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
@@ -290,6 +315,8 @@ top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 plugindir = $(libdir)/RhythmCat2
 lyricshow_la_LDFLAGS = -module -avoid-version -export-dynamic -O2
+notify_la_LDFLAGS = -module -avoid-version -export-dynamic -O2
+desklrc_la_LDFLAGS = -module -avoid-version -export-dynamic -O2
 plugin_LTLIBRARIES = $(am__append_1)
 noinst_LTLIBRARIES = 
 INCLUDES = @GLIB2_CFLAGS@ @GSTREAMER_CFLAGS@ @GTK_CFLAGS@ @JSON_CFLAGS@ \
@@ -300,6 +327,19 @@ INCLUDES = @GLIB2_CFLAGS@ @GSTREAMER_CFLAGS@ @GTK_CFLAGS@ @JSON_CFLAGS@ \
 @WITH_NATIVE_PLUGINS_TRUE@    $(top_builddir)/lib/librhythmcat-2.0.la \
 @WITH_NATIVE_PLUGINS_TRUE@    $(top_builddir)/ui/librhythmcat-ui-2.0.la
 
+@WITH_NATIVE_PLUGINS_TRUE@lyricshow_la_LIBTOOLFLAGS = --tag=disable-static
+@WITH_NATIVE_PLUGINS_TRUE@notify_la_SOURCES = notify.c
+@WITH_NATIVE_PLUGINS_TRUE@notify_la_LIBADD = @GLIB2_LIBS@ @GTK_LIBS@ @GSTREAMER_LIBS@ @JSON_LIBS@ \
+@WITH_NATIVE_PLUGINS_TRUE@    $(top_builddir)/lib/librhythmcat-2.0.la \
+@WITH_NATIVE_PLUGINS_TRUE@    $(top_builddir)/ui/librhythmcat-ui-2.0.la
+
+@WITH_NATIVE_PLUGINS_TRUE@notify_la_LIBTOOLFLAGS = --tag=disable-static
+@WITH_NATIVE_PLUGINS_TRUE@desklrc_la_SOURCES = desklrc.c
+@WITH_NATIVE_PLUGINS_TRUE@desklrc_la_LIBADD = @GLIB2_LIBS@ @GTK_LIBS@ @GSTREAMER_LIBS@ @JSON_LIBS@ \
+@WITH_NATIVE_PLUGINS_TRUE@    $(top_builddir)/lib/librhythmcat-2.0.la \
+@WITH_NATIVE_PLUGINS_TRUE@    $(top_builddir)/ui/librhythmcat-ui-2.0.la
+
+@WITH_NATIVE_PLUGINS_TRUE@desklrc_la_LIBTOOLFLAGS = --tag=disable-static
 SUFFIXES = .c .so
 all: all-am
 
@@ -375,8 +415,12 @@ clean-pluginLTLIBRARIES:
 	  echo "rm -f \"$${dir}/so_locations\""; \
 	  rm -f "$${dir}/so_locations"; \
 	done
+desklrc.la: $(desklrc_la_OBJECTS) $(desklrc_la_DEPENDENCIES) $(EXTRA_desklrc_la_DEPENDENCIES) 
+	$(AM_V_CCLD)$(desklrc_la_LINK) $(am_desklrc_la_rpath) $(desklrc_la_OBJECTS) $(desklrc_la_LIBADD) $(LIBS)
 lyricshow.la: $(lyricshow_la_OBJECTS) $(lyricshow_la_DEPENDENCIES) $(EXTRA_lyricshow_la_DEPENDENCIES) 
 	$(AM_V_CCLD)$(lyricshow_la_LINK) $(am_lyricshow_la_rpath) $(lyricshow_la_OBJECTS) $(lyricshow_la_LIBADD) $(LIBS)
+notify.la: $(notify_la_OBJECTS) $(notify_la_DEPENDENCIES) $(EXTRA_notify_la_DEPENDENCIES) 
+	$(AM_V_CCLD)$(notify_la_LINK) $(am_notify_la_rpath) $(notify_la_OBJECTS) $(notify_la_LIBADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
@@ -384,7 +428,9 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/lyricshow.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/desklrc_la-desklrc.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/lyricshow_la-lyricshow.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/notify_la-notify.Plo@am__quote@
 
 .c.o:
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(COMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
@@ -406,6 +452,27 @@ distclean-compile:
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='$<' object='$@' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LTCOMPILE) -c -o $@ $<
+
+desklrc_la-desklrc.lo: desklrc.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(desklrc_la_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT desklrc_la-desklrc.lo -MD -MP -MF $(DEPDIR)/desklrc_la-desklrc.Tpo -c -o desklrc_la-desklrc.lo `test -f 'desklrc.c' || echo '$(srcdir)/'`desklrc.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/desklrc_la-desklrc.Tpo $(DEPDIR)/desklrc_la-desklrc.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='desklrc.c' object='desklrc_la-desklrc.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(desklrc_la_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o desklrc_la-desklrc.lo `test -f 'desklrc.c' || echo '$(srcdir)/'`desklrc.c
+
+lyricshow_la-lyricshow.lo: lyricshow.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(lyricshow_la_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT lyricshow_la-lyricshow.lo -MD -MP -MF $(DEPDIR)/lyricshow_la-lyricshow.Tpo -c -o lyricshow_la-lyricshow.lo `test -f 'lyricshow.c' || echo '$(srcdir)/'`lyricshow.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/lyricshow_la-lyricshow.Tpo $(DEPDIR)/lyricshow_la-lyricshow.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='lyricshow.c' object='lyricshow_la-lyricshow.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(lyricshow_la_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o lyricshow_la-lyricshow.lo `test -f 'lyricshow.c' || echo '$(srcdir)/'`lyricshow.c
+
+notify_la-notify.lo: notify.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(notify_la_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT notify_la-notify.lo -MD -MP -MF $(DEPDIR)/notify_la-notify.Tpo -c -o notify_la-notify.lo `test -f 'notify.c' || echo '$(srcdir)/'`notify.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/notify_la-notify.Tpo $(DEPDIR)/notify_la-notify.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='notify.c' object='notify_la-notify.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(notify_la_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o notify_la-notify.lo `test -f 'notify.c' || echo '$(srcdir)/'`notify.c
 
 mostlyclean-libtool:
 	-rm -f *.lo

@@ -232,21 +232,21 @@ rclib_marshal_VOID__POINTER_POINTER (GClosure     *closure,
             data2);
 }
 
-/* VOID:UINT,INT64,POINTER (./rclib-marshal.list:6) */
+/* VOID:UINT,POINTER,INT64 (./rclib-marshal.list:6) */
 void
-rclib_marshal_VOID__UINT_INT64_POINTER (GClosure     *closure,
+rclib_marshal_VOID__UINT_POINTER_INT64 (GClosure     *closure,
                                         GValue       *return_value G_GNUC_UNUSED,
                                         guint         n_param_values,
                                         const GValue *param_values,
                                         gpointer      invocation_hint G_GNUC_UNUSED,
                                         gpointer      marshal_data)
 {
-  typedef void (*GMarshalFunc_VOID__UINT_INT64_POINTER) (gpointer     data1,
+  typedef void (*GMarshalFunc_VOID__UINT_POINTER_INT64) (gpointer     data1,
                                                          guint        arg_1,
-                                                         gint64       arg_2,
-                                                         gpointer     arg_3,
+                                                         gpointer     arg_2,
+                                                         gint64       arg_3,
                                                          gpointer     data2);
-  register GMarshalFunc_VOID__UINT_INT64_POINTER callback;
+  register GMarshalFunc_VOID__UINT_POINTER_INT64 callback;
   register GCClosure *cc = (GCClosure*) closure;
   register gpointer data1, data2;
 
@@ -262,16 +262,57 @@ rclib_marshal_VOID__UINT_INT64_POINTER (GClosure     *closure,
       data1 = g_value_peek_pointer (param_values + 0);
       data2 = closure->data;
     }
-  callback = (GMarshalFunc_VOID__UINT_INT64_POINTER) (marshal_data ? marshal_data : cc->callback);
+  callback = (GMarshalFunc_VOID__UINT_POINTER_INT64) (marshal_data ? marshal_data : cc->callback);
+
+  callback (data1,
+            g_marshal_value_peek_uint (param_values + 1),
+            g_marshal_value_peek_pointer (param_values + 2),
+            g_marshal_value_peek_int64 (param_values + 3),
+            data2);
+}
+
+/* VOID:UINT,INT64,POINTER,INT64 (./rclib-marshal.list:7) */
+void
+rclib_marshal_VOID__UINT_INT64_POINTER_INT64 (GClosure     *closure,
+                                              GValue       *return_value G_GNUC_UNUSED,
+                                              guint         n_param_values,
+                                              const GValue *param_values,
+                                              gpointer      invocation_hint G_GNUC_UNUSED,
+                                              gpointer      marshal_data)
+{
+  typedef void (*GMarshalFunc_VOID__UINT_INT64_POINTER_INT64) (gpointer     data1,
+                                                               guint        arg_1,
+                                                               gint64       arg_2,
+                                                               gpointer     arg_3,
+                                                               gint64       arg_4,
+                                                               gpointer     data2);
+  register GMarshalFunc_VOID__UINT_INT64_POINTER_INT64 callback;
+  register GCClosure *cc = (GCClosure*) closure;
+  register gpointer data1, data2;
+
+  g_return_if_fail (n_param_values == 5);
+
+  if (G_CCLOSURE_SWAP_DATA (closure))
+    {
+      data1 = closure->data;
+      data2 = g_value_peek_pointer (param_values + 0);
+    }
+  else
+    {
+      data1 = g_value_peek_pointer (param_values + 0);
+      data2 = closure->data;
+    }
+  callback = (GMarshalFunc_VOID__UINT_INT64_POINTER_INT64) (marshal_data ? marshal_data : cc->callback);
 
   callback (data1,
             g_marshal_value_peek_uint (param_values + 1),
             g_marshal_value_peek_int64 (param_values + 2),
             g_marshal_value_peek_pointer (param_values + 3),
+            g_marshal_value_peek_int64 (param_values + 4),
             data2);
 }
 
-/* VOID:UINT,UINT,FLOAT,POINTER (./rclib-marshal.list:7) */
+/* VOID:UINT,UINT,FLOAT,POINTER (./rclib-marshal.list:8) */
 void
 rclib_marshal_VOID__UINT_UINT_FLOAT_POINTER (GClosure     *closure,
                                              GValue       *return_value G_GNUC_UNUSED,
@@ -312,7 +353,7 @@ rclib_marshal_VOID__UINT_UINT_FLOAT_POINTER (GClosure     *closure,
             data2);
 }
 
-/* BOOLEAN:UINT,POINTER (./rclib-marshal.list:8) */
+/* BOOLEAN:UINT,POINTER (./rclib-marshal.list:9) */
 void
 rclib_marshal_BOOLEAN__UINT_POINTER (GClosure     *closure,
                                      GValue       *return_value G_GNUC_UNUSED,

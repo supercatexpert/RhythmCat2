@@ -31,6 +31,46 @@
 
 G_BEGIN_DECLS
 
+#define RC_MAIN_APPLICATION_TYPE (rc_main_application_get_type())
+#define RC_MAIN_APPLICATION(obj) (G_TYPE_CHECK_INSTANCE_CAST((obj), \
+    RC_MAIN_APPLICATION_TYPE, RCMainApplication))
+#define RC_MAIN_APPLICATION_CLASS(k) (G_TYPE_CHECK_CLASS_CAST((k), \
+    RC_MAIN_APPLICATION_TYPE, RCMainApplicationClass))
+#define RC_IS_MAIN_APPLICATION(o) (G_TYPE_CHECK_INSTANCE_TYPE((o), \
+    RC_MAIN_APPLICATION_TYPE))
+#define RC_IS_MAIN_APPLICATION_CLASS(k) (G_TYPE_CHECK_CLASS_TYPE((k), \
+    RC_MAIN_APPLICATION_TYPE))
+#define RC_MAIN_APPLICATION_GET_CLASS(o) (G_TYPE_INSTANCE_GET_CLASS((o), \
+    RC_MAIN_APPLICATION_TYPE, RCMainApplicationClass))
+
+typedef struct _RCMainApplication RCMainApplication;
+typedef struct _RCMainApplicationClass RCMainApplicationClass;
+
+/**
+ * RCMainApplication:
+ *
+ * The data structure used for #RCMainApplication class.
+ */
+
+struct _RCMainApplication {
+    /*< private >*/
+    GtkApplication parent;
+};
+
+/**
+ * RCMainApplicationClass:
+ *
+ * #RCMainApplicationClass class.
+ */
+
+struct _RCMainApplicationClass {
+    /*< private >*/
+    GtkApplicationClass parent_class;
+};
+
+/*< private >*/
+GType rc_main_application_get_type();
+
 gint rc_main_run(gint *argc, gchar **argv[]);
 void rc_main_exit();
 const gchar *rc_main_get_data_dir();

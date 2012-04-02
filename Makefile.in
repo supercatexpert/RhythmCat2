@@ -282,7 +282,7 @@ top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 EXTRA_DIST = m4/ChangeLog BUGS ChangeLog
-SUBDIRS = lib ui po plugins docs
+SUBDIRS = lib ui data po plugins docs
 ACLOCAL_AMFLAGS = -I m4
 all: config.h
 	$(MAKE) $(AM_MAKEFLAGS) all-recursive

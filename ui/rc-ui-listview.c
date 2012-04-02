@@ -616,11 +616,14 @@ static void rc_ui_listview_catalog_delete_cb(RCLibDb *db,
 
 /**
  * rc_ui_listview_init:
+ * @catalog_widget: return the catalog list view widget
+ * @playlist_widget: return the playlist list view widget
  * 
  * Initialize the catalog list view & playlist list view.
  */
 
-void rc_ui_listview_init()
+void rc_ui_listview_init(GtkWidget **catalog_widget,
+    GtkWidget **playlist_widget)
 {
     RCUiListViewPrivate *priv = &ui_listview_private;
     GtkTreeModel *catalog_model;
@@ -630,6 +633,8 @@ void rc_ui_listview_init()
     GtkTreeIter catalog_iter, playlist_iter;
     priv->catalog_listview = gtk_tree_view_new();
     priv->playlist_listview = gtk_tree_view_new();
+    if(catalog_widget!=NULL) *catalog_widget = priv->catalog_listview;
+    if(playlist_widget!=NULL) *playlist_widget = priv->playlist_listview;
     rc_ui_list_model_init();
     catalog_selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(
         priv->catalog_listview));

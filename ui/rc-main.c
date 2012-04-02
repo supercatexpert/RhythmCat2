@@ -27,6 +27,7 @@
 #include <gst/gst.h>
 #include <glib/gprintf.h>
 #include <rclib.h>
+#include "rc-main.h"
 #include "rc-ui-player.h"
 #include "rc-ui-listview.h"
 #include "rc-mpris2.h"
@@ -34,6 +35,17 @@
 #include "rc-ui-style.h"
 #include "rc-ui-effect.h"
 
+#define RC_MAIN_APPLICATION_GET_PRIVATE(obj) \
+    G_TYPE_INSTANCE_GET_PRIVATE((obj), RC_MAIN_APPLICATION_TYPE, \
+    RCMainApplicationPrivate)
+
+typedef struct RCMainApplicationPrivate
+{
+    gint dummy;
+}RCMainApplicationPrivate;
+
+static GObject *main_application_instance = NULL;
+static gpointer rc_main_application_parent_class = NULL;
 static gchar main_app_id[] = "org.rhythmcat.RhythmCat2";
 static gboolean main_debug_flag = FALSE;
 static gboolean main_malloc_flag = FALSE;
@@ -49,8 +61,7 @@ static inline void rc_main_settings_init()
         rclib_settings_set_boolean("MainUI", "MinimizeWhenClose", FALSE);
 }
 
-static void rc_main_app_activate_cb(GApplication *application,
-    gpointer data)
+static void rc_main_app_activate(GApplication *application)
 {
     const gchar *home_dir = NULL;
     gchar *theme;
@@ -176,8 +187,8 @@ static void rc_main_app_activate_cb(GApplication *application,
     }
 }
 
-static void rc_main_app_open_cb(GApplication *application, GFile **files,
-    gint n_files, gchar *hint, gpointer data)
+static void rc_main_app_open(GApplication *application, GFile **files,
+    gint n_files, const gchar *hint)
 {
     GtkTreeIter tree_iter;
     GSequenceIter *catalog_iter = NULL;
@@ -214,6 +225,81 @@ static gboolean rc_main_print_version(const gchar *option_name,
     exit(0);
     return TRUE;
 }
+
+static void rc_main_application_finalize(GObject *object)
+{
+    G_OBJECT_CLASS(rc_main_application_parent_class)->finalize(object);
+}
+
+static GObject *rc_main_application_constructor(GType type,
+    guint n_construct_params, GObjectConstructParam *construct_params)
+{
+    GObject *retval;
+    if(main_application_instance!=NULL) return main_application_instance;
+    retval = G_OBJECT_CLASS(rc_main_application_parent_class)->constructor
+        (type, n_construct_params, construct_params);
+    main_application_instance = retval;
+    g_object_add_weak_pointer(retval, (gpointer)&main_application_instance);
+    return retval;
+}
+
+static void rc_main_application_class_init(RCMainApplicationClass *klass)
+{
+    GObjectClass *object_class;
+    GApplicationClass *application_class;
+    object_class = G_OBJECT_CLASS(klass);
+    rc_main_application_parent_class = g_type_class_peek_parent(klass);
+    object_class->constructor = rc_main_application_constructor;
+    object_class->finalize = rc_main_application_finalize;
+    
+    application_class = G_APPLICATION_CLASS(klass);
+    application_class->open = rc_main_app_open;
+    application_class->activate = rc_main_app_activate; 
+    
+    g_type_class_add_private(klass, sizeof(RCMainApplicationPrivate));
+}
+
+static void rc_main_application_instance_init(RCMainApplication *app)
+{
+
+}
+
+GType rc_main_application_get_type()
+{
+    static volatile gsize g_define_type_id__volatile = 0;
+    GType g_define_type_id;
+    static const GTypeInfo app_info = {
+        .class_size = sizeof(RCMainApplicationClass),
+        .base_init = NULL,
+        .base_finalize = NULL,
+        .class_init = (GClassInitFunc)rc_main_application_class_init,
+        .class_finalize = NULL,
+        .class_data = NULL,
+        .instance_size = sizeof(RCMainApplication),
+        .n_preallocs = 0,
+        .instance_init = (GInstanceInitFunc)rc_main_application_instance_init
+    };
+    if(g_once_init_enter(&g_define_type_id__volatile))
+    {
+        g_define_type_id = g_type_register_static(GTK_TYPE_APPLICATION,
+            g_intern_static_string("RCMainApplication"), &app_info, 0);
+        g_once_init_leave(&g_define_type_id__volatile, g_define_type_id);
+    }
+    return g_define_type_id__volatile;
+}
+
+/**
+ * rc_main_run:
+ * @argc: (inout): address of the <parameter>argc</parameter> parameter of
+ *     your main() function (or 0 if @argv is %NULL). This will be changed if 
+ *     any arguments were handled
+ * @argv: (array length=argc) (inout) (allow-none): address of the
+ *     <parameter>argv</parameter> parameter of main(), or %NULL
+ *
+ * Start to run the player.
+ *
+ * Returns: The return value of the player.
+ */
 
 gint rc_main_run(gint *argc, gchar **argv[])
 {
@@ -260,7 +346,8 @@ gint rc_main_run(gint *argc, gchar **argv[])
         ;
     g_set_application_name("RhythmCat2");
     g_set_prgname("RhythmCat2");
-    app = gtk_application_new(main_app_id, G_APPLICATION_HANDLES_OPEN);
+    app = g_object_new(RC_MAIN_APPLICATION_TYPE, "application-id",
+        main_app_id, "flags", G_APPLICATION_HANDLES_OPEN, NULL);
     if(app!=NULL)
     {
         if(!g_application_register(G_APPLICATION(app), NULL, &error))
@@ -314,19 +401,15 @@ gint rc_main_run(gint *argc, gchar **argv[])
     if(catalog!=NULL && g_sequence_get_length(catalog)==0)
         rclib_db_catalog_add(_("Default Playlist"), NULL,
         RCLIB_DB_CATALOG_TYPE_PLAYLIST);
-    g_signal_connect(app, "activate", G_CALLBACK(rc_main_app_activate_cb),
-        NULL);
-    g_signal_connect(app, "open", G_CALLBACK(rc_main_app_open_cb), NULL);
     if(app!=NULL)
         status = g_application_run(G_APPLICATION(app), *argc, *argv);
     else /* If GtkApplication is not available, use fallback functions. */
     {
         gtk_init(argc, argv);
-        rc_main_run(NULL, NULL);
+        rc_main_app_activate(NULL);
         gtk_main();
         status = 0;
     }
-    g_free(main_user_dir);
     g_object_unref(app);
     return status;
 }

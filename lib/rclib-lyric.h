@@ -109,9 +109,9 @@ struct _RCLibLyricClass {
     GObjectClass parent_class;
     void (*lyric_ready)(RCLibLyric *lyric, guint index);
     void (*line_changed)(RCLibLyric *lyric, guint index,
-        const RCLibLyricData *lyric_data);
-    void (*lyric_timer)(RCLibLyric *lyric, guint index,
-        gint64 pos, const RCLibLyricData *lyric_data);
+        const RCLibLyricData *lyric_data, gint64 offset);
+    void (*lyric_timer)(RCLibLyric *lyric, guint index, gint64 pos,
+        const RCLibLyricData *lyric_data, gint64 offset);
 };
 
 /*< private >*/
@@ -136,6 +136,7 @@ gchar *rclib_lyric_search_lyric(const gchar *uri, const gchar *title,
     const gchar *artist);
 gboolean rclib_lyric_is_available(guint index);
 RCLibLyricParsedData *rclib_lyric_get_parsed_data(guint index);
+gint64 rclib_lyric_get_track_time_offset(guint index);
 
 G_END_DECLS
 

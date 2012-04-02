@@ -3,12 +3,12 @@
 
 m4_define([rc_major_version], [1])
 m4_define([rc_minor_version], [9])
-m4_define([rc_micro_version], [1])
+m4_define([rc_micro_version], [2])
 m4_define([rc_version], [rc_major_version.rc_minor_version.rc_micro_version])
 
 AC_PREREQ([2.61])
 AC_INIT([RhythmCat], [rc_version], [https://github.com/supercatexpert/RhythmCat2/issues/])
-AM_INIT_AUTOMAKE([RhythmCat], [1.9.1])
+AM_INIT_AUTOMAKE([RhythmCat], [rc_version])
 AC_CONFIG_SRCDIR([Makefile.am])
 AC_CONFIG_HEADERS([config.h])
 
@@ -104,6 +104,7 @@ AC_CONFIG_FILES([lib/librhythmcat-2.0.pc ui/rhythmcat-2.0.pc])
 AC_OUTPUT([Makefile lib/Makefile ui/Makefile \
     plugins/Makefile plugins/base/Makefile plugins/extra/Makefile \
     plugins/devel/Makefile \
+    data/Makefile data/icons/Makefile data/images/Makefile \
     docs/Makefile docs/reference/Makefile docs/reference/lib/Makefile \
     docs/reference/ui/Makefile docs/reference/lib/version.xml \
     docs/reference/ui/version.xml po/Makefile.in po/Makefile])

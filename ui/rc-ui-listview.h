@@ -30,7 +30,8 @@
 
 G_BEGIN_DECLS
 
-void rc_ui_listview_init();
+void rc_ui_listview_init(GtkWidget **catalog_widget,
+    GtkWidget **playlist_widget);
 GtkWidget *rc_ui_listview_get_catalog_widget();
 GtkWidget *rc_ui_listview_get_playlist_widget();
 void rc_ui_listview_catalog_set_pango_attributes(const PangoAttrList *list);

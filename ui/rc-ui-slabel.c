@@ -45,7 +45,6 @@ typedef struct RCUiScrollableLabelPrivate
     gdouble percent;
     PangoLayout *layout;
     gint current_x;
-    gint current_width;
 }RCUiScrollableLabelPrivate;
 
 enum
@@ -181,7 +180,6 @@ static gboolean rc_ui_scrollable_label_draw(GtkWidget *widget, cairo_t *cr)
     style_context = gtk_widget_get_style_context(widget);
     pango_layout_get_pixel_size(priv->layout, &width, &height);
     gtk_widget_get_allocation(widget, &allocation);
-    priv->current_width = width;
     if(width > allocation.width)
         priv->current_x = (gint)((gdouble)(allocation.width -
             width) * priv->percent);
@@ -203,7 +201,6 @@ static void rc_ui_scrollable_label_init(RCUiScrollableLabel *object)
     priv->attrs = NULL;
     priv->layout = gtk_widget_create_pango_layout(GTK_WIDGET(object), NULL);
     priv->current_x = 0;
-    priv->current_width = 0;
     style_context = gtk_widget_get_style_context(GTK_WIDGET(object));
     fd = gtk_style_context_get_font(style_context, GTK_STATE_FLAG_NORMAL);
     pango_layout_set_font_description(priv->layout, fd);
@@ -467,10 +464,12 @@ gdouble rc_ui_scrollable_label_get_percent(RCUiScrollableLabel *widget)
 gint rc_ui_scrollable_label_get_width(RCUiScrollableLabel *widget)
 {
     RCUiScrollableLabelPrivate *priv;
+    gint width = 0;
     if(widget==NULL) return 0;
     priv = RC_UI_SCROLLABLE_LABEL_GET_PRIVATE(widget);
-    if(priv==NULL) return 0;
-    return priv->current_width;
+    if(priv==NULL || priv->layout==NULL) return 0;
+    pango_layout_get_pixel_size(priv->layout, &width, NULL);
+    return width;
 }
 
 

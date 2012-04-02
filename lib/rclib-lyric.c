@@ -92,8 +92,9 @@ static gboolean rclib_lyric_watch_timer(gpointer data)
     GstState state = 0;
     gint64 pos;
     gint i;
+    gint64 offset;
     const RCLibLyricData *lyric_data;
-    rclib_core_get_state(&state, NULL, GST_CLOCK_TIME_NONE);
+    rclib_core_get_state(&state, NULL, 0);
     if(state!=GST_STATE_PLAYING && state!=GST_STATE_PAUSED)
     {
         return TRUE;
@@ -101,14 +102,15 @@ static gboolean rclib_lyric_watch_timer(gpointer data)
     pos = rclib_core_query_position();
     for(i=0;i<2;i++)
     {
+        offset = rclib_lyric_get_track_time_offset(i);
         lyric_data = rclib_lyric_get_line(i, pos);
         g_signal_emit(lyric_instance, lyric_signals[SIGNAL_LYRIC_TIMER],
-            0, i, pos, lyric_data);
+            0, i, pos, lyric_data, offset);
         if(lyric_data==NULL) continue;
         if(reference[i]!=lyric_data)
         {
             g_signal_emit(lyric_instance, lyric_signals[SIGNAL_LINE_CHANGED],
-                0, i, lyric_data);
+                0, i, lyric_data, offset);
             reference[i] = lyric_data;
         }
     }
@@ -188,11 +190,24 @@ static void rclib_lyric_finalize(GObject *object)
     G_OBJECT_CLASS(rclib_lyric_parent_class)->finalize(object);
 }
 
+static GObject *rclib_lyric_constructor(GType type, guint n_construct_params,
+    GObjectConstructParam *construct_params)
+{
+    GObject *retval;
+    if(lyric_instance!=NULL) return lyric_instance;
+    retval = G_OBJECT_CLASS(rclib_lyric_parent_class)->constructor
+        (type, n_construct_params, construct_params);
+    lyric_instance = retval;
+    g_object_add_weak_pointer(retval, (gpointer)&lyric_instance);
+    return retval;
+}
+
 static void rclib_lyric_class_init(RCLibLyricClass *klass)
 {
     GObjectClass *object_class = (GObjectClass *)klass;
     rclib_lyric_parent_class = g_type_class_peek_parent(klass);
     object_class->finalize = rclib_lyric_finalize;
+    object_class->constructor = rclib_lyric_constructor;
     g_type_class_add_private(klass, sizeof(RCLibLyricPrivate));
     
     /**
@@ -213,6 +228,7 @@ static void rclib_lyric_class_init(RCLibLyricClass *klass)
      * @lyric: the #RCLibLyric that received the signal
      * @index: the track index of the current lyric line
      * @lyric_data: the lyric data of the current lyric line
+     * @offset: the time offset of the lyric data
      *
      * The ::line-changed signal is emitted when a lyric line has been
      * found which matches the current playing position.
@@ -220,8 +236,8 @@ static void rclib_lyric_class_init(RCLibLyricClass *klass)
     lyric_signals[SIGNAL_LINE_CHANGED] = g_signal_new("line-changed",
         RCLIB_LYRIC_TYPE, G_SIGNAL_RUN_FIRST,
         G_STRUCT_OFFSET(RCLibLyricClass, line_changed), NULL, NULL,
-        g_cclosure_marshal_VOID__UINT_POINTER, G_TYPE_NONE, 2, G_TYPE_UINT,
-        G_TYPE_POINTER, NULL);
+        rclib_marshal_VOID__UINT_POINTER_INT64, G_TYPE_NONE, 3, G_TYPE_UINT,
+        G_TYPE_POINTER, G_TYPE_INT64, NULL);
         
     /**
      * RCLibLyric::lyric-timer:
@@ -229,6 +245,7 @@ static void rclib_lyric_class_init(RCLibLyricClass *klass)
      * @index: the track index of the current lyric line
      * @pos: current time position
      * @lyric_data: the lyric data of the current lyric line
+     * @offset: the time offset of the lyric data
      *
      * The ::lyric-timer signal is emitted every 100ms, used for
      * lyric display.
@@ -236,8 +253,8 @@ static void rclib_lyric_class_init(RCLibLyricClass *klass)
     lyric_signals[SIGNAL_LYRIC_TIMER] = g_signal_new("lyric-timer",
         RCLIB_LYRIC_TYPE, G_SIGNAL_RUN_FIRST,
         G_STRUCT_OFFSET(RCLibLyricClass, lyric_timer), NULL, NULL,
-        rclib_marshal_VOID__UINT_INT64_POINTER, G_TYPE_NONE, 3, G_TYPE_UINT,
-        G_TYPE_INT64, G_TYPE_POINTER, NULL);
+        rclib_marshal_VOID__UINT_INT64_POINTER_INT64, G_TYPE_NONE, 4,
+        G_TYPE_UINT, G_TYPE_INT64, G_TYPE_POINTER, G_TYPE_INT64, NULL);
 }
 
 static void rclib_lyric_instance_init(RCLibLyric *lyric)
@@ -666,6 +683,7 @@ const RCLibLyricData *rclib_lyric_get_line(guint index, gint64 time)
     GSequenceIter *iter;
     iter = rclib_lyric_get_line_iter(index, time);
     if(iter==NULL) return NULL;
+    if(g_sequence_iter_is_end(iter)) return NULL;
     lyric_data = g_sequence_get(iter);
     return lyric_data;
 }
@@ -928,5 +946,28 @@ RCLibLyricParsedData *rclib_lyric_get_parsed_data(guint index)
     else
         parsed_data = &(priv->parsed_data1);
     return parsed_data;
+}
+
+/**
+ * rclib_lyric_get_track_time_offset:
+ * @index: the lyric track index
+ *
+ * Get the time offset (in nanosecond) by the given track index
+ *
+ * Returns: The delay time.
+ */
+
+gint64 rclib_lyric_get_track_time_offset(guint index)
+{
+    RCLibLyricPrivate *priv;
+    RCLibLyricParsedData *parsed_data;
+    if(lyric_instance==NULL) return 0;
+    priv = RCLIB_LYRIC_GET_PRIVATE(lyric_instance);
+    if(priv==NULL) return 0;
+    if(index==1)
+        parsed_data = &(priv->parsed_data2);
+    else
+        parsed_data = &(priv->parsed_data1);
+    return (gint64)parsed_data->offset * GST_MSECOND;
 }
 

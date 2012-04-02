@@ -210,6 +210,7 @@ struct _RCLibPluginClass {
     void (*loaded)(RCLibPlugin *plugin, const RCLibPluginData *data);
     void (*unloaded)(RCLibPlugin *plugin, const RCLibPluginData *data);
     void (*unregistered)(RCLibPlugin *plugin, const gchar *id);
+    void (*shutdown)(RCLibPlugin *plugin);
 };
 
 /*< private >*/
