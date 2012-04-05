@@ -34,10 +34,11 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
-@WITH_NATIVE_PLUGINS_TRUE@am__append_1 = \
-@WITH_NATIVE_PLUGINS_TRUE@    lyricshow.la \
-@WITH_NATIVE_PLUGINS_TRUE@    notify.la \
-@WITH_NATIVE_PLUGINS_TRUE@    desklrc.la
+@WITH_GTK_UI_TRUE@am__append_1 = @GTK_CFLAGS@ -I$(top_srcdir)/ui
+@WITH_GTK_UI_TRUE@@WITH_NATIVE_PLUGINS_TRUE@am__append_2 = \
+@WITH_GTK_UI_TRUE@@WITH_NATIVE_PLUGINS_TRUE@    lyricshow.la \
+@WITH_GTK_UI_TRUE@@WITH_NATIVE_PLUGINS_TRUE@    notify.la \
+@WITH_GTK_UI_TRUE@@WITH_NATIVE_PLUGINS_TRUE@    desklrc.la
 
 subdir = plugins/base
 DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in
@@ -83,11 +84,10 @@ am__uninstall_files_from_dir = { \
   }
 am__installdirs = "$(DESTDIR)$(plugindir)"
 LTLIBRARIES = $(noinst_LTLIBRARIES) $(plugin_LTLIBRARIES)
-@WITH_NATIVE_PLUGINS_TRUE@desklrc_la_DEPENDENCIES = $(top_builddir)/lib/librhythmcat-2.0.la \
-@WITH_NATIVE_PLUGINS_TRUE@	$(top_builddir)/ui/librhythmcat-ui-2.0.la
+@WITH_GTK_UI_TRUE@@WITH_NATIVE_PLUGINS_TRUE@desklrc_la_DEPENDENCIES = $(top_builddir)/lib/librhythmcat-2.0.la \
+@WITH_GTK_UI_TRUE@@WITH_NATIVE_PLUGINS_TRUE@	$(top_builddir)/ui/librhythmcat-ui-2.0.la
 am__desklrc_la_SOURCES_DIST = desklrc.c
-@WITH_NATIVE_PLUGINS_TRUE@am_desklrc_la_OBJECTS =  \
-@WITH_NATIVE_PLUGINS_TRUE@	desklrc_la-desklrc.lo
+@WITH_GTK_UI_TRUE@@WITH_NATIVE_PLUGINS_TRUE@am_desklrc_la_OBJECTS = desklrc_la-desklrc.lo
 desklrc_la_OBJECTS = $(am_desklrc_la_OBJECTS)
 AM_V_lt = $(am__v_lt_@AM_V@)
 am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
@@ -95,27 +95,32 @@ am__v_lt_0 = --silent
 desklrc_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC \
 	$(desklrc_la_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link $(CCLD) \
 	$(AM_CFLAGS) $(CFLAGS) $(desklrc_la_LDFLAGS) $(LDFLAGS) -o $@
-@WITH_NATIVE_PLUGINS_TRUE@am_desklrc_la_rpath = -rpath $(plugindir)
-@WITH_NATIVE_PLUGINS_TRUE@lyricshow_la_DEPENDENCIES = $(top_builddir)/lib/librhythmcat-2.0.la \
-@WITH_NATIVE_PLUGINS_TRUE@	$(top_builddir)/ui/librhythmcat-ui-2.0.la
+@WITH_GTK_UI_TRUE@@WITH_NATIVE_PLUGINS_TRUE@am_desklrc_la_rpath =  \
+@WITH_GTK_UI_TRUE@@WITH_NATIVE_PLUGINS_TRUE@	-rpath \
+@WITH_GTK_UI_TRUE@@WITH_NATIVE_PLUGINS_TRUE@	$(plugindir)
+@WITH_GTK_UI_TRUE@@WITH_NATIVE_PLUGINS_TRUE@lyricshow_la_DEPENDENCIES = $(top_builddir)/lib/librhythmcat-2.0.la \
+@WITH_GTK_UI_TRUE@@WITH_NATIVE_PLUGINS_TRUE@	$(top_builddir)/ui/librhythmcat-ui-2.0.la
 am__lyricshow_la_SOURCES_DIST = lyricshow.c
-@WITH_NATIVE_PLUGINS_TRUE@am_lyricshow_la_OBJECTS =  \
-@WITH_NATIVE_PLUGINS_TRUE@	lyricshow_la-lyricshow.lo
+@WITH_GTK_UI_TRUE@@WITH_NATIVE_PLUGINS_TRUE@am_lyricshow_la_OBJECTS = lyricshow_la-lyricshow.lo
 lyricshow_la_OBJECTS = $(am_lyricshow_la_OBJECTS)
 lyricshow_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC \
 	$(lyricshow_la_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link \
 	$(CCLD) $(AM_CFLAGS) $(CFLAGS) $(lyricshow_la_LDFLAGS) \
 	$(LDFLAGS) -o $@
-@WITH_NATIVE_PLUGINS_TRUE@am_lyricshow_la_rpath = -rpath $(plugindir)
-@WITH_NATIVE_PLUGINS_TRUE@notify_la_DEPENDENCIES = $(top_builddir)/lib/librhythmcat-2.0.la \
-@WITH_NATIVE_PLUGINS_TRUE@	$(top_builddir)/ui/librhythmcat-ui-2.0.la
+@WITH_GTK_UI_TRUE@@WITH_NATIVE_PLUGINS_TRUE@am_lyricshow_la_rpath =  \
+@WITH_GTK_UI_TRUE@@WITH_NATIVE_PLUGINS_TRUE@	-rpath \
+@WITH_GTK_UI_TRUE@@WITH_NATIVE_PLUGINS_TRUE@	$(plugindir)
+@WITH_GTK_UI_TRUE@@WITH_NATIVE_PLUGINS_TRUE@notify_la_DEPENDENCIES = $(top_builddir)/lib/librhythmcat-2.0.la \
+@WITH_GTK_UI_TRUE@@WITH_NATIVE_PLUGINS_TRUE@	$(top_builddir)/ui/librhythmcat-ui-2.0.la
 am__notify_la_SOURCES_DIST = notify.c
-@WITH_NATIVE_PLUGINS_TRUE@am_notify_la_OBJECTS = notify_la-notify.lo
+@WITH_GTK_UI_TRUE@@WITH_NATIVE_PLUGINS_TRUE@am_notify_la_OBJECTS = notify_la-notify.lo
 notify_la_OBJECTS = $(am_notify_la_OBJECTS)
 notify_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC \
 	$(notify_la_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link $(CCLD) \
 	$(AM_CFLAGS) $(CFLAGS) $(notify_la_LDFLAGS) $(LDFLAGS) -o $@
-@WITH_NATIVE_PLUGINS_TRUE@am_notify_la_rpath = -rpath $(plugindir)
+@WITH_GTK_UI_TRUE@@WITH_NATIVE_PLUGINS_TRUE@am_notify_la_rpath =  \
+@WITH_GTK_UI_TRUE@@WITH_NATIVE_PLUGINS_TRUE@	-rpath \
+@WITH_GTK_UI_TRUE@@WITH_NATIVE_PLUGINS_TRUE@	$(plugindir)
 DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__depfiles_maybe = depfiles
@@ -206,6 +211,8 @@ JSON_CFLAGS = @JSON_CFLAGS@
 JSON_LIBS = @JSON_LIBS@
 LD = @LD@
 LDFLAGS = @LDFLAGS@
+LIBCURL_CFLAGS = @LIBCURL_CFLAGS@
+LIBCURL_LIBS = @LIBCURL_LIBS@
 LIBICONV = @LIBICONV@
 LIBINTL = @LIBINTL@
 LIBOBJS = @LIBOBJS@
@@ -313,33 +320,33 @@ target_alias = @target_alias@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-plugindir = $(libdir)/RhythmCat2
+plugindir = $(libdir)/RhythmCat2/plugins
 lyricshow_la_LDFLAGS = -module -avoid-version -export-dynamic -O2
 notify_la_LDFLAGS = -module -avoid-version -export-dynamic -O2
 desklrc_la_LDFLAGS = -module -avoid-version -export-dynamic -O2
-plugin_LTLIBRARIES = $(am__append_1)
+plugin_LTLIBRARIES = $(am__append_2)
 noinst_LTLIBRARIES = 
-INCLUDES = @GLIB2_CFLAGS@ @GSTREAMER_CFLAGS@ @GTK_CFLAGS@ @JSON_CFLAGS@ \
-    -DLOCALEDIR=\"$(localedir)\" -I$(top_srcdir)/lib -I$(top_srcdir)/ui
+INCLUDES = @GLIB2_CFLAGS@ @GSTREAMER_CFLAGS@ @JSON_CFLAGS@ \
+	-DLOCALEDIR=\"$(localedir)\" -I$(top_srcdir)/lib \
+	$(am__append_1)
+@WITH_GTK_UI_TRUE@@WITH_NATIVE_PLUGINS_TRUE@lyricshow_la_SOURCES = lyricshow.c
+@WITH_GTK_UI_TRUE@@WITH_NATIVE_PLUGINS_TRUE@lyricshow_la_LIBADD = @GLIB2_LIBS@ @GTK_LIBS@ @GSTREAMER_LIBS@ @JSON_LIBS@ \
+@WITH_GTK_UI_TRUE@@WITH_NATIVE_PLUGINS_TRUE@    $(top_builddir)/lib/librhythmcat-2.0.la \
+@WITH_GTK_UI_TRUE@@WITH_NATIVE_PLUGINS_TRUE@    $(top_builddir)/ui/librhythmcat-ui-2.0.la
 
-@WITH_NATIVE_PLUGINS_TRUE@lyricshow_la_SOURCES = lyricshow.c
-@WITH_NATIVE_PLUGINS_TRUE@lyricshow_la_LIBADD = @GLIB2_LIBS@ @GTK_LIBS@ @GSTREAMER_LIBS@ @JSON_LIBS@ \
-@WITH_NATIVE_PLUGINS_TRUE@    $(top_builddir)/lib/librhythmcat-2.0.la \
-@WITH_NATIVE_PLUGINS_TRUE@    $(top_builddir)/ui/librhythmcat-ui-2.0.la
+@WITH_GTK_UI_TRUE@@WITH_NATIVE_PLUGINS_TRUE@lyricshow_la_LIBTOOLFLAGS = --tag=disable-static
+@WITH_GTK_UI_TRUE@@WITH_NATIVE_PLUGINS_TRUE@notify_la_SOURCES = notify.c
+@WITH_GTK_UI_TRUE@@WITH_NATIVE_PLUGINS_TRUE@notify_la_LIBADD = @GLIB2_LIBS@ @GTK_LIBS@ @GSTREAMER_LIBS@ @JSON_LIBS@ \
+@WITH_GTK_UI_TRUE@@WITH_NATIVE_PLUGINS_TRUE@    $(top_builddir)/lib/librhythmcat-2.0.la \
+@WITH_GTK_UI_TRUE@@WITH_NATIVE_PLUGINS_TRUE@    $(top_builddir)/ui/librhythmcat-ui-2.0.la
 
-@WITH_NATIVE_PLUGINS_TRUE@lyricshow_la_LIBTOOLFLAGS = --tag=disable-static
-@WITH_NATIVE_PLUGINS_TRUE@notify_la_SOURCES = notify.c
-@WITH_NATIVE_PLUGINS_TRUE@notify_la_LIBADD = @GLIB2_LIBS@ @GTK_LIBS@ @GSTREAMER_LIBS@ @JSON_LIBS@ \
-@WITH_NATIVE_PLUGINS_TRUE@    $(top_builddir)/lib/librhythmcat-2.0.la \
-@WITH_NATIVE_PLUGINS_TRUE@    $(top_builddir)/ui/librhythmcat-ui-2.0.la
+@WITH_GTK_UI_TRUE@@WITH_NATIVE_PLUGINS_TRUE@notify_la_LIBTOOLFLAGS = --tag=disable-static
+@WITH_GTK_UI_TRUE@@WITH_NATIVE_PLUGINS_TRUE@desklrc_la_SOURCES = desklrc.c
+@WITH_GTK_UI_TRUE@@WITH_NATIVE_PLUGINS_TRUE@desklrc_la_LIBADD = @GLIB2_LIBS@ @GTK_LIBS@ @GSTREAMER_LIBS@ @JSON_LIBS@ \
+@WITH_GTK_UI_TRUE@@WITH_NATIVE_PLUGINS_TRUE@    $(top_builddir)/lib/librhythmcat-2.0.la \
+@WITH_GTK_UI_TRUE@@WITH_NATIVE_PLUGINS_TRUE@    $(top_builddir)/ui/librhythmcat-ui-2.0.la
 
-@WITH_NATIVE_PLUGINS_TRUE@notify_la_LIBTOOLFLAGS = --tag=disable-static
-@WITH_NATIVE_PLUGINS_TRUE@desklrc_la_SOURCES = desklrc.c
-@WITH_NATIVE_PLUGINS_TRUE@desklrc_la_LIBADD = @GLIB2_LIBS@ @GTK_LIBS@ @GSTREAMER_LIBS@ @JSON_LIBS@ \
-@WITH_NATIVE_PLUGINS_TRUE@    $(top_builddir)/lib/librhythmcat-2.0.la \
-@WITH_NATIVE_PLUGINS_TRUE@    $(top_builddir)/ui/librhythmcat-ui-2.0.la
-
-@WITH_NATIVE_PLUGINS_TRUE@desklrc_la_LIBTOOLFLAGS = --tag=disable-static
+@WITH_GTK_UI_TRUE@@WITH_NATIVE_PLUGINS_TRUE@desklrc_la_LIBTOOLFLAGS = --tag=disable-static
 SUFFIXES = .c .so
 all: all-am
 

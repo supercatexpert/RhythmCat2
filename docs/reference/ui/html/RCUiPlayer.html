@@ -26,6 +26,8 @@
                   <a href="#RCUiPlayer.description" class="shortcut">Description</a>
                    | 
                   <a href="#RCUiPlayer.object-hierarchy" class="shortcut">Object Hierarchy</a>
+                   | 
+                  <a href="#RCUiPlayer.signals" class="shortcut">Signals</a>
 </td></tr>
 </table>
 <div class="refentry">
@@ -43,7 +45,7 @@
 struct              <a class="link" href="RCUiPlayer.html#RCUiPlayerClass" title="struct RCUiPlayerClass">RCUiPlayerClass</a>;
 #define             <a class="link" href="RCUiPlayer.html#RC-UI-PLAYER-TYPE:CAPS" title="RC_UI_PLAYER_TYPE">RC_UI_PLAYER_TYPE</a>
 <span class="returnvalue">void</span>                <a class="link" href="RCUiPlayer.html#rc-ui-player-exit" title="rc_ui_player_exit ()">rc_ui_player_exit</a>                   ();
-const <a href="/usr/share/gtk-doc/html/gdk-pixbuf/gdk-pixbuf-The-GdkPixbuf-Structure.html#GdkPixbuf"><span class="returnvalue">GdkPixbuf</span></a> *   <a class="link" href="RCUiPlayer.html#rc-ui-player-get-icon-image" title="rc_ui_player_get_icon_image ()">rc_ui_player_get_icon_image</a>         ();
+<a href="/usr/share/gtk-doc/html/gdk-pixbuf/gdk-pixbuf-The-GdkPixbuf-Structure.html#GdkPixbuf"><span class="returnvalue">GdkPixbuf</span></a> *         <a class="link" href="RCUiPlayer.html#rc-ui-player-get-icon-image" title="rc_ui_player_get_icon_image ()">rc_ui_player_get_icon_image</a>         ();
 <a href="/usr/share/gtk-doc/html/gtk/GtkWidget.html"><span class="returnvalue">GtkWidget</span></a> *         <a class="link" href="RCUiPlayer.html#rc-ui-player-get-main-window" title="rc_ui_player_get_main_window ()">rc_ui_player_get_main_window</a>        ();
 <span class="returnvalue">void</span>                <a class="link" href="RCUiPlayer.html#rc-ui-player-init" title="rc_ui_player_init ()">rc_ui_player_init</a>                   (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/gtk3/GtkApplication.html"><span class="type">GtkApplication</span></a> *app</code></em>);
 </pre>
@@ -56,6 +58,12 @@ const <a href="/usr/share/gtk-doc/html/gdk-pixbuf/gdk-pixbuf-The-GdkPixbuf-Struc
 </pre>
 </div>
 <div class="refsect1">
+<a name="RCUiPlayer.signals"></a><h2>Signals</h2>
+<pre class="synopsis">
+  "<a class="link" href="RCUiPlayer.html#RCUiPlayer-ready" title='The "ready" signal'>ready</a>"                                          : <a href="/usr/share/gtk-doc/html/gobject/gobject-Signals.html#G-SIGNAL-RUN-FIRST:CAPS"><code class="literal">Run First</code></a>
+</pre>
+</div>
+<div class="refsect1">
 <a name="RCUiPlayer.description"></a><h2>Description</h2>
 </div>
 <div class="refsect1">
@@ -64,7 +72,7 @@ const <a href="/usr/share/gtk-doc/html/gdk-pixbuf/gdk-pixbuf-The-GdkPixbuf-Struc
 <a name="RCUiPlayer-struct"></a><h3>struct RCUiPlayer</h3>
 <pre class="programlisting">struct RCUiPlayer;</pre>
 <p>
-The data structure used for RCLibCore class.
+The data structure used for <a class="link" href="RCUiPlayer.html" title="RCUiPlayer"><span class="type">RCUiPlayer</span></a> class.
 </p>
 </div>
 <hr>
@@ -74,7 +82,7 @@ The data structure used for RCLibCore class.
 };
 </pre>
 <p>
-Provide signal process functions in the class.
+<a class="link" href="RCUiPlayer.html#RCUiPlayerClass" title="struct RCUiPlayerClass"><span class="type">RCUiPlayerClass</span></a> class.
 </p>
 </div>
 <hr>
@@ -94,7 +102,7 @@ Unload the running instance of the main UI.
 <hr>
 <div class="refsect2">
 <a name="rc-ui-player-get-icon-image"></a><h3>rc_ui_player_get_icon_image ()</h3>
-<pre class="programlisting">const <a href="/usr/share/gtk-doc/html/gdk-pixbuf/gdk-pixbuf-The-GdkPixbuf-Structure.html#GdkPixbuf"><span class="returnvalue">GdkPixbuf</span></a> *   rc_ui_player_get_icon_image         ();</pre>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/gdk-pixbuf/gdk-pixbuf-The-GdkPixbuf-Structure.html#GdkPixbuf"><span class="returnvalue">GdkPixbuf</span></a> *         rc_ui_player_get_icon_image         ();</pre>
 <p>
 Get the icon image of this player.
 </p>
@@ -134,6 +142,30 @@ Initialize the main UI of the player.
 <td><p><span class="term"><em class="parameter"><code>app</code></em> :</span></p></td>
 <td>the <a href="/usr/share/gtk-doc/html/gtk3/GtkApplication.html"><span class="type">GtkApplication</span></a> for the program</td>
 </tr></tbody>
+</table></div>
+</div>
+</div>
+<div class="refsect1">
+<a name="RCUiPlayer.signal-details"></a><h2>Signal Details</h2>
+<div class="refsect2">
+<a name="RCUiPlayer-ready"></a><h3>The <code class="literal">"ready"</code> signal</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                user_function                      (<a class="link" href="RCUiPlayer.html" title="RCUiPlayer"><span class="type">RCUiPlayer</span></a> *player,
+                                                        <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>    user_data)      : <a href="/usr/share/gtk-doc/html/gobject/gobject-Signals.html#G-SIGNAL-RUN-FIRST:CAPS"><code class="literal">Run First</code></a></pre>
+<p>
+The ::ready signal is emitted when the main UI is ready.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>player</code></em> :</span></p></td>
+<td>the <a class="link" href="RCUiPlayer.html" title="RCUiPlayer"><span class="type">RCUiPlayer</span></a> that received the signal</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>user_data</code></em> :</span></p></td>
+<td>user data set when the signal handler was connected.</td>
+</tr>
+</tbody>
 </table></div>
 </div>
 </div>

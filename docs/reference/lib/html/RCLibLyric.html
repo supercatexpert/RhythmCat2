@@ -417,6 +417,7 @@ invalid and may be reused.
 <pre class="programlisting"><span class="returnvalue">void</span>                user_function                      (<a class="link" href="RCLibLyric.html" title="RCLibLyric"><span class="type">RCLibLyric</span></a> *lyric,
                                                         <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a>       index,
                                                         <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>    lyric_data,
+                                                        <span class="type">gint64</span>      offset,
                                                         <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>    user_data)       : <a href="/usr/share/gtk-doc/html/gobject/gobject-Signals.html#G-SIGNAL-RUN-FIRST:CAPS"><code class="literal">Run First</code></a></pre>
 <p>
 The ::line-changed signal is emitted when a lyric line has been
@@ -436,6 +437,10 @@ found which matches the current playing position.
 <tr>
 <td><p><span class="term"><em class="parameter"><code>lyric_data</code></em> :</span></p></td>
 <td>the lyric data of the current lyric line</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>offset</code></em> :</span></p></td>
+<td>the time offset of the lyric data</td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>user_data</code></em> :</span></p></td>
@@ -479,6 +484,7 @@ ready to be used.
                                                         <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a>       index,
                                                         <span class="type">gint64</span>      pos,
                                                         <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>    lyric_data,
+                                                        <span class="type">gint64</span>      offset,
                                                         <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>    user_data)       : <a href="/usr/share/gtk-doc/html/gobject/gobject-Signals.html#G-SIGNAL-RUN-FIRST:CAPS"><code class="literal">Run First</code></a></pre>
 <p>
 The ::lyric-timer signal is emitted every 100ms, used for
@@ -502,6 +508,10 @@ lyric display.
 <tr>
 <td><p><span class="term"><em class="parameter"><code>lyric_data</code></em> :</span></p></td>
 <td>the lyric data of the current lyric line</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>offset</code></em> :</span></p></td>
+<td>the time offset of the lyric data</td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>user_data</code></em> :</span></p></td>

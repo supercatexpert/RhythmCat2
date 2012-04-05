@@ -63,7 +63,6 @@ static inline void rc_main_settings_init()
 
 static void rc_main_app_activate(GApplication *application)
 {
-    const gchar *home_dir = NULL;
     gchar *theme;
     gchar *theme_file;
     gchar *plugin_dir;
@@ -118,15 +117,15 @@ static void rc_main_app_activate(GApplication *application)
     g_free(theme);
     rclib_settings_apply();
     rc_mpris2_init();
-    home_dir = g_getenv("HOME");
-    if(home_dir==NULL)
-        home_dir = g_get_home_dir();
-    plugin_conf = g_build_filename(home_dir, ".RhythmCat2", "plugins.conf",
+    plugin_conf = g_build_filename(main_user_dir, "plugins.conf",
         NULL);
     rclib_plugin_init(plugin_conf);
     g_free(plugin_conf);
-    plugin_dir = g_build_filename(home_dir, ".RhythmCat2", "Plugins", NULL);
+    plugin_dir = g_build_filename(main_user_dir, "Plugins", NULL);
     g_mkdir_with_parents(plugin_dir, 0700);
+    rclib_plugin_load_from_dir(plugin_dir);
+    plugin_dir = g_build_filename(main_data_dir, "..", "..", "lib",
+        "RhythmCat2", "plugin", NULL);
     rclib_plugin_load_from_dir(plugin_dir);
     g_free(plugin_dir);
     rclib_plugin_load_from_configure();

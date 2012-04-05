@@ -264,7 +264,8 @@ RCLibTagMetadata *rclib_tag_read_metadata(const gchar *uri)
         if(GST_MESSAGE_TYPE(msg)==GST_MESSAGE_DURATION)
         {
             gst_message_parse_duration(msg, &fmt, &dura);
-            mmd->length = dura;
+            if(fmt==GST_FORMAT_TIME)
+                mmd->length = dura;
         }
         else if(GST_MESSAGE_TYPE(msg)==GST_MESSAGE_TAG)
         {
@@ -281,6 +282,7 @@ RCLibTagMetadata *rclib_tag_read_metadata(const gchar *uri)
     gst_message_unref(msg);
     if(mmd->length<=0)
     {
+        fmt = GST_FORMAT_TIME;
         gst_element_query_duration(pipeline, &fmt, &dura);
         mmd->length = dura;
     }

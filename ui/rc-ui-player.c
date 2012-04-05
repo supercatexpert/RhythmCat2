@@ -75,7 +75,6 @@ typedef struct RCUiPlayerPrivate
     GtkWidget *progress_eventbox;
     GdkPixbuf *cover_default_pixbuf;
     GdkPixbuf *icon_pixbuf;
-    GdkPixbuf *menu_pixbuf;
     GdkPixbuf *cover_using_pixbuf;
     gchar *cover_file_path;
     GtkStatusIcon *tray_icon;
@@ -1335,8 +1334,6 @@ static void rc_ui_player_instance_init(RCUiPlayer *ui)
         (const gchar **)&ui_image_default_cover);
     priv->icon_pixbuf = gdk_pixbuf_new_from_xpm_data(
         (const gchar **)&ui_image_icon);
-    priv->menu_pixbuf = gdk_pixbuf_scale_simple(priv->icon_pixbuf, 24, 24,
-        GDK_INTERP_HYPER);
     gtk_icon_theme_add_builtin_icon("RhythmCat", 128, priv->icon_pixbuf);
     position_adjustment = gtk_adjustment_new(0.0, 0.0, 100.0, 1.0, 2.0, 0.0);
     priv->tray_icon = gtk_status_icon_new_from_pixbuf(priv->icon_pixbuf);

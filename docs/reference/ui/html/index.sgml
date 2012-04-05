@@ -82,10 +82,10 @@
 <ANCHOR id="RhythmCat-rc-ui-menu.details" href="RhythmCat/RhythmCat-rc-ui-menu.html#RhythmCat-rc-ui-menu.details">
 <ANCHOR id="rc-ui-menu-get-ui-manager" href="RhythmCat/RhythmCat-rc-ui-menu.html#rc-ui-menu-get-ui-manager">
 <ANCHOR id="rc-ui-menu-init" href="RhythmCat/RhythmCat-rc-ui-menu.html#rc-ui-menu-init">
-<ANCHOR id="rc-ui-menu-state-refresh" href="RhythmCat/RhythmCat-rc-ui-menu.html#rc-ui-menu-state-refresh">
 <ANCHOR id="RCUiPlayer" href="RhythmCat/RCUiPlayer.html">
 <ANCHOR id="RCUiPlayer.synopsis" href="RhythmCat/RCUiPlayer.html#RCUiPlayer.synopsis">
 <ANCHOR id="RCUiPlayer.object-hierarchy" href="RhythmCat/RCUiPlayer.html#RCUiPlayer.object-hierarchy">
+<ANCHOR id="RCUiPlayer.signals" href="RhythmCat/RCUiPlayer.html#RCUiPlayer.signals">
 <ANCHOR id="RCUiPlayer.description" href="RhythmCat/RCUiPlayer.html#RCUiPlayer.description">
 <ANCHOR id="RCUiPlayer.details" href="RhythmCat/RCUiPlayer.html#RCUiPlayer.details">
 <ANCHOR id="RCUiPlayer-struct" href="RhythmCat/RCUiPlayer.html#RCUiPlayer-struct">
@@ -95,6 +95,8 @@
 <ANCHOR id="rc-ui-player-get-icon-image" href="RhythmCat/RCUiPlayer.html#rc-ui-player-get-icon-image">
 <ANCHOR id="rc-ui-player-get-main-window" href="RhythmCat/RCUiPlayer.html#rc-ui-player-get-main-window">
 <ANCHOR id="rc-ui-player-init" href="RhythmCat/RCUiPlayer.html#rc-ui-player-init">
+<ANCHOR id="RCUiPlayer.signal-details" href="RhythmCat/RCUiPlayer.html#RCUiPlayer.signal-details">
+<ANCHOR id="RCUiPlayer-ready" href="RhythmCat/RCUiPlayer.html#RCUiPlayer-ready">
 <ANCHOR id="RhythmCat-rc-ui-plugin" href="RhythmCat/RhythmCat-rc-ui-plugin.html">
 <ANCHOR id="RhythmCat-rc-ui-plugin.synopsis" href="RhythmCat/RhythmCat-rc-ui-plugin.html#RhythmCat-rc-ui-plugin.synopsis">
 <ANCHOR id="RhythmCat-rc-ui-plugin.description" href="RhythmCat/RhythmCat-rc-ui-plugin.html#RhythmCat-rc-ui-plugin.description">
@@ -151,3 +153,7 @@
 <ANCHOR id="rc-ui-style-css-unset" href="RhythmCat/RhythmCat-rc-ui-style.html#rc-ui-style-css-unset">
 <ANCHOR id="rc-ui-style-get-embeded-theme" href="RhythmCat/RhythmCat-rc-ui-style.html#rc-ui-style-get-embeded-theme">
 <ANCHOR id="rc-ui-style-search-theme-paths" href="RhythmCat/RhythmCat-rc-ui-style.html#rc-ui-style-search-theme-paths">
+<ANCHOR id="annotation-glossterm-array" href="RhythmCat/annotation-glossary.html#annotation-glossterm-array">
+<ANCHOR id="annotation-glossterm-allow-none" href="RhythmCat/annotation-glossary.html#annotation-glossterm-allow-none">
+<ANCHOR id="annotation-glossterm-inout" href="RhythmCat/annotation-glossary.html#annotation-glossterm-inout">
+<ANCHOR id="annotation-glossterm-transfer full" href="RhythmCat/annotation-glossary.html#annotation-glossterm-transfer full">

@@ -560,7 +560,12 @@ static gboolean rc_plugin_lrcshow_load(RCLibPluginData *plugin)
 static gboolean rc_plugin_lrcshow_unload(RCLibPluginData *plugin)
 {
     RCPluginLrcshowPriv *priv = &lrcshow_priv;
-    rc_ui_menu_remove_menu_action(GTK_ACTION(priv->action), priv->menu_id);
+    if(priv->menu_id>0)
+    {
+        rc_ui_menu_remove_menu_action(GTK_ACTION(priv->action),
+            priv->menu_id);
+        g_object_unref(priv->action);
+    }
     if(priv->timeout_id>0)
         g_source_remove(priv->timeout_id);
     if(priv->lyric_found_id>0)

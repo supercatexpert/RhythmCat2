@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: RhythmCat 1.9.0\n"
 "Report-Msgid-Bugs-To: https://github.com/supercatexpert/RhythmCat2/issues/\n"
-"POT-Creation-Date: 2012-03-25 00:19+0800\n"
+"POT-Creation-Date: 2012-04-03 14:06+0800\n"
 "PO-Revision-Date: 2012-01-20 20:57+0800\n"
 "Last-Translator: SuperCat <supercatexpert@gmail.com>\n"
 "Language-Team: Chinese (simplified)\n"
@@ -56,26 +56,26 @@ msgstr ""
 msgid "Vocal"
 msgstr ""
 
-#: lib/rclib-core.c:1177 lib/rclib-core.c:1186 lib/rclib-core.c:1196
-#: lib/rclib-core.c:1206 lib/rclib-core.c:1216
+#: lib/rclib-core.c:1190 lib/rclib-core.c:1199 lib/rclib-core.c:1209
+#: lib/rclib-core.c:1219 lib/rclib-core.c:1229
 #, c-format
 msgid "Cannot load necessary plugin: %s"
 msgstr ""
 
-#: lib/rclib-core.c:1225 lib/rclib-core.c:1249
+#: lib/rclib-core.c:1238 lib/rclib-core.c:1262
 #, c-format
 msgid "Cannot create bin: %s"
 msgstr ""
 
-#: lib/rclib-core.c:1234 lib/rclib-core.c:1258
+#: lib/rclib-core.c:1247 lib/rclib-core.c:1271
 msgid "Cannot link elements!"
 msgstr ""
 
-#: lib/rclib-core.c:1376
+#: lib/rclib-core.c:1389
 msgid "The core is already initialized!"
 msgstr ""
 
-#: lib/rclib-core.c:1975
+#: lib/rclib-core.c:1988
 msgid "Custom"
 msgstr ""
 
@@ -83,8 +83,8 @@ msgstr ""
 msgid "Unnamed list"
 msgstr ""
 
-#: lib/rclib-db.c:2079 ui/rc-ui-listmodel.c:365 ui/rc-ui-player.c:130
-#: ui/rc-ui-player.c:1168
+#: lib/rclib-db.c:2092 ui/rc-ui-listmodel.c:365 ui/rc-ui-player.c:136
+#: ui/rc-ui-player.c:1344
 msgid "Unknown Title"
 msgstr ""
 
@@ -136,35 +136,35 @@ msgstr ""
 msgid "Audio Effects"
 msgstr ""
 
-#: ui/rc-ui-listmodel.c:369 ui/rc-ui-player.c:141 ui/rc-ui-player.c:1169
+#: ui/rc-ui-listmodel.c:369 ui/rc-ui-player.c:147 ui/rc-ui-player.c:1345
 msgid "Unknown Artist"
 msgstr ""
 
-#: ui/rc-ui-listmodel.c:373 ui/rc-ui-player.c:151 ui/rc-ui-player.c:1170
+#: ui/rc-ui-listmodel.c:373 ui/rc-ui-player.c:157 ui/rc-ui-player.c:1346
 msgid "Unknown Album"
 msgstr ""
 
-#: ui/rc-ui-listview.c:700
+#: ui/rc-ui-listview.c:705
 msgid "Name"
 msgstr ""
 
-#: ui/rc-ui-listview.c:706
+#: ui/rc-ui-listview.c:711
 msgid "Title"
 msgstr ""
 
-#: ui/rc-ui-listview.c:709
+#: ui/rc-ui-listview.c:714
 msgid "Artist"
 msgstr ""
 
-#: ui/rc-ui-listview.c:712
+#: ui/rc-ui-listview.c:717
 msgid "Album"
 msgstr ""
 
-#: ui/rc-ui-listview.c:715
+#: ui/rc-ui-listview.c:720
 msgid "Length"
 msgstr ""
 
-#: ui/rc-ui-listview.c:1008
+#: ui/rc-ui-listview.c:1013
 #, c-format
 msgid "Playlist %u"
 msgstr ""
@@ -465,11 +465,11 @@ msgstr ""
 msgid "Save the album image"
 msgstr ""
 
-#: ui/rc-ui-menu.c:341 ui/rc-ui-player.c:669
+#: ui/rc-ui-menu.c:341 ui/rc-ui-player.c:691
 msgid "Importing: 0 remaining"
 msgstr ""
 
-#: ui/rc-ui-menu.c:345 ui/rc-ui-player.c:709
+#: ui/rc-ui-menu.c:345 ui/rc-ui-player.c:731
 msgid "Refreshing: 0 remaining"
 msgstr ""
 
@@ -730,44 +730,44 @@ msgstr ""
 msgid "Enter the URL of the file you would like to open:"
 msgstr ""
 
-#: ui/rc-ui-player.c:280 ui/rc-ui-player.c:339 ui/rc-ui-player.c:1171
+#: ui/rc-ui-player.c:286 ui/rc-ui-player.c:345 ui/rc-ui-player.c:1347
 msgid "Unknown Format"
 msgstr ""
 
-#: ui/rc-ui-player.c:282
+#: ui/rc-ui-player.c:288
 #, c-format
 msgid "%d kbps "
 msgstr ""
 
-#: ui/rc-ui-player.c:285
+#: ui/rc-ui-player.c:291
 #, c-format
 msgid "%d Hz "
 msgstr ""
 
-#: ui/rc-ui-player.c:289
+#: ui/rc-ui-player.c:295
 msgid "Mono"
 msgstr ""
 
-#: ui/rc-ui-player.c:292
+#: ui/rc-ui-player.c:298
 msgid "Stereo"
 msgstr ""
 
-#: ui/rc-ui-player.c:295
+#: ui/rc-ui-player.c:301
 #, c-format
 msgid "%d channels"
 msgstr ""
 
-#: ui/rc-ui-player.c:654
+#: ui/rc-ui-player.c:676
 #, c-format
 msgid "Importing: %d remaining"
 msgstr ""
 
-#: ui/rc-ui-player.c:694
+#: ui/rc-ui-player.c:716
 #, c-format
 msgid "Refreshing: %d remaining"
 msgstr ""
 
-#: ui/rc-main.c:207
+#: ui/rc-main.c:221
 #, c-format
 msgid ""
 "RhythmCat2, library version %d.%d.%d\n"
@@ -775,25 +775,25 @@ msgid ""
 "A music player based on GTK+ 3.0 & GStreamer 0.10\n"
 msgstr ""
 
-#: ui/rc-main.c:220
+#: ui/rc-main.c:309
 msgid "Enable debug mode"
 msgstr ""
 
-#: ui/rc-main.c:222
+#: ui/rc-main.c:311
 msgid "Use malloc function in stardard C library"
 msgstr ""
 
-#: ui/rc-main.c:227
+#: ui/rc-main.c:316
 msgid "Output version information and exit"
 msgstr ""
 
-#: ui/rc-main.c:246
+#: ui/rc-main.c:335
 #, c-format
 msgid ""
 "%s\n"
 "Run '%s --help' to see a full list of available command line options.\n"
 msgstr ""
 
-#: ui/rc-main.c:309
+#: ui/rc-main.c:402
 msgid "Default Playlist"
 msgstr ""

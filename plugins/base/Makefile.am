@@ -1,4 +1,4 @@
-plugindir = $(libdir)/RhythmCat2
+plugindir = $(libdir)/RhythmCat2/plugins
 
 lyricshow_la_LDFLAGS = -module -avoid-version -export-dynamic -O2
 notify_la_LDFLAGS = -module -avoid-version -export-dynamic -O2
@@ -7,10 +7,15 @@ desklrc_la_LDFLAGS = -module -avoid-version -export-dynamic -O2
 plugin_LTLIBRARIES = 
 noinst_LTLIBRARIES =
 
-INCLUDES = @GLIB2_CFLAGS@ @GSTREAMER_CFLAGS@ @GTK_CFLAGS@ @JSON_CFLAGS@ \
-    -DLOCALEDIR=\"$(localedir)\" -I$(top_srcdir)/lib -I$(top_srcdir)/ui
+INCLUDES = @GLIB2_CFLAGS@ @GSTREAMER_CFLAGS@  @JSON_CFLAGS@ \
+    -DLOCALEDIR=\"$(localedir)\" -I$(top_srcdir)/lib
+if WITH_GTK_UI
+INCLUDES += @GTK_CFLAGS@ -I$(top_srcdir)/ui
+endif
 
 if WITH_NATIVE_PLUGINS
+
+if WITH_GTK_UI
 
 plugin_LTLIBRARIES += \
     lyricshow.la \
@@ -34,6 +39,8 @@ desklrc_la_LIBADD = @GLIB2_LIBS@ @GTK_LIBS@ @GSTREAMER_LIBS@ @JSON_LIBS@ \
     $(top_builddir)/lib/librhythmcat-2.0.la \
     $(top_builddir)/ui/librhythmcat-ui-2.0.la
 desklrc_la_LIBTOOLFLAGS = --tag=disable-static
+
+endif
 
 endif
 

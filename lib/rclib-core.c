@@ -935,6 +935,11 @@ static gboolean rclib_core_bus_callback(GstBus *bus, GstMessage *msg,
             break;
         case GST_MESSAGE_DURATION:
             gst_message_parse_duration(msg, &format, &duration);
+            if(format!=GST_FORMAT_TIME)
+            {
+                format = GST_FORMAT_TIME;
+                break;
+            }
             if(priv->end_time>0 && priv->end_time>priv->start_time)
                 duration = priv->end_time - priv->start_time;
             else if(priv->start_time>0 && duration>priv->start_time)

@@ -1,24 +1,12 @@
 plugindir = $(libdir)/RhythmCat2/plugins
 
-python3_la_LDFLAGS = -module -avoid-version -export-dynamic -O2
+plugin_LTLIBRARIES = 
 
-plugin_LTLIBRARIES =
+    
 noinst_LTLIBRARIES =
 
 INCLUDES = @GLIB2_CFLAGS@ @GSTREAMER_CFLAGS@ @GTK_CFLAGS@ @JSON_CFLAGS@ \
     -DLOCALEDIR=\"$(localedir)\" -I$(top_srcdir)/lib -I$(top_srcdir)/ui
-
-if WITH_PYTHON3_PLUGINS
-
-plugin_LTLIBRARIES += \
-    python3.la
-
-python3_la_SOURCES = python3.c
-python3_la_LIBADD = @GLIB2_LIBS@ @GSTREAMER_LIBS@ @JSON_LIBS@ @PYTHON3_LIBS@
-INCLUDES += @PYTHON3_CFLAGS@
-python3_la_LIBTOOLFLAGS = --tag=disable-static
-
-endif
 
 SUFFIXES = .c .so
 .c.so:

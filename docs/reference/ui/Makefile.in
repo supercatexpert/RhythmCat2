@@ -121,6 +121,8 @@ JSON_CFLAGS = @JSON_CFLAGS@
 JSON_LIBS = @JSON_LIBS@
 LD = @LD@
 LDFLAGS = @LDFLAGS@
+LIBCURL_CFLAGS = @LIBCURL_CFLAGS@
+LIBCURL_LIBS = @LIBCURL_LIBS@
 LIBICONV = @LIBICONV@
 LIBINTL = @LIBINTL@
 LIBOBJS = @LIBOBJS@
@@ -238,41 +240,41 @@ AUTOMAKE_OPTIONS = 1.6
 # of using the various options.
 
 # The name of the module, e.g. 'glib'.
-DOC_MODULE = RhythmCat
+@WITH_GTK_UI_TRUE@DOC_MODULE = RhythmCat
 
 # Uncomment for versioned docs and specify the version of the module, e.g. '2'.
-DOC_MODULE_VERSION = @RC_VERSION@
+@WITH_GTK_UI_TRUE@DOC_MODULE_VERSION = @RC_VERSION@
 
 # The top-level SGML file. You can change this if you want to.
-DOC_MAIN_SGML_FILE = $(DOC_MODULE)-docs.sgml
+@WITH_GTK_UI_TRUE@DOC_MAIN_SGML_FILE = $(DOC_MODULE)-docs.sgml
 
 # Directories containing the source code, relative to $(srcdir).
 # gtk-doc will search all .c and .h files beneath these paths
 # for inline comments documenting functions and macros.
 # e.g. DOC_SOURCE_DIR=../../../gtk ../../../gdk
-DOC_SOURCE_DIR = $(top_srcdir)/ui
+@WITH_GTK_UI_TRUE@DOC_SOURCE_DIR = $(top_srcdir)/ui
 
 # Extra options to pass to gtkdoc-scangobj. Not normally needed.
-SCANGOBJ_OPTIONS = 
+@WITH_GTK_UI_TRUE@SCANGOBJ_OPTIONS = 
 
 # Extra options to supply to gtkdoc-scan.
 # e.g. SCAN_OPTIONS=--deprecated-guards="GTK_DISABLE_DEPRECATED"
-SCAN_OPTIONS = 
+@WITH_GTK_UI_TRUE@SCAN_OPTIONS = 
 
 # Extra options to supply to gtkdoc-mkdb.
 # e.g. MKDB_OPTIONS=--sgml-mode --output-format=xml
-MKDB_OPTIONS = --sgml-mode --output-format=xml
+@WITH_GTK_UI_TRUE@MKDB_OPTIONS = --sgml-mode --output-format=xml
 
 # Extra options to supply to gtkdoc-mktmpl
 # e.g. MKTMPL_OPTIONS=--only-section-tmpl
-MKTMPL_OPTIONS = 
+@WITH_GTK_UI_TRUE@MKTMPL_OPTIONS = 
 
 # Extra options to supply to gtkdoc-mkhtml
-MKHTML_OPTIONS = 
+@WITH_GTK_UI_TRUE@MKHTML_OPTIONS = 
 
 # Extra options to supply to gtkdoc-fixref. Not normally needed.
 # e.g. FIXXREF_OPTIONS=--extra-dir=../gdk-pixbuf/html --extra-dir=../gdk/html
-FIXXREF_OPTIONS = 
+@WITH_GTK_UI_TRUE@FIXXREF_OPTIONS = 
 
 # Used for dependencies. The docs will be rebuilt if any of these change.
 # e.g. HFILE_GLOB=$(top_srcdir)/gtk/*.h
@@ -280,80 +282,81 @@ FIXXREF_OPTIONS =
 
 # Extra header to include when scanning, which are not under DOC_SOURCE_DIR
 # e.g. EXTRA_HFILES=$(top_srcdir}/contrib/extra.h
-EXTRA_HFILES = 
+@WITH_GTK_UI_TRUE@EXTRA_HFILES = 
 
 # Header files to ignore when scanning. Use base file name, no paths
 # e.g. IGNORE_HFILES=gtkdebug.h gtkintl.h
-IGNORE_HFILES = rrc-ui-img-icon.xpm rc-ui-img-nocov.xpm rc-ui-css.h rc-common.h
+@WITH_GTK_UI_TRUE@IGNORE_HFILES = rrc-ui-img-icon.xpm rc-ui-img-nocov.xpm rc-ui-css.h rc-common.h
 
 # Images to copy into HTML directory.
 # e.g. HTML_IMAGES=$(top_srcdir)/gtk/stock-icons/stock_about_24.png
-HTML_IMAGES = 
+@WITH_GTK_UI_TRUE@HTML_IMAGES = 
 
 # Extra SGML files that are included by $(DOC_MAIN_SGML_FILE).
 # e.g. content_files=running.sgml building.sgml changes-2.0.sgml
-content_files = version.xml
+@WITH_GTK_UI_TRUE@content_files = version.xml
 
 # SGML files where gtk-doc abbrevations (#GtkWidget) are expanded
 # These files must be listed here *and* in content_files
 # e.g. expand_content_files=running.sgml
-expand_content_files = 
+@WITH_GTK_UI_TRUE@expand_content_files = 
 
 # CFLAGS and LDFLAGS for compiling gtkdoc-scangobj with your library.
 # Only needed if you are using gtkdoc-scangobj to dynamically query widget
 # signals and properties.
 # e.g. GTKDOC_CFLAGS=-I$(top_srcdir) -I$(top_builddir) $(GTK_DEBUG_FLAGS)
 # e.g. GTKDOC_LIBS=$(top_builddir)/gtk/$(gtktargetlib)
-GTKDOC_CFLAGS = -I@GLIB2_CFLAGS@ -I@JSON_CFLAGS@ -I@GSTREAMER_CFLAGS@ \
-    -I@GTK_CFLAGS@ -I$(top_srcdir)/lib -I$(top_srcdir)/ui
+@WITH_GTK_UI_TRUE@GTKDOC_CFLAGS = -I@GLIB2_CFLAGS@ -I@JSON_CFLAGS@ -I@GSTREAMER_CFLAGS@ \
+@WITH_GTK_UI_TRUE@    -I@GTK_CFLAGS@ -I$(top_srcdir)/lib -I$(top_srcdir)/ui
 
-GTKDOC_LIBS = @GLIB2_LIBS@ @GSTREAMER_LIBS@ @JSON_LIBS@ @GTK_LIBS@\
-    $(top_builddir)/lib/librhythmcat-2.0.la \
-    $(top_builddir)/ui/librhythmcat-ui-2.0.la
+@WITH_GTK_UI_TRUE@GTKDOC_LIBS = @GLIB2_LIBS@ @GSTREAMER_LIBS@ @JSON_LIBS@ @GTK_LIBS@\
+@WITH_GTK_UI_TRUE@    $(top_builddir)/lib/librhythmcat-2.0.la \
+@WITH_GTK_UI_TRUE@    $(top_builddir)/ui/librhythmcat-ui-2.0.la
 
-@GTK_DOC_USE_LIBTOOL_FALSE@GTKDOC_CC = $(CC) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
-@GTK_DOC_USE_LIBTOOL_TRUE@GTKDOC_CC = $(LIBTOOL) --tag=CC --mode=compile $(CC) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
-@GTK_DOC_USE_LIBTOOL_FALSE@GTKDOC_LD = $(CC) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS)
-@GTK_DOC_USE_LIBTOOL_TRUE@GTKDOC_LD = $(LIBTOOL) --tag=CC --mode=link $(CC) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS)
-@GTK_DOC_USE_LIBTOOL_FALSE@GTKDOC_RUN = 
-@GTK_DOC_USE_LIBTOOL_TRUE@GTKDOC_RUN = $(LIBTOOL) --mode=execute
+@GTK_DOC_USE_LIBTOOL_FALSE@@WITH_GTK_UI_TRUE@GTKDOC_CC = $(CC) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
+@GTK_DOC_USE_LIBTOOL_TRUE@@WITH_GTK_UI_TRUE@GTKDOC_CC = $(LIBTOOL) --tag=CC --mode=compile $(CC) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
+@GTK_DOC_USE_LIBTOOL_FALSE@@WITH_GTK_UI_TRUE@GTKDOC_LD = $(CC) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS)
+@GTK_DOC_USE_LIBTOOL_TRUE@@WITH_GTK_UI_TRUE@GTKDOC_LD = $(LIBTOOL) --tag=CC --mode=link $(CC) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS)
+@GTK_DOC_USE_LIBTOOL_FALSE@@WITH_GTK_UI_TRUE@GTKDOC_RUN = 
+@GTK_DOC_USE_LIBTOOL_TRUE@@WITH_GTK_UI_TRUE@GTKDOC_RUN = $(LIBTOOL) --mode=execute
 
 # We set GPATH here; this gives us semantics for GNU make
 # which are more like other make's VPATH, when it comes to
 # whether a source that is a target of one rule is then
 # searched for in VPATH/GPATH.
 #
-GPATH = $(srcdir)
-TARGET_DIR = $(HTML_DIR)/$(DOC_MODULE)
+@WITH_GTK_UI_TRUE@GPATH = $(srcdir)
+@WITH_GTK_UI_TRUE@TARGET_DIR = $(HTML_DIR)/$(DOC_MODULE)
 
 # This includes the standard gtk-doc make rules, copied by gtkdocize.
 
 # Other files to distribute
 # e.g. EXTRA_DIST += version.xml.in
-EXTRA_DIST = $(content_files) $(HTML_IMAGES) $(DOC_MAIN_SGML_FILE) \
-	$(DOC_MODULE)-sections.txt $(DOC_MODULE)-overrides.txt \
-	version.xml.in
-DOC_STAMPS = scan-build.stamp sgml-build.stamp html-build.stamp pdf-build.stamp \
-	$(srcdir)/sgml.stamp $(srcdir)/html.stamp  \
-	$(srcdir)/pdf.stamp
+@WITH_GTK_UI_TRUE@EXTRA_DIST = $(content_files) $(HTML_IMAGES) \
+@WITH_GTK_UI_TRUE@	$(DOC_MAIN_SGML_FILE) \
+@WITH_GTK_UI_TRUE@	$(DOC_MODULE)-sections.txt \
+@WITH_GTK_UI_TRUE@	$(DOC_MODULE)-overrides.txt version.xml.in
+@WITH_GTK_UI_TRUE@DOC_STAMPS = scan-build.stamp sgml-build.stamp html-build.stamp pdf-build.stamp \
+@WITH_GTK_UI_TRUE@	$(srcdir)/sgml.stamp $(srcdir)/html.stamp  \
+@WITH_GTK_UI_TRUE@	$(srcdir)/pdf.stamp
 
-SCANOBJ_FILES = \
-	$(DOC_MODULE).args 	 \
-	$(DOC_MODULE).hierarchy  \
-	$(DOC_MODULE).interfaces \
-	$(DOC_MODULE).prerequisites \
-	$(DOC_MODULE).signals
+@WITH_GTK_UI_TRUE@SCANOBJ_FILES = \
+@WITH_GTK_UI_TRUE@	$(DOC_MODULE).args 	 \
+@WITH_GTK_UI_TRUE@	$(DOC_MODULE).hierarchy  \
+@WITH_GTK_UI_TRUE@	$(DOC_MODULE).interfaces \
+@WITH_GTK_UI_TRUE@	$(DOC_MODULE).prerequisites \
+@WITH_GTK_UI_TRUE@	$(DOC_MODULE).signals
 
-REPORT_FILES = \
-	$(DOC_MODULE)-undocumented.txt \
-	$(DOC_MODULE)-undeclared.txt \
-	$(DOC_MODULE)-unused.txt
+@WITH_GTK_UI_TRUE@REPORT_FILES = \
+@WITH_GTK_UI_TRUE@	$(DOC_MODULE)-undocumented.txt \
+@WITH_GTK_UI_TRUE@	$(DOC_MODULE)-undeclared.txt \
+@WITH_GTK_UI_TRUE@	$(DOC_MODULE)-unused.txt
 
-CLEANFILES = $(SCANOBJ_FILES) $(REPORT_FILES) $(DOC_STAMPS)
-@ENABLE_GTK_DOC_TRUE@@GTK_DOC_BUILD_HTML_FALSE@HTML_BUILD_STAMP = 
-@ENABLE_GTK_DOC_TRUE@@GTK_DOC_BUILD_HTML_TRUE@HTML_BUILD_STAMP = html-build.stamp
-@ENABLE_GTK_DOC_TRUE@@GTK_DOC_BUILD_PDF_FALSE@PDF_BUILD_STAMP = 
-@ENABLE_GTK_DOC_TRUE@@GTK_DOC_BUILD_PDF_TRUE@PDF_BUILD_STAMP = pdf-build.stamp
+@WITH_GTK_UI_TRUE@CLEANFILES = $(SCANOBJ_FILES) $(REPORT_FILES) $(DOC_STAMPS)
+@ENABLE_GTK_DOC_TRUE@@GTK_DOC_BUILD_HTML_FALSE@@WITH_GTK_UI_TRUE@HTML_BUILD_STAMP = 
+@ENABLE_GTK_DOC_TRUE@@GTK_DOC_BUILD_HTML_TRUE@@WITH_GTK_UI_TRUE@HTML_BUILD_STAMP = html-build.stamp
+@ENABLE_GTK_DOC_TRUE@@GTK_DOC_BUILD_PDF_FALSE@@WITH_GTK_UI_TRUE@PDF_BUILD_STAMP = 
+@ENABLE_GTK_DOC_TRUE@@GTK_DOC_BUILD_PDF_TRUE@@WITH_GTK_UI_TRUE@PDF_BUILD_STAMP = pdf-build.stamp
 all: all-am
 
 .SUFFIXES:
@@ -402,6 +405,7 @@ TAGS:
 ctags: CTAGS
 CTAGS:
 
+@WITH_GTK_UI_FALSE@dist-hook:
 
 distdir: $(DISTFILES)
 	@srcdirstrip=`echo "$(srcdir)" | sed 's/[].[^$$\\*]/\\\\&/g'`; \
@@ -438,6 +442,7 @@ distdir: $(DISTFILES)
 	  dist-hook
 check-am: all-am
 check: check-am
+@WITH_GTK_UI_FALSE@all-local:
 all-am: Makefile all-local
 installdirs:
 install: install-am
@@ -471,6 +476,11 @@ distclean-generic:
 maintainer-clean-generic:
 	@echo "This command is intended for maintainers to use"
 	@echo "it deletes files that may require special tools to rebuild."
+@WITH_GTK_UI_FALSE@uninstall-local:
+@WITH_GTK_UI_FALSE@distclean-local:
+@WITH_GTK_UI_FALSE@install-data-local:
+@WITH_GTK_UI_FALSE@maintainer-clean-local:
+@WITH_GTK_UI_FALSE@clean-local:
 clean: clean-am
 
 clean-am: clean-generic clean-libtool clean-local mostlyclean-am
@@ -555,152 +565,152 @@ uninstall-am: uninstall-local
 	uninstall-local
 
 
-@ENABLE_GTK_DOC_TRUE@all-local: $(HTML_BUILD_STAMP) $(PDF_BUILD_STAMP)
-@ENABLE_GTK_DOC_FALSE@all-local:
+@ENABLE_GTK_DOC_TRUE@@WITH_GTK_UI_TRUE@all-local: $(HTML_BUILD_STAMP) $(PDF_BUILD_STAMP)
+@ENABLE_GTK_DOC_FALSE@@WITH_GTK_UI_TRUE@all-local:
 
-docs: $(HTML_BUILD_STAMP) $(PDF_BUILD_STAMP)
+@WITH_GTK_UI_TRUE@docs: $(HTML_BUILD_STAMP) $(PDF_BUILD_STAMP)
 
-$(REPORT_FILES): sgml-build.stamp
+@WITH_GTK_UI_TRUE@$(REPORT_FILES): sgml-build.stamp
 
 #### scan ####
 
-scan-build.stamp: $(HFILE_GLOB) $(CFILE_GLOB)
-	@echo 'gtk-doc: Scanning header files'
-	@-chmod -R u+w $(srcdir)
-	@_source_dir='' ; for i in $(DOC_SOURCE_DIR) ; do \
-	    _source_dir="$${_source_dir} --source-dir=$$i" ; \
-	  done ; \
-	  cd $(srcdir) && \
-	  gtkdoc-scan --module=$(DOC_MODULE) --ignore-headers="$(IGNORE_HFILES)" $${_source_dir} $(SCAN_OPTIONS) $(EXTRA_HFILES)
-	@if grep -l '^..*$$' $(srcdir)/$(DOC_MODULE).types > /dev/null 2>&1 ; then \
-	    CC="$(GTKDOC_CC)" LD="$(GTKDOC_LD)" RUN="$(GTKDOC_RUN)" CFLAGS="$(GTKDOC_CFLAGS) $(CFLAGS)" LDFLAGS="$(GTKDOC_LIBS) $(LDFLAGS)" gtkdoc-scangobj $(SCANGOBJ_OPTIONS) --module=$(DOC_MODULE) --output-dir=$(srcdir) ; \
-	else \
-	    cd $(srcdir) ; \
-	    for i in $(SCANOBJ_FILES) ; do \
-               test -f $$i || touch $$i ; \
-	    done \
-	fi
-	@touch scan-build.stamp
+@WITH_GTK_UI_TRUE@scan-build.stamp: $(HFILE_GLOB) $(CFILE_GLOB)
+@WITH_GTK_UI_TRUE@	@echo 'gtk-doc: Scanning header files'
+@WITH_GTK_UI_TRUE@	@-chmod -R u+w $(srcdir)
+@WITH_GTK_UI_TRUE@	@_source_dir='' ; for i in $(DOC_SOURCE_DIR) ; do \
+@WITH_GTK_UI_TRUE@	    _source_dir="$${_source_dir} --source-dir=$$i" ; \
+@WITH_GTK_UI_TRUE@	  done ; \
+@WITH_GTK_UI_TRUE@	  cd $(srcdir) && \
+@WITH_GTK_UI_TRUE@	  gtkdoc-scan --module=$(DOC_MODULE) --ignore-headers="$(IGNORE_HFILES)" $${_source_dir} $(SCAN_OPTIONS) $(EXTRA_HFILES)
+@WITH_GTK_UI_TRUE@	@if grep -l '^..*$$' $(srcdir)/$(DOC_MODULE).types > /dev/null 2>&1 ; then \
+@WITH_GTK_UI_TRUE@	    CC="$(GTKDOC_CC)" LD="$(GTKDOC_LD)" RUN="$(GTKDOC_RUN)" CFLAGS="$(GTKDOC_CFLAGS) $(CFLAGS)" LDFLAGS="$(GTKDOC_LIBS) $(LDFLAGS)" gtkdoc-scangobj $(SCANGOBJ_OPTIONS) --module=$(DOC_MODULE) --output-dir=$(srcdir) ; \
+@WITH_GTK_UI_TRUE@	else \
+@WITH_GTK_UI_TRUE@	    cd $(srcdir) ; \
+@WITH_GTK_UI_TRUE@	    for i in $(SCANOBJ_FILES) ; do \
+@WITH_GTK_UI_TRUE@               test -f $$i || touch $$i ; \
+@WITH_GTK_UI_TRUE@	    done \
+@WITH_GTK_UI_TRUE@	fi
+@WITH_GTK_UI_TRUE@	@touch scan-build.stamp
 
-$(DOC_MODULE)-decl.txt $(SCANOBJ_FILES) $(DOC_MODULE)-sections.txt $(DOC_MODULE)-overrides.txt: scan-build.stamp
-	@true
+@WITH_GTK_UI_TRUE@$(DOC_MODULE)-decl.txt $(SCANOBJ_FILES) $(DOC_MODULE)-sections.txt $(DOC_MODULE)-overrides.txt: scan-build.stamp
+@WITH_GTK_UI_TRUE@	@true
 
 #### xml ####
 
-sgml-build.stamp: $(DOC_MODULE)-decl.txt $(SCANOBJ_FILES) $(DOC_MODULE)-sections.txt $(DOC_MODULE)-overrides.txt $(expand_content_files)
-	@echo 'gtk-doc: Building XML'
-	@-chmod -R u+w $(srcdir)
-	@_source_dir='' ; for i in $(DOC_SOURCE_DIR) ; do \
-	    _source_dir="$${_source_dir} --source-dir=$$i" ; \
-	  done ; \
-	  cd $(srcdir) && \
-	  gtkdoc-mkdb --module=$(DOC_MODULE) --output-format=xml --expand-content-files="$(expand_content_files)" --main-sgml-file=$(DOC_MAIN_SGML_FILE) $${_source_dir} $(MKDB_OPTIONS)
-	@touch sgml-build.stamp
+@WITH_GTK_UI_TRUE@sgml-build.stamp: $(DOC_MODULE)-decl.txt $(SCANOBJ_FILES) $(DOC_MODULE)-sections.txt $(DOC_MODULE)-overrides.txt $(expand_content_files)
+@WITH_GTK_UI_TRUE@	@echo 'gtk-doc: Building XML'
+@WITH_GTK_UI_TRUE@	@-chmod -R u+w $(srcdir)
+@WITH_GTK_UI_TRUE@	@_source_dir='' ; for i in $(DOC_SOURCE_DIR) ; do \
+@WITH_GTK_UI_TRUE@	    _source_dir="$${_source_dir} --source-dir=$$i" ; \
+@WITH_GTK_UI_TRUE@	  done ; \
+@WITH_GTK_UI_TRUE@	  cd $(srcdir) && \
+@WITH_GTK_UI_TRUE@	  gtkdoc-mkdb --module=$(DOC_MODULE) --output-format=xml --expand-content-files="$(expand_content_files)" --main-sgml-file=$(DOC_MAIN_SGML_FILE) $${_source_dir} $(MKDB_OPTIONS)
+@WITH_GTK_UI_TRUE@	@touch sgml-build.stamp
 
-sgml.stamp: sgml-build.stamp
-	@true
+@WITH_GTK_UI_TRUE@sgml.stamp: sgml-build.stamp
+@WITH_GTK_UI_TRUE@	@true
 
 #### html ####
 
-html-build.stamp: sgml.stamp $(DOC_MAIN_SGML_FILE) $(content_files)
-	@echo 'gtk-doc: Building HTML'
-	@-chmod -R u+w $(srcdir)
-	@rm -rf $(srcdir)/html
-	@mkdir $(srcdir)/html
-	@mkhtml_options=""; \
-	gtkdoc-mkhtml 2>&1 --help | grep  >/dev/null "\-\-path"; \
-	if test "$(?)" = "0"; then \
-	  mkhtml_options=--path="$(srcdir)"; \
-	fi; \
-	cd $(srcdir)/html && gtkdoc-mkhtml $$mkhtml_options $(MKHTML_OPTIONS) $(DOC_MODULE) ../$(DOC_MAIN_SGML_FILE)
-	@test "x$(HTML_IMAGES)" = "x" || ( cd $(srcdir) && cp $(HTML_IMAGES) html )
-	@echo 'gtk-doc: Fixing cross-references'
-	@cd $(srcdir) && gtkdoc-fixxref --module=$(DOC_MODULE) --module-dir=html --html-dir=$(HTML_DIR) $(FIXXREF_OPTIONS)
-	@touch html-build.stamp
+@WITH_GTK_UI_TRUE@html-build.stamp: sgml.stamp $(DOC_MAIN_SGML_FILE) $(content_files)
+@WITH_GTK_UI_TRUE@	@echo 'gtk-doc: Building HTML'
+@WITH_GTK_UI_TRUE@	@-chmod -R u+w $(srcdir)
+@WITH_GTK_UI_TRUE@	@rm -rf $(srcdir)/html
+@WITH_GTK_UI_TRUE@	@mkdir $(srcdir)/html
+@WITH_GTK_UI_TRUE@	@mkhtml_options=""; \
+@WITH_GTK_UI_TRUE@	gtkdoc-mkhtml 2>&1 --help | grep  >/dev/null "\-\-path"; \
+@WITH_GTK_UI_TRUE@	if test "$(?)" = "0"; then \
+@WITH_GTK_UI_TRUE@	  mkhtml_options=--path="$(srcdir)"; \
+@WITH_GTK_UI_TRUE@	fi; \
+@WITH_GTK_UI_TRUE@	cd $(srcdir)/html && gtkdoc-mkhtml $$mkhtml_options $(MKHTML_OPTIONS) $(DOC_MODULE) ../$(DOC_MAIN_SGML_FILE)
+@WITH_GTK_UI_TRUE@	@test "x$(HTML_IMAGES)" = "x" || ( cd $(srcdir) && cp $(HTML_IMAGES) html )
+@WITH_GTK_UI_TRUE@	@echo 'gtk-doc: Fixing cross-references'
+@WITH_GTK_UI_TRUE@	@cd $(srcdir) && gtkdoc-fixxref --module=$(DOC_MODULE) --module-dir=html --html-dir=$(HTML_DIR) $(FIXXREF_OPTIONS)
+@WITH_GTK_UI_TRUE@	@touch html-build.stamp
 
 #### pdf ####
 
-pdf-build.stamp: sgml.stamp $(DOC_MAIN_SGML_FILE) $(content_files)
-	@echo 'gtk-doc: Building PDF'
-	@-chmod -R u+w $(srcdir)
-	@rm -rf $(srcdir)/$(DOC_MODULE).pdf
-	@mkpdf_imgdirs=""; \
-	if test "x$(HTML_IMAGES)" != "x"; then \
-	  for img in $(HTML_IMAGES); do \
-	    part=`dirname $$img`; \
-	    echo $$mkpdf_imgdirs | grep >/dev/null "\-\-imgdir=$$part "; \
-	    if test $$? != 0; then \
-	      mkpdf_imgdirs="$$mkpdf_imgdirs --imgdir=$$part"; \
-	    fi; \
-	  done; \
-	fi; \
-	cd $(srcdir) && gtkdoc-mkpdf --path="$(abs_srcdir)" $$mkpdf_imgdirs $(DOC_MODULE) $(DOC_MAIN_SGML_FILE) $(MKPDF_OPTIONS)
-	@touch pdf-build.stamp
+@WITH_GTK_UI_TRUE@pdf-build.stamp: sgml.stamp $(DOC_MAIN_SGML_FILE) $(content_files)
+@WITH_GTK_UI_TRUE@	@echo 'gtk-doc: Building PDF'
+@WITH_GTK_UI_TRUE@	@-chmod -R u+w $(srcdir)
+@WITH_GTK_UI_TRUE@	@rm -rf $(srcdir)/$(DOC_MODULE).pdf
+@WITH_GTK_UI_TRUE@	@mkpdf_imgdirs=""; \
+@WITH_GTK_UI_TRUE@	if test "x$(HTML_IMAGES)" != "x"; then \
+@WITH_GTK_UI_TRUE@	  for img in $(HTML_IMAGES); do \
+@WITH_GTK_UI_TRUE@	    part=`dirname $$img`; \
+@WITH_GTK_UI_TRUE@	    echo $$mkpdf_imgdirs | grep >/dev/null "\-\-imgdir=$$part "; \
+@WITH_GTK_UI_TRUE@	    if test $$? != 0; then \
+@WITH_GTK_UI_TRUE@	      mkpdf_imgdirs="$$mkpdf_imgdirs --imgdir=$$part"; \
+@WITH_GTK_UI_TRUE@	    fi; \
+@WITH_GTK_UI_TRUE@	  done; \
+@WITH_GTK_UI_TRUE@	fi; \
+@WITH_GTK_UI_TRUE@	cd $(srcdir) && gtkdoc-mkpdf --path="$(abs_srcdir)" $$mkpdf_imgdirs $(DOC_MODULE) $(DOC_MAIN_SGML_FILE) $(MKPDF_OPTIONS)
+@WITH_GTK_UI_TRUE@	@touch pdf-build.stamp
 
 ##############
 
-clean-local:
-	rm -f *~ *.bak
-	rm -rf .libs
+@WITH_GTK_UI_TRUE@clean-local:
+@WITH_GTK_UI_TRUE@	rm -f *~ *.bak
+@WITH_GTK_UI_TRUE@	rm -rf .libs
 
-distclean-local:
-	cd $(srcdir) && \
-	  rm -rf xml $(REPORT_FILES) $(DOC_MODULE).pdf \
-	         $(DOC_MODULE)-decl-list.txt $(DOC_MODULE)-decl.txt
+@WITH_GTK_UI_TRUE@distclean-local:
+@WITH_GTK_UI_TRUE@	cd $(srcdir) && \
+@WITH_GTK_UI_TRUE@	  rm -rf xml $(REPORT_FILES) $(DOC_MODULE).pdf \
+@WITH_GTK_UI_TRUE@	         $(DOC_MODULE)-decl-list.txt $(DOC_MODULE)-decl.txt
 
-maintainer-clean-local: clean
-	cd $(srcdir) && rm -rf html
+@WITH_GTK_UI_TRUE@maintainer-clean-local: clean
+@WITH_GTK_UI_TRUE@	cd $(srcdir) && rm -rf html
 
-install-data-local:
-	@installfiles=`echo $(srcdir)/html/*`; \
-	if test "$$installfiles" = '$(srcdir)/html/*'; \
-	then echo '-- Nothing to install' ; \
-	else \
-	  if test -n "$(DOC_MODULE_VERSION)"; then \
-	    installdir="$(DESTDIR)$(TARGET_DIR)-$(DOC_MODULE_VERSION)"; \
-	  else \
-	    installdir="$(DESTDIR)$(TARGET_DIR)"; \
-	  fi; \
-	  $(mkinstalldirs) $${installdir} ; \
-	  for i in $$installfiles; do \
-	    echo '-- Installing '$$i ; \
-	    $(INSTALL_DATA) $$i $${installdir}; \
-	  done; \
-	  if test -n "$(DOC_MODULE_VERSION)"; then \
-	    mv -f $${installdir}/$(DOC_MODULE).devhelp2 \
-	      $${installdir}/$(DOC_MODULE)-$(DOC_MODULE_VERSION).devhelp2; \
-	    mv -f $${installdir}/$(DOC_MODULE).devhelp \
-	      $${installdir}/$(DOC_MODULE)-$(DOC_MODULE_VERSION).devhelp; \
-	  fi; \
-	  $(GTKDOC_REBASE) --relative --dest-dir=$(DESTDIR) --html-dir=$${installdir}; \
-	fi
+@WITH_GTK_UI_TRUE@install-data-local:
+@WITH_GTK_UI_TRUE@	@installfiles=`echo $(srcdir)/html/*`; \
+@WITH_GTK_UI_TRUE@	if test "$$installfiles" = '$(srcdir)/html/*'; \
+@WITH_GTK_UI_TRUE@	then echo '-- Nothing to install' ; \
+@WITH_GTK_UI_TRUE@	else \
+@WITH_GTK_UI_TRUE@	  if test -n "$(DOC_MODULE_VERSION)"; then \
+@WITH_GTK_UI_TRUE@	    installdir="$(DESTDIR)$(TARGET_DIR)-$(DOC_MODULE_VERSION)"; \
+@WITH_GTK_UI_TRUE@	  else \
+@WITH_GTK_UI_TRUE@	    installdir="$(DESTDIR)$(TARGET_DIR)"; \
+@WITH_GTK_UI_TRUE@	  fi; \
+@WITH_GTK_UI_TRUE@	  $(mkinstalldirs) $${installdir} ; \
+@WITH_GTK_UI_TRUE@	  for i in $$installfiles; do \
+@WITH_GTK_UI_TRUE@	    echo '-- Installing '$$i ; \
+@WITH_GTK_UI_TRUE@	    $(INSTALL_DATA) $$i $${installdir}; \
+@WITH_GTK_UI_TRUE@	  done; \
+@WITH_GTK_UI_TRUE@	  if test -n "$(DOC_MODULE_VERSION)"; then \
+@WITH_GTK_UI_TRUE@	    mv -f $${installdir}/$(DOC_MODULE).devhelp2 \
+@WITH_GTK_UI_TRUE@	      $${installdir}/$(DOC_MODULE)-$(DOC_MODULE_VERSION).devhelp2; \
+@WITH_GTK_UI_TRUE@	    mv -f $${installdir}/$(DOC_MODULE).devhelp \
+@WITH_GTK_UI_TRUE@	      $${installdir}/$(DOC_MODULE)-$(DOC_MODULE_VERSION).devhelp; \
+@WITH_GTK_UI_TRUE@	  fi; \
+@WITH_GTK_UI_TRUE@	  $(GTKDOC_REBASE) --relative --dest-dir=$(DESTDIR) --html-dir=$${installdir}; \
+@WITH_GTK_UI_TRUE@	fi
 
-uninstall-local:
-	@if test -n "$(DOC_MODULE_VERSION)"; then \
-	  installdir="$(DESTDIR)$(TARGET_DIR)-$(DOC_MODULE_VERSION)"; \
-	else \
-	  installdir="$(DESTDIR)$(TARGET_DIR)"; \
-	fi; \
-	rm -rf $${installdir}
+@WITH_GTK_UI_TRUE@uninstall-local:
+@WITH_GTK_UI_TRUE@	@if test -n "$(DOC_MODULE_VERSION)"; then \
+@WITH_GTK_UI_TRUE@	  installdir="$(DESTDIR)$(TARGET_DIR)-$(DOC_MODULE_VERSION)"; \
+@WITH_GTK_UI_TRUE@	else \
+@WITH_GTK_UI_TRUE@	  installdir="$(DESTDIR)$(TARGET_DIR)"; \
+@WITH_GTK_UI_TRUE@	fi; \
+@WITH_GTK_UI_TRUE@	rm -rf $${installdir}
 
 #
 # Require gtk-doc when making dist
 #
-@ENABLE_GTK_DOC_TRUE@dist-check-gtkdoc:
-@ENABLE_GTK_DOC_FALSE@dist-check-gtkdoc:
-@ENABLE_GTK_DOC_FALSE@	@echo "*** gtk-doc must be installed and enabled in order to make dist"
-@ENABLE_GTK_DOC_FALSE@	@false
+@ENABLE_GTK_DOC_TRUE@@WITH_GTK_UI_TRUE@dist-check-gtkdoc:
+@ENABLE_GTK_DOC_FALSE@@WITH_GTK_UI_TRUE@dist-check-gtkdoc:
+@ENABLE_GTK_DOC_FALSE@@WITH_GTK_UI_TRUE@	@echo "*** gtk-doc must be installed and enabled in order to make dist"
+@ENABLE_GTK_DOC_FALSE@@WITH_GTK_UI_TRUE@	@false
 
-dist-hook: dist-check-gtkdoc dist-hook-local
-	mkdir $(distdir)/html
-	cp $(srcdir)/html/* $(distdir)/html
-	-cp $(srcdir)/$(DOC_MODULE).pdf $(distdir)/
-	-cp $(srcdir)/$(DOC_MODULE).types $(distdir)/
-	-cp $(srcdir)/$(DOC_MODULE)-sections.txt $(distdir)/
-	cd $(distdir) && rm -f $(DISTCLEANFILES)
-	$(GTKDOC_REBASE) --online --relative --html-dir=$(distdir)/html
+@WITH_GTK_UI_TRUE@dist-hook: dist-check-gtkdoc dist-hook-local
+@WITH_GTK_UI_TRUE@	mkdir $(distdir)/html
+@WITH_GTK_UI_TRUE@	cp $(srcdir)/html/* $(distdir)/html
+@WITH_GTK_UI_TRUE@	-cp $(srcdir)/$(DOC_MODULE).pdf $(distdir)/
+@WITH_GTK_UI_TRUE@	-cp $(srcdir)/$(DOC_MODULE).types $(distdir)/
+@WITH_GTK_UI_TRUE@	-cp $(srcdir)/$(DOC_MODULE)-sections.txt $(distdir)/
+@WITH_GTK_UI_TRUE@	cd $(distdir) && rm -f $(DISTCLEANFILES)
+@WITH_GTK_UI_TRUE@	$(GTKDOC_REBASE) --online --relative --html-dir=$(distdir)/html
 
-.PHONY : dist-hook-local docs
+@WITH_GTK_UI_TRUE@.PHONY : dist-hook-local docs
 
 # Files not to distribute
 # for --rebuild-types in $(SCAN_OPTIONS), e.g. $(DOC_MODULE).types
@@ -711,7 +721,7 @@ dist-hook: dist-check-gtkdoc dist-hook-local
 #TESTS_ENVIRONMENT = cd $(srcsrc) &&
 #TESTS = $(GTKDOC_CHECK)
 
--include $(top_srcdir)/git.mk
+@WITH_GTK_UI_TRUE@-include $(top_srcdir)/git.mk
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

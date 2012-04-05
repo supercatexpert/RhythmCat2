@@ -1,1 +1,1 @@
-SUBDIRS = base extra devel 
+SUBDIRS = base extra restricted devel

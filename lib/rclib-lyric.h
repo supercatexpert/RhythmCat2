@@ -112,6 +112,7 @@ struct _RCLibLyricClass {
         const RCLibLyricData *lyric_data, gint64 offset);
     void (*lyric_timer)(RCLibLyric *lyric, guint index, gint64 pos,
         const RCLibLyricData *lyric_data, gint64 offset);
+    void (*lyric_may_missing)(RCLibLyric *lyric);
 };
 
 /*< private >*/

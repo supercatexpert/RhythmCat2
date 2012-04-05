@@ -34,13 +34,10 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
-@WITH_NATIVE_PLUGINS_TRUE@am__append_1 = \
-@WITH_NATIVE_PLUGINS_TRUE@    helloworld.la
-
-@WITH_PYTHON3_PLUGINS_TRUE@am__append_2 = \
+@WITH_PYTHON3_PLUGINS_TRUE@am__append_1 = \
 @WITH_PYTHON3_PLUGINS_TRUE@    python3.la
 
-@WITH_PYTHON3_PLUGINS_TRUE@am__append_3 = @PYTHON3_CFLAGS@
+@WITH_PYTHON3_PLUGINS_TRUE@am__append_2 = @PYTHON3_CFLAGS@
 subdir = plugins/devel
 DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
@@ -85,25 +82,17 @@ am__uninstall_files_from_dir = { \
   }
 am__installdirs = "$(DESTDIR)$(plugindir)"
 LTLIBRARIES = $(noinst_LTLIBRARIES) $(plugin_LTLIBRARIES)
-@WITH_NATIVE_PLUGINS_TRUE@helloworld_la_DEPENDENCIES = $(top_builddir)/lib/librhythmcat-2.0.la \
-@WITH_NATIVE_PLUGINS_TRUE@	$(top_builddir)/ui/librhythmcat-ui-2.0.la
-am__helloworld_la_SOURCES_DIST = helloworld.c
-@WITH_NATIVE_PLUGINS_TRUE@am_helloworld_la_OBJECTS = helloworld.lo
-helloworld_la_OBJECTS = $(am_helloworld_la_OBJECTS)
+python3_la_DEPENDENCIES =
+am__python3_la_SOURCES_DIST = python3.c
+@WITH_PYTHON3_PLUGINS_TRUE@am_python3_la_OBJECTS =  \
+@WITH_PYTHON3_PLUGINS_TRUE@	python3_la-python3.lo
+python3_la_OBJECTS = $(am_python3_la_OBJECTS)
 AM_V_lt = $(am__v_lt_@AM_V@)
 am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
 am__v_lt_0 = --silent
-helloworld_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
-	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
-	$(helloworld_la_LDFLAGS) $(LDFLAGS) -o $@
-@WITH_NATIVE_PLUGINS_TRUE@am_helloworld_la_rpath = -rpath $(plugindir)
-python3_la_DEPENDENCIES =
-am__python3_la_SOURCES_DIST = python3.c
-@WITH_PYTHON3_PLUGINS_TRUE@am_python3_la_OBJECTS = python3.lo
-python3_la_OBJECTS = $(am_python3_la_OBJECTS)
-python3_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
-	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
-	$(python3_la_LDFLAGS) $(LDFLAGS) -o $@
+python3_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC \
+	$(python3_la_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link $(CCLD) \
+	$(AM_CFLAGS) $(CFLAGS) $(python3_la_LDFLAGS) $(LDFLAGS) -o $@
 @WITH_PYTHON3_PLUGINS_TRUE@am_python3_la_rpath = -rpath $(plugindir)
 DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
@@ -131,9 +120,8 @@ am__v_CCLD_0 = @echo "  CCLD  " $@;
 AM_V_GEN = $(am__v_GEN_@AM_V@)
 am__v_GEN_ = $(am__v_GEN_@AM_DEFAULT_V@)
 am__v_GEN_0 = @echo "  GEN   " $@;
-SOURCES = $(helloworld_la_SOURCES) $(python3_la_SOURCES)
-DIST_SOURCES = $(am__helloworld_la_SOURCES_DIST) \
-	$(am__python3_la_SOURCES_DIST)
+SOURCES = $(python3_la_SOURCES)
+DIST_SOURCES = $(am__python3_la_SOURCES_DIST)
 ETAGS = etags
 CTAGS = ctags
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
@@ -194,6 +182,8 @@ JSON_CFLAGS = @JSON_CFLAGS@
 JSON_LIBS = @JSON_LIBS@
 LD = @LD@
 LDFLAGS = @LDFLAGS@
+LIBCURL_CFLAGS = @LIBCURL_CFLAGS@
+LIBCURL_LIBS = @LIBCURL_LIBS@
 LIBICONV = @LIBICONV@
 LIBINTL = @LIBINTL@
 LIBOBJS = @LIBOBJS@
@@ -301,21 +291,16 @@ target_alias = @target_alias@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-plugindir = $(libdir)/RhythmCat2
-helloworld_la_LDFLAGS = -module -avoid-version -export-dynamic -O2
+plugindir = $(libdir)/RhythmCat2/plugins
 python3_la_LDFLAGS = -module -avoid-version -export-dynamic -O2
-plugin_LTLIBRARIES = $(am__append_1) $(am__append_2)
+plugin_LTLIBRARIES = $(am__append_1)
 noinst_LTLIBRARIES = 
 INCLUDES = @GLIB2_CFLAGS@ @GSTREAMER_CFLAGS@ @GTK_CFLAGS@ \
 	@JSON_CFLAGS@ -DLOCALEDIR=\"$(localedir)\" -I$(top_srcdir)/lib \
-	-I$(top_srcdir)/ui $(am__append_3)
-@WITH_NATIVE_PLUGINS_TRUE@helloworld_la_SOURCES = helloworld.c
-@WITH_NATIVE_PLUGINS_TRUE@helloworld_la_LIBADD = @GLIB2_LIBS@ @GTK_LIBS@ @GSTREAMER_LIBS@ @JSON_LIBS@ \
-@WITH_NATIVE_PLUGINS_TRUE@    $(top_builddir)/lib/librhythmcat-2.0.la \
-@WITH_NATIVE_PLUGINS_TRUE@    $(top_builddir)/ui/librhythmcat-ui-2.0.la
-
+	-I$(top_srcdir)/ui $(am__append_2)
 @WITH_PYTHON3_PLUGINS_TRUE@python3_la_SOURCES = python3.c
 @WITH_PYTHON3_PLUGINS_TRUE@python3_la_LIBADD = @GLIB2_LIBS@ @GSTREAMER_LIBS@ @JSON_LIBS@ @PYTHON3_LIBS@
+@WITH_PYTHON3_PLUGINS_TRUE@python3_la_LIBTOOLFLAGS = --tag=disable-static
 SUFFIXES = .c .so
 all: all-am
 
@@ -391,8 +376,6 @@ clean-pluginLTLIBRARIES:
 	  echo "rm -f \"$${dir}/so_locations\""; \
 	  rm -f "$${dir}/so_locations"; \
 	done
-helloworld.la: $(helloworld_la_OBJECTS) $(helloworld_la_DEPENDENCIES) $(EXTRA_helloworld_la_DEPENDENCIES) 
-	$(AM_V_CCLD)$(helloworld_la_LINK) $(am_helloworld_la_rpath) $(helloworld_la_OBJECTS) $(helloworld_la_LIBADD) $(LIBS)
 python3.la: $(python3_la_OBJECTS) $(python3_la_DEPENDENCIES) $(EXTRA_python3_la_DEPENDENCIES) 
 	$(AM_V_CCLD)$(python3_la_LINK) $(am_python3_la_rpath) $(python3_la_OBJECTS) $(python3_la_LIBADD) $(LIBS)
 
@@ -402,8 +385,7 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/helloworld.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/python3.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/python3_la-python3.Plo@am__quote@
 
 .c.o:
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(COMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
@@ -425,6 +407,13 @@ distclean-compile:
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='$<' object='$@' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LTCOMPILE) -c -o $@ $<
+
+python3_la-python3.lo: python3.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(python3_la_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT python3_la-python3.lo -MD -MP -MF $(DEPDIR)/python3_la-python3.Tpo -c -o python3_la-python3.lo `test -f 'python3.c' || echo '$(srcdir)/'`python3.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/python3_la-python3.Tpo $(DEPDIR)/python3_la-python3.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='python3.c' object='python3_la-python3.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(python3_la_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o python3_la-python3.lo `test -f 'python3.c' || echo '$(srcdir)/'`python3.c
 
 mostlyclean-libtool:
 	-rm -f *.lo

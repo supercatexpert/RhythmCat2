@@ -61,6 +61,7 @@ enum
     SIGNAL_LYRIC_READY,
     SIGNAL_LINE_CHANGED,
     SIGNAL_LYRIC_TIMER,
+    SIGNAL_LYRIC_MAY_MISSING,
     SIGNAL_LAST
 };
 
@@ -145,11 +146,15 @@ static void rclib_lyric_uri_changed_cb(RCLibCore *core, const gchar *uri,
     GSequenceIter *iter = NULL;
     gchar *lyric_path = NULL;
     gchar *lyric_sec_path = NULL;
+    RCLibDbPlaylistData *playlist_data = NULL;
+    gboolean flag1 = FALSE;
+    gboolean flag2 = FALSE;
     rclib_lyric_clean(0);
     rclib_lyric_clean(1);
     iter = rclib_core_get_db_reference();
     if(iter!=NULL)
     {
+        playlist_data = g_sequence_get(iter);
         lyric_path = g_strdup(rclib_db_playlist_get_lyric_bind(iter));
         lyric_sec_path = g_strdup(
             rclib_db_playlist_get_lyric_secondary_bind(iter));
@@ -157,11 +162,24 @@ static void rclib_lyric_uri_changed_cb(RCLibCore *core, const gchar *uri,
     if(lyric_path==NULL)
         lyric_path = rclib_lyric_search_lyric(uri, NULL, NULL);
     if(lyric_path!=NULL)
-        rclib_lyric_load_file(lyric_path, 0);
+        flag1 = rclib_lyric_load_file(lyric_path, 0);
     if(lyric_sec_path!=NULL)
-        rclib_lyric_load_file(lyric_sec_path, 1);
+        flag2 = rclib_lyric_load_file(lyric_sec_path, 1);
     g_free(lyric_path);
     g_free(lyric_sec_path);
+    if(!flag1 && playlist_data!=NULL)
+    {
+        lyric_path = rclib_lyric_search_lyric(uri, playlist_data->title,
+            playlist_data->artist);
+        if(lyric_path!=NULL)
+            rclib_lyric_load_file(lyric_path, 0);
+        g_free(lyric_path);
+    }
+    if(!flag1 && !flag2)
+    {
+        g_signal_emit(lyric_instance,
+            lyric_signals[SIGNAL_LYRIC_MAY_MISSING], 0);
+    }
 }
 
 static void rclib_lyric_finalize(GObject *object)
@@ -255,6 +273,19 @@ static void rclib_lyric_class_init(RCLibLyricClass *klass)
         G_STRUCT_OFFSET(RCLibLyricClass, lyric_timer), NULL, NULL,
         rclib_marshal_VOID__UINT_INT64_POINTER_INT64, G_TYPE_NONE, 4,
         G_TYPE_UINT, G_TYPE_INT64, G_TYPE_POINTER, G_TYPE_INT64, NULL);
+        
+    /**
+     * RCLibLyric::lyric-may-missing:
+     * @lyric: the #RCLibLyric that received the signal
+     *
+     * The ::lyric-may-missing signal is emitted if the lyric file of
+     * the current playing music may not exist.
+     */
+    lyric_signals[SIGNAL_LYRIC_MAY_MISSING] = g_signal_new(
+        "lyric-may-missing", RCLIB_LYRIC_TYPE, G_SIGNAL_RUN_FIRST,
+        G_STRUCT_OFFSET(RCLibLyricClass, lyric_may_missing), NULL, NULL,
+        g_cclosure_marshal_VOID__VOID, G_TYPE_NONE, 0,
+        G_TYPE_NONE, NULL);   
 }
 
 static void rclib_lyric_instance_init(RCLibLyric *lyric)
@@ -582,6 +613,7 @@ gboolean rclib_lyric_load_file(const gchar *filename, guint index)
     RCLibLyricData *lyric_data;
     rclib_lyric_clean(index);
     if(lyric_instance==NULL) return FALSE;
+    if(filename==NULL) return FALSE;
     priv = RCLIB_LYRIC_GET_PRIVATE(lyric_instance);
     if(priv==NULL) return FALSE;
     file = g_file_new_for_path(filename);

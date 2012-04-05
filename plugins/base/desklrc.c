@@ -168,6 +168,8 @@ static void rc_plugin_desklrc_show(GtkWidget *widget,
                 iter_next1 = g_sequence_iter_next(iter_now1);
             else
                 iter_next1 = g_sequence_iter_prev(iter_now1);
+            if(g_sequence_iter_is_end(iter_next1))
+                iter_next1 = NULL;
         }
         else
         {
@@ -184,6 +186,8 @@ static void rc_plugin_desklrc_show(GtkWidget *widget,
                     iter_next2 = g_sequence_iter_next(iter_now2);
                 else
                     iter_next2 = g_sequence_iter_prev(iter_now2);
+                if(g_sequence_iter_is_end(iter_next2))
+                    iter_next2 = NULL;
             }
             else
             {
