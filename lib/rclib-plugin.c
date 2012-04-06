@@ -106,7 +106,7 @@ static void rclib_plugin_data_free(RCLibPluginData *plugin)
     if(plugin==NULL) return;
     if(plugin->native)
     {
-        if(plugin->info->destroy!=NULL)
+        if(plugin->info!=NULL && plugin->info->destroy!=NULL)
             plugin->info->destroy(plugin);
         if(plugin->handle!=NULL)
             g_module_close(plugin->handle);

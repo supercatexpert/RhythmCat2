@@ -262,7 +262,21 @@ void rclib_settings_apply()
                 id3_encoding);
             g_free(id3_encoding);
         }
-        g_free(encoding);
+        if(encoding!=NULL)
+            g_free(encoding);
+        else
+        {
+            id3_encoding = rclib_settings_get_string("Metadata", "ID3Encoding",
+                NULL);
+            if(id3_encoding!=NULL && strlen(id3_encoding)>0)
+                rclib_tag_set_fallback_encoding(id3_encoding);
+            g_free(id3_encoding);
+            encoding = rclib_settings_get_string("Metadata", "LyricEncoding",
+                NULL);
+            if(encoding!=NULL && strlen(encoding)>0)
+                rclib_lyric_set_fallback_encoding(encoding);
+            g_free(encoding);
+        }
     }
     else
     {
@@ -274,7 +288,7 @@ void rclib_settings_apply()
         encoding = rclib_settings_get_string("Metadata", "LyricEncoding",
             NULL);
         if(encoding!=NULL && strlen(encoding)>0)
-            rclib_tag_set_fallback_encoding(encoding);
+            rclib_lyric_set_fallback_encoding(encoding);
         g_free(encoding);
     }
 }

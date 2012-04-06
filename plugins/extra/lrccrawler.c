@@ -71,12 +71,11 @@ typedef struct RCPluginLyricCrawlerPrivate
     GtkWidget *title_entry;
     GtkWidget *artist_entry;
     GtkWidget *search_button;
+    GtkWidget *download_button;
     GtkWidget *save_file_entry;
     GtkWidget *result_label;
     GtkWidget *auto_search_checkbutton;
     GtkToggleAction *action;
-    GtkListStore *result_store;
-    GtkListStore *search_module_store;
     GSList *crawler_module_list;
     gboolean auto_search;
     gboolean auto_search_mode;
@@ -101,7 +100,16 @@ static gboolean rc_plugin_lrccrawler_search_idle_func(gpointer data)
     GtkTreePath *path;
     GtkListStore *store = NULL;
     RCPluginLyricCrawlerPrivate *priv = &lyric_crawler_priv;
-    if(data==NULL) return FALSE;
+    if(data==NULL)
+    {
+        if(priv->search_window!=NULL)
+        {
+            gtk_label_set_text(GTK_LABEL(priv->result_label),
+                _("No matched lyric was found"));
+            gtk_widget_set_sensitive(priv->search_button, TRUE);
+        }
+        return FALSE;
+    }
     if(priv->search_window!=NULL)
     {
         store = GTK_LIST_STORE(gtk_tree_view_get_model(GTK_TREE_VIEW(
@@ -136,6 +144,8 @@ static gboolean rc_plugin_lrccrawler_search_idle_func(gpointer data)
         g_free(tmp);
         if(priv->search_window!=NULL)
         {
+            gtk_widget_set_sensitive(priv->search_button, TRUE);
+            gtk_widget_set_sensitive(priv->download_button, TRUE);
             path = gtk_tree_path_new_first();
             gtk_tree_view_set_cursor(GTK_TREE_VIEW(priv->result_treeview),
                 path, NULL, FALSE);
@@ -162,7 +172,7 @@ static gboolean rc_plugin_lrccrawler_download_idle_func(gpointer data)
     if(data==NULL) return FALSE;
     if(down_data->result)
     {
-        if(priv->search_window==NULL)
+        if(priv->search_window!=NULL)
         {
             gtk_label_set_text(GTK_LABEL(priv->result_label),
                 _("Downloaded successfully"));
@@ -172,7 +182,7 @@ static gboolean rc_plugin_lrccrawler_download_idle_func(gpointer data)
     }
     else
     {
-        if(priv->search_window==NULL)
+        if(priv->search_window!=NULL)
         {
             gtk_label_set_text(GTK_LABEL(priv->result_label),
                 _("Failed to downloaded"));
@@ -180,6 +190,11 @@ static gboolean rc_plugin_lrccrawler_download_idle_func(gpointer data)
     }
     g_free(down_data->path);
     g_free(down_data);
+    if(priv->search_window==NULL)
+    {
+        gtk_widget_set_sensitive(priv->search_button, TRUE);
+        gtk_widget_set_sensitive(priv->download_button, TRUE);
+    }
     return FALSE;
 }
 
@@ -365,7 +380,11 @@ static void rc_plugin_lrccrawler_search_button_clicked(GtkButton *button,
         g_warning("Cannot start search thread: %s", error->message);
         rclib_tag_free(mmd);
         g_error_free(error);
+        return;
     }
+    gtk_widget_set_sensitive(priv->search_button, FALSE);
+    gtk_widget_set_sensitive(priv->download_button, FALSE);
+    gtk_label_set_text(GTK_LABEL(priv->result_label), _("Searching..."));
 }
 
 static void rc_plugin_lrccrawler_download_button_clicked(
@@ -374,20 +393,22 @@ static void rc_plugin_lrccrawler_download_button_clicked(
     RCPluginLyricCrawlerPrivate *priv = (RCPluginLyricCrawlerPrivate *)data;
     gchar **args;
     GtkTreeIter iter;
+    GtkTreeModel *model;
     gchar *url;
     const gchar *path;
     GError *error = NULL;
     GtkTreeSelection *selection;
     if(data==NULL) return;
     if(priv->download_thread!=NULL) return;
+    model = gtk_tree_view_get_model(GTK_TREE_VIEW(priv->result_treeview));
+    if(model==NULL) return;
     path = gtk_entry_get_text(GTK_ENTRY(priv->save_file_entry));
     if(path==NULL || strlen(path)==0) return;
     selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(
         priv->result_treeview));
     if(selection==NULL) return;
     if(!gtk_tree_selection_get_selected(selection, NULL, &iter)) return;
-    gtk_tree_model_get(GTK_TREE_MODEL(priv->result_store), &iter,
-        CRAWLER_RESULT_COLUMN_URL, &url, -1);
+    gtk_tree_model_get(model, &iter, CRAWLER_RESULT_COLUMN_URL, &url, -1);
     if(url==NULL) return;
     args = g_new0(gchar *, 2);
     args[0] = url;
@@ -402,8 +423,12 @@ static void rc_plugin_lrccrawler_download_button_clicked(
         g_free(args[0]);
         g_free(args[1]);
         g_free(args);
+        return;
     }
-
+    gtk_widget_set_sensitive(priv->search_button, FALSE);
+    gtk_widget_set_sensitive(priv->download_button, FALSE);
+    gtk_label_set_text(GTK_LABEL(priv->result_label),
+        _("Downloading lyric file..."));
 }
 
 static void rc_plugin_lrccrawler_set_proxy_cb(GtkButton *button,
@@ -652,7 +677,6 @@ static inline void rc_plugin_lrccrawler_search_window_init(
     GtkWidget *artist_label;
     GtkWidget *get_tag_button;
     GtkWidget *save_label;
-    GtkWidget *download_button;
     GtkWidget *close_button;
     GtkTreeViewColumn *columns[3];
     GtkCellRenderer *renderers[3];
@@ -696,7 +720,7 @@ static inline void rc_plugin_lrccrawler_search_window_init(
     proxy_button = gtk_button_new_with_label(_("Proxy Settings"));
     get_tag_button = gtk_button_new_with_label(_("Get Playing Tag"));
     priv->search_button = gtk_button_new_with_label(_("Search!"));
-    download_button = gtk_button_new_with_label(_("Download!"));
+    priv->download_button = gtk_button_new_with_label(_("Download!"));
     close_button = gtk_button_new_with_label(_("Close"));
     priv->auto_search_checkbutton = gtk_check_button_new_with_label(
         _("Auto search lyric"));
@@ -796,10 +820,11 @@ static inline void rc_plugin_lrccrawler_search_window_init(
     g_object_set(scrolled_window, "expand", TRUE, NULL);
     g_object_set(priv->save_file_entry, "hexpand-set", TRUE, "hexpand",
         TRUE, NULL);
+    g_object_set(priv->download_button, "sensitive", FALSE, NULL);
     g_object_set(button_hbox, "hexpand-set", TRUE, "hexpand",
         TRUE, "layout-style", GTK_BUTTONBOX_END, "spacing", 4, NULL);
     gtk_container_add(GTK_CONTAINER(scrolled_window), priv->result_treeview);
-    gtk_box_pack_start(GTK_BOX(button_hbox), download_button,
+    gtk_box_pack_start(GTK_BOX(button_hbox), priv->download_button,
         FALSE, FALSE, 5);
     gtk_box_pack_start(GTK_BOX(button_hbox), close_button,
         FALSE, FALSE, 5);
@@ -836,7 +861,7 @@ static inline void rc_plugin_lrccrawler_search_window_init(
         G_CALLBACK(rc_plugin_lrccrawler_search_button_clicked), priv);
     g_signal_connect(proxy_button, "clicked",
         G_CALLBACK(rc_plugin_lrccrawler_set_proxy_cb), priv);
-    g_signal_connect(download_button, "clicked",
+    g_signal_connect(priv->download_button, "clicked",
         G_CALLBACK(rc_plugin_lrccrawler_download_button_clicked), priv);
     g_signal_connect(close_button, "clicked",
         G_CALLBACK(rc_plugin_lrccrawler_close_button_clicked), priv);
@@ -972,10 +997,7 @@ static gboolean rc_plugin_lrccrawler_unload(RCLibPluginData *plugin)
     priv->missing_signal = 0;
     if(priv->search_window!=NULL)
         gtk_widget_destroy(priv->search_window);
-    priv->search_window = NULL;
-    
-    
-    
+    priv->search_window = NULL; 
     return TRUE;
 }
 
@@ -1004,7 +1026,7 @@ static gboolean rc_plugin_lrccrawler_init(RCLibPluginData *plugin)
         dir = g_dir_open(dir_path, 0, NULL);
     if(dir!=NULL)
     {
-        module_pattern = g_strdup_printf("crawler_[^\\.]+\\.%s",
+        module_pattern = g_strdup_printf("lrccrawler-[^\\.]+\\.%s",
             G_MODULE_SUFFIX);
         while((file_foreach=g_dir_read_name(dir))!=NULL)
         {
@@ -1023,6 +1045,8 @@ static gboolean rc_plugin_lrccrawler_init(RCLibPluginData *plugin)
         g_free(module_pattern);
         g_dir_close(dir);
     }
+    if(priv->crawler_module_list!=NULL)
+        priv->current_module = priv->crawler_module_list->data;
     rclib_plugin_signal_connect("shutdown",
         G_CALLBACK(rc_plugin_lrccrawler_shutdown_cb), priv);
     return TRUE;
@@ -1033,6 +1057,7 @@ static void rc_plugin_lrccrawler_destroy(RCLibPluginData *plugin)
     RCPluginLyricCrawlerPrivate *priv = &lyric_crawler_priv;
     RCLyricCrawlerModule *module_data;
     GSList *list_foreach;
+    rc_lrccrawler_common_operation_cancel();
     for(list_foreach=priv->crawler_module_list;list_foreach!=NULL;
         list_foreach=g_slist_next(list_foreach))
     {

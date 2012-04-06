@@ -191,6 +191,7 @@
     <keyword type="function" name="rclib_lyric_signal_connect ()" link="RCLibLyric.html#rclib-lyric-signal-connect"/>
     <keyword type="function" name="rclib_lyric_signal_disconnect ()" link="RCLibLyric.html#rclib-lyric-signal-disconnect"/>
     <keyword type="signal" name="The &quot;line-changed&quot; signal" link="RCLibLyric.html#RCLibLyric-line-changed"/>
+    <keyword type="signal" name="The &quot;lyric-may-missing&quot; signal" link="RCLibLyric.html#RCLibLyric-lyric-may-missing"/>
     <keyword type="signal" name="The &quot;lyric-ready&quot; signal" link="RCLibLyric.html#RCLibLyric-lyric-ready"/>
     <keyword type="signal" name="The &quot;lyric-timer&quot; signal" link="RCLibLyric.html#RCLibLyric-lyric-timer"/>
     <keyword type="struct" name="struct RCLibCueData" link="LibRhythmCat-Cue-Parser.html#RCLibCueData"/>

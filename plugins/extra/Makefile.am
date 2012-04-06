@@ -1,15 +1,18 @@
 plugindir = $(libdir)/RhythmCat2/plugins
+crawlermoduledir= $(libdir)/RhythmCat2/plugins/CrawlerModules
 
 lrccrawler_la_LDFLAGS = -module -avoid-version -export-dynamic -O2
+lrccrawler_lrc123_la_LDFLAGS = -module -avoid-version -export-dynamic -O2
 
 plugin_LTLIBRARIES = 
-
+crawlermodule_LTLIBRARIES =
 noinst_LTLIBRARIES =
 
 noinst_HEADERS = lrccrawler-common.h
 
 INCLUDES = @GLIB2_CFLAGS@ @GSTREAMER_CFLAGS@  @JSON_CFLAGS@ \
     -DLOCALEDIR=\"$(localedir)\" -I$(top_srcdir)/lib
+
 if WITH_GTK_UI
 INCLUDES += @GTK_CFLAGS@ -I$(top_srcdir)/ui
 endif
@@ -32,6 +35,13 @@ lrccrawler_la_LIBADD = @GLIB2_LIBS@ @GTK_LIBS@ @GSTREAMER_LIBS@ @JSON_LIBS@ \
     @LIBCURL_LIBS@ $(top_builddir)/lib/librhythmcat-2.0.la \
     $(top_builddir)/ui/librhythmcat-ui-2.0.la
 lrccrawler_la_LIBTOOLFLAGS = --tag=disable-static
+
+crawlermodule_LTLIBRARIES += \
+    lrccrawler-lrc123.la
+
+lrccrawler_lrc123_la_SOURCES = lrccrawler-lrc123.c lrccrawler-common.c
+lrccrawler_lrc123_la_LIBADD = @GLIB2_LIBS@ @GTK_LIBS@ @LIBCURL_LIBS@
+lrccrawler_lrc123_la_LIBTOOLFLAGS = --tag=disable-static
 
 endif
 

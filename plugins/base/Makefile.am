@@ -9,6 +9,7 @@ noinst_LTLIBRARIES =
 
 INCLUDES = @GLIB2_CFLAGS@ @GSTREAMER_CFLAGS@  @JSON_CFLAGS@ \
     -DLOCALEDIR=\"$(localedir)\" -I$(top_srcdir)/lib
+
 if WITH_GTK_UI
 INCLUDES += @GTK_CFLAGS@ -I$(top_srcdir)/ui
 endif
@@ -46,8 +47,11 @@ endif
 
 SUFFIXES = .c .so
 .c.so:
-	$(LIBTOOL) --mode=compile $(CC) -DHAVE_CONFIG_H -I$(top_builddir) $(AM_CPPFLAGS) $(CFLAGS) -c $< -o tmp$@.lo $(PLUGIN_CFLAGS)
-	$(LIBTOOL) --mode=link    $(CC) $(CFLAGS) -o libtmp$@.la -rpath $(plugindir) tmp$@.lo $(LIBS) $(LDFLAGS) -module -avoid-version $(PLUGIN_LIBS)
+	$(LIBTOOL) --mode=compile $(CC) -DHAVE_CONFIG_H -I$(top_builddir) \
+	    $(AM_CPPFLAGS) $(CFLAGS) -c $< -o tmp$@.lo $(PLUGIN_CFLAGS) --tag=disable-static
+	$(LIBTOOL) --mode=link    $(CC) $(CFLAGS) -o libtmp$@.la -rpath \
+	    $(plugindir) tmp$@.lo $(LIBS) $(LDFLAGS) -module -avoid-version \$(PLUGIN_LIBS) --tag=disable-static
 	@rm -f tmp$@.lo tmp$@.o libtmp$@.la
 	@cp .libs/libtmp$@*.so $@
 	@rm -rf .libs/libtmp$@.*
+

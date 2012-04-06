@@ -81,6 +81,7 @@ const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span c
 <a name="RCLibLyric.signals"></a><h2>Signals</h2>
 <pre class="synopsis">
   "<a class="link" href="RCLibLyric.html#RCLibLyric-line-changed" title='The "line-changed" signal'>line-changed</a>"                                   : <a href="/usr/share/gtk-doc/html/gobject/gobject-Signals.html#G-SIGNAL-RUN-FIRST:CAPS"><code class="literal">Run First</code></a>
+  "<a class="link" href="RCLibLyric.html#RCLibLyric-lyric-may-missing" title='The "lyric-may-missing" signal'>lyric-may-missing</a>"                              : <a href="/usr/share/gtk-doc/html/gobject/gobject-Signals.html#G-SIGNAL-RUN-FIRST:CAPS"><code class="literal">Run First</code></a>
   "<a class="link" href="RCLibLyric.html#RCLibLyric-lyric-ready" title='The "lyric-ready" signal'>lyric-ready</a>"                                    : <a href="/usr/share/gtk-doc/html/gobject/gobject-Signals.html#G-SIGNAL-RUN-FIRST:CAPS"><code class="literal">Run First</code></a>
   "<a class="link" href="RCLibLyric.html#RCLibLyric-lyric-timer" title='The "lyric-timer" signal'>lyric-timer</a>"                                    : <a href="/usr/share/gtk-doc/html/gobject/gobject-Signals.html#G-SIGNAL-RUN-FIRST:CAPS"><code class="literal">Run First</code></a>
 </pre>
@@ -441,6 +442,29 @@ found which matches the current playing position.
 <tr>
 <td><p><span class="term"><em class="parameter"><code>offset</code></em> :</span></p></td>
 <td>the time offset of the lyric data</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>user_data</code></em> :</span></p></td>
+<td>user data set when the signal handler was connected.</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="RCLibLyric-lyric-may-missing"></a><h3>The <code class="literal">"lyric-may-missing"</code> signal</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                user_function                      (<a class="link" href="RCLibLyric.html" title="RCLibLyric"><span class="type">RCLibLyric</span></a> *lyric,
+                                                        <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>    user_data)      : <a href="/usr/share/gtk-doc/html/gobject/gobject-Signals.html#G-SIGNAL-RUN-FIRST:CAPS"><code class="literal">Run First</code></a></pre>
+<p>
+The ::lyric-may-missing signal is emitted if the lyric file of
+the current playing music may not exist.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>lyric</code></em> :</span></p></td>
+<td>the <a class="link" href="RCLibLyric.html" title="RCLibLyric"><span class="type">RCLibLyric</span></a> that received the signal</td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>user_data</code></em> :</span></p></td>

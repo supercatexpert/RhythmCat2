@@ -1,12 +1,41 @@
 plugindir = $(libdir)/RhythmCat2/plugins
+crawlermoduledir= $(libdir)/RhythmCat2/plugins/CrawlerModules
+
+lrccrawler_ttplayer_la_LDFLAGS = -module -avoid-version -export-dynamic -O2
 
 plugin_LTLIBRARIES = 
-
-    
+crawlermodule_LTLIBRARIES =    
 noinst_LTLIBRARIES =
 
 INCLUDES = @GLIB2_CFLAGS@ @GSTREAMER_CFLAGS@ @GTK_CFLAGS@ @JSON_CFLAGS@ \
     -DLOCALEDIR=\"$(localedir)\" -I$(top_srcdir)/lib -I$(top_srcdir)/ui
+
+if WITH_GTK_UI
+INCLUDES += @GTK_CFLAGS@ -I$(top_srcdir)/ui
+endif
+
+if HAVE_LIBCURL
+INCLUDES += @LIBCURL_CFLAGS@ -I$(top_srcdir)/plugins/extra
+endif
+
+if WITH_NATIVE_PLUGINS
+
+if WITH_GTK_UI
+
+if HAVE_LIBCURL
+
+crawlermodule_LTLIBRARIES += \
+    lrccrawler-ttplayer.la
+
+lrccrawler_ttplayer_la_SOURCES = lrccrawler-ttplayer.c ../extra/lrccrawler-common.c
+lrccrawler_ttplayer_la_LIBADD = @GLIB2_LIBS@ @GTK_LIBS@ @LIBCURL_LIBS@
+lrccrawler_ttplayer_la_LIBTOOLFLAGS = --tag=disable-static
+
+endif
+
+endif
+
+endif
 
 SUFFIXES = .c .so
 .c.so:
