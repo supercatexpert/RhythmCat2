@@ -33,13 +33,6 @@ rclib_album_get_type
 </SECTION>
 
 <SECTION>
-<FILE>rclib-common</FILE>
-GETTEXT_PACKAGE
-G_LOG_DOMAIN
-PACKAGE
-</SECTION>
-
-<SECTION>
 <FILE>rclib-core</FILE>
 <TITLE>RCLibCore</TITLE>
 RCLIB_CORE_TYPE
@@ -166,38 +159,22 @@ rclib_db_get_type
 </SECTION>
 
 <SECTION>
-<FILE>rclib-dbus</FILE>
-<TITLE>RCLibDBus</TITLE>
-RCLIB_DBUS_TYPE
-RCLibDBus
-RCLibDBusClass
-rclib_dbus_exit
-rclib_dbus_get_instance
-rclib_dbus_init
-rclib_dbus_signal_connect
-rclib_dbus_signal_disconnect
-<SUBSECTION Standard>
-RCLIB_DBUS
-RCLIB_DBUS_CLASS
-RCLIB_DBUS_GET_CLASS
-RCLIB_IS_DBUS
-RCLIB_IS_DBUS_CLASS
-rclib_dbus_get_type
-</SECTION>
-
-<SECTION>
 <FILE>rclib-lyric</FILE>
 <TITLE>RCLibLyric</TITLE>
 RCLIB_LYRIC_TYPE
 RCLibLyric
 RCLibLyricClass
 RCLibLyricData
+RCLibLyricParsedData
 rclib_lyric_clean
 rclib_lyric_exit
 rclib_lyric_get_fallback_encoding
 rclib_lyric_get_instance
 rclib_lyric_get_line
+rclib_lyric_get_line_iter
+rclib_lyric_get_parsed_data
 rclib_lyric_get_search_dir
+rclib_lyric_get_track_time_offset
 rclib_lyric_init
 rclib_lyric_is_available
 rclib_lyric_load_file
@@ -321,6 +298,7 @@ RCLibTagMetadata
 rclib_tag_free
 rclib_tag_get_fallback_encoding
 rclib_tag_get_name_from_fpath
+rclib_tag_get_name_from_uri
 rclib_tag_read_metadata
 rclib_tag_set_fallback_encoding
 </SECTION>

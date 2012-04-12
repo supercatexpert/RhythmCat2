@@ -21,4 +21,14 @@
     * Desktop Lyric plug-in is available now.
     * Version 1.9.2 released.
     
+2012-04-11  SuperCat    <supercatexpert@gmail.com>
 
+    * Move multimedia key support into plug-in (in base plug-ins).
+    
+2012-04-11  SuperCat    <supercatexpert@gmail.com>
+
+    * Move MPRIS2 support into plug-in (in base plug-ins).
+    * The items in catalog and playlist list views can be searched
+      by using keyboard now.
+      
+    

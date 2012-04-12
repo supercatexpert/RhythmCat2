@@ -101,6 +101,7 @@ typedef struct RCUiPlayerPrivate
 enum
 {
     SIGNAL_READY,
+    SIGNAL_KEEP_ABOVE_CHANGED,
     SIGNAL_LAST
 };
 
@@ -111,7 +112,6 @@ static gint ui_player_signals[SIGNAL_LAST] = {0};
 static inline void rc_ui_player_title_label_set_value(
     RCUiPlayerPrivate *priv, const gchar *uri, const gchar *title)
 {
-    gchar *filename = NULL;
     gchar *rtitle = NULL;
     if(title!=NULL && strlen(title)>0)
     {
@@ -119,12 +119,7 @@ static inline void rc_ui_player_title_label_set_value(
     }
     else
     {
-        filename = g_filename_from_uri(uri, NULL, NULL);
-        if(filename!=NULL)
-        {
-            rtitle = rclib_tag_get_name_from_fpath(filename);
-            g_free(filename);
-        }
+        rtitle = rclib_tag_get_name_from_uri(uri);
         if(rtitle!=NULL)
         {
             gtk_label_set_text(GTK_LABEL(priv->title_label), rtitle);
@@ -829,6 +824,8 @@ static gboolean rc_ui_player_window_state_event_cb(GtkWidget *widget,
         gtk_toggle_action_set_active(GTK_TOGGLE_ACTION(
             gtk_ui_manager_get_action(priv->ui_manager,
             "/TrayPopupMenu/TrayAlwaysOnTop")), TRUE);
+        g_signal_emit(ui_player_instance,
+            ui_player_signals[SIGNAL_KEEP_ABOVE_CHANGED], 0, TRUE);
     }
     else
     {
@@ -838,6 +835,8 @@ static gboolean rc_ui_player_window_state_event_cb(GtkWidget *widget,
         gtk_toggle_action_set_active(GTK_TOGGLE_ACTION(
             gtk_ui_manager_get_action(priv->ui_manager,
             "/TrayPopupMenu/TrayAlwaysOnTop")), FALSE);
+        g_signal_emit(ui_player_instance,
+            ui_player_signals[SIGNAL_KEEP_ABOVE_CHANGED], 0, FALSE);
     }
     if(rclib_settings_get_boolean("MainUI", "MinimizeToTray", NULL))
     {
@@ -1309,6 +1308,20 @@ static void rc_ui_player_class_init(RCUiPlayerClass *klass)
         RC_UI_PLAYER_TYPE, G_SIGNAL_RUN_FIRST,
         G_STRUCT_OFFSET(RCUiPlayerClass, ready), NULL, NULL,
         g_cclosure_marshal_VOID__VOID, G_TYPE_NONE, 0, G_TYPE_NONE, NULL);
+
+    /**
+     * RCUiPlayer::keep-above-changed:
+     * @player: the #RCUiPlayer that received the signal
+     * @state: the state
+     *
+     * The ::keep-above-changed signal is emitted when the keep above
+     * state of the main window changed.
+     */   
+    ui_player_signals[SIGNAL_KEEP_ABOVE_CHANGED] = g_signal_new(
+        "keep-above-changed", RC_UI_PLAYER_TYPE, G_SIGNAL_RUN_FIRST,
+        G_STRUCT_OFFSET(RCUiPlayerClass, keep_above_changed), NULL, NULL,
+        g_cclosure_marshal_VOID__BOOLEAN, G_TYPE_NONE, 1, G_TYPE_BOOLEAN,
+        NULL);
 }
 
 static void rc_ui_player_instance_init(RCUiPlayer *ui)
@@ -1654,4 +1667,45 @@ GdkPixbuf *rc_ui_player_get_default_cover_image()
     if(priv==NULL) return NULL;
     return priv->cover_default_pixbuf;
 }
+
+/**
+ * rc_ui_player_present_main_window:
+ *
+ * Present the main window, if it is hided.
+ */
+
+void rc_ui_player_present_main_window()
+{
+    RCUiPlayerPrivate *priv = NULL;
+    if(ui_player_instance==NULL) return;
+    priv = RC_UI_PLAYER_GET_PRIVATE(ui_player_instance);
+    if(priv==NULL) return;
+    gtk_window_present(GTK_WINDOW(priv->main_window));
+}
+
+/**
+ * rc_ui_player_set_keep_above_state:
+ *
+ * Keep the player above the other windows.
+ * Notice that it depends on the Window Manager,
+ * in some WMs, it may has no effect.
+ */
+
+void rc_ui_player_set_keep_above_state(gboolean state)
+{
+    RCUiPlayerPrivate *priv = NULL;
+    if(ui_player_instance==NULL) return;
+    priv = RC_UI_PLAYER_GET_PRIVATE(ui_player_instance);
+    if(priv==NULL) return;
+    gtk_window_set_keep_above(GTK_WINDOW(priv->main_window), state);
+    gtk_toggle_action_set_active(GTK_TOGGLE_ACTION(
+        gtk_ui_manager_get_action(priv->ui_manager,
+        "/RC2MenuBar/ViewMenu/ViewAlwaysOnTop")), state);
+    gtk_toggle_action_set_active(GTK_TOGGLE_ACTION(
+        gtk_ui_manager_get_action(priv->ui_manager,
+        "/TrayPopupMenu/TrayAlwaysOnTop")), state);
+    g_signal_emit(ui_player_instance,
+        ui_player_signals[SIGNAL_KEEP_ABOVE_CHANGED], 0, state);
+}
+
 

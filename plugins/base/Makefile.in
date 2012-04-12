@@ -35,10 +35,14 @@ POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
 @WITH_GTK_UI_TRUE@am__append_1 = @GTK_CFLAGS@ -I$(top_srcdir)/ui
-@WITH_GTK_UI_TRUE@@WITH_NATIVE_PLUGINS_TRUE@am__append_2 = \
+@WITH_NATIVE_PLUGINS_TRUE@am__append_2 = \
+@WITH_NATIVE_PLUGINS_TRUE@    mediakey.la
+
+@WITH_GTK_UI_TRUE@@WITH_NATIVE_PLUGINS_TRUE@am__append_3 = \
 @WITH_GTK_UI_TRUE@@WITH_NATIVE_PLUGINS_TRUE@    lyricshow.la \
 @WITH_GTK_UI_TRUE@@WITH_NATIVE_PLUGINS_TRUE@    notify.la \
-@WITH_GTK_UI_TRUE@@WITH_NATIVE_PLUGINS_TRUE@    desklrc.la
+@WITH_GTK_UI_TRUE@@WITH_NATIVE_PLUGINS_TRUE@    desklrc.la \
+@WITH_GTK_UI_TRUE@@WITH_NATIVE_PLUGINS_TRUE@    mpris2.la
 
 subdir = plugins/base
 DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in
@@ -110,6 +114,27 @@ lyricshow_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC \
 @WITH_GTK_UI_TRUE@@WITH_NATIVE_PLUGINS_TRUE@am_lyricshow_la_rpath =  \
 @WITH_GTK_UI_TRUE@@WITH_NATIVE_PLUGINS_TRUE@	-rpath \
 @WITH_GTK_UI_TRUE@@WITH_NATIVE_PLUGINS_TRUE@	$(plugindir)
+@WITH_NATIVE_PLUGINS_TRUE@mediakey_la_DEPENDENCIES = $(top_builddir)/lib/librhythmcat-2.0.la
+am__mediakey_la_SOURCES_DIST = mediakey.c
+@WITH_NATIVE_PLUGINS_TRUE@am_mediakey_la_OBJECTS =  \
+@WITH_NATIVE_PLUGINS_TRUE@	mediakey_la-mediakey.lo
+mediakey_la_OBJECTS = $(am_mediakey_la_OBJECTS)
+mediakey_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC \
+	$(mediakey_la_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link \
+	$(CCLD) $(AM_CFLAGS) $(CFLAGS) $(mediakey_la_LDFLAGS) \
+	$(LDFLAGS) -o $@
+@WITH_NATIVE_PLUGINS_TRUE@am_mediakey_la_rpath = -rpath $(plugindir)
+@WITH_GTK_UI_TRUE@@WITH_NATIVE_PLUGINS_TRUE@mpris2_la_DEPENDENCIES = $(top_builddir)/lib/librhythmcat-2.0.la \
+@WITH_GTK_UI_TRUE@@WITH_NATIVE_PLUGINS_TRUE@	$(top_builddir)/ui/librhythmcat-ui-2.0.la
+am__mpris2_la_SOURCES_DIST = mpris2.c
+@WITH_GTK_UI_TRUE@@WITH_NATIVE_PLUGINS_TRUE@am_mpris2_la_OBJECTS = mpris2_la-mpris2.lo
+mpris2_la_OBJECTS = $(am_mpris2_la_OBJECTS)
+mpris2_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC \
+	$(mpris2_la_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link $(CCLD) \
+	$(AM_CFLAGS) $(CFLAGS) $(mpris2_la_LDFLAGS) $(LDFLAGS) -o $@
+@WITH_GTK_UI_TRUE@@WITH_NATIVE_PLUGINS_TRUE@am_mpris2_la_rpath =  \
+@WITH_GTK_UI_TRUE@@WITH_NATIVE_PLUGINS_TRUE@	-rpath \
+@WITH_GTK_UI_TRUE@@WITH_NATIVE_PLUGINS_TRUE@	$(plugindir)
 @WITH_GTK_UI_TRUE@@WITH_NATIVE_PLUGINS_TRUE@notify_la_DEPENDENCIES = $(top_builddir)/lib/librhythmcat-2.0.la \
 @WITH_GTK_UI_TRUE@@WITH_NATIVE_PLUGINS_TRUE@	$(top_builddir)/ui/librhythmcat-ui-2.0.la
 am__notify_la_SOURCES_DIST = notify.c
@@ -148,9 +173,12 @@ AM_V_GEN = $(am__v_GEN_@AM_V@)
 am__v_GEN_ = $(am__v_GEN_@AM_DEFAULT_V@)
 am__v_GEN_0 = @echo "  GEN   " $@;
 SOURCES = $(desklrc_la_SOURCES) $(lyricshow_la_SOURCES) \
+	$(mediakey_la_SOURCES) $(mpris2_la_SOURCES) \
 	$(notify_la_SOURCES)
 DIST_SOURCES = $(am__desklrc_la_SOURCES_DIST) \
-	$(am__lyricshow_la_SOURCES_DIST) $(am__notify_la_SOURCES_DIST)
+	$(am__lyricshow_la_SOURCES_DIST) \
+	$(am__mediakey_la_SOURCES_DIST) $(am__mpris2_la_SOURCES_DIST) \
+	$(am__notify_la_SOURCES_DIST)
 ETAGS = etags
 CTAGS = ctags
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
@@ -324,11 +352,18 @@ plugindir = $(libdir)/RhythmCat2/plugins
 lyricshow_la_LDFLAGS = -module -avoid-version -export-dynamic -O2
 notify_la_LDFLAGS = -module -avoid-version -export-dynamic -O2
 desklrc_la_LDFLAGS = -module -avoid-version -export-dynamic -O2
-plugin_LTLIBRARIES = $(am__append_2)
+mediakey_la_LDFLAGS = -module -avoid-version -export-dynamic -O2
+mpris2_la_LDFLAGS = -module -avoid-version -export-dynamic -O2
+plugin_LTLIBRARIES = $(am__append_2) $(am__append_3)
 noinst_LTLIBRARIES = 
 INCLUDES = @GLIB2_CFLAGS@ @GSTREAMER_CFLAGS@ @JSON_CFLAGS@ \
 	-DLOCALEDIR=\"$(localedir)\" -I$(top_srcdir)/lib \
 	$(am__append_1)
+@WITH_NATIVE_PLUGINS_TRUE@mediakey_la_SOURCES = mediakey.c
+@WITH_NATIVE_PLUGINS_TRUE@mediakey_la_LIBADD = @GLIB2_LIBS@ @GSTREAMER_LIBS@ @JSON_LIBS@ \
+@WITH_NATIVE_PLUGINS_TRUE@    $(top_builddir)/lib/librhythmcat-2.0.la 
+
+@WITH_NATIVE_PLUGINS_TRUE@mediakey_la_LIBTOOLFLAGS = --tag=disable-static
 @WITH_GTK_UI_TRUE@@WITH_NATIVE_PLUGINS_TRUE@lyricshow_la_SOURCES = lyricshow.c
 @WITH_GTK_UI_TRUE@@WITH_NATIVE_PLUGINS_TRUE@lyricshow_la_LIBADD = @GLIB2_LIBS@ @GTK_LIBS@ @GSTREAMER_LIBS@ @JSON_LIBS@ \
 @WITH_GTK_UI_TRUE@@WITH_NATIVE_PLUGINS_TRUE@    $(top_builddir)/lib/librhythmcat-2.0.la \
@@ -347,6 +382,12 @@ INCLUDES = @GLIB2_CFLAGS@ @GSTREAMER_CFLAGS@ @JSON_CFLAGS@ \
 @WITH_GTK_UI_TRUE@@WITH_NATIVE_PLUGINS_TRUE@    $(top_builddir)/ui/librhythmcat-ui-2.0.la
 
 @WITH_GTK_UI_TRUE@@WITH_NATIVE_PLUGINS_TRUE@desklrc_la_LIBTOOLFLAGS = --tag=disable-static
+@WITH_GTK_UI_TRUE@@WITH_NATIVE_PLUGINS_TRUE@mpris2_la_SOURCES = mpris2.c
+@WITH_GTK_UI_TRUE@@WITH_NATIVE_PLUGINS_TRUE@mpris2_la_LIBADD = @GLIB2_LIBS@ @GTK_LIBS@ @GSTREAMER_LIBS@ @JSON_LIBS@ \
+@WITH_GTK_UI_TRUE@@WITH_NATIVE_PLUGINS_TRUE@    $(top_builddir)/lib/librhythmcat-2.0.la \
+@WITH_GTK_UI_TRUE@@WITH_NATIVE_PLUGINS_TRUE@    $(top_builddir)/ui/librhythmcat-ui-2.0.la
+
+@WITH_GTK_UI_TRUE@@WITH_NATIVE_PLUGINS_TRUE@mpris2_la_LIBTOOLFLAGS = --tag=disable-static
 SUFFIXES = .c .so
 all: all-am
 
@@ -426,6 +467,10 @@ desklrc.la: $(desklrc_la_OBJECTS) $(desklrc_la_DEPENDENCIES) $(EXTRA_desklrc_la_
 	$(AM_V_CCLD)$(desklrc_la_LINK) $(am_desklrc_la_rpath) $(desklrc_la_OBJECTS) $(desklrc_la_LIBADD) $(LIBS)
 lyricshow.la: $(lyricshow_la_OBJECTS) $(lyricshow_la_DEPENDENCIES) $(EXTRA_lyricshow_la_DEPENDENCIES) 
 	$(AM_V_CCLD)$(lyricshow_la_LINK) $(am_lyricshow_la_rpath) $(lyricshow_la_OBJECTS) $(lyricshow_la_LIBADD) $(LIBS)
+mediakey.la: $(mediakey_la_OBJECTS) $(mediakey_la_DEPENDENCIES) $(EXTRA_mediakey_la_DEPENDENCIES) 
+	$(AM_V_CCLD)$(mediakey_la_LINK) $(am_mediakey_la_rpath) $(mediakey_la_OBJECTS) $(mediakey_la_LIBADD) $(LIBS)
+mpris2.la: $(mpris2_la_OBJECTS) $(mpris2_la_DEPENDENCIES) $(EXTRA_mpris2_la_DEPENDENCIES) 
+	$(AM_V_CCLD)$(mpris2_la_LINK) $(am_mpris2_la_rpath) $(mpris2_la_OBJECTS) $(mpris2_la_LIBADD) $(LIBS)
 notify.la: $(notify_la_OBJECTS) $(notify_la_DEPENDENCIES) $(EXTRA_notify_la_DEPENDENCIES) 
 	$(AM_V_CCLD)$(notify_la_LINK) $(am_notify_la_rpath) $(notify_la_OBJECTS) $(notify_la_LIBADD) $(LIBS)
 
@@ -437,6 +482,8 @@ distclean-compile:
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/desklrc_la-desklrc.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/lyricshow_la-lyricshow.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mediakey_la-mediakey.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mpris2_la-mpris2.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/notify_la-notify.Plo@am__quote@
 
 .c.o:
@@ -473,6 +520,20 @@ lyricshow_la-lyricshow.lo: lyricshow.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='lyricshow.c' object='lyricshow_la-lyricshow.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(lyricshow_la_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o lyricshow_la-lyricshow.lo `test -f 'lyricshow.c' || echo '$(srcdir)/'`lyricshow.c
+
+mediakey_la-mediakey.lo: mediakey.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(mediakey_la_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT mediakey_la-mediakey.lo -MD -MP -MF $(DEPDIR)/mediakey_la-mediakey.Tpo -c -o mediakey_la-mediakey.lo `test -f 'mediakey.c' || echo '$(srcdir)/'`mediakey.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/mediakey_la-mediakey.Tpo $(DEPDIR)/mediakey_la-mediakey.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='mediakey.c' object='mediakey_la-mediakey.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(mediakey_la_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o mediakey_la-mediakey.lo `test -f 'mediakey.c' || echo '$(srcdir)/'`mediakey.c
+
+mpris2_la-mpris2.lo: mpris2.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(mpris2_la_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT mpris2_la-mpris2.lo -MD -MP -MF $(DEPDIR)/mpris2_la-mpris2.Tpo -c -o mpris2_la-mpris2.lo `test -f 'mpris2.c' || echo '$(srcdir)/'`mpris2.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/mpris2_la-mpris2.Tpo $(DEPDIR)/mpris2_la-mpris2.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='mpris2.c' object='mpris2_la-mpris2.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(mpris2_la_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o mpris2_la-mpris2.lo `test -f 'mpris2.c' || echo '$(srcdir)/'`mpris2.c
 
 notify_la-notify.lo: notify.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(notify_la_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT notify_la-notify.lo -MD -MP -MF $(DEPDIR)/notify_la-notify.Tpo -c -o notify_la-notify.lo `test -f 'notify.c' || echo '$(srcdir)/'`notify.c

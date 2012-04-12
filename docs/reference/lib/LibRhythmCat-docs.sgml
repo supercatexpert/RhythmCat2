@@ -15,19 +15,19 @@
   </bookinfo>
 
   <chapter>
-    <title>LibRhythmCat</title>
-    <xi:include href="xml/rclib-core.xml"/>
-    <xi:include href="xml/rclib-db.xml"/>
-    <xi:include href="xml/rclib-player.xml"/>
-    <xi:include href="xml/rclib-dbus.xml"/>
+    <title>[Insert title here]</title>
+        <xi:include href="xml/rclib.xml"/>
     <xi:include href="xml/rclib-album.xml"/>
-    <xi:include href="xml/rclib-lyric.xml"/>
+    <xi:include href="xml/rclib-core.xml"/>
     <xi:include href="xml/rclib-cue.xml"/>
-    <xi:include href="xml/rclib-tag.xml"/>
+    <xi:include href="xml/rclib-db.xml"/>
+    <xi:include href="xml/rclib-lyric.xml"/>
+    <xi:include href="xml/rclib-player.xml"/>
     <xi:include href="xml/rclib-plugin.xml"/>
-    <xi:include href="xml/rclib-util.xml"/>
     <xi:include href="xml/rclib-settings.xml"/>
-    <xi:include href="xml/rclib.xml"/>
+    <xi:include href="xml/rclib-tag.xml"/>
+    <xi:include href="xml/rclib-util.xml"/>
+
   </chapter>
   <chapter id="object-tree">
     <title>Object Hierarchy</title>

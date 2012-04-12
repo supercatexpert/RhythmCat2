@@ -60,7 +60,7 @@ gchar *rclib_util_get_data_dir(const gchar *name, const gchar *arg0)
     gchar *data_dir = NULL;
     gchar *bin_dir = NULL;
     gchar *exec_path = NULL;
-    char full_path[PATH_MAX];
+    char full_path[PATH_MAX] = {0};
     if(name==NULL) return NULL;
     #ifdef G_OS_UNIX
         exec_path = g_file_read_link("/proc/self/exe", NULL);
@@ -86,7 +86,7 @@ gchar *rclib_util_get_data_dir(const gchar *name, const gchar *arg0)
         }
     #endif
     #ifdef G_OS_WIN32
-        bzero(full_path, PATH_MAX);
+        memset(full_path, 0, PATH_MAX);
         GetModuleFileName(NULL, full_path, PATH_MAX);
         bin_dir = g_path_get_dirname(full_path);
     #endif

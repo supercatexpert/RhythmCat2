@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
 <!DOCTYPE book PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "">
-<book xmlns="http://www.devhelp.net/book" title="RhythmCat UI Reference Manual" link="index.html" author="" name="RhythmCat" version="2" language="c">
+<book xmlns="http://www.devhelp.net/book" title="RhythmCat Reference Manual" link="index.html" author="" name="RhythmCat" version="2" language="c">
   <chapters>
     <sub name="[Insert title here]" link="ch01.html">
-      <sub name="rc-main" link="RhythmCat-rc-main.html"/>
-      <sub name="rc-mpris2" link="RhythmCat-rc-mpris2.html"/>
+      <sub name="RCMainApplication" link="RCMainApplication.html"/>
       <sub name="rc-ui-dialog" link="RhythmCat-rc-ui-dialog.html"/>
       <sub name="rc-ui-effect" link="RhythmCat-rc-ui-effect.html"/>
       <sub name="RCUiPlaylistStore" link="RCUiPlaylistStore.html"/>
@@ -23,12 +22,13 @@
     <sub name="Annotation Glossary" link="annotation-glossary.html"/>
   </chapters>
   <functions>
-    <keyword type="function" name="rc_main_exit ()" link="RhythmCat-rc-main.html#rc-main-exit"/>
-    <keyword type="function" name="rc_main_get_data_dir ()" link="RhythmCat-rc-main.html#rc-main-get-data-dir"/>
-    <keyword type="function" name="rc_main_get_user_dir ()" link="RhythmCat-rc-main.html#rc-main-get-user-dir"/>
-    <keyword type="function" name="rc_main_run ()" link="RhythmCat-rc-main.html#rc-main-run"/>
-    <keyword type="function" name="rc_mpris2_exit ()" link="RhythmCat-rc-mpris2.html#rc-mpris2-exit"/>
-    <keyword type="function" name="rc_mpris2_init ()" link="RhythmCat-rc-mpris2.html#rc-mpris2-init"/>
+    <keyword type="struct" name="struct RCMainApplication" link="RCMainApplication.html#RCMainApplication-struct"/>
+    <keyword type="struct" name="struct RCMainApplicationClass" link="RCMainApplication.html#RCMainApplicationClass"/>
+    <keyword type="macro" name="RC_MAIN_APPLICATION_TYPE" link="RCMainApplication.html#RC-MAIN-APPLICATION-TYPE:CAPS"/>
+    <keyword type="function" name="rc_main_exit ()" link="RCMainApplication.html#rc-main-exit"/>
+    <keyword type="function" name="rc_main_get_data_dir ()" link="RCMainApplication.html#rc-main-get-data-dir"/>
+    <keyword type="function" name="rc_main_get_user_dir ()" link="RCMainApplication.html#rc-main-get-user-dir"/>
+    <keyword type="function" name="rc_main_run ()" link="RCMainApplication.html#rc-main-run"/>
     <keyword type="function" name="rc_ui_dialog_about_player ()" link="RhythmCat-rc-ui-dialog.html#rc-ui-dialog-about-player"/>
     <keyword type="function" name="rc_ui_dialog_add_directory ()" link="RhythmCat-rc-ui-dialog.html#rc-ui-dialog-add-directory"/>
     <keyword type="function" name="rc_ui_dialog_add_music ()" link="RhythmCat-rc-ui-dialog.html#rc-ui-dialog-add-music"/>
@@ -73,15 +73,22 @@
     <keyword type="function" name="rc_ui_listview_playlist_select ()" link="RhythmCat-rc-ui-listview.html#rc-ui-listview-playlist-select"/>
     <keyword type="function" name="rc_ui_listview_playlist_select_all ()" link="RhythmCat-rc-ui-listview.html#rc-ui-listview-playlist-select-all"/>
     <keyword type="function" name="rc_ui_listview_playlist_set_pango_attributes ()" link="RhythmCat-rc-ui-listview.html#rc-ui-listview-playlist-set-pango-attributes"/>
+    <keyword type="function" name="rc_ui_menu_add_menu_action ()" link="RhythmCat-rc-ui-menu.html#rc-ui-menu-add-menu-action"/>
     <keyword type="function" name="rc_ui_menu_get_ui_manager ()" link="RhythmCat-rc-ui-menu.html#rc-ui-menu-get-ui-manager"/>
     <keyword type="function" name="rc_ui_menu_init ()" link="RhythmCat-rc-ui-menu.html#rc-ui-menu-init"/>
+    <keyword type="function" name="rc_ui_menu_remove_menu_action ()" link="RhythmCat-rc-ui-menu.html#rc-ui-menu-remove-menu-action"/>
     <keyword type="struct" name="struct RCUiPlayer" link="RCUiPlayer.html#RCUiPlayer-struct"/>
     <keyword type="struct" name="struct RCUiPlayerClass" link="RCUiPlayer.html#RCUiPlayerClass"/>
     <keyword type="macro" name="RC_UI_PLAYER_TYPE" link="RCUiPlayer.html#RC-UI-PLAYER-TYPE:CAPS"/>
     <keyword type="function" name="rc_ui_player_exit ()" link="RCUiPlayer.html#rc-ui-player-exit"/>
+    <keyword type="function" name="rc_ui_player_get_default_cover_image ()" link="RCUiPlayer.html#rc-ui-player-get-default-cover-image"/>
     <keyword type="function" name="rc_ui_player_get_icon_image ()" link="RCUiPlayer.html#rc-ui-player-get-icon-image"/>
+    <keyword type="function" name="rc_ui_player_get_instance ()" link="RCUiPlayer.html#rc-ui-player-get-instance"/>
     <keyword type="function" name="rc_ui_player_get_main_window ()" link="RCUiPlayer.html#rc-ui-player-get-main-window"/>
+    <keyword type="function" name="rc_ui_player_get_tray_icon ()" link="RCUiPlayer.html#rc-ui-player-get-tray-icon"/>
     <keyword type="function" name="rc_ui_player_init ()" link="RCUiPlayer.html#rc-ui-player-init"/>
+    <keyword type="function" name="rc_ui_player_signal_connect ()" link="RCUiPlayer.html#rc-ui-player-signal-connect"/>
+    <keyword type="function" name="rc_ui_player_signal_disconnect ()" link="RCUiPlayer.html#rc-ui-player-signal-disconnect"/>
     <keyword type="signal" name="The &quot;ready&quot; signal" link="RCUiPlayer.html#RCUiPlayer-ready"/>
     <keyword type="function" name="rc_ui_plugin_window_destroy ()" link="RhythmCat-rc-ui-plugin.html#rc-ui-plugin-window-destroy"/>
     <keyword type="function" name="rc_ui_plugin_window_show ()" link="RhythmCat-rc-ui-plugin.html#rc-ui-plugin-window-show"/>

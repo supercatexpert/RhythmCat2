@@ -300,7 +300,7 @@ static void rc_ui_playlist_store_get_value(GtkTreeModel *model,
     gint sec, min;
     gsize i, len;
     GstState state;
-    gchar *rtitle = NULL, *filename = NULL;
+    gchar *rtitle = NULL;
     gchar *rartist, *ralbum;
     GString *ftitle;
     g_return_if_fail(RC_UI_IS_PLAYLIST_STORE(model));
@@ -354,13 +354,7 @@ static void rc_ui_playlist_store_get_value(GtkTreeModel *model,
             else
             {
                 if(list_data->uri!=NULL)
-                    filename = g_filename_from_uri(list_data->uri, NULL,
-                        NULL);
-                if(filename!=NULL)
-                {
-                    rtitle = rclib_tag_get_name_from_fpath(filename);
-                    g_free(filename);
-                }
+                    rtitle = rclib_tag_get_name_from_uri(list_data->uri);
             }
             if(rtitle==NULL) rtitle = g_strdup(_("Unknown Title"));
             if(list_data->artist!=NULL && strlen(list_data->artist)>0)

@@ -61,13 +61,13 @@ LTLIBRARIES = $(noinst_LTLIBRARIES)
 am__librhythmcat_ui_2_0_la_SOURCES_DIST = rc-ui-listmodel.c \
 	rc-ui-player.c rc-ui-listview.c rc-ui-menu.c rc-ui-dialog.c \
 	rc-ui-slabel.c rc-ui-spectrum.c rc-ui-style.c rc-ui-plugin.c \
-	rc-ui-settings.c rc-ui-effect.c rc-mpris2.c rc-main.c
+	rc-ui-settings.c rc-ui-effect.c rc-main.c
 @WITH_GTK_UI_TRUE@am__objects_1 = rc-ui-listmodel.lo rc-ui-player.lo \
 @WITH_GTK_UI_TRUE@	rc-ui-listview.lo rc-ui-menu.lo \
 @WITH_GTK_UI_TRUE@	rc-ui-dialog.lo rc-ui-slabel.lo \
 @WITH_GTK_UI_TRUE@	rc-ui-spectrum.lo rc-ui-style.lo \
 @WITH_GTK_UI_TRUE@	rc-ui-plugin.lo rc-ui-settings.lo \
-@WITH_GTK_UI_TRUE@	rc-ui-effect.lo rc-mpris2.lo rc-main.lo
+@WITH_GTK_UI_TRUE@	rc-ui-effect.lo rc-main.lo
 @WITH_GTK_UI_TRUE@am_librhythmcat_ui_2_0_la_OBJECTS =  \
 @WITH_GTK_UI_TRUE@	$(am__objects_1)
 librhythmcat_ui_2_0_la_OBJECTS = $(am_librhythmcat_ui_2_0_la_OBJECTS)
@@ -148,8 +148,7 @@ DATA = $(pkgconfig_DATA)
 am__librhythmcat_ui_2_0include_HEADERS_DIST = rc-ui-listmodel.h \
 	rc-ui-listview.h rc-ui-player.h rc-ui-menu.h rc-ui-dialog.h \
 	rc-ui-slabel.h rc-ui-style.h rc-ui-spectrum.h rc-ui-plugin.h \
-	rc-ui-settings.h rc-ui-effect.h rc-mpris2.h rc-main.h \
-	rc-common.h
+	rc-ui-settings.h rc-ui-effect.h rc-main.h rc-common.h
 am__noinst_HEADERS_DIST = rc-ui-css.h rc-ui-img-icon.xpm \
 	rc-ui-img-nocov.xpm
 HEADERS = $(librhythmcat_ui_2_0include_HEADERS) $(noinst_HEADERS)
@@ -329,12 +328,12 @@ top_srcdir = @top_srcdir@
 @WITH_GTK_UI_TRUE@librhythmcat_ui_2_0_sources = \
 @WITH_GTK_UI_TRUE@    rc-ui-listmodel.c rc-ui-player.c rc-ui-listview.c rc-ui-menu.c \
 @WITH_GTK_UI_TRUE@    rc-ui-dialog.c rc-ui-slabel.c rc-ui-spectrum.c rc-ui-style.c \
-@WITH_GTK_UI_TRUE@    rc-ui-plugin.c rc-ui-settings.c rc-ui-effect.c rc-mpris2.c rc-main.c
+@WITH_GTK_UI_TRUE@    rc-ui-plugin.c rc-ui-settings.c rc-ui-effect.c rc-main.c
 
 @WITH_GTK_UI_TRUE@librhythmcat_ui_2_0_headers = \
 @WITH_GTK_UI_TRUE@    rc-ui-listmodel.h rc-ui-listview.h rc-ui-player.h rc-ui-menu.h \
 @WITH_GTK_UI_TRUE@    rc-ui-dialog.h rc-ui-slabel.h rc-ui-style.h rc-ui-spectrum.h \
-@WITH_GTK_UI_TRUE@    rc-ui-plugin.h rc-ui-settings.h rc-ui-effect.h rc-mpris2.h rc-main.h \
+@WITH_GTK_UI_TRUE@    rc-ui-plugin.h rc-ui-settings.h rc-ui-effect.h rc-main.h \
 @WITH_GTK_UI_TRUE@    rc-common.h 
 
 @WITH_GTK_UI_TRUE@RhythmCat2_SOURCES = \
@@ -343,7 +342,7 @@ top_srcdir = @top_srcdir@
 @WITH_GTK_UI_TRUE@RhythmCat2_headers = \
 @WITH_GTK_UI_TRUE@    rc-ui-listmodel.h rc-ui-listview.h rc-ui-player.h rc-ui-menu.h \
 @WITH_GTK_UI_TRUE@    rc-ui-dialog.h rc-ui-slabel.h rc-ui-style.h rc-ui-spectrum.h \
-@WITH_GTK_UI_TRUE@    rc-ui-plugin.h rc-ui-settings.h rc-ui-effect.h rc-mpris2.h rc-main.h \
+@WITH_GTK_UI_TRUE@    rc-ui-plugin.h rc-ui-settings.h rc-ui-effect.h rc-main.h \
 @WITH_GTK_UI_TRUE@    rc-common.h rc-ui-css.h
 
 @WITH_GTK_UI_TRUE@librhythmcat_ui_2_0_la_SOURCES = \
@@ -472,7 +471,6 @@ distclean-compile:
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/main.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rc-main.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rc-mpris2.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rc-ui-dialog.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rc-ui-effect.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rc-ui-listmodel.Plo@am__quote@

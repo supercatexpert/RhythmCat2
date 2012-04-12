@@ -2060,7 +2060,7 @@ gboolean rclib_db_playlist_export_m3u_file(GSequenceIter *iter,
     RCLibDbCatalogData *catalog_data;
     RCLibDbPlaylistData *playlist_data;
     GSequenceIter *playlist_iter;
-    gchar *title = NULL, *tmp;
+    gchar *title = NULL;
     gchar *filename;
     FILE *fp;
     if(iter==NULL || sfilename==NULL) return FALSE;
@@ -2083,12 +2083,7 @@ gboolean rclib_db_playlist_export_m3u_file(GSequenceIter *iter,
         if(playlist_data->title!=NULL)
             title = g_strdup(playlist_data->title);
         else
-        {
-            tmp = g_filename_from_uri(playlist_data->uri, NULL, NULL);
-            if(tmp!=NULL)
-                title = rclib_tag_get_name_from_fpath(filename);
-            g_free(tmp);
-        }
+            title = rclib_tag_get_name_from_uri(playlist_data->uri);
         if(title==NULL) title = g_strdup(_("Unknown Title"));
         if(playlist_data->artist==NULL)
         {

@@ -172,7 +172,7 @@ static void rclib_lyric_uri_changed_cb(RCLibCore *core, const gchar *uri,
         lyric_path = rclib_lyric_search_lyric(uri, playlist_data->title,
             playlist_data->artist);
         if(lyric_path!=NULL)
-            rclib_lyric_load_file(lyric_path, 0);
+            flag1 = rclib_lyric_load_file(lyric_path, 0);
         g_free(lyric_path);
     }
     if(!flag1 && !flag2)

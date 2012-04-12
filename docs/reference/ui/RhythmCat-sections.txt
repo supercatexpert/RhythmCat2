@@ -1,15 +1,20 @@
 <SECTION>
 <FILE>rc-main</FILE>
+<TITLE>RCMainApplication</TITLE>
+RCMainApplication
+RCMainApplicationClass
+RC_MAIN_APPLICATION_TYPE
 rc_main_exit
 rc_main_get_data_dir
 rc_main_get_user_dir
 rc_main_run
-</SECTION>
-
-<SECTION>
-<FILE>rc-mpris2</FILE>
-rc_mpris2_exit
-rc_mpris2_init
+<SUBSECTION Standard>
+RC_IS_MAIN_APPLICATION
+RC_IS_MAIN_APPLICATION_CLASS
+RC_MAIN_APPLICATION
+RC_MAIN_APPLICATION_CLASS
+RC_MAIN_APPLICATION_GET_CLASS
+rc_main_application_get_type
 </SECTION>
 
 <SECTION>
@@ -91,9 +96,10 @@ rc_ui_listview_playlist_set_pango_attributes
 
 <SECTION>
 <FILE>rc-ui-menu</FILE>
+rc_ui_menu_add_menu_action
 rc_ui_menu_get_ui_manager
 rc_ui_menu_init
-rc_ui_menu_state_refresh
+rc_ui_menu_remove_menu_action
 </SECTION>
 
 <SECTION>
@@ -103,9 +109,14 @@ RCUiPlayer
 RCUiPlayerClass
 RC_UI_PLAYER_TYPE
 rc_ui_player_exit
+rc_ui_player_get_default_cover_image
 rc_ui_player_get_icon_image
+rc_ui_player_get_instance
 rc_ui_player_get_main_window
+rc_ui_player_get_tray_icon
 rc_ui_player_init
+rc_ui_player_signal_connect
+rc_ui_player_signal_disconnect
 <SUBSECTION Standard>
 RC_UI_IS_PLAYER
 RC_UI_IS_PLAYER_CLASS

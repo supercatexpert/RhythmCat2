@@ -1,18 +1,25 @@
 - Bug Report Interface
 - Upgrade the dependency to GLib 2.32 when it is available on Debian Wheezy,
   and use new threads API in newer GLib
-- Upgrade the dependency to GTK+ 3.4 when it is available on Debian Wheezy,
-  add multi-touch support
-- Port more legacy plug-ins
+- Upgrade the dependency to GTK+ 3.4 when it is available on Debian Wheezy
+- Make some widgets hidable (e.g. cover image, lyric label, spectrum show)
+- Playlist text format support
+- Import playlist data from legacy version
+- Auto-save playlist
 
 Long-term:
+- GObject Introspection (GI) support
 - Command Line Interface (CLI), based on ncurses
-- Mini mode
+- Mini mode (plug-in? based on Clutter?)
 - More plug-ins
+- More spectrum style
 - Non-Unix platform support
 - Music Library
 - More interfaces in MPRIS v2.1 support
+- Multi-touch support
 
 Other ideas:
-
+- Better karaoke mode plug-in?
+- Perl plug-in loader?
+- Vala support
 

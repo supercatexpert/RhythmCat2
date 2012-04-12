@@ -9,12 +9,12 @@ noinst_HEADERS = \
 librhythmcat_ui_2_0_sources = \
     rc-ui-listmodel.c rc-ui-player.c rc-ui-listview.c rc-ui-menu.c \
     rc-ui-dialog.c rc-ui-slabel.c rc-ui-spectrum.c rc-ui-style.c \
-    rc-ui-plugin.c rc-ui-settings.c rc-ui-effect.c rc-mpris2.c rc-main.c
+    rc-ui-plugin.c rc-ui-settings.c rc-ui-effect.c rc-main.c
 
 librhythmcat_ui_2_0_headers = \
     rc-ui-listmodel.h rc-ui-listview.h rc-ui-player.h rc-ui-menu.h \
     rc-ui-dialog.h rc-ui-slabel.h rc-ui-style.h rc-ui-spectrum.h \
-    rc-ui-plugin.h rc-ui-settings.h rc-ui-effect.h rc-mpris2.h rc-main.h \
+    rc-ui-plugin.h rc-ui-settings.h rc-ui-effect.h rc-main.h \
     rc-common.h 
 
 RhythmCat2_SOURCES = \
@@ -23,7 +23,7 @@ RhythmCat2_SOURCES = \
 RhythmCat2_headers = \
     rc-ui-listmodel.h rc-ui-listview.h rc-ui-player.h rc-ui-menu.h \
     rc-ui-dialog.h rc-ui-slabel.h rc-ui-style.h rc-ui-spectrum.h \
-    rc-ui-plugin.h rc-ui-settings.h rc-ui-effect.h rc-mpris2.h rc-main.h \
+    rc-ui-plugin.h rc-ui-settings.h rc-ui-effect.h rc-main.h \
     rc-common.h rc-ui-css.h
 
 librhythmcat_ui_2_0_la_SOURCES = \

@@ -128,20 +128,12 @@ static void rc_ui_menu_random_clicked_cb(GtkAction *action,
 static void rc_ui_menu_keep_above_clicked_cb(GtkAction *action,
     gpointer data)
 {
-    GtkWidget *main_window;
     gboolean active;
-    main_window = rc_ui_player_get_main_window();
-    if(main_window==NULL || action==NULL) return;
+    if(action==NULL) return;
     active = gtk_toggle_action_get_active(GTK_TOGGLE_ACTION(action));
     g_signal_handlers_block_by_func(action,
         G_CALLBACK(rc_ui_menu_keep_above_clicked_cb), data);
-    gtk_window_set_keep_above(GTK_WINDOW(main_window), active);
-    gtk_toggle_action_set_active(GTK_TOGGLE_ACTION(
-        gtk_ui_manager_get_action(ui_manager,
-        "/RC2MenuBar/ViewMenu/ViewAlwaysOnTop")), active);
-    gtk_toggle_action_set_active(GTK_TOGGLE_ACTION(
-        gtk_ui_manager_get_action(ui_manager,
-        "/TrayPopupMenu/TrayAlwaysOnTop")), active);
+    rc_ui_player_set_keep_above_state(active);
     g_signal_handlers_unblock_by_func(action,
         G_CALLBACK(rc_ui_menu_keep_above_clicked_cb), data);
 }
@@ -241,10 +233,6 @@ static GtkActionEntry ui_menu_entries[] =
       N_("_Audio Effects"), "<control>E",
       N_("Adjust the audio effects"),
       G_CALLBACK(rc_ui_effect_window_show) },      
-    { "ViewMiniMode", NULL,
-      N_("_Mini Mode"), "<control><alt>M",
-      N_("Enable mini mode"),
-      G_CALLBACK(NULL) },
     { "ControlPlay", GTK_STOCK_MEDIA_PLAY,
       N_("_Play/Pause"), "<control>L",
       N_("Play or pause the music"),
@@ -288,7 +276,7 @@ static GtkActionEntry ui_menu_entries[] =
     { "HelpSupportedFormat", NULL,
       N_("_Supported Format"), NULL,
       N_("Check the supported music format of this player"),
-      G_CALLBACK(NULL) },
+      G_CALLBACK(rc_ui_dialog_show_supported_format) },
     { "CatalogNewList", GTK_STOCK_NEW,
       N_("_New Playlist"), NULL,
       N_("Create a new playlist"),
@@ -372,11 +360,7 @@ static GtkActionEntry ui_menu_entries[] =
     { "TrayShowPlayer", GTK_STOCK_HOME,
       N_("S_how Player"), NULL,
       N_("Show the window of player"),
-      G_CALLBACK(NULL) },
-    { "TrayModeSwitch", NULL,
-      N_("_Mode Switch"), NULL,
-      N_("Switch between normal mode and mini mode"),
-      G_CALLBACK(NULL) },
+      G_CALLBACK(rc_ui_player_present_main_window) },
     { "TrayAbout", GTK_STOCK_ABOUT,
       N_("_About"), NULL,
       N_("About this player"),
@@ -497,7 +481,6 @@ static const gchar *ui_menu_info =
     "      <separator name='ViewSep1'/>"
     "      <separator name='ViewSep2'/>"
     "      <menuitem action='ViewAlwaysOnTop'/>"
-    "      <menuitem action='ViewMiniMode'/>"
     "    </menu>"
     "    <menu action='HelpMenu'>"
     "      <menuitem action='HelpReport'/>"
@@ -538,7 +521,6 @@ static const gchar *ui_menu_info =
     "    <menuitem action='TrayNext'/>"
     "    <separator/>"
     "    <menuitem action='TrayShowPlayer'/>"
-    "    <menuitem action='TrayModeSwitch'/>"
     "    <menuitem action='TrayAlwaysOnTop'/>"
     "    <menuitem action='TrayAbout'/>"
     "    <separator/>"
@@ -670,15 +652,7 @@ GtkUIManager *rc_ui_menu_init()
         
     /* Seal the menus that are not available now */
     gtk_action_set_sensitive(gtk_ui_manager_get_action(ui_manager,
-        "/RC2MenuBar/ViewMenu/ViewMiniMode"), FALSE);
-    gtk_action_set_sensitive(gtk_ui_manager_get_action(ui_manager,
         "/RC2MenuBar/HelpMenu/HelpReport"), FALSE);
-    gtk_action_set_sensitive(gtk_ui_manager_get_action(ui_manager,
-        "/RC2MenuBar/HelpMenu/HelpSupportedFormat"), FALSE);
-    gtk_action_set_sensitive(gtk_ui_manager_get_action(ui_manager,
-        "/TrayPopupMenu/TrayShowPlayer"), FALSE);
-    gtk_action_set_sensitive(gtk_ui_manager_get_action(ui_manager,
-        "/TrayPopupMenu/TrayModeSwitch"), FALSE);
 
     rclib_core_signal_connect("state-changed",
         G_CALLBACK(rc_ui_menu_core_state_changed_cb), NULL);

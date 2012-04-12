@@ -150,7 +150,7 @@ static gboolean rc_plugin_lrccrawler_search_idle_func(gpointer data)
             gtk_tree_view_set_cursor(GTK_TREE_VIEW(priv->result_treeview),
                 path, NULL, FALSE);
             gtk_tree_path_free(path);
-            gtk_window_present(GTK_WINDOW(priv->search_window));
+            gtk_toggle_action_set_active(GTK_TOGGLE_ACTION(priv->action), TRUE);
         }
     }
     else
@@ -190,7 +190,7 @@ static gboolean rc_plugin_lrccrawler_download_idle_func(gpointer data)
     }
     g_free(down_data->path);
     g_free(down_data);
-    if(priv->search_window==NULL)
+    if(priv->search_window!=NULL)
     {
         gtk_widget_set_sensitive(priv->search_button, TRUE);
         gtk_widget_set_sensitive(priv->download_button, TRUE);
@@ -871,40 +871,47 @@ static inline void rc_plugin_lrccrawler_search_window_init(
         G_CALLBACK(rc_plugin_lrccrawler_auto_search_check_button_cb),
         priv);
 }
-/*
-static void rc_plugin_lrccrawler_auto_search_lyric_cb()
-{
-    const RCMusicMetaData *mmd;
-    gboolean visible;
-    gchar *string, *tmp;
-    if(!lyric_auto_search) return;
-    if(lyric_search_thread!=NULL) return;
-    if(current_module==NULL) return;
-    g_object_get(G_OBJECT(lyric_search_window), "visible", &visible, NULL);
-    if(visible) return;
-    mmd = rc_tag_get_playing_metadata();
-    if(mmd->title!=NULL)
-        gtk_entry_set_text(GTK_ENTRY(lyric_title_entry), mmd->title);
-    if(mmd->artist!=NULL)
-        gtk_entry_set_text(GTK_ENTRY(lyric_artist_entry), mmd->artist);
-    if(mmd->artist!=NULL)
-        tmp = g_strdup_printf("%s - %s.LRC", mmd->artist, mmd->title);
-    else
-        tmp = g_strdup_printf("%s.LRC", mmd->title);
-    string = g_build_filename(rc_player_get_conf_dir(), "Lyrics",
-        tmp, NULL);
-    g_free(tmp);
-    gtk_entry_set_text(GTK_ENTRY(lyric_save_file_entry), string);
-    g_free(string);
-    lyric_auto_search_mode = TRUE;
-    gtk_button_clicked(GTK_BUTTON(lyric_search_button));
-}
-*/
 
 static void rc_plugin_lrccrawler_may_missing_cb(RCLibLyric *lyric,
     gpointer data)
 {
-
+    RCPluginLyricCrawlerPrivate *priv = (RCPluginLyricCrawlerPrivate *)data;
+    gchar *uri = NULL;
+    gchar *filepath = NULL;
+    GSequenceIter *iter = NULL;
+    gchar *rtitle;
+    RCLibDbPlaylistData *playlist_data = NULL;
+    if(data==NULL) return;
+    if(!priv->auto_search) return;
+    if(gtk_widget_get_visible(priv->search_window)) return;
+    uri = rclib_core_get_uri();
+    if(uri==NULL) return;
+    iter = rclib_core_get_db_reference();
+    if(iter!=NULL)
+        playlist_data = g_sequence_get(iter);
+    if(playlist_data!=NULL && playlist_data->title!=NULL &&
+        strlen(playlist_data->title)>0)
+    {
+        gtk_entry_set_text(GTK_ENTRY(priv->title_entry),
+            playlist_data->title);
+    }
+    else
+    {
+        filepath = g_filename_from_uri(uri, NULL, NULL);
+        rtitle = rclib_tag_get_name_from_fpath(filepath);
+        g_free(filepath);
+        gtk_entry_set_text(GTK_ENTRY(priv->title_entry), rtitle);
+        g_free(rtitle);
+    }
+    if(playlist_data!=NULL && playlist_data->artist!=NULL &&
+        strlen(playlist_data->artist)>0)
+    {
+        gtk_entry_set_text(GTK_ENTRY(priv->artist_entry),
+            playlist_data->artist);
+    }    
+    g_free(uri);
+    priv->auto_search_mode = TRUE;
+    gtk_button_clicked(GTK_BUTTON(priv->search_button));
 }
 
 static void rc_plugin_lrccrawler_view_menu_toggled(GtkToggleAction *toggle,

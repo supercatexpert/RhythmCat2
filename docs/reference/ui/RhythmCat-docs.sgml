@@ -6,18 +6,17 @@
 ]>
 <book id="index">
   <bookinfo>
-    <title>RhythmCat UI Reference Manual</title>
+    <title>RhythmCat Reference Manual</title>
     <releaseinfo>
       for RhythmCat 1.9.2.
       The latest version of this documentation can be found on-line at
-      <ulink role="online-location" url="http://[SERVER]/RhythmCat/index.html">http://[SERVER]/RhythmCat/</ulink>.
+      <ulink role="online-location" url="https://github.com/supercatexpert/RhythmCat2/">https://github.com/supercatexpert/RhythmCat2/</ulink>.
     </releaseinfo>
   </bookinfo>
 
   <chapter>
     <title>[Insert title here]</title>
         <xi:include href="xml/rc-main.xml"/>
-    <xi:include href="xml/rc-mpris2.xml"/>
     <xi:include href="xml/rc-ui-dialog.xml"/>
     <xi:include href="xml/rc-ui-effect.xml"/>
     <xi:include href="xml/rc-ui-listmodel.xml"/>

@@ -354,7 +354,8 @@ void rc_ui_dialog_save_all_playlist()
 void rc_ui_dialog_bind_lyric()
 {
     GtkWidget *dialog;
-    GtkWidget *vbox;
+    GtkWidget *content_area;
+    GtkWidget *main_grid;
     GtkWidget *frame1, *frame2;
     GtkWidget *grid1, *grid2;
     GtkWidget *radio_buttons[4];
@@ -396,9 +397,11 @@ void rc_ui_dialog_bind_lyric()
         GTK_FILE_CHOOSER_ACTION_OPEN);
     frame1 = gtk_frame_new(_("The first lyric file binding"));
     frame2 = gtk_frame_new(_("The second lyric file binding"));
-    vbox = gtk_dialog_get_content_area(GTK_DIALOG(dialog));
+    content_area = gtk_dialog_get_content_area(GTK_DIALOG(dialog));
+    main_grid = gtk_grid_new();
     grid1 = gtk_grid_new();
     grid2 = gtk_grid_new();
+    gtk_grid_set_row_spacing(GTK_GRID(main_grid), 2);
     gtk_grid_set_row_spacing(GTK_GRID(grid1), 2);
     gtk_grid_set_row_spacing(GTK_GRID(grid2), 2);
     for(i=0;i<4;i++)
@@ -449,13 +452,14 @@ void rc_ui_dialog_bind_lyric()
     gtk_grid_attach(GTK_GRID(grid1), radio_buttons[1], 0, 2, 1, 1);
     gtk_grid_attach(GTK_GRID(grid2), radio_buttons[2], 0, 0, 1, 1);
     gtk_grid_attach(GTK_GRID(grid2), filebutton[1], 0, 1, 1, 1);
-    gtk_grid_attach(GTK_GRID(grid2), radio_buttons[3], 0, 2, 1, 1);
+    gtk_grid_attach(GTK_GRID(grid2), radio_buttons[3], 0, 2, 1, 1);    
     gtk_container_add(GTK_CONTAINER(frame1), grid1);
     gtk_container_add(GTK_CONTAINER(frame2), grid2);
-    gtk_box_pack_start(GTK_BOX(vbox), frame1, FALSE, FALSE, 2);
-    gtk_box_pack_start(GTK_BOX(vbox), frame2, FALSE, FALSE, 2);
+    gtk_grid_attach(GTK_GRID(main_grid), frame1, 0, 0, 1, 1);
+    gtk_grid_attach(GTK_GRID(main_grid), frame2, 0, 1, 1, 1);
     gtk_widget_set_size_request(dialog, 300, -1);
-    gtk_widget_show_all(vbox);
+    gtk_container_add(GTK_CONTAINER(content_area), main_grid);
+    gtk_widget_show_all(content_area);
     ret = gtk_dialog_run(GTK_DIALOG(dialog));
     if(ret==GTK_RESPONSE_ACCEPT)
     {
@@ -551,7 +555,7 @@ void rc_ui_dialog_bind_lyric()
 void rc_ui_dialog_bind_album()
 {
     GtkWidget *dialog;
-    GtkWidget *vbox;
+    GtkWidget *content_area;
     GtkWidget *grid;
     GtkWidget *radio_buttons[2];
     GtkWidget *filebutton;
@@ -581,7 +585,7 @@ void rc_ui_dialog_bind_album()
         GTK_RADIO_BUTTON(radio_buttons[0]), _("_Do not bind album file"));
     filebutton = gtk_file_chooser_button_new(_("Select a album image file"),
         GTK_FILE_CHOOSER_ACTION_OPEN);
-    vbox = gtk_dialog_get_content_area(GTK_DIALOG(dialog));
+    content_area = gtk_dialog_get_content_area(GTK_DIALOG(dialog));
     grid = gtk_grid_new();
     gtk_grid_set_row_spacing(GTK_GRID(grid), 2);
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(radio_buttons[1]), TRUE);
@@ -611,9 +615,9 @@ void rc_ui_dialog_bind_album()
     gtk_grid_attach(GTK_GRID(grid), radio_buttons[0], 0, 0, 1, 1);
     gtk_grid_attach(GTK_GRID(grid), filebutton, 0, 1, 1, 1);
     gtk_grid_attach(GTK_GRID(grid), radio_buttons[1], 0, 2, 1, 1);
-    gtk_box_pack_start(GTK_BOX(vbox), grid, FALSE, FALSE, 2);
+    gtk_container_add(GTK_CONTAINER(content_area), grid);
     gtk_widget_set_size_request(dialog, 300, -1);
-    gtk_widget_show_all(vbox);
+    gtk_widget_show_all(content_area);
     ret = gtk_dialog_run(GTK_DIALOG(dialog));
     if(ret==GTK_RESPONSE_ACCEPT)
     {
@@ -760,7 +764,8 @@ void rc_ui_dialog_open_music()
 void rc_ui_dialog_open_location()
 {
     GtkWidget *dialog;
-    GtkWidget *vbox;
+    GtkWidget *grid;
+    GtkWidget *content_area;
     GtkWidget *label;
     GtkWidget *entry;
     const gchar *uri;
@@ -769,14 +774,18 @@ void rc_ui_dialog_open_location()
         GTK_WINDOW(rc_ui_player_get_main_window()), GTK_DIALOG_MODAL |
         GTK_DIALOG_DESTROY_WITH_PARENT, GTK_STOCK_OPEN, GTK_RESPONSE_ACCEPT,
         GTK_STOCK_CANCEL, GTK_RESPONSE_REJECT, NULL);
-    vbox = gtk_dialog_get_content_area(GTK_DIALOG(dialog));
+    content_area = gtk_dialog_get_content_area(GTK_DIALOG(dialog));
+    grid = gtk_grid_new();
     label = gtk_label_new(_("Enter the URL of the file you "
         "would like to open:"));
     entry = gtk_entry_new();
-    gtk_box_pack_start(GTK_BOX(vbox), label, FALSE, FALSE, 2);
-    gtk_box_pack_start(GTK_BOX(vbox), entry, TRUE, FALSE, 2);
+    g_object_set(entry, "hexpand-set", TRUE, "hexpand", TRUE, NULL);
+    g_object_set(grid, "row-spacing", 3, NULL);
+    gtk_grid_attach(GTK_GRID(grid), label, 0, 0, 1, 1);
+    gtk_grid_attach(GTK_GRID(grid), entry, 0, 1, 1, 1);
+    gtk_container_add(GTK_CONTAINER(content_area), grid);
     gtk_widget_set_size_request(dialog, 300, -1);
-    gtk_widget_show_all(vbox);
+    gtk_widget_show_all(content_area);
     ret = gtk_dialog_run(GTK_DIALOG(dialog));
     if(ret==GTK_RESPONSE_ACCEPT)
     {
@@ -787,4 +796,173 @@ void rc_ui_dialog_open_location()
     gtk_widget_destroy(dialog);
 }
 
+static void rc_ui_dialog_show_supported_format_close_button_clicked(
+    GtkWidget *widget, gpointer data)
+{
+    if(data==NULL) return;
+    gtk_widget_destroy(GTK_WIDGET(data));
+}
+
+/**
+ * rc_ui_dialog_show_supported_format:
+ *
+ * Show a dialog to get the supported music format list of the player.
+ */
+
+void rc_ui_dialog_show_supported_format()
+{
+    static GtkWidget *dialog = NULL;
+    GtkWidget *main_grid;
+    GtkWidget *button_hbox;
+    GtkWidget *scrolled_window;
+    GtkWidget *treeview;
+    GtkWidget *close_button;
+    GtkListStore *list_store;
+    GtkTreeViewColumn *columns[2];
+    GtkCellRenderer *renderers[2];
+    GtkTreeIter iter;
+    gboolean flag;
+    gint i;
+    if(dialog!=NULL)
+    {
+        gtk_widget_show_all(dialog);
+        return;
+    }
+    dialog = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+    list_store = gtk_list_store_new(2, G_TYPE_STRING, G_TYPE_BOOLEAN);
+    renderers[0] = gtk_cell_renderer_text_new();
+    renderers[1] = gtk_cell_renderer_toggle_new();
+    columns[0] = gtk_tree_view_column_new_with_attributes(
+        _("Format"), renderers[0], "text", 0, NULL);
+    columns[1] = gtk_tree_view_column_new_with_attributes(
+        _("Supported"), renderers[1], "active", 1, NULL);
+    gtk_tree_view_column_set_expand(columns[0], TRUE);
+    treeview = gtk_tree_view_new_with_model(GTK_TREE_MODEL(list_store));
+    for(i=0;i<2;i++)
+        gtk_tree_view_append_column(GTK_TREE_VIEW(treeview), columns[i]);
+    close_button = gtk_button_new_from_stock(GTK_STOCK_CLOSE);
+    scrolled_window = gtk_scrolled_window_new(NULL, NULL);
+    main_grid = gtk_grid_new();
+    button_hbox = gtk_hbutton_box_new();
+    gtk_window_set_position(GTK_WINDOW(dialog), GTK_WIN_POS_CENTER);
+    gtk_window_set_title(GTK_WINDOW(dialog), _("Supported Audio Format"));
+    gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(scrolled_window),
+        GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
+    gtk_widget_set_size_request(dialog, 350, 250);
+    gtk_window_set_resizable(GTK_WINDOW(dialog), FALSE);
+    g_object_set(main_grid, "row-spacing", 2, NULL);
+    g_object_set(scrolled_window, "expand", TRUE, NULL);
+    g_object_set(button_hbox, "layout-style", GTK_BUTTONBOX_END, "spacing",
+        5, NULL);
+    gtk_container_add(GTK_CONTAINER(scrolled_window), treeview);
+    gtk_box_pack_start(GTK_BOX(button_hbox), close_button, FALSE, FALSE, 2);
+    gtk_grid_attach(GTK_GRID(main_grid), scrolled_window, 0, 0, 1, 1);
+    gtk_grid_attach(GTK_GRID(main_grid), button_hbox, 0, 1, 1, 1);
+    gtk_container_add(GTK_CONTAINER(dialog), main_grid);
+    g_signal_connect(close_button, "clicked",
+        G_CALLBACK(rc_ui_dialog_show_supported_format_close_button_clicked),
+        dialog);
+    g_signal_connect(dialog, "destroy",
+        G_CALLBACK(gtk_widget_destroyed), &dialog);
+
+    /* Check FLAC support */
+    gtk_list_store_append(list_store, &iter);
+    flag = gst_default_registry_check_feature_version("flacdec", 0, 10, 0);
+    if(!flag)
+    {
+        flag = gst_default_registry_check_feature_version("ffdec_flac", 0,
+            10, 0);
+    }
+    gtk_list_store_set(list_store, &iter, 0, "FLAC", 1, flag, -1);
+
+    /* Check OGG Vorbis support */
+    gtk_list_store_append(list_store, &iter);
+    flag = gst_default_registry_check_feature_version("oggdemux", 0, 10, 0)
+        && gst_default_registry_check_feature_version("vorbisdec", 0, 10, 0);
+    gtk_list_store_set(list_store, &iter, 0, "OGG Vorbis", 1, flag, -1);
+
+    /* Check MP3 support */
+    gtk_list_store_append(list_store, &iter);
+    flag = gst_default_registry_check_feature_version("flump3dec", 0, 10, 0);
+    if(!flag)
+    {
+        flag = gst_default_registry_check_feature_version("mad", 0, 10, 0);
+    }
+    if(!flag)
+    {
+        flag = gst_default_registry_check_feature_version("ffdec_mp3", 0,
+            10, 0);
+    }
+    gtk_list_store_set(list_store, &iter, 0, "MP3", 1, flag, -1);
+
+    /* Check WMA support */
+    gtk_list_store_append(list_store, &iter);
+    flag = gst_default_registry_check_feature_version("fluwmadec", 0, 10, 0);
+    if(!flag)
+    {
+        flag = gst_default_registry_check_feature_version("ffdec_wmapro", 0,
+            10, 0) && gst_default_registry_check_feature_version("ffdec_wmav1",
+            0, 10, 0) && gst_default_registry_check_feature_version(
+            "ffdec_wmav2", 0, 10, 0) &&
+            gst_default_registry_check_feature_version("ffdec_wmavoice", 0,
+            10, 0);
+    }
+    if(!flag)
+    {
+        flag = gst_default_registry_check_feature_version("ffdec_mp3", 0,
+            10, 0);
+    }
+    gtk_list_store_set(list_store, &iter, 0, "WMA", 1, flag, -1);
+
+    /* Check Wavpack support */
+    gtk_list_store_append(list_store, &iter);
+    flag = gst_default_registry_check_feature_version("wavpackdec", 0, 10, 0);
+    gtk_list_store_set(list_store, &iter, 0, "Wavpack", 1, flag, -1);
+
+    /* Check APE support */
+    gtk_list_store_append(list_store, &iter);
+    flag = gst_default_registry_check_feature_version("ffdec_ape", 0, 10, 0)
+        && gst_default_registry_check_feature_version("ffdemux_ape", 0, 10, 0);
+    gtk_list_store_set(list_store, &iter, 0, "APE", 1, flag, -1);
+
+    /* Check TTA support */
+    gtk_list_store_append(list_store, &iter);
+    flag = gst_default_registry_check_feature_version("ttadec", 0, 10, 0) &&
+        gst_default_registry_check_feature_version("ttaparse", 0, 10, 0);
+    if(!flag)
+    {
+        flag = gst_default_registry_check_feature_version("ffdemux_tta", 0,
+            10, 0) && gst_default_registry_check_feature_version("ffdec_tta",
+            0, 10, 0);
+    }
+    gtk_list_store_set(list_store, &iter, 0, "TTA", 1, flag, -1);
+
+    /* Check AAC support */
+    gtk_list_store_append(list_store, &iter);
+    flag = gst_default_registry_check_feature_version("fluaacdec", 0, 10, 0);
+    if(!flag)
+    {
+        flag = gst_default_registry_check_feature_version("ffdec_aac", 0,
+            10, 0);
+    }
+    gtk_list_store_set(list_store, &iter, 0, "AAC", 1, flag, -1);
+
+    /* Check AC3 support */
+    gtk_list_store_append(list_store, &iter);
+    flag = gst_default_registry_check_feature_version("ffdec_ac3", 0, 10, 0);
+    gtk_list_store_set(list_store, &iter, 0, "AC3", 1, flag, -1);
+
+    /* Check MIDI support */
+    gtk_list_store_append(list_store, &iter);
+    flag = gst_default_registry_check_feature_version("fluidsynth", 0, 10, 0);
+    if(!flag)
+    {
+        flag = gst_default_registry_check_feature_version("wildmidi", 0,
+            10, 0);
+    }
+    gtk_list_store_set(list_store, &iter, 0, "MIDI", 1, flag, -1);
+
+    g_object_unref(list_store);
+    gtk_widget_show_all(dialog);
+}
 

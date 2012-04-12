@@ -3,6 +3,8 @@ plugindir = $(libdir)/RhythmCat2/plugins
 lyricshow_la_LDFLAGS = -module -avoid-version -export-dynamic -O2
 notify_la_LDFLAGS = -module -avoid-version -export-dynamic -O2
 desklrc_la_LDFLAGS = -module -avoid-version -export-dynamic -O2
+mediakey_la_LDFLAGS = -module -avoid-version -export-dynamic -O2
+mpris2_la_LDFLAGS = -module -avoid-version -export-dynamic -O2
 
 plugin_LTLIBRARIES = 
 noinst_LTLIBRARIES =
@@ -16,12 +18,21 @@ endif
 
 if WITH_NATIVE_PLUGINS
 
+plugin_LTLIBRARIES += \
+    mediakey.la
+
+mediakey_la_SOURCES = mediakey.c
+mediakey_la_LIBADD = @GLIB2_LIBS@ @GSTREAMER_LIBS@ @JSON_LIBS@ \
+    $(top_builddir)/lib/librhythmcat-2.0.la 
+mediakey_la_LIBTOOLFLAGS = --tag=disable-static
+
 if WITH_GTK_UI
 
 plugin_LTLIBRARIES += \
     lyricshow.la \
     notify.la \
-    desklrc.la
+    desklrc.la \
+    mpris2.la
 
 lyricshow_la_SOURCES = lyricshow.c
 lyricshow_la_LIBADD = @GLIB2_LIBS@ @GTK_LIBS@ @GSTREAMER_LIBS@ @JSON_LIBS@ \
@@ -40,6 +51,12 @@ desklrc_la_LIBADD = @GLIB2_LIBS@ @GTK_LIBS@ @GSTREAMER_LIBS@ @JSON_LIBS@ \
     $(top_builddir)/lib/librhythmcat-2.0.la \
     $(top_builddir)/ui/librhythmcat-ui-2.0.la
 desklrc_la_LIBTOOLFLAGS = --tag=disable-static
+
+mpris2_la_SOURCES = mpris2.c
+mpris2_la_LIBADD = @GLIB2_LIBS@ @GTK_LIBS@ @GSTREAMER_LIBS@ @JSON_LIBS@ \
+    $(top_builddir)/lib/librhythmcat-2.0.la \
+    $(top_builddir)/ui/librhythmcat-ui-2.0.la
+mpris2_la_LIBTOOLFLAGS = --tag=disable-static
 
 endif
 

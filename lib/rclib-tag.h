@@ -81,6 +81,7 @@ struct _RCLibTagMetadata {
 RCLibTagMetadata *rclib_tag_read_metadata(const gchar *uri);
 void rclib_tag_free(RCLibTagMetadata *mmd);
 gchar *rclib_tag_get_name_from_fpath(const gchar *filename);
+gchar *rclib_tag_get_name_from_uri(const gchar *uri);
 void rclib_tag_set_fallback_encoding(const gchar *encoding);
 const gchar *rclib_tag_get_fallback_encoding();
 

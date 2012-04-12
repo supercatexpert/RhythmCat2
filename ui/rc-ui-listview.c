@@ -614,6 +614,48 @@ static void rc_ui_listview_catalog_delete_cb(RCLibDb *db,
         NULL);
 }
 
+static gboolean rc_ui_listview_catalog_search_comparison_func(
+    GtkTreeModel *model, gint column, const gchar *key, GtkTreeIter *iter,
+    gpointer search_data)
+{
+    gchar *name = NULL;
+    gchar *name_down, *key_down;
+    gboolean flag;
+    gtk_tree_model_get(model, iter, RC_UI_CATALOG_COLUMN_NAME, &name, -1);
+    if(name==NULL) return TRUE;
+    name_down = g_utf8_strdown(name, -1);
+    key_down = g_utf8_strdown(key, -1);
+    g_free(name);
+    if(g_strstr_len(name_down, -1, key_down)!=NULL)
+        flag = FALSE;
+    else
+        flag = TRUE;
+    g_free(name_down);
+    g_free(key_down);
+    return flag;
+}
+
+static gboolean rc_ui_listview_playlist_search_comparison_func(
+    GtkTreeModel *model, gint column, const gchar *key, GtkTreeIter *iter,
+    gpointer search_data)
+{
+    gchar *name = NULL;
+    gchar *name_down, *key_down;
+    gboolean flag;
+    gtk_tree_model_get(model, iter, RC_UI_PLAYLIST_COLUMN_FTITLE, &name, -1);
+    if(name==NULL) return TRUE;
+    name_down = g_utf8_strdown(name, -1);
+    key_down = g_utf8_strdown(key, -1);
+    g_free(name);
+    if(g_strstr_len(name_down, -1, key_down)!=NULL)
+        flag = FALSE;
+    else
+        flag = TRUE;
+    g_free(name_down);
+    g_free(key_down);
+    return flag;
+}
+
 /**
  * rc_ui_listview_init:
  * @catalog_widget: return the catalog list view widget
@@ -772,6 +814,16 @@ void rc_ui_listview_init(GtkWidget **catalog_widget,
         GTK_TREE_VIEW(priv->playlist_listview)), GTK_SELECTION_MULTIPLE);
     gtk_tree_view_columns_autosize(GTK_TREE_VIEW(priv->catalog_listview));
     gtk_tree_view_columns_autosize(GTK_TREE_VIEW(priv->playlist_listview));
+    gtk_tree_view_set_enable_search(GTK_TREE_VIEW(priv->catalog_listview),
+        TRUE);
+    gtk_tree_view_set_enable_search(GTK_TREE_VIEW(priv->playlist_listview),
+        TRUE);
+    gtk_tree_view_set_search_equal_func(GTK_TREE_VIEW(
+        priv->catalog_listview),
+        rc_ui_listview_catalog_search_comparison_func, NULL, NULL);
+    gtk_tree_view_set_search_equal_func(GTK_TREE_VIEW(
+        priv->playlist_listview),
+        rc_ui_listview_playlist_search_comparison_func, NULL, NULL);
     rc_ui_listview_catalog_set_drag();
     rc_ui_listview_playlist_set_drag();
     g_signal_connect(G_OBJECT(priv->catalog_name_renderer), "edited",

@@ -30,7 +30,6 @@
 #include "rc-main.h"
 #include "rc-ui-player.h"
 #include "rc-ui-listview.h"
-#include "rc-mpris2.h"
 #include "rc-common.h"
 #include "rc-ui-style.h"
 #include "rc-ui-effect.h"
@@ -116,7 +115,6 @@ static void rc_main_app_activate(GApplication *application)
     }
     g_free(theme);
     rclib_settings_apply();
-    rc_mpris2_init();
     plugin_conf = g_build_filename(main_user_dir, "plugins.conf",
         NULL);
     rclib_plugin_init(plugin_conf);
@@ -125,7 +123,7 @@ static void rc_main_app_activate(GApplication *application)
     g_mkdir_with_parents(plugin_dir, 0700);
     rclib_plugin_load_from_dir(plugin_dir);
     plugin_dir = g_build_filename(main_data_dir, "..", "..", "lib",
-        "RhythmCat2", "plugin", NULL);
+        "RhythmCat2", "plugins", NULL);
     rclib_plugin_load_from_dir(plugin_dir);
     g_free(plugin_dir);
     rclib_plugin_load_from_configure();
@@ -424,7 +422,6 @@ void rc_main_exit()
     rc_ui_effect_window_destroy();
     rc_ui_player_exit();
     rclib_plugin_exit();
-    rc_mpris2_exit();
     rclib_exit();
     g_free(main_data_dir);
     g_free(main_user_dir);

@@ -69,7 +69,7 @@ struct _RCUiPlayerClass {
     GObjectClass parent_class;
     void (*ready)(RCUiPlayer *player);
     /* To be implemented! */
-    void (*keep_aboved)(RCUiPlayer *player, gboolean state);
+    void (*keep_above_changed)(RCUiPlayer *player, gboolean state);
 };
 
 /*< private >*/
@@ -86,6 +86,8 @@ GtkWidget *rc_ui_player_get_main_window();
 GdkPixbuf *rc_ui_player_get_icon_image();
 GtkStatusIcon *rc_ui_player_get_tray_icon();
 GdkPixbuf *rc_ui_player_get_default_cover_image();
+void rc_ui_player_present_main_window();
+void rc_ui_player_set_keep_above_state(gboolean state);
 
 G_END_DECLS
 

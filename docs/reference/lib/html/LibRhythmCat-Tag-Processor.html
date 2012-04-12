@@ -5,20 +5,20 @@
 <title>Tag Processor</title>
 <meta name="generator" content="DocBook XSL Stylesheets V1.76.1">
 <link rel="home" href="index.html" title="LibRhythmCat Reference Manual">
-<link rel="up" href="ch01.html" title="LibRhythmCat">
-<link rel="prev" href="LibRhythmCat-Cue-Parser.html" title="Cue Parser">
-<link rel="next" href="LibRhythmCat-RCLibPlugin.html" title="RCLibPlugin">
+<link rel="up" href="ch01.html" title="[Insert title here]">
+<link rel="prev" href="LibRhythmCat-Settings.html" title="Settings">
+<link rel="next" href="LibRhythmCat-Utilities.html" title="Utilities">
 <meta name="generator" content="GTK-Doc V1.18 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2">
 <tr valign="middle">
-<td><a accesskey="p" href="LibRhythmCat-Cue-Parser.html"><img src="left.png" width="24" height="24" border="0" alt="Prev"></a></td>
+<td><a accesskey="p" href="LibRhythmCat-Settings.html"><img src="left.png" width="24" height="24" border="0" alt="Prev"></a></td>
 <td><a accesskey="u" href="ch01.html"><img src="up.png" width="24" height="24" border="0" alt="Up"></a></td>
 <td><a accesskey="h" href="index.html"><img src="home.png" width="24" height="24" border="0" alt="Home"></a></td>
 <th width="100%" align="center">LibRhythmCat Reference Manual</th>
-<td><a accesskey="n" href="LibRhythmCat-RCLibPlugin.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
+<td><a accesskey="n" href="LibRhythmCat-Utilities.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
 </tr>
 <tr><td colspan="5" class="shortcuts">
 <a href="#LibRhythmCat-Tag-Processor.synopsis" class="shortcut">Top</a>
@@ -44,6 +44,7 @@ struct              <a class="link" href="LibRhythmCat-Tag-Processor.html#RCLibT
 <span class="returnvalue">void</span>                <a class="link" href="LibRhythmCat-Tag-Processor.html#rclib-tag-free" title="rclib_tag_free ()">rclib_tag_free</a>                      (<em class="parameter"><code><a class="link" href="LibRhythmCat-Tag-Processor.html#RCLibTagMetadata" title="struct RCLibTagMetadata"><span class="type">RCLibTagMetadata</span></a> *mmd</code></em>);
 const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *       <a class="link" href="LibRhythmCat-Tag-Processor.html#rclib-tag-get-fallback-encoding" title="rclib_tag_get_fallback_encoding ()">rclib_tag_get_fallback_encoding</a>     ();
 <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *             <a class="link" href="LibRhythmCat-Tag-Processor.html#rclib-tag-get-name-from-fpath" title="rclib_tag_get_name_from_fpath ()">rclib_tag_get_name_from_fpath</a>       (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *filename</code></em>);
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *             <a class="link" href="LibRhythmCat-Tag-Processor.html#rclib-tag-get-name-from-uri" title="rclib_tag_get_name_from_uri ()">rclib_tag_get_name_from_uri</a>         (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *uri</code></em>);
 <a class="link" href="LibRhythmCat-Tag-Processor.html#RCLibTagMetadata" title="struct RCLibTagMetadata"><span class="returnvalue">RCLibTagMetadata</span></a> *  <a class="link" href="LibRhythmCat-Tag-Processor.html#rclib-tag-read-metadata" title="rclib_tag_read_metadata ()">rclib_tag_read_metadata</a>             (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *uri</code></em>);
 <span class="returnvalue">void</span>                <a class="link" href="LibRhythmCat-Tag-Processor.html#rclib-tag-set-fallback-encoding" title="rclib_tag_set_fallback_encoding ()">rclib_tag_set_fallback_encoding</a>     (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *encoding</code></em>);
 </pre>
@@ -204,6 +205,27 @@ Return the base-name without extension from a full path or file name.
 <tr>
 <td><p><span class="term"><em class="parameter"><code>filename</code></em> :</span></p></td>
 <td>the full path or file name</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>The base-name without extension.</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-tag-get-name-from-uri"></a><h3>rclib_tag_get_name_from_uri ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *             rclib_tag_get_name_from_uri         (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *uri</code></em>);</pre>
+<p>
+Return the base-name without extension from a URI.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>uri</code></em> :</span></p></td>
+<td>the URI</td>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>

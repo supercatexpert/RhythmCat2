@@ -34,10 +34,11 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
-@WITH_PYTHON3_PLUGINS_TRUE@am__append_1 = \
+@WITH_GTK_UI_TRUE@am__append_1 = @GTK_CFLAGS@ -I$(top_srcdir)/ui
+@WITH_PYTHON3_PLUGINS_TRUE@am__append_2 = \
 @WITH_PYTHON3_PLUGINS_TRUE@    python3.la
 
-@WITH_PYTHON3_PLUGINS_TRUE@am__append_2 = @PYTHON3_CFLAGS@
+@WITH_PYTHON3_PLUGINS_TRUE@am__append_3 = @PYTHON3_CFLAGS@
 subdir = plugins/devel
 DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
@@ -82,14 +83,22 @@ am__uninstall_files_from_dir = { \
   }
 am__installdirs = "$(DESTDIR)$(plugindir)"
 LTLIBRARIES = $(noinst_LTLIBRARIES) $(plugin_LTLIBRARIES)
+karamixer_la_DEPENDENCIES =
+am__karamixer_la_SOURCES_DIST = karamixer.c
+@WITH_GTK_UI_TRUE@am_karamixer_la_OBJECTS = karamixer_la-karamixer.lo
+karamixer_la_OBJECTS = $(am_karamixer_la_OBJECTS)
+AM_V_lt = $(am__v_lt_@AM_V@)
+am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
+am__v_lt_0 = --silent
+karamixer_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC \
+	$(karamixer_la_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link \
+	$(CCLD) $(AM_CFLAGS) $(CFLAGS) $(karamixer_la_LDFLAGS) \
+	$(LDFLAGS) -o $@
 python3_la_DEPENDENCIES =
 am__python3_la_SOURCES_DIST = python3.c
 @WITH_PYTHON3_PLUGINS_TRUE@am_python3_la_OBJECTS =  \
 @WITH_PYTHON3_PLUGINS_TRUE@	python3_la-python3.lo
 python3_la_OBJECTS = $(am_python3_la_OBJECTS)
-AM_V_lt = $(am__v_lt_@AM_V@)
-am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
-am__v_lt_0 = --silent
 python3_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC \
 	$(python3_la_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link $(CCLD) \
 	$(AM_CFLAGS) $(CFLAGS) $(python3_la_LDFLAGS) $(LDFLAGS) -o $@
@@ -120,8 +129,9 @@ am__v_CCLD_0 = @echo "  CCLD  " $@;
 AM_V_GEN = $(am__v_GEN_@AM_V@)
 am__v_GEN_ = $(am__v_GEN_@AM_DEFAULT_V@)
 am__v_GEN_0 = @echo "  GEN   " $@;
-SOURCES = $(python3_la_SOURCES)
-DIST_SOURCES = $(am__python3_la_SOURCES_DIST)
+SOURCES = $(karamixer_la_SOURCES) $(python3_la_SOURCES)
+DIST_SOURCES = $(am__karamixer_la_SOURCES_DIST) \
+	$(am__python3_la_SOURCES_DIST)
 ETAGS = etags
 CTAGS = ctags
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
@@ -292,12 +302,16 @@ top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 plugindir = $(libdir)/RhythmCat2/plugins
+karamixer_la_LDFLAGS = -module -avoid-version -export-dynamic -O2
 python3_la_LDFLAGS = -module -avoid-version -export-dynamic -O2
-plugin_LTLIBRARIES = $(am__append_1)
+plugin_LTLIBRARIES = karamixer.la $(am__append_2)
 noinst_LTLIBRARIES = 
-INCLUDES = @GLIB2_CFLAGS@ @GSTREAMER_CFLAGS@ @GTK_CFLAGS@ \
-	@JSON_CFLAGS@ -DLOCALEDIR=\"$(localedir)\" -I$(top_srcdir)/lib \
-	-I$(top_srcdir)/ui $(am__append_2)
+INCLUDES = @GLIB2_CFLAGS@ @GSTREAMER_CFLAGS@ @JSON_CFLAGS@ \
+	-DLOCALEDIR=\"$(localedir)\" -I$(top_srcdir)/lib \
+	$(am__append_1) $(am__append_3)
+@WITH_GTK_UI_TRUE@karamixer_la_SOURCES = karamixer.c
+@WITH_GTK_UI_TRUE@karamixer_la_LIBADD = @GLIB2_LIBS@ @GSTREAMER_LIBS@ @JSON_LIBS@ @GTK_LIBS@
+@WITH_GTK_UI_TRUE@karamixer_la_LIBTOOLFLAGS = --tag=disable-static
 @WITH_PYTHON3_PLUGINS_TRUE@python3_la_SOURCES = python3.c
 @WITH_PYTHON3_PLUGINS_TRUE@python3_la_LIBADD = @GLIB2_LIBS@ @GSTREAMER_LIBS@ @JSON_LIBS@ @PYTHON3_LIBS@
 @WITH_PYTHON3_PLUGINS_TRUE@python3_la_LIBTOOLFLAGS = --tag=disable-static
@@ -376,6 +390,8 @@ clean-pluginLTLIBRARIES:
 	  echo "rm -f \"$${dir}/so_locations\""; \
 	  rm -f "$${dir}/so_locations"; \
 	done
+karamixer.la: $(karamixer_la_OBJECTS) $(karamixer_la_DEPENDENCIES) $(EXTRA_karamixer_la_DEPENDENCIES) 
+	$(AM_V_CCLD)$(karamixer_la_LINK) -rpath $(plugindir) $(karamixer_la_OBJECTS) $(karamixer_la_LIBADD) $(LIBS)
 python3.la: $(python3_la_OBJECTS) $(python3_la_DEPENDENCIES) $(EXTRA_python3_la_DEPENDENCIES) 
 	$(AM_V_CCLD)$(python3_la_LINK) $(am_python3_la_rpath) $(python3_la_OBJECTS) $(python3_la_LIBADD) $(LIBS)
 
@@ -385,6 +401,7 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/karamixer_la-karamixer.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/python3_la-python3.Plo@am__quote@
 
 .c.o:
@@ -407,6 +424,13 @@ distclean-compile:
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='$<' object='$@' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LTCOMPILE) -c -o $@ $<
+
+karamixer_la-karamixer.lo: karamixer.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(karamixer_la_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT karamixer_la-karamixer.lo -MD -MP -MF $(DEPDIR)/karamixer_la-karamixer.Tpo -c -o karamixer_la-karamixer.lo `test -f 'karamixer.c' || echo '$(srcdir)/'`karamixer.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/karamixer_la-karamixer.Tpo $(DEPDIR)/karamixer_la-karamixer.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='karamixer.c' object='karamixer_la-karamixer.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(karamixer_la_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o karamixer_la-karamixer.lo `test -f 'karamixer.c' || echo '$(srcdir)/'`karamixer.c
 
 python3_la-python3.lo: python3.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(python3_la_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT python3_la-python3.lo -MD -MP -MF $(DEPDIR)/python3_la-python3.Tpo -c -o python3_la-python3.lo `test -f 'python3.c' || echo '$(srcdir)/'`python3.c

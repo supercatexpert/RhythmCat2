@@ -362,6 +362,28 @@ gchar *rclib_tag_get_name_from_fpath(const gchar *filename)
 }
 
 /**
+ * rclib_tag_get_name_from_uri:
+ * @uri: the URI
+ *
+ * Return the base-name without extension from a URI.
+ *
+ * Returns: The base-name without extension.
+ */
+
+gchar *rclib_tag_get_name_from_uri(const gchar *uri)
+{
+    gchar *filepath;
+    gchar *realname;
+    if(uri==NULL) return NULL;
+    filepath = g_filename_from_uri(uri, NULL, NULL);
+    if(filepath==NULL) return NULL;
+    realname = rclib_tag_get_name_from_fpath(filepath);
+    g_free(filepath);
+    return realname;
+}
+
+
+/**
  * rclib_tag_search_lyric_file:
  * @dirname: the directory name
  * @mmd: the metadata
@@ -380,7 +402,6 @@ gchar *rclib_tag_search_lyric_file(const gchar *dirname,
     GRegex *artist_title_regex = NULL;
     GRegex *title_artist_regex = NULL;
     GRegex *title_only_regex = NULL;
-    gchar *path = NULL;
     gchar *realname = NULL;
     gchar *realname_pattern = NULL;
     gchar *tmp, *string;
@@ -392,12 +413,7 @@ gchar *rclib_tag_search_lyric_file(const gchar *dirname,
     gdir = g_dir_open(dirname, 0, NULL);
     if(gdir==NULL) return NULL;
     if(mmd->uri!=NULL)
-        path = g_filename_from_uri(mmd->uri, NULL, NULL);
-    if(path!=NULL)
-    {
-        realname = rclib_tag_get_name_from_fpath(path);
-        g_free(path);
-    }
+        realname = rclib_tag_get_name_from_uri(mmd->uri);
     if(realname!=NULL)
     {
         tmp = g_regex_escape_string(realname, -1);
@@ -505,7 +521,6 @@ gchar *rclib_tag_search_album_file(const gchar *dirname,
     GRegex *artist_regex = NULL;
     GRegex *title_regex = NULL;
     GRegex *album_regex = NULL;
-    gchar *path = NULL;
     gchar *realname = NULL;
     gchar *realname_pattern = NULL;
     gchar *tmp, *string;
@@ -517,12 +532,7 @@ gchar *rclib_tag_search_album_file(const gchar *dirname,
     gdir = g_dir_open(dirname, 0, NULL);
     if(gdir==NULL) return NULL;
     if(mmd->uri!=NULL)
-        path = g_filename_from_uri(mmd->uri, NULL, NULL);
-    if(path!=NULL)
-    {
-        realname = rclib_tag_get_name_from_fpath(path);
-        g_free(path);
-    }
+        realname = rclib_tag_get_name_from_uri(mmd->uri);
     if(realname!=NULL)
     {
         tmp = g_regex_escape_string(realname, -1);

@@ -1,12 +1,28 @@
 plugindir = $(libdir)/RhythmCat2/plugins
 
+karamixer_la_LDFLAGS = -module -avoid-version -export-dynamic -O2
 python3_la_LDFLAGS = -module -avoid-version -export-dynamic -O2
 
 plugin_LTLIBRARIES =
 noinst_LTLIBRARIES =
 
-INCLUDES = @GLIB2_CFLAGS@ @GSTREAMER_CFLAGS@ @GTK_CFLAGS@ @JSON_CFLAGS@ \
-    -DLOCALEDIR=\"$(localedir)\" -I$(top_srcdir)/lib -I$(top_srcdir)/ui
+INCLUDES = @GLIB2_CFLAGS@ @GSTREAMER_CFLAGS@ @JSON_CFLAGS@ \
+    -DLOCALEDIR=\"$(localedir)\" -I$(top_srcdir)/lib
+
+if WITH_GTK_UI
+INCLUDES += @GTK_CFLAGS@ -I$(top_srcdir)/ui
+endif
+
+plugin_LTLIBRARIES += \
+    karamixer.la
+
+if WITH_GTK_UI
+
+karamixer_la_SOURCES = karamixer.c
+karamixer_la_LIBADD = @GLIB2_LIBS@ @GSTREAMER_LIBS@ @JSON_LIBS@ @GTK_LIBS@
+karamixer_la_LIBTOOLFLAGS = --tag=disable-static
+
+endif
 
 if WITH_PYTHON3_PLUGINS
 

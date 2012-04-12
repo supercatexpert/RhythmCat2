@@ -5,20 +5,20 @@
 <title>RCLibLyric</title>
 <meta name="generator" content="DocBook XSL Stylesheets V1.76.1">
 <link rel="home" href="index.html" title="LibRhythmCat Reference Manual">
-<link rel="up" href="ch01.html" title="LibRhythmCat">
-<link rel="prev" href="LibRhythmCat-RCLibAlbum.html" title="RCLibAlbum">
-<link rel="next" href="LibRhythmCat-Cue-Parser.html" title="Cue Parser">
+<link rel="up" href="ch01.html" title="[Insert title here]">
+<link rel="prev" href="RCLibDb.html" title="RCLibDb">
+<link rel="next" href="RCLibPlayer.html" title="RCLibPlayer">
 <meta name="generator" content="GTK-Doc V1.18 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2">
 <tr valign="middle">
-<td><a accesskey="p" href="LibRhythmCat-RCLibAlbum.html"><img src="left.png" width="24" height="24" border="0" alt="Prev"></a></td>
+<td><a accesskey="p" href="RCLibDb.html"><img src="left.png" width="24" height="24" border="0" alt="Prev"></a></td>
 <td><a accesskey="u" href="ch01.html"><img src="up.png" width="24" height="24" border="0" alt="Up"></a></td>
 <td><a accesskey="h" href="index.html"><img src="home.png" width="24" height="24" border="0" alt="Home"></a></td>
 <th width="100%" align="center">LibRhythmCat Reference Manual</th>
-<td><a accesskey="n" href="LibRhythmCat-Cue-Parser.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
+<td><a accesskey="n" href="RCLibPlayer.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
 </tr>
 <tr><td colspan="5" class="shortcuts">
 <a href="#RCLibLyric.synopsis" class="shortcut">Top</a>
@@ -48,13 +48,18 @@
 struct              <a class="link" href="RCLibLyric.html#RCLibLyric-struct" title="struct RCLibLyric">RCLibLyric</a>;
 struct              <a class="link" href="RCLibLyric.html#RCLibLyricClass" title="struct RCLibLyricClass">RCLibLyricClass</a>;
 struct              <a class="link" href="RCLibLyric.html#RCLibLyricData" title="struct RCLibLyricData">RCLibLyricData</a>;
+struct              <a class="link" href="RCLibLyric.html#RCLibLyricParsedData" title="struct RCLibLyricParsedData">RCLibLyricParsedData</a>;
 <span class="returnvalue">void</span>                <a class="link" href="RCLibLyric.html#rclib-lyric-clean" title="rclib_lyric_clean ()">rclib_lyric_clean</a>                   (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> index</code></em>);
 <span class="returnvalue">void</span>                <a class="link" href="RCLibLyric.html#rclib-lyric-exit" title="rclib_lyric_exit ()">rclib_lyric_exit</a>                    ();
 const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *       <a class="link" href="RCLibLyric.html#rclib-lyric-get-fallback-encoding" title="rclib_lyric_get_fallback_encoding ()">rclib_lyric_get_fallback_encoding</a>   ();
 <a href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GObject"><span class="returnvalue">GObject</span></a> *           <a class="link" href="RCLibLyric.html#rclib-lyric-get-instance" title="rclib_lyric_get_instance ()">rclib_lyric_get_instance</a>            ();
 const <a class="link" href="RCLibLyric.html#RCLibLyricData" title="struct RCLibLyricData"><span class="returnvalue">RCLibLyricData</span></a> * <a class="link" href="RCLibLyric.html#rclib-lyric-get-line" title="rclib_lyric_get_line ()">rclib_lyric_get_line</a>             (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> index</code></em>,
                                                          <em class="parameter"><code><span class="type">gint64</span> time</code></em>);
+<a href="/usr/share/gtk-doc/html/glib/glib-Sequences.html#GSequenceIter"><span class="returnvalue">GSequenceIter</span></a> *     <a class="link" href="RCLibLyric.html#rclib-lyric-get-line-iter" title="rclib_lyric_get_line_iter ()">rclib_lyric_get_line_iter</a>           (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> index</code></em>,
+                                                         <em class="parameter"><code><span class="type">gint64</span> time</code></em>);
+<a class="link" href="RCLibLyric.html#RCLibLyricParsedData" title="struct RCLibLyricParsedData"><span class="returnvalue">RCLibLyricParsedData</span></a> * <a class="link" href="RCLibLyric.html#rclib-lyric-get-parsed-data" title="rclib_lyric_get_parsed_data ()">rclib_lyric_get_parsed_data</a>      (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> index</code></em>);
 const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *       <a class="link" href="RCLibLyric.html#rclib-lyric-get-search-dir" title="rclib_lyric_get_search_dir ()">rclib_lyric_get_search_dir</a>          ();
+<span class="returnvalue">gint64</span>              <a class="link" href="RCLibLyric.html#rclib-lyric-get-track-time-offset" title="rclib_lyric_get_track_time_offset ()">rclib_lyric_get_track_time_offset</a>   (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> index</code></em>);
 <span class="returnvalue">void</span>                <a class="link" href="RCLibLyric.html#rclib-lyric-init" title="rclib_lyric_init ()">rclib_lyric_init</a>                    ();
 <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RCLibLyric.html#rclib-lyric-is-available" title="rclib_lyric_is_available ()">rclib_lyric_is_available</a>            (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> index</code></em>);
 <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RCLibLyric.html#rclib-lyric-load-file" title="rclib_lyric_load_file ()">rclib_lyric_load_file</a>               (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *filename</code></em>,
@@ -152,6 +157,56 @@ The structure for lyric data.
 </div>
 <hr>
 <div class="refsect2">
+<a name="RCLibLyricParsedData"></a><h3>struct RCLibLyricParsedData</h3>
+<pre class="programlisting">struct RCLibLyricParsedData {
+    GSequence *seq;
+    gchar *filename;
+    gchar *title;
+    gchar *artist;
+    gchar *album;
+    gchar *author;
+    gint offset;
+};
+</pre>
+<p>
+The structure for parsed lyric data.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Sequences.html#GSequence"><span class="type">GSequence</span></a> *<em class="structfield"><code><a name="RCLibLyricParsedData.seq"></a>seq</code></em>;</span></p></td>
+<td>the <a href="/usr/share/gtk-doc/html/glib/glib-Sequences.html#GSequence"><span class="type">GSequence</span></a> which contains the lyric data</td>
+</tr>
+<tr>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *<em class="structfield"><code><a name="RCLibLyricParsedData.filename"></a>filename</code></em>;</span></p></td>
+<td>the file path of the lyric file</td>
+</tr>
+<tr>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *<em class="structfield"><code><a name="RCLibLyricParsedData.title"></a>title</code></em>;</span></p></td>
+<td>the title</td>
+</tr>
+<tr>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *<em class="structfield"><code><a name="RCLibLyricParsedData.artist"></a>artist</code></em>;</span></p></td>
+<td>the artist</td>
+</tr>
+<tr>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *<em class="structfield"><code><a name="RCLibLyricParsedData.album"></a>album</code></em>;</span></p></td>
+<td>the album</td>
+</tr>
+<tr>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *<em class="structfield"><code><a name="RCLibLyricParsedData.author"></a>author</code></em>;</span></p></td>
+<td>the author of the lyric file</td>
+</tr>
+<tr>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> <em class="structfield"><code><a name="RCLibLyricParsedData.offset"></a>offset</code></em>;</span></p></td>
+<td>the offset time of the lyric data</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
 <a name="rclib-lyric-clean"></a><h3>rclib_lyric_clean ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>                rclib_lyric_clean                   (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> index</code></em>);</pre>
 <p>
@@ -231,6 +286,54 @@ Find the lyric line which matches to the given time (in nanoseconds).
 </div>
 <hr>
 <div class="refsect2">
+<a name="rclib-lyric-get-line-iter"></a><h3>rclib_lyric_get_line_iter ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Sequences.html#GSequenceIter"><span class="returnvalue">GSequenceIter</span></a> *     rclib_lyric_get_line_iter           (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> index</code></em>,
+                                                         <em class="parameter"><code><span class="type">gint64</span> time</code></em>);</pre>
+<p>
+Find iter of the lyric line which matches to the given time
+(in nanoseconds).
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>time</code></em> :</span></p></td>
+<td>the time to search</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>index</code></em> :</span></p></td>
+<td>the lyric track index</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>The <a href="/usr/share/gtk-doc/html/glib/glib-Sequences.html#GSequenceIter"><span class="type">GSequenceIter</span></a> of the lyric line, NULL if not found.</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-lyric-get-parsed-data"></a><h3>rclib_lyric_get_parsed_data ()</h3>
+<pre class="programlisting"><a class="link" href="RCLibLyric.html#RCLibLyricParsedData" title="struct RCLibLyricParsedData"><span class="returnvalue">RCLibLyricParsedData</span></a> * rclib_lyric_get_parsed_data      (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> index</code></em>);</pre>
+<p>
+Get the parsed lyric data by the given track index.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>index</code></em> :</span></p></td>
+<td>the lyric track index</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>The parsed lyric data.</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
 <a name="rclib-lyric-get-search-dir"></a><h3>rclib_lyric_get_search_dir ()</h3>
 <pre class="programlisting">const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *       rclib_lyric_get_search_dir          ();</pre>
 <p>
@@ -242,6 +345,27 @@ Get the directory for searching the lyric files.
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
 <td>The directory path.</td>
 </tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-lyric-get-track-time-offset"></a><h3>rclib_lyric_get_track_time_offset ()</h3>
+<pre class="programlisting"><span class="returnvalue">gint64</span>              rclib_lyric_get_track_time_offset   (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> index</code></em>);</pre>
+<p>
+Get the time offset (in nanosecond) by the given track index
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>index</code></em> :</span></p></td>
+<td>the lyric track index</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>The delay time.</td>
+</tr>
+</tbody>
 </table></div>
 </div>
 <hr>

@@ -2,12 +2,12 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>rc-main</title>
+<title>RCMainApplication</title>
 <meta name="generator" content="DocBook XSL Stylesheets V1.76.1">
-<link rel="home" href="index.html" title="RhythmCat UI Reference Manual">
+<link rel="home" href="index.html" title="RhythmCat Reference Manual">
 <link rel="up" href="ch01.html" title="[Insert title here]">
 <link rel="prev" href="ch01.html" title="[Insert title here]">
-<link rel="next" href="RhythmCat-rc-mpris2.html" title="rc-mpris2">
+<link rel="next" href="RhythmCat-rc-ui-dialog.html" title="rc-ui-dialog">
 <meta name="generator" content="GTK-Doc V1.18 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
@@ -17,38 +17,84 @@
 <td><a accesskey="p" href="ch01.html"><img src="left.png" width="24" height="24" border="0" alt="Prev"></a></td>
 <td><a accesskey="u" href="ch01.html"><img src="up.png" width="24" height="24" border="0" alt="Up"></a></td>
 <td><a accesskey="h" href="index.html"><img src="home.png" width="24" height="24" border="0" alt="Home"></a></td>
-<th width="100%" align="center">RhythmCat UI Reference Manual</th>
-<td><a accesskey="n" href="RhythmCat-rc-mpris2.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
+<th width="100%" align="center">RhythmCat Reference Manual</th>
+<td><a accesskey="n" href="RhythmCat-rc-ui-dialog.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
 </tr>
 <tr><td colspan="5" class="shortcuts">
-<a href="#RhythmCat-rc-main.synopsis" class="shortcut">Top</a>
+<a href="#RCMainApplication.synopsis" class="shortcut">Top</a>
                    | 
-                  <a href="#RhythmCat-rc-main.description" class="shortcut">Description</a>
+                  <a href="#RCMainApplication.description" class="shortcut">Description</a>
+                   | 
+                  <a href="#RCMainApplication.object-hierarchy" class="shortcut">Object Hierarchy</a>
+                   | 
+                  <a href="#RCMainApplication.implemented-interfaces" class="shortcut">Implemented Interfaces</a>
 </td></tr>
 </table>
 <div class="refentry">
-<a name="RhythmCat-rc-main"></a><div class="titlepage"></div>
+<a name="RCMainApplication"></a><div class="titlepage"></div>
 <div class="refnamediv"><table width="100%"><tr>
 <td valign="top">
-<h2><span class="refentrytitle"><a name="RhythmCat-rc-main.top_of_page"></a>rc-main</span></h2>
-<p>rc-main</p>
+<h2><span class="refentrytitle"><a name="RCMainApplication.top_of_page"></a>RCMainApplication</span></h2>
+<p>RCMainApplication</p>
 </td>
 <td valign="top" align="right"></td>
 </tr></table></div>
 <div class="refsynopsisdiv">
-<a name="RhythmCat-rc-main.synopsis"></a><h2>Synopsis</h2>
-<pre class="synopsis"><span class="returnvalue">void</span>                <a class="link" href="RhythmCat-rc-main.html#rc-main-exit" title="rc_main_exit ()">rc_main_exit</a>                        ();
-const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *       <a class="link" href="RhythmCat-rc-main.html#rc-main-get-data-dir" title="rc_main_get_data_dir ()">rc_main_get_data_dir</a>                ();
-const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *       <a class="link" href="RhythmCat-rc-main.html#rc-main-get-user-dir" title="rc_main_get_user_dir ()">rc_main_get_user_dir</a>                ();
-<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="returnvalue">gint</span></a>                <a class="link" href="RhythmCat-rc-main.html#rc-main-run" title="rc_main_run ()">rc_main_run</a>                         (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> *argc</code></em>,
+<a name="RCMainApplication.synopsis"></a><h2>Synopsis</h2>
+<pre class="synopsis">struct              <a class="link" href="RCMainApplication.html#RCMainApplication-struct" title="struct RCMainApplication">RCMainApplication</a>;
+struct              <a class="link" href="RCMainApplication.html#RCMainApplicationClass" title="struct RCMainApplicationClass">RCMainApplicationClass</a>;
+#define             <a class="link" href="RCMainApplication.html#RC-MAIN-APPLICATION-TYPE:CAPS" title="RC_MAIN_APPLICATION_TYPE">RC_MAIN_APPLICATION_TYPE</a>
+<span class="returnvalue">void</span>                <a class="link" href="RCMainApplication.html#rc-main-exit" title="rc_main_exit ()">rc_main_exit</a>                        ();
+const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *       <a class="link" href="RCMainApplication.html#rc-main-get-data-dir" title="rc_main_get_data_dir ()">rc_main_get_data_dir</a>                ();
+const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *       <a class="link" href="RCMainApplication.html#rc-main-get-user-dir" title="rc_main_get_user_dir ()">rc_main_get_user_dir</a>                ();
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="returnvalue">gint</span></a>                <a class="link" href="RCMainApplication.html#rc-main-run" title="rc_main_run ()">rc_main_run</a>                         (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> *argc</code></em>,
                                                          <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> **argv[]</code></em>);
 </pre>
 </div>
 <div class="refsect1">
-<a name="RhythmCat-rc-main.description"></a><h2>Description</h2>
+<a name="RCMainApplication.object-hierarchy"></a><h2>Object Hierarchy</h2>
+<pre class="synopsis">
+  <a href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GObject">GObject</a>
+   +----<a href="/usr/share/gtk-doc/html/gio/GApplication.html">GApplication</a>
+         +----<a href="/usr/share/gtk-doc/html/gtk3/GtkApplication.html">GtkApplication</a>
+               +----RCMainApplication
+</pre>
 </div>
 <div class="refsect1">
-<a name="RhythmCat-rc-main.details"></a><h2>Details</h2>
+<a name="RCMainApplication.implemented-interfaces"></a><h2>Implemented Interfaces</h2>
+<p>
+RCMainApplication implements
+ <a href="/usr/share/gtk-doc/html/gio/GActionGroup.html">GActionGroup</a>.</p>
+</div>
+<div class="refsect1">
+<a name="RCMainApplication.description"></a><h2>Description</h2>
+</div>
+<div class="refsect1">
+<a name="RCMainApplication.details"></a><h2>Details</h2>
+<div class="refsect2">
+<a name="RCMainApplication-struct"></a><h3>struct RCMainApplication</h3>
+<pre class="programlisting">struct RCMainApplication;</pre>
+<p>
+The data structure used for <a class="link" href="RCMainApplication.html" title="RCMainApplication"><span class="type">RCMainApplication</span></a> class.
+</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="RCMainApplicationClass"></a><h3>struct RCMainApplicationClass</h3>
+<pre class="programlisting">struct RCMainApplicationClass {
+};
+</pre>
+<p>
+<a class="link" href="RCMainApplication.html#RCMainApplicationClass" title="struct RCMainApplicationClass"><span class="type">RCMainApplicationClass</span></a> class.
+</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="RC-MAIN-APPLICATION-TYPE:CAPS"></a><h3>RC_MAIN_APPLICATION_TYPE</h3>
+<pre class="programlisting">#define RC_MAIN_APPLICATION_TYPE (rc_main_application_get_type())
+</pre>
+</div>
+<hr>
 <div class="refsect2">
 <a name="rc-main-exit"></a><h3>rc_main_exit ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>                rc_main_exit                        ();</pre>
