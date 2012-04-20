@@ -97,6 +97,13 @@ static void rc_ui_spectrum_widget_size_allocate(GtkWidget *widget,
     }
 }
 
+static void rc_ui_spectrum_widget_get_preferred_height(GtkWidget *widget,
+    gint *min_height, gint *nat_height)
+{
+    *min_height = 15;
+    *nat_height = 24;
+}
+
 static void rc_ui_spectrum_widget_interpolate(gfloat *in_array,
     guint in_size, gfloat *out_array, guint out_size)
 {
@@ -196,6 +203,8 @@ static void rc_ui_spectrum_widget_class_init(RCUiSpectrumWidgetClass *klass)
     widget_class->realize = rc_ui_spectrum_widget_realize;
     widget_class->size_allocate = rc_ui_spectrum_widget_size_allocate;
     widget_class->draw = rc_ui_spectrum_widget_draw;
+    widget_class->get_preferred_height =
+        rc_ui_spectrum_widget_get_preferred_height;
     g_type_class_add_private(klass, sizeof(RCUiSpectrumWidgetPrivate));
 }
 

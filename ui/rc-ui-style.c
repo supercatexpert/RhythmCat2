@@ -24,18 +24,45 @@
  */
  
 #include "rc-ui-style.h"
-#include "rc-ui-css.h"
+#include "rc-ui-resources.h"
 #include "rc-main.h"
 #include "rc-common.h"
 
 static GtkCssProvider *style_css_provider = NULL;
-static RCUiStyleEmbededTheme style_embeded_themes[] = {
+static RCUiStyleEmbededTheme *style_embeded_themes = NULL;
+static guint style_embeded_theme_number = 1;
+
+static void rc_ui_style_css_data_init()
+{
+    GBytes *bytes;
+    GResource *resource;
+    GError *error = NULL;
+    gsize size = 0;
+    gconstpointer data = NULL;
+    if(style_embeded_themes!=NULL) return;
+    resource = rc_ui_resources_get_resource();
+    style_embeded_themes = g_new0(RCUiStyleEmbededTheme,
+        style_embeded_theme_number+1);
+    
+    bytes = g_resource_lookup_data(resource,
+        "/org/RhythmCat2/ui/style/rc-ui-theme-monochrome.css",
+        G_RESOURCE_LOOKUP_FLAGS_NONE, &error);
+    if(bytes!=NULL)
     {
-        .name = "Monochrome",
-        .data = rc_ui_css_monochrome,
-        .length = sizeof(rc_ui_css_monochrome)
+        data = g_bytes_get_data(bytes, &size);
+        style_embeded_themes[0].name = "Monochrome";
+        style_embeded_themes[0].data = g_strdup(data);
+        style_embeded_themes[0].length = strlen(data);
+        g_bytes_unref(bytes);
     }
-};
+    else
+    {
+        g_warning("Cannot read theme \"Monochrome\" from resource data: %s",
+            error->message);
+        g_error_free(error);
+        error = NULL;
+    }
+}
 
 /**
  * rc_ui_style_css_set_file:
@@ -150,8 +177,10 @@ void rc_ui_style_css_unset()
 
 const RCUiStyleEmbededTheme *rc_ui_style_get_embeded_theme(guint *number)
 {
+    if(style_embeded_themes==NULL)
+        rc_ui_style_css_data_init();
     if(number!=NULL)
-        *number = sizeof(style_embeded_themes)/sizeof(RCUiStyleEmbededTheme);
+        *number = style_embeded_theme_number;
     return style_embeded_themes;
 }
 

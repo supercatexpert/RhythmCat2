@@ -48,6 +48,13 @@ void rc_ui_listview_catalog_delete_items();
 void rc_ui_listview_playlist_select_all();
 void rc_ui_listview_playlist_delete_items();
 void rc_ui_listview_playlist_refresh();
+void rc_ui_listview_playlist_set_column_display_mode(gboolean mode);
+gboolean rc_ui_listview_playlist_get_column_display_mode();
+void rc_ui_listview_playlist_set_title_format(const gchar *format);
+void rc_ui_listview_playlist_set_enabled_columns(gboolean artist_column,
+    gboolean album_column);
+void rc_ui_listview_playlist_get_enabled_columns(gboolean *artist_column,
+    gboolean *album_column);
 
 G_END_DECLS
 

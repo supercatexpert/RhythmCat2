@@ -61,15 +61,16 @@ LTLIBRARIES = $(noinst_LTLIBRARIES)
 am__librhythmcat_ui_2_0_la_SOURCES_DIST = rc-ui-listmodel.c \
 	rc-ui-player.c rc-ui-listview.c rc-ui-menu.c rc-ui-dialog.c \
 	rc-ui-slabel.c rc-ui-spectrum.c rc-ui-style.c rc-ui-plugin.c \
-	rc-ui-settings.c rc-ui-effect.c rc-main.c
+	rc-ui-settings.c rc-ui-effect.c rc-main.c rc-ui-resources.c
 @WITH_GTK_UI_TRUE@am__objects_1 = rc-ui-listmodel.lo rc-ui-player.lo \
 @WITH_GTK_UI_TRUE@	rc-ui-listview.lo rc-ui-menu.lo \
 @WITH_GTK_UI_TRUE@	rc-ui-dialog.lo rc-ui-slabel.lo \
 @WITH_GTK_UI_TRUE@	rc-ui-spectrum.lo rc-ui-style.lo \
 @WITH_GTK_UI_TRUE@	rc-ui-plugin.lo rc-ui-settings.lo \
 @WITH_GTK_UI_TRUE@	rc-ui-effect.lo rc-main.lo
+@WITH_GTK_UI_TRUE@am__objects_2 = rc-ui-resources.lo
 @WITH_GTK_UI_TRUE@am_librhythmcat_ui_2_0_la_OBJECTS =  \
-@WITH_GTK_UI_TRUE@	$(am__objects_1)
+@WITH_GTK_UI_TRUE@	$(am__objects_1) $(am__objects_2)
 librhythmcat_ui_2_0_la_OBJECTS = $(am_librhythmcat_ui_2_0_la_OBJECTS)
 AM_V_lt = $(am__v_lt_@AM_V@)
 am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
@@ -148,9 +149,9 @@ DATA = $(pkgconfig_DATA)
 am__librhythmcat_ui_2_0include_HEADERS_DIST = rc-ui-listmodel.h \
 	rc-ui-listview.h rc-ui-player.h rc-ui-menu.h rc-ui-dialog.h \
 	rc-ui-slabel.h rc-ui-style.h rc-ui-spectrum.h rc-ui-plugin.h \
-	rc-ui-settings.h rc-ui-effect.h rc-main.h rc-common.h
-am__noinst_HEADERS_DIST = rc-ui-css.h rc-ui-img-icon.xpm \
-	rc-ui-img-nocov.xpm
+	rc-ui-settings.h rc-ui-effect.h rc-main.h rc-common.h \
+	rc-ui-resources.h
+am__noinst_HEADERS_DIST = rc-ui-img-icon.xpm rc-ui-img-nocov.xpm
 HEADERS = $(librhythmcat_ui_2_0include_HEADERS) $(noinst_HEADERS)
 ETAGS = etags
 CTAGS = ctags
@@ -187,6 +188,7 @@ GETTEXT_MACRO_VERSION = @GETTEXT_MACRO_VERSION@
 GETTEXT_PACKAGE = @GETTEXT_PACKAGE@
 GLIB2_CFLAGS = @GLIB2_CFLAGS@
 GLIB2_LIBS = @GLIB2_LIBS@
+GLIB_COMPILE_RESOURCE = @GLIB_COMPILE_RESOURCE@
 GLIB_GENMARSHAL = @GLIB_GENMARSHAL@
 GMOFILES = @GMOFILES@
 GMSGFMT = @GMSGFMT@
@@ -323,7 +325,7 @@ top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 @WITH_GTK_UI_TRUE@noinst_LTLIBRARIES = librhythmcat-ui-2.0.la
 @WITH_GTK_UI_TRUE@noinst_HEADERS = \
-@WITH_GTK_UI_TRUE@    rc-ui-css.h rc-ui-img-icon.xpm rc-ui-img-nocov.xpm
+@WITH_GTK_UI_TRUE@    rc-ui-img-icon.xpm rc-ui-img-nocov.xpm
 
 @WITH_GTK_UI_TRUE@librhythmcat_ui_2_0_sources = \
 @WITH_GTK_UI_TRUE@    rc-ui-listmodel.c rc-ui-player.c rc-ui-listview.c rc-ui-menu.c \
@@ -336,26 +338,23 @@ top_srcdir = @top_srcdir@
 @WITH_GTK_UI_TRUE@    rc-ui-plugin.h rc-ui-settings.h rc-ui-effect.h rc-main.h \
 @WITH_GTK_UI_TRUE@    rc-common.h 
 
+@WITH_GTK_UI_TRUE@librhythmcat_ui_2_0_builtsources = rc-ui-resources.c
+@WITH_GTK_UI_TRUE@librhythmcat_ui_2_0_builtheaders = rc-ui-resources.h
 @WITH_GTK_UI_TRUE@RhythmCat2_SOURCES = \
 @WITH_GTK_UI_TRUE@    main.c
 
-@WITH_GTK_UI_TRUE@RhythmCat2_headers = \
-@WITH_GTK_UI_TRUE@    rc-ui-listmodel.h rc-ui-listview.h rc-ui-player.h rc-ui-menu.h \
-@WITH_GTK_UI_TRUE@    rc-ui-dialog.h rc-ui-slabel.h rc-ui-style.h rc-ui-spectrum.h \
-@WITH_GTK_UI_TRUE@    rc-ui-plugin.h rc-ui-settings.h rc-ui-effect.h rc-main.h \
-@WITH_GTK_UI_TRUE@    rc-common.h rc-ui-css.h
-
 @WITH_GTK_UI_TRUE@librhythmcat_ui_2_0_la_SOURCES = \
-@WITH_GTK_UI_TRUE@    $(librhythmcat_ui_2_0_sources)
+@WITH_GTK_UI_TRUE@    $(librhythmcat_ui_2_0_sources) $(librhythmcat_ui_2_0_builtsources)
 
 @WITH_GTK_UI_TRUE@librhythmcat_ui_2_0includedir = $(includedir)/rhythmcat2
 @WITH_GTK_UI_TRUE@librhythmcat_ui_2_0include_HEADERS = \
-@WITH_GTK_UI_TRUE@    $(librhythmcat_ui_2_0_headers)
+@WITH_GTK_UI_TRUE@    $(librhythmcat_ui_2_0_headers) $(librhythmcat_ui_2_0_builtheaders)
 
 @WITH_GTK_UI_TRUE@librhythmcat_ui_2_0_la_LDFLAGS = -export-dynamic -O2 -no-undefined -export-symbols-regex "^[[^_]].*"
 @WITH_GTK_UI_TRUE@librhythmcat_ui_2_0_la_LIBADD = @LIBOBJS@ @GLIB2_LIBS@ @GTK_LIBS@ @GSTREAMER_LIBS@ \
 @WITH_GTK_UI_TRUE@    @JSON_LIBS@ $(top_builddir)/lib/librhythmcat-2.0.la
 
+@WITH_GTK_UI_TRUE@CLEAN_FILES = $(BUILT_SOURCES)
 @WITH_GTK_UI_TRUE@RhythmCat2_DEPENDENCIES = @LIBOBJS@ librhythmcat-ui-2.0.la
 @WITH_GTK_UI_TRUE@RhythmCat2_LDFLAGS = -export-dynamic -no-undefined -export-symbols-regex "^[[^_]].*" -O2
 @WITH_GTK_UI_TRUE@INCLUDES = @GLIB2_CFLAGS@ @GTK_CFLAGS@ @GSTREAMER_CFLAGS@ @JSON_CFLAGS@ \
@@ -365,7 +364,9 @@ top_srcdir = @top_srcdir@
 @WITH_GTK_UI_TRUE@    @JSON_LIBS@ $(top_builddir)/lib/librhythmcat-2.0.la librhythmcat-ui-2.0.la
 
 @WITH_GTK_UI_TRUE@EXTRA_DIST = \
-@WITH_GTK_UI_TRUE@    rhythmcat-2.0.pc.in
+@WITH_GTK_UI_TRUE@    rhythmcat-2.0.pc.in \
+@WITH_GTK_UI_TRUE@    rc-ui-resources.gresource.xml \
+@WITH_GTK_UI_TRUE@    rc-ui-theme-monochrome.css
 
 @WITH_GTK_UI_TRUE@pkgconfigdir = $(libdir)/pkgconfig
 @WITH_GTK_UI_TRUE@pkgconfig_DATA = rhythmcat-2.0.pc
@@ -478,6 +479,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rc-ui-menu.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rc-ui-player.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rc-ui-plugin.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rc-ui-resources.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rc-ui-settings.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rc-ui-slabel.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rc-ui-spectrum.Plo@am__quote@
@@ -759,6 +761,14 @@ uninstall-am: uninstall-binPROGRAMS \
 	uninstall-librhythmcat_ui_2_0includeHEADERS \
 	uninstall-pkgconfigDATA
 
+
+@WITH_GTK_UI_TRUE@rc-ui-resources.c: rc-ui-resources.gresource.xml
+@WITH_GTK_UI_TRUE@	@GLIB_COMPILE_RESOURCE@ $(srcdir)/rc-ui-resources.gresource.xml \
+@WITH_GTK_UI_TRUE@	    --target=rc-ui-resources.c --generate-source --c-name=rc_ui_resources
+
+@WITH_GTK_UI_TRUE@rc-ui-resources.h: rc-ui-resources.gresource.xml
+@WITH_GTK_UI_TRUE@	@GLIB_COMPILE_RESOURCE@ $(srcdir)/rc-ui-resources.gresource.xml \
+@WITH_GTK_UI_TRUE@	    --target=rc-ui-resources.h --generate-header --c-name=rc_ui_resources
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

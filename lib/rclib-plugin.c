@@ -573,7 +573,7 @@ gboolean rclib_plugin_register(RCLibPluginData *plugin)
 RCLibPluginData *rclib_plugin_data_ref(RCLibPluginData *plugin)
 {
     if(plugin==NULL) return NULL;
-    plugin->ref_count++;
+    g_atomic_int_add(&(plugin->ref_count), 1);
     return plugin;
 }
 
@@ -588,8 +588,7 @@ RCLibPluginData *rclib_plugin_data_ref(RCLibPluginData *plugin)
 void rclib_plugin_data_unref(RCLibPluginData *plugin)
 {
     if(plugin==NULL) return;
-    plugin->ref_count--;
-    if(plugin->ref_count<=0)
+    if(g_atomic_int_dec_and_test(&(plugin->ref_count)))
         rclib_plugin_data_free(plugin);
 }
 

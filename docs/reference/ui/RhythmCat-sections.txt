@@ -31,6 +31,7 @@ rc_ui_dialog_save_album
 rc_ui_dialog_save_all_playlist
 rc_ui_dialog_save_playlist
 rc_ui_dialog_show_message
+rc_ui_dialog_show_supported_format
 </SECTION>
 
 <SECTION>
@@ -55,7 +56,9 @@ rc_ui_list_model_exit
 rc_ui_list_model_get_catalog_by_model
 rc_ui_list_model_get_catalog_store
 rc_ui_list_model_get_playlist_store
+rc_ui_list_model_get_playlist_title_format
 rc_ui_list_model_init
+rc_ui_list_model_set_playlist_title_format
 <SUBSECTION Standard>
 RC_UI_CATALOG_STORE
 RC_UI_CATALOG_STORE_CLASS
@@ -86,12 +89,17 @@ rc_ui_listview_get_catalog_widget
 rc_ui_listview_get_playlist_widget
 rc_ui_listview_init
 rc_ui_listview_playlist_delete_items
+rc_ui_listview_playlist_get_column_display_mode
 rc_ui_listview_playlist_get_cursor
+rc_ui_listview_playlist_get_enabled_columns
 rc_ui_listview_playlist_get_model
 rc_ui_listview_playlist_refresh
 rc_ui_listview_playlist_select
 rc_ui_listview_playlist_select_all
+rc_ui_listview_playlist_set_column_display_mode
+rc_ui_listview_playlist_set_enabled_columns
 rc_ui_listview_playlist_set_pango_attributes
+rc_ui_listview_playlist_set_title_format
 </SECTION>
 
 <SECTION>
@@ -108,6 +116,8 @@ rc_ui_menu_remove_menu_action
 RCUiPlayer
 RCUiPlayerClass
 RC_UI_PLAYER_TYPE
+rc_ui_player_cover_image_get_visible
+rc_ui_player_cover_image_set_visible
 rc_ui_player_exit
 rc_ui_player_get_default_cover_image
 rc_ui_player_get_icon_image
@@ -115,8 +125,14 @@ rc_ui_player_get_instance
 rc_ui_player_get_main_window
 rc_ui_player_get_tray_icon
 rc_ui_player_init
+rc_ui_player_lyric_labels_get_visible
+rc_ui_player_lyric_labels_set_visible
+rc_ui_player_present_main_window
+rc_ui_player_set_keep_above_state
 rc_ui_player_signal_connect
 rc_ui_player_signal_disconnect
+rc_ui_player_spectrum_get_visible
+rc_ui_player_spectrum_set_visible
 <SUBSECTION Standard>
 RC_UI_IS_PLAYER
 RC_UI_IS_PLAYER_CLASS

@@ -3,9 +3,10 @@ Introduction:
 RhythmCat2 is a music player which can be used under Linux. It is not only a
 normal music player, it has both command-line interface and graphic user
 interface, and it can extend its features by plug-ins, like lyric show
-in window, desktop lyric show, etc...
+in window, desktop lyric show, etc... The GTK+ UI can use custom GTK+ 3 themes,
+and the UI layout can be changed partially.
 
-Since this project in just in experimental stage, only GUI version has been
+Since this project in just in experimental stage, only GTK+ UI frontend has been
 implemented.
 
 Developing platform:
@@ -13,7 +14,7 @@ Developing platform:
 Operating System: Debian Wheezy (Testing) for AMD64
 Compiler: gcc 4.6.3
 Programming Language: C
-Dependent Libraries: glib-2.0 (>=2.30) gtk+-3.0(>=3.0) libjson0 (>=0.9)
+Dependent Libraries: glib-2.0 (>=2.32) gtk+-3.0(>=3.2) libjson0 (>=0.9)
     gstreamer-0.10 (>=0.10.30) gstreamer-plugins-base-0.10 (>=0.10.30)
     gstreamer-plugins-good-0.10 (>=0.10.30)
     
@@ -21,7 +22,7 @@ Suggest Libraries: gstreamer-plugins-bad-0.10 gstreamer-plugins-ugly-0.10
 
 Developing stage:
 
-Experimental, features are limited.
+Unstable, features are implemented basically, somehow not well tested.
 
 License:
 
@@ -45,24 +46,27 @@ Debian/Ubuntu, you can run the commands below to help you install the packages
 that the compilation needed: 
 
 sudo apt-get install build-essential libgtk-3-dev libgstreamer0.10-dev \
-    libgstreamer-plugins-base0.10-dev libjson-glib-dev
+    libgstreamer-plugins-base0.10-dev libjson0-dev
 
 If you want to compile Python3 loader and use Python3 plug-ins, install
-package python3-dev:
+package python3-dev (need Python version 3.2 or above):
 
 sudo apt-get install python3-dev
 
-If you want to play MP3 or other Restricted Format, please install Gstreamer
-Bad & Ugly plugins. In Debian/Ubuntu, you can just run:
+If you want to play MP3 or other Restricted Audio Format, please install
+GStreamer Bad & Ugly plug-ins. In Debian/Ubuntu, you can just run:
 
 sudo apt-get install gstreamer0.10-plugins-bad gstreamer0.10-plugins-ugly
 
 Then you can try to compile it:
 
-./configure #(add argument --with-native-plugins/--with-python3-plugins if \
-    you want native plug-ins/Python3 plug-ins)
+./configure --with-native-plugins --with-python3-plugins
 make
 sudo make install
+
+Notice: You can remove argument '--with-native-plugins' or
+'--with-python3-plugins' if you do not need native plug-ins or
+Python3 plug-ins.
 
 then just run /usr/local/bin/RhythmCat2, feel happy with it!
 

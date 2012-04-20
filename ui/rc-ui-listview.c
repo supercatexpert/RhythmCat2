@@ -55,7 +55,8 @@ typedef struct RCUiListViewPrivate
     GtkTreeViewColumn *playlist_artist_column;
     GtkTreeViewColumn *playlist_album_column;
     GtkTreeViewColumn *playlist_length_column;
-    GtkTreeViewColumn *playlist_rating_column; /* not available now */
+    GtkTreeViewColumn *playlist_rating_column; /* Not available now */
+    gboolean display_mode;
 }RCUiListViewPrivate;
 
 static RCUiListViewPrivate ui_listview_private = {0};
@@ -786,14 +787,12 @@ void rc_ui_listview_init(GtkWidget **catalog_widget,
         "max-width", 30, NULL);        
     g_object_set(priv->playlist_title_column, "expand", TRUE, NULL);
     g_object_set(priv->playlist_artist_column, "expand", TRUE, "visible",
-        FALSE, NULL);
+        FALSE, "resizable", TRUE, NULL);
     g_object_set(priv->playlist_album_column, "expand", TRUE, "visible",
-        FALSE, NULL);
+        FALSE, "resizable", TRUE, NULL);
     g_object_set(priv->playlist_length_column, "sizing",
         GTK_TREE_VIEW_COLUMN_FIXED, "fixed-width", 55, "alignment",
         1.0, NULL);
-    gtk_tree_view_column_set_visible(priv->playlist_artist_column, FALSE);
-    gtk_tree_view_column_set_visible(priv->playlist_album_column, FALSE);
     gtk_tree_view_append_column(GTK_TREE_VIEW(priv->catalog_listview),
         priv->catalog_state_column);
     gtk_tree_view_append_column(GTK_TREE_VIEW(priv->catalog_listview),
@@ -826,43 +825,35 @@ void rc_ui_listview_init(GtkWidget **catalog_widget,
         rc_ui_listview_playlist_search_comparison_func, NULL, NULL);
     rc_ui_listview_catalog_set_drag();
     rc_ui_listview_playlist_set_drag();
-    g_signal_connect(G_OBJECT(priv->catalog_name_renderer), "edited",
+    g_signal_connect(priv->catalog_name_renderer, "edited",
         G_CALLBACK(rc_ui_listview_catalog_row_edited), NULL);
-    g_signal_connect(G_OBJECT(priv->catalog_listview), "drag-motion",
+    g_signal_connect(priv->catalog_listview, "drag-motion",
         G_CALLBACK(rc_ui_listview_dnd_motion), NULL);
-    g_signal_connect(G_OBJECT(priv->playlist_listview), "drag-motion",
+    g_signal_connect(priv->playlist_listview, "drag-motion",
         G_CALLBACK(rc_ui_listview_dnd_motion), NULL);
-    g_signal_connect(G_OBJECT(priv->catalog_listview), "drag-data-get",
+    g_signal_connect(priv->catalog_listview, "drag-data-get",
         G_CALLBACK(rc_ui_listview_dnd_data_get), NULL);
-    g_signal_connect(G_OBJECT(priv->playlist_listview), "drag-data-get",
+    g_signal_connect(priv->playlist_listview, "drag-data-get",
         G_CALLBACK(rc_ui_listview_dnd_data_get), NULL);
-    g_signal_connect(G_OBJECT(priv->catalog_listview),
-        "drag-data-delete",
+    g_signal_connect(priv->catalog_listview, "drag-data-delete",
         G_CALLBACK(rc_ui_listview_dnd_delete), NULL);
-    g_signal_connect(G_OBJECT(priv->playlist_listview),
-        "drag-data-delete",
+    g_signal_connect(priv->playlist_listview, "drag-data-delete",
         G_CALLBACK(rc_ui_listview_dnd_delete), NULL);
-    g_signal_connect(G_OBJECT(priv->catalog_listview),
-        "drag-data-received",
+    g_signal_connect(priv->catalog_listview, "drag-data-received",
         G_CALLBACK(rc_ui_listview_catalog_dnd_data_received), NULL);
-    g_signal_connect(G_OBJECT(priv->playlist_listview),
-        "drag-data-received",
+    g_signal_connect(priv->playlist_listview, "drag-data-received",
         G_CALLBACK(rc_ui_listview_playlist_dnd_data_received), NULL);
-    g_signal_connect(G_OBJECT(priv->catalog_listview),
-        "button-press-event",
+    g_signal_connect(priv->catalog_listview, "button-press-event",
         G_CALLBACK(rc_ui_listview_button_pressed_event), NULL);
-    g_signal_connect(G_OBJECT(priv->playlist_listview),
-        "button-press-event",
+    g_signal_connect(priv->playlist_listview, "button-press-event",
         G_CALLBACK(rc_ui_listview_button_pressed_event), NULL);
-    g_signal_connect(G_OBJECT(priv->catalog_listview),
-        "button-release-event",
+    g_signal_connect(priv->catalog_listview, "button-release-event",
         G_CALLBACK(rc_ui_listview_catalog_button_release_event), NULL);
-    g_signal_connect(G_OBJECT(priv->playlist_listview),
-        "button-release-event",
+    g_signal_connect(priv->playlist_listview, "button-release-event",
         G_CALLBACK(rc_ui_listview_playlist_button_release_event), NULL);
-    g_signal_connect(G_OBJECT(priv->catalog_listview), "cursor-changed",
+    g_signal_connect(priv->catalog_listview, "cursor-changed",
         G_CALLBACK(rc_ui_listview_catalog_row_selected), NULL);
-    g_signal_connect(G_OBJECT(priv->playlist_listview), "row-activated",
+    g_signal_connect(priv->playlist_listview, "row-activated",
         G_CALLBACK(rc_ui_listview_playlist_row_activated), NULL);
     rclib_db_signal_connect("catalog-delete",
         G_CALLBACK(rc_ui_listview_catalog_delete_cb), NULL);
@@ -1205,5 +1196,108 @@ void rc_ui_listview_playlist_refresh()
     rclib_db_playlist_refresh((GSequenceIter *)iter.user_data);
 }
 
+/**
+ * rc_ui_listview_playlist_set_column_display_mode:
+ * @mode: the column display mode
+ *
+ * Set the column display mode, set it to #FALSE to use single title column
+ * mode, set it to #TRUE to show metadata in more than one columns and
+ * the list header.
+ */
+
+void rc_ui_listview_playlist_set_column_display_mode(gboolean mode)
+{
+    RCUiListViewPrivate *priv = &ui_listview_private;
+    if(priv->playlist_listview==NULL) return;
+    priv->display_mode = mode;
+    if(mode)
+    {
+        g_object_set(priv->playlist_listview, "headers-visible", TRUE, NULL);
+        rc_ui_listview_playlist_set_title_format("%TITLE");
+    }
+    else
+    {
+        g_object_set(priv->playlist_listview, "headers-visible", FALSE, NULL);
+        g_object_set(priv->playlist_artist_column, "visible", FALSE, NULL);
+        g_object_set(priv->playlist_album_column, "visible", FALSE, NULL);
+    }
+}
+
+/**
+ * rc_ui_listview_playlist_get_column_display_mode:
+ *
+ * Get the column display mode.
+ *
+ * Returns: The column display mode.
+ */
+
+gboolean rc_ui_listview_playlist_get_column_display_mode()
+{
+    RCUiListViewPrivate *priv = &ui_listview_private;
+    return priv->display_mode;
+}
+
+/**
+ * rc_ui_listview_playlist_set_title_format:
+ * @format: the format string
+ *
+ * Set the format string of the title column in the playlist, using
+ * %TITLE as title string, %ARTIST as artist string, %ALBUM as album string.
+ * Notice that %TITLE should be always included in the string.
+ */
+
+void rc_ui_listview_playlist_set_title_format(const gchar *format)
+{
+    RCUiListViewPrivate *priv = &ui_listview_private;
+    if(priv->playlist_listview==NULL) return;
+    if(format==NULL || g_strstr_len(format, -1, "%TITLE")==NULL)
+        rc_ui_list_model_set_playlist_title_format("%TITLE");
+    else
+        rc_ui_list_model_set_playlist_title_format(format);
+    gtk_widget_queue_draw(priv->playlist_listview);
+}
+
+/**
+ * rc_ui_listview_playlist_set_enabled_columns:
+ * @artist_column: whether to show artist column
+ * @album_column: whether to show album column
+ *
+ * Whether the artist column or album column should be displayed in the
+ * playlist.
+ * Notice that this function will only take effects if the display mode is
+ * set to #TRUE.
+ */
+
+void rc_ui_listview_playlist_set_enabled_columns(gboolean artist_column,
+    gboolean album_column)
+{
+    RCUiListViewPrivate *priv = &ui_listview_private;
+    if(priv->playlist_listview==NULL) return;
+    if(!priv->display_mode) return;
+    g_object_set(priv->playlist_artist_column, "visible", artist_column,
+        NULL);
+    g_object_set(priv->playlist_album_column, "visible", album_column,
+        NULL);
+}
+
+/**
+ * rc_ui_listview_playlist_get_enabled_columns:
+ * @artist_column: return the visibility of the artist column
+ * @album_column: return the visibility of the album column
+ *
+ * Get the visibility of the artist column and album column.
+ */
+
+void rc_ui_listview_playlist_get_enabled_columns(gboolean *artist_column,
+    gboolean *album_column)
+{
+    RCUiListViewPrivate *priv = &ui_listview_private;
+    gboolean state;
+    if(priv->playlist_listview==NULL) return;
+    g_object_get(priv->playlist_listview, "headers-visible", &state, NULL);
+    if(artist_column!=NULL) *artist_column = state;
+    g_object_get(priv->playlist_artist_column, "visible", &state, NULL);
+    if(album_column!=NULL) *album_column = state;
+}
 
 

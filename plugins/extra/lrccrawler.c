@@ -372,9 +372,9 @@ static void rc_plugin_lrccrawler_search_button_clicked(GtkButton *button,
     text = gtk_entry_get_text(GTK_ENTRY(priv->artist_entry));
     if(text!=NULL && strlen(text)>0)
         mmd->artist = g_strdup(text);
-    priv->search_thread = g_thread_create(
-        rc_plugin_lrccrawler_search_lyric_thread_func, (gpointer)mmd,
-        FALSE, &error);
+    priv->search_thread = g_thread_new("LyricCrawler-Search-Thread",
+        rc_plugin_lrccrawler_search_lyric_thread_func, (gpointer)mmd);
+    g_thread_unref(priv->search_thread);
     if(error!=NULL)
     {
         g_warning("Cannot start search thread: %s", error->message);
@@ -413,9 +413,9 @@ static void rc_plugin_lrccrawler_download_button_clicked(
     args = g_new0(gchar *, 2);
     args[0] = url;
     args[1] = g_strdup(path);
-    priv->download_thread = g_thread_create(
-        rc_plugin_lrccrawler_down_lyric_thread_func, args, FALSE,
-        &error);
+    priv->download_thread = g_thread_new("LyricCrawler-Download-Thread",
+        rc_plugin_lrccrawler_down_lyric_thread_func, args);
+    g_thread_unref(priv->download_thread);
     if(error!=NULL)
     {
         g_warning("Cannot start download thread: %s", error->message);

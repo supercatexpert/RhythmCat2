@@ -88,6 +88,12 @@ GtkStatusIcon *rc_ui_player_get_tray_icon();
 GdkPixbuf *rc_ui_player_get_default_cover_image();
 void rc_ui_player_present_main_window();
 void rc_ui_player_set_keep_above_state(gboolean state);
+void rc_ui_player_cover_image_set_visible(gboolean visible);
+gboolean rc_ui_player_cover_image_get_visible();
+void rc_ui_player_lyric_labels_set_visible(gboolean visible);
+gboolean rc_ui_player_lyric_labels_get_visible();
+void rc_ui_player_spectrum_set_visible(gboolean visible);
+gboolean rc_ui_player_spectrum_get_visible();
 
 G_END_DECLS
 

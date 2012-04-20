@@ -45,10 +45,10 @@ typedef struct RCUiPlaylistStorePrivate {
     GSequenceIter *catalog_iter;
     gint stamp;
     gint n_columns;
-    gchar *format;
 }RCUiPlaylistStorePrivate;
 
 static GtkTreeModel *catalog_model = NULL;
+static gchar *format_string = NULL;
 static gpointer rc_ui_catalog_store_parent_class = NULL;
 static gpointer rc_ui_playlist_store_parent_class = NULL;
 
@@ -365,31 +365,31 @@ static void rc_ui_playlist_store_get_value(GtkTreeModel *model,
                 ralbum = g_strdup(list_data->album);
             else
                 ralbum = g_strdup(_("Unknown Album"));
-            len = strlen(priv->format);
+            len = strlen(format_string);
             ftitle = g_string_new(NULL);
             for(i=0;i<len;i++)
             {
-                if(priv->format[i]!='%')
-                    g_string_append_c(ftitle, priv->format[i]);
+                if(format_string[i]!='%')
+                    g_string_append_c(ftitle, format_string[i]);
                 else
                 {
-                    if(strncmp(priv->format+i, "%TITLE", 6)==0)
+                    if(strncmp(format_string+i, "%TITLE", 6)==0)
                     {
                         g_string_append(ftitle, rtitle);
                         i+=5;
                     }
-                    else if(strncmp(priv->format+i, "%ARTIST", 7)==0)
+                    else if(strncmp(format_string+i, "%ARTIST", 7)==0)
                     {
                         g_string_append(ftitle, rartist);
                         i+=6;
                     }
-                    else if(strncmp(priv->format+i, "%ALBUM", 6)==0)
+                    else if(strncmp(format_string+i, "%ALBUM", 6)==0)
                     {
                         g_string_append(ftitle, ralbum);
                         i+=5;
                     }
                     else
-                        g_string_append_c(ftitle, priv->format[i]);
+                        g_string_append_c(ftitle, format_string[i]);
                 }
             }
             g_free(rtitle);
@@ -724,10 +724,7 @@ static void rc_ui_catalog_store_finalize(GObject *object)
 
 static void rc_ui_playlist_store_finalize(GObject *object)
 {
-    RCUiPlaylistStorePrivate *priv;
     g_return_if_fail(RC_UI_IS_PLAYLIST_STORE(object));
-    priv = RC_UI_PLAYLIST_STORE_GET_PRIVATE(object);
-    g_free(priv->format);
     G_OBJECT_CLASS(rc_ui_playlist_store_parent_class)->finalize(object);
 }
 
@@ -768,7 +765,6 @@ static void rc_ui_playlist_store_init(RCUiPlaylistStore *store)
 	priv->stamp = g_random_int();
     priv->playlist = NULL;
     priv->n_columns = RC_UI_PLAYLIST_COLUMN_LAST;
-    priv->format = g_strdup("%TITLE");
 }
 
 GType rc_ui_catalog_store_get_type()
@@ -1031,6 +1027,8 @@ gboolean rc_ui_list_model_init()
         g_warning("Cannot load catalog from music database!");
         return FALSE;
     }
+    if(format_string==NULL)
+        format_string = g_strdup("%TITLE");
     catalog_model = GTK_TREE_MODEL(g_object_new(
         RC_UI_TYPE_CATALOG_STORE, NULL));
     catalog_priv = RC_UI_CATALOG_STORE_GET_PRIVATE(catalog_model);
@@ -1132,4 +1130,33 @@ GSequenceIter *rc_ui_list_model_get_catalog_by_model(GtkTreeModel *model)
     return priv->catalog_iter;
 }
 
+/**
+ * rc_ui_list_model_set_playlist_title_format:
+ * @format: the format string
+ *
+ * Set the format string of the title column in the playlist, using
+ * %TITLE as title string, %ARTIST as artist string, %ALBUM as album string.
+ * Notice that %TITLE should be always included in the string.
+ */
+
+void rc_ui_list_model_set_playlist_title_format(const gchar *format)
+{
+    if(format==NULL || g_strstr_len(format, -1, "%TITLE")==NULL)
+        return;
+    g_free(format_string);
+    format_string = g_strdup(format);
+}
+
+/**
+ * rc_ui_list_model_get_playlist_title_format:
+ *
+ * Get the format string of the title column in the playlist.
+ *
+ * Returns: The format string, do not free or modify it.
+ */
+
+const gchar *rc_ui_list_model_get_playlist_title_format()
+{
+    return format_string;
+}
 

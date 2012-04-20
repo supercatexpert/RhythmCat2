@@ -2,7 +2,7 @@
 <!DOCTYPE book PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "">
 <book xmlns="http://www.devhelp.net/book" title="RhythmCat Reference Manual" link="index.html" author="" name="RhythmCat" version="2" language="c">
   <chapters>
-    <sub name="[Insert title here]" link="ch01.html">
+    <sub name="API reference" link="ch01.html">
       <sub name="RCMainApplication" link="RCMainApplication.html"/>
       <sub name="rc-ui-dialog" link="RhythmCat-rc-ui-dialog.html"/>
       <sub name="rc-ui-effect" link="RhythmCat-rc-ui-effect.html"/>
@@ -41,6 +41,7 @@
     <keyword type="function" name="rc_ui_dialog_save_all_playlist ()" link="RhythmCat-rc-ui-dialog.html#rc-ui-dialog-save-all-playlist"/>
     <keyword type="function" name="rc_ui_dialog_save_playlist ()" link="RhythmCat-rc-ui-dialog.html#rc-ui-dialog-save-playlist"/>
     <keyword type="function" name="rc_ui_dialog_show_message ()" link="RhythmCat-rc-ui-dialog.html#rc-ui-dialog-show-message"/>
+    <keyword type="function" name="rc_ui_dialog_show_supported_format ()" link="RhythmCat-rc-ui-dialog.html#rc-ui-dialog-show-supported-format"/>
     <keyword type="function" name="rc_ui_effect_window_destroy ()" link="RhythmCat-rc-ui-effect.html#rc-ui-effect-window-destroy"/>
     <keyword type="function" name="rc_ui_effect_window_hide ()" link="RhythmCat-rc-ui-effect.html#rc-ui-effect-window-hide"/>
     <keyword type="function" name="rc_ui_effect_window_init ()" link="RhythmCat-rc-ui-effect.html#rc-ui-effect-window-init"/>
@@ -55,7 +56,9 @@
     <keyword type="function" name="rc_ui_list_model_get_catalog_by_model ()" link="RCUiPlaylistStore.html#rc-ui-list-model-get-catalog-by-model"/>
     <keyword type="function" name="rc_ui_list_model_get_catalog_store ()" link="RCUiPlaylistStore.html#rc-ui-list-model-get-catalog-store"/>
     <keyword type="function" name="rc_ui_list_model_get_playlist_store ()" link="RCUiPlaylistStore.html#rc-ui-list-model-get-playlist-store"/>
+    <keyword type="function" name="rc_ui_list_model_get_playlist_title_format ()" link="RCUiPlaylistStore.html#rc-ui-list-model-get-playlist-title-format"/>
     <keyword type="function" name="rc_ui_list_model_init ()" link="RCUiPlaylistStore.html#rc-ui-list-model-init"/>
+    <keyword type="function" name="rc_ui_list_model_set_playlist_title_format ()" link="RCUiPlaylistStore.html#rc-ui-list-model-set-playlist-title-format"/>
     <keyword type="function" name="rc_ui_listview_catalog_delete_items ()" link="RhythmCat-rc-ui-listview.html#rc-ui-listview-catalog-delete-items"/>
     <keyword type="function" name="rc_ui_listview_catalog_get_cursor ()" link="RhythmCat-rc-ui-listview.html#rc-ui-listview-catalog-get-cursor"/>
     <keyword type="function" name="rc_ui_listview_catalog_get_model ()" link="RhythmCat-rc-ui-listview.html#rc-ui-listview-catalog-get-model"/>
@@ -67,12 +70,17 @@
     <keyword type="function" name="rc_ui_listview_get_playlist_widget ()" link="RhythmCat-rc-ui-listview.html#rc-ui-listview-get-playlist-widget"/>
     <keyword type="function" name="rc_ui_listview_init ()" link="RhythmCat-rc-ui-listview.html#rc-ui-listview-init"/>
     <keyword type="function" name="rc_ui_listview_playlist_delete_items ()" link="RhythmCat-rc-ui-listview.html#rc-ui-listview-playlist-delete-items"/>
+    <keyword type="function" name="rc_ui_listview_playlist_get_column_display_mode ()" link="RhythmCat-rc-ui-listview.html#rc-ui-listview-playlist-get-column-display-mode"/>
     <keyword type="function" name="rc_ui_listview_playlist_get_cursor ()" link="RhythmCat-rc-ui-listview.html#rc-ui-listview-playlist-get-cursor"/>
+    <keyword type="function" name="rc_ui_listview_playlist_get_enabled_columns ()" link="RhythmCat-rc-ui-listview.html#rc-ui-listview-playlist-get-enabled-columns"/>
     <keyword type="function" name="rc_ui_listview_playlist_get_model ()" link="RhythmCat-rc-ui-listview.html#rc-ui-listview-playlist-get-model"/>
     <keyword type="function" name="rc_ui_listview_playlist_refresh ()" link="RhythmCat-rc-ui-listview.html#rc-ui-listview-playlist-refresh"/>
     <keyword type="function" name="rc_ui_listview_playlist_select ()" link="RhythmCat-rc-ui-listview.html#rc-ui-listview-playlist-select"/>
     <keyword type="function" name="rc_ui_listview_playlist_select_all ()" link="RhythmCat-rc-ui-listview.html#rc-ui-listview-playlist-select-all"/>
+    <keyword type="function" name="rc_ui_listview_playlist_set_column_display_mode ()" link="RhythmCat-rc-ui-listview.html#rc-ui-listview-playlist-set-column-display-mode"/>
+    <keyword type="function" name="rc_ui_listview_playlist_set_enabled_columns ()" link="RhythmCat-rc-ui-listview.html#rc-ui-listview-playlist-set-enabled-columns"/>
     <keyword type="function" name="rc_ui_listview_playlist_set_pango_attributes ()" link="RhythmCat-rc-ui-listview.html#rc-ui-listview-playlist-set-pango-attributes"/>
+    <keyword type="function" name="rc_ui_listview_playlist_set_title_format ()" link="RhythmCat-rc-ui-listview.html#rc-ui-listview-playlist-set-title-format"/>
     <keyword type="function" name="rc_ui_menu_add_menu_action ()" link="RhythmCat-rc-ui-menu.html#rc-ui-menu-add-menu-action"/>
     <keyword type="function" name="rc_ui_menu_get_ui_manager ()" link="RhythmCat-rc-ui-menu.html#rc-ui-menu-get-ui-manager"/>
     <keyword type="function" name="rc_ui_menu_init ()" link="RhythmCat-rc-ui-menu.html#rc-ui-menu-init"/>
@@ -80,6 +88,8 @@
     <keyword type="struct" name="struct RCUiPlayer" link="RCUiPlayer.html#RCUiPlayer-struct"/>
     <keyword type="struct" name="struct RCUiPlayerClass" link="RCUiPlayer.html#RCUiPlayerClass"/>
     <keyword type="macro" name="RC_UI_PLAYER_TYPE" link="RCUiPlayer.html#RC-UI-PLAYER-TYPE:CAPS"/>
+    <keyword type="function" name="rc_ui_player_cover_image_get_visible ()" link="RCUiPlayer.html#rc-ui-player-cover-image-get-visible"/>
+    <keyword type="function" name="rc_ui_player_cover_image_set_visible ()" link="RCUiPlayer.html#rc-ui-player-cover-image-set-visible"/>
     <keyword type="function" name="rc_ui_player_exit ()" link="RCUiPlayer.html#rc-ui-player-exit"/>
     <keyword type="function" name="rc_ui_player_get_default_cover_image ()" link="RCUiPlayer.html#rc-ui-player-get-default-cover-image"/>
     <keyword type="function" name="rc_ui_player_get_icon_image ()" link="RCUiPlayer.html#rc-ui-player-get-icon-image"/>
@@ -87,8 +97,15 @@
     <keyword type="function" name="rc_ui_player_get_main_window ()" link="RCUiPlayer.html#rc-ui-player-get-main-window"/>
     <keyword type="function" name="rc_ui_player_get_tray_icon ()" link="RCUiPlayer.html#rc-ui-player-get-tray-icon"/>
     <keyword type="function" name="rc_ui_player_init ()" link="RCUiPlayer.html#rc-ui-player-init"/>
+    <keyword type="function" name="rc_ui_player_lyric_labels_get_visible ()" link="RCUiPlayer.html#rc-ui-player-lyric-labels-get-visible"/>
+    <keyword type="function" name="rc_ui_player_lyric_labels_set_visible ()" link="RCUiPlayer.html#rc-ui-player-lyric-labels-set-visible"/>
+    <keyword type="function" name="rc_ui_player_present_main_window ()" link="RCUiPlayer.html#rc-ui-player-present-main-window"/>
+    <keyword type="function" name="rc_ui_player_set_keep_above_state ()" link="RCUiPlayer.html#rc-ui-player-set-keep-above-state"/>
     <keyword type="function" name="rc_ui_player_signal_connect ()" link="RCUiPlayer.html#rc-ui-player-signal-connect"/>
     <keyword type="function" name="rc_ui_player_signal_disconnect ()" link="RCUiPlayer.html#rc-ui-player-signal-disconnect"/>
+    <keyword type="function" name="rc_ui_player_spectrum_get_visible ()" link="RCUiPlayer.html#rc-ui-player-spectrum-get-visible"/>
+    <keyword type="function" name="rc_ui_player_spectrum_set_visible ()" link="RCUiPlayer.html#rc-ui-player-spectrum-set-visible"/>
+    <keyword type="signal" name="The &quot;keep-above-changed&quot; signal" link="RCUiPlayer.html#RCUiPlayer-keep-above-changed"/>
     <keyword type="signal" name="The &quot;ready&quot; signal" link="RCUiPlayer.html#RCUiPlayer-ready"/>
     <keyword type="function" name="rc_ui_plugin_window_destroy ()" link="RhythmCat-rc-ui-plugin.html#rc-ui-plugin-window-destroy"/>
     <keyword type="function" name="rc_ui_plugin_window_show ()" link="RhythmCat-rc-ui-plugin.html#rc-ui-plugin-window-show"/>

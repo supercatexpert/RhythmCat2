@@ -96,6 +96,7 @@ GETTEXT_MACRO_VERSION = @GETTEXT_MACRO_VERSION@
 GETTEXT_PACKAGE = @GETTEXT_PACKAGE@
 GLIB2_CFLAGS = @GLIB2_CFLAGS@
 GLIB2_LIBS = @GLIB2_LIBS@
+GLIB_COMPILE_RESOURCE = @GLIB_COMPILE_RESOURCE@
 GLIB_GENMARSHAL = @GLIB_GENMARSHAL@
 GMOFILES = @GMOFILES@
 GMSGFMT = @GMSGFMT@
@@ -286,7 +287,7 @@ AUTOMAKE_OPTIONS = 1.6
 
 # Header files to ignore when scanning. Use base file name, no paths
 # e.g. IGNORE_HFILES=gtkdebug.h gtkintl.h
-@WITH_GTK_UI_TRUE@IGNORE_HFILES = rrc-ui-img-icon.xpm rc-ui-img-nocov.xpm rc-ui-css.h rc-common.h
+@WITH_GTK_UI_TRUE@IGNORE_HFILES = rrc-ui-img-icon.xpm rc-ui-img-nocov.xpm rc-ui-resources.h rc-common.h
 
 # Images to copy into HTML directory.
 # e.g. HTML_IMAGES=$(top_srcdir)/gtk/stock-icons/stock_about_24.png

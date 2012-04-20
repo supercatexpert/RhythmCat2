@@ -1,11 +1,10 @@
 - Bug Report Interface
-- Upgrade the dependency to GLib 2.32 when it is available on Debian Wheezy,
-  and use new threads API in newer GLib
 - Upgrade the dependency to GTK+ 3.4 when it is available on Debian Wheezy
-- Make some widgets hidable (e.g. cover image, lyric label, spectrum show)
-- Playlist text format support
 - Import playlist data from legacy version
-- Auto-save playlist
+- Auto-save the changes in the playlist (to another file), if the player is
+  not terminated normally, users can choose whether to use the auto-saved one.
+- Solve the library path name problem (in Fedora x64, it will be $PREFIX/lib64,
+  in Debian Testing/sid x64, it will be $PREFIX/lib/x86_64-linux-gnu).
 
 Long-term:
 - GObject Introspection (GI) support

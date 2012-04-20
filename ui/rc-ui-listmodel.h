@@ -118,6 +118,8 @@ void rc_ui_list_model_exit();
 GtkTreeModel *rc_ui_list_model_get_catalog_store();
 GtkTreeModel *rc_ui_list_model_get_playlist_store(GtkTreeIter *iter);
 GSequenceIter *rc_ui_list_model_get_catalog_by_model(GtkTreeModel *model);
+void rc_ui_list_model_set_playlist_title_format(const gchar *format);
+const gchar *rc_ui_list_model_get_playlist_title_format();
 
 G_END_DECLS
 

@@ -132,7 +132,6 @@ gboolean rclib_init(gint *argc, gchar **argv[], const gchar *dir,
     gchar *lyric_dir, *album_dir;
     gchar *settings_file;
     if(dir==NULL) return FALSE;
-    if(!g_thread_supported()) g_thread_init(NULL);
     g_type_init();
     bindtextdomain(GETTEXT_PACKAGE, LOCALEDIR);
     bind_textdomain_codeset(GETTEXT_PACKAGE, "UTF-8");

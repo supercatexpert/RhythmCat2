@@ -25,6 +25,7 @@
 
 #include "rc-ui-player.h"
 #include "rc-ui-listview.h"
+#include "rc-ui-listmodel.h"
 #include "rc-ui-menu.h"
 #include "rc-ui-dialog.h"
 #include "rc-ui-slabel.h"
@@ -32,6 +33,8 @@
 #include "rc-ui-img-icon.xpm"
 #include "rc-ui-img-nocov.xpm"
 #include "rc-common.h"
+
+#define RC_UI_PLAYER_COVER_IMAGE_SIZE 160
 
 #define RC_UI_PLAYER_GET_PRIVATE(obj) G_TYPE_INSTANCE_GET_PRIVATE((obj), \
     RC_UI_PLAYER_TYPE, RCUiPlayerPrivate)
@@ -95,7 +98,7 @@ typedef struct RCUiPlayerPrivate
     gulong import_updated_id;
     gulong refresh_updated_id;  
     gulong album_found_id;
-    gulong album_none_id;  
+    gulong album_none_id;
 }RCUiPlayerPrivate;
 
 enum
@@ -1100,18 +1103,18 @@ static void rc_ui_player_layout_init(RCUiPlayerPrivate *priv)
     lyric_grid = gtk_grid_new();
     info_grid = gtk_grid_new();
     ctrl_button_grid = gtk_grid_new();
-    g_object_set(priv->album_frame, "margin-left", 1, "margin-right", 2,
+    g_object_set(priv->album_frame, "margin-left", 1, "margin-right", 0,
         NULL);
     g_object_set(info_grid, "column-spacing", 2, NULL);
     g_object_set(mmd_grid, "row-spacing", 2, "hexpand-set", TRUE,
         "hexpand", TRUE, "vexpand-set", TRUE, "vexpand", FALSE, NULL);
     g_object_set(time_grid, "row-spacing", 2, NULL);
     g_object_set(lyric_grid, "margin-top", 2, "margin-bottom", 2, NULL);
-    g_object_set(panel_grid, "column-spacing", 2, "hexpand-set", TRUE,
-        "hexpand", NULL);
+    g_object_set(panel_grid, "hexpand-set", TRUE, "hexpand", TRUE, NULL);
     g_object_set(player_grid, "expand", TRUE, NULL);
     g_object_set(panel_right_grid, "hexpand-set", TRUE, "hexpand", TRUE,
-        "vexpand-set", TRUE, "vexpand", FALSE, NULL);
+        "vexpand-set", TRUE, "vexpand", FALSE, "margin-left", 4,
+        "margin-right", 2, NULL);
     gtk_container_add(GTK_CONTAINER(priv->catalog_scr_window),
         priv->catalog_listview);
     gtk_container_add(GTK_CONTAINER(priv->playlist_scr_window),
@@ -1341,8 +1344,8 @@ static void rc_ui_player_instance_init(RCUiPlayer *ui)
     priv = RC_UI_PLAYER_GET_PRIVATE(ui);
     priv->cover_set_flag = FALSE;
     priv->update_seek_scale = TRUE;
-    priv->cover_image_width = 160;
-    priv->cover_image_height = 160;
+    priv->cover_image_width = RC_UI_PLAYER_COVER_IMAGE_SIZE;
+    priv->cover_image_height = RC_UI_PLAYER_COVER_IMAGE_SIZE;
     priv->cover_default_pixbuf = gdk_pixbuf_new_from_xpm_data(
         (const gchar **)&ui_image_default_cover);
     priv->icon_pixbuf = gdk_pixbuf_new_from_xpm_data(
@@ -1395,7 +1398,9 @@ static void rc_ui_player_instance_init(RCUiPlayer *ui)
     g_object_set(priv->main_window, "name", "RC2MainWindow", "title",
         "RhythmCat2 Music Player", "icon", priv->icon_pixbuf,
         "window-position", GTK_WIN_POS_CENTER, "default-width", 600,
-        "default-height", 400, "has-resize-grip", FALSE,  NULL);
+        "default-height", 400, "has-resize-grip", FALSE,
+        "role", "RhythmCat2 Music Player Main Window", "startup-id",
+        "RhythmCat2", NULL);
     gtk_window_set_geometry_hints(GTK_WINDOW(priv->main_window), 
         GTK_WIDGET(priv->main_window), &main_window_hints,
         GDK_HINT_MIN_SIZE);
@@ -1708,4 +1713,106 @@ void rc_ui_player_set_keep_above_state(gboolean state)
         ui_player_signals[SIGNAL_KEEP_ABOVE_CHANGED], 0, state);
 }
 
+/**
+ * rc_ui_player_cover_image_set_visible:
+ * @visible: whether the widget is visible
+ *
+ * Set the visibilty of the cover image widget.
+ */
+
+void rc_ui_player_cover_image_set_visible(gboolean visible)
+{
+    RCUiPlayerPrivate *priv = NULL;
+    if(ui_player_instance==NULL) return;
+    priv = RC_UI_PLAYER_GET_PRIVATE(ui_player_instance);
+    if(priv==NULL || priv->album_frame==NULL) return;
+    gtk_widget_set_visible(priv->album_frame, visible);
+}
+
+/**
+ * rc_ui_player_cover_image_get_visible: 
+ *
+ * Get the visibilty of the cover image widget.
+ *
+ * Returns: Whether the widget is visible.
+ */
+
+gboolean rc_ui_player_cover_image_get_visible()
+{
+    RCUiPlayerPrivate *priv = NULL;
+    if(ui_player_instance==NULL) return FALSE;
+    priv = RC_UI_PLAYER_GET_PRIVATE(ui_player_instance);
+    if(priv==NULL || priv->album_frame==NULL) return FALSE;
+    return gtk_widget_get_visible(priv->album_frame);
+}
+
+/**
+ * rc_ui_player_lyric_labels_set_visible:
+ * @visible: whether the widget is visible
+ *
+ * Set the visibilty of the lyric label widgets.
+ */
+
+void rc_ui_player_lyric_labels_set_visible(gboolean visible)
+{
+    RCUiPlayerPrivate *priv = NULL;
+    if(ui_player_instance==NULL) return;
+    priv = RC_UI_PLAYER_GET_PRIVATE(ui_player_instance);
+    if(priv==NULL || priv->lyric1_slabel==NULL || priv->lyric2_slabel==NULL)
+        return;
+    gtk_widget_set_visible(priv->lyric1_slabel, visible);
+    gtk_widget_set_visible(priv->lyric2_slabel, visible);
+}
+
+/**
+ * rc_ui_player_lyric_labels_get_visible: 
+ *
+ * Get the visibilty of the lyric label widgets.
+ *
+ * Returns: Whether the widget is visible.
+ */
+
+gboolean rc_ui_player_lyric_labels_get_visible()
+{
+    RCUiPlayerPrivate *priv = NULL;
+    if(ui_player_instance==NULL) return FALSE;
+    priv = RC_UI_PLAYER_GET_PRIVATE(ui_player_instance);
+    if(priv==NULL || priv->lyric1_slabel==NULL || priv->lyric2_slabel==NULL)
+        return FALSE;
+    return  gtk_widget_get_visible(priv->lyric1_slabel) &&
+        gtk_widget_get_visible(priv->lyric2_slabel);
+}
+
+/**
+ * rc_ui_player_spectrum_set_visible:
+ * @visible: whether the widget is visible
+ *
+ * Set the visibilty of the spectrum show widget.
+ */
+
+void rc_ui_player_spectrum_set_visible(gboolean visible)
+{
+    RCUiPlayerPrivate *priv = NULL;
+    if(ui_player_instance==NULL) return;
+    priv = RC_UI_PLAYER_GET_PRIVATE(ui_player_instance);
+    if(priv==NULL || priv->spectrum_widget==NULL) return;
+    gtk_widget_set_visible(priv->spectrum_widget, visible);
+}
+
+/**
+ * rc_ui_player_cover_image_get_visible: 
+ *
+ * Get the visibilty of the spectrum show widget.
+ *
+ * Returns: Whether the widget is visible.
+ */
+
+gboolean rc_ui_player_spectrum_get_visible()
+{
+    RCUiPlayerPrivate *priv = NULL;
+    if(ui_player_instance==NULL) return FALSE;
+    priv = RC_UI_PLAYER_GET_PRIVATE(ui_player_instance);
+    if(priv==NULL || priv->spectrum_widget==NULL) return FALSE;
+    return gtk_widget_get_visible(priv->spectrum_widget);
+}
 

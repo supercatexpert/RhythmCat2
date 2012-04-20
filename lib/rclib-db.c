@@ -1093,10 +1093,10 @@ static void rclib_db_instance_init(RCLibDb *db)
         rclib_db_playlist_import_data_free);
     priv->refresh_queue = g_async_queue_new_full((GDestroyNotify)
         rclib_db_playlist_refresh_data_free);
-    priv->import_thread = g_thread_create(rclib_db_playlist_import_thread_cb,
-        db, TRUE, NULL);
-    priv->refresh_thread = g_thread_create(
-        rclib_db_playlist_refresh_thread_cb, db, TRUE, NULL);
+    priv->import_thread = g_thread_new("RC2-Import-Thread",
+        rclib_db_playlist_import_thread_cb, db);
+    priv->refresh_thread = g_thread_new("RC2-Refresh-Thread",
+        rclib_db_playlist_refresh_thread_cb, db);
     priv->import_work_flag = FALSE;
     priv->refresh_work_flag = FALSE;
     priv->dirty_flag = FALSE;
@@ -1249,7 +1249,7 @@ RCLibDbCatalogData *rclib_db_catalog_data_new()
 RCLibDbCatalogData *rclib_db_catalog_data_ref(RCLibDbCatalogData *data)
 {
     if(data==NULL) return NULL;
-    data->ref_count++;
+    g_atomic_int_add(&(data->ref_count), 1);
     return data;
 }
 
@@ -1266,8 +1266,8 @@ RCLibDbCatalogData *rclib_db_catalog_data_ref(RCLibDbCatalogData *data)
 void rclib_db_catalog_data_unref(RCLibDbCatalogData *data)
 {
     if(data==NULL) return;
-    data->ref_count--;
-    if(data->ref_count<=0) rclib_db_catalog_data_free(data);
+    if(g_atomic_int_dec_and_test(&(data->ref_count)))
+        rclib_db_catalog_data_free(data);
 }
 
 /**
@@ -1313,7 +1313,7 @@ RCLibDbPlaylistData *rclib_db_playlist_data_new()
 RCLibDbPlaylistData *rclib_db_playlist_data_ref(RCLibDbPlaylistData *data)
 {
     if(data==NULL) return NULL;
-    data->ref_count++;
+    g_atomic_int_add(&(data->ref_count), 1);
     return data;
 }
 
@@ -1330,8 +1330,8 @@ RCLibDbPlaylistData *rclib_db_playlist_data_ref(RCLibDbPlaylistData *data)
 void rclib_db_playlist_data_unref(RCLibDbPlaylistData *data)
 {
     if(data==NULL) return;
-    data->ref_count--;
-    if(data->ref_count<=0) rclib_db_playlist_data_free(data);
+    if(g_atomic_int_dec_and_test(&(data->ref_count)))
+        rclib_db_playlist_data_free(data);
 }
 
 /**

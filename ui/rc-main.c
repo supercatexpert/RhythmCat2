@@ -74,8 +74,10 @@ static void rc_main_app_activate(GApplication *application)
     gchar *uri;
     gint i;
     gboolean theme_flag = FALSE;
+    gboolean artist_column_flag, album_column_flag;
     const RCUiStyleEmbededTheme *theme_embeded;
     guint theme_number;
+    gchar *tmp_string;
     if(application!=NULL)
         rc_ui_player_init(GTK_APPLICATION(application));
     else
@@ -115,6 +117,40 @@ static void rc_main_app_activate(GApplication *application)
     }
     g_free(theme);
     rclib_settings_apply();
+    if(rclib_settings_has_key("MainUI", "HideCoverImage", NULL))
+    {
+        rc_ui_player_cover_image_set_visible(
+            !rclib_settings_get_boolean("MainUI", "HideCoverImage", NULL));
+    }
+    if(rclib_settings_has_key("MainUI", "HideLyricLabels", NULL))
+    {
+        rc_ui_player_lyric_labels_set_visible(
+            !rclib_settings_get_boolean("MainUI", "HideLyricLabels", NULL));
+    }
+    if(rclib_settings_has_key("MainUI", "HideSpectrumWidget", NULL))
+    {
+        rc_ui_player_spectrum_set_visible(
+            !rclib_settings_get_boolean("MainUI", "HideSpectrumWidget",
+            NULL));
+    }
+    if(rclib_settings_get_boolean("MainUI", "UseMultiColumns", NULL))
+    {
+        rc_ui_listview_playlist_set_column_display_mode(TRUE);
+        artist_column_flag = rclib_settings_get_boolean("MainUI",
+            "PlaylistColumnArtistEnabled", NULL);
+        album_column_flag = rclib_settings_get_boolean("MainUI",
+            "PlaylistColumnAlbumEnabled", NULL),
+        rc_ui_listview_playlist_set_enabled_columns(artist_column_flag,
+            album_column_flag);
+    }
+    else
+    {
+        tmp_string = rclib_settings_get_string("MainUI",
+            "PlaylistTitleFormat", NULL);
+        if(tmp_string!=NULL && g_strstr_len(tmp_string, -1, "%TITLE")!=NULL)
+            rc_ui_listview_playlist_set_title_format(tmp_string);
+        g_free(tmp_string);
+    }
     plugin_conf = g_build_filename(main_user_dir, "plugins.conf",
         NULL);
     rclib_plugin_init(plugin_conf);

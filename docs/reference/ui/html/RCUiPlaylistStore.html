@@ -5,7 +5,7 @@
 <title>RCUiPlaylistStore</title>
 <meta name="generator" content="DocBook XSL Stylesheets V1.76.1">
 <link rel="home" href="index.html" title="RhythmCat Reference Manual">
-<link rel="up" href="ch01.html" title="[Insert title here]">
+<link rel="up" href="ch01.html" title="API reference">
 <link rel="prev" href="RhythmCat-rc-ui-effect.html" title="rc-ui-effect">
 <link rel="next" href="RhythmCat-rc-ui-listview.html" title="rc-ui-listview">
 <meta name="generator" content="GTK-Doc V1.18 (XML mode)">
@@ -52,7 +52,11 @@ struct              <a class="link" href="RCUiPlaylistStore.html#RCUiPlaylistSto
                                                         (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/gtk/GtkTreeModel.html"><span class="type">GtkTreeModel</span></a> *model</code></em>);
 <a href="/usr/share/gtk-doc/html/gtk/GtkTreeModel.html"><span class="returnvalue">GtkTreeModel</span></a> *      <a class="link" href="RCUiPlaylistStore.html#rc-ui-list-model-get-catalog-store" title="rc_ui_list_model_get_catalog_store ()">rc_ui_list_model_get_catalog_store</a>  ();
 <a href="/usr/share/gtk-doc/html/gtk/GtkTreeModel.html"><span class="returnvalue">GtkTreeModel</span></a> *      <a class="link" href="RCUiPlaylistStore.html#rc-ui-list-model-get-playlist-store" title="rc_ui_list_model_get_playlist_store ()">rc_ui_list_model_get_playlist_store</a> (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/gtk/GtkTreeModel.html#GtkTreeIter"><span class="type">GtkTreeIter</span></a> *iter</code></em>);
+const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *       <a class="link" href="RCUiPlaylistStore.html#rc-ui-list-model-get-playlist-title-format" title="rc_ui_list_model_get_playlist_title_format ()">rc_ui_list_model_get_playlist_title_format</a>
+                                                        ();
 <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RCUiPlaylistStore.html#rc-ui-list-model-init" title="rc_ui_list_model_init ()">rc_ui_list_model_init</a>               ();
+<span class="returnvalue">void</span>                <a class="link" href="RCUiPlaylistStore.html#rc-ui-list-model-set-playlist-title-format" title="rc_ui_list_model_set_playlist_title_format ()">rc_ui_list_model_set_playlist_title_format</a>
+                                                        (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *format</code></em>);
 </pre>
 </div>
 <div class="refsect1">
@@ -203,6 +207,22 @@ Get the playlist store by the iter in the catalog.
 </div>
 <hr>
 <div class="refsect2">
+<a name="rc-ui-list-model-get-playlist-title-format"></a><h3>rc_ui_list_model_get_playlist_title_format ()</h3>
+<pre class="programlisting">const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *       rc_ui_list_model_get_playlist_title_format
+                                                        ();</pre>
+<p>
+Get the format string of the title column in the playlist.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>The format string, do not free or modify it.</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
 <a name="rc-ui-list-model-init"></a><h3>rc_ui_list_model_init ()</h3>
 <pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rc_ui_list_model_init               ();</pre>
 <p>
@@ -213,6 +233,24 @@ Initialize the list model (catalog model &amp; playlist model).
 <tbody><tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
 <td>Whether the initialization succeeded.</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rc-ui-list-model-set-playlist-title-format"></a><h3>rc_ui_list_model_set_playlist_title_format ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rc_ui_list_model_set_playlist_title_format
+                                                        (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *format</code></em>);</pre>
+<p>
+Set the format string of the title column in the playlist, using
+<code class="literal">TITLE</code> as title string, <code class="literal">ARTIST</code> as artist string, <code class="literal">ALBUM</code> as album string.
+Notice that <code class="literal">TITLE</code> should be always included in the string.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><em class="parameter"><code>format</code></em> :</span></p></td>
+<td>the format string</td>
 </tr></tbody>
 </table></div>
 </div>

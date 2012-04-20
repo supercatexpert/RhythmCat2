@@ -563,7 +563,6 @@ static void rclib_lyric_add_line(RCLibLyricParsedData *parsed_data,
             tmp++;
             if(sscanf(tmp, "%d", &value)==1)
                 parsed_data->offset = value;
-            g_printf("str: %s %d\n", str, value);
         }
         g_free(str);
         str = g_match_info_fetch_named(match_info, "text");

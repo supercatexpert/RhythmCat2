@@ -15,7 +15,7 @@
   </bookinfo>
 
   <chapter>
-    <title>[Insert title here]</title>
+    <title>API reference</title>
         <xi:include href="xml/rc-main.xml"/>
     <xi:include href="xml/rc-ui-dialog.xml"/>
     <xi:include href="xml/rc-ui-effect.xml"/>

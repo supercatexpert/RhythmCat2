@@ -41,11 +41,16 @@ AC_PROG_INSTALL
 AC_PROG_LN_S
 AC_PROG_LIBTOOL
 AM_PROG_LIBTOOL
-CFLAGS="-Wall -O3 -DINSTALL_PATH=\\\"$datadir/RhythmCat2/\\\""
+CFLAGS="-Wall -O2 -DINSTALL_PATH=\\\"$datadir/RhythmCat2/\\\""
 
 AC_PATH_PROG(GLIB_GENMARSHAL, glib-genmarshal, no)
 if test "$GLIB_GENMARSHAL" = no; then
     AC_MSG_ERROR([glib-genmarshal not found!])
+fi
+
+AC_PATH_PROG(GLIB_COMPILE_RESOURCE, glib-compile-resources, no)
+if test "$GLIB_COMPILE_RESOURCE" = no; then
+    AC_MSG_ERROR([glib-compile-resources not found!])
 fi
 
 # Check for gtk-doc
@@ -53,8 +58,8 @@ m4_ifdef([GTK_DOC_CHECK], [GTK_DOC_CHECK([1.14],[--flavour no-tmpl])], \
     [AM_CONDITIONAL([ENABLE_GTK_DOC], false)])
 
 # Checks for libraries.
-PKG_CHECK_MODULES([GLIB2], [glib-2.0 >= 2.30, gthread-2.0 >= 2.30, \
-    gmodule-2.0 >= 2.30, gio-2.0 >= 2.30])
+PKG_CHECK_MODULES([GLIB2], [glib-2.0 >= 2.32, gthread-2.0 >= 2.32, \
+    gmodule-2.0 >= 2.32, gio-2.0 >= 2.32])
 PKG_CHECK_MODULES([GSTREAMER], [gstreamer-0.10 >= 0.10.30, \
     gstreamer-pbutils-0.10 >= 0.10.30 gstreamer-plugins-base-0.10 >= 0.10.30 \
     gstreamer-fft-0.10])
@@ -85,9 +90,6 @@ AM_GNU_GETTEXT_VERSION([0.18.1])
 AM_GNU_GETTEXT([external])
 
 # Checks for features
-AC_ARG_ENABLE(debug, AS_HELP_STRING([--enable-debug], \
-    [enable debug mode [default=no]]), enable_debug=yes, enable_debug=no)
-AM_CONDITIONAL(DEBUG_MODE, test "x$enable_debug" = "xyes")
 
 AC_ARG_WITH(gtk-ui, AS_HELP_STRING([--without-gtk-ui], \
     [dont't compile GTK+ 3 UI [default=no]]), with_gtk_ui=no, \
@@ -141,7 +143,6 @@ echo
 echo Build GTK+ 3 UI............. : $with_gtk_ui
 echo Build Console UI............ : $with_console_ui
 echo
-echo Enable DEBUG.................: $enable_debug
 echo Enable Gtk-Doc...............: $enable_gtk_doc
 echo
 echo With Native Plug-ins.........: $with_native_plugins

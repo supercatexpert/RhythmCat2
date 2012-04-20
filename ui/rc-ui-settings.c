@@ -26,6 +26,9 @@
 #include "rc-ui-settings.h"
 #include "rc-common.h"
 #include "rc-ui-style.h"
+#include "rc-ui-player.h"
+#include "rc-ui-listmodel.h"
+#include "rc-ui-listview.h"
 
 typedef struct RCUiSettingsPrivate
 {
@@ -39,6 +42,15 @@ typedef struct RCUiSettingsPrivate
     GtkWidget *pl_id3enc_entry;
     GtkWidget *pl_lrcenc_entry;
     GtkWidget *apr_theme_combo_box;
+    GtkWidget *if_hidecovimg_check_button;
+    GtkWidget *if_hidelrc_check_button;
+    GtkWidget *if_hidespr_check_button;
+    GtkWidget *if_multicolumn_check_button;
+    GtkWidget *if_titleformat_entry;
+    GtkWidget *if_titleformat_grid;
+    GtkWidget *if_showcolumn_frame;
+    GtkWidget *if_showarcolumn_check_button;
+    GtkWidget *if_showalcolumn_check_button;
 }RCUiSettingsPrivate;
 
 static RCUiSettingsPrivate settings_priv = {0};
@@ -104,7 +116,7 @@ static inline GtkWidget *rc_ui_settings_general_build(
     frame_label = gtk_label_new(NULL);
     gtk_label_set_markup(GTK_LABEL(frame_label), _("<b>General</b>"));
     g_object_set(general_frame, "label-widget", frame_label, "shadow-type",
-        GTK_SHADOW_NONE, "expand", TRUE, NULL);
+        GTK_SHADOW_NONE, "hexpand-set", TRUE, "hexpand", TRUE, NULL);
     general_frame_grid = gtk_grid_new();
     g_object_set(priv->gen_autoplay_check_button, "active",
         rclib_settings_get_boolean("Player", "AutoPlayWhenStartup", NULL),
@@ -208,7 +220,7 @@ static inline GtkWidget *rc_ui_settings_playlist_build(
     frame_label = gtk_label_new(NULL);
     gtk_label_set_markup(GTK_LABEL(frame_label), _("<b>Metadata</b>"));
     g_object_set(metadata_frame, "label-widget", frame_label, "shadow-type",
-        GTK_SHADOW_NONE, "expand", TRUE, NULL);
+        GTK_SHADOW_NONE, "hexpand-set", TRUE, "hexpand", TRUE, NULL);
     metadata_frame_grid = gtk_grid_new();
     g_object_set(priv->pl_id3enc_entry, "margin-left", 2, "margin-right",
         2, "margin-top", 2, "margin-bottom", 2, "hexpand-set", TRUE,
@@ -328,7 +340,7 @@ static inline GtkWidget *rc_ui_settings_appearance_build(
         renderer, "text", 0, NULL);
     gtk_label_set_markup(GTK_LABEL(frame_label), _("<b>Theme</b>"));
     g_object_set(theme_frame, "label-widget", frame_label, "shadow-type",
-        GTK_SHADOW_NONE, "expand", TRUE, NULL);
+        GTK_SHADOW_NONE, "hexpand-set", TRUE, "hexpand", TRUE, NULL);
     theme_frame_grid = gtk_grid_new();
     g_object_set(priv->apr_theme_combo_box, "margin-left", 2, "margin-right",
         2, "margin-top", 2, "margin-bottom", 2, "hexpand-set", TRUE,
@@ -388,6 +400,243 @@ static inline GtkWidget *rc_ui_settings_appearance_build(
     return appearance_grid;
 }
 
+static void rc_ui_settings_if_hidecovimg_toggled(GtkToggleButton *button,
+    gpointer data)
+{
+    gboolean flag = gtk_toggle_button_get_active(button);
+    rclib_settings_set_boolean("MainUI", "HideCoverImage", flag);
+    rc_ui_player_cover_image_set_visible(!flag);
+}
+
+static void rc_ui_settings_if_hidelrc_toggled(GtkToggleButton *button,
+    gpointer data)
+{
+    gboolean flag = gtk_toggle_button_get_active(button);
+    rclib_settings_set_boolean("MainUI", "HideLyricLabels", flag);
+    rc_ui_player_lyric_labels_set_visible(!flag);
+}
+
+static void rc_ui_settings_if_hidespr_toggled(GtkToggleButton *button,
+    gpointer data)
+{
+    gboolean flag = gtk_toggle_button_get_active(button);
+    rclib_settings_set_boolean("MainUI", "HideSpectrumWidget", flag);
+    rc_ui_player_spectrum_set_visible(!flag);
+}
+
+static void rc_ui_settings_if_multicolumn_toggled(GtkToggleButton *button,
+    gpointer data)
+{
+    RCUiSettingsPrivate *priv = (RCUiSettingsPrivate *)data;
+    gboolean flag;
+    gboolean artist_column_flag, album_column_flag;
+    gchar *string;
+    if(data==NULL) return;
+    flag = gtk_toggle_button_get_active(button);
+    rc_ui_listview_playlist_set_column_display_mode(flag);
+    rclib_settings_set_boolean("MainUI", "UseMultiColumns", flag);
+    if(flag)
+    {
+        artist_column_flag = rclib_settings_get_boolean("MainUI",
+            "PlaylistColumnArtistEnabled", NULL);
+        album_column_flag = rclib_settings_get_boolean("MainUI",
+            "PlaylistColumnAlbumEnabled", NULL),
+        rc_ui_listview_playlist_set_enabled_columns(artist_column_flag,
+            album_column_flag);
+        g_object_set(priv->if_showarcolumn_check_button, "active",
+             artist_column_flag, NULL);
+        g_object_set(priv->if_showalcolumn_check_button, "active",
+            album_column_flag, NULL);
+        g_object_set(priv->if_multicolumn_check_button, "active", TRUE,
+            NULL);
+        g_object_set(priv->if_titleformat_grid, "visible", FALSE, NULL);
+        g_object_set(priv->if_showcolumn_frame, "visible", TRUE, NULL);
+    }
+    else
+    {
+        string = rclib_settings_get_string("MainUI", "PlaylistTitleFormat",
+            NULL);
+        if(string!=NULL && g_strstr_len(string, -1, "%TITLE")!=NULL)
+        {
+            rc_ui_listview_playlist_set_title_format(string);
+            gtk_entry_set_text(GTK_ENTRY(priv->if_titleformat_entry),
+                string);
+        }
+        g_free(string);
+        g_object_set(priv->if_titleformat_grid, "visible", TRUE, NULL);
+        g_object_set(priv->if_showcolumn_frame, "visible", FALSE, NULL);
+    }
+}
+
+static void rc_ui_settings_if_titleformat_changed(GtkEditable *editable,
+    gpointer data)
+{
+    const gchar *text;
+    if(rc_ui_listview_playlist_get_column_display_mode()) return;
+    text = gtk_entry_get_text(GTK_ENTRY(editable));
+    if(text==NULL || g_strstr_len(text, -1, "%TITLE")==NULL) return;
+    rc_ui_listview_playlist_set_title_format(text);
+    rclib_settings_set_string("MainUI", "PlaylistTitleFormat", text);
+}
+
+static void rc_ui_settings_if_showcolumn_toggled(GtkToggleButton *button,
+    gpointer data)
+{
+    RCUiSettingsPrivate *priv = (RCUiSettingsPrivate *)data;
+    gboolean artist_column_flag, album_column_flag;
+    if(data==NULL) return;
+    if(!rc_ui_listview_playlist_get_column_display_mode()) return;
+    artist_column_flag = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(
+        priv->if_showarcolumn_check_button));
+    album_column_flag = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(
+        priv->if_showalcolumn_check_button));
+    rc_ui_listview_playlist_set_enabled_columns(artist_column_flag,
+        album_column_flag);
+    rclib_settings_set_boolean("MainUI", "PlaylistColumnArtistEnabled",
+        artist_column_flag);
+    rclib_settings_set_boolean("MainUI", "PlaylistColumnAlbumEnabled",
+        album_column_flag);
+}
+
+static inline GtkWidget *rc_ui_settings_interface_build(
+    RCUiSettingsPrivate *priv)
+{
+    GtkWidget *interface_grid;
+    GtkWidget *frame_label;
+    GtkWidget *mainwin_frame;
+    GtkWidget *mainwin_frame_grid;
+    GtkWidget *listview_frame;
+    GtkWidget *listview_frame_grid;
+    GtkWidget *titleformat_label;
+    GtkWidget *note_label;
+    GtkWidget *showcolumn_frame_grid;
+    gboolean artist_column_state = FALSE;
+    gboolean album_column_state = FALSE;
+    interface_grid = gtk_grid_new();
+    priv->if_hidecovimg_check_button = gtk_check_button_new_with_mnemonic(
+        _("Hide cover _image"));
+    priv->if_hidelrc_check_button = gtk_check_button_new_with_mnemonic(
+        _("Hide _lyric labels")); 
+    priv->if_hidespr_check_button = gtk_check_button_new_with_mnemonic(
+        _("Hide _spectrum show"));
+    priv->if_multicolumn_check_button = gtk_check_button_new_with_mnemonic(
+        _("Show _metadata in multi-columns"));
+    priv->if_titleformat_entry = gtk_entry_new();
+    priv->if_showarcolumn_check_button = gtk_check_button_new_with_mnemonic(
+        _("Artist"));
+    priv->if_showalcolumn_check_button = gtk_check_button_new_with_mnemonic(
+        _("Album"));
+    priv->if_titleformat_grid = gtk_grid_new();
+    showcolumn_frame_grid = gtk_grid_new();
+    priv->if_showcolumn_frame = gtk_frame_new(NULL);
+    frame_label = gtk_label_new(NULL);
+    gtk_label_set_markup(GTK_LABEL(frame_label), _("<b>Visible Columns</b>"));
+    g_object_set(priv->if_showcolumn_frame, "label-widget", frame_label,
+        "hexpand-set", TRUE, "hexpand", TRUE, NULL);
+    titleformat_label = gtk_label_new(_("Title column format: "));
+    note_label = gtk_label_new(NULL);
+    gtk_label_set_markup(GTK_LABEL(note_label), _("<b>Hint</b>: Use "
+        "<i>%TITLE</i> as title string, <i>%ARTIST</i> as artist string, "
+        "<i>%ALBUM</i> as album string, somehow <i>%TITLE</i> must be "
+        "included in the format string."));
+    g_object_set(note_label, "wrap", TRUE, "wrap-mode", PANGO_WRAP_WORD_CHAR,
+        "hexpand-set", TRUE, "hexpand", TRUE, NULL);
+    g_object_set(priv->if_titleformat_entry, "hexpand-set", TRUE, "hexpand",
+        TRUE, NULL);
+    g_object_set(priv->if_titleformat_grid, "hexpand-set", TRUE, "hexpand",
+        TRUE, NULL);
+    g_object_set(priv->if_showcolumn_frame, "hexpand-set", TRUE, "hexpand",
+        TRUE, NULL);
+    gtk_grid_attach(GTK_GRID(priv->if_titleformat_grid), titleformat_label,
+        0, 0, 1, 1);
+    gtk_grid_attach(GTK_GRID(priv->if_titleformat_grid),
+        priv->if_titleformat_entry, 1, 0, 1, 1);
+    gtk_grid_attach(GTK_GRID(priv->if_titleformat_grid), note_label,
+        0, 1, 2, 1);
+    gtk_grid_attach(GTK_GRID(showcolumn_frame_grid),
+        priv->if_showarcolumn_check_button, 0, 0, 1, 1);
+    gtk_grid_attach(GTK_GRID(showcolumn_frame_grid),
+        priv->if_showalcolumn_check_button, 1, 0, 1, 1);
+    gtk_container_add(GTK_CONTAINER(priv->if_showcolumn_frame),
+        showcolumn_frame_grid);
+    gtk_widget_show_all(priv->if_titleformat_grid);
+    gtk_widget_show_all(priv->if_showcolumn_frame);
+    gtk_widget_set_no_show_all(priv->if_titleformat_grid, TRUE);
+    gtk_widget_set_no_show_all(priv->if_showcolumn_frame, TRUE);
+    mainwin_frame = gtk_frame_new(NULL);
+    frame_label = gtk_label_new(NULL);
+    gtk_label_set_markup(GTK_LABEL(frame_label), _("<b>Main Window</b>"));
+    g_object_set(mainwin_frame, "label-widget", frame_label, "shadow-type",
+        GTK_SHADOW_NONE, "hexpand-set", TRUE, "hexpand", TRUE, NULL);
+    mainwin_frame_grid = gtk_grid_new();
+    listview_frame = gtk_frame_new(NULL);
+    frame_label = gtk_label_new(NULL);
+    gtk_label_set_markup(GTK_LABEL(frame_label), _("<b>List Views</b>"));
+    g_object_set(listview_frame, "label-widget", frame_label, "shadow-type",
+        GTK_SHADOW_NONE, "hexpand-set", TRUE, "hexpand", TRUE, NULL);
+    listview_frame_grid = gtk_grid_new();
+    g_object_set(priv->if_hidecovimg_check_button, "active",
+        rclib_settings_get_boolean("MainUI", "HideCoverImage", NULL),
+        NULL);
+    g_object_set(priv->if_hidelrc_check_button, "active",
+        rclib_settings_get_boolean("MainUI", "HideLyricLabels", NULL),
+        NULL);
+    g_object_set(priv->if_hidespr_check_button, "active",
+        rclib_settings_get_boolean("MainUI", "HideSpectrumWidget", NULL),
+        NULL);
+    g_object_set(priv->if_titleformat_entry, "text",
+        rc_ui_list_model_get_playlist_title_format(), NULL);
+    rc_ui_listview_playlist_get_enabled_columns(&artist_column_state,
+        &album_column_state);
+    g_object_set(priv->if_showarcolumn_check_button, "active",
+        artist_column_state, NULL);
+    g_object_set(priv->if_showalcolumn_check_button, "active",
+        album_column_state, NULL);
+    if(rc_ui_listview_playlist_get_column_display_mode())
+    {
+        g_object_set(priv->if_multicolumn_check_button, "active", TRUE,
+            NULL);
+        g_object_set(priv->if_titleformat_grid, "visible", FALSE, NULL);    
+    }
+    else
+    {
+        g_object_set(priv->if_showcolumn_frame, "visible", FALSE, NULL);
+    }
+    gtk_grid_attach(GTK_GRID(mainwin_frame_grid),
+        priv->if_hidecovimg_check_button, 0, 0, 1, 1);
+    gtk_grid_attach(GTK_GRID(mainwin_frame_grid),
+        priv->if_hidelrc_check_button, 0, 1, 1, 1);
+    gtk_grid_attach(GTK_GRID(mainwin_frame_grid),
+        priv->if_hidespr_check_button, 0, 2, 1, 1);
+    gtk_grid_attach(GTK_GRID(listview_frame_grid),
+        priv->if_multicolumn_check_button, 0, 0, 1, 1);
+    gtk_grid_attach(GTK_GRID(listview_frame_grid),
+        priv->if_titleformat_grid, 0, 1, 1, 1);    
+    gtk_grid_attach(GTK_GRID(listview_frame_grid),
+        priv->if_showcolumn_frame, 0, 2, 1, 1);   
+    gtk_container_add(GTK_CONTAINER(mainwin_frame), mainwin_frame_grid);
+    gtk_container_add(GTK_CONTAINER(listview_frame), listview_frame_grid);
+    gtk_grid_attach(GTK_GRID(interface_grid), mainwin_frame, 0, 0,
+        1, 1);
+    gtk_grid_attach(GTK_GRID(interface_grid), listview_frame, 0, 1,
+        1, 1);
+    g_signal_connect(priv->if_hidecovimg_check_button, "toggled",
+        G_CALLBACK(rc_ui_settings_if_hidecovimg_toggled), NULL);
+    g_signal_connect(priv->if_hidelrc_check_button, "toggled",
+        G_CALLBACK(rc_ui_settings_if_hidelrc_toggled), NULL);
+    g_signal_connect(priv->if_hidespr_check_button, "toggled",
+        G_CALLBACK(rc_ui_settings_if_hidespr_toggled), NULL);
+    g_signal_connect(priv->if_multicolumn_check_button, "toggled",
+        G_CALLBACK(rc_ui_settings_if_multicolumn_toggled), priv);        
+    g_signal_connect(priv->if_titleformat_entry, "changed",
+        G_CALLBACK(rc_ui_settings_if_titleformat_changed), priv);
+    g_signal_connect(priv->if_showarcolumn_check_button, "toggled",
+        G_CALLBACK(rc_ui_settings_if_showcolumn_toggled), priv);
+    g_signal_connect(priv->if_showalcolumn_check_button, "toggled",
+        G_CALLBACK(rc_ui_settings_if_showcolumn_toggled), priv);
+    return interface_grid;
+}
+
 static inline void rc_ui_settings_window_init()
 {
     RCUiSettingsPrivate *priv = &settings_priv;
@@ -396,6 +645,7 @@ static inline void rc_ui_settings_window_init()
     GtkWidget *general_label;
     GtkWidget *playlist_label;
     GtkWidget *appearance_label;
+    GtkWidget *interface_label;
     GtkWidget *button_hbox;
     priv->settings_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
     main_grid = gtk_grid_new();
@@ -404,6 +654,7 @@ static inline void rc_ui_settings_window_init()
     general_label = gtk_label_new(_("General"));
     playlist_label = gtk_label_new(_("Playlist"));
     appearance_label = gtk_label_new(_("Appearance"));
+    interface_label = gtk_label_new(_("Interface"));
     button_hbox = gtk_button_box_new(GTK_ORIENTATION_HORIZONTAL);
     g_object_set(priv->settings_window, "title", _("Player Preferences"),
         "window-position", GTK_WIN_POS_CENTER, "has-resize-grip", FALSE,
@@ -423,6 +674,8 @@ static inline void rc_ui_settings_window_init()
         rc_ui_settings_playlist_build(priv), playlist_label);
     gtk_notebook_append_page(GTK_NOTEBOOK(priv->settings_notebook),
         rc_ui_settings_appearance_build(priv), appearance_label);
+    gtk_notebook_append_page(GTK_NOTEBOOK(priv->settings_notebook),
+        rc_ui_settings_interface_build(priv), interface_label);
     gtk_box_pack_start(GTK_BOX(button_hbox), close_button, FALSE, FALSE, 2);
     gtk_grid_attach(GTK_GRID(main_grid), priv->settings_notebook, 0, 0,
         1, 1);

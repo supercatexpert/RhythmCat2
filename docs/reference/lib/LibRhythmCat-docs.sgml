@@ -15,7 +15,7 @@
   </bookinfo>
 
   <chapter>
-    <title>[Insert title here]</title>
+    <title>API reference</title>
         <xi:include href="xml/rclib.xml"/>
     <xi:include href="xml/rclib-album.xml"/>
     <xi:include href="xml/rclib-core.xml"/>

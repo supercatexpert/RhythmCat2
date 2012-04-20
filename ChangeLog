@@ -30,5 +30,12 @@
     * Move MPRIS2 support into plug-in (in base plug-ins).
     * The items in catalog and playlist list views can be searched
       by using keyboard now.
-      
+
+2012-04-17  SuperCat    <supercatexpert@gmail.com>
+
+    * Cover image, lyric labels, and spectrum show can be hided now.
+    
+2012-04-19  SuperCat    <supercatexpert@gmail.com>
+    * Change the GLib dependency to version 2.32. Use new threads
+      API in GLib.
     
