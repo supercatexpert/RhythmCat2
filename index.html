@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8' />
+    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+    <meta name="description" content="RhythmCat2 : The next generation of RhythmCat Music Player." />
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>RhythmCat2</title>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/supercatexpert/RhythmCat2">Fork Me on GitHub</a>
+
+          <h1 id="project_title">RhythmCat2</h1>
+          <h2 id="project_tagline">The next generation of RhythmCat Music Player.</h2>
+
+          <section id="downloads">
+            <a class="zip_download_link" href="https://github.com/supercatexpert/RhythmCat2/zipball/master">Download this project as a .zip file</a>
+            <a class="tar_download_link" href="https://github.com/supercatexpert/RhythmCat2/tarball/master">Download this project as a tar.gz file</a>
+          </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h2>Introduction:</h2>
+
+<p>RhythmCat2 the next gernation of RhythmCat Music Player. It is a music player which can be used under Linux. It is not only a normal music player, it has both command-line interface (to be implemented) and graphic user interface, and it can extend its features by plug-ins, like lyric show in window, desktop lyric show, etc... The GTK+ UI can use custom GTK+ 3 themes, and the UI layout can be changed partially.</p>
+
+<p>Since this project in just in experimental stage, only GTK+ UI frontend has been implemented.</p>
+
+<h2>Developing platform:</h2>
+
+<p>Operating System: Debian Wheezy (Testing) for AMD64</p>
+
+<p>Compiler: gcc 4.6.3</p>
+
+<p>Programming Language: C</p>
+
+<p>Dependent Libraries: glib-2.0 (&gt;=2.32) gtk+-3.0(&gt;=3.2) libjson0 (&gt;=0.9) gstreamer-0.10 (&gt;=0.10.30) gstreamer-plugins-base-0.10 (&gt;=0.10.30) gstreamer-plugins-good-0.10 (&gt;=0.10.30)</p>
+
+<p>Suggest Libraries (Optional): gstreamer-plugins-bad-0.10 gstreamer-plugins-ugly-0.10 libcurl (&gt;=7.0) python3 (&gt;=3.2) python3-dev (&gt;=3.2)</p>
+
+<h2>Developing stage:</h2>
+
+<p>Unstable, features are implemented basically, somehow not well tested.</p>
+
+<h2>License:</h2>
+
+<p>GNU GPL v3.</p>
+
+<p>You MUST accept the GPL v3 License, then you can use this program and the
+source code.</p>
+
+<p>You can get the GPL v3 License (plain text) here:</p>
+
+<p><a href="http://www.gnu.org/licenses/gpl.txt">http://www.gnu.org/licenses/gpl.txt</a></p>
+
+<p>Or read the COPYING file in the source archive.</p>
+
+<h2>How to install this program:</h2>
+
+<p>Get the latest version from Github:</p>
+
+<p><code>git clone git://github.com/supercatexpert/RhythmCat2.git</code></p>
+
+<p>Now only source code is available, you should compile it, then you can use this program. Before you compile it, you should check the developing environment, and the libraries which this program depends. On Debian/Ubuntu, you can run the commands below to help you install the packages that the compilation needed: </p>
+
+<p><code>sudo apt-get install build-essential libgtk-3-dev libgstreamer0.10-dev \
+    libgstreamer-plugins-base0.10-dev libjson0-dev libcurl4-openssl-dev</code></p>
+
+<p>If you want to compile Python3 loader and use Python3 plug-ins, install
+package python3-dev:</p>
+
+<p><code>sudo apt-get install python3-dev</code></p>
+
+<p>If you want to play MP3 or other Restricted Format, please install Gstreamer
+Bad &amp; Ugly plugins. In Debian/Ubuntu, you can just run:</p>
+
+<p><code>sudo apt-get install gstreamer0.10-plugins-bad gstreamer0.10-plugins-ugly</code></p>
+
+<p>Then you can try to compile it:</p>
+
+<p><code>./configure --with-native-plugins --with-python3-plugins</code></p>
+
+<p><code>make</code></p>
+
+<p><code>sudo make install</code></p>
+
+<p>PS: You can remove --with-native-plugins or --with-python3-plugins arguments if you do not need native plug-ins or Python3 plug-ins.</p>
+
+<p>then just run /usr/local/bin/RhythmCat2, feel happy with it!</p>
+
+<p>This program is in experimental stage now. We provide no WARRANTY. 
+If you found any bugs, please send an e-mail to me, and report the bugs you
+found. My e-mail: <a href="mailto:supercatexpert@gmail.com">supercatexpert@gmail.com</a> . Or send the Issue on the 
+Github project page.</p>
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">RhythmCat2 maintained by <a href="https://github.com/supercatexpert">supercatexpert</a></p>
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+    
+
+  </body>
+</html>
