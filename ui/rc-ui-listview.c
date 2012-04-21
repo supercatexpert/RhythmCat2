@@ -26,6 +26,7 @@
 #include "rc-ui-listview.h"
 #include "rc-ui-listmodel.h"
 #include "rc-ui-menu.h"
+#include "rc-ui-player.h"
 #include "rc-common.h"
 
 enum
@@ -46,6 +47,9 @@ typedef struct RCUiListViewPrivate
     GtkCellRenderer *playlist_title_renderer;
     GtkCellRenderer *playlist_artist_renderer;
     GtkCellRenderer *playlist_album_renderer;
+    GtkCellRenderer *playlist_tracknum_renderer;
+    GtkCellRenderer *playlist_year_renderer;
+    GtkCellRenderer *playlist_ftype_renderer;
     GtkCellRenderer *playlist_length_renderer;
     GtkCellRenderer *playlist_rating_renderer; /* Not available now */
     GtkTreeViewColumn *catalog_state_column;
@@ -53,7 +57,10 @@ typedef struct RCUiListViewPrivate
     GtkTreeViewColumn *playlist_state_column;
     GtkTreeViewColumn *playlist_title_column;
     GtkTreeViewColumn *playlist_artist_column;
-    GtkTreeViewColumn *playlist_album_column;
+    GtkTreeViewColumn *playlist_album_column;  
+    GtkTreeViewColumn *playlist_tracknum_column;
+    GtkTreeViewColumn *playlist_year_column;
+    GtkTreeViewColumn *playlist_ftype_column;
     GtkTreeViewColumn *playlist_length_column;
     GtkTreeViewColumn *playlist_rating_column; /* Not available now */
     gboolean display_mode;
@@ -718,6 +725,9 @@ void rc_ui_listview_init(GtkWidget **catalog_widget,
     priv->playlist_title_renderer = gtk_cell_renderer_text_new();
     priv->playlist_artist_renderer = gtk_cell_renderer_text_new();
     priv->playlist_album_renderer = gtk_cell_renderer_text_new();
+    priv->playlist_tracknum_renderer = gtk_cell_renderer_text_new();
+    priv->playlist_year_renderer = gtk_cell_renderer_text_new();
+    priv->playlist_ftype_renderer = gtk_cell_renderer_text_new();
     priv->playlist_length_renderer = gtk_cell_renderer_text_new();
     priv->playlist_rating_renderer = NULL;
     gtk_cell_renderer_set_fixed_size(priv->catalog_state_renderer, 16, -1);
@@ -726,20 +736,33 @@ void rc_ui_listview_init(GtkWidget **catalog_widget,
     gtk_cell_renderer_set_fixed_size(priv->playlist_title_renderer, 120, -1);
     gtk_cell_renderer_set_fixed_size(priv->playlist_artist_renderer, 60, -1);
     gtk_cell_renderer_set_fixed_size(priv->playlist_album_renderer, 60, -1);
+    gtk_cell_renderer_set_fixed_size(priv->playlist_tracknum_renderer,
+        50, -1);
+    gtk_cell_renderer_set_fixed_size(priv->playlist_year_renderer, 50, -1);
+    gtk_cell_renderer_set_fixed_size(priv->playlist_ftype_renderer, 60, -1);
     gtk_cell_renderer_set_fixed_size(priv->playlist_length_renderer, 55, -1);
-    g_object_set(G_OBJECT(priv->catalog_name_renderer), "ellipsize", 
+    g_object_set(priv->catalog_name_renderer, "ellipsize", 
         PANGO_ELLIPSIZE_END, "ellipsize-set", TRUE, "weight",
         PANGO_WEIGHT_NORMAL, "weight-set", TRUE, NULL);
-    g_object_set(G_OBJECT(priv->playlist_title_renderer), "ellipsize", 
+    g_object_set(priv->playlist_title_renderer, "ellipsize", 
         PANGO_ELLIPSIZE_END, "ellipsize-set", TRUE, "weight",
         PANGO_WEIGHT_NORMAL, "weight-set", TRUE, NULL);
-    g_object_set(G_OBJECT(priv->playlist_artist_renderer), "ellipsize", 
+    g_object_set(priv->playlist_artist_renderer, "ellipsize", 
         PANGO_ELLIPSIZE_END, "ellipsize-set", TRUE, "weight",
         PANGO_WEIGHT_NORMAL, "weight-set", TRUE, NULL);
-    g_object_set(G_OBJECT(priv->playlist_album_renderer), "ellipsize", 
+    g_object_set(priv->playlist_album_renderer, "ellipsize", 
         PANGO_ELLIPSIZE_END, "ellipsize-set", TRUE, "weight",
         PANGO_WEIGHT_NORMAL, "weight-set", TRUE, NULL);
-    g_object_set(G_OBJECT(priv->playlist_length_renderer), "xalign", 1.0,
+    g_object_set(priv->playlist_tracknum_renderer, "ellipsize", 
+        PANGO_ELLIPSIZE_END, "ellipsize-set", TRUE, "weight",
+        PANGO_WEIGHT_NORMAL, "weight-set", TRUE, NULL);
+    g_object_set(priv->playlist_year_renderer, "ellipsize", 
+        PANGO_ELLIPSIZE_END, "ellipsize-set", TRUE, "weight",
+        PANGO_WEIGHT_NORMAL, "weight-set", TRUE, NULL);
+    g_object_set(priv->playlist_ftype_renderer, "ellipsize", 
+        PANGO_ELLIPSIZE_END, "ellipsize-set", TRUE, "weight",
+        PANGO_WEIGHT_NORMAL, "weight-set", TRUE, NULL);
+    g_object_set(priv->playlist_length_renderer, "xalign", 1.0,
         "width-chars", 6, NULL);
     priv->catalog_state_column = gtk_tree_view_column_new_with_attributes(
         "#", priv->catalog_state_renderer, "stock-id", 
@@ -759,6 +782,15 @@ void rc_ui_listview_init(GtkWidget **catalog_widget,
     priv->playlist_album_column = gtk_tree_view_column_new_with_attributes(
         _("Album"), priv->playlist_artist_renderer, "text",
         RC_UI_PLAYLIST_COLUMN_ALBUM, NULL);
+    priv->playlist_tracknum_column = gtk_tree_view_column_new_with_attributes(
+        _("Track"), priv->playlist_tracknum_renderer, "text",
+        RC_UI_PLAYLIST_COLUMN_TRACK, NULL);
+    priv->playlist_year_column = gtk_tree_view_column_new_with_attributes(
+        _("Year"), priv->playlist_year_renderer, "text",
+        RC_UI_PLAYLIST_COLUMN_YEAR, NULL);
+    priv->playlist_ftype_column = gtk_tree_view_column_new_with_attributes(
+        _("Format"), priv->playlist_ftype_renderer, "text",
+        RC_UI_PLAYLIST_COLUMN_FTYPE, NULL);
     priv->playlist_length_column = gtk_tree_view_column_new_with_attributes(
         _("Length"), priv->playlist_length_renderer, "text",
         RC_UI_PLAYLIST_COLUMN_LENGTH, NULL);
@@ -775,6 +807,15 @@ void rc_ui_listview_init(GtkWidget **catalog_widget,
     gtk_tree_view_column_set_cell_data_func(priv->playlist_album_column,
         priv->playlist_album_renderer,
         rc_ui_listview_playlist_text_call_data_func, NULL, NULL);
+    gtk_tree_view_column_set_cell_data_func(priv->playlist_tracknum_column,
+        priv->playlist_tracknum_renderer,
+        rc_ui_listview_playlist_text_call_data_func, NULL, NULL);
+    gtk_tree_view_column_set_cell_data_func(priv->playlist_year_column,
+        priv->playlist_year_renderer,
+        rc_ui_listview_playlist_text_call_data_func, NULL, NULL);
+    gtk_tree_view_column_set_cell_data_func(priv->playlist_ftype_column,
+        priv->playlist_ftype_renderer,
+        rc_ui_listview_playlist_text_call_data_func, NULL, NULL);
     gtk_tree_view_column_set_cell_data_func(priv->playlist_length_column,
         priv->playlist_length_renderer,
         rc_ui_listview_playlist_text_call_data_func, NULL, NULL);
@@ -789,6 +830,12 @@ void rc_ui_listview_init(GtkWidget **catalog_widget,
     g_object_set(priv->playlist_artist_column, "expand", TRUE, "visible",
         FALSE, "resizable", TRUE, NULL);
     g_object_set(priv->playlist_album_column, "expand", TRUE, "visible",
+        FALSE, "resizable", TRUE, NULL);
+    g_object_set(priv->playlist_tracknum_column, "expand", TRUE, "visible",
+        FALSE, "resizable", TRUE, NULL);
+    g_object_set(priv->playlist_year_column, "expand", TRUE, "visible",
+        FALSE, "resizable", TRUE, NULL);
+    g_object_set(priv->playlist_ftype_column, "expand", TRUE, "visible",
         FALSE, "resizable", TRUE, NULL);
     g_object_set(priv->playlist_length_column, "sizing",
         GTK_TREE_VIEW_COLUMN_FIXED, "fixed-width", 55, "alignment",
@@ -805,6 +852,12 @@ void rc_ui_listview_init(GtkWidget **catalog_widget,
         priv->playlist_artist_column);
     gtk_tree_view_append_column(GTK_TREE_VIEW(priv->playlist_listview),
         priv->playlist_album_column);
+    gtk_tree_view_append_column(GTK_TREE_VIEW(priv->playlist_listview),
+        priv->playlist_tracknum_column);
+    gtk_tree_view_append_column(GTK_TREE_VIEW(priv->playlist_listview),
+        priv->playlist_year_column);
+    gtk_tree_view_append_column(GTK_TREE_VIEW(priv->playlist_listview),
+        priv->playlist_ftype_column);
     gtk_tree_view_append_column(GTK_TREE_VIEW(priv->playlist_listview),
         priv->playlist_length_column);
     gtk_tree_selection_set_mode(gtk_tree_view_get_selection(
@@ -909,6 +962,9 @@ void rc_ui_listview_playlist_set_pango_attributes(const PangoAttrList *list)
     g_object_set(priv->playlist_title_renderer, "attributes", list, NULL);
     g_object_set(priv->playlist_artist_renderer, "attributes", list, NULL);
     g_object_set(priv->playlist_album_renderer, "attributes", list, NULL);
+    g_object_set(priv->playlist_tracknum_renderer, "attributes", list, NULL);
+    g_object_set(priv->playlist_year_renderer, "attributes", list, NULL);
+    g_object_set(priv->playlist_ftype_renderer, "attributes", list, NULL);
     g_object_set(priv->playlist_length_renderer, "attributes", list, NULL);
 }
 
@@ -1220,7 +1276,11 @@ void rc_ui_listview_playlist_set_column_display_mode(gboolean mode)
         g_object_set(priv->playlist_listview, "headers-visible", FALSE, NULL);
         g_object_set(priv->playlist_artist_column, "visible", FALSE, NULL);
         g_object_set(priv->playlist_album_column, "visible", FALSE, NULL);
+        g_object_set(priv->playlist_tracknum_column, "visible", FALSE, NULL);
+        g_object_set(priv->playlist_year_column, "visible", FALSE, NULL);
+        g_object_set(priv->playlist_ftype_column, "visible", FALSE, NULL);
     }
+    rc_ui_player_playlist_scrolled_window_set_horizontal_policy(mode);
 }
 
 /**
@@ -1259,45 +1319,83 @@ void rc_ui_listview_playlist_set_title_format(const gchar *format)
 
 /**
  * rc_ui_listview_playlist_set_enabled_columns:
- * @artist_column: whether to show artist column
- * @album_column: whether to show album column
+ * @column_flags: the columns to set
+ * @enable_flags: set the columns state
  *
- * Whether the artist column or album column should be displayed in the
- * playlist.
+ * Enable or disable (set the visibility of) some columns by the given flags.
  * Notice that this function will only take effects if the display mode is
  * set to #TRUE.
  */
 
-void rc_ui_listview_playlist_set_enabled_columns(gboolean artist_column,
-    gboolean album_column)
+void rc_ui_listview_playlist_set_enabled_columns(guint column_flags,
+    guint enable_flags)
 {
     RCUiListViewPrivate *priv = &ui_listview_private;
     if(priv->playlist_listview==NULL) return;
     if(!priv->display_mode) return;
-    g_object_set(priv->playlist_artist_column, "visible", artist_column,
-        NULL);
-    g_object_set(priv->playlist_album_column, "visible", album_column,
-        NULL);
+    if(column_flags==0) return;
+    if(column_flags & RC_UI_LISTVIEW_PLAYLIST_COLUMN_ARTIST)
+    {
+        g_object_set(priv->playlist_artist_column, "visible",
+            enable_flags & RC_UI_LISTVIEW_PLAYLIST_COLUMN_ARTIST ?
+            TRUE: FALSE, NULL);
+    }
+    if(column_flags & RC_UI_LISTVIEW_PLAYLIST_COLUMN_ALBUM)
+    {
+        g_object_set(priv->playlist_album_column, "visible",
+            enable_flags & RC_UI_LISTVIEW_PLAYLIST_COLUMN_ALBUM ?
+            TRUE: FALSE, NULL);
+    }
+    if(column_flags & RC_UI_LISTVIEW_PLAYLIST_COLUMN_TRACK)
+    {
+        g_object_set(priv->playlist_tracknum_column, "visible",
+            enable_flags & RC_UI_LISTVIEW_PLAYLIST_COLUMN_TRACK ?
+            TRUE: FALSE, NULL);
+    }
+    if(column_flags & RC_UI_LISTVIEW_PLAYLIST_COLUMN_YEAR)
+    {
+        g_object_set(priv->playlist_year_column, "visible",
+            enable_flags & RC_UI_LISTVIEW_PLAYLIST_COLUMN_YEAR ?
+            TRUE: FALSE, NULL);
+    }
+    if(column_flags & RC_UI_LISTVIEW_PLAYLIST_COLUMN_FTYPE)
+    {
+        g_object_set(priv->playlist_ftype_column, "visible",
+            enable_flags & RC_UI_LISTVIEW_PLAYLIST_COLUMN_FTYPE ?
+            TRUE: FALSE, NULL);
+    }
 }
 
 /**
  * rc_ui_listview_playlist_get_enabled_columns:
- * @artist_column: return the visibility of the artist column
- * @album_column: return the visibility of the album column
  *
  * Get the visibility of the artist column and album column.
+ *
+ * Returns: The flags of the columns.
  */
 
-void rc_ui_listview_playlist_get_enabled_columns(gboolean *artist_column,
-    gboolean *album_column)
+guint rc_ui_listview_playlist_get_enabled_columns()
 {
     RCUiListViewPrivate *priv = &ui_listview_private;
     gboolean state;
-    if(priv->playlist_listview==NULL) return;
+    guint flags = 0;
+    if(priv->playlist_listview==NULL) return 0;
     g_object_get(priv->playlist_listview, "headers-visible", &state, NULL);
-    if(artist_column!=NULL) *artist_column = state;
+    if(state)
+        flags |= RC_UI_LISTVIEW_PLAYLIST_COLUMN_ARTIST;
     g_object_get(priv->playlist_artist_column, "visible", &state, NULL);
-    if(album_column!=NULL) *album_column = state;
+    if(state)
+        flags |= RC_UI_LISTVIEW_PLAYLIST_COLUMN_ALBUM;
+    g_object_get(priv->playlist_tracknum_column, "visible", &state, NULL);
+    if(state)
+        flags |= RC_UI_LISTVIEW_PLAYLIST_COLUMN_TRACK;
+    g_object_get(priv->playlist_year_column, "visible", &state, NULL);
+    if(state)
+        flags |= RC_UI_LISTVIEW_PLAYLIST_COLUMN_YEAR;
+    g_object_get(priv->playlist_ftype_column, "visible", &state, NULL);
+    if(state)
+        flags |= RC_UI_LISTVIEW_PLAYLIST_COLUMN_FTYPE;
+    return flags;
 }
 
 

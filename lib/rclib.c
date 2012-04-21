@@ -46,10 +46,11 @@ const gchar *rclib_build_date = __DATE__;
 const gchar *rclib_build_time = __TIME__;
 
 static gchar *db_file = NULL;
-static gulong main_tag_found_handler;
-static gulong main_new_duration_handler;
-static gulong main_catalog_delete_handler;
-static gulong main_playist_delete_handler;
+static gulong main_tag_found_handler = 0;
+static gulong main_new_duration_handler = 0;
+static gulong main_catalog_delete_handler = 0;
+static gulong main_playist_delete_handler = 0;
+static gulong main_error_handler = 0;
 
 static void rclib_main_update_db_metadata_cb(RCLibCore *core,
     const RCLibCoreMetadata *metadata, const gchar *uri, gpointer data)
@@ -72,6 +73,10 @@ static void rclib_main_update_db_metadata_cb(RCLibCore *core,
     playlist_data->ftype = metadata->ftype;
     playlist_data->tracknum = metadata->track;
     playlist_data->year = metadata->year;
+    if(type==RCLIB_CORE_SOURCE_CUE || type==RCLIB_CORE_SOURCE_EMBEDED_CUE)
+        playlist_data->type = RCLIB_DB_PLAYLIST_TYPE_CUE;
+    else
+        playlist_data->type = RCLIB_DB_PLAYLIST_TYPE_MUSIC;
     rclib_db_playlist_update_metadata(iter, playlist_data);
     if(metadata->duration>0)
         rclib_db_playlist_update_length(iter, metadata->duration);
@@ -107,6 +112,15 @@ static void rclib_main_playlist_delete_cb(RCLibDb *db, GSequenceIter *iter,
     if(iter==NULL) return;
     if(iter==rclib_core_get_db_reference())
         rclib_core_update_db_reference(NULL);
+}
+
+static void rclib_main_error_cb(RCLibCore *core, const gchar *message,
+    gpointer data)
+{
+    GSequenceIter *iter;
+    iter = rclib_core_get_db_reference();
+    if(iter==NULL) return;
+    rclib_db_playlist_set_type(iter, RCLIB_DB_PLAYLIST_TYPE_MISSING);
 }
 
 /**
@@ -170,6 +184,8 @@ gboolean rclib_init(gint *argc, gchar **argv[], const gchar *dir,
         G_CALLBACK(rclib_main_catalog_delete_cb), NULL);
     main_playist_delete_handler = rclib_db_signal_connect("playlist-delete",
         G_CALLBACK(rclib_main_playlist_delete_cb), NULL);
+    main_error_handler = rclib_core_signal_connect("error",
+        G_CALLBACK(rclib_main_error_cb), NULL);
     return TRUE;
 }
 
@@ -189,6 +205,8 @@ void rclib_exit()
         rclib_db_signal_disconnect(main_catalog_delete_handler);
     if(main_playist_delete_handler>0)
         rclib_db_signal_disconnect(main_playist_delete_handler);
+    if(main_error_handler>0)
+        rclib_core_signal_disconnect(main_error_handler);
     g_free(db_file);
     rclib_settings_exit();
     rclib_album_exit();

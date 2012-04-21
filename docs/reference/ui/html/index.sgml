@@ -61,6 +61,7 @@
 <ANCHOR id="RhythmCat-rc-ui-listview.synopsis" href="RhythmCat/RhythmCat-rc-ui-listview.html#RhythmCat-rc-ui-listview.synopsis">
 <ANCHOR id="RhythmCat-rc-ui-listview.description" href="RhythmCat/RhythmCat-rc-ui-listview.html#RhythmCat-rc-ui-listview.description">
 <ANCHOR id="RhythmCat-rc-ui-listview.details" href="RhythmCat/RhythmCat-rc-ui-listview.html#RhythmCat-rc-ui-listview.details">
+<ANCHOR id="RCUiListViewPlaylistColumnFlags" href="RhythmCat/RhythmCat-rc-ui-listview.html#RCUiListViewPlaylistColumnFlags">
 <ANCHOR id="rc-ui-listview-catalog-delete-items" href="RhythmCat/RhythmCat-rc-ui-listview.html#rc-ui-listview-catalog-delete-items">
 <ANCHOR id="rc-ui-listview-catalog-get-cursor" href="RhythmCat/RhythmCat-rc-ui-listview.html#rc-ui-listview-catalog-get-cursor">
 <ANCHOR id="rc-ui-listview-catalog-get-model" href="RhythmCat/RhythmCat-rc-ui-listview.html#rc-ui-listview-catalog-get-model">
@@ -111,6 +112,7 @@
 <ANCHOR id="rc-ui-player-init" href="RhythmCat/RCUiPlayer.html#rc-ui-player-init">
 <ANCHOR id="rc-ui-player-lyric-labels-get-visible" href="RhythmCat/RCUiPlayer.html#rc-ui-player-lyric-labels-get-visible">
 <ANCHOR id="rc-ui-player-lyric-labels-set-visible" href="RhythmCat/RCUiPlayer.html#rc-ui-player-lyric-labels-set-visible">
+<ANCHOR id="rc-ui-player-playlist-scrolled-window-set-horizontal-policy" href="RhythmCat/RCUiPlayer.html#rc-ui-player-playlist-scrolled-window-set-horizontal-policy">
 <ANCHOR id="rc-ui-player-present-main-window" href="RhythmCat/RCUiPlayer.html#rc-ui-player-present-main-window">
 <ANCHOR id="rc-ui-player-set-keep-above-state" href="RhythmCat/RCUiPlayer.html#rc-ui-player-set-keep-above-state">
 <ANCHOR id="rc-ui-player-signal-connect" href="RhythmCat/RCUiPlayer.html#rc-ui-player-signal-connect">

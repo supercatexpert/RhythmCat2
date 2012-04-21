@@ -74,7 +74,8 @@ static void rc_main_app_activate(GApplication *application)
     gchar *uri;
     gint i;
     gboolean theme_flag = FALSE;
-    gboolean artist_column_flag, album_column_flag;
+    gboolean column_flag;
+    guint column_flags = 0;
     const RCUiStyleEmbededTheme *theme_embeded;
     guint theme_number;
     gchar *tmp_string;
@@ -136,12 +137,33 @@ static void rc_main_app_activate(GApplication *application)
     if(rclib_settings_get_boolean("MainUI", "UseMultiColumns", NULL))
     {
         rc_ui_listview_playlist_set_column_display_mode(TRUE);
-        artist_column_flag = rclib_settings_get_boolean("MainUI",
+        column_flag = rclib_settings_get_boolean("MainUI",
             "PlaylistColumnArtistEnabled", NULL);
-        album_column_flag = rclib_settings_get_boolean("MainUI",
-            "PlaylistColumnAlbumEnabled", NULL),
-        rc_ui_listview_playlist_set_enabled_columns(artist_column_flag,
-            album_column_flag);
+        if(column_flag)
+            column_flags |= RC_UI_LISTVIEW_PLAYLIST_COLUMN_ARTIST;
+        column_flag = rclib_settings_get_boolean("MainUI",
+            "PlaylistColumnAlbumEnabled", NULL);
+        if(column_flag)
+            column_flags |= RC_UI_LISTVIEW_PLAYLIST_COLUMN_ALBUM;
+        column_flag = rclib_settings_get_boolean("MainUI",
+            "PlaylistColumnTrackNumberEnabled", NULL);
+        if(column_flag)
+            column_flags |= RC_UI_LISTVIEW_PLAYLIST_COLUMN_TRACK;
+        column_flag = rclib_settings_get_boolean("MainUI",
+            "PlaylistColumnYearEnabled", NULL);
+        if(column_flag)
+            column_flags |= RC_UI_LISTVIEW_PLAYLIST_COLUMN_YEAR;
+        column_flag = rclib_settings_get_boolean("MainUI",
+            "PlaylistColumnFileTypeEnabled", NULL);
+        if(column_flag)
+            column_flags |= RC_UI_LISTVIEW_PLAYLIST_COLUMN_FTYPE;
+        rc_ui_listview_playlist_set_enabled_columns(
+            RC_UI_LISTVIEW_PLAYLIST_COLUMN_ARTIST |
+            RC_UI_LISTVIEW_PLAYLIST_COLUMN_ALBUM |
+            RC_UI_LISTVIEW_PLAYLIST_COLUMN_TRACK |
+            RC_UI_LISTVIEW_PLAYLIST_COLUMN_YEAR |
+            RC_UI_LISTVIEW_PLAYLIST_COLUMN_FTYPE,
+            column_flags);
     }
     else
     {

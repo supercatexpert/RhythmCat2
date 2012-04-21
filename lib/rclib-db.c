@@ -235,7 +235,6 @@ static gboolean rclib_db_playlist_refresh_idle_cb(gpointer data)
     if(data==NULL) return FALSE;
     if(db_instance==NULL) return FALSE;
     idle_data = (RCLibDbPlaylistRefreshIdleData *)data;
-    if(idle_data->mmd==NULL) return FALSE;
     priv = RCLIB_DB_GET_PRIVATE(db_instance);
     if(priv==NULL) return FALSE;
     if(db_instance==NULL) return FALSE;
@@ -248,19 +247,22 @@ static gboolean rclib_db_playlist_refresh_idle_cb(gpointer data)
     if(!rclib_db_is_iter_valid(playlist, idle_data->playlist_iter))
         return FALSE;
     playlist_data = g_sequence_get(idle_data->playlist_iter);
-    g_free(playlist_data->title);
-    g_free(playlist_data->artist);
-    g_free(playlist_data->album);
-    g_free(playlist_data->ftype);
     mmd = idle_data->mmd;
     playlist_data->type = idle_data->type;
-    playlist_data->title = g_strdup(mmd->title);
-    playlist_data->artist = g_strdup(mmd->artist);
-    playlist_data->album = g_strdup(mmd->album);
-    playlist_data->ftype = g_strdup(mmd->ftype);
-    playlist_data->length = mmd->length;
-    playlist_data->tracknum = mmd->tracknum;
-    playlist_data->year = mmd->year;
+    if(mmd!=NULL)
+    {
+        g_free(playlist_data->title);
+        g_free(playlist_data->artist);
+        g_free(playlist_data->album);
+        g_free(playlist_data->ftype);
+        playlist_data->title = g_strdup(mmd->title);
+        playlist_data->artist = g_strdup(mmd->artist);
+        playlist_data->album = g_strdup(mmd->album);
+        playlist_data->ftype = g_strdup(mmd->ftype);
+        playlist_data->length = mmd->length;
+        playlist_data->tracknum = mmd->tracknum;
+        playlist_data->year = mmd->year;
+    }
     priv->dirty_flag = TRUE;
     g_signal_emit(db_instance, db_signals[SIGNAL_PLAYLIST_CHANGED],
         0, idle_data->playlist_iter);
@@ -514,7 +516,6 @@ static gpointer rclib_db_playlist_refresh_thread_cb(gpointer data)
     RCLibCueData cue_data;
     gchar *cue_uri;
     gchar *scheme;
-    guint i;
     gint track = 0;
     gint length;
     gboolean local_flag;
@@ -568,6 +569,19 @@ static gpointer rclib_db_playlist_refresh_thread_cb(gpointer data)
                             g_idle_add(rclib_db_playlist_refresh_idle_cb,
                                 idle_data);
                         }
+                        else
+                        {
+                            idle_data =
+                                g_new0(RCLibDbPlaylistRefreshIdleData, 1);
+                            idle_data->catalog_iter =
+                                refresh_data->catalog_iter;
+                            idle_data->playlist_iter =
+                                refresh_data->playlist_iter;
+                            idle_data->mmd = NULL;
+                            idle_data->type = RCLIB_DB_PLAYLIST_TYPE_MISSING;
+                            g_idle_add(rclib_db_playlist_refresh_idle_cb,
+                                idle_data);
+                        }
                     }
                     rclib_cue_free(&cue_data);
                     g_free(cue_uri);
@@ -581,8 +595,7 @@ static gpointer rclib_db_playlist_refresh_thread_cb(gpointer data)
                 }
             }
             mmd = rclib_tag_read_metadata(refresh_data->uri);
-            if(mmd==NULL) break;
-            if(mmd->emb_cue!=NULL) /* Embeded CUE check */
+            if(mmd!=NULL && mmd->emb_cue!=NULL) /* Embeded CUE check */
             {
                 if(rclib_cue_read_data(mmd->emb_cue,
                     RCLIB_CUE_INPUT_EMBEDED, &cue_data)>0)
@@ -605,22 +618,16 @@ static gpointer rclib_db_playlist_refresh_thread_cb(gpointer data)
                             g_idle_add(rclib_db_playlist_refresh_idle_cb,
                                 idle_data);
                         }
-                    }
-                    else
-                    {
-                        for(i=0;i<cue_data.length;i++)
+                        else
                         {
-                            cue_mmd = rclib_db_get_metadata_from_cue(
-                                &cue_data, i, mmd);
-                            if(cue_mmd==NULL) continue;
                             idle_data =
                                 g_new0(RCLibDbPlaylistRefreshIdleData, 1);
                             idle_data->catalog_iter =
                                 refresh_data->catalog_iter;
                             idle_data->playlist_iter =
                                 refresh_data->playlist_iter;
-                            idle_data->mmd = mmd;
-                            idle_data->type = RCLIB_DB_PLAYLIST_TYPE_CUE;
+                            idle_data->mmd = NULL;
+                            idle_data->type = RCLIB_DB_PLAYLIST_TYPE_MISSING;
                             g_idle_add(rclib_db_playlist_refresh_idle_cb,
                                 idle_data);
                         }
@@ -632,7 +639,10 @@ static gpointer rclib_db_playlist_refresh_thread_cb(gpointer data)
             idle_data->catalog_iter = refresh_data->catalog_iter;
             idle_data->playlist_iter = refresh_data->playlist_iter;
             idle_data->mmd = mmd;
-            idle_data->type = RCLIB_DB_PLAYLIST_TYPE_MUSIC;
+            if(mmd!=NULL)
+                idle_data->type = RCLIB_DB_PLAYLIST_TYPE_MUSIC;
+            else
+                idle_data->type = RCLIB_DB_PLAYLIST_TYPE_MISSING;
             g_idle_add(rclib_db_playlist_refresh_idle_cb, idle_data);
         }
         G_STMT_END;
@@ -1631,6 +1641,7 @@ void rclib_db_playlist_update_metadata(GSequenceIter *iter,
     playlist_data->ftype = g_strdup(data->ftype);
     playlist_data->tracknum = data->tracknum;
     playlist_data->year = data->year;
+    playlist_data->type = data->type;
     priv->dirty_flag = TRUE;
     g_signal_emit(db_instance, db_signals[SIGNAL_PLAYLIST_CHANGED],
         0, iter);

@@ -37,7 +37,8 @@
 </tr></table></div>
 <div class="refsynopsisdiv">
 <a name="RhythmCat-rc-ui-listview.synopsis"></a><h2>Synopsis</h2>
-<pre class="synopsis"><span class="returnvalue">void</span>                <a class="link" href="RhythmCat-rc-ui-listview.html#rc-ui-listview-catalog-delete-items" title="rc_ui_listview_catalog_delete_items ()">rc_ui_listview_catalog_delete_items</a> ();
+<pre class="synopsis">enum                <a class="link" href="RhythmCat-rc-ui-listview.html#RCUiListViewPlaylistColumnFlags" title="enum RCUiListViewPlaylistColumnFlags">RCUiListViewPlaylistColumnFlags</a>;
+<span class="returnvalue">void</span>                <a class="link" href="RhythmCat-rc-ui-listview.html#rc-ui-listview-catalog-delete-items" title="rc_ui_listview_catalog_delete_items ()">rc_ui_listview_catalog_delete_items</a> ();
 <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RhythmCat-rc-ui-listview.html#rc-ui-listview-catalog-get-cursor" title="rc_ui_listview_catalog_get_cursor ()">rc_ui_listview_catalog_get_cursor</a>   (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/gtk/GtkTreeModel.html#GtkTreeIter"><span class="type">GtkTreeIter</span></a> *iter</code></em>);
 <a href="/usr/share/gtk-doc/html/gtk/GtkTreeModel.html"><span class="returnvalue">GtkTreeModel</span></a> *      <a class="link" href="RhythmCat-rc-ui-listview.html#rc-ui-listview-catalog-get-model" title="rc_ui_listview_catalog_get_model ()">rc_ui_listview_catalog_get_model</a>    ();
 <span class="returnvalue">void</span>                <a class="link" href="RhythmCat-rc-ui-listview.html#rc-ui-listview-catalog-new-playlist" title="rc_ui_listview_catalog_new_playlist ()">rc_ui_listview_catalog_new_playlist</a> ();
@@ -55,9 +56,8 @@
 <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RhythmCat-rc-ui-listview.html#rc-ui-listview-playlist-get-column-display-mode" title="rc_ui_listview_playlist_get_column_display_mode ()">rc_ui_listview_playlist_get_column_display_mode</a>
                                                         ();
 <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RhythmCat-rc-ui-listview.html#rc-ui-listview-playlist-get-cursor" title="rc_ui_listview_playlist_get_cursor ()">rc_ui_listview_playlist_get_cursor</a>  (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/gtk/GtkTreeModel.html#GtkTreeIter"><span class="type">GtkTreeIter</span></a> *iter</code></em>);
-<span class="returnvalue">void</span>                <a class="link" href="RhythmCat-rc-ui-listview.html#rc-ui-listview-playlist-get-enabled-columns" title="rc_ui_listview_playlist_get_enabled_columns ()">rc_ui_listview_playlist_get_enabled_columns</a>
-                                                        (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> *artist_column</code></em>,
-                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> *album_column</code></em>);
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="returnvalue">guint</span></a>               <a class="link" href="RhythmCat-rc-ui-listview.html#rc-ui-listview-playlist-get-enabled-columns" title="rc_ui_listview_playlist_get_enabled_columns ()">rc_ui_listview_playlist_get_enabled_columns</a>
+                                                        ();
 <a href="/usr/share/gtk-doc/html/gtk/GtkTreeModel.html"><span class="returnvalue">GtkTreeModel</span></a> *      <a class="link" href="RhythmCat-rc-ui-listview.html#rc-ui-listview-playlist-get-model" title="rc_ui_listview_playlist_get_model ()">rc_ui_listview_playlist_get_model</a>   ();
 <span class="returnvalue">void</span>                <a class="link" href="RhythmCat-rc-ui-listview.html#rc-ui-listview-playlist-refresh" title="rc_ui_listview_playlist_refresh ()">rc_ui_listview_playlist_refresh</a>     ();
 <span class="returnvalue">void</span>                <a class="link" href="RhythmCat-rc-ui-listview.html#rc-ui-listview-playlist-select" title="rc_ui_listview_playlist_select ()">rc_ui_listview_playlist_select</a>      (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/gtk/GtkTreeModel.html#GtkTreeIter"><span class="type">GtkTreeIter</span></a> *iter</code></em>);
@@ -65,8 +65,8 @@
 <span class="returnvalue">void</span>                <a class="link" href="RhythmCat-rc-ui-listview.html#rc-ui-listview-playlist-set-column-display-mode" title="rc_ui_listview_playlist_set_column_display_mode ()">rc_ui_listview_playlist_set_column_display_mode</a>
                                                         (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> mode</code></em>);
 <span class="returnvalue">void</span>                <a class="link" href="RhythmCat-rc-ui-listview.html#rc-ui-listview-playlist-set-enabled-columns" title="rc_ui_listview_playlist_set_enabled_columns ()">rc_ui_listview_playlist_set_enabled_columns</a>
-                                                        (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> artist_column</code></em>,
-                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> album_column</code></em>);
+                                                        (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> column_flags</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> enable_flags</code></em>);
 <span class="returnvalue">void</span>                <a class="link" href="RhythmCat-rc-ui-listview.html#rc-ui-listview-playlist-set-pango-attributes" title="rc_ui_listview_playlist_set_pango_attributes ()">rc_ui_listview_playlist_set_pango_attributes</a>
                                                         (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/pango/pango-Text-Attributes.html#PangoAttrList"><span class="type">PangoAttrList</span></a> *list</code></em>);
 <span class="returnvalue">void</span>                <a class="link" href="RhythmCat-rc-ui-listview.html#rc-ui-listview-playlist-set-title-format" title="rc_ui_listview_playlist_set_title_format ()">rc_ui_listview_playlist_set_title_format</a>
@@ -78,6 +78,18 @@
 </div>
 <div class="refsect1">
 <a name="RhythmCat-rc-ui-listview.details"></a><h2>Details</h2>
+<div class="refsect2">
+<a name="RCUiListViewPlaylistColumnFlags"></a><h3>enum RCUiListViewPlaylistColumnFlags</h3>
+<pre class="programlisting">typedef enum {
+    RC_UI_LISTVIEW_PLAYLIST_COLUMN_ARTIST = 1&lt;&lt;0,
+    RC_UI_LISTVIEW_PLAYLIST_COLUMN_ALBUM = 1&lt;&lt;1,
+    RC_UI_LISTVIEW_PLAYLIST_COLUMN_TRACK = 1&lt;&lt;2,
+    RC_UI_LISTVIEW_PLAYLIST_COLUMN_YEAR = 1&lt;&lt;3,
+    RC_UI_LISTVIEW_PLAYLIST_COLUMN_FTYPE = 1&lt;&lt;4
+} RCUiListViewPlaylistColumnFlags;
+</pre>
+</div>
+<hr>
 <div class="refsect2">
 <a name="rc-ui-listview-catalog-delete-items"></a><h3>rc_ui_listview_catalog_delete_items ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>                rc_ui_listview_catalog_delete_items ();</pre>
@@ -256,24 +268,17 @@ Get the GtkTreeIter of the selected music item in the playlist.
 <hr>
 <div class="refsect2">
 <a name="rc-ui-listview-playlist-get-enabled-columns"></a><h3>rc_ui_listview_playlist_get_enabled_columns ()</h3>
-<pre class="programlisting"><span class="returnvalue">void</span>                rc_ui_listview_playlist_get_enabled_columns
-                                                        (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> *artist_column</code></em>,
-                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> *album_column</code></em>);</pre>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="returnvalue">guint</span></a>               rc_ui_listview_playlist_get_enabled_columns
+                                                        ();</pre>
 <p>
 Get the visibility of the artist column and album column.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
-<tbody>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>artist_column</code></em> :</span></p></td>
-<td>return the visibility of the artist column</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>album_column</code></em> :</span></p></td>
-<td>return the visibility of the album column</td>
-</tr>
-</tbody>
+<tbody><tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>The flags of the columns.</td>
+</tr></tbody>
 </table></div>
 </div>
 <hr>
@@ -344,11 +349,10 @@ the list header.
 <div class="refsect2">
 <a name="rc-ui-listview-playlist-set-enabled-columns"></a><h3>rc_ui_listview_playlist_set_enabled_columns ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>                rc_ui_listview_playlist_set_enabled_columns
-                                                        (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> artist_column</code></em>,
-                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> album_column</code></em>);</pre>
+                                                        (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> column_flags</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> enable_flags</code></em>);</pre>
 <p>
-Whether the artist column or album column should be displayed in the
-playlist.
+Enable or disable (set the visibility of) some columns by the given flags.
 Notice that this function will only take effects if the display mode is
 set to <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE:CAPS"><span class="type">TRUE</span></a>.
 </p>
@@ -356,12 +360,12 @@ set to <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE:CAPS
 <col align="left" valign="top">
 <tbody>
 <tr>
-<td><p><span class="term"><em class="parameter"><code>artist_column</code></em> :</span></p></td>
-<td>whether to show artist column</td>
+<td><p><span class="term"><em class="parameter"><code>column_flags</code></em> :</span></p></td>
+<td>the columns to set</td>
 </tr>
 <tr>
-<td><p><span class="term"><em class="parameter"><code>album_column</code></em> :</span></p></td>
-<td>whether to show album column</td>
+<td><p><span class="term"><em class="parameter"><code>enable_flags</code></em> :</span></p></td>
+<td>set the columns state</td>
 </tr>
 </tbody>
 </table></div>

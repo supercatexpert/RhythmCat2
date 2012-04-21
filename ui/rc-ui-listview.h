@@ -30,6 +30,14 @@
 
 G_BEGIN_DECLS
 
+typedef enum {
+    RC_UI_LISTVIEW_PLAYLIST_COLUMN_ARTIST = 1<<0,
+    RC_UI_LISTVIEW_PLAYLIST_COLUMN_ALBUM = 1<<1,
+    RC_UI_LISTVIEW_PLAYLIST_COLUMN_TRACK = 1<<2,
+    RC_UI_LISTVIEW_PLAYLIST_COLUMN_YEAR = 1<<3,
+    RC_UI_LISTVIEW_PLAYLIST_COLUMN_FTYPE = 1<<4
+}RCUiListViewPlaylistColumnFlags;
+
 void rc_ui_listview_init(GtkWidget **catalog_widget,
     GtkWidget **playlist_widget);
 GtkWidget *rc_ui_listview_get_catalog_widget();
@@ -51,10 +59,9 @@ void rc_ui_listview_playlist_refresh();
 void rc_ui_listview_playlist_set_column_display_mode(gboolean mode);
 gboolean rc_ui_listview_playlist_get_column_display_mode();
 void rc_ui_listview_playlist_set_title_format(const gchar *format);
-void rc_ui_listview_playlist_set_enabled_columns(gboolean artist_column,
-    gboolean album_column);
-void rc_ui_listview_playlist_get_enabled_columns(gboolean *artist_column,
-    gboolean *album_column);
+void rc_ui_listview_playlist_set_enabled_columns(guint column_flags,
+    guint enable_flags);
+guint rc_ui_listview_playlist_get_enabled_columns();
 
 G_END_DECLS
 

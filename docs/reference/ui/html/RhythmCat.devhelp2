@@ -59,6 +59,7 @@
     <keyword type="function" name="rc_ui_list_model_get_playlist_title_format ()" link="RCUiPlaylistStore.html#rc-ui-list-model-get-playlist-title-format"/>
     <keyword type="function" name="rc_ui_list_model_init ()" link="RCUiPlaylistStore.html#rc-ui-list-model-init"/>
     <keyword type="function" name="rc_ui_list_model_set_playlist_title_format ()" link="RCUiPlaylistStore.html#rc-ui-list-model-set-playlist-title-format"/>
+    <keyword type="enum" name="enum RCUiListViewPlaylistColumnFlags" link="RhythmCat-rc-ui-listview.html#RCUiListViewPlaylistColumnFlags"/>
     <keyword type="function" name="rc_ui_listview_catalog_delete_items ()" link="RhythmCat-rc-ui-listview.html#rc-ui-listview-catalog-delete-items"/>
     <keyword type="function" name="rc_ui_listview_catalog_get_cursor ()" link="RhythmCat-rc-ui-listview.html#rc-ui-listview-catalog-get-cursor"/>
     <keyword type="function" name="rc_ui_listview_catalog_get_model ()" link="RhythmCat-rc-ui-listview.html#rc-ui-listview-catalog-get-model"/>
@@ -99,6 +100,7 @@
     <keyword type="function" name="rc_ui_player_init ()" link="RCUiPlayer.html#rc-ui-player-init"/>
     <keyword type="function" name="rc_ui_player_lyric_labels_get_visible ()" link="RCUiPlayer.html#rc-ui-player-lyric-labels-get-visible"/>
     <keyword type="function" name="rc_ui_player_lyric_labels_set_visible ()" link="RCUiPlayer.html#rc-ui-player-lyric-labels-set-visible"/>
+    <keyword type="function" name="rc_ui_player_playlist_scrolled_window_set_horizontal_policy ()" link="RCUiPlayer.html#rc-ui-player-playlist-scrolled-window-set-horizontal-policy"/>
     <keyword type="function" name="rc_ui_player_present_main_window ()" link="RCUiPlayer.html#rc-ui-player-present-main-window"/>
     <keyword type="function" name="rc_ui_player_set_keep_above_state ()" link="RCUiPlayer.html#rc-ui-player-set-keep-above-state"/>
     <keyword type="function" name="rc_ui_player_signal_connect ()" link="RCUiPlayer.html#rc-ui-player-signal-connect"/>

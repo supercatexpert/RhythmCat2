@@ -36,6 +36,14 @@
     * Cover image, lyric labels, and spectrum show can be hided now.
     
 2012-04-19  SuperCat    <supercatexpert@gmail.com>
+
     * Change the GLib dependency to version 2.32. Use new threads
       API in GLib.
+      
+2012-04-21  SuperCat    <supercatexpert@gmail.com>
+
+    * The GTK+ UI layout can be customed partially (like playlist view,
+      panel, etc).
+    * Missing music item in the playlist will be marked.
+
     

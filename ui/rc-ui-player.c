@@ -1816,3 +1816,27 @@ gboolean rc_ui_player_spectrum_get_visible()
     return gtk_widget_get_visible(priv->spectrum_widget);
 }
 
+/**
+ * rc_ui_player_playlist_scrolled_window_set_horizontal_policy:
+ * @state: the policy state
+ *
+ * Set the horizontal policy state of the playlist scrolled window.
+ */
+
+void rc_ui_player_playlist_scrolled_window_set_horizontal_policy(
+    gboolean state)
+{
+    RCUiPlayerPrivate *priv = NULL;
+    GtkPolicyType type;
+    if(ui_player_instance==NULL) return;
+    priv = RC_UI_PLAYER_GET_PRIVATE(ui_player_instance);
+    if(priv==NULL || priv->album_frame==NULL) return;
+    if(state)
+        type = GTK_POLICY_AUTOMATIC;
+    else
+        type = GTK_POLICY_NEVER;
+    g_object_set(priv->playlist_scr_window, "hscrollbar-policy", type, NULL);
+}
+
+    
+

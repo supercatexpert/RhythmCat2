@@ -94,6 +94,8 @@ void rc_ui_player_lyric_labels_set_visible(gboolean visible);
 gboolean rc_ui_player_lyric_labels_get_visible();
 void rc_ui_player_spectrum_set_visible(gboolean visible);
 gboolean rc_ui_player_spectrum_get_visible();
+void rc_ui_player_playlist_scrolled_window_set_horizontal_policy(
+    gboolean state);
 
 G_END_DECLS
 

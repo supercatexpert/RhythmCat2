@@ -182,7 +182,7 @@ struct _RCLibCoreClass {
     void (*echo_changed)(RCLibCore *core);
     void (*spectrum_updated)(RCLibCore *core, guint rate, guint bands,
         const GValue *magnitudes);
-    void (*error)(RCLibCore *core);
+    void (*error)(RCLibCore *core, const gchar *message);
 };
 
 /*< private >*/

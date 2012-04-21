@@ -78,6 +78,7 @@ rc_ui_playlist_store_get_type
 
 <SECTION>
 <FILE>rc-ui-listview</FILE>
+RCUiListViewPlaylistColumnFlags
 rc_ui_listview_catalog_delete_items
 rc_ui_listview_catalog_get_cursor
 rc_ui_listview_catalog_get_model
@@ -127,6 +128,7 @@ rc_ui_player_get_tray_icon
 rc_ui_player_init
 rc_ui_player_lyric_labels_get_visible
 rc_ui_player_lyric_labels_set_visible
+rc_ui_player_playlist_scrolled_window_set_horizontal_policy
 rc_ui_player_present_main_window
 rc_ui_player_set_keep_above_state
 rc_ui_player_signal_connect

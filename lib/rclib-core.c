@@ -775,8 +775,8 @@ static void rclib_core_class_init(RCLibCoreClass *klass)
      */
     core_signals[SIGNAL_ERROR] = g_signal_new("error",
         RCLIB_CORE_TYPE, G_SIGNAL_RUN_FIRST, G_STRUCT_OFFSET(RCLibCoreClass,
-        error), NULL, NULL, g_cclosure_marshal_VOID__POINTER,
-        G_TYPE_NONE, 0, G_TYPE_NONE, NULL);
+        error), NULL, NULL, g_cclosure_marshal_VOID__STRING,
+        G_TYPE_NONE, 1, G_TYPE_STRING, NULL);
 }
 
 static gboolean rclib_core_effect_add_element_nonblock(GstElement *effectbin,
@@ -896,7 +896,7 @@ static gboolean rclib_core_bus_callback(GstBus *bus, GstMessage *msg,
     guint rate = 0;
     gdouble threshold = -60;
     if(object==NULL) return TRUE;
-    priv = RCLIB_CORE_GET_PRIVATE(RCLIB_CORE(object));
+    priv = RCLIB_CORE_GET_PRIVATE(RCLIB_CORE(object));    
     switch(GST_MESSAGE_TYPE(msg))
     {
         case GST_MESSAGE_EOS:
@@ -979,13 +979,24 @@ static gboolean rclib_core_bus_callback(GstBus *bus, GstMessage *msg,
             }
             break;
         case GST_MESSAGE_ERROR:
+            error = NULL;
+            error_msg = NULL;
             gst_message_parse_error(msg, &error, &error_msg);
-            g_debug("%s\nDEBUG: %s", error->message, error_msg);
+            g_warning("%s\nDEBUG: %s", error->message, error_msg);
             g_error_free(error);
-            g_signal_emit(object, core_signals[SIGNAL_ERROR], 0);
+            g_signal_emit(object, core_signals[SIGNAL_ERROR], 0, error_msg);
+            g_free(error_msg);
             if(!gst_element_post_message(priv->playbin,
                 gst_message_new_eos(GST_OBJECT(priv->playbin))))
                 rclib_core_stop();
+            break;
+        case GST_MESSAGE_WARNING:
+            error = NULL;
+            error_msg = NULL;
+            gst_message_parse_warning(msg, &error, &error_msg);
+            g_warning("%s\nDEBUG: %s", error->message, error_msg);
+            g_error_free(error);
+            g_free(error_msg);
             break;
         default:
             break;
