@@ -1,0 +1,158 @@
+Source: rhythmcat2
+Section: sound
+Priority: extra
+Maintainer: SuperCat Expert <supercatexpert@gmail.com>
+Build-Depends: multiarch-support, cdbs (>= 0.4.90), debhelper (>= 9),
+    autotools-dev, libgtk-3-dev (>= 3.2), libgstreamer0.10-dev (>= 0.10.30),
+    libglib2.0-dev (>= 2.32), libgstreamer-plugins-base0.10-dev (>= 0.10.30),
+    libjson0-dev (>= 0.9), libcurl4-openssl-dev
+Build-Depends-Indep: libglib2.0-doc, libgtk-3-doc, gstreamer0.10-doc,
+    gstreamer0.10-plugins-base-doc, gstreamer0.10-plugins-good-doc
+Standards-Version: 3.9.2
+Homepage: https://github.com/supercatexpert/RhythmCat2/
+#Vcs-Git: git://git.debian.org/collab-maint/rhythmcat2.git
+#Vcs-Browser: http://git.debian.org/?p=collab-maint/rhythmcat2.git;a=summary
+
+Package: rhythmcat2
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, librhythmcat2 (>=1.9.2)
+Pre-Depends: ${misc:Pre-Depends}
+Description: GStreamer based music player with plug-in support
+ RhythmCat2 is a music player which can be used under Linux. It is not only a
+ normal music player, it has both command-line interface and graphic user
+ interface, and it can extend its features by plug-ins, like lyric show
+ in window, desktop lyric show, etc... The GTK+ UI can use custom GTK+ 3 themes,
+ and the UI layout can be customed partially.
+ .
+ This package provides GTK+ UI frontend.
+ 
+Package: librhythmcat2
+Architecture: any
+Multi-Arch: same
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Pre-Depends: ${misc:Pre-Depends}, multiarch-support
+Description: Backend library of RhythmCat2 Music Player
+ RhythmCat2 is a music player which can be used under Linux. It is not only a
+ normal music player, it has both command-line interface and graphic user
+ interface, and it can extend its features by plug-ins, like lyric show
+ in window, desktop lyric show, etc... The GTK+ UI can use custom GTK+ 3 themes,
+ and the UI layout can be customed partially.
+ .
+ This package provides basic backend library.
+
+Package: rhythmcat2-dev
+Section: libdevel
+Architecture: any
+Multi-Arch: same
+Depends: ${misc:Depends}, librhythmcat2 (>=1.9.2), rhythmcat2 (>=1.9.2)
+Pre-Depends: ${misc:Pre-Depends}, multiarch-support
+Description: Development files for RhythmCat2 GTK+ UI
+ RhythmCat2 is a music player which can be used under Linux. It is not only a
+ normal music player, it has both command-line interface and graphic user
+ interface, and it can extend its features by plug-ins, like lyric show
+ in window, desktop lyric show, etc... The GTK+ UI can use custom GTK+ 3 themes,
+ and the UI layout can be customed partially.
+ .
+ This package is required to build plugins for RhythmCat2 (GTK+ frontend part).
+ 
+Package: librhythmcat2-dev
+Section: libdevel
+Architecture: any
+Multi-Arch: same
+Depends: ${misc:Depends}, librhythmcat2 (>=1.9.2)
+Pre-Depends: ${misc:Pre-Depends}, multiarch-support
+Description: Development files for LibRhythmCat2
+ RhythmCat2 is a music player which can be used under Linux. It is not only a
+ normal music player, it has both command-line interface and graphic user
+ interface, and it can extend its features by plug-ins, like lyric show
+ in window, desktop lyric show, etc... The GTK+ UI can use custom GTK+ 3 themes,
+ and the UI layout can be customed partially.
+ .
+ This package is required to build plugins for RhythmCat2.
+ 
+Package: rhythmcat2-doc
+Section: doc
+Architecture: all
+Depends: ${misc:Depends}
+Suggests: devhelp
+Recommends: libglib2.0-doc, libpango1.0-doc, libgtk-3-doc, gstreamer0.10-doc,
+    gstreamer0.10-plugins-base-doc, gstreamer0.10-plugins-good-doc
+Description: Development documents for RhythmCat2 GTK+ UI
+ RhythmCat2 is a music player which can be used under Linux. It is not only a
+ normal music player, it has both command-line interface and graphic user
+ interface, and it can extend its features by plug-ins, like lyric show
+ in window, desktop lyric show, etc... The GTK+ UI can use custom GTK+ 3 themes,
+ and the UI layout can be customed partially.
+ .
+ This package contains the API reference manual for RhythmCat2
+ (GTK+ frontend part), which is useful when developing the plug-ins.
+ 
+Package: librhythmcat2-doc
+Section: doc
+Architecture: all
+Depends: ${misc:Depends}
+Suggests: devhelp
+Recommends: libglib2.0-doc, libpango1.0-doc, gstreamer0.10-doc,
+    gstreamer0.10-plugins-base-doc, gstreamer0.10-plugins-good-doc
+Description: Development documents for LibRhythmCat2
+ RhythmCat2 is a music player which can be used under Linux. It is not only a
+ normal music player, it has both command-line interface and graphic user
+ interface, and it can extend its features by plug-ins, like lyric show
+ in window, desktop lyric show, etc... The GTK+ UI can use custom GTK+ 3 themes,
+ and the UI layout can be customed partially.
+ .
+ This package contains the API reference manual for LibRhythmCat2, which is
+ useful when developing the plug-ins.
+
+Package: rhythmcat2-plugins-base
+Architecture: any
+Multi-Arch: same
+Depends: ${shlibs:Depends}, ${misc:Depends}, librhythmcat2 (>=1.9.2),
+    rhythmcat2 (>=1.9.2)
+Pre-Depends: ${misc:Pre-Depends}, multiarch-support
+Description: Base plug-ins for RhythmCat2
+ RhythmCat2 is a music player which can be used under Linux. It is not only a
+ normal music player, it has both command-line interface and graphic user
+ interface, and it can extend its features by plug-ins, like lyric show
+ in window, desktop lyric show, etc... The GTK+ UI can use custom GTK+ 3 themes,
+ and the UI layout can be customed partially.
+ .
+ This package provides base plug-ins, including: lyric show, desktop lyric, 
+ multimedia key supprot, MPRIS2 support, and notify popups.
+ .
+
+Package: rhythmcat2-plugins-extra
+Architecture: any
+Multi-Arch: same
+Depends: ${shlibs:Depends}, ${misc:Depends}, librhythmcat2 (>=1.9.2),
+    rhythmcat2 (>=1.9.2)
+Pre-Depends: ${misc:Pre-Depends}, multiarch-support
+Description: Extra plug-ins for RhythmCat2
+ RhythmCat2 is a music player which can be used under Linux. It is not only a
+ normal music player, it has both command-line interface and graphic user
+ interface, and it can extend its features by plug-ins, like lyric show
+ in window, desktop lyric show, etc... The GTK+ UI can use custom GTK+ 3 themes,
+ and the UI layout can be customed partially.
+ .
+ This package provides extra plug-ins, including: lyric crawler, and lyric
+ crawler downloader modules.
+ .
+
+Package: rhythmcat2-plugins-python3-loader
+Architecture: any
+Multi-Arch: same
+Depends: ${shlibs:Depends}, ${misc:Depends}, librhythmcat2 (>=1.9.2),
+    rhythmcat2 (>=1.9.2)
+Pre-Depends: ${misc:Pre-Depends}, multiarch-support
+Description: Python3 plug-in loader for RhythmCat2
+ RhythmCat2 is a music player which can be used under Linux. It is not only a
+ normal music player, it has both command-line interface and graphic user
+ interface, and it can extend its features by plug-ins, like lyric show
+ in window, desktop lyric show, etc... The GTK+ UI can use custom GTK+ 3 themes,
+ and the UI layout can be customed partially.
+ .
+ This package provides Python3 plug-in loader, which is used to load Python3
+ based plug-ins.
+ .
+
+

@@ -26,6 +26,15 @@
 #include "rc-ui-effect.h"
 #include "rc-common.h"
 
+/**
+ * SECTION: rc-ui-effect
+ * @Short_description: The audio effect configuration UI
+ * @Title: Audio Effect UI
+ * @Include: rc-ui-effect.h
+ *
+ * The audio effect configuation UI module, show the configuration panel.
+ */
+
 typedef struct RCUiAudioEffectPrivate
 {
     GtkWidget *effect_window;

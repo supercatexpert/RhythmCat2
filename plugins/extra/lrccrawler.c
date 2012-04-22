@@ -880,7 +880,10 @@ static void rc_plugin_lrccrawler_may_missing_cb(RCLibLyric *lyric,
     gchar *filepath = NULL;
     GSequenceIter *iter = NULL;
     gchar *rtitle;
+    gchar *title = NULL, *artist = NULL;
+    gchar *full_path;
     RCLibDbPlaylistData *playlist_data = NULL;
+    const gchar *home_dir;
     if(data==NULL) return;
     if(!priv->auto_search) return;
     if(gtk_widget_get_visible(priv->search_window)) return;
@@ -894,6 +897,7 @@ static void rc_plugin_lrccrawler_may_missing_cb(RCLibLyric *lyric,
     {
         gtk_entry_set_text(GTK_ENTRY(priv->title_entry),
             playlist_data->title);
+        title = g_strdup(playlist_data->title);
     }
     else
     {
@@ -901,6 +905,7 @@ static void rc_plugin_lrccrawler_may_missing_cb(RCLibLyric *lyric,
         rtitle = rclib_tag_get_name_from_fpath(filepath);
         g_free(filepath);
         gtk_entry_set_text(GTK_ENTRY(priv->title_entry), rtitle);
+        title = g_strdup(rtitle);
         g_free(rtitle);
     }
     if(playlist_data!=NULL && playlist_data->artist!=NULL &&
@@ -908,8 +913,30 @@ static void rc_plugin_lrccrawler_may_missing_cb(RCLibLyric *lyric,
     {
         gtk_entry_set_text(GTK_ENTRY(priv->artist_entry),
             playlist_data->artist);
-    }    
+        artist = g_strdup(playlist_data->artist);
+    }
+    else
+    {
+        gtk_entry_set_text(GTK_ENTRY(priv->artist_entry),
+            "");
+    }
     g_free(uri);
+    home_dir = g_getenv("HOME");
+    if(home_dir==NULL)
+        home_dir = g_get_home_dir();
+    if(artist!=NULL && title!=NULL)
+        filepath = g_strdup_printf("%s - %s.LRC", artist, title);
+    else if(title!=NULL)
+        filepath = g_strdup_printf("%s.LRC", title);
+    else
+        filepath = g_strdup("New file.LRC");
+    g_free(title);
+    g_free(artist);
+    full_path = g_build_filename(home_dir, ".RhythmCat2", "Lyrics",
+        filepath, NULL);
+    g_free(filepath);
+    gtk_entry_set_text(GTK_ENTRY(priv->save_file_entry), full_path);
+    g_free(full_path);
     priv->auto_search_mode = TRUE;
     gtk_button_clicked(GTK_BUTTON(priv->search_button));
 }

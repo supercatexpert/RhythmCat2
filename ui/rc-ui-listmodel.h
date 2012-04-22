@@ -59,6 +59,17 @@ G_BEGIN_DECLS
     (G_TYPE_INSTANCE_GET_CLASS((obj), RC_UI_TYPE_PLAYLIST_STORE, \
     RCUiPlaylistStore))
 
+/**
+ * RCUiCatalogColumns:
+ * @RC_UI_CATALOG_COLUMN_TYPE: the type column
+ * @RC_UI_CATALOG_COLUMN_STATE: the state column
+ * @RC_UI_CATALOG_COLUMN_NAME: the name column
+ * @RC_UI_CATALOG_COLUMN_PLAYING_FLAG: the playing flag column
+ * @RC_UI_CATALOG_COLUMN_LAST: the last column, do not use it
+ *
+ * The enum type for the columns in the catalog store.
+ */
+
 typedef enum {
     RC_UI_CATALOG_COLUMN_TYPE,
     RC_UI_CATALOG_COLUMN_STATE,
@@ -66,6 +77,25 @@ typedef enum {
     RC_UI_CATALOG_COLUMN_PLAYING_FLAG,
     RC_UI_CATALOG_COLUMN_LAST
 }RCUiCatalogColumns;
+
+/**
+ * RCUiPlaylistColumns:
+ * @RC_UI_PLAYLIST_COLUMN_TYPE: the type column
+ * @RC_UI_PLAYLIST_COLUMN_STATE: the state column
+ * @RC_UI_PLAYLIST_COLUMN_FTITLE: the title column
+ * @RC_UI_PLAYLIST_COLUMN_TITLE: the real title column
+ * @RC_UI_PLAYLIST_COLUMN_ARTIST: the artist column
+ * @RC_UI_PLAYLIST_COLUMN_ALBUM: the album column
+ * @RC_UI_PLAYLIST_COLUMN_FTYPE: the file type (format) column
+ * @RC_UI_PLAYLIST_COLUMN_LENGTH: the time length column
+ * @RC_UI_PLAYLIST_COLUMN_TRACK: the track number column
+ * @RC_UI_PLAYLIST_COLUMN_RATING: the rating column
+ * @RC_UI_PLAYLIST_COLUMN_YEAR: the year column
+ * @RC_UI_PLAYLIST_COLUMN_PLAYING_FLAG: the playing flag column
+ * @RC_UI_PLAYLIST_COLUMN_LAST: the last column, do not use it
+ *
+ * The enum type for the columns in the playlist store.
+ */
 
 typedef enum {
     RC_UI_PLAYLIST_COLUMN_TYPE,

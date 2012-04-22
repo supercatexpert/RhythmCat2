@@ -29,6 +29,17 @@
 #include "rc-ui-player.h"
 #include "rc-common.h"
 
+/**
+ * SECTION: rc-ui-listview
+ * @Short_description: Catalog and playlist list views
+ * @Title: List Views
+ * @Include: rc-ui-listview.h
+ *
+ * This module provides the catalog and playlist list view
+ * widgets for the player. They show catalog and playlist
+ * in the main window.
+ */
+
 enum
 {
     RC_UI_LISTVIEW_TARGET_INFO_CATALOG,
@@ -1302,8 +1313,9 @@ gboolean rc_ui_listview_playlist_get_column_display_mode()
  * @format: the format string
  *
  * Set the format string of the title column in the playlist, using
- * %TITLE as title string, %ARTIST as artist string, %ALBUM as album string.
- * Notice that %TITLE should be always included in the string.
+ * \%TITLE as title string, \%ARTIST as artist string, \%ALBUM as album
+ * string.
+ * Notice that \%TITLE should be always included in the string.
  */
 
 void rc_ui_listview_playlist_set_title_format(const gchar *format)

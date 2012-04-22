@@ -33,6 +33,20 @@
 #include "rc-common.h"
 #include "rc-ui-style.h"
 #include "rc-ui-effect.h"
+#include "rc-ui-resources.h"
+
+/**
+ * SECTION: rc-main
+ * @Short_description: Main application functions
+ * @Title: RCMainApplication
+ * @Include: rc-main.h
+ *
+ * The #RCMainApplication is a class which inherits #GtkApplication. It
+ * manages the initialization, startup, running, and uninitialzation of
+ * the program.
+ *
+ * It also provides some utility functions.
+ */
 
 #define RC_MAIN_APPLICATION_GET_PRIVATE(obj) \
     G_TYPE_INSTANCE_GET_PRIVATE((obj), RC_MAIN_APPLICATION_TYPE, \
@@ -66,6 +80,9 @@ static void rc_main_app_activate(GApplication *application)
     gchar *theme_file;
     gchar *plugin_dir;
     gchar *plugin_conf;
+    GFile *prefixdir_gfile;
+    GFile *libdir_gfile;
+    gchar *libdir_name = NULL;
     GSequenceIter *catalog_iter = NULL;
     GSequence *catalog = NULL;
     RCLibDbCatalogData *catalog_data = NULL;
@@ -76,28 +93,19 @@ static void rc_main_app_activate(GApplication *application)
     gboolean theme_flag = FALSE;
     gboolean column_flag;
     guint column_flags = 0;
-    const RCUiStyleEmbededTheme *theme_embeded;
-    guint theme_number;
+    guint plugin_number = 0;
     gchar *tmp_string;
     if(application!=NULL)
         rc_ui_player_init(GTK_APPLICATION(application));
     else
         rc_ui_player_init(NULL);    
     rc_ui_effect_window_init();
-    theme_embeded = rc_ui_style_get_embeded_theme(&theme_number);
     theme = rclib_settings_get_string("MainUI", "Theme", NULL);
     if(theme!=NULL && strlen(theme)>0)
     {
         if(g_str_has_prefix(theme, "embeded-theme:"))
         {
-            for(i=0;i<theme_number;i++)
-            {
-                if(g_strcmp0(theme+14, theme_embeded[i].name)==0)
-                {
-                    theme_flag = rc_ui_style_css_set_data(
-                        theme_embeded[i].data, theme_embeded[i].length);
-                }
-            }
+            theme_flag = rc_ui_style_embeded_theme_set_by_name(theme+14);
         }
         else
         {
@@ -107,16 +115,14 @@ static void rc_main_app_activate(GApplication *application)
         }
         if(!theme_flag)
         {
-            rc_ui_style_css_set_data(theme_embeded[0].data,
-                theme_embeded[0].length);
+            rc_ui_style_embeded_theme_set_default();
         }
     }
     else
     {
-        rc_ui_style_css_set_data(theme_embeded[0].data,
-            theme_embeded[0].length);
+        rc_ui_style_embeded_theme_set_default();
     }
-    g_free(theme);
+    g_free(theme); 
     rclib_settings_apply();
     if(rclib_settings_has_key("MainUI", "HideCoverImage", NULL))
     {
@@ -180,10 +186,29 @@ static void rc_main_app_activate(GApplication *application)
     plugin_dir = g_build_filename(main_user_dir, "Plugins", NULL);
     g_mkdir_with_parents(plugin_dir, 0700);
     rclib_plugin_load_from_dir(plugin_dir);
-    plugin_dir = g_build_filename(main_data_dir, "..", "..", "lib",
+    prefixdir_gfile = g_file_new_for_path(PREFIXDIR);
+    libdir_gfile = g_file_new_for_path(LIBDIR);
+    if(prefixdir_gfile!=NULL && libdir_gfile!=NULL)
+    {
+        libdir_name = g_file_get_relative_path(prefixdir_gfile,
+            libdir_gfile);
+    }
+    if(prefixdir_gfile!=NULL) g_object_unref(prefixdir_gfile);
+    if(libdir_gfile!=NULL) g_object_unref(libdir_gfile);
+    if(libdir_name==NULL) libdir_name = g_strdup("lib");
+    plugin_dir = g_build_filename(main_data_dir, "..", "..", libdir_name,
         "RhythmCat2", "plugins", NULL);
-    rclib_plugin_load_from_dir(plugin_dir);
+    g_free(libdir_name);
+    if(g_file_test(plugin_dir, G_FILE_TEST_IS_DIR))
+        plugin_number = rclib_plugin_load_from_dir(plugin_dir);
     g_free(plugin_dir);
+    if(plugin_number==0)
+    {
+        plugin_dir = g_build_filename(LIBDIR, "RhythmCat2", "plugins", NULL);
+        if(g_file_test(plugin_dir, G_FILE_TEST_IS_DIR))
+            rclib_plugin_load_from_dir(plugin_dir);
+        g_free(plugin_dir);
+    }
     rclib_plugin_load_from_configure();
     catalog = rclib_db_get_catalog();
     if(rclib_settings_get_boolean("Player", "LoadLastPosition", NULL) &&
@@ -456,6 +481,7 @@ gint rc_main_run(gint *argc, gchar **argv[])
     if(catalog!=NULL && g_sequence_get_length(catalog)==0)
         rclib_db_catalog_add(_("Default Playlist"), NULL,
         RCLIB_DB_CATALOG_TYPE_PLAYLIST);
+    g_resources_register(rc_ui_resources_get_resource());
     if(app!=NULL)
         status = g_application_run(G_APPLICATION(app), *argc, *argv);
     else /* If GtkApplication is not available, use fallback functions. */
@@ -465,6 +491,7 @@ gint rc_main_run(gint *argc, gchar **argv[])
         gtk_main();
         status = 0;
     }
+    g_resources_unregister(rc_ui_resources_get_resource());
     g_object_unref(app);
     return status;
 }

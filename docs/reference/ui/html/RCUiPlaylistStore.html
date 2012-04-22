@@ -2,23 +2,23 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>RCUiPlaylistStore</title>
+<title>Playlist View Models</title>
 <meta name="generator" content="DocBook XSL Stylesheets V1.76.1">
 <link rel="home" href="index.html" title="RhythmCat Reference Manual">
 <link rel="up" href="ch01.html" title="API reference">
-<link rel="prev" href="RhythmCat-rc-ui-effect.html" title="rc-ui-effect">
-<link rel="next" href="RhythmCat-rc-ui-listview.html" title="rc-ui-listview">
+<link rel="prev" href="RhythmCat-Audio-Effect-UI.html" title="Audio Effect UI">
+<link rel="next" href="RhythmCat-List-Views.html" title="List Views">
 <meta name="generator" content="GTK-Doc V1.18 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2">
 <tr valign="middle">
-<td><a accesskey="p" href="RhythmCat-rc-ui-effect.html"><img src="left.png" width="24" height="24" border="0" alt="Prev"></a></td>
+<td><a accesskey="p" href="RhythmCat-Audio-Effect-UI.html"><img src="left.png" width="24" height="24" border="0" alt="Prev"></a></td>
 <td><a accesskey="u" href="ch01.html"><img src="up.png" width="24" height="24" border="0" alt="Up"></a></td>
 <td><a accesskey="h" href="index.html"><img src="home.png" width="24" height="24" border="0" alt="Home"></a></td>
 <th width="100%" align="center">RhythmCat Reference Manual</th>
-<td><a accesskey="n" href="RhythmCat-rc-ui-listview.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
+<td><a accesskey="n" href="RhythmCat-List-Views.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
 </tr>
 <tr><td colspan="5" class="shortcuts">
 <a href="#RCUiPlaylistStore.synopsis" class="shortcut">Top</a>
@@ -34,14 +34,17 @@
 <a name="RCUiPlaylistStore"></a><div class="titlepage"></div>
 <div class="refnamediv"><table width="100%"><tr>
 <td valign="top">
-<h2><span class="refentrytitle"><a name="RCUiPlaylistStore.top_of_page"></a>RCUiPlaylistStore</span></h2>
-<p>RCUiPlaylistStore</p>
+<h2><span class="refentrytitle"><a name="RCUiPlaylistStore.top_of_page"></a>Playlist View Models</span></h2>
+<p>Playlist View Models — Catalog and playlist list view models</p>
 </td>
 <td valign="top" align="right"></td>
 </tr></table></div>
 <div class="refsynopsisdiv">
 <a name="RCUiPlaylistStore.synopsis"></a><h2>Synopsis</h2>
-<a name="RCUiCatalogStore"></a><pre class="synopsis">enum                <a class="link" href="RCUiPlaylistStore.html#RCUiCatalogColumns" title="enum RCUiCatalogColumns">RCUiCatalogColumns</a>;
+<a name="RCUiCatalogStore"></a><pre class="synopsis">
+#include &lt;rc-ui-listmodel.h&gt;
+
+enum                <a class="link" href="RCUiPlaylistStore.html#RCUiCatalogColumns" title="enum RCUiCatalogColumns">RCUiCatalogColumns</a>;
 struct              <a class="link" href="RCUiPlaylistStore.html#RCUiCatalogStore-struct" title="struct RCUiCatalogStore">RCUiCatalogStore</a>;
 struct              <a class="link" href="RCUiPlaylistStore.html#RCUiCatalogStoreClass" title="struct RCUiCatalogStoreClass">RCUiCatalogStoreClass</a>;
 enum                <a class="link" href="RCUiPlaylistStore.html#RCUiPlaylistColumns" title="enum RCUiPlaylistColumns">RCUiPlaylistColumns</a>;
@@ -81,6 +84,12 @@ RCUiPlaylistStore implements
 </div>
 <div class="refsect1">
 <a name="RCUiPlaylistStore.description"></a><h2>Description</h2>
+<p>
+This module provides 2 classes: <a class="link" href="RCUiPlaylistStore.html#RCUiCatalogStore"><span class="type">RCUiCatalogStore</span></a> and <a class="link" href="RCUiPlaylistStore.html" title="Playlist View Models"><span class="type">RCUiPlaylistStore</span></a>,
+which implements interface <a href="/usr/share/gtk-doc/html/gtk/GtkTreeModel.html"><span class="type">GtkTreeModel</span></a>. They can be used by <a href="/usr/share/gtk-doc/html/gtk/GtkTreeView.html"><span class="type">GtkTreeView</span></a>
+for showing and operating the data inside. <a class="link" href="RCUiPlaylistStore.html#RCUiCatalogStore"><span class="type">RCUiCatalogStore</span></a> contains the
+catalog list, and <a class="link" href="RCUiPlaylistStore.html" title="Playlist View Models"><span class="type">RCUiPlaylistStore</span></a> contains the playlist.
+</p>
 </div>
 <div class="refsect1">
 <a name="RCUiPlaylistStore.details"></a><h2>Details</h2>
@@ -94,6 +103,39 @@ RCUiPlaylistStore implements
     RC_UI_CATALOG_COLUMN_LAST
 } RCUiCatalogColumns;
 </pre>
+<p>
+The enum type for the columns in the catalog store.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><a name="RC-UI-CATALOG-COLUMN-TYPE:CAPS"></a><span class="term"><code class="literal">RC_UI_CATALOG_COLUMN_TYPE</code></span></p></td>
+<td>the type column
+</td>
+</tr>
+<tr>
+<td><p><a name="RC-UI-CATALOG-COLUMN-STATE:CAPS"></a><span class="term"><code class="literal">RC_UI_CATALOG_COLUMN_STATE</code></span></p></td>
+<td>the state column
+</td>
+</tr>
+<tr>
+<td><p><a name="RC-UI-CATALOG-COLUMN-NAME:CAPS"></a><span class="term"><code class="literal">RC_UI_CATALOG_COLUMN_NAME</code></span></p></td>
+<td>the name column
+</td>
+</tr>
+<tr>
+<td><p><a name="RC-UI-CATALOG-COLUMN-PLAYING-FLAG:CAPS"></a><span class="term"><code class="literal">RC_UI_CATALOG_COLUMN_PLAYING_FLAG</code></span></p></td>
+<td>the playing flag column
+</td>
+</tr>
+<tr>
+<td><p><a name="RC-UI-CATALOG-COLUMN-LAST:CAPS"></a><span class="term"><code class="literal">RC_UI_CATALOG_COLUMN_LAST</code></span></p></td>
+<td>the last column, do not use it
+</td>
+</tr>
+</tbody>
+</table></div>
 </div>
 <hr>
 <div class="refsect2">
@@ -126,6 +168,79 @@ RCUiPlaylistStore implements
     RC_UI_PLAYLIST_COLUMN_LAST
 } RCUiPlaylistColumns;
 </pre>
+<p>
+The enum type for the columns in the playlist store.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><a name="RC-UI-PLAYLIST-COLUMN-TYPE:CAPS"></a><span class="term"><code class="literal">RC_UI_PLAYLIST_COLUMN_TYPE</code></span></p></td>
+<td>the type column
+</td>
+</tr>
+<tr>
+<td><p><a name="RC-UI-PLAYLIST-COLUMN-STATE:CAPS"></a><span class="term"><code class="literal">RC_UI_PLAYLIST_COLUMN_STATE</code></span></p></td>
+<td>the state column
+</td>
+</tr>
+<tr>
+<td><p><a name="RC-UI-PLAYLIST-COLUMN-FTITLE:CAPS"></a><span class="term"><code class="literal">RC_UI_PLAYLIST_COLUMN_FTITLE</code></span></p></td>
+<td>the title column
+</td>
+</tr>
+<tr>
+<td><p><a name="RC-UI-PLAYLIST-COLUMN-TITLE:CAPS"></a><span class="term"><code class="literal">RC_UI_PLAYLIST_COLUMN_TITLE</code></span></p></td>
+<td>the real title column
+</td>
+</tr>
+<tr>
+<td><p><a name="RC-UI-PLAYLIST-COLUMN-ARTIST:CAPS"></a><span class="term"><code class="literal">RC_UI_PLAYLIST_COLUMN_ARTIST</code></span></p></td>
+<td>the artist column
+</td>
+</tr>
+<tr>
+<td><p><a name="RC-UI-PLAYLIST-COLUMN-ALBUM:CAPS"></a><span class="term"><code class="literal">RC_UI_PLAYLIST_COLUMN_ALBUM</code></span></p></td>
+<td>the album column
+</td>
+</tr>
+<tr>
+<td><p><a name="RC-UI-PLAYLIST-COLUMN-FTYPE:CAPS"></a><span class="term"><code class="literal">RC_UI_PLAYLIST_COLUMN_FTYPE</code></span></p></td>
+<td>the file type (format) column
+</td>
+</tr>
+<tr>
+<td><p><a name="RC-UI-PLAYLIST-COLUMN-LENGTH:CAPS"></a><span class="term"><code class="literal">RC_UI_PLAYLIST_COLUMN_LENGTH</code></span></p></td>
+<td>the time length column
+</td>
+</tr>
+<tr>
+<td><p><a name="RC-UI-PLAYLIST-COLUMN-TRACK:CAPS"></a><span class="term"><code class="literal">RC_UI_PLAYLIST_COLUMN_TRACK</code></span></p></td>
+<td>the track number column
+</td>
+</tr>
+<tr>
+<td><p><a name="RC-UI-PLAYLIST-COLUMN-RATING:CAPS"></a><span class="term"><code class="literal">RC_UI_PLAYLIST_COLUMN_RATING</code></span></p></td>
+<td>the rating column
+</td>
+</tr>
+<tr>
+<td><p><a name="RC-UI-PLAYLIST-COLUMN-YEAR:CAPS"></a><span class="term"><code class="literal">RC_UI_PLAYLIST_COLUMN_YEAR</code></span></p></td>
+<td>the year column
+</td>
+</tr>
+<tr>
+<td><p><a name="RC-UI-PLAYLIST-COLUMN-PLAYING-FLAG:CAPS"></a><span class="term"><code class="literal">RC_UI_PLAYLIST_COLUMN_PLAYING_FLAG</code></span></p></td>
+<td>the playing flag column
+</td>
+</tr>
+<tr>
+<td><p><a name="RC-UI-PLAYLIST-COLUMN-LAST:CAPS"></a><span class="term"><code class="literal">RC_UI_PLAYLIST_COLUMN_LAST</code></span></p></td>
+<td>the last column, do not use it
+</td>
+</tr>
+</tbody>
+</table></div>
 </div>
 <hr>
 <div class="refsect2">
@@ -243,8 +358,8 @@ Initialize the list model (catalog model &amp; playlist model).
                                                         (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *format</code></em>);</pre>
 <p>
 Set the format string of the title column in the playlist, using
-<code class="literal">TITLE</code> as title string, <code class="literal">ARTIST</code> as artist string, <code class="literal">ALBUM</code> as album string.
-Notice that <code class="literal">TITLE</code> should be always included in the string.
+%TITLE as title string, %ARTIST as artist string, %ALBUM as album string.
+Notice that %TITLE should be always included in the string.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">

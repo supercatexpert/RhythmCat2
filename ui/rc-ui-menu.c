@@ -32,6 +32,17 @@
 #include "rc-common.h"
 #include "rc-ui-player.h"
 
+/**
+ * SECTION: rc-ui-menu
+ * @Short_description: The menus in the player
+ * @Title: Menus
+ * @Include: rc-ui-menu.h
+ *
+ * This module provides the menus in the player, including main
+ * window, status icon, popup menus, etc. Plug-ins can also add
+ * their own menu items into the player.
+ */
+
 static GtkUIManager *ui_manager = NULL;
 static GtkActionGroup *ui_actions = NULL;
 

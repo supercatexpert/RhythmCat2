@@ -26,6 +26,18 @@
 #include "rc-ui-listmodel.h"
 #include "rc-common.h"
 
+/**
+ * SECTION: rc-ui-listmodel
+ * @Short_description: Catalog and playlist list view models
+ * @Title: Playlist View Models
+ * @Include: rc-ui-listmodel.h
+ *
+ * This module provides 2 classes: #RCUiCatalogStore and #RCUiPlaylistStore,
+ * which implements interface #GtkTreeModel. They can be used by #GtkTreeView
+ * for showing and operating the data inside. #RCUiCatalogStore contains the
+ * catalog list, and #RCUiPlaylistStore contains the playlist.
+ */
+
 #define RC_UI_CATALOG_STORE_GET_PRIVATE(o) \
     (G_TYPE_INSTANCE_GET_PRIVATE((o), RC_UI_TYPE_CATALOG_STORE, \
     RCUiCatalogStorePrivate))
@@ -1135,8 +1147,8 @@ GSequenceIter *rc_ui_list_model_get_catalog_by_model(GtkTreeModel *model)
  * @format: the format string
  *
  * Set the format string of the title column in the playlist, using
- * %TITLE as title string, %ARTIST as artist string, %ALBUM as album string.
- * Notice that %TITLE should be always included in the string.
+ * \%TITLE as title string, \%ARTIST as artist string, \%ALBUM as album string.
+ * Notice that \%TITLE should be always included in the string.
  */
 
 void rc_ui_list_model_set_playlist_title_format(const gchar *format)

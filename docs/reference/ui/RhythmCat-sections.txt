@@ -197,11 +197,15 @@ rc_ui_spectrum_widget_get_type
 
 <SECTION>
 <FILE>rc-ui-style</FILE>
-RCUiStyleEmbededTheme
 rc_ui_style_css_set_data
 rc_ui_style_css_set_file
+rc_ui_style_css_set_resource
 rc_ui_style_css_unset
-rc_ui_style_get_embeded_theme
+rc_ui_style_embeded_theme_get_length
+rc_ui_style_embeded_theme_get_name
+rc_ui_style_embeded_theme_set_by_index
+rc_ui_style_embeded_theme_set_by_name
+rc_ui_style_embeded_theme_set_default
 rc_ui_style_search_theme_paths
 </SECTION>
 

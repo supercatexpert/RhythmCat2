@@ -24,11 +24,14 @@ librhythmcat_ui_2_0_builtheaders = rc-ui-resources.h
 RhythmCat2_SOURCES = \
     main.c
 
-rc-ui-resources.c: rc-ui-resources.gresource.xml
+librhythmcat_ui_2_0_resourcefiles = \
+    rc-ui-resources.gresource.xml rc-ui-theme-monochrome.css
+
+rc-ui-resources.c: $(librhythmcat_ui_2_0_resourcefiles)
 	@GLIB_COMPILE_RESOURCE@ $(srcdir)/rc-ui-resources.gresource.xml \
 	    --target=rc-ui-resources.c --generate-source --c-name=rc_ui_resources
 
-rc-ui-resources.h: rc-ui-resources.gresource.xml
+rc-ui-resources.h: $(librhythmcat_ui_2_0_resourcefiles)
 	@GLIB_COMPILE_RESOURCE@ $(srcdir)/rc-ui-resources.gresource.xml \
 	    --target=rc-ui-resources.h --generate-header --c-name=rc_ui_resources
 
@@ -48,7 +51,8 @@ RhythmCat2_DEPENDENCIES = @LIBOBJS@ librhythmcat-ui-2.0.la
 RhythmCat2_LDFLAGS = -export-dynamic -no-undefined -export-symbols-regex "^[[^_]].*" -O2
 
 INCLUDES = @GLIB2_CFLAGS@ @GTK_CFLAGS@ @GSTREAMER_CFLAGS@ @JSON_CFLAGS@ \
-    -DLOCALEDIR=\"$(localedir)\" -I$(top_srcdir)/lib
+    -DLOCALEDIR=\"$(localedir)\" -I$(top_srcdir)/lib -DLIBDIR=\"$(libdir)\" \
+    -DPREFIXDIR=\"$(prefix)\"
 
 RhythmCat2_LDADD = @LIBOBJS@ @GLIB2_LIBS@ @GTK_LIBS@ @GSTREAMER_LIBS@ \
     @JSON_LIBS@ $(top_builddir)/lib/librhythmcat-2.0.la librhythmcat-ui-2.0.la

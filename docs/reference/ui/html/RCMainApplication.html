@@ -7,7 +7,7 @@
 <link rel="home" href="index.html" title="RhythmCat Reference Manual">
 <link rel="up" href="ch01.html" title="API reference">
 <link rel="prev" href="ch01.html" title="API reference">
-<link rel="next" href="RhythmCat-rc-ui-dialog.html" title="rc-ui-dialog">
+<link rel="next" href="RhythmCat-Dialogs.html" title="Dialogs">
 <meta name="generator" content="GTK-Doc V1.18 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
@@ -18,7 +18,7 @@
 <td><a accesskey="u" href="ch01.html"><img src="up.png" width="24" height="24" border="0" alt="Up"></a></td>
 <td><a accesskey="h" href="index.html"><img src="home.png" width="24" height="24" border="0" alt="Home"></a></td>
 <th width="100%" align="center">RhythmCat Reference Manual</th>
-<td><a accesskey="n" href="RhythmCat-rc-ui-dialog.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
+<td><a accesskey="n" href="RhythmCat-Dialogs.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
 </tr>
 <tr><td colspan="5" class="shortcuts">
 <a href="#RCMainApplication.synopsis" class="shortcut">Top</a>
@@ -35,13 +35,16 @@
 <div class="refnamediv"><table width="100%"><tr>
 <td valign="top">
 <h2><span class="refentrytitle"><a name="RCMainApplication.top_of_page"></a>RCMainApplication</span></h2>
-<p>RCMainApplication</p>
+<p>RCMainApplication — Main application functions</p>
 </td>
 <td valign="top" align="right"></td>
 </tr></table></div>
 <div class="refsynopsisdiv">
 <a name="RCMainApplication.synopsis"></a><h2>Synopsis</h2>
-<pre class="synopsis">struct              <a class="link" href="RCMainApplication.html#RCMainApplication-struct" title="struct RCMainApplication">RCMainApplication</a>;
+<pre class="synopsis">
+#include &lt;rc-main.h&gt;
+
+struct              <a class="link" href="RCMainApplication.html#RCMainApplication-struct" title="struct RCMainApplication">RCMainApplication</a>;
 struct              <a class="link" href="RCMainApplication.html#RCMainApplicationClass" title="struct RCMainApplicationClass">RCMainApplicationClass</a>;
 #define             <a class="link" href="RCMainApplication.html#RC-MAIN-APPLICATION-TYPE:CAPS" title="RC_MAIN_APPLICATION_TYPE">RC_MAIN_APPLICATION_TYPE</a>
 <span class="returnvalue">void</span>                <a class="link" href="RCMainApplication.html#rc-main-exit" title="rc_main_exit ()">rc_main_exit</a>                        ();
@@ -68,6 +71,14 @@ RCMainApplication implements
 </div>
 <div class="refsect1">
 <a name="RCMainApplication.description"></a><h2>Description</h2>
+<p>
+The <a class="link" href="RCMainApplication.html" title="RCMainApplication"><span class="type">RCMainApplication</span></a> is a class which inherits <a href="/usr/share/gtk-doc/html/gtk3/GtkApplication.html"><span class="type">GtkApplication</span></a>. It
+manages the initialization, startup, running, and uninitialzation of
+the program.
+</p>
+<p>
+It also provides some utility functions.
+</p>
 </div>
 <div class="refsect1">
 <a name="RCMainApplication.details"></a><h2>Details</h2>

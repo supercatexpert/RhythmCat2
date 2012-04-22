@@ -343,6 +343,9 @@ top_srcdir = @top_srcdir@
 @WITH_GTK_UI_TRUE@RhythmCat2_SOURCES = \
 @WITH_GTK_UI_TRUE@    main.c
 
+@WITH_GTK_UI_TRUE@librhythmcat_ui_2_0_resourcefiles = \
+@WITH_GTK_UI_TRUE@    rc-ui-resources.gresource.xml rc-ui-theme-monochrome.css
+
 @WITH_GTK_UI_TRUE@librhythmcat_ui_2_0_la_SOURCES = \
 @WITH_GTK_UI_TRUE@    $(librhythmcat_ui_2_0_sources) $(librhythmcat_ui_2_0_builtsources)
 
@@ -358,7 +361,8 @@ top_srcdir = @top_srcdir@
 @WITH_GTK_UI_TRUE@RhythmCat2_DEPENDENCIES = @LIBOBJS@ librhythmcat-ui-2.0.la
 @WITH_GTK_UI_TRUE@RhythmCat2_LDFLAGS = -export-dynamic -no-undefined -export-symbols-regex "^[[^_]].*" -O2
 @WITH_GTK_UI_TRUE@INCLUDES = @GLIB2_CFLAGS@ @GTK_CFLAGS@ @GSTREAMER_CFLAGS@ @JSON_CFLAGS@ \
-@WITH_GTK_UI_TRUE@    -DLOCALEDIR=\"$(localedir)\" -I$(top_srcdir)/lib
+@WITH_GTK_UI_TRUE@    -DLOCALEDIR=\"$(localedir)\" -I$(top_srcdir)/lib -DLIBDIR=\"$(libdir)\" \
+@WITH_GTK_UI_TRUE@    -DPREFIXDIR=\"$(prefix)\"
 
 @WITH_GTK_UI_TRUE@RhythmCat2_LDADD = @LIBOBJS@ @GLIB2_LIBS@ @GTK_LIBS@ @GSTREAMER_LIBS@ \
 @WITH_GTK_UI_TRUE@    @JSON_LIBS@ $(top_builddir)/lib/librhythmcat-2.0.la librhythmcat-ui-2.0.la
@@ -762,11 +766,11 @@ uninstall-am: uninstall-binPROGRAMS \
 	uninstall-pkgconfigDATA
 
 
-@WITH_GTK_UI_TRUE@rc-ui-resources.c: rc-ui-resources.gresource.xml
+@WITH_GTK_UI_TRUE@rc-ui-resources.c: $(librhythmcat_ui_2_0_resourcefiles)
 @WITH_GTK_UI_TRUE@	@GLIB_COMPILE_RESOURCE@ $(srcdir)/rc-ui-resources.gresource.xml \
 @WITH_GTK_UI_TRUE@	    --target=rc-ui-resources.c --generate-source --c-name=rc_ui_resources
 
-@WITH_GTK_UI_TRUE@rc-ui-resources.h: rc-ui-resources.gresource.xml
+@WITH_GTK_UI_TRUE@rc-ui-resources.h: $(librhythmcat_ui_2_0_resourcefiles)
 @WITH_GTK_UI_TRUE@	@GLIB_COMPILE_RESOURCE@ $(srcdir)/rc-ui-resources.gresource.xml \
 @WITH_GTK_UI_TRUE@	    --target=rc-ui-resources.h --generate-header --c-name=rc_ui_resources
 

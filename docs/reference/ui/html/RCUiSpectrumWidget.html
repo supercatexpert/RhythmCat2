@@ -7,7 +7,7 @@
 <link rel="home" href="index.html" title="RhythmCat Reference Manual">
 <link rel="up" href="ch01.html" title="API reference">
 <link rel="prev" href="RCUiScrollableLabel.html" title="RCUiScrollableLabel">
-<link rel="next" href="RhythmCat-rc-ui-style.html" title="rc-ui-style">
+<link rel="next" href="RhythmCat-Styles.html" title="Styles">
 <meta name="generator" content="GTK-Doc V1.18 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
@@ -18,7 +18,7 @@
 <td><a accesskey="u" href="ch01.html"><img src="up.png" width="24" height="24" border="0" alt="Up"></a></td>
 <td><a accesskey="h" href="index.html"><img src="home.png" width="24" height="24" border="0" alt="Home"></a></td>
 <th width="100%" align="center">RhythmCat Reference Manual</th>
-<td><a accesskey="n" href="RhythmCat-rc-ui-style.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
+<td><a accesskey="n" href="RhythmCat-Styles.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
 </tr>
 <tr><td colspan="5" class="shortcuts">
 <a href="#RCUiSpectrumWidget.synopsis" class="shortcut">Top</a>
@@ -35,13 +35,16 @@
 <div class="refnamediv"><table width="100%"><tr>
 <td valign="top">
 <h2><span class="refentrytitle"><a name="RCUiSpectrumWidget.top_of_page"></a>RCUiSpectrumWidget</span></h2>
-<p>RCUiSpectrumWidget</p>
+<p>RCUiSpectrumWidget — A spectrum show widget.</p>
 </td>
 <td valign="top" align="right"></td>
 </tr></table></div>
 <div class="refsynopsisdiv">
 <a name="RCUiSpectrumWidget.synopsis"></a><h2>Synopsis</h2>
-<pre class="synopsis">struct              <a class="link" href="RCUiSpectrumWidget.html#RCUiSpectrumWidget-struct" title="struct RCUiSpectrumWidget">RCUiSpectrumWidget</a>;
+<pre class="synopsis">
+#include &lt;rc-ui-slabel.h&gt;
+
+struct              <a class="link" href="RCUiSpectrumWidget.html#RCUiSpectrumWidget-struct" title="struct RCUiSpectrumWidget">RCUiSpectrumWidget</a>;
 struct              <a class="link" href="RCUiSpectrumWidget.html#RCUiSpectrumWidgetClass" title="struct RCUiSpectrumWidgetClass">RCUiSpectrumWidgetClass</a>;
 #define             <a class="link" href="RCUiSpectrumWidget.html#RC-UI-SPECTRUM-WIDGET-TYPE:CAPS" title="RC_UI_SPECTRUM_WIDGET_TYPE">RC_UI_SPECTRUM_WIDGET_TYPE</a>
 <span class="returnvalue">void</span>                <a class="link" href="RCUiSpectrumWidget.html#rc-ui-spectrum-widget-clean" title="rc_ui_spectrum_widget_clean ()">rc_ui_spectrum_widget_clean</a>         (<em class="parameter"><code><a class="link" href="RCUiSpectrumWidget.html" title="RCUiSpectrumWidget"><span class="type">RCUiSpectrumWidget</span></a> *spectrum</code></em>);
@@ -71,6 +74,9 @@ RCUiSpectrumWidget implements
 </div>
 <div class="refsect1">
 <a name="RCUiSpectrumWidget.description"></a><h2>Description</h2>
+<p>
+The spectrum show widget. It shows the spectrum gragh in the player.
+</p>
 </div>
 <div class="refsect1">
 <a name="RCUiSpectrumWidget.details"></a><h2>Details</h2>
@@ -153,6 +159,10 @@ Set magnitude values for the <a class="link" href="RCUiSpectrumWidget.html" titl
 <tr>
 <td><p><span class="term"><em class="parameter"><code>bands</code></em> :</span></p></td>
 <td>the band number</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>threshold</code></em> :</span></p></td>
+<td>the threshold value</td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>magnitudes</code></em> :</span></p></td>

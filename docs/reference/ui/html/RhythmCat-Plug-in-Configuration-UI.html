@@ -2,12 +2,12 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>rc-ui-plugin</title>
+<title>Plug-in Configuration UI</title>
 <meta name="generator" content="DocBook XSL Stylesheets V1.76.1">
 <link rel="home" href="index.html" title="RhythmCat Reference Manual">
 <link rel="up" href="ch01.html" title="API reference">
-<link rel="prev" href="RCUiPlayer.html" title="RCUiPlayer">
-<link rel="next" href="RhythmCat-rc-ui-settings.html" title="rc-ui-settings">
+<link rel="prev" href="RCUiPlayer.html" title="Main UI">
+<link rel="next" href="RhythmCat-Settings-UI.html" title="Settings UI">
 <meta name="generator" content="GTK-Doc V1.18 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
@@ -18,34 +18,40 @@
 <td><a accesskey="u" href="ch01.html"><img src="up.png" width="24" height="24" border="0" alt="Up"></a></td>
 <td><a accesskey="h" href="index.html"><img src="home.png" width="24" height="24" border="0" alt="Home"></a></td>
 <th width="100%" align="center">RhythmCat Reference Manual</th>
-<td><a accesskey="n" href="RhythmCat-rc-ui-settings.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
+<td><a accesskey="n" href="RhythmCat-Settings-UI.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
 </tr>
 <tr><td colspan="5" class="shortcuts">
-<a href="#RhythmCat-rc-ui-plugin.synopsis" class="shortcut">Top</a>
+<a href="#RhythmCat-Plug-in-Configuration-UI.synopsis" class="shortcut">Top</a>
                    | 
-                  <a href="#RhythmCat-rc-ui-plugin.description" class="shortcut">Description</a>
+                  <a href="#RhythmCat-Plug-in-Configuration-UI.description" class="shortcut">Description</a>
 </td></tr>
 </table>
 <div class="refentry">
-<a name="RhythmCat-rc-ui-plugin"></a><div class="titlepage"></div>
+<a name="RhythmCat-Plug-in-Configuration-UI"></a><div class="titlepage"></div>
 <div class="refnamediv"><table width="100%"><tr>
 <td valign="top">
-<h2><span class="refentrytitle"><a name="RhythmCat-rc-ui-plugin.top_of_page"></a>rc-ui-plugin</span></h2>
-<p>rc-ui-plugin</p>
+<h2><span class="refentrytitle"><a name="RhythmCat-Plug-in-Configuration-UI.top_of_page"></a>Plug-in Configuration UI</span></h2>
+<p>Plug-in Configuration UI — Plug-in Configuration UI</p>
 </td>
 <td valign="top" align="right"></td>
 </tr></table></div>
 <div class="refsynopsisdiv">
-<a name="RhythmCat-rc-ui-plugin.synopsis"></a><h2>Synopsis</h2>
-<pre class="synopsis"><span class="returnvalue">void</span>                <a class="link" href="RhythmCat-rc-ui-plugin.html#rc-ui-plugin-window-destroy" title="rc_ui_plugin_window_destroy ()">rc_ui_plugin_window_destroy</a>         ();
-<span class="returnvalue">void</span>                <a class="link" href="RhythmCat-rc-ui-plugin.html#rc-ui-plugin-window-show" title="rc_ui_plugin_window_show ()">rc_ui_plugin_window_show</a>            ();
+<a name="RhythmCat-Plug-in-Configuration-UI.synopsis"></a><h2>Synopsis</h2>
+<pre class="synopsis">
+#include &lt;rclib-db.h&gt;
+
+<span class="returnvalue">void</span>                <a class="link" href="RhythmCat-Plug-in-Configuration-UI.html#rc-ui-plugin-window-destroy" title="rc_ui_plugin_window_destroy ()">rc_ui_plugin_window_destroy</a>         ();
+<span class="returnvalue">void</span>                <a class="link" href="RhythmCat-Plug-in-Configuration-UI.html#rc-ui-plugin-window-show" title="rc_ui_plugin_window_show ()">rc_ui_plugin_window_show</a>            ();
 </pre>
 </div>
 <div class="refsect1">
-<a name="RhythmCat-rc-ui-plugin.description"></a><h2>Description</h2>
+<a name="RhythmCat-Plug-in-Configuration-UI.description"></a><h2>Description</h2>
+<p>
+The plug-in configuation UI module, show plug-in configuration panel.
+</p>
 </div>
 <div class="refsect1">
-<a name="RhythmCat-rc-ui-plugin.details"></a><h2>Details</h2>
+<a name="RhythmCat-Plug-in-Configuration-UI.details"></a><h2>Details</h2>
 <div class="refsect2">
 <a name="rc-ui-plugin-window-destroy"></a><h3>rc_ui_plugin_window_destroy ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>                rc_ui_plugin_window_destroy         ();</pre>

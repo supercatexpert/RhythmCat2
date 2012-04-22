@@ -6,7 +6,7 @@
 <meta name="generator" content="DocBook XSL Stylesheets V1.76.1">
 <link rel="home" href="index.html" title="RhythmCat Reference Manual">
 <link rel="up" href="ch01.html" title="API reference">
-<link rel="prev" href="RhythmCat-rc-ui-settings.html" title="rc-ui-settings">
+<link rel="prev" href="RhythmCat-Settings-UI.html" title="Settings UI">
 <link rel="next" href="RCUiSpectrumWidget.html" title="RCUiSpectrumWidget">
 <meta name="generator" content="GTK-Doc V1.18 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
@@ -14,7 +14,7 @@
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2">
 <tr valign="middle">
-<td><a accesskey="p" href="RhythmCat-rc-ui-settings.html"><img src="left.png" width="24" height="24" border="0" alt="Prev"></a></td>
+<td><a accesskey="p" href="RhythmCat-Settings-UI.html"><img src="left.png" width="24" height="24" border="0" alt="Prev"></a></td>
 <td><a accesskey="u" href="ch01.html"><img src="up.png" width="24" height="24" border="0" alt="Up"></a></td>
 <td><a accesskey="h" href="index.html"><img src="home.png" width="24" height="24" border="0" alt="Home"></a></td>
 <th width="100%" align="center">RhythmCat Reference Manual</th>
@@ -37,13 +37,16 @@
 <div class="refnamediv"><table width="100%"><tr>
 <td valign="top">
 <h2><span class="refentrytitle"><a name="RCUiScrollableLabel.top_of_page"></a>RCUiScrollableLabel</span></h2>
-<p>RCUiScrollableLabel</p>
+<p>RCUiScrollableLabel — A scrollable label widget.</p>
 </td>
 <td valign="top" align="right"></td>
 </tr></table></div>
 <div class="refsynopsisdiv">
 <a name="RCUiScrollableLabel.synopsis"></a><h2>Synopsis</h2>
-<pre class="synopsis">struct              <a class="link" href="RCUiScrollableLabel.html#RCUiScrollableLabel-struct" title="struct RCUiScrollableLabel">RCUiScrollableLabel</a>;
+<pre class="synopsis">
+#include &lt;rc-ui-slabel.h&gt;
+
+struct              <a class="link" href="RCUiScrollableLabel.html#RCUiScrollableLabel-struct" title="struct RCUiScrollableLabel">RCUiScrollableLabel</a>;
 struct              <a class="link" href="RCUiScrollableLabel.html#RCUiScrollableLabelClass" title="struct RCUiScrollableLabelClass">RCUiScrollableLabelClass</a>;
 #define             <a class="link" href="RCUiScrollableLabel.html#RC-UI-SCROLLABLE-LABEL-TYPE:CAPS" title="RC_UI_SCROLLABLE_LABEL_TYPE">RC_UI_SCROLLABLE_LABEL_TYPE</a>
 <a href="/usr/share/gtk-doc/html/pango/pango-Text-Attributes.html#PangoAttrList"><span class="returnvalue">PangoAttrList</span></a> *     <a class="link" href="RCUiScrollableLabel.html#rc-ui-scrollable-label-get-attributes" title="rc_ui_scrollable_label_get_attributes ()">rc_ui_scrollable_label_get_attributes</a>
@@ -86,6 +89,9 @@ RCUiScrollableLabel implements
 </div>
 <div class="refsect1">
 <a name="RCUiScrollableLabel.description"></a><h2>Description</h2>
+<p>
+An scrolledate label widget.
+</p>
 </div>
 <div class="refsect1">
 <a name="RCUiScrollableLabel.details"></a><h2>Details</h2>

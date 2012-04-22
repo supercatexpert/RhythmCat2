@@ -1237,7 +1237,7 @@ void rclib_db_signal_disconnect(gulong handler_id)
  * Create a new empty #RCLibDbCatalogData structure,
  * and set the reference count to 1.
  *
- * Returns: The new empty allocated #RCLibCatalogData structure.
+ * Returns: The new empty allocated #RCLibDbCatalogData structure.
  */
 
 RCLibDbCatalogData *rclib_db_catalog_data_new()
@@ -1301,7 +1301,7 @@ void rclib_db_catalog_data_free(RCLibDbCatalogData *data)
  * Create a new empty #RCLibDbPlaylistData structure,
  * and set the reference count to 1.
  *
- * Returns: The new empty allocated #RCLibPlaylistData structure.
+ * Returns: The new empty allocated #RCLibDbPlaylistData structure.
  */
 
 RCLibDbPlaylistData *rclib_db_playlist_data_new()

@@ -2,23 +2,23 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>RCUiPlayer</title>
+<title>Main UI</title>
 <meta name="generator" content="DocBook XSL Stylesheets V1.76.1">
 <link rel="home" href="index.html" title="RhythmCat Reference Manual">
 <link rel="up" href="ch01.html" title="API reference">
-<link rel="prev" href="RhythmCat-rc-ui-menu.html" title="rc-ui-menu">
-<link rel="next" href="RhythmCat-rc-ui-plugin.html" title="rc-ui-plugin">
+<link rel="prev" href="RhythmCat-Menus.html" title="Menus">
+<link rel="next" href="RhythmCat-Plug-in-Configuration-UI.html" title="Plug-in Configuration UI">
 <meta name="generator" content="GTK-Doc V1.18 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2">
 <tr valign="middle">
-<td><a accesskey="p" href="RhythmCat-rc-ui-menu.html"><img src="left.png" width="24" height="24" border="0" alt="Prev"></a></td>
+<td><a accesskey="p" href="RhythmCat-Menus.html"><img src="left.png" width="24" height="24" border="0" alt="Prev"></a></td>
 <td><a accesskey="u" href="ch01.html"><img src="up.png" width="24" height="24" border="0" alt="Up"></a></td>
 <td><a accesskey="h" href="index.html"><img src="home.png" width="24" height="24" border="0" alt="Home"></a></td>
 <th width="100%" align="center">RhythmCat Reference Manual</th>
-<td><a accesskey="n" href="RhythmCat-rc-ui-plugin.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
+<td><a accesskey="n" href="RhythmCat-Plug-in-Configuration-UI.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
 </tr>
 <tr><td colspan="5" class="shortcuts">
 <a href="#RCUiPlayer.synopsis" class="shortcut">Top</a>
@@ -34,14 +34,17 @@
 <a name="RCUiPlayer"></a><div class="titlepage"></div>
 <div class="refnamediv"><table width="100%"><tr>
 <td valign="top">
-<h2><span class="refentrytitle"><a name="RCUiPlayer.top_of_page"></a>RCUiPlayer</span></h2>
-<p>RCUiPlayer</p>
+<h2><span class="refentrytitle"><a name="RCUiPlayer.top_of_page"></a>Main UI</span></h2>
+<p>Main UI — The main UI of the player</p>
 </td>
 <td valign="top" align="right"></td>
 </tr></table></div>
 <div class="refsynopsisdiv">
 <a name="RCUiPlayer.synopsis"></a><h2>Synopsis</h2>
-<pre class="synopsis">struct              <a class="link" href="RCUiPlayer.html#RCUiPlayer-struct" title="struct RCUiPlayer">RCUiPlayer</a>;
+<pre class="synopsis">
+#include &lt;rc-ui-player.h&gt;
+
+struct              <a class="link" href="RCUiPlayer.html#RCUiPlayer-struct" title="struct RCUiPlayer">RCUiPlayer</a>;
 struct              <a class="link" href="RCUiPlayer.html#RCUiPlayerClass" title="struct RCUiPlayerClass">RCUiPlayerClass</a>;
 #define             <a class="link" href="RCUiPlayer.html#RC-UI-PLAYER-TYPE:CAPS" title="RC_UI_PLAYER_TYPE">RC_UI_PLAYER_TYPE</a>
 <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RCUiPlayer.html#rc-ui-player-cover-image-get-visible" title="rc_ui_player_cover_image_get_visible ()">rc_ui_player_cover_image_get_visible</a>
@@ -88,6 +91,10 @@ struct              <a class="link" href="RCUiPlayer.html#RCUiPlayerClass" title
 </div>
 <div class="refsect1">
 <a name="RCUiPlayer.description"></a><h2>Description</h2>
+<p>
+This module provides the main UI of the player, it shows the main
+player window and the widgets inside for the player.
+</p>
 </div>
 <div class="refsect1">
 <a name="RCUiPlayer.details"></a><h2>Details</h2>
@@ -95,7 +102,7 @@ struct              <a class="link" href="RCUiPlayer.html#RCUiPlayerClass" title
 <a name="RCUiPlayer-struct"></a><h3>struct RCUiPlayer</h3>
 <pre class="programlisting">struct RCUiPlayer;</pre>
 <p>
-The data structure used for <a class="link" href="RCUiPlayer.html" title="RCUiPlayer"><span class="type">RCUiPlayer</span></a> class.
+The data structure used for <a class="link" href="RCUiPlayer.html" title="Main UI"><span class="type">RCUiPlayer</span></a> class.
 </p>
 </div>
 <hr>
@@ -190,7 +197,7 @@ Get the icon image of this player.
 <a name="rc-ui-player-get-instance"></a><h3>rc_ui_player_get_instance ()</h3>
 <pre class="programlisting"><a href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GObject"><span class="returnvalue">GObject</span></a> *           rc_ui_player_get_instance           ();</pre>
 <p>
-Get the running <a class="link" href="RCUiPlayer.html" title="RCUiPlayer"><span class="type">RCUiPlayer</span></a> instance.
+Get the running <a class="link" href="RCUiPlayer.html" title="Main UI"><span class="type">RCUiPlayer</span></a> instance.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -310,6 +317,13 @@ Keep the player above the other windows.
 Notice that it depends on the Window Manager,
 in some WMs, it may has no effect.
 </p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><em class="parameter"><code>state</code></em> :</span></p></td>
+<td>the new state</td>
+</tr></tbody>
+</table></div>
 </div>
 <hr>
 <div class="refsect2">
@@ -319,7 +333,7 @@ in some WMs, it may has no effect.
                                                          <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> data</code></em>);</pre>
 <p>
 Connect the GCallback function to the given signal for the running
-instance of <a class="link" href="RCUiPlayer.html" title="RCUiPlayer"><span class="type">RCUiPlayer</span></a> object.
+instance of <a class="link" href="RCUiPlayer.html" title="Main UI"><span class="type">RCUiPlayer</span></a> object.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -348,7 +362,7 @@ instance of <a class="link" href="RCUiPlayer.html" title="RCUiPlayer"><span clas
 <a name="rc-ui-player-signal-disconnect"></a><h3>rc_ui_player_signal_disconnect ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>                rc_ui_player_signal_disconnect      (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gulong"><span class="type">gulong</span></a> handler_id</code></em>);</pre>
 <p>
-Disconnects a handler from the running <a class="link" href="RCUiPlayer.html" title="RCUiPlayer"><span class="type">RCUiPlayer</span></a> instance so it
+Disconnects a handler from the running <a class="link" href="RCUiPlayer.html" title="Main UI"><span class="type">RCUiPlayer</span></a> instance so it
 will not be called during any future or currently ongoing emissions
 of the signal it has been connected to. The <span class="type">handler_id</span> becomes
 invalid and may be reused.
@@ -386,7 +400,7 @@ Set the visibilty of the spectrum show widget.
 <a name="RCUiPlayer.signal-details"></a><h2>Signal Details</h2>
 <div class="refsect2">
 <a name="RCUiPlayer-keep-above-changed"></a><h3>The <code class="literal">"keep-above-changed"</code> signal</h3>
-<pre class="programlisting"><span class="returnvalue">void</span>                user_function                      (<a class="link" href="RCUiPlayer.html" title="RCUiPlayer"><span class="type">RCUiPlayer</span></a> *player,
+<pre class="programlisting"><span class="returnvalue">void</span>                user_function                      (<a class="link" href="RCUiPlayer.html" title="Main UI"><span class="type">RCUiPlayer</span></a> *player,
                                                         <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a>    state,
                                                         <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>    user_data)      : <a href="/usr/share/gtk-doc/html/gobject/gobject-Signals.html#G-SIGNAL-RUN-FIRST:CAPS"><code class="literal">Run First</code></a></pre>
 <p>
@@ -398,7 +412,7 @@ state of the main window changed.
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>player</code></em> :</span></p></td>
-<td>the <a class="link" href="RCUiPlayer.html" title="RCUiPlayer"><span class="type">RCUiPlayer</span></a> that received the signal</td>
+<td>the <a class="link" href="RCUiPlayer.html" title="Main UI"><span class="type">RCUiPlayer</span></a> that received the signal</td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>state</code></em> :</span></p></td>
@@ -414,7 +428,7 @@ state of the main window changed.
 <hr>
 <div class="refsect2">
 <a name="RCUiPlayer-ready"></a><h3>The <code class="literal">"ready"</code> signal</h3>
-<pre class="programlisting"><span class="returnvalue">void</span>                user_function                      (<a class="link" href="RCUiPlayer.html" title="RCUiPlayer"><span class="type">RCUiPlayer</span></a> *player,
+<pre class="programlisting"><span class="returnvalue">void</span>                user_function                      (<a class="link" href="RCUiPlayer.html" title="Main UI"><span class="type">RCUiPlayer</span></a> *player,
                                                         <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>    user_data)      : <a href="/usr/share/gtk-doc/html/gobject/gobject-Signals.html#G-SIGNAL-RUN-FIRST:CAPS"><code class="literal">Run First</code></a></pre>
 <p>
 The ::ready signal is emitted when the main UI is ready.
@@ -424,7 +438,7 @@ The ::ready signal is emitted when the main UI is ready.
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>player</code></em> :</span></p></td>
-<td>the <a class="link" href="RCUiPlayer.html" title="RCUiPlayer"><span class="type">RCUiPlayer</span></a> that received the signal</td>
+<td>the <a class="link" href="RCUiPlayer.html" title="Main UI"><span class="type">RCUiPlayer</span></a> that received the signal</td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>user_data</code></em> :</span></p></td>

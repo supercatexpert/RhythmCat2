@@ -3,8 +3,7 @@
 - Import playlist data from legacy version
 - Auto-save the changes in the playlist (to another file), if the player is
   not terminated normally, users can choose whether to use the auto-saved one.
-- Solve the library path name problem (in Fedora x64, it will be $PREFIX/lib64,
-  in Debian Testing/sid x64, it will be $PREFIX/lib/x86_64-linux-gnu)
+- Docs of UI part
 
 Long-term:
 - GObject Introspection (GI) support

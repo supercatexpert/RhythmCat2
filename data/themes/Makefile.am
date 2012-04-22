@@ -1,1 +1,1 @@
-SUBDIRS = Monochrome
+SUBDIRS =

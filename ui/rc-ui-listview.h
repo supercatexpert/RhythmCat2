@@ -30,6 +30,17 @@
 
 G_BEGIN_DECLS
 
+/**
+ * RCUiListViewPlaylistColumnFlags:
+ * @RC_UI_LISTVIEW_PLAYLIST_COLUMN_ARTIST: the artist column
+ * @RC_UI_LISTVIEW_PLAYLIST_COLUMN_ALBUM: the album column
+ * @RC_UI_LISTVIEW_PLAYLIST_COLUMN_TRACK: the track number column
+ * @RC_UI_LISTVIEW_PLAYLIST_COLUMN_YEAR: the year column
+ * @RC_UI_LISTVIEW_PLAYLIST_COLUMN_FTYPE: the file type (format) column
+ *
+ * The enum type for control the visibility of some columns in the playlist.
+ */
+
 typedef enum {
     RC_UI_LISTVIEW_PLAYLIST_COLUMN_ARTIST = 1<<0,
     RC_UI_LISTVIEW_PLAYLIST_COLUMN_ALBUM = 1<<1,

@@ -29,7 +29,7 @@
 /**
  * SECTION: rclib
  * @Short_description: The main module
- * @Title: Main module
+ * @Title: Main Module
  * @Include: rclib.h
  *
  * The main module is used for general library initialization and library

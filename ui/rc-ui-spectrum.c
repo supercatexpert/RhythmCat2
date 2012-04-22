@@ -26,12 +26,12 @@
 #include "rc-ui-spectrum.h"
 
 /**
- * SECTION: RCUiSpectrumWidget
+ * SECTION: rc-ui-spectrum
  * @Short_description: A spectrum show widget.
  * @Title: RCUiSpectrumWidget
- * @Include: ui-slabel.h
+ * @Include: rc-ui-slabel.h
  *
- * An spectrum show widget.
+ * The spectrum show widget. It shows the spectrum gragh in the player.
  */
 
 #define RC_UI_SPECTRUM_WIDGET_GET_PRIVATE(obj)  \
@@ -251,6 +251,7 @@ GtkWidget *rc_ui_spectrum_widget_new()
  * @spectrum: the #RCUiSpectrumWidget widget
  * @rate: the sample rate
  * @bands: the band number
+ * @threshold: the threshold value
  * @magnitudes: a magniude array
  *
  * Set magnitude values for the #RCUiSpectrumWidget widget.

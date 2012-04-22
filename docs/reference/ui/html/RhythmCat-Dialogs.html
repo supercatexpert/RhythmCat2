@@ -2,12 +2,12 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>rc-ui-dialog</title>
+<title>Dialogs</title>
 <meta name="generator" content="DocBook XSL Stylesheets V1.76.1">
 <link rel="home" href="index.html" title="RhythmCat Reference Manual">
 <link rel="up" href="ch01.html" title="API reference">
 <link rel="prev" href="RCMainApplication.html" title="RCMainApplication">
-<link rel="next" href="RhythmCat-rc-ui-effect.html" title="rc-ui-effect">
+<link rel="next" href="RhythmCat-Audio-Effect-UI.html" title="Audio Effect UI">
 <meta name="generator" content="GTK-Doc V1.18 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
@@ -18,48 +18,54 @@
 <td><a accesskey="u" href="ch01.html"><img src="up.png" width="24" height="24" border="0" alt="Up"></a></td>
 <td><a accesskey="h" href="index.html"><img src="home.png" width="24" height="24" border="0" alt="Home"></a></td>
 <th width="100%" align="center">RhythmCat Reference Manual</th>
-<td><a accesskey="n" href="RhythmCat-rc-ui-effect.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
+<td><a accesskey="n" href="RhythmCat-Audio-Effect-UI.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
 </tr>
 <tr><td colspan="5" class="shortcuts">
-<a href="#RhythmCat-rc-ui-dialog.synopsis" class="shortcut">Top</a>
+<a href="#RhythmCat-Dialogs.synopsis" class="shortcut">Top</a>
                    | 
-                  <a href="#RhythmCat-rc-ui-dialog.description" class="shortcut">Description</a>
+                  <a href="#RhythmCat-Dialogs.description" class="shortcut">Description</a>
 </td></tr>
 </table>
 <div class="refentry">
-<a name="RhythmCat-rc-ui-dialog"></a><div class="titlepage"></div>
+<a name="RhythmCat-Dialogs"></a><div class="titlepage"></div>
 <div class="refnamediv"><table width="100%"><tr>
 <td valign="top">
-<h2><span class="refentrytitle"><a name="RhythmCat-rc-ui-dialog.top_of_page"></a>rc-ui-dialog</span></h2>
-<p>rc-ui-dialog</p>
+<h2><span class="refentrytitle"><a name="RhythmCat-Dialogs.top_of_page"></a>Dialogs</span></h2>
+<p>Dialogs — Dialogs in the player</p>
 </td>
 <td valign="top" align="right"></td>
 </tr></table></div>
 <div class="refsynopsisdiv">
-<a name="RhythmCat-rc-ui-dialog.synopsis"></a><h2>Synopsis</h2>
-<pre class="synopsis"><span class="returnvalue">void</span>                <a class="link" href="RhythmCat-rc-ui-dialog.html#rc-ui-dialog-about-player" title="rc_ui_dialog_about_player ()">rc_ui_dialog_about_player</a>           ();
-<span class="returnvalue">void</span>                <a class="link" href="RhythmCat-rc-ui-dialog.html#rc-ui-dialog-add-directory" title="rc_ui_dialog_add_directory ()">rc_ui_dialog_add_directory</a>          ();
-<span class="returnvalue">void</span>                <a class="link" href="RhythmCat-rc-ui-dialog.html#rc-ui-dialog-add-music" title="rc_ui_dialog_add_music ()">rc_ui_dialog_add_music</a>              ();
-<span class="returnvalue">void</span>                <a class="link" href="RhythmCat-rc-ui-dialog.html#rc-ui-dialog-bind-album" title="rc_ui_dialog_bind_album ()">rc_ui_dialog_bind_album</a>             ();
-<span class="returnvalue">void</span>                <a class="link" href="RhythmCat-rc-ui-dialog.html#rc-ui-dialog-bind-lyric" title="rc_ui_dialog_bind_lyric ()">rc_ui_dialog_bind_lyric</a>             ();
-<span class="returnvalue">void</span>                <a class="link" href="RhythmCat-rc-ui-dialog.html#rc-ui-dialog-load-playlist" title="rc_ui_dialog_load_playlist ()">rc_ui_dialog_load_playlist</a>          ();
-<span class="returnvalue">void</span>                <a class="link" href="RhythmCat-rc-ui-dialog.html#rc-ui-dialog-open-location" title="rc_ui_dialog_open_location ()">rc_ui_dialog_open_location</a>          ();
-<span class="returnvalue">void</span>                <a class="link" href="RhythmCat-rc-ui-dialog.html#rc-ui-dialog-open-music" title="rc_ui_dialog_open_music ()">rc_ui_dialog_open_music</a>             ();
-<span class="returnvalue">void</span>                <a class="link" href="RhythmCat-rc-ui-dialog.html#rc-ui-dialog-save-album" title="rc_ui_dialog_save_album ()">rc_ui_dialog_save_album</a>             ();
-<span class="returnvalue">void</span>                <a class="link" href="RhythmCat-rc-ui-dialog.html#rc-ui-dialog-save-all-playlist" title="rc_ui_dialog_save_all_playlist ()">rc_ui_dialog_save_all_playlist</a>      ();
-<span class="returnvalue">void</span>                <a class="link" href="RhythmCat-rc-ui-dialog.html#rc-ui-dialog-save-playlist" title="rc_ui_dialog_save_playlist ()">rc_ui_dialog_save_playlist</a>          ();
-<span class="returnvalue">void</span>                <a class="link" href="RhythmCat-rc-ui-dialog.html#rc-ui-dialog-show-message" title="rc_ui_dialog_show_message ()">rc_ui_dialog_show_message</a>           (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/gtk/GtkMessageDialog.html#GtkMessageType"><span class="type">GtkMessageType</span></a> type</code></em>,
+<a name="RhythmCat-Dialogs.synopsis"></a><h2>Synopsis</h2>
+<pre class="synopsis">
+#include &lt;rc-ui-dialog.h&gt;
+
+<span class="returnvalue">void</span>                <a class="link" href="RhythmCat-Dialogs.html#rc-ui-dialog-about-player" title="rc_ui_dialog_about_player ()">rc_ui_dialog_about_player</a>           ();
+<span class="returnvalue">void</span>                <a class="link" href="RhythmCat-Dialogs.html#rc-ui-dialog-add-directory" title="rc_ui_dialog_add_directory ()">rc_ui_dialog_add_directory</a>          ();
+<span class="returnvalue">void</span>                <a class="link" href="RhythmCat-Dialogs.html#rc-ui-dialog-add-music" title="rc_ui_dialog_add_music ()">rc_ui_dialog_add_music</a>              ();
+<span class="returnvalue">void</span>                <a class="link" href="RhythmCat-Dialogs.html#rc-ui-dialog-bind-album" title="rc_ui_dialog_bind_album ()">rc_ui_dialog_bind_album</a>             ();
+<span class="returnvalue">void</span>                <a class="link" href="RhythmCat-Dialogs.html#rc-ui-dialog-bind-lyric" title="rc_ui_dialog_bind_lyric ()">rc_ui_dialog_bind_lyric</a>             ();
+<span class="returnvalue">void</span>                <a class="link" href="RhythmCat-Dialogs.html#rc-ui-dialog-load-playlist" title="rc_ui_dialog_load_playlist ()">rc_ui_dialog_load_playlist</a>          ();
+<span class="returnvalue">void</span>                <a class="link" href="RhythmCat-Dialogs.html#rc-ui-dialog-open-location" title="rc_ui_dialog_open_location ()">rc_ui_dialog_open_location</a>          ();
+<span class="returnvalue">void</span>                <a class="link" href="RhythmCat-Dialogs.html#rc-ui-dialog-open-music" title="rc_ui_dialog_open_music ()">rc_ui_dialog_open_music</a>             ();
+<span class="returnvalue">void</span>                <a class="link" href="RhythmCat-Dialogs.html#rc-ui-dialog-save-album" title="rc_ui_dialog_save_album ()">rc_ui_dialog_save_album</a>             ();
+<span class="returnvalue">void</span>                <a class="link" href="RhythmCat-Dialogs.html#rc-ui-dialog-save-all-playlist" title="rc_ui_dialog_save_all_playlist ()">rc_ui_dialog_save_all_playlist</a>      ();
+<span class="returnvalue">void</span>                <a class="link" href="RhythmCat-Dialogs.html#rc-ui-dialog-save-playlist" title="rc_ui_dialog_save_playlist ()">rc_ui_dialog_save_playlist</a>          ();
+<span class="returnvalue">void</span>                <a class="link" href="RhythmCat-Dialogs.html#rc-ui-dialog-show-message" title="rc_ui_dialog_show_message ()">rc_ui_dialog_show_message</a>           (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/gtk/GtkMessageDialog.html#GtkMessageType"><span class="type">GtkMessageType</span></a> type</code></em>,
                                                          <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *title</code></em>,
                                                          <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *format</code></em>,
                                                          <em class="parameter"><code>...</code></em>);
-<span class="returnvalue">void</span>                <a class="link" href="RhythmCat-rc-ui-dialog.html#rc-ui-dialog-show-supported-format" title="rc_ui_dialog_show_supported_format ()">rc_ui_dialog_show_supported_format</a>  ();
+<span class="returnvalue">void</span>                <a class="link" href="RhythmCat-Dialogs.html#rc-ui-dialog-show-supported-format" title="rc_ui_dialog_show_supported_format ()">rc_ui_dialog_show_supported_format</a>  ();
 </pre>
 </div>
 <div class="refsect1">
-<a name="RhythmCat-rc-ui-dialog.description"></a><h2>Description</h2>
+<a name="RhythmCat-Dialogs.description"></a><h2>Description</h2>
+<p>
+This module provides the dialogs in the player.
+</p>
 </div>
 <div class="refsect1">
-<a name="RhythmCat-rc-ui-dialog.details"></a><h2>Details</h2>
+<a name="RhythmCat-Dialogs.details"></a><h2>Details</h2>
 <div class="refsect2">
 <a name="rc-ui-dialog-about-player"></a><h3>rc_ui_dialog_about_player ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>                rc_ui_dialog_about_player           ();</pre>
@@ -176,7 +182,7 @@ Show message dialog in the player.
 <td>printf()-style format string, or NULL, allow-none</td>
 </tr>
 <tr>
-<td><p><span class="term"><em class="parameter"><code>Varargs</code></em> :</span></p></td>
+<td><p><span class="term"><em class="parameter"><code>...</code></em> :</span></p></td>
 <td>arguments for <em class="parameter"><code>format</code></em>
 </td>
 </tr>

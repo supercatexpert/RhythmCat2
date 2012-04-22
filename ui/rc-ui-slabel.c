@@ -26,10 +26,10 @@
 #include "rc-ui-slabel.h" 
 
 /**
- * SECTION: RCUiScrollableLabel
+ * SECTION: rc-ui-slabel
  * @Short_description: A scrollable label widget.
  * @Title: RCUiScrollableLabel
- * @Include: ui-slabel.h
+ * @Include: rc-ui-slabel.h
  *
  * An scrolledate label widget.
  */

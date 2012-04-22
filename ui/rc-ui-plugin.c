@@ -26,6 +26,15 @@
 #include "rc-ui-plugin.h"
 #include "rc-common.h"
 
+/**
+ * SECTION: rc-ui-plugin
+ * @Short_description: Plug-in Configuration UI
+ * @Title: Plug-in Configuration UI
+ * @Include: rclib-db.h
+ *
+ * The plug-in configuation UI module, show plug-in configuration panel.
+ */
+
 typedef struct RCUiPluginPrivate
 {
     GtkWidget *plugin_window;

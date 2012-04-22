@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Main module</title>
+<title>Main Module</title>
 <meta name="generator" content="DocBook XSL Stylesheets V1.76.1">
 <link rel="home" href="index.html" title="LibRhythmCat Reference Manual">
 <link rel="up" href="ch01.html" title="API reference">
@@ -21,49 +21,49 @@
 <td><a accesskey="n" href="RCLibAlbum.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
 </tr>
 <tr><td colspan="5" class="shortcuts">
-<a href="#LibRhythmCat-Main-module.synopsis" class="shortcut">Top</a>
+<a href="#LibRhythmCat-Main-Module.synopsis" class="shortcut">Top</a>
                    | 
-                  <a href="#LibRhythmCat-Main-module.description" class="shortcut">Description</a>
+                  <a href="#LibRhythmCat-Main-Module.description" class="shortcut">Description</a>
 </td></tr>
 </table>
 <div class="refentry">
-<a name="LibRhythmCat-Main-module"></a><div class="titlepage"></div>
+<a name="LibRhythmCat-Main-Module"></a><div class="titlepage"></div>
 <div class="refnamediv"><table width="100%"><tr>
 <td valign="top">
-<h2><span class="refentrytitle"><a name="LibRhythmCat-Main-module.top_of_page"></a>Main module</span></h2>
-<p>Main module — The main module</p>
+<h2><span class="refentrytitle"><a name="LibRhythmCat-Main-Module.top_of_page"></a>Main Module</span></h2>
+<p>Main Module — The main module</p>
 </td>
 <td valign="top" align="right"></td>
 </tr></table></div>
 <div class="refsynopsisdiv">
-<a name="LibRhythmCat-Main-module.synopsis"></a><h2>Synopsis</h2>
+<a name="LibRhythmCat-Main-Module.synopsis"></a><h2>Synopsis</h2>
 <pre class="synopsis">
 #include &lt;rclib.h&gt;
 
-extern const gchar *<a class="link" href="LibRhythmCat-Main-module.html#rclib-build-date" title="rclib_build_date">rclib_build_date</a>;
-extern const gchar *<a class="link" href="LibRhythmCat-Main-module.html#rclib-build-time" title="rclib_build_time">rclib_build_time</a>;
-<span class="returnvalue">void</span>                <a class="link" href="LibRhythmCat-Main-module.html#rclib-exit" title="rclib_exit ()">rclib_exit</a>                          ();
-<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="LibRhythmCat-Main-module.html#rclib-init" title="rclib_init ()">rclib_init</a>                          (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> *argc</code></em>,
+extern const gchar *<a class="link" href="LibRhythmCat-Main-Module.html#rclib-build-date" title="rclib_build_date">rclib_build_date</a>;
+extern const gchar *<a class="link" href="LibRhythmCat-Main-Module.html#rclib-build-time" title="rclib_build_time">rclib_build_time</a>;
+<span class="returnvalue">void</span>                <a class="link" href="LibRhythmCat-Main-Module.html#rclib-exit" title="rclib_exit ()">rclib_exit</a>                          ();
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="LibRhythmCat-Main-Module.html#rclib-init" title="rclib_init ()">rclib_init</a>                          (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> *argc</code></em>,
                                                          <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> **argv[]</code></em>,
                                                          <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *dir</code></em>,
                                                          <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Error-Reporting.html#GError"><span class="type">GError</span></a> **error</code></em>);
-extern const guint  <a class="link" href="LibRhythmCat-Main-module.html#rclib-major-version" title="rclib_major_version">rclib_major_version</a>;
-extern const guint  <a class="link" href="LibRhythmCat-Main-module.html#rclib-micro-version" title="rclib_micro_version">rclib_micro_version</a>;
-extern const guint  <a class="link" href="LibRhythmCat-Main-module.html#rclib-minor-version" title="rclib_minor_version">rclib_minor_version</a>;
+extern const guint  <a class="link" href="LibRhythmCat-Main-Module.html#rclib-major-version" title="rclib_major_version">rclib_major_version</a>;
+extern const guint  <a class="link" href="LibRhythmCat-Main-Module.html#rclib-micro-version" title="rclib_micro_version">rclib_micro_version</a>;
+extern const guint  <a class="link" href="LibRhythmCat-Main-Module.html#rclib-minor-version" title="rclib_minor_version">rclib_minor_version</a>;
 </pre>
 </div>
 <div class="refsect1">
-<a name="LibRhythmCat-Main-module.description"></a><h2>Description</h2>
+<a name="LibRhythmCat-Main-Module.description"></a><h2>Description</h2>
 <p>
 The main module is used for general library initialization and library
 information access, it will initialize the core, database, player
 schedulor, lyric processor, and connect some signals to callbacks for
 update the metadata in the database. If you do not want to initialize
-the modules by yourself, just using function <a class="link" href="LibRhythmCat-Main-module.html#rclib-init" title="rclib_init ()"><code class="function">rclib_init()</code></a>.
+the modules by yourself, just using function <a class="link" href="LibRhythmCat-Main-Module.html#rclib-init" title="rclib_init ()"><code class="function">rclib_init()</code></a>.
 </p>
 </div>
 <div class="refsect1">
-<a name="LibRhythmCat-Main-module.details"></a><h2>Details</h2>
+<a name="LibRhythmCat-Main-Module.details"></a><h2>Details</h2>
 <div class="refsect2">
 <a name="rclib-build-date"></a><h3>rclib_build_date</h3>
 <pre class="programlisting">extern const gchar *rclib_build_date;

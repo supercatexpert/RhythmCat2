@@ -30,6 +30,15 @@
 #include "rc-ui-listmodel.h"
 #include "rc-ui-listview.h"
 
+/**
+ * SECTION: rc-ui-settings
+ * @Short_description: Player Configuration UI
+ * @Title: Settings UI
+ * @Include: rc-ui-settings.h
+ *
+ * The player configuation UI module, show player configuration panel.
+ */
+
 typedef struct RCUiSettingsPrivate
 {
     GtkWidget *settings_window;
@@ -277,9 +286,6 @@ static void rc_ui_settings_apr_theme_changed(GtkComboBox *widget,
     gchar *theme_file;
     gboolean embeded_flag;
     gboolean theme_flag = FALSE;
-    const RCUiStyleEmbededTheme *theme_embeded;
-    guint theme_number;
-    gint i;
     model = gtk_combo_box_get_model(widget);
     if(model==NULL) return;
     if(!gtk_combo_box_get_active_iter(widget, &iter)) return;
@@ -287,15 +293,7 @@ static void rc_ui_settings_apr_theme_changed(GtkComboBox *widget,
     if(embeded_flag)
     {
         theme_settings = g_strdup_printf("embeded-theme:%s", theme);
-        theme_embeded = rc_ui_style_get_embeded_theme(&theme_number);
-        for(i=0;i<theme_number;i++)
-        {
-            if(g_strcmp0(theme, theme_embeded[i].name)==0)
-            {
-                theme_flag = rc_ui_style_css_set_data(theme_embeded[i].data,
-                    theme_embeded[i].length);
-            }
-        }
+        theme_flag = rc_ui_style_embeded_theme_set_by_name(theme);
         if(theme_flag)
             rclib_settings_set_string("MainUI", "Theme", theme_settings);
         g_free(theme_settings);
@@ -323,9 +321,9 @@ static inline GtkWidget *rc_ui_settings_appearance_build(
     GtkCellRenderer *renderer;
     GtkTreeIter iter;
     GSList *theme_list, *foreach;
-    const RCUiStyleEmbededTheme *theme_embeded;
+    const gchar *embeded_theme_name;
     guint theme_number;
-    gint i;
+    guint i;
     const gchar *path;
     gchar *theme_name;
     gchar *theme_settings;
@@ -354,18 +352,19 @@ static inline GtkWidget *rc_ui_settings_appearance_build(
         theme_embeded_flag = g_str_has_prefix(theme_settings,
             "embeded-theme:");
     }
-    theme_embeded = rc_ui_style_get_embeded_theme(&theme_number);
+    theme_number = rc_ui_style_embeded_theme_get_length();
     for(i=0;i<theme_number;i++)
     {
+        embeded_theme_name = rc_ui_style_embeded_theme_get_name(i);
         theme_name = g_strdup_printf(_("%s (Embeded)"),
-            theme_embeded[i].name);
+            embeded_theme_name);
         gtk_list_store_append(store, &iter);
         gtk_list_store_set(store, &iter, 0, theme_name, 1, TRUE, 2,
-            theme_embeded[i].name, -1);
+            embeded_theme_name, -1);
         g_free(theme_name);
         if(theme_embeded_flag)
         {
-            if(g_strcmp0(theme_settings+14, theme_embeded[i].name)==0)
+            if(g_strcmp0(theme_settings+14, embeded_theme_name)==0)
             {
                 gtk_combo_box_set_active_iter(GTK_COMBO_BOX(
                     priv->apr_theme_combo_box), &iter);

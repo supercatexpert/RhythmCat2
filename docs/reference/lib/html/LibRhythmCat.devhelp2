@@ -3,7 +3,7 @@
 <book xmlns="http://www.devhelp.net/book" title="LibRhythmCat Reference Manual" link="index.html" author="" name="LibRhythmCat" version="2" language="c">
   <chapters>
     <sub name="API reference" link="ch01.html">
-      <sub name="Main module" link="LibRhythmCat-Main-module.html"/>
+      <sub name="Main Module" link="LibRhythmCat-Main-Module.html"/>
       <sub name="RCLibAlbum" link="RCLibAlbum.html"/>
       <sub name="RCLibCore" link="RCLibCore.html"/>
       <sub name="Cue Parser" link="LibRhythmCat-Cue-Parser.html"/>
@@ -21,13 +21,13 @@
     <sub name="Annotation Glossary" link="annotation-glossary.html"/>
   </chapters>
   <functions>
-    <keyword type="variable" name="rclib_build_date" link="LibRhythmCat-Main-module.html#rclib-build-date"/>
-    <keyword type="variable" name="rclib_build_time" link="LibRhythmCat-Main-module.html#rclib-build-time"/>
-    <keyword type="function" name="rclib_exit ()" link="LibRhythmCat-Main-module.html#rclib-exit"/>
-    <keyword type="function" name="rclib_init ()" link="LibRhythmCat-Main-module.html#rclib-init"/>
-    <keyword type="variable" name="rclib_major_version" link="LibRhythmCat-Main-module.html#rclib-major-version"/>
-    <keyword type="variable" name="rclib_micro_version" link="LibRhythmCat-Main-module.html#rclib-micro-version"/>
-    <keyword type="variable" name="rclib_minor_version" link="LibRhythmCat-Main-module.html#rclib-minor-version"/>
+    <keyword type="variable" name="rclib_build_date" link="LibRhythmCat-Main-Module.html#rclib-build-date"/>
+    <keyword type="variable" name="rclib_build_time" link="LibRhythmCat-Main-Module.html#rclib-build-time"/>
+    <keyword type="function" name="rclib_exit ()" link="LibRhythmCat-Main-Module.html#rclib-exit"/>
+    <keyword type="function" name="rclib_init ()" link="LibRhythmCat-Main-Module.html#rclib-init"/>
+    <keyword type="variable" name="rclib_major_version" link="LibRhythmCat-Main-Module.html#rclib-major-version"/>
+    <keyword type="variable" name="rclib_micro_version" link="LibRhythmCat-Main-Module.html#rclib-micro-version"/>
+    <keyword type="variable" name="rclib_minor_version" link="LibRhythmCat-Main-Module.html#rclib-minor-version"/>
     <keyword type="macro" name="RCLIB_ALBUM_TYPE" link="RCLibAlbum.html#RCLIB-ALBUM-TYPE:CAPS"/>
     <keyword type="struct" name="struct RCLibAlbum" link="RCLibAlbum.html#RCLibAlbum-struct"/>
     <keyword type="struct" name="struct RCLibAlbumClass" link="RCLibAlbum.html#RCLibAlbumClass"/>

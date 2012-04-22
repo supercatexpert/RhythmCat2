@@ -31,24 +31,15 @@
 
 G_BEGIN_DECLS
 
-typedef struct _RCUiStyleEmbededTheme RCUiStyleEmbededTheme;
-
-/**
- * RCUiStyleEmbededTheme:
- *
- * The embeded theme data in the player.
- */
- 
-struct _RCUiStyleEmbededTheme {
-    const gchar *name;
-    const gchar *data;
-    gssize length;
-}; 
-
 gboolean rc_ui_style_css_set_file(const gchar *filename);
 gboolean rc_ui_style_css_set_data(const gchar *data, gssize length);
+gboolean rc_ui_style_css_set_resource(const gchar *resource_path);
 void rc_ui_style_css_unset();
-const RCUiStyleEmbededTheme *rc_ui_style_get_embeded_theme(guint *number);
+gboolean rc_ui_style_embeded_theme_set_by_name(const gchar *name);
+gboolean rc_ui_style_embeded_theme_set_by_index(guint index);
+gboolean rc_ui_style_embeded_theme_set_default();
+guint rc_ui_style_embeded_theme_get_length();
+const gchar *rc_ui_style_embeded_theme_get_name(guint index);
 GSList *rc_ui_style_search_theme_paths();
 
 G_END_DECLS

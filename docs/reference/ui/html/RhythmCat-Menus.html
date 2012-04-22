@@ -2,57 +2,65 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>rc-ui-menu</title>
+<title>Menus</title>
 <meta name="generator" content="DocBook XSL Stylesheets V1.76.1">
 <link rel="home" href="index.html" title="RhythmCat Reference Manual">
 <link rel="up" href="ch01.html" title="API reference">
-<link rel="prev" href="RhythmCat-rc-ui-listview.html" title="rc-ui-listview">
-<link rel="next" href="RCUiPlayer.html" title="RCUiPlayer">
+<link rel="prev" href="RhythmCat-List-Views.html" title="List Views">
+<link rel="next" href="RCUiPlayer.html" title="Main UI">
 <meta name="generator" content="GTK-Doc V1.18 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2">
 <tr valign="middle">
-<td><a accesskey="p" href="RhythmCat-rc-ui-listview.html"><img src="left.png" width="24" height="24" border="0" alt="Prev"></a></td>
+<td><a accesskey="p" href="RhythmCat-List-Views.html"><img src="left.png" width="24" height="24" border="0" alt="Prev"></a></td>
 <td><a accesskey="u" href="ch01.html"><img src="up.png" width="24" height="24" border="0" alt="Up"></a></td>
 <td><a accesskey="h" href="index.html"><img src="home.png" width="24" height="24" border="0" alt="Home"></a></td>
 <th width="100%" align="center">RhythmCat Reference Manual</th>
 <td><a accesskey="n" href="RCUiPlayer.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
 </tr>
 <tr><td colspan="5" class="shortcuts">
-<a href="#RhythmCat-rc-ui-menu.synopsis" class="shortcut">Top</a>
+<a href="#RhythmCat-Menus.synopsis" class="shortcut">Top</a>
                    | 
-                  <a href="#RhythmCat-rc-ui-menu.description" class="shortcut">Description</a>
+                  <a href="#RhythmCat-Menus.description" class="shortcut">Description</a>
 </td></tr>
 </table>
 <div class="refentry">
-<a name="RhythmCat-rc-ui-menu"></a><div class="titlepage"></div>
+<a name="RhythmCat-Menus"></a><div class="titlepage"></div>
 <div class="refnamediv"><table width="100%"><tr>
 <td valign="top">
-<h2><span class="refentrytitle"><a name="RhythmCat-rc-ui-menu.top_of_page"></a>rc-ui-menu</span></h2>
-<p>rc-ui-menu</p>
+<h2><span class="refentrytitle"><a name="RhythmCat-Menus.top_of_page"></a>Menus</span></h2>
+<p>Menus — The menus in the player</p>
 </td>
 <td valign="top" align="right"></td>
 </tr></table></div>
 <div class="refsynopsisdiv">
-<a name="RhythmCat-rc-ui-menu.synopsis"></a><h2>Synopsis</h2>
-<pre class="synopsis"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="returnvalue">guint</span></a>               <a class="link" href="RhythmCat-rc-ui-menu.html#rc-ui-menu-add-menu-action" title="rc_ui_menu_add_menu_action ()">rc_ui_menu_add_menu_action</a>          (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/gtk/GtkAction.html"><span class="type">GtkAction</span></a> *action</code></em>,
+<a name="RhythmCat-Menus.synopsis"></a><h2>Synopsis</h2>
+<pre class="synopsis">
+#include &lt;rc-ui-menu.h&gt;
+
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="returnvalue">guint</span></a>               <a class="link" href="RhythmCat-Menus.html#rc-ui-menu-add-menu-action" title="rc_ui_menu_add_menu_action ()">rc_ui_menu_add_menu_action</a>          (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/gtk/GtkAction.html"><span class="type">GtkAction</span></a> *action</code></em>,
                                                          <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *path</code></em>,
                                                          <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *name</code></em>,
                                                          <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *action_name</code></em>,
                                                          <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> top</code></em>);
-<a href="/usr/share/gtk-doc/html/gtk/GtkUIManager.html"><span class="returnvalue">GtkUIManager</span></a> *      <a class="link" href="RhythmCat-rc-ui-menu.html#rc-ui-menu-get-ui-manager" title="rc_ui_menu_get_ui_manager ()">rc_ui_menu_get_ui_manager</a>           ();
-<a href="/usr/share/gtk-doc/html/gtk/GtkUIManager.html"><span class="returnvalue">GtkUIManager</span></a> *      <a class="link" href="RhythmCat-rc-ui-menu.html#rc-ui-menu-init" title="rc_ui_menu_init ()">rc_ui_menu_init</a>                     ();
-<span class="returnvalue">void</span>                <a class="link" href="RhythmCat-rc-ui-menu.html#rc-ui-menu-remove-menu-action" title="rc_ui_menu_remove_menu_action ()">rc_ui_menu_remove_menu_action</a>       (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/gtk/GtkAction.html"><span class="type">GtkAction</span></a> *action</code></em>,
+<a href="/usr/share/gtk-doc/html/gtk/GtkUIManager.html"><span class="returnvalue">GtkUIManager</span></a> *      <a class="link" href="RhythmCat-Menus.html#rc-ui-menu-get-ui-manager" title="rc_ui_menu_get_ui_manager ()">rc_ui_menu_get_ui_manager</a>           ();
+<a href="/usr/share/gtk-doc/html/gtk/GtkUIManager.html"><span class="returnvalue">GtkUIManager</span></a> *      <a class="link" href="RhythmCat-Menus.html#rc-ui-menu-init" title="rc_ui_menu_init ()">rc_ui_menu_init</a>                     ();
+<span class="returnvalue">void</span>                <a class="link" href="RhythmCat-Menus.html#rc-ui-menu-remove-menu-action" title="rc_ui_menu_remove_menu_action ()">rc_ui_menu_remove_menu_action</a>       (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/gtk/GtkAction.html"><span class="type">GtkAction</span></a> *action</code></em>,
                                                          <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> id</code></em>);
 </pre>
 </div>
 <div class="refsect1">
-<a name="RhythmCat-rc-ui-menu.description"></a><h2>Description</h2>
+<a name="RhythmCat-Menus.description"></a><h2>Description</h2>
+<p>
+This module provides the menus in the player, including main
+window, status icon, popup menus, etc. Plug-ins can also add
+their own menu items into the player.
+</p>
 </div>
 <div class="refsect1">
-<a name="RhythmCat-rc-ui-menu.details"></a><h2>Details</h2>
+<a name="RhythmCat-Menus.details"></a><h2>Details</h2>
 <div class="refsect2">
 <a name="rc-ui-menu-add-menu-action"></a><h3>rc_ui_menu_add_menu_action ()</h3>
 <pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="returnvalue">guint</span></a>               rc_ui_menu_add_menu_action          (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/gtk/GtkAction.html"><span class="type">GtkAction</span></a> *action</code></em>,

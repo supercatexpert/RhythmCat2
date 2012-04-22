@@ -28,6 +28,15 @@
 #include "rc-ui-player.h"
 #include "rc-common.h"
 
+/**
+ * SECTION: rc-ui-dialog
+ * @Short_description: Dialogs in the player
+ * @Title: Dialogs
+ * @Include: rc-ui-dialog.h
+ *
+ * This module provides the dialogs in the player.
+ */
+
 static const gchar *dialog_about_license =
     "RhythmCat is free software; you can redistribute it\n"
     "and/or modify it under the terms of the GNU General\n"
@@ -78,7 +87,7 @@ void rc_ui_dialog_about_player()
  * @type: type of message
  * @title: title of the message
  * @format: printf()-style format string, or NULL, allow-none
- * @Varargs: arguments for @format
+ * @...: arguments for @format
  *
  * Show message dialog in the player.
  */

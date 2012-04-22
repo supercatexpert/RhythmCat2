@@ -34,6 +34,16 @@
 #include "rc-ui-img-nocov.xpm"
 #include "rc-common.h"
 
+/**
+ * SECTION: rc-ui-player
+ * @Short_description: The main UI of the player
+ * @Title: Main UI
+ * @Include: rc-ui-player.h
+ *
+ * This module provides the main UI of the player, it shows the main
+ * player window and the widgets inside for the player.
+ */
+
 #define RC_UI_PLAYER_COVER_IMAGE_SIZE 160
 
 #define RC_UI_PLAYER_GET_PRIVATE(obj) G_TYPE_INSTANCE_GET_PRIVATE((obj), \
@@ -1690,6 +1700,7 @@ void rc_ui_player_present_main_window()
 
 /**
  * rc_ui_player_set_keep_above_state:
+ * @state: the new state
  *
  * Keep the player above the other windows.
  * Notice that it depends on the Window Manager,
