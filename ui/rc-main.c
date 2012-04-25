@@ -34,6 +34,7 @@
 #include "rc-ui-style.h"
 #include "rc-ui-effect.h"
 #include "rc-ui-resources.h"
+#include "rc-ui-dialog.h"
 
 /**
  * SECTION: rc-main
@@ -265,6 +266,8 @@ static void rc_main_app_activate(GApplication *application)
             }
         }
     }
+    if(rclib_db_autosaved_exist())
+        rc_ui_dialog_show_load_autosaved();
 }
 
 static void rc_main_app_open(GApplication *application, GFile **files,
@@ -405,11 +408,25 @@ gint rc_main_run(gint *argc, gchar **argv[])
     GFile **remote_files;
     guint remote_file_num;
     guint i;
+    gchar *locale_dir;
+    setlocale(LC_ALL, NULL);
+    main_data_dir = rclib_util_get_data_dir("RhythmCat2", *argv[0]);
+    locale_dir = g_build_filename(main_data_dir, "..", "locale", NULL);
+    if(g_file_test(locale_dir, G_FILE_TEST_IS_DIR))
+    {
+        bindtextdomain(GETTEXT_PACKAGE, locale_dir);
+        g_free(locale_dir);
+    }
+    else
+    {
+        bindtextdomain(GETTEXT_PACKAGE, LOCALEDIR);
+    }
+    bind_textdomain_codeset(GETTEXT_PACKAGE, "UTF-8");
+    textdomain(GETTEXT_PACKAGE);
     context = g_option_context_new(NULL);
     g_option_context_add_main_entries(context, options, GETTEXT_PACKAGE);
     g_option_context_add_group(context, gst_init_get_option_group());
     g_option_context_add_group(context, gtk_get_option_group(TRUE));
-    setlocale(LC_ALL, NULL);
     if(!g_option_context_parse(context, argc, argv, &error))
     {
         g_print(_("%s\nRun '%s --help' to see a full list of available "
@@ -468,10 +485,10 @@ gint rc_main_run(gint *argc, gchar **argv[])
         g_error("Cannot load core: %s", error->message);
         g_error_free(error);
         g_free(main_user_dir);
+        g_free(main_data_dir);
         main_user_dir = NULL;
         return 1;
     }
-    main_data_dir = rclib_util_get_data_dir("RhythmCat2", *argv[0]);
     rc_main_settings_init();
     gdk_threads_init();
     g_print("LibRhythmCat loaded. Version: %d.%d.%d, build date: %s\n",

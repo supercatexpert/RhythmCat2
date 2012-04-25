@@ -51,6 +51,8 @@ enum                <a class="link" href="RCLibDb.html#RCLibDbCatalogType" title
 struct              <a class="link" href="RCLibDb.html#RCLibDbClass" title="struct RCLibDbClass">RCLibDbClass</a>;
 struct              <a class="link" href="RCLibDb.html#RCLibDbPlaylistData" title="struct RCLibDbPlaylistData">RCLibDbPlaylistData</a>;
 enum                <a class="link" href="RCLibDb.html#RCLibDbPlaylistType" title="enum RCLibDbPlaylistType">RCLibDbPlaylistType</a>;
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RCLibDb.html#rclib-db-autosaved-exist" title="rclib_db_autosaved_exist ()">rclib_db_autosaved_exist</a>            ();
+<span class="returnvalue">void</span>                <a class="link" href="RCLibDb.html#rclib-db-autosaved-remove" title="rclib_db_autosaved_remove ()">rclib_db_autosaved_remove</a>           ();
 <a href="/usr/share/gtk-doc/html/glib/glib-Sequences.html#GSequenceIter"><span class="returnvalue">GSequenceIter</span></a> *     <a class="link" href="RCLibDb.html#rclib-db-catalog-add" title="rclib_db_catalog_add ()">rclib_db_catalog_add</a>                (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *name</code></em>,
                                                          <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Sequences.html#GSequenceIter"><span class="type">GSequenceIter</span></a> *iter</code></em>,
                                                          <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> type</code></em>);
@@ -68,6 +70,7 @@ enum                <a class="link" href="RCLibDb.html#RCLibDbPlaylistType" titl
 <a href="/usr/share/gtk-doc/html/glib/glib-Sequences.html#GSequence"><span class="returnvalue">GSequence</span></a> *         <a class="link" href="RCLibDb.html#rclib-db-get-catalog" title="rclib_db_get_catalog ()">rclib_db_get_catalog</a>                ();
 <a href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GObject"><span class="returnvalue">GObject</span></a> *           <a class="link" href="RCLibDb.html#rclib-db-get-instance" title="rclib_db_get_instance ()">rclib_db_get_instance</a>               ();
 <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RCLibDb.html#rclib-db-init" title="rclib_db_init ()">rclib_db_init</a>                       (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *file</code></em>);
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RCLibDb.html#rclib-db-load-autosaved" title="rclib_db_load_autosaved ()">rclib_db_load_autosaved</a>             ();
 <span class="returnvalue">void</span>                <a class="link" href="RCLibDb.html#rclib-db-playlist-add-directory" title="rclib_db_playlist_add_directory ()">rclib_db_playlist_add_directory</a>     (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Sequences.html#GSequenceIter"><span class="type">GSequenceIter</span></a> *iter</code></em>,
                                                          <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Sequences.html#GSequenceIter"><span class="type">GSequenceIter</span></a> *insert_iter</code></em>,
                                                          <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *dir</code></em>);
@@ -362,6 +365,29 @@ The enum type for playlist type.
 </div>
 <hr>
 <div class="refsect2">
+<a name="rclib-db-autosaved-exist"></a><h3>rclib_db_autosaved_exist ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rclib_db_autosaved_exist            ();</pre>
+<p>
+Whether auto-saved playlist file exists.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>The existence of auto-saved playlist file.</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-db-autosaved-remove"></a><h3>rclib_db_autosaved_remove ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rclib_db_autosaved_remove           ();</pre>
+<p>
+Remove the auto-saved playlist file.
+</p>
+</div>
+<hr>
+<div class="refsect2">
 <a name="rclib-db-catalog-add"></a><h3>rclib_db_catalog_add ()</h3>
 <pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Sequences.html#GSequenceIter"><span class="returnvalue">GSequenceIter</span></a> *     rclib_db_catalog_add                (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *name</code></em>,
                                                          <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Sequences.html#GSequenceIter"><span class="type">GSequenceIter</span></a> *iter</code></em>,
@@ -601,6 +627,14 @@ Initialize the music library database.
 </tr>
 </tbody>
 </table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-db-load-autosaved"></a><h3>rclib_db_load_autosaved ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rclib_db_load_autosaved             ();</pre>
+<p>
+Load all playlist data from auto-saved playlist.
+</p>
 </div>
 <hr>
 <div class="refsect2">

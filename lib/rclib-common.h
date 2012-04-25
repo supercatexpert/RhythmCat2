@@ -35,8 +35,8 @@ G_BEGIN_DECLS
 #endif
 
 #define G_LOG_DOMAIN "LibRhythmCat2"
-#define GETTEXT_PACKAGE "LibRhythmCat2"
-#define PACKAGE "LibRhythmCat2"
+#define GETTEXT_PACKAGE "RhythmCat2"
+#define PACKAGE "RhythmCat2"
 
 G_END_DECLS
 

@@ -852,7 +852,7 @@ void rc_ui_dialog_show_supported_format()
     close_button = gtk_button_new_from_stock(GTK_STOCK_CLOSE);
     scrolled_window = gtk_scrolled_window_new(NULL, NULL);
     main_grid = gtk_grid_new();
-    button_hbox = gtk_hbutton_box_new();
+    button_hbox = gtk_button_box_new(GTK_ORIENTATION_HORIZONTAL);
     gtk_window_set_position(GTK_WINDOW(dialog), GTK_WIN_POS_CENTER);
     gtk_window_set_title(GTK_WINDOW(dialog), _("Supported Audio Format"));
     gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(scrolled_window),
@@ -974,4 +974,36 @@ void rc_ui_dialog_show_supported_format()
     g_object_unref(list_store);
     gtk_widget_show_all(dialog);
 }
+
+static void rc_ui_dialog_autosaved_response_cb(GtkDialog *dialog,
+    gint response_id, gpointer user_data)
+{
+    if(response_id==GTK_RESPONSE_YES)
+    {
+        rclib_db_load_autosaved();
+        rc_ui_listview_refresh();
+    }
+    rclib_db_autosaved_remove();
+    gtk_widget_destroy(GTK_WIDGET(dialog));
+}
+
+/**
+ * rc_ui_dialog_show_load_autosaved:
+ *
+ * Show a dialog to ask the user whether to use the auto-saved playlist file.
+ */
+
+void rc_ui_dialog_show_load_autosaved()
+{
+    GtkWidget *dialog;
+    dialog = gtk_message_dialog_new(NULL, GTK_DIALOG_MODAL,
+        GTK_MESSAGE_QUESTION, GTK_BUTTONS_YES_NO,
+        _("The player does not exit normally, "
+        "do you want to use the auto-saved playlist data?"));
+    g_signal_connect(dialog, "response",
+        G_CALLBACK(rc_ui_dialog_autosaved_response_cb), NULL);
+    gtk_widget_show_all(dialog);
+}
+
+
 

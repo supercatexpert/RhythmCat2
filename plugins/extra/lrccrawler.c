@@ -83,6 +83,7 @@ typedef struct RCPluginLyricCrawlerPrivate
     GThread *search_thread;
     GThread *download_thread;
     gulong missing_signal;
+    gulong shutdown_id;
     guint menu_id;
     GKeyFile *keyfile;
 }RCPluginLyricCrawlerPrivate;
@@ -1081,7 +1082,7 @@ static gboolean rc_plugin_lrccrawler_init(RCLibPluginData *plugin)
     }
     if(priv->crawler_module_list!=NULL)
         priv->current_module = priv->crawler_module_list->data;
-    rclib_plugin_signal_connect("shutdown",
+    priv->shutdown_id = rclib_plugin_signal_connect("shutdown",
         G_CALLBACK(rc_plugin_lrccrawler_shutdown_cb), priv);
     return TRUE;
 }
@@ -1092,6 +1093,8 @@ static void rc_plugin_lrccrawler_destroy(RCLibPluginData *plugin)
     RCLyricCrawlerModule *module_data;
     GSList *list_foreach;
     rc_lrccrawler_common_operation_cancel();
+    if(priv->shutdown_id>0)
+        rclib_plugin_signal_disconnect(priv->shutdown_id);
     for(list_foreach=priv->crawler_module_list;list_foreach!=NULL;
         list_foreach=g_slist_next(list_foreach))
     {

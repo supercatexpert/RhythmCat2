@@ -1410,4 +1410,18 @@ guint rc_ui_listview_playlist_get_enabled_columns()
     return flags;
 }
 
+/**
+ * rc_ui_listview_refresh:
+ *
+ * Refresh the catalog and playlist list view.
+ */
+
+void rc_ui_listview_refresh()
+{
+    RCUiListViewPrivate *priv = &ui_listview_private;
+    if(priv->catalog_listview!=NULL)
+        gtk_widget_queue_draw(priv->catalog_listview);
+    if(priv->playlist_listview)
+        gtk_widget_queue_draw(priv->playlist_listview);
+}
 

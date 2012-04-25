@@ -40,6 +40,8 @@
 #define G_LOG_DOMAIN "Py3Loader"
 #define PY3LD_ID "rc2-python3-loader"
 
+static gboolean python_loaded = FALSE;
+
 static void py3ld_add_module_path(const gchar *module_path)
 {
     PyObject *pathlist, *pathstring;
@@ -48,6 +50,21 @@ static void py3ld_add_module_path(const gchar *module_path)
     if(PySequence_Contains(pathlist, pathstring)==0)
         PyList_Insert(pathlist, 0, pathstring);
     Py_DECREF(pathstring);
+}
+
+gboolean py3ld_check_is_imported(const gchar *name)
+{
+    PyObject *module_dict;
+    PyObject *key;
+    gboolean flag = FALSE;
+    if(name==NULL) return FALSE;
+    module_dict = PyImport_GetModuleDict();
+    if(module_dict==NULL) return FALSE;
+    key = PyUnicode_FromString(name);
+    if(PyDict_Contains(module_dict, key)>0)
+        flag = TRUE;
+    Py_DECREF(key);
+    return flag;
 }
 
 static gboolean py3ld_load(RCLibPluginData *plugin)
@@ -71,7 +88,7 @@ static gboolean py3ld_init(RCLibPluginData *plugin)
     if(Py_IsInitialized())
     {
         g_message("Initialized already!");
-        return TRUE;
+        return FALSE;
     }
     ret = sigaction(SIGINT, NULL, &old_sigint);
     if(ret!=0)
@@ -80,6 +97,7 @@ static gboolean py3ld_init(RCLibPluginData *plugin)
         return FALSE;
     }
     Py_Initialize();
+    python_loaded = TRUE;
     ret = sigaction(SIGINT, &old_sigint, NULL);
     if(ret!=0)
     {
@@ -98,13 +116,14 @@ static gboolean py3ld_init(RCLibPluginData *plugin)
 
 static void py3ld_destroy(RCLibPluginData *plugin)
 {
-    if(Py_IsInitialized()) Py_Finalize();
+    if(Py_IsInitialized() && python_loaded) Py_Finalize();
 }
 
 static gboolean py3ld_plugin_probe(RCLibPluginData *plugin)
 {
     RCLibPluginInfo *info;
-    PyObject *py_module, *fromlist, *locals;
+    PyObject *py_module = NULL;
+    PyObject *fromlist, *locals;
     PyObject *plugin_info;
     PyObject *py_magic, *py_major_ver, *py_minor_ver, *py_id;
     PyObject *py_name, *py_version, *py_desc, *py_author, *py_homepage;
@@ -119,11 +138,19 @@ static gboolean py3ld_plugin_probe(RCLibPluginData *plugin)
     if(plugin_dir!=NULL)
         py3ld_add_module_path(plugin_dir);
     g_free(plugin_dir);
-    fromlist = PyTuple_New(0);
     module_name = rclib_tag_get_name_from_fpath(plugin->path);
-    py_module = PyImport_ImportModuleEx(module_name, NULL, NULL, fromlist);
+    if(!py3ld_check_is_imported(module_name))
+    {
+        fromlist = PyTuple_New(0);
+        py_module = PyImport_ImportModuleEx(module_name, NULL, NULL,
+            fromlist);
+        Py_DECREF(fromlist);
+    }
+    else
+    {
+        g_printf("Repeat import!\n");
+    }
     g_free(module_name);
-    Py_DECREF(fromlist);
     if(py_module==NULL)
     {
         PyErr_Print();

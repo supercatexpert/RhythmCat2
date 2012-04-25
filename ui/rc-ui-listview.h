@@ -73,6 +73,7 @@ void rc_ui_listview_playlist_set_title_format(const gchar *format);
 void rc_ui_listview_playlist_set_enabled_columns(guint column_flags,
     guint enable_flags);
 guint rc_ui_listview_playlist_get_enabled_columns();
+void rc_ui_listview_refresh();
 
 G_END_DECLS
 

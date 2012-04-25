@@ -107,7 +107,9 @@ static void rclib_plugin_data_free(RCLibPluginData *plugin)
     if(plugin->native)
     {
         if(plugin->info!=NULL && plugin->info->destroy!=NULL)
+        {
             plugin->info->destroy(plugin);
+        }
         if(plugin->handle!=NULL)
             g_module_close(plugin->handle);
     }
@@ -389,6 +391,7 @@ gulong rclib_plugin_signal_connect(const gchar *name,
 void rclib_plugin_signal_disconnect(gulong handler_id)
 {
     if(plugin_instance==NULL) return;
+    if(!g_signal_handler_is_connected(plugin_instance, handler_id)) return;
     g_signal_handler_disconnect(plugin_instance, handler_id);
 }
 
@@ -533,7 +536,10 @@ gboolean rclib_plugin_register(RCLibPluginData *plugin)
     if(plugin->unloadable)
         return FALSE;
     if(g_hash_table_lookup(priv->plugin_table, plugin->info->id)!=NULL)
-        return TRUE;
+    {
+        plugin->unloadable = TRUE;
+        return FALSE;
+    }
     if(plugin->info->type==RCLIB_PLUGIN_TYPE_LOADER)
     {
         if(plugin->info->extra_info==NULL) return FALSE;
@@ -891,9 +897,9 @@ void rclib_plugin_destroy(RCLibPluginData *plugin)
     priv = RCLIB_PLUGIN_GET_PRIVATE(plugin_instance);
     if(priv==NULL || priv->plugin_table==NULL) return;
     if(plugin->loaded) rclib_plugin_unload(plugin);
-    if(plugin->info!=NULL && priv->loader_table!=NULL &&
-        plugin->info->type==RCLIB_PLUGIN_TYPE_LOADER &&
-        plugin->info->extra_info!=NULL)
+    if(!plugin->unloadable && plugin->info!=NULL &&
+        priv->loader_table!=NULL && plugin->info->extra_info!=NULL &&
+        plugin->info->type==RCLIB_PLUGIN_TYPE_LOADER)
     {
         loader = plugin->info->extra_info;
         for(exts=loader->extensions;exts!=NULL && *exts!=NULL;exts++)

@@ -45,5 +45,19 @@
     * The GTK+ UI layout can be customed partially (like playlist view,
       panel, etc).
     * Missing music item in the playlist will be marked.
+    
+2012-04-22  SuperCat    <supercatexpert@gmail.com>
 
+    * Completed debian packaging scripts.
+    * Added multiarch library support.
+    
+2012-04-25  SuperCat    <supercatexpert@gmail.com>
+
+    * Auto-save playlist file if the playlist has been modified (the scan cycle
+      is 120s), if the auto-save playlist exists when the player starts, the user
+      can use that file.
+    * Debian and Fedora package files are ready.
+    
+      
+      
     

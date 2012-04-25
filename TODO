@@ -1,9 +1,8 @@
 - Bug Report Interface
 - Upgrade the dependency to GTK+ 3.4 when it is available on Debian Wheezy
 - Import playlist data from legacy version
-- Auto-save the changes in the playlist (to another file), if the player is
-  not terminated normally, users can choose whether to use the auto-saved one.
-- Docs of UI part
+- Language translations (remaing: Japanese)
+- Complete SPEC file
 
 Long-term:
 - GObject Introspection (GI) support
@@ -15,6 +14,7 @@ Long-term:
 - Music Library
 - More interfaces in MPRIS v2.1 support
 - Multi-touch support
+- Use GtkBuilder
 
 Other ideas:
 - Better karaoke mode plug-in?

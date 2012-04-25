@@ -56,6 +56,7 @@ typedef struct RCPluginLrcshowPriv
     gboolean drag_action;
     gulong lyric_found_id;
     gulong timeout_id;
+    gulong shutdown_id;
     gboolean show_window;
     GKeyFile *keyfile;
 }RCPluginLrcshowPriv;
@@ -680,7 +681,7 @@ static gboolean rc_plugin_lrcshow_init(RCLibPluginData *plugin)
     priv->drag_flag = TRUE;
     priv->keyfile = rclib_plugin_get_keyfile();
     rc_plugin_lrcshow_load_conf(priv);
-    rclib_plugin_signal_connect("shutdown",
+    priv->shutdown_id = rclib_plugin_signal_connect("shutdown",
         G_CALLBACK(rc_plugin_lrcshow_shutdown_cb), priv);
     return TRUE;
 }
@@ -688,6 +689,8 @@ static gboolean rc_plugin_lrcshow_init(RCLibPluginData *plugin)
 static void rc_plugin_lrcshow_destroy(RCLibPluginData *plugin)
 {
     RCPluginLrcshowPriv *priv = &lrcshow_priv;
+    if(priv->shutdown_id>0)
+        rclib_plugin_signal_disconnect(priv->shutdown_id);
     g_free(priv->font_string);
 }
 

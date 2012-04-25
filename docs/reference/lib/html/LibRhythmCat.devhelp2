@@ -106,6 +106,8 @@
     <keyword type="struct" name="struct RCLibDbClass" link="RCLibDb.html#RCLibDbClass"/>
     <keyword type="struct" name="struct RCLibDbPlaylistData" link="RCLibDb.html#RCLibDbPlaylistData"/>
     <keyword type="enum" name="enum RCLibDbPlaylistType" link="RCLibDb.html#RCLibDbPlaylistType"/>
+    <keyword type="function" name="rclib_db_autosaved_exist ()" link="RCLibDb.html#rclib-db-autosaved-exist"/>
+    <keyword type="function" name="rclib_db_autosaved_remove ()" link="RCLibDb.html#rclib-db-autosaved-remove"/>
     <keyword type="function" name="rclib_db_catalog_add ()" link="RCLibDb.html#rclib-db-catalog-add"/>
     <keyword type="function" name="rclib_db_catalog_data_free ()" link="RCLibDb.html#rclib-db-catalog-data-free"/>
     <keyword type="function" name="rclib_db_catalog_data_new ()" link="RCLibDb.html#rclib-db-catalog-data-new"/>
@@ -119,6 +121,7 @@
     <keyword type="function" name="rclib_db_get_catalog ()" link="RCLibDb.html#rclib-db-get-catalog"/>
     <keyword type="function" name="rclib_db_get_instance ()" link="RCLibDb.html#rclib-db-get-instance"/>
     <keyword type="function" name="rclib_db_init ()" link="RCLibDb.html#rclib-db-init"/>
+    <keyword type="function" name="rclib_db_load_autosaved ()" link="RCLibDb.html#rclib-db-load-autosaved"/>
     <keyword type="function" name="rclib_db_playlist_add_directory ()" link="RCLibDb.html#rclib-db-playlist-add-directory"/>
     <keyword type="function" name="rclib_db_playlist_add_m3u_file ()" link="RCLibDb.html#rclib-db-playlist-add-m3u-file"/>
     <keyword type="function" name="rclib_db_playlist_add_music ()" link="RCLibDb.html#rclib-db-playlist-add-music"/>

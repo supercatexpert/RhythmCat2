@@ -27,6 +27,7 @@
 <ANCHOR id="rc-ui-dialog-save-album" href="RhythmCat/RhythmCat-Dialogs.html#rc-ui-dialog-save-album">
 <ANCHOR id="rc-ui-dialog-save-all-playlist" href="RhythmCat/RhythmCat-Dialogs.html#rc-ui-dialog-save-all-playlist">
 <ANCHOR id="rc-ui-dialog-save-playlist" href="RhythmCat/RhythmCat-Dialogs.html#rc-ui-dialog-save-playlist">
+<ANCHOR id="rc-ui-dialog-show-load-autosaved" href="RhythmCat/RhythmCat-Dialogs.html#rc-ui-dialog-show-load-autosaved">
 <ANCHOR id="rc-ui-dialog-show-message" href="RhythmCat/RhythmCat-Dialogs.html#rc-ui-dialog-show-message">
 <ANCHOR id="rc-ui-dialog-show-supported-format" href="RhythmCat/RhythmCat-Dialogs.html#rc-ui-dialog-show-supported-format">
 <ANCHOR id="RhythmCat-Audio-Effect-UI" href="RhythmCat/RhythmCat-Audio-Effect-UI.html">
@@ -107,6 +108,7 @@
 <ANCHOR id="rc-ui-listview-playlist-set-enabled-columns" href="RhythmCat/RhythmCat-List-Views.html#rc-ui-listview-playlist-set-enabled-columns">
 <ANCHOR id="rc-ui-listview-playlist-set-pango-attributes" href="RhythmCat/RhythmCat-List-Views.html#rc-ui-listview-playlist-set-pango-attributes">
 <ANCHOR id="rc-ui-listview-playlist-set-title-format" href="RhythmCat/RhythmCat-List-Views.html#rc-ui-listview-playlist-set-title-format">
+<ANCHOR id="rc-ui-listview-refresh" href="RhythmCat/RhythmCat-List-Views.html#rc-ui-listview-refresh">
 <ANCHOR id="RhythmCat-Menus" href="RhythmCat/RhythmCat-Menus.html">
 <ANCHOR id="RhythmCat-Menus.synopsis" href="RhythmCat/RhythmCat-Menus.html#RhythmCat-Menus.synopsis">
 <ANCHOR id="RhythmCat-Menus.description" href="RhythmCat/RhythmCat-Menus.html#RhythmCat-Menus.description">

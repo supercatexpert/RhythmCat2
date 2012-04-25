@@ -55,11 +55,17 @@ typedef struct RCLibDbPrivate
     GSequence *catalog;
     GThread *import_thread;
     GThread *refresh_thread;
+    GThread *autosave_thread;
     GAsyncQueue *import_queue;
     GAsyncQueue *refresh_queue;
     gboolean import_work_flag;
     gboolean refresh_work_flag;
     gboolean dirty_flag;
+    gboolean work_flag;
+    gulong autosave_timeout;
+    GMutex autosave_mutex;
+    GCond autosave_cond;
+    json_object *autosave_json_object;
 }RCLibDbPrivate;
 
 typedef struct RCLibDbPlaylistImportData
@@ -792,16 +798,13 @@ static gboolean rclib_db_load_library_db(GSequence *catalog,
     return TRUE;
 }
 
-static gboolean rclib_db_save_library_db(GSequence *catalog,
-    const gchar *file, gboolean *dirty_flag)
+static inline json_object *rclib_db_build_json_object(GSequence *catalog)
 {
     json_object *root_object, *catalog_object, *playlist_object;
     json_object *catalog_array, *playlist_array, *tmp;
     RCLibDbCatalogData *catalog_data;
     RCLibDbPlaylistData *playlist_data;
     GSequenceIter *catalog_iter, *playlist_iter;
-    const gchar *json_data;
-    GError *error = NULL;
     gchar *time;
     catalog_array = json_object_new_array();
     for(catalog_iter = g_sequence_get_begin_iter(catalog);
@@ -885,6 +888,17 @@ static gboolean rclib_db_save_library_db(GSequence *catalog,
     }
     root_object = json_object_new_object();
     json_object_object_add(root_object, "RCMusicCatalog", catalog_array);
+    return root_object;
+}
+
+static gboolean rclib_db_save_library_db(GSequence *catalog,
+    const gchar *file, gboolean *dirty_flag)
+{
+    const gchar *json_data;
+    GError *error = NULL;
+    json_object *root_object;
+    root_object = rclib_db_build_json_object(catalog);
+    if(root_object==NULL) return FALSE;
     json_data = json_object_to_json_string(root_object);
     if(json_data!=NULL)
     {
@@ -903,11 +917,65 @@ static gboolean rclib_db_save_library_db(GSequence *catalog,
     return TRUE;
 }
 
+static gpointer rclib_db_playlist_autosave_thread_cb(gpointer data)
+{
+    RCLibDbPrivate *priv = (RCLibDbPrivate *)data;
+    const gchar *json_data;
+    gchar *filename;
+    if(data==NULL)
+    {
+        g_thread_exit(NULL);
+        return NULL;
+    }
+    while(priv->work_flag)
+    {
+        g_mutex_lock(&(priv->autosave_mutex));
+        g_cond_wait(&(priv->autosave_cond), &(priv->autosave_mutex));
+        json_data = json_object_to_json_string(priv->autosave_json_object);
+        if(json_data!=NULL)
+        {
+            filename = g_strdup_printf("%s.autosave", priv->filename);
+            if(g_file_set_contents(filename, json_data, -1, NULL))
+                g_message("Auto save successfully!");
+            g_free(filename);
+        }
+        json_object_put(priv->autosave_json_object);
+        priv->autosave_json_object = NULL;
+        priv->dirty_flag = FALSE;
+        g_mutex_unlock(&(priv->autosave_mutex));
+    }
+    g_thread_exit(NULL);
+    return NULL;
+}
+
+static gboolean rclib_db_autosave_timeout_cb(gpointer data)
+{
+    RCLibDbPrivate *priv = (RCLibDbPrivate *)data;
+    if(data==NULL) return FALSE;
+    if(!priv->dirty_flag) return TRUE;
+    if(priv->filename==NULL) return TRUE;
+    if(priv->autosave_json_object!=NULL) return TRUE;
+    priv->autosave_json_object = rclib_db_build_json_object(priv->catalog);
+    g_mutex_lock(&(priv->autosave_mutex));
+    g_cond_signal(&(priv->autosave_cond));
+    g_mutex_unlock(&(priv->autosave_mutex));
+    return TRUE;
+}
+
 static void rclib_db_finalize(GObject *object)
 {
     RCLibDbPlaylistImportData *import_data;
     RCLibDbPlaylistRefreshData *refresh_data;
+    gchar *autosave_file;
     RCLibDbPrivate *priv = RCLIB_DB_GET_PRIVATE(RCLIB_DB(object));
+    priv->work_flag = FALSE;
+    g_mutex_lock(&(priv->autosave_mutex));
+    g_cond_signal(&(priv->autosave_cond));
+    g_mutex_unlock(&(priv->autosave_mutex));
+    g_source_remove(priv->autosave_timeout);
+    g_thread_join(priv->autosave_thread);
+    g_mutex_clear(&(priv->autosave_mutex));
+    g_cond_clear(&(priv->autosave_cond));
     while(g_async_queue_length(priv->import_queue)>=0)
     {
         import_data = g_async_queue_try_pop(priv->import_queue);
@@ -928,6 +996,9 @@ static void rclib_db_finalize(GObject *object)
     g_thread_join(priv->refresh_thread);
     rclib_db_save_library_db(priv->catalog, priv->filename,
         &(priv->dirty_flag));
+    autosave_file = g_strdup_printf("%s.autosave", priv->filename);
+    g_remove(autosave_file);
+    g_free(autosave_file);
     g_free(priv->filename);
     g_async_queue_unref(priv->import_queue);
     g_sequence_free(priv->catalog);
@@ -1103,13 +1174,20 @@ static void rclib_db_instance_init(RCLibDb *db)
         rclib_db_playlist_import_data_free);
     priv->refresh_queue = g_async_queue_new_full((GDestroyNotify)
         rclib_db_playlist_refresh_data_free);
+    g_mutex_init(&(priv->autosave_mutex));
+    g_cond_init(&(priv->autosave_cond));
+    priv->work_flag = TRUE;
     priv->import_thread = g_thread_new("RC2-Import-Thread",
         rclib_db_playlist_import_thread_cb, db);
     priv->refresh_thread = g_thread_new("RC2-Refresh-Thread",
         rclib_db_playlist_refresh_thread_cb, db);
+    priv->autosave_thread = g_thread_new("RC2-Autosave-Thread",
+        rclib_db_playlist_autosave_thread_cb, priv);
     priv->import_work_flag = FALSE;
     priv->refresh_work_flag = FALSE;
     priv->dirty_flag = FALSE;
+    priv->autosave_timeout = g_timeout_add_seconds(120,
+        rclib_db_autosave_timeout_cb, priv);
 }
 
 GType rclib_db_get_type()
@@ -1631,6 +1709,15 @@ void rclib_db_playlist_update_metadata(GSequenceIter *iter,
     if(priv==NULL) return;
     playlist_data = g_sequence_get(iter);
     if(playlist_data==NULL) return;
+    if((data->title!=NULL && g_strcmp0(playlist_data->title,
+        data->title)!=0) || (data->artist!=NULL &&
+        g_strcmp0(playlist_data->artist, data->artist)!=0) ||
+        (data->album!=NULL && g_strcmp0(playlist_data->album,
+        data->album)!=0) || playlist_data->tracknum!=data->tracknum ||
+        playlist_data->year!=data->year || playlist_data->type!=data->type)
+    {
+        priv->dirty_flag = TRUE;
+    }
     g_free(playlist_data->title);
     g_free(playlist_data->artist);
     g_free(playlist_data->album);
@@ -1642,7 +1729,6 @@ void rclib_db_playlist_update_metadata(GSequenceIter *iter,
     playlist_data->tracknum = data->tracknum;
     playlist_data->year = data->year;
     playlist_data->type = data->type;
-    priv->dirty_flag = TRUE;
     g_signal_emit(db_instance, db_signals[SIGNAL_PLAYLIST_CHANGED],
         0, iter);
 }
@@ -1667,8 +1753,9 @@ void rclib_db_playlist_update_length(GSequenceIter *iter,
     if(priv==NULL) return;
     playlist_data = g_sequence_get(iter);
     if(playlist_data==NULL) return;
+    if(playlist_data->length!=length)
+        priv->dirty_flag = TRUE;
     playlist_data->length = length;
-    priv->dirty_flag = TRUE;
     g_signal_emit(db_instance, db_signals[SIGNAL_PLAYLIST_CHANGED],
         0, iter);
 }
@@ -1692,8 +1779,9 @@ void rclib_db_playlist_set_type(GSequenceIter *iter,
     if(priv==NULL) return;
     playlist_data = g_sequence_get(iter);
     if(playlist_data==NULL) return;
+    if(playlist_data->type!=type)
+        priv->dirty_flag = TRUE;
     playlist_data->type = type;
-    priv->dirty_flag = TRUE;
     g_signal_emit(db_instance, db_signals[SIGNAL_PLAYLIST_CHANGED],
         0, iter);
 }
@@ -1716,8 +1804,9 @@ void rclib_db_playlist_set_rating(GSequenceIter *iter, gint rating)
     if(priv==NULL) return;
     playlist_data = g_sequence_get(iter);
     if(playlist_data==NULL) return;
+    if(playlist_data->rating!=rating)
+        priv->dirty_flag = TRUE;
     playlist_data->rating = rating;
-    priv->dirty_flag = TRUE;
     g_signal_emit(db_instance, db_signals[SIGNAL_PLAYLIST_CHANGED],
         0, iter);
 }
@@ -2272,10 +2361,91 @@ gboolean rclib_db_sync()
     RCLibDbPrivate *priv;
     if(db_instance==NULL) return FALSE;
     priv = RCLIB_DB_GET_PRIVATE(RCLIB_DB(db_instance));
-    if(priv==NULL || priv->catalog==NULL || priv->filename)
+    if(priv==NULL || priv->catalog==NULL || priv->filename==NULL)
         return FALSE;
     if(!priv->dirty_flag) return TRUE;
     return rclib_db_save_library_db(priv->catalog, priv->filename,
         &(priv->dirty_flag));
 }
+
+/**
+ * rclib_db_load_autosaved:
+ *
+ * Load all playlist data from auto-saved playlist.
+ */
+
+gboolean rclib_db_load_autosaved()
+{
+    RCLibDbPrivate *priv;
+    GSequenceIter *iter;
+    gchar *filename;
+    gboolean flag;
+    if(db_instance==NULL) return FALSE;
+    priv = RCLIB_DB_GET_PRIVATE(RCLIB_DB(db_instance));
+    if(priv==NULL || priv->catalog==NULL || priv->filename==NULL)
+        return FALSE;
+    while(g_sequence_get_length(priv->catalog)>0)
+    {
+        iter = g_sequence_get_begin_iter(priv->catalog);
+        rclib_db_catalog_delete(iter);
+    }
+    filename = g_strdup_printf("%s.autosave", priv->filename);
+    flag = rclib_db_load_library_db(priv->catalog, filename,
+        &(priv->dirty_flag));
+    g_free(filename);
+    if(flag)
+    {
+        for(iter=g_sequence_get_begin_iter(priv->catalog);
+            !g_sequence_iter_is_end(iter);
+            iter=g_sequence_iter_next(iter))
+        {
+            g_signal_emit(db_instance, db_signals[SIGNAL_CATALOG_ADDED],
+                0, iter);
+        }
+    }
+    return flag;
+}
+
+/**
+ * rclib_db_autosaved_exist:
+ *
+ * Whether auto-saved playlist file exists.
+ *
+ * Returns: The existence of auto-saved playlist file.
+ */
+
+gboolean rclib_db_autosaved_exist()
+{
+    RCLibDbPrivate *priv;
+    gchar *filename;
+    gboolean flag = FALSE;
+    if(db_instance==NULL) return FALSE;
+    priv = RCLIB_DB_GET_PRIVATE(RCLIB_DB(db_instance));
+    if(priv==NULL || priv->catalog==NULL || priv->filename==NULL)
+        return FALSE;
+    filename = g_strdup_printf("%s.autosave", priv->filename);
+    flag = g_file_test(filename, G_FILE_TEST_IS_REGULAR | G_FILE_TEST_EXISTS);
+    g_free(filename);
+    return flag;
+}
+
+/**
+ * rclib_db_autosaved_remove:
+ *
+ * Remove the auto-saved playlist file.
+ */
+
+void rclib_db_autosaved_remove()
+{
+    RCLibDbPrivate *priv;
+    gchar *filename;
+    if(db_instance==NULL) return;
+    priv = RCLIB_DB_GET_PRIVATE(RCLIB_DB(db_instance));
+    if(priv==NULL || priv->catalog==NULL || priv->filename==NULL)
+        return;
+    filename = g_strdup_printf("%s.autosave", priv->filename);
+    g_remove(filename);
+    g_free(filename);
+}
+
 

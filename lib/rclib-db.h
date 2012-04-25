@@ -234,6 +234,9 @@ void rclib_db_playlist_refresh_cancel();
 gint rclib_db_playlist_import_queue_get_length();
 gint rclib_db_playlist_refresh_queue_get_length();
 gboolean rclib_db_playlist_sync();
+gboolean rclib_db_load_autosaved();
+gboolean rclib_db_autosaved_exist();
+void rclib_db_autosaved_remove();
 
 G_END_DECLS
 

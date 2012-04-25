@@ -142,6 +142,8 @@
 <ANCHOR id="RCLIB-DB-PLAYLIST-TYPE-MISSING:CAPS" href="LibRhythmCat/RCLibDb.html#RCLIB-DB-PLAYLIST-TYPE-MISSING:CAPS">
 <ANCHOR id="RCLIB-DB-PLAYLIST-TYPE-MUSIC:CAPS" href="LibRhythmCat/RCLibDb.html#RCLIB-DB-PLAYLIST-TYPE-MUSIC:CAPS">
 <ANCHOR id="RCLIB-DB-PLAYLIST-TYPE-CUE:CAPS" href="LibRhythmCat/RCLibDb.html#RCLIB-DB-PLAYLIST-TYPE-CUE:CAPS">
+<ANCHOR id="rclib-db-autosaved-exist" href="LibRhythmCat/RCLibDb.html#rclib-db-autosaved-exist">
+<ANCHOR id="rclib-db-autosaved-remove" href="LibRhythmCat/RCLibDb.html#rclib-db-autosaved-remove">
 <ANCHOR id="rclib-db-catalog-add" href="LibRhythmCat/RCLibDb.html#rclib-db-catalog-add">
 <ANCHOR id="rclib-db-catalog-data-free" href="LibRhythmCat/RCLibDb.html#rclib-db-catalog-data-free">
 <ANCHOR id="rclib-db-catalog-data-new" href="LibRhythmCat/RCLibDb.html#rclib-db-catalog-data-new">
@@ -155,6 +157,7 @@
 <ANCHOR id="rclib-db-get-catalog" href="LibRhythmCat/RCLibDb.html#rclib-db-get-catalog">
 <ANCHOR id="rclib-db-get-instance" href="LibRhythmCat/RCLibDb.html#rclib-db-get-instance">
 <ANCHOR id="rclib-db-init" href="LibRhythmCat/RCLibDb.html#rclib-db-init">
+<ANCHOR id="rclib-db-load-autosaved" href="LibRhythmCat/RCLibDb.html#rclib-db-load-autosaved">
 <ANCHOR id="rclib-db-playlist-add-directory" href="LibRhythmCat/RCLibDb.html#rclib-db-playlist-add-directory">
 <ANCHOR id="rclib-db-playlist-add-m3u-file" href="LibRhythmCat/RCLibDb.html#rclib-db-playlist-add-m3u-file">
 <ANCHOR id="rclib-db-playlist-add-music" href="LibRhythmCat/RCLibDb.html#rclib-db-playlist-add-music">

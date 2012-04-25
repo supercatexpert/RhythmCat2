@@ -1998,7 +1998,7 @@ const gchar *rclib_core_get_eq_name(RCLibCoreEQType type)
 {
     if(type>=RCLIB_CORE_EQ_TYPE_NONE && type<RCLIB_CORE_EQ_TYPE_CUSTOM)
     {
-        return core_eq_data[type].name;
+        return gettext(core_eq_data[type].name);
     }
     else
         return _("Custom");

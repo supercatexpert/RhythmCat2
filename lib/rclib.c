@@ -147,9 +147,6 @@ gboolean rclib_init(gint *argc, gchar **argv[], const gchar *dir,
     gchar *settings_file;
     if(dir==NULL) return FALSE;
     g_type_init();
-    bindtextdomain(GETTEXT_PACKAGE, LOCALEDIR);
-    bind_textdomain_codeset(GETTEXT_PACKAGE, "UTF-8");
-    textdomain(GETTEXT_PACKAGE);
     if(!gst_init_check(argc, argv, error))
         return FALSE;
     if(!rclib_core_init(error))

@@ -105,6 +105,8 @@ RCLibDbCatalogType
 RCLibDbClass
 RCLibDbPlaylistData
 RCLibDbPlaylistType
+rclib_db_autosaved_exist
+rclib_db_autosaved_remove
 rclib_db_catalog_add
 rclib_db_catalog_data_free
 rclib_db_catalog_data_new
@@ -118,6 +120,7 @@ rclib_db_exit
 rclib_db_get_catalog
 rclib_db_get_instance
 rclib_db_init
+rclib_db_load_autosaved
 rclib_db_playlist_add_directory
 rclib_db_playlist_add_m3u_file
 rclib_db_playlist_add_music

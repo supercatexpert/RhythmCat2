@@ -7,8 +7,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: RhythmCat 1.9.0\n"
-"Report-Msgid-Bugs-To: https://github.com/supercatexpert/RhythmCat2/issues/\n"
-"POT-Creation-Date: 2012-04-03 14:06+0800\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2012-04-24 14:21+0800\n"
 "PO-Revision-Date: 2012-01-20 20:58+0800\n"
 "Last-Translator: SuperCat <supercatexpert@gmail.com>\n"
 "Language-Team: Japanese\n"
@@ -18,758 +18,810 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
-#: lib/rclib-core.c:110
+#: ../lib/rclib-core.c:110
 msgid "None"
 msgstr ""
 
-#: lib/rclib-core.c:112
+#: ../lib/rclib-core.c:112
 msgid "Pop"
 msgstr ""
 
-#: lib/rclib-core.c:114
+#: ../lib/rclib-core.c:114
 msgid "Rock"
 msgstr ""
 
-#: lib/rclib-core.c:116
+#: ../lib/rclib-core.c:116
 msgid "Metal"
 msgstr ""
 
-#: lib/rclib-core.c:118
+#: ../lib/rclib-core.c:118
 msgid "Dance"
 msgstr ""
 
-#: lib/rclib-core.c:120
+#: ../lib/rclib-core.c:120
 msgid "Electronic"
 msgstr ""
 
-#: lib/rclib-core.c:122
+#: ../lib/rclib-core.c:122
 msgid "Jazz"
 msgstr ""
 
-#: lib/rclib-core.c:124
+#: ../lib/rclib-core.c:124
 msgid "Classical"
 msgstr ""
 
-#: lib/rclib-core.c:126
+#: ../lib/rclib-core.c:126
 msgid "Blues"
 msgstr ""
 
-#: lib/rclib-core.c:128
+#: ../lib/rclib-core.c:128
 msgid "Vocal"
 msgstr ""
 
-#: lib/rclib-core.c:1190 lib/rclib-core.c:1199 lib/rclib-core.c:1209
-#: lib/rclib-core.c:1219 lib/rclib-core.c:1229
+#: ../lib/rclib-core.c:1206 ../lib/rclib-core.c:1215 ../lib/rclib-core.c:1225
+#: ../lib/rclib-core.c:1235 ../lib/rclib-core.c:1245
 #, c-format
 msgid "Cannot load necessary plugin: %s"
 msgstr ""
 
-#: lib/rclib-core.c:1238 lib/rclib-core.c:1262
+#: ../lib/rclib-core.c:1254 ../lib/rclib-core.c:1278
 #, c-format
 msgid "Cannot create bin: %s"
 msgstr ""
 
-#: lib/rclib-core.c:1247 lib/rclib-core.c:1271
+#: ../lib/rclib-core.c:1263 ../lib/rclib-core.c:1287
+#, c-format
 msgid "Cannot link elements!"
 msgstr ""
 
-#: lib/rclib-core.c:1389
+#: ../lib/rclib-core.c:1405
+#, c-format
 msgid "The core is already initialized!"
 msgstr ""
 
-#: lib/rclib-core.c:1988
+#: ../lib/rclib-core.c:2004
 msgid "Custom"
 msgstr ""
 
-#: lib/rclib-db.c:693
+#: ../lib/rclib-db.c:703
 msgid "Unnamed list"
 msgstr ""
 
-#: lib/rclib-db.c:2092 ui/rc-ui-listmodel.c:365 ui/rc-ui-player.c:136
-#: ui/rc-ui-player.c:1344
+#: ../lib/rclib-db.c:2098 ../ui/rc-ui-listmodel.c:371 ../ui/rc-ui-player.c:143
+#: ../ui/rc-ui-player.c:1367
 msgid "Unknown Title"
 msgstr ""
 
-#: ui/rc-ui-effect.c:190 ui/rc-ui-effect.c:240
+#: ../ui/rc-ui-effect.c:199 ../ui/rc-ui-effect.c:249
 msgid "EQ Setting File (*.EQF)"
 msgstr ""
 
-#: ui/rc-ui-effect.c:192
+#: ../ui/rc-ui-effect.c:201
 msgid "Save Equalizer Setting..."
 msgstr ""
 
-#: ui/rc-ui-effect.c:242
+#: ../ui/rc-ui-effect.c:251
 msgid "Load Equalizer Setting..."
 msgstr ""
 
-#: ui/rc-ui-effect.c:341
+#: ../ui/rc-ui-effect.c:350
 msgid "Equalizer"
 msgstr ""
 
-#: ui/rc-ui-effect.c:342
+#: ../ui/rc-ui-effect.c:351
 msgid "Balance"
 msgstr ""
 
-#: ui/rc-ui-effect.c:343
+#: ../ui/rc-ui-effect.c:352
 msgid "Echo"
 msgstr ""
 
-#: ui/rc-ui-effect.c:379
+#: ../ui/rc-ui-effect.c:388
 msgid "Left"
 msgstr ""
 
-#: ui/rc-ui-effect.c:381
+#: ../ui/rc-ui-effect.c:390
 msgid "Right"
 msgstr ""
 
-#: ui/rc-ui-effect.c:385
+#: ../ui/rc-ui-effect.c:394
 msgid "Delay"
 msgstr ""
 
-#: ui/rc-ui-effect.c:386
+#: ../ui/rc-ui-effect.c:395
 msgid "Feedback"
 msgstr ""
 
-#: ui/rc-ui-effect.c:387
+#: ../ui/rc-ui-effect.c:396
 msgid "Intensity"
 msgstr ""
 
-#: ui/rc-ui-effect.c:437
+#: ../ui/rc-ui-effect.c:446
 msgid "Audio Effects"
 msgstr ""
 
-#: ui/rc-ui-listmodel.c:369 ui/rc-ui-player.c:147 ui/rc-ui-player.c:1345
+#: ../ui/rc-ui-listmodel.c:375 ../ui/rc-ui-player.c:154
+#: ../ui/rc-ui-player.c:1368
 msgid "Unknown Artist"
 msgstr ""
 
-#: ui/rc-ui-listmodel.c:373 ui/rc-ui-player.c:157 ui/rc-ui-player.c:1346
+#: ../ui/rc-ui-listmodel.c:379 ../ui/rc-ui-player.c:164
+#: ../ui/rc-ui-player.c:1369
 msgid "Unknown Album"
 msgstr ""
 
-#: ui/rc-ui-listview.c:705
+#: ../ui/rc-ui-listview.c:782
 msgid "Name"
 msgstr ""
 
-#: ui/rc-ui-listview.c:711
+#: ../ui/rc-ui-listview.c:788
 msgid "Title"
 msgstr ""
 
-#: ui/rc-ui-listview.c:714
+#: ../ui/rc-ui-listview.c:791 ../ui/rc-ui-settings.c:602
 msgid "Artist"
 msgstr ""
 
-#: ui/rc-ui-listview.c:717
+#: ../ui/rc-ui-listview.c:794 ../ui/rc-ui-settings.c:604
 msgid "Album"
 msgstr ""
 
-#: ui/rc-ui-listview.c:720
+#: ../ui/rc-ui-listview.c:797 ../ui/rc-ui-settings.c:606
+msgid "Track"
+msgstr ""
+
+#: ../ui/rc-ui-listview.c:800 ../ui/rc-ui-settings.c:608
+msgid "Year"
+msgstr ""
+
+#: ../ui/rc-ui-listview.c:803 ../ui/rc-ui-settings.c:610
+#: ../ui/rc-ui-dialog.c:845
+msgid "Format"
+msgstr ""
+
+#: ../ui/rc-ui-listview.c:806
 msgid "Length"
 msgstr ""
 
-#: ui/rc-ui-listview.c:1013
+#: ../ui/rc-ui-listview.c:1123
 #, c-format
 msgid "Playlist %u"
 msgstr ""
 
-#: ui/rc-ui-menu.c:162
+#: ../ui/rc-ui-menu.c:165
 msgid "_Playlist"
 msgstr ""
 
-#: ui/rc-ui-menu.c:163
+#: ../ui/rc-ui-menu.c:166
 msgid "_View"
 msgstr ""
 
-#: ui/rc-ui-menu.c:164
+#: ../ui/rc-ui-menu.c:167
 msgid "_Control"
 msgstr ""
 
-#: ui/rc-ui-menu.c:165
+#: ../ui/rc-ui-menu.c:168
 msgid "_Help"
 msgstr ""
 
-#: ui/rc-ui-menu.c:166
+#: ../ui/rc-ui-menu.c:169
 msgid "_Repeat"
 msgstr ""
 
-#: ui/rc-ui-menu.c:167
+#: ../ui/rc-ui-menu.c:170
 msgid "Ran_dom"
 msgstr ""
 
-#: ui/rc-ui-menu.c:169
+#: ../ui/rc-ui-menu.c:172
 msgid "Open _Music"
 msgstr ""
 
-#: ui/rc-ui-menu.c:170
+#: ../ui/rc-ui-menu.c:173
 msgid "Open and play the music file"
 msgstr ""
 
-#: ui/rc-ui-menu.c:173
+#: ../ui/rc-ui-menu.c:176
 msgid "Open _Location"
 msgstr ""
 
-#: ui/rc-ui-menu.c:174
+#: ../ui/rc-ui-menu.c:177
 msgid "Open a location and play"
 msgstr ""
 
-#: ui/rc-ui-menu.c:177
+#: ../ui/rc-ui-menu.c:180
 msgid "_Preferences"
 msgstr ""
 
-#: ui/rc-ui-menu.c:178
+#: ../ui/rc-ui-menu.c:181
 msgid "Configure the player"
 msgstr ""
 
-#: ui/rc-ui-menu.c:181
+#: ../ui/rc-ui-menu.c:184
 msgid "Plu_gins"
 msgstr ""
 
-#: ui/rc-ui-menu.c:182
+#: ../ui/rc-ui-menu.c:185
 msgid "Configure plugins"
 msgstr ""
 
-#: ui/rc-ui-menu.c:185 ui/rc-ui-menu.c:385
+#: ../ui/rc-ui-menu.c:188 ../ui/rc-ui-menu.c:380
 msgid "_Quit"
 msgstr ""
 
-#: ui/rc-ui-menu.c:186 ui/rc-ui-menu.c:386
+#: ../ui/rc-ui-menu.c:189 ../ui/rc-ui-menu.c:381
 msgid "Quit this player"
 msgstr ""
 
-#: ui/rc-ui-menu.c:189 ui/rc-ui-menu.c:293
+#: ../ui/rc-ui-menu.c:192 ../ui/rc-ui-menu.c:292
 msgid "_New Playlist"
 msgstr ""
 
-#: ui/rc-ui-menu.c:190 ui/rc-ui-menu.c:294
+#: ../ui/rc-ui-menu.c:193 ../ui/rc-ui-menu.c:293
 msgid "Create a new playlist"
 msgstr ""
 
-#: ui/rc-ui-menu.c:193 ui/rc-ui-menu.c:297
+#: ../ui/rc-ui-menu.c:196 ../ui/rc-ui-menu.c:296
 msgid "Re_name Playlist"
 msgstr ""
 
-#: ui/rc-ui-menu.c:194
+#: ../ui/rc-ui-menu.c:197
 msgid "Rename the playlist"
 msgstr ""
 
-#: ui/rc-ui-menu.c:197 ui/rc-ui-menu.c:301
+#: ../ui/rc-ui-menu.c:200 ../ui/rc-ui-menu.c:300
 msgid "R_emove Playlist"
 msgstr ""
 
-#: ui/rc-ui-menu.c:198 ui/rc-ui-menu.c:302
+#: ../ui/rc-ui-menu.c:201 ../ui/rc-ui-menu.c:301
 msgid "Remove the playlist"
 msgstr ""
 
-#: ui/rc-ui-menu.c:201
+#: ../ui/rc-ui-menu.c:204
 msgid "_Export Playlist"
 msgstr ""
 
-#: ui/rc-ui-menu.c:202 ui/rc-ui-menu.c:306
+#: ../ui/rc-ui-menu.c:205 ../ui/rc-ui-menu.c:305
 msgid "Export music to a playlist"
 msgstr ""
 
-#: ui/rc-ui-menu.c:205
+#: ../ui/rc-ui-menu.c:208
 msgid "Export _All Playlists"
 msgstr ""
 
-#: ui/rc-ui-menu.c:206
+#: ../ui/rc-ui-menu.c:209
 msgid "Export all playlists to a folder"
 msgstr ""
 
-#: ui/rc-ui-menu.c:209 ui/rc-ui-menu.c:309
+#: ../ui/rc-ui-menu.c:212 ../ui/rc-ui-menu.c:308
 msgid "Import _Music"
 msgstr ""
 
-#: ui/rc-ui-menu.c:210 ui/rc-ui-menu.c:310
+#: ../ui/rc-ui-menu.c:213 ../ui/rc-ui-menu.c:309
 msgid "Import music file"
 msgstr ""
 
-#: ui/rc-ui-menu.c:213
+#: ../ui/rc-ui-menu.c:216
 msgid "Import From _Playlist"
 msgstr ""
 
-#: ui/rc-ui-menu.c:214 ui/rc-ui-menu.c:314
+#: ../ui/rc-ui-menu.c:217 ../ui/rc-ui-menu.c:313
 msgid "Import music from playlist"
 msgstr ""
 
-#: ui/rc-ui-menu.c:217
+#: ../ui/rc-ui-menu.c:220
 msgid "Import From _Folder"
 msgstr ""
 
-#: ui/rc-ui-menu.c:218
+#: ../ui/rc-ui-menu.c:221
 msgid "Import all music from folder"
 msgstr ""
 
-#: ui/rc-ui-menu.c:221
+#: ../ui/rc-ui-menu.c:224
 msgid "_Remove Music"
 msgstr ""
 
-#: ui/rc-ui-menu.c:222 ui/rc-ui-menu.c:330
+#: ../ui/rc-ui-menu.c:225 ../ui/rc-ui-menu.c:329
 msgid "Remove music from playlist"
 msgstr ""
 
-#: ui/rc-ui-menu.c:225 ui/rc-ui-menu.c:317
+#: ../ui/rc-ui-menu.c:228 ../ui/rc-ui-menu.c:316
 msgid "Select _All"
 msgstr ""
 
-#: ui/rc-ui-menu.c:226 ui/rc-ui-menu.c:318
+#: ../ui/rc-ui-menu.c:229 ../ui/rc-ui-menu.c:317
 msgid "Select all music in the playlist"
 msgstr ""
 
-#: ui/rc-ui-menu.c:229 ui/rc-ui-menu.c:333
+#: ../ui/rc-ui-menu.c:232 ../ui/rc-ui-menu.c:332
 msgid "Re_fresh Playlist"
 msgstr ""
 
-#: ui/rc-ui-menu.c:230 ui/rc-ui-menu.c:334
+#: ../ui/rc-ui-menu.c:233 ../ui/rc-ui-menu.c:333
 msgid "Refresh music information in the playlist"
 msgstr ""
 
-#: ui/rc-ui-menu.c:233 ui/rc-ui-menu.c:321
+#: ../ui/rc-ui-menu.c:236 ../ui/rc-ui-menu.c:320
 msgid "Bind _Lyric File"
 msgstr ""
 
-#: ui/rc-ui-menu.c:234 ui/rc-ui-menu.c:322
+#: ../ui/rc-ui-menu.c:237 ../ui/rc-ui-menu.c:321
 msgid "Bind lyric file to the selected music"
 msgstr ""
 
-#: ui/rc-ui-menu.c:237 ui/rc-ui-menu.c:325
+#: ../ui/rc-ui-menu.c:240 ../ui/rc-ui-menu.c:324
 msgid "Bind Al_bum File"
 msgstr ""
 
-#: ui/rc-ui-menu.c:238 ui/rc-ui-menu.c:326
+#: ../ui/rc-ui-menu.c:241 ../ui/rc-ui-menu.c:325
 msgid "Bind album file to the selected music"
 msgstr ""
 
-#: ui/rc-ui-menu.c:241
+#: ../ui/rc-ui-menu.c:244
 msgid "_Audio Effects"
 msgstr ""
 
-#: ui/rc-ui-menu.c:242
+#: ../ui/rc-ui-menu.c:245
 msgid "Adjust the audio effects"
 msgstr ""
 
-#: ui/rc-ui-menu.c:245
-msgid "_Mini Mode"
-msgstr ""
-
-#: ui/rc-ui-menu.c:246
-msgid "Enable mini mode"
-msgstr ""
-
-#: ui/rc-ui-menu.c:249 ui/rc-ui-menu.c:357
+#: ../ui/rc-ui-menu.c:248 ../ui/rc-ui-menu.c:356
 msgid "_Play/Pause"
 msgstr ""
 
-#: ui/rc-ui-menu.c:250 ui/rc-ui-menu.c:358
+#: ../ui/rc-ui-menu.c:249 ../ui/rc-ui-menu.c:357
 msgid "Play or pause the music"
 msgstr ""
 
-#: ui/rc-ui-menu.c:253 ui/rc-ui-menu.c:361
+#: ../ui/rc-ui-menu.c:252 ../ui/rc-ui-menu.c:360
 msgid "_Stop"
 msgstr ""
 
-#: ui/rc-ui-menu.c:254 ui/rc-ui-menu.c:362
+#: ../ui/rc-ui-menu.c:253 ../ui/rc-ui-menu.c:361
 msgid "Stop the music"
 msgstr ""
 
-#: ui/rc-ui-menu.c:257 ui/rc-ui-menu.c:365
+#: ../ui/rc-ui-menu.c:256 ../ui/rc-ui-menu.c:364
 msgid "Pre_vious"
 msgstr ""
 
-#: ui/rc-ui-menu.c:258 ui/rc-ui-menu.c:366
+#: ../ui/rc-ui-menu.c:257 ../ui/rc-ui-menu.c:365
 msgid "Play previous music"
 msgstr ""
 
-#: ui/rc-ui-menu.c:261 ui/rc-ui-menu.c:369
+#: ../ui/rc-ui-menu.c:260 ../ui/rc-ui-menu.c:368
 msgid "_Next"
 msgstr ""
 
-#: ui/rc-ui-menu.c:262 ui/rc-ui-menu.c:370
+#: ../ui/rc-ui-menu.c:261 ../ui/rc-ui-menu.c:369
 msgid "Play next music"
 msgstr ""
 
-#: ui/rc-ui-menu.c:265
+#: ../ui/rc-ui-menu.c:264
 msgid "_Backward"
 msgstr ""
 
-#: ui/rc-ui-menu.c:266
+#: ../ui/rc-ui-menu.c:265
 msgid "Backward 5 seconds"
 msgstr ""
 
-#: ui/rc-ui-menu.c:269
+#: ../ui/rc-ui-menu.c:268
 msgid "_Forward"
 msgstr ""
 
-#: ui/rc-ui-menu.c:270
+#: ../ui/rc-ui-menu.c:269
 msgid "Forward 5 seconds"
 msgstr ""
 
-#: ui/rc-ui-menu.c:273
+#: ../ui/rc-ui-menu.c:272
 msgid "_Increase Volume"
 msgstr ""
 
-#: ui/rc-ui-menu.c:274
+#: ../ui/rc-ui-menu.c:273
 msgid "Increase the volume"
 msgstr ""
 
-#: ui/rc-ui-menu.c:277
+#: ../ui/rc-ui-menu.c:276
 msgid "_Decrease Volume"
 msgstr ""
 
-#: ui/rc-ui-menu.c:278
+#: ../ui/rc-ui-menu.c:277
 msgid "Decrease the volume"
 msgstr ""
 
-#: ui/rc-ui-menu.c:281 ui/rc-ui-menu.c:381
+#: ../ui/rc-ui-menu.c:280 ../ui/rc-ui-menu.c:376
 msgid "_About"
 msgstr ""
 
-#: ui/rc-ui-menu.c:282 ui/rc-ui-menu.c:382
+#: ../ui/rc-ui-menu.c:281 ../ui/rc-ui-menu.c:377
 msgid "About this player"
 msgstr ""
 
-#: ui/rc-ui-menu.c:285
+#: ../ui/rc-ui-menu.c:284
 msgid "_Bug Report"
 msgstr ""
 
-#: ui/rc-ui-menu.c:286
+#: ../ui/rc-ui-menu.c:285
 msgid "Report bugs"
 msgstr ""
 
-#: ui/rc-ui-menu.c:289
+#: ../ui/rc-ui-menu.c:288
 msgid "_Supported Format"
 msgstr ""
 
-#: ui/rc-ui-menu.c:290
+#: ../ui/rc-ui-menu.c:289
 msgid "Check the supported music format of this player"
 msgstr ""
 
-#: ui/rc-ui-menu.c:298
+#: ../ui/rc-ui-menu.c:297
 msgid "Raname the playlist"
 msgstr ""
 
-#: ui/rc-ui-menu.c:305
+#: ../ui/rc-ui-menu.c:304
 msgid "E_xport Playlist"
 msgstr ""
 
-#: ui/rc-ui-menu.c:313
+#: ../ui/rc-ui-menu.c:312
 msgid "Import from _Playlist"
 msgstr ""
 
-#: ui/rc-ui-menu.c:329
+#: ../ui/rc-ui-menu.c:328
 msgid "R_emove Music"
 msgstr ""
 
-#: ui/rc-ui-menu.c:337
+#: ../ui/rc-ui-menu.c:336
 msgid "_Save album image as"
 msgstr ""
 
-#: ui/rc-ui-menu.c:338
+#: ../ui/rc-ui-menu.c:337
 msgid "Save the album image"
 msgstr ""
 
-#: ui/rc-ui-menu.c:341 ui/rc-ui-player.c:691
+#: ../ui/rc-ui-menu.c:340 ../ui/rc-ui-player.c:698
 msgid "Importing: 0 remaining"
 msgstr ""
 
-#: ui/rc-ui-menu.c:345 ui/rc-ui-player.c:731
+#: ../ui/rc-ui-menu.c:344 ../ui/rc-ui-player.c:738
 msgid "Refreshing: 0 remaining"
 msgstr ""
 
-#: ui/rc-ui-menu.c:349
+#: ../ui/rc-ui-menu.c:348
 msgid "Stop _importing"
 msgstr ""
 
-#: ui/rc-ui-menu.c:350
+#: ../ui/rc-ui-menu.c:349
 msgid "Terminate the remaining importing jobs."
 msgstr ""
 
-#: ui/rc-ui-menu.c:353
+#: ../ui/rc-ui-menu.c:352
 msgid "Stop _refreshing"
 msgstr ""
 
-#: ui/rc-ui-menu.c:354
+#: ../ui/rc-ui-menu.c:353
 msgid "Terminate the remaining refreshing jobs."
 msgstr ""
 
-#: ui/rc-ui-menu.c:373
+#: ../ui/rc-ui-menu.c:372
 msgid "S_how Player"
 msgstr ""
 
-#: ui/rc-ui-menu.c:374
+#: ../ui/rc-ui-menu.c:373
 msgid "Show the window of player"
 msgstr ""
 
-#: ui/rc-ui-menu.c:377
-msgid "_Mode Switch"
-msgstr ""
-
-#: ui/rc-ui-menu.c:378
-msgid "Switch between normal mode and mini mode"
-msgstr ""
-
-#: ui/rc-ui-menu.c:395
+#: ../ui/rc-ui-menu.c:390
 msgid "_No Repeat"
 msgstr ""
 
-#: ui/rc-ui-menu.c:396
+#: ../ui/rc-ui-menu.c:391
 msgid "No repeat"
 msgstr ""
 
-#: ui/rc-ui-menu.c:398
+#: ../ui/rc-ui-menu.c:393
 msgid "Single _Music Repeat"
 msgstr ""
 
-#: ui/rc-ui-menu.c:399
+#: ../ui/rc-ui-menu.c:394
 msgid "Repeat playing single music"
 msgstr ""
 
-#: ui/rc-ui-menu.c:401
+#: ../ui/rc-ui-menu.c:396
 msgid "Single _Playlist Repeat"
 msgstr ""
 
-#: ui/rc-ui-menu.c:402
+#: ../ui/rc-ui-menu.c:397
 msgid "Repeat playing single playlist"
 msgstr ""
 
-#: ui/rc-ui-menu.c:404
+#: ../ui/rc-ui-menu.c:399
 msgid "_All Playlists Repeat"
 msgstr ""
 
-#: ui/rc-ui-menu.c:405
+#: ../ui/rc-ui-menu.c:400
 msgid "Repeat playing all playlists"
 msgstr ""
 
-#: ui/rc-ui-menu.c:413
+#: ../ui/rc-ui-menu.c:408
 msgid "_No Random"
 msgstr ""
 
-#: ui/rc-ui-menu.c:414
+#: ../ui/rc-ui-menu.c:409
 msgid "No random playing"
 msgstr ""
 
-#: ui/rc-ui-menu.c:416
+#: ../ui/rc-ui-menu.c:411
 msgid "_Single Playlist Random"
 msgstr ""
 
-#: ui/rc-ui-menu.c:417
+#: ../ui/rc-ui-menu.c:412
 msgid "Random playing a music in the playlist"
 msgstr ""
 
-#: ui/rc-ui-menu.c:420
+#: ../ui/rc-ui-menu.c:415
 msgid "_All Playlists Random"
 msgstr ""
 
-#: ui/rc-ui-menu.c:421
+#: ../ui/rc-ui-menu.c:416
 msgid "Random playing a music in all playlists"
 msgstr ""
 
-#: ui/rc-ui-menu.c:430 ui/rc-ui-menu.c:434
+#: ../ui/rc-ui-menu.c:425 ../ui/rc-ui-menu.c:429
 msgid "Always On _Top"
 msgstr ""
 
-#: ui/rc-ui-menu.c:431 ui/rc-ui-menu.c:435
+#: ../ui/rc-ui-menu.c:426 ../ui/rc-ui-menu.c:430
 msgid "Always on top"
 msgstr ""
 
-#: ui/rc-ui-plugin.c:360
+#: ../ui/rc-ui-plugin.c:369
 msgid "Plug-in Configuration"
 msgstr ""
 
-#: ui/rc-ui-settings.c:96
+#: ../ui/rc-ui-settings.c:120
 msgid "_Auto play on startup"
 msgstr ""
 
-#: ui/rc-ui-settings.c:98
+#: ../ui/rc-ui-settings.c:122
 msgid "_Load the last playing position"
 msgstr ""
 
-#: ui/rc-ui-settings.c:100
+#: ../ui/rc-ui-settings.c:124
 msgid "Minimize to _tray"
 msgstr ""
 
-#: ui/rc-ui-settings.c:102
+#: ../ui/rc-ui-settings.c:126
 msgid "Minimize the window if the _close button is clicked"
 msgstr ""
 
-#: ui/rc-ui-settings.c:105
+#: ../ui/rc-ui-settings.c:129
 msgid "<b>General</b>"
 msgstr ""
 
-#: ui/rc-ui-settings.c:200
+#: ../ui/rc-ui-settings.c:224
 msgid "_Auto encoding detect (use system language settings)"
 msgstr ""
 
-#: ui/rc-ui-settings.c:204
+#: ../ui/rc-ui-settings.c:228
 msgid "ID3 Tag fallback character encodings"
 msgstr ""
 
-#: ui/rc-ui-settings.c:206
+#: ../ui/rc-ui-settings.c:230
 msgid "Lyric text fallback character encodings"
 msgstr ""
 
-#: ui/rc-ui-settings.c:209
+#: ../ui/rc-ui-settings.c:233
 msgid "<b>Metadata</b>"
 msgstr ""
 
-#: ui/rc-ui-settings.c:329
+#: ../ui/rc-ui-settings.c:342
 msgid "<b>Theme</b>"
 msgstr ""
 
-#: ui/rc-ui-settings.c:345
+#: ../ui/rc-ui-settings.c:359
 #, c-format
 msgid "%s (Embeded)"
 msgstr ""
 
-#: ui/rc-ui-settings.c:404
+#: ../ui/rc-ui-settings.c:593
+msgid "Hide cover _image"
+msgstr ""
+
+#: ../ui/rc-ui-settings.c:595
+msgid "Hide _lyric labels"
+msgstr ""
+
+#: ../ui/rc-ui-settings.c:597
+msgid "Hide _spectrum show"
+msgstr ""
+
+#: ../ui/rc-ui-settings.c:599
+msgid "Show _metadata in multi-columns"
+msgstr ""
+
+#: ../ui/rc-ui-settings.c:615
+msgid "<b>Visible Columns</b>"
+msgstr ""
+
+#: ../ui/rc-ui-settings.c:618
+msgid "Title column format: "
+msgstr ""
+
+#: ../ui/rc-ui-settings.c:620
+msgid ""
+"<b>Hint</b>: Use <i>%TITLE</i> as title string, <i>%ARTIST</i> as artist "
+"string, <i>%ALBUM</i> as album string, somehow <i>%TITLE</i> must be "
+"included in the format string."
+msgstr ""
+
+#: ../ui/rc-ui-settings.c:656
+msgid "<b>Main Window</b>"
+msgstr ""
+
+#: ../ui/rc-ui-settings.c:662
+msgid "<b>List Views</b>"
+msgstr ""
+
+#: ../ui/rc-ui-settings.c:758
 msgid "General"
 msgstr ""
 
-#: ui/rc-ui-settings.c:405
+#: ../ui/rc-ui-settings.c:759
 msgid "Playlist"
 msgstr ""
 
-#: ui/rc-ui-settings.c:406
+#: ../ui/rc-ui-settings.c:760
 msgid "Appearance"
 msgstr ""
 
-#: ui/rc-ui-settings.c:408
+#: ../ui/rc-ui-settings.c:761
+msgid "Interface"
+msgstr ""
+
+#: ../ui/rc-ui-settings.c:763
 msgid "Player Preferences"
 msgstr ""
 
-#: ui/rc-ui-dialog.c:68
+#: ../ui/rc-ui-dialog.c:77
 msgid "A music player based on GTK+ 3.0 & GStreamer 0.10"
 msgstr ""
 
-#: ui/rc-ui-dialog.c:127 ui/rc-ui-dialog.c:721
+#: ../ui/rc-ui-dialog.c:136 ../ui/rc-ui-dialog.c:734
 msgid "All supported music files(*.FLAC;*.OGG;*.MP3;*.WAV;*.WMA...)"
 msgstr ""
 
-#: ui/rc-ui-dialog.c:130 ui/rc-ui-dialog.c:724
+#: ../ui/rc-ui-dialog.c:139 ../ui/rc-ui-dialog.c:737
 msgid "Select the music you want to add..."
 msgstr ""
 
-#: ui/rc-ui-dialog.c:180
+#: ../ui/rc-ui-dialog.c:189
 msgid "Select the directory you want to import..."
 msgstr ""
 
-#: ui/rc-ui-dialog.c:231 ui/rc-ui-dialog.c:278
+#: ../ui/rc-ui-dialog.c:240 ../ui/rc-ui-dialog.c:287
 msgid "M3U Playlist(*.M3U)"
 msgstr ""
 
-#: ui/rc-ui-dialog.c:234
+#: ../ui/rc-ui-dialog.c:243
 msgid "Load the playlist..."
 msgstr ""
 
-#: ui/rc-ui-dialog.c:281 ui/rc-ui-dialog.c:676
+#: ../ui/rc-ui-dialog.c:290 ../ui/rc-ui-dialog.c:689
 msgid "Save the playlist..."
 msgstr ""
 
-#: ui/rc-ui-dialog.c:322
+#: ../ui/rc-ui-dialog.c:331
 msgid "Select the directory you want to store the playlists..."
 msgstr ""
 
-#: ui/rc-ui-dialog.c:380
+#: ../ui/rc-ui-dialog.c:390
 msgid "Set lyric file binding"
 msgstr ""
 
-#: ui/rc-ui-dialog.c:385
+#: ../ui/rc-ui-dialog.c:395
 msgid "_Bind lyric file to the music"
 msgstr ""
 
-#: ui/rc-ui-dialog.c:387
+#: ../ui/rc-ui-dialog.c:397
 msgid "_Do not bind lryic file"
 msgstr ""
 
-#: ui/rc-ui-dialog.c:389
+#: ../ui/rc-ui-dialog.c:399
 msgid "Bind _secondary lyric file to the music"
 msgstr ""
 
-#: ui/rc-ui-dialog.c:392
+#: ../ui/rc-ui-dialog.c:402
 msgid "Do _not bind secondary lyric file"
 msgstr ""
 
-#: ui/rc-ui-dialog.c:393 ui/rc-ui-dialog.c:395
+#: ../ui/rc-ui-dialog.c:403 ../ui/rc-ui-dialog.c:405
 msgid "Select a lyric file"
 msgstr ""
 
-#: ui/rc-ui-dialog.c:397
+#: ../ui/rc-ui-dialog.c:407
 msgid "The first lyric file binding"
 msgstr ""
 
-#: ui/rc-ui-dialog.c:398
+#: ../ui/rc-ui-dialog.c:408
 msgid "The second lyric file binding"
 msgstr ""
 
-#: ui/rc-ui-dialog.c:419 ui/rc-ui-dialog.c:425 ui/rc-ui-dialog.c:590
+#: ../ui/rc-ui-dialog.c:431 ../ui/rc-ui-dialog.c:437 ../ui/rc-ui-dialog.c:603
 msgid "Image File (*.JPG, *.BMP, *.PNG)..."
 msgstr ""
 
-#: ui/rc-ui-dialog.c:420 ui/rc-ui-dialog.c:426
+#: ../ui/rc-ui-dialog.c:432 ../ui/rc-ui-dialog.c:438
 msgid "Lyric File (*.LRC)"
 msgstr ""
 
-#: ui/rc-ui-dialog.c:574
+#: ../ui/rc-ui-dialog.c:587
 msgid "Set album file binding"
 msgstr ""
 
-#: ui/rc-ui-dialog.c:579
+#: ../ui/rc-ui-dialog.c:592
 msgid "_Bind album image file to the music"
 msgstr ""
 
-#: ui/rc-ui-dialog.c:581
+#: ../ui/rc-ui-dialog.c:594
 msgid "_Do not bind album file"
 msgstr ""
 
-#: ui/rc-ui-dialog.c:582
+#: ../ui/rc-ui-dialog.c:595
 msgid "Select a album image file"
 msgstr ""
 
-#: ui/rc-ui-dialog.c:768
+#: ../ui/rc-ui-dialog.c:782
 msgid "Open Location"
 msgstr ""
 
-#: ui/rc-ui-dialog.c:773
+#: ../ui/rc-ui-dialog.c:788
 msgid "Enter the URL of the file you would like to open:"
 msgstr ""
 
-#: ui/rc-ui-player.c:286 ui/rc-ui-player.c:345 ui/rc-ui-player.c:1347
+#: ../ui/rc-ui-dialog.c:847
+msgid "Supported"
+msgstr ""
+
+#: ../ui/rc-ui-dialog.c:857
+msgid "Supported Audio Format"
+msgstr ""
+
+#: ../ui/rc-ui-player.c:293 ../ui/rc-ui-player.c:352 ../ui/rc-ui-player.c:1370
 msgid "Unknown Format"
 msgstr ""
 
-#: ui/rc-ui-player.c:288
+#: ../ui/rc-ui-player.c:295
 #, c-format
 msgid "%d kbps "
 msgstr ""
 
-#: ui/rc-ui-player.c:291
+#: ../ui/rc-ui-player.c:298
 #, c-format
 msgid "%d Hz "
 msgstr ""
 
-#: ui/rc-ui-player.c:295
+#: ../ui/rc-ui-player.c:302
 msgid "Mono"
 msgstr ""
 
-#: ui/rc-ui-player.c:298
+#: ../ui/rc-ui-player.c:305
 msgid "Stereo"
 msgstr ""
 
-#: ui/rc-ui-player.c:301
+#: ../ui/rc-ui-player.c:308
 #, c-format
 msgid "%d channels"
 msgstr ""
 
-#: ui/rc-ui-player.c:676
+#: ../ui/rc-ui-player.c:683
 #, c-format
 msgid "Importing: %d remaining"
 msgstr ""
 
-#: ui/rc-ui-player.c:716
+#: ../ui/rc-ui-player.c:723
 #, c-format
 msgid "Refreshing: %d remaining"
 msgstr ""
 
-#: ui/rc-main.c:221
+#: ../ui/rc-main.c:301
 #, c-format
 msgid ""
 "RhythmCat2, library version %d.%d.%d\n"
@@ -777,25 +829,25 @@ msgid ""
 "A music player based on GTK+ 3.0 & GStreamer 0.10\n"
 msgstr ""
 
-#: ui/rc-main.c:309
+#: ../ui/rc-main.c:389
 msgid "Enable debug mode"
 msgstr ""
 
-#: ui/rc-main.c:311
+#: ../ui/rc-main.c:391
 msgid "Use malloc function in stardard C library"
 msgstr ""
 
-#: ui/rc-main.c:316
+#: ../ui/rc-main.c:396
 msgid "Output version information and exit"
 msgstr ""
 
-#: ui/rc-main.c:335
+#: ../ui/rc-main.c:429
 #, c-format
 msgid ""
 "%s\n"
 "Run '%s --help' to see a full list of available command line options.\n"
 msgstr ""
 
-#: ui/rc-main.c:402
+#: ../ui/rc-main.c:496
 msgid "Default Playlist"
 msgstr ""

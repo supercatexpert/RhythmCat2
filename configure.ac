@@ -13,7 +13,7 @@ AM_INIT_AUTOMAKE([RhythmCat], [rc_version])
 AC_CONFIG_SRCDIR([Makefile.am])
 AC_CONFIG_HEADERS([config.h])
 
-m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])
+AM_SILENT_RULES([yes])
 
 RC_MAJOR_VERSION=rc_major_version
 RC_MINOR_VERSION=rc_minor_version
@@ -31,9 +31,6 @@ AC_DEFINE(RC_MINOR_VERSION, [rc_minor_version],
     [Define to the RhythmCat minor version])
 AC_DEFINE(RC_MICRO_VERSION, [rc_micro_version],
     [Define to the RhythmCat micro version])
-
-# Set of available languages. (Obsoleted!)
-#ALL_LINGUAS="zh_CN zh_TW ja_JP"
 
 # Checks for programs.
 AC_PROG_CC
@@ -81,6 +78,7 @@ AC_FUNC_FORK
 AC_CHECK_FUNCS([bzero memset realpath strrchr strstr])
 
 # Add the languages which your application supports to po/LINGUAS
+IT_PROG_INTLTOOL([0.40.0])
 GETTEXT_PACKAGE=RhythmCat2
 AC_SUBST(GETTEXT_PACKAGE)
 AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE, "$GETTEXT_PACKAGE", \
@@ -123,33 +121,33 @@ AM_CONDITIONAL(WITH_PYTHON3_PLUGINS, test "x$with_python3_plugins" = "xyes")
 
 AM_CONDITIONAL(HAVE_LIBCURL, test "x$have_libcurl" = "xyes")
 
-AC_CONFIG_FILES([lib/librhythmcat-2.0.pc ui/rhythmcat-2.0.pc])
-AC_OUTPUT([Makefile lib/Makefile ui/Makefile \
-    plugins/Makefile plugins/base/Makefile plugins/extra/Makefile \
-    plugins/devel/Makefile plugins/restricted/Makefile \
-    data/Makefile data/icons/Makefile data/images/Makefile \
-    docs/Makefile docs/reference/Makefile docs/reference/lib/Makefile \
-    docs/reference/ui/Makefile docs/reference/lib/version.xml \
-    docs/reference/ui/version.xml po/Makefile.in po/Makefile])
-
 AM_COND_IF(ENABLE_GTK_DOC, enable_gtk_doc=yes, enable_gtk_doc=no)
 with_console_ui=no
 
+AC_CONFIG_FILES([lib/librhythmcat-2.0.pc ui/rhythmcat-2.0.pc \
+    Makefile lib/Makefile ui/Makefile data/Makefile data/icons/Makefile \
+    data/images/Makefile plugins/Makefile plugins/base/Makefile \
+    plugins/extra/Makefile plugins/devel/Makefile \
+    plugins/restricted/Makefile docs/Makefile docs/reference/Makefile \
+    docs/reference/lib/Makefile docs/reference/ui/Makefile \
+    docs/reference/lib/version.xml docs/reference/ui/version.xml \
+    po/Makefile.in po/Makefile \
+])
 AC_OUTPUT
-echo
-echo $PACKAGE $VERSION
 
-echo
-echo Build GTK+ 3 UI............. : $with_gtk_ui
-echo Build Console UI............ : $with_console_ui
-echo
-echo Enable Gtk-Doc...............: $enable_gtk_doc
-echo
-echo With Native Plug-ins.........: $with_native_plugins
-echo With Python3 Plug-ins........: $with_python3_plugins
-echo
-echo configure complete, now type \'make\'
-echo
+echo "
+$PACKAGE $VERSION
+
+Build GTK+ 3 UI............. : $with_gtk_ui
+Build Console UI............ : $with_console_ui
+
+Enable Gtk-Doc...............: $enable_gtk_doc
+
+With Native Plug-ins.........: $with_native_plugins
+With Python3 Plug-ins........: $with_python3_plugins
+
+configure complete, now type \'make\'
+"
 
 
 

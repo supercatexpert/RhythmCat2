@@ -30,6 +30,7 @@ rc_ui_dialog_open_music
 rc_ui_dialog_save_album
 rc_ui_dialog_save_all_playlist
 rc_ui_dialog_save_playlist
+rc_ui_dialog_show_load_autosaved
 rc_ui_dialog_show_message
 rc_ui_dialog_show_supported_format
 </SECTION>
@@ -101,6 +102,7 @@ rc_ui_listview_playlist_set_column_display_mode
 rc_ui_listview_playlist_set_enabled_columns
 rc_ui_listview_playlist_set_pango_attributes
 rc_ui_listview_playlist_set_title_format
+rc_ui_listview_refresh
 </SECTION>
 
 <SECTION>

@@ -50,6 +50,7 @@ typedef struct RCPluginDesklrcPrivate
     gint osd_window_pos_y;
     gboolean notify_flag;
     gulong timeout_id;
+    gulong shutdown_id;
     GKeyFile *keyfile;
 }RCPluginDesklrcPrivate;
 
@@ -1100,7 +1101,7 @@ static gboolean rc_plugin_desklrc_init(RCLibPluginData *plugin)
         priv->osd_window_pos_y = 100;
     priv->keyfile = rclib_plugin_get_keyfile();
     rc_plugin_desklrc_load_conf(priv);
-    rclib_plugin_signal_connect("shutdown",
+    priv->shutdown_id = rclib_plugin_signal_connect("shutdown",
         G_CALLBACK(rc_plugin_desklrc_shutdown_cb), priv);
     return TRUE;
 }
@@ -1108,6 +1109,8 @@ static gboolean rc_plugin_desklrc_init(RCLibPluginData *plugin)
 static void rc_plugin_desklrc_destroy(RCLibPluginData *plugin)
 {
     RCPluginDesklrcPrivate *priv = &desklrc_priv;
+    if(priv->shutdown_id>0)
+        rclib_plugin_signal_disconnect(priv->shutdown_id);
     g_free(priv->font_string);
 }
 

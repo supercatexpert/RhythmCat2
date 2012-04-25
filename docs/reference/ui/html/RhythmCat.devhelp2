@@ -40,6 +40,7 @@
     <keyword type="function" name="rc_ui_dialog_save_album ()" link="RhythmCat-Dialogs.html#rc-ui-dialog-save-album"/>
     <keyword type="function" name="rc_ui_dialog_save_all_playlist ()" link="RhythmCat-Dialogs.html#rc-ui-dialog-save-all-playlist"/>
     <keyword type="function" name="rc_ui_dialog_save_playlist ()" link="RhythmCat-Dialogs.html#rc-ui-dialog-save-playlist"/>
+    <keyword type="function" name="rc_ui_dialog_show_load_autosaved ()" link="RhythmCat-Dialogs.html#rc-ui-dialog-show-load-autosaved"/>
     <keyword type="function" name="rc_ui_dialog_show_message ()" link="RhythmCat-Dialogs.html#rc-ui-dialog-show-message"/>
     <keyword type="function" name="rc_ui_dialog_show_supported_format ()" link="RhythmCat-Dialogs.html#rc-ui-dialog-show-supported-format"/>
     <keyword type="function" name="rc_ui_effect_window_destroy ()" link="RhythmCat-Audio-Effect-UI.html#rc-ui-effect-window-destroy"/>
@@ -82,6 +83,7 @@
     <keyword type="function" name="rc_ui_listview_playlist_set_enabled_columns ()" link="RhythmCat-List-Views.html#rc-ui-listview-playlist-set-enabled-columns"/>
     <keyword type="function" name="rc_ui_listview_playlist_set_pango_attributes ()" link="RhythmCat-List-Views.html#rc-ui-listview-playlist-set-pango-attributes"/>
     <keyword type="function" name="rc_ui_listview_playlist_set_title_format ()" link="RhythmCat-List-Views.html#rc-ui-listview-playlist-set-title-format"/>
+    <keyword type="function" name="rc_ui_listview_refresh ()" link="RhythmCat-List-Views.html#rc-ui-listview-refresh"/>
     <keyword type="function" name="rc_ui_menu_add_menu_action ()" link="RhythmCat-Menus.html#rc-ui-menu-add-menu-action"/>
     <keyword type="function" name="rc_ui_menu_get_ui_manager ()" link="RhythmCat-Menus.html#rc-ui-menu-get-ui-manager"/>
     <keyword type="function" name="rc_ui_menu_init ()" link="RhythmCat-Menus.html#rc-ui-menu-init"/>
