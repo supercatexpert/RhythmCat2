@@ -87,6 +87,8 @@ AM_GLIB_GNU_GETTEXT
 AM_GNU_GETTEXT_VERSION([0.18.1])
 AM_GNU_GETTEXT([external])
 
+GOBJECT_INTROSPECTION_CHECK([1.32.0])
+
 # Checks for features
 
 AC_ARG_WITH(gtk-ui, AS_HELP_STRING([--without-gtk-ui], \
@@ -124,6 +126,13 @@ AM_CONDITIONAL(HAVE_LIBCURL, test "x$have_libcurl" = "xyes")
 AM_COND_IF(ENABLE_GTK_DOC, enable_gtk_doc=yes, enable_gtk_doc=no)
 with_console_ui=no
 
+if test "$found_introspection" = "yes"; then
+	enable_introspection=yes
+    PKG_CHECK_MODULES([GINTROSPECTION], [gobject-introspection-1.0 >= 1.0])
+else
+	enable_introspection=no
+fi
+
 AC_CONFIG_FILES([lib/librhythmcat-2.0.pc ui/rhythmcat-2.0.pc \
     Makefile lib/Makefile ui/Makefile data/Makefile data/icons/Makefile \
     data/images/Makefile plugins/Makefile plugins/base/Makefile \
@@ -142,11 +151,12 @@ Build GTK+ 3 UI............. : $with_gtk_ui
 Build Console UI............ : $with_console_ui
 
 Enable Gtk-Doc...............: $enable_gtk_doc
+Enable GObject Introspection.: $enable_introspection
 
 With Native Plug-ins.........: $with_native_plugins
 With Python3 Plug-ins........: $with_python3_plugins
 
-configure complete, now type \'make\'
+configure complete, now type 'make'
 "
 
 

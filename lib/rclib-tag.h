@@ -47,7 +47,7 @@ typedef struct _RCLibTagMetadata RCLibTagMetadata;
  * @album: the album text of the music
  * @comment: the comment text of the music
  * @ftype: the file type of the music
- * @emb_cue: the embeded CUE data of the music
+ * @emb_cue: the embedded CUE data of the music
  * @image: the GstBuffer which contains the cover image
  * @eos: the EOS signal
  * @audio_flag: whether this file has audio

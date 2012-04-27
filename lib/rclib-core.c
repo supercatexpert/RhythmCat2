@@ -1529,7 +1529,7 @@ void rclib_core_set_uri(const gchar *uri, GSequenceIter *db_reference,
                     cue_mmd->emb_cue!=NULL)
                 {
                     if(rclib_cue_read_data(cue_mmd->emb_cue,
-                        RCLIB_CUE_INPUT_EMBEDED, &cue_data)>0)
+                        RCLIB_CUE_INPUT_EMBEDDED, &cue_data)>0)
                     {
                         cue_flag = TRUE;
                         emb_cue_flag = TRUE;
@@ -1563,7 +1563,7 @@ void rclib_core_set_uri(const gchar *uri, GSequenceIter *db_reference,
         g_object_set(G_OBJECT(priv->playbin), "uri", cue_data.file, NULL);
         rclib_cue_free(&cue_data);
         if(emb_cue_flag)
-            priv->type = RCLIB_CORE_SOURCE_EMBEDED_CUE;
+            priv->type = RCLIB_CORE_SOURCE_EMBEDDED_CUE;
         else
             priv->type = RCLIB_CORE_SOURCE_CUE;
     }

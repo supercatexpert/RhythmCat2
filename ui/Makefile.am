@@ -14,8 +14,7 @@ librhythmcat_ui_2_0_sources = \
 librhythmcat_ui_2_0_headers = \
     rc-ui-listmodel.h rc-ui-listview.h rc-ui-player.h rc-ui-menu.h \
     rc-ui-dialog.h rc-ui-slabel.h rc-ui-style.h rc-ui-spectrum.h \
-    rc-ui-plugin.h rc-ui-settings.h rc-ui-effect.h rc-main.h \
-    rc-common.h 
+    rc-ui-plugin.h rc-ui-settings.h rc-ui-effect.h rc-main.h
 
 librhythmcat_ui_2_0_builtsources = rc-ui-resources.c
 
@@ -38,14 +37,18 @@ rc-ui-resources.h: $(librhythmcat_ui_2_0_resourcefiles)
 librhythmcat_ui_2_0_la_SOURCES = \
     $(librhythmcat_ui_2_0_sources) $(librhythmcat_ui_2_0_builtsources)
 librhythmcat_ui_2_0includedir=$(includedir)/rhythmcat2
-librhythmcat_ui_2_0include_HEADERS = \
+librhythmcat_ui_2_0include_HEADERS = rc-common.h \
     $(librhythmcat_ui_2_0_headers) $(librhythmcat_ui_2_0_builtheaders)
 
 librhythmcat_ui_2_0_la_LDFLAGS = -export-dynamic -O2 -no-undefined -export-symbols-regex "^[[^_]].*"
 librhythmcat_ui_2_0_la_LIBADD = @LIBOBJS@ @GLIB2_LIBS@ @GTK_LIBS@ @GSTREAMER_LIBS@ \
     @JSON_LIBS@ $(top_builddir)/lib/librhythmcat-2.0.la
+    
+if HAVE_INTROSPECTION
+    librhythmcat_ui_2_0_la_LIBADD += @GINTROSPECTION_LIBS@
+endif
 
-CLEAN_FILES = $(BUILT_SOURCES)
+CLEANFILES = $(BUILT_SOURCES)
 
 RhythmCat2_DEPENDENCIES = @LIBOBJS@ librhythmcat-ui-2.0.la
 RhythmCat2_LDFLAGS = -export-dynamic -no-undefined -export-symbols-regex "^[[^_]].*" -O2
@@ -53,6 +56,10 @@ RhythmCat2_LDFLAGS = -export-dynamic -no-undefined -export-symbols-regex "^[[^_]
 INCLUDES = @GLIB2_CFLAGS@ @GTK_CFLAGS@ @GSTREAMER_CFLAGS@ @JSON_CFLAGS@ \
     -DLOCALEDIR=\"$(localedir)\" -I$(top_srcdir)/lib -DLIBDIR=\"$(libdir)\" \
     -DPREFIXDIR=\"$(prefix)\"
+    
+if HAVE_INTROSPECTION
+    INCLUDES += -DENABLE_INTROSPECTION @GINTROSPECTION_CFLAGS@
+endif
 
 RhythmCat2_LDADD = @LIBOBJS@ @GLIB2_LIBS@ @GTK_LIBS@ @GSTREAMER_LIBS@ \
     @JSON_LIBS@ $(top_builddir)/lib/librhythmcat-2.0.la librhythmcat-ui-2.0.la
@@ -64,6 +71,35 @@ EXTRA_DIST = \
     
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = rhythmcat-2.0.pc
+
+if HAVE_INTROSPECTION
+-include $(INTROSPECTION_MAKEFILE)
+INTROSPECTION_GIRS = 
+INTROSPECTION_SCANNER_ARGS = --add-include-path=$(srcdir)/lib \
+    --include-uninstalled=$(top_builddir)/lib/RhythmCatLib-2.0.gir
+INTROSPECTION_COMPILER_ARGS = --includedir=$(top_builddir)/lib
+
+introspection_sources = $(librhythmcat_ui_2_0_sources) $(librhythmcat_ui_2_0_headers)
+
+RhythmCat-2.0.gir: RhythmCat2
+RhythmCat_2_0_gir_SCANNERFLAGS = --identifier-prefix=RC --symbol-prefix=rc
+RhythmCat_2_0_gir_NAMESPACE = RhythmCat
+RhythmCat_2_0_gir_VERSION = 2.0
+RhythmCat_2_0_gir_INCLUDES = GObject-2.0 Gtk-3.0 Gst-0.10 GstPbutils-0.10 GstBase-0.10 GstFft-0.10
+RhythmCat_2_0_gir_CFLAGS = $(INCLUDES)
+RhythmCat_2_0_gir_PROGRAM = $(builddir)/RhythmCat2
+RhythmCat_2_0_gir_FILES = $(introspection_sources)
+INTROSPECTION_GIRS += RhythmCat-2.0.gir
+
+girdir = $(datadir)/gir-1.0
+gir_DATA = $(INTROSPECTION_GIRS)
+
+typelibdir = $(libdir)/girepository-1.0
+typelib_DATA = $(INTROSPECTION_GIRS:.gir=.typelib)
+
+CLEANFILES += $(gir_DATA) $(typelib_DATA)
+
+endif
 
 endif
 

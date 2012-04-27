@@ -121,6 +121,7 @@ rclib_db_get_catalog
 rclib_db_get_instance
 rclib_db_init
 rclib_db_load_autosaved
+rclib_db_load_legacy
 rclib_db_playlist_add_directory
 rclib_db_playlist_add_m3u_file
 rclib_db_playlist_add_music

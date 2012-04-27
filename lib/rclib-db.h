@@ -31,7 +31,6 @@
 #include <glib/gi18n.h>
 #include <glib-object.h>
 #include <gst/gst.h>
-#include <json.h>
 
 G_BEGIN_DECLS
 
@@ -237,6 +236,7 @@ gboolean rclib_db_playlist_sync();
 gboolean rclib_db_load_autosaved();
 gboolean rclib_db_autosaved_exist();
 void rclib_db_autosaved_remove();
+gboolean rclib_db_load_legacy();
 
 G_END_DECLS
 

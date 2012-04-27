@@ -36,17 +36,17 @@
  *
  * This module provides the configration of the style (theme) of the
  * player. The player can use GTK+ 3 CSS style file for setting the
- * style, there are also some embeded styles in the player.
+ * style, there are also some embedded styles in the player.
  */
 
-typedef struct RCUiStyleEmbededTheme
+typedef struct RCUiStyleEmbeddedTheme
 {
     const gchar *name;
     const gchar *path;
-}RCUiStyleEmbededTheme; 
+}RCUiStyleEmbeddedTheme; 
 
 static GtkCssProvider *style_css_provider = NULL;
-static RCUiStyleEmbededTheme style_embeded_themes[] =
+static RCUiStyleEmbeddedTheme style_embedded_themes[] =
 {
     {
         .name = "Monochrome",
@@ -209,26 +209,26 @@ void rc_ui_style_css_unset()
 }
 
 /**
- * rc_ui_style_embeded_theme_set_by_name:
+ * rc_ui_style_embedded_theme_set_by_name:
  * @name: the theme name
  *
- * Use the embeded theme in the player by the given name.
+ * Use the embedded theme in the player by the given name.
  *
  * Returns: Whether the theme is set successfully.
  */
 
-gboolean rc_ui_style_embeded_theme_set_by_name(const gchar *name)
+gboolean rc_ui_style_embedded_theme_set_by_name(const gchar *name)
 {
     guint length;
     guint i;
     gboolean flag = FALSE;
-    length = sizeof(style_embeded_themes)/sizeof(RCUiStyleEmbededTheme);
+    length = sizeof(style_embedded_themes)/sizeof(RCUiStyleEmbeddedTheme);
     for(i=0;i<length;i++)
     {
-        if(g_strcmp0(name, style_embeded_themes[i].name)==0)
+        if(g_strcmp0(name, style_embedded_themes[i].name)==0)
         {
             flag = rc_ui_style_css_set_resource(
-                style_embeded_themes[i].path);
+                style_embedded_themes[i].path);
             if(flag) break;
         }
     }
@@ -236,64 +236,64 @@ gboolean rc_ui_style_embeded_theme_set_by_name(const gchar *name)
 }
 
 /**
- * rc_ui_style_embeded_theme_set_by_index:
+ * rc_ui_style_embedded_theme_set_by_index:
  * @index: the theme index
  *
- * Use the embeded theme in the player by the given index number.
+ * Use the embedded theme in the player by the given index number.
  *
  * Returns: Whether the theme is set successfully.
  */
 
-gboolean rc_ui_style_embeded_theme_set_by_index(guint index)
+gboolean rc_ui_style_embedded_theme_set_by_index(guint index)
 {
     guint length;
-    length = sizeof(style_embeded_themes)/sizeof(RCUiStyleEmbededTheme);
+    length = sizeof(style_embedded_themes)/sizeof(RCUiStyleEmbeddedTheme);
     if(index>=length) return FALSE;
-    return rc_ui_style_css_set_resource(style_embeded_themes[index].path);
+    return rc_ui_style_css_set_resource(style_embedded_themes[index].path);
 }
 
 /**
- * rc_ui_style_embeded_theme_set_default:
+ * rc_ui_style_embedded_theme_set_default:
  *
- * Use the default embeded theme in the player.
+ * Use the default embedded theme in the player.
  *
  * Returns: Whether the theme is set successfully.
  */
 
-gboolean rc_ui_style_embeded_theme_set_default()
+gboolean rc_ui_style_embedded_theme_set_default()
 {
-    return rc_ui_style_css_set_resource(style_embeded_themes[0].path);
+    return rc_ui_style_css_set_resource(style_embedded_themes[0].path);
 }
 
 /**
- * rc_ui_style_embeded_theme_get_length:
+ * rc_ui_style_embedded_theme_get_length:
  *
- * Get the number of the embeded themes in the player.
+ * Get the number of the embedded themes in the player.
  *
- * Returns: The number of the embeded themes.
+ * Returns: The number of the embedded themes.
  */
 
-guint rc_ui_style_embeded_theme_get_length()
+guint rc_ui_style_embedded_theme_get_length()
 {
-    return sizeof(style_embeded_themes)/sizeof(RCUiStyleEmbededTheme);
+    return sizeof(style_embedded_themes)/sizeof(RCUiStyleEmbeddedTheme);
 }
 
 /**
- * rc_ui_style_embeded_theme_get_name:
+ * rc_ui_style_embedded_theme_get_name:
  * @index: the theme index
  *
- * Get the name of the embeded themes in the player by the given index
+ * Get the name of the embedded themes in the player by the given index
  * number.
  *
- * Returns: The name of the embeded themes.
+ * Returns: The name of the embedded themes.
  */
 
-const gchar *rc_ui_style_embeded_theme_get_name(guint index)
+const gchar *rc_ui_style_embedded_theme_get_name(guint index)
 {
     guint length;
-    length = sizeof(style_embeded_themes)/sizeof(RCUiStyleEmbededTheme);
+    length = sizeof(style_embedded_themes)/sizeof(RCUiStyleEmbeddedTheme);
     if(index>=length) return NULL;
-    return style_embeded_themes[index].name;
+    return style_embedded_themes[index].name;
 }
 
 /**

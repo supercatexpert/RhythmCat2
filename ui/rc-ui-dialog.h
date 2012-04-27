@@ -47,6 +47,7 @@ void rc_ui_dialog_open_music();
 void rc_ui_dialog_open_location();
 void rc_ui_dialog_show_supported_format();
 void rc_ui_dialog_show_load_autosaved();
+void rc_ui_dialog_show_load_legacy();
 
 G_END_DECLS
 

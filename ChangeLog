@@ -58,6 +58,14 @@
       can use that file.
     * Debian and Fedora package files are ready.
     
-      
-      
+2012-04-26  SuperCat    <supercatexpert@gmail.com>
+
+    * It is possible to load playlist data from legacy version now.
+        
+2012-04-27  SuperCat    <supercatexpert@gmail.com>   
+
+    * Added GI(GObject Introspection) support for both LibRhythmCat2 and RhythmCat2.
+    * Added GIR (GObject Introspection Repository) package files for Debian.
+    * Added GIR files into Fedora RPM packages.
+    
     

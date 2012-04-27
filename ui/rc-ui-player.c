@@ -1442,7 +1442,7 @@ static void rc_ui_player_instance_init(RCUiPlayer *ui)
     g_object_set(priv->progress_spinner, "name", "RC2ProgressSpinner", NULL);
     g_object_set(priv->time_scale, "name", "RC2TimeScale", "can-focus",
         FALSE, "draw-value", FALSE, "hexpand-set", TRUE, "hexpand", TRUE,
-        NULL);
+        "margin-left", 3, "margin-right", 2, NULL);
     g_object_set(priv->ctrl_play_button, "name", "RC2ControlButton",
         "relief", GTK_RELIEF_NONE, "can-focus", FALSE, NULL);
     g_object_set(priv->ctrl_stop_button, "name", "RC2ControlButton",

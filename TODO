@@ -1,11 +1,8 @@
+- Language translations (remaining: Japanese)
 - Bug Report Interface
 - Upgrade the dependency to GTK+ 3.4 when it is available on Debian Wheezy
-- Import playlist data from legacy version
-- Language translations (remaing: Japanese)
-- Complete SPEC file
 
 Long-term:
-- GObject Introspection (GI) support
 - Command Line Interface (CLI), based on ncurses
 - Mini mode (plug-in? based on Clutter?)
 - More plug-ins
@@ -14,7 +11,6 @@ Long-term:
 - Music Library
 - More interfaces in MPRIS v2.1 support
 - Multi-touch support
-- Use GtkBuilder
 
 Other ideas:
 - Better karaoke mode plug-in?

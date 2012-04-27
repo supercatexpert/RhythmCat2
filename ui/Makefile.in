@@ -38,12 +38,21 @@ POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
 @WITH_GTK_UI_TRUE@bin_PROGRAMS = RhythmCat2$(EXEEXT)
+@HAVE_INTROSPECTION_TRUE@@WITH_GTK_UI_TRUE@am__append_1 = @GINTROSPECTION_LIBS@
+@HAVE_INTROSPECTION_TRUE@@WITH_GTK_UI_TRUE@am__append_2 = -DENABLE_INTROSPECTION @GINTROSPECTION_CFLAGS@
+@HAVE_INTROSPECTION_TRUE@@WITH_GTK_UI_TRUE@am__append_3 = $(gir_DATA) $(typelib_DATA)
 subdir = ui
 DIST_COMMON = $(am__librhythmcat_ui_2_0include_HEADERS_DIST) \
 	$(am__noinst_HEADERS_DIST) $(srcdir)/Makefile.am \
 	$(srcdir)/Makefile.in $(srcdir)/rhythmcat-2.0.pc.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
-am__aclocal_m4_deps = $(top_srcdir)/configure.ac
+am__aclocal_m4_deps = $(top_srcdir)/m4/gettext.m4 \
+	$(top_srcdir)/m4/gtk-doc.m4 $(top_srcdir)/m4/iconv.m4 \
+	$(top_srcdir)/m4/intltool.m4 $(top_srcdir)/m4/introspection.m4 \
+	$(top_srcdir)/m4/lib-ld.m4 $(top_srcdir)/m4/lib-link.m4 \
+	$(top_srcdir)/m4/lib-prefix.m4 $(top_srcdir)/m4/nls.m4 \
+	$(top_srcdir)/m4/po.m4 $(top_srcdir)/m4/progtest.m4 \
+	$(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
 mkinstalldirs = $(install_sh) -d
@@ -51,8 +60,10 @@ CONFIG_HEADER = $(top_builddir)/config.h
 CONFIG_CLEAN_FILES = rhythmcat-2.0.pc
 CONFIG_CLEAN_VPATH_FILES =
 LTLIBRARIES = $(noinst_LTLIBRARIES)
+am__DEPENDENCIES_1 =
 @WITH_GTK_UI_TRUE@librhythmcat_ui_2_0_la_DEPENDENCIES = @LIBOBJS@ \
-@WITH_GTK_UI_TRUE@	$(top_builddir)/lib/librhythmcat-2.0.la
+@WITH_GTK_UI_TRUE@	$(top_builddir)/lib/librhythmcat-2.0.la \
+@WITH_GTK_UI_TRUE@	$(am__DEPENDENCIES_1)
 am__librhythmcat_ui_2_0_la_SOURCES_DIST = rc-ui-listmodel.c \
 	rc-ui-player.c rc-ui-listview.c rc-ui-menu.c rc-ui-dialog.c \
 	rc-ui-slabel.c rc-ui-spectrum.c rc-ui-style.c rc-ui-plugin.c \
@@ -75,7 +86,8 @@ librhythmcat_ui_2_0_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC \
 	$(AM_CFLAGS) $(CFLAGS) $(librhythmcat_ui_2_0_la_LDFLAGS) \
 	$(LDFLAGS) -o $@
 @WITH_GTK_UI_TRUE@am_librhythmcat_ui_2_0_la_rpath =
-am__installdirs = "$(DESTDIR)$(bindir)" "$(DESTDIR)$(pkgconfigdir)" \
+am__installdirs = "$(DESTDIR)$(bindir)" "$(DESTDIR)$(girdir)" \
+	"$(DESTDIR)$(pkgconfigdir)" "$(DESTDIR)$(typelibdir)" \
 	"$(DESTDIR)$(librhythmcat_ui_2_0includedir)"
 PROGRAMS = $(bin_PROGRAMS)
 am__RhythmCat2_SOURCES_DIST = main.c
@@ -140,11 +152,11 @@ am__uninstall_files_from_dir = { \
     || { echo " ( cd '$$dir' && rm -f" $$files ")"; \
          $(am__cd) "$$dir" && rm -f $$files; }; \
   }
-DATA = $(pkgconfig_DATA)
-am__librhythmcat_ui_2_0include_HEADERS_DIST = rc-ui-listmodel.h \
-	rc-ui-listview.h rc-ui-player.h rc-ui-menu.h rc-ui-dialog.h \
-	rc-ui-slabel.h rc-ui-style.h rc-ui-spectrum.h rc-ui-plugin.h \
-	rc-ui-settings.h rc-ui-effect.h rc-main.h rc-common.h \
+DATA = $(gir_DATA) $(pkgconfig_DATA) $(typelib_DATA)
+am__librhythmcat_ui_2_0include_HEADERS_DIST = rc-common.h \
+	rc-ui-listmodel.h rc-ui-listview.h rc-ui-player.h rc-ui-menu.h \
+	rc-ui-dialog.h rc-ui-slabel.h rc-ui-style.h rc-ui-spectrum.h \
+	rc-ui-plugin.h rc-ui-settings.h rc-ui-effect.h rc-main.h \
 	rc-ui-resources.h
 am__noinst_HEADERS_DIST = rc-ui-img-icon.xpm rc-ui-img-nocov.xpm
 HEADERS = $(librhythmcat_ui_2_0include_HEADERS) $(noinst_HEADERS)
@@ -182,6 +194,8 @@ EXEEXT = @EXEEXT@
 FGREP = @FGREP@
 GETTEXT_MACRO_VERSION = @GETTEXT_MACRO_VERSION@
 GETTEXT_PACKAGE = @GETTEXT_PACKAGE@
+GINTROSPECTION_CFLAGS = @GINTROSPECTION_CFLAGS@
+GINTROSPECTION_LIBS = @GINTROSPECTION_LIBS@
 GLIB2_CFLAGS = @GLIB2_CFLAGS@
 GLIB2_LIBS = @GLIB2_LIBS@
 GLIB_COMPILE_RESOURCE = @GLIB_COMPILE_RESOURCE@
@@ -193,8 +207,6 @@ GREP = @GREP@
 GSTREAMER_CFLAGS = @GSTREAMER_CFLAGS@
 GSTREAMER_LIBS = @GSTREAMER_LIBS@
 GTKDOC_CHECK = @GTKDOC_CHECK@
-GTKDOC_DEPS_CFLAGS = @GTKDOC_DEPS_CFLAGS@
-GTKDOC_DEPS_LIBS = @GTKDOC_DEPS_LIBS@
 GTKDOC_MKPDF = @GTKDOC_MKPDF@
 GTKDOC_REBASE = @GTKDOC_REBASE@
 GTK_CFLAGS = @GTK_CFLAGS@
@@ -216,6 +228,14 @@ INTLTOOL_V_MERGE_OPTIONS = @INTLTOOL_V_MERGE_OPTIONS@
 INTLTOOL__v_MERGE_ = @INTLTOOL__v_MERGE_@
 INTLTOOL__v_MERGE_0 = @INTLTOOL__v_MERGE_0@
 INTL_MACOSX_LIBS = @INTL_MACOSX_LIBS@
+INTROSPECTION_CFLAGS = @INTROSPECTION_CFLAGS@
+INTROSPECTION_COMPILER = @INTROSPECTION_COMPILER@
+INTROSPECTION_GENERATE = @INTROSPECTION_GENERATE@
+INTROSPECTION_GIRDIR = @INTROSPECTION_GIRDIR@
+INTROSPECTION_LIBS = @INTROSPECTION_LIBS@
+INTROSPECTION_MAKEFILE = @INTROSPECTION_MAKEFILE@
+INTROSPECTION_SCANNER = @INTROSPECTION_SCANNER@
+INTROSPECTION_TYPELIBDIR = @INTROSPECTION_TYPELIBDIR@
 JSON_CFLAGS = @JSON_CFLAGS@
 JSON_LIBS = @JSON_LIBS@
 LD = @LD@
@@ -343,8 +363,7 @@ top_srcdir = @top_srcdir@
 @WITH_GTK_UI_TRUE@librhythmcat_ui_2_0_headers = \
 @WITH_GTK_UI_TRUE@    rc-ui-listmodel.h rc-ui-listview.h rc-ui-player.h rc-ui-menu.h \
 @WITH_GTK_UI_TRUE@    rc-ui-dialog.h rc-ui-slabel.h rc-ui-style.h rc-ui-spectrum.h \
-@WITH_GTK_UI_TRUE@    rc-ui-plugin.h rc-ui-settings.h rc-ui-effect.h rc-main.h \
-@WITH_GTK_UI_TRUE@    rc-common.h 
+@WITH_GTK_UI_TRUE@    rc-ui-plugin.h rc-ui-settings.h rc-ui-effect.h rc-main.h
 
 @WITH_GTK_UI_TRUE@librhythmcat_ui_2_0_builtsources = rc-ui-resources.c
 @WITH_GTK_UI_TRUE@librhythmcat_ui_2_0_builtheaders = rc-ui-resources.h
@@ -358,20 +377,23 @@ top_srcdir = @top_srcdir@
 @WITH_GTK_UI_TRUE@    $(librhythmcat_ui_2_0_sources) $(librhythmcat_ui_2_0_builtsources)
 
 @WITH_GTK_UI_TRUE@librhythmcat_ui_2_0includedir = $(includedir)/rhythmcat2
-@WITH_GTK_UI_TRUE@librhythmcat_ui_2_0include_HEADERS = \
+@WITH_GTK_UI_TRUE@librhythmcat_ui_2_0include_HEADERS = rc-common.h \
 @WITH_GTK_UI_TRUE@    $(librhythmcat_ui_2_0_headers) $(librhythmcat_ui_2_0_builtheaders)
 
 @WITH_GTK_UI_TRUE@librhythmcat_ui_2_0_la_LDFLAGS = -export-dynamic -O2 -no-undefined -export-symbols-regex "^[[^_]].*"
-@WITH_GTK_UI_TRUE@librhythmcat_ui_2_0_la_LIBADD = @LIBOBJS@ @GLIB2_LIBS@ @GTK_LIBS@ @GSTREAMER_LIBS@ \
-@WITH_GTK_UI_TRUE@    @JSON_LIBS@ $(top_builddir)/lib/librhythmcat-2.0.la
-
-@WITH_GTK_UI_TRUE@CLEAN_FILES = $(BUILT_SOURCES)
+@WITH_GTK_UI_TRUE@librhythmcat_ui_2_0_la_LIBADD = @LIBOBJS@ \
+@WITH_GTK_UI_TRUE@	@GLIB2_LIBS@ @GTK_LIBS@ @GSTREAMER_LIBS@ \
+@WITH_GTK_UI_TRUE@	@JSON_LIBS@ \
+@WITH_GTK_UI_TRUE@	$(top_builddir)/lib/librhythmcat-2.0.la \
+@WITH_GTK_UI_TRUE@	$(am__append_1)
+@WITH_GTK_UI_TRUE@CLEANFILES = $(BUILT_SOURCES) $(am__append_3)
 @WITH_GTK_UI_TRUE@RhythmCat2_DEPENDENCIES = @LIBOBJS@ librhythmcat-ui-2.0.la
 @WITH_GTK_UI_TRUE@RhythmCat2_LDFLAGS = -export-dynamic -no-undefined -export-symbols-regex "^[[^_]].*" -O2
-@WITH_GTK_UI_TRUE@INCLUDES = @GLIB2_CFLAGS@ @GTK_CFLAGS@ @GSTREAMER_CFLAGS@ @JSON_CFLAGS@ \
-@WITH_GTK_UI_TRUE@    -DLOCALEDIR=\"$(localedir)\" -I$(top_srcdir)/lib -DLIBDIR=\"$(libdir)\" \
-@WITH_GTK_UI_TRUE@    -DPREFIXDIR=\"$(prefix)\"
-
+@WITH_GTK_UI_TRUE@INCLUDES = @GLIB2_CFLAGS@ @GTK_CFLAGS@ \
+@WITH_GTK_UI_TRUE@	@GSTREAMER_CFLAGS@ @JSON_CFLAGS@ \
+@WITH_GTK_UI_TRUE@	-DLOCALEDIR=\"$(localedir)\" \
+@WITH_GTK_UI_TRUE@	-I$(top_srcdir)/lib -DLIBDIR=\"$(libdir)\" \
+@WITH_GTK_UI_TRUE@	-DPREFIXDIR=\"$(prefix)\" $(am__append_2)
 @WITH_GTK_UI_TRUE@RhythmCat2_LDADD = @LIBOBJS@ @GLIB2_LIBS@ @GTK_LIBS@ @GSTREAMER_LIBS@ \
 @WITH_GTK_UI_TRUE@    @JSON_LIBS@ $(top_builddir)/lib/librhythmcat-2.0.la librhythmcat-ui-2.0.la
 
@@ -382,6 +404,24 @@ top_srcdir = @top_srcdir@
 
 @WITH_GTK_UI_TRUE@pkgconfigdir = $(libdir)/pkgconfig
 @WITH_GTK_UI_TRUE@pkgconfig_DATA = rhythmcat-2.0.pc
+@HAVE_INTROSPECTION_TRUE@@WITH_GTK_UI_TRUE@INTROSPECTION_GIRS =  \
+@HAVE_INTROSPECTION_TRUE@@WITH_GTK_UI_TRUE@	RhythmCat-2.0.gir
+@HAVE_INTROSPECTION_TRUE@@WITH_GTK_UI_TRUE@INTROSPECTION_SCANNER_ARGS = --add-include-path=$(srcdir)/lib \
+@HAVE_INTROSPECTION_TRUE@@WITH_GTK_UI_TRUE@    --include-uninstalled=$(top_builddir)/lib/RhythmCatLib-2.0.gir
+
+@HAVE_INTROSPECTION_TRUE@@WITH_GTK_UI_TRUE@INTROSPECTION_COMPILER_ARGS = --includedir=$(top_builddir)/lib
+@HAVE_INTROSPECTION_TRUE@@WITH_GTK_UI_TRUE@introspection_sources = $(librhythmcat_ui_2_0_sources) $(librhythmcat_ui_2_0_headers)
+@HAVE_INTROSPECTION_TRUE@@WITH_GTK_UI_TRUE@RhythmCat_2_0_gir_SCANNERFLAGS = --identifier-prefix=RC --symbol-prefix=rc
+@HAVE_INTROSPECTION_TRUE@@WITH_GTK_UI_TRUE@RhythmCat_2_0_gir_NAMESPACE = RhythmCat
+@HAVE_INTROSPECTION_TRUE@@WITH_GTK_UI_TRUE@RhythmCat_2_0_gir_VERSION = 2.0
+@HAVE_INTROSPECTION_TRUE@@WITH_GTK_UI_TRUE@RhythmCat_2_0_gir_INCLUDES = GObject-2.0 Gtk-3.0 Gst-0.10 GstPbutils-0.10 GstBase-0.10 GstFft-0.10
+@HAVE_INTROSPECTION_TRUE@@WITH_GTK_UI_TRUE@RhythmCat_2_0_gir_CFLAGS = $(INCLUDES)
+@HAVE_INTROSPECTION_TRUE@@WITH_GTK_UI_TRUE@RhythmCat_2_0_gir_PROGRAM = $(builddir)/RhythmCat2
+@HAVE_INTROSPECTION_TRUE@@WITH_GTK_UI_TRUE@RhythmCat_2_0_gir_FILES = $(introspection_sources)
+@HAVE_INTROSPECTION_TRUE@@WITH_GTK_UI_TRUE@girdir = $(datadir)/gir-1.0
+@HAVE_INTROSPECTION_TRUE@@WITH_GTK_UI_TRUE@gir_DATA = $(INTROSPECTION_GIRS)
+@HAVE_INTROSPECTION_TRUE@@WITH_GTK_UI_TRUE@typelibdir = $(libdir)/girepository-1.0
+@HAVE_INTROSPECTION_TRUE@@WITH_GTK_UI_TRUE@typelib_DATA = $(INTROSPECTION_GIRS:.gir=.typelib)
 all: all-am
 
 .SUFFIXES:
@@ -523,6 +563,24 @@ mostlyclean-libtool:
 
 clean-libtool:
 	-rm -rf .libs _libs
+install-girDATA: $(gir_DATA)
+	@$(NORMAL_INSTALL)
+	test -z "$(girdir)" || $(MKDIR_P) "$(DESTDIR)$(girdir)"
+	@list='$(gir_DATA)'; test -n "$(girdir)" || list=; \
+	for p in $$list; do \
+	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
+	  echo "$$d$$p"; \
+	done | $(am__base_list) | \
+	while read files; do \
+	  echo " $(INSTALL_DATA) $$files '$(DESTDIR)$(girdir)'"; \
+	  $(INSTALL_DATA) $$files "$(DESTDIR)$(girdir)" || exit $$?; \
+	done
+
+uninstall-girDATA:
+	@$(NORMAL_UNINSTALL)
+	@list='$(gir_DATA)'; test -n "$(girdir)" || list=; \
+	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
+	dir='$(DESTDIR)$(girdir)'; $(am__uninstall_files_from_dir)
 install-pkgconfigDATA: $(pkgconfig_DATA)
 	@$(NORMAL_INSTALL)
 	test -z "$(pkgconfigdir)" || $(MKDIR_P) "$(DESTDIR)$(pkgconfigdir)"
@@ -541,6 +599,24 @@ uninstall-pkgconfigDATA:
 	@list='$(pkgconfig_DATA)'; test -n "$(pkgconfigdir)" || list=; \
 	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
 	dir='$(DESTDIR)$(pkgconfigdir)'; $(am__uninstall_files_from_dir)
+install-typelibDATA: $(typelib_DATA)
+	@$(NORMAL_INSTALL)
+	test -z "$(typelibdir)" || $(MKDIR_P) "$(DESTDIR)$(typelibdir)"
+	@list='$(typelib_DATA)'; test -n "$(typelibdir)" || list=; \
+	for p in $$list; do \
+	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
+	  echo "$$d$$p"; \
+	done | $(am__base_list) | \
+	while read files; do \
+	  echo " $(INSTALL_DATA) $$files '$(DESTDIR)$(typelibdir)'"; \
+	  $(INSTALL_DATA) $$files "$(DESTDIR)$(typelibdir)" || exit $$?; \
+	done
+
+uninstall-typelibDATA:
+	@$(NORMAL_UNINSTALL)
+	@list='$(typelib_DATA)'; test -n "$(typelibdir)" || list=; \
+	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
+	dir='$(DESTDIR)$(typelibdir)'; $(am__uninstall_files_from_dir)
 install-librhythmcat_ui_2_0includeHEADERS: $(librhythmcat_ui_2_0include_HEADERS)
 	@$(NORMAL_INSTALL)
 	test -z "$(librhythmcat_ui_2_0includedir)" || $(MKDIR_P) "$(DESTDIR)$(librhythmcat_ui_2_0includedir)"
@@ -646,7 +722,7 @@ check-am: all-am
 check: check-am
 all-am: Makefile $(LTLIBRARIES) $(PROGRAMS) $(DATA) $(HEADERS)
 installdirs:
-	for dir in "$(DESTDIR)$(bindir)" "$(DESTDIR)$(pkgconfigdir)" "$(DESTDIR)$(librhythmcat_ui_2_0includedir)"; do \
+	for dir in "$(DESTDIR)$(bindir)" "$(DESTDIR)$(girdir)" "$(DESTDIR)$(pkgconfigdir)" "$(DESTDIR)$(typelibdir)" "$(DESTDIR)$(librhythmcat_ui_2_0includedir)"; do \
 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
 	done
 install: install-am
@@ -671,6 +747,7 @@ install-strip:
 mostlyclean-generic:
 
 clean-generic:
+	-test -z "$(CLEANFILES)" || rm -f $(CLEANFILES)
 
 distclean-generic:
 	-test -z "$(CONFIG_CLEAN_FILES)" || rm -f $(CONFIG_CLEAN_FILES)
@@ -702,8 +779,9 @@ info: info-am
 
 info-am:
 
-install-data-am: install-librhythmcat_ui_2_0includeHEADERS \
-	install-pkgconfigDATA
+install-data-am: install-girDATA \
+	install-librhythmcat_ui_2_0includeHEADERS \
+	install-pkgconfigDATA install-typelibDATA
 
 install-dvi: install-dvi-am
 
@@ -749,9 +827,9 @@ ps: ps-am
 
 ps-am:
 
-uninstall-am: uninstall-binPROGRAMS \
+uninstall-am: uninstall-binPROGRAMS uninstall-girDATA \
 	uninstall-librhythmcat_ui_2_0includeHEADERS \
-	uninstall-pkgconfigDATA
+	uninstall-pkgconfigDATA uninstall-typelibDATA
 
 .MAKE: install-am install-strip
 
@@ -761,17 +839,17 @@ uninstall-am: uninstall-binPROGRAMS \
 	distclean-libtool distclean-tags distdir dvi dvi-am html \
 	html-am info info-am install install-am install-binPROGRAMS \
 	install-data install-data-am install-dvi install-dvi-am \
-	install-exec install-exec-am install-html install-html-am \
-	install-info install-info-am \
+	install-exec install-exec-am install-girDATA install-html \
+	install-html-am install-info install-info-am \
 	install-librhythmcat_ui_2_0includeHEADERS install-man \
 	install-pdf install-pdf-am install-pkgconfigDATA install-ps \
-	install-ps-am install-strip installcheck installcheck-am \
-	installdirs maintainer-clean maintainer-clean-generic \
-	mostlyclean mostlyclean-compile mostlyclean-generic \
-	mostlyclean-libtool pdf pdf-am ps ps-am tags uninstall \
-	uninstall-am uninstall-binPROGRAMS \
-	uninstall-librhythmcat_ui_2_0includeHEADERS \
-	uninstall-pkgconfigDATA
+	install-ps-am install-strip install-typelibDATA installcheck \
+	installcheck-am installdirs maintainer-clean \
+	maintainer-clean-generic mostlyclean mostlyclean-compile \
+	mostlyclean-generic mostlyclean-libtool pdf pdf-am ps ps-am \
+	tags uninstall uninstall-am uninstall-binPROGRAMS \
+	uninstall-girDATA uninstall-librhythmcat_ui_2_0includeHEADERS \
+	uninstall-pkgconfigDATA uninstall-typelibDATA
 
 
 @WITH_GTK_UI_TRUE@rc-ui-resources.c: $(librhythmcat_ui_2_0_resourcefiles)
@@ -781,6 +859,10 @@ uninstall-am: uninstall-binPROGRAMS \
 @WITH_GTK_UI_TRUE@rc-ui-resources.h: $(librhythmcat_ui_2_0_resourcefiles)
 @WITH_GTK_UI_TRUE@	@GLIB_COMPILE_RESOURCE@ $(srcdir)/rc-ui-resources.gresource.xml \
 @WITH_GTK_UI_TRUE@	    --target=rc-ui-resources.h --generate-header --c-name=rc_ui_resources
+
+@HAVE_INTROSPECTION_TRUE@@WITH_GTK_UI_TRUE@-include $(INTROSPECTION_MAKEFILE)
+
+@HAVE_INTROSPECTION_TRUE@@WITH_GTK_UI_TRUE@RhythmCat-2.0.gir: RhythmCat2
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

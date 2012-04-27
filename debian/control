@@ -5,7 +5,7 @@ Maintainer: SuperCat Expert <supercatexpert@gmail.com>
 Build-Depends: multiarch-support, cdbs (>= 0.4.90), debhelper (>= 9),
     autotools-dev, libgtk-3-dev (>= 3.2), libgstreamer0.10-dev (>= 0.10.30),
     libglib2.0-dev (>= 2.32), libgstreamer-plugins-base0.10-dev (>= 0.10.30),
-    libjson0-dev (>= 0.9), libcurl4-openssl-dev
+    libjson0-dev (>= 0.9), libcurl4-openssl-dev, gobject-introspection (>=1.32)
 Build-Depends-Indep: libglib2.0-doc, libgtk-3-doc, gstreamer0.10-doc,
     gstreamer0.10-plugins-base-doc, gstreamer0.10-plugins-good-doc
 Standards-Version: 3.9.2
@@ -156,4 +156,37 @@ Description: Python3 plug-in loader for RhythmCat2
  based plug-ins.
  .
 
+Package: gir1.2-librhythmcat2
+Section: introspection
+Architecture: any
+Depends: ${misc:Depends}, librhythmcat2 (>=1.9.2),
+    gobject-introspection (>=1.32), gir1.2-gstreamer-0.10,
+    gir1.2-gst-plugins-base-0.10, gir1.2-glib-2.0
+Pre-Depends: ${misc:Pre-Depends}
+Description: GObject introspection data for RhythmCat2 Library
+ RhythmCat2 is a music player which can be used under Linux. It is not only a
+ normal music player, it has both command-line interface and graphic user
+ interface, and it can extend its features by plug-ins, like lyric show
+ in window, desktop lyric show, etc... The GTK+ UI can use custom GTK+ 3 themes,
+ and the UI layout can be customed partially.
+ .
+ This package can be used by other packages using the GIRepository format to
+ generate dynamic bindings.
 
+Package: gir1.2-rhythmcat2
+Section: introspection
+Architecture: any
+Depends: ${misc:Depends}, librhythmcat2 (>=1.9.2), rhythmcat2 (>=1.9.2),
+    gobject-introspection (>=1.32), gir1.2-gtk-3.0, gir1.2-gstreamer-0.10,
+    gir1.2-gst-plugins-base-0.10, gir1.2-glib-2.0
+Pre-Depends: ${misc:Pre-Depends}
+Description: GObject introspection data for RhythmCat2
+ RhythmCat2 is a music player which can be used under Linux. It is not only a
+ normal music player, it has both command-line interface and graphic user
+ interface, and it can extend its features by plug-ins, like lyric show
+ in window, desktop lyric show, etc... The GTK+ UI can use custom GTK+ 3 themes,
+ and the UI layout can be customed partially.
+ .
+ This package can be used by other packages using the GIRepository format to
+ generate dynamic bindings.
+ 

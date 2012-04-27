@@ -122,6 +122,7 @@
     <keyword type="function" name="rclib_db_get_instance ()" link="RCLibDb.html#rclib-db-get-instance"/>
     <keyword type="function" name="rclib_db_init ()" link="RCLibDb.html#rclib-db-init"/>
     <keyword type="function" name="rclib_db_load_autosaved ()" link="RCLibDb.html#rclib-db-load-autosaved"/>
+    <keyword type="function" name="rclib_db_load_legacy ()" link="RCLibDb.html#rclib-db-load-legacy"/>
     <keyword type="function" name="rclib_db_playlist_add_directory ()" link="RCLibDb.html#rclib-db-playlist-add-directory"/>
     <keyword type="function" name="rclib_db_playlist_add_m3u_file ()" link="RCLibDb.html#rclib-db-playlist-add-m3u-file"/>
     <keyword type="function" name="rclib_db_playlist_add_music ()" link="RCLibDb.html#rclib-db-playlist-add-music"/>
@@ -303,10 +304,10 @@
     <keyword type="constant" name="RCLIB_CORE_SOURCE_NONE" link="RCLibCore.html#RCLIB-CORE-SOURCE-NONE:CAPS"/>
     <keyword type="constant" name="RCLIB_CORE_SOURCE_NORMAL" link="RCLibCore.html#RCLIB-CORE-SOURCE-NORMAL:CAPS"/>
     <keyword type="constant" name="RCLIB_CORE_SOURCE_CUE" link="RCLibCore.html#RCLIB-CORE-SOURCE-CUE:CAPS"/>
-    <keyword type="constant" name="RCLIB_CORE_SOURCE_EMBEDED_CUE" link="RCLibCore.html#RCLIB-CORE-SOURCE-EMBEDED-CUE:CAPS"/>
+    <keyword type="constant" name="RCLIB_CORE_SOURCE_EMBEDDED_CUE" link="RCLibCore.html#RCLIB-CORE-SOURCE-EMBEDDED-CUE:CAPS"/>
     <keyword type="constant" name="RCLIB_CUE_INPUT_URI" link="LibRhythmCat-Cue-Parser.html#RCLIB-CUE-INPUT-URI:CAPS"/>
     <keyword type="constant" name="RCLIB_CUE_INPUT_PATH" link="LibRhythmCat-Cue-Parser.html#RCLIB-CUE-INPUT-PATH:CAPS"/>
-    <keyword type="constant" name="RCLIB_CUE_INPUT_EMBEDED" link="LibRhythmCat-Cue-Parser.html#RCLIB-CUE-INPUT-EMBEDED:CAPS"/>
+    <keyword type="constant" name="RCLIB_CUE_INPUT_EMBEDDED" link="LibRhythmCat-Cue-Parser.html#RCLIB-CUE-INPUT-EMBEDDED:CAPS"/>
     <keyword type="constant" name="RCLIB_DB_CATALOG_TYPE_PLAYLIST" link="RCLibDb.html#RCLIB-DB-CATALOG-TYPE-PLAYLIST:CAPS"/>
     <keyword type="constant" name="RCLIB_DB_PLAYLIST_TYPE_MISSING" link="RCLibDb.html#RCLIB-DB-PLAYLIST-TYPE-MISSING:CAPS"/>
     <keyword type="constant" name="RCLIB_DB_PLAYLIST_TYPE_MUSIC" link="RCLibDb.html#RCLIB-DB-PLAYLIST-TYPE-MUSIC:CAPS"/>

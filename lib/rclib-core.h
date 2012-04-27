@@ -49,7 +49,7 @@ G_BEGIN_DECLS
  * @RCLIB_CORE_SOURCE_NONE: the source is empty
  * @RCLIB_CORE_SOURCE_NORMAL: the source is a normal audio file
  * @RCLIB_CORE_SOURCE_CUE: the source is from CUE sheet file
- * @RCLIB_CORE_SOURCE_EMBEDED_CUE: the source is from embeded CUE sheet
+ * @RCLIB_CORE_SOURCE_EMBEDDED_CUE: the source is from embedded CUE sheet
  *
  * The enum type for the source type.
  */
@@ -58,7 +58,7 @@ typedef enum {
     RCLIB_CORE_SOURCE_NONE = 0,
     RCLIB_CORE_SOURCE_NORMAL = 1,
     RCLIB_CORE_SOURCE_CUE = 2,
-    RCLIB_CORE_SOURCE_EMBEDED_CUE = 3
+    RCLIB_CORE_SOURCE_EMBEDDED_CUE = 3
 }RCLibCoreSourceType;
 
 /**

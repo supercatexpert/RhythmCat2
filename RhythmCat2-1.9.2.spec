@@ -14,7 +14,7 @@ Requires: gstreamer-plugins-base >= 0.10.30 gstreamer-plugins-good >= 0.10.30
 Requires: json-c >= 0.9 librhythmcat2 >= 1.9.2
 BuildRequires: glib2-devel >= 2.32 gtk3-devel >= 2.32 gstreamer-devel >= 0.10.30
 BuildRequires: gstreamer-plugins-base-devel >= 0.10.30 json-c-devel >= 0.9
-BuildRequires: desktop-file-utils
+BuildRequires: desktop-file-utils gobject-introspection gobject-introspection-devel
 
 %global _unpackaged_files_terminate_build 0
 
@@ -98,10 +98,10 @@ Group: Application/Multimedia
 Requires: glib2 >= 2.32 gtk3 >= 3.4 gstreamer >= 0.10.30
 Requires: gstreamer-plugins-base >= 0.10.30 gstreamer-plugins-good >= 0.10.30
 Requires: json-c >= 0.9 librhythmcat2 >= 1.9.2 rhythmcat2 >= 1.9.2 python3 >= 3.2
-Requires: python3-libs >= 3.2
+Requires: python3-libs >= 3.2 gobject-introspection python3-gobject
 BuildRequires: glib2-devel >= 2.32 gtk3-devel >= 2.32 gstreamer-devel >= 0.10.30
 BuildRequires: gstreamer-plugins-base-devel >= 0.10.30 json-c-devel >= 0.9
-BuildRequires: python3-devel >= 3.2
+BuildRequires: python3-devel >= 3.2 gobject-introspection-devel
 %description -n rhythmcat2-plugins-python3-loader
 This package provides Python3 plug-in loader, which is used to load Python3
 based plug-ins.
@@ -110,7 +110,8 @@ based plug-ins.
 %setup -q -n RhythmCat2-%{version}
 
 %build
-%configure --enable-gtk-doc --with-native-plugins --with-python3-plugins
+%configure --enable-gtk-doc --with-native-plugins \
+    --with-python3-plugins --enable-introspection
 make %{_smp_mflags}
 
 %install
@@ -140,11 +141,16 @@ rm -rf %{buildroot}
 %{_datadir}/applications/RhythmCat2.desktop
 %{_datadir}/RhythmCat2
 %{_datadir}/man/*
+%{_libdir}/girepository-1.0/RhythmCat-2.0.typelib
+%{_datadir}/gir-1.0/RhythmCat-2.0.gir
+
 
 %files -n librhythmcat2
 %{_libdir}/librhythmcat-2.0.a
 %{_libdir}/librhythmcat-2.0.so*
 %{_datadir}/locale
+%{_libdir}/girepository-1.0/RhythmCatLib-2.0.typelib
+%{_datadir}/gir-1.0/RhythmCatLib-2.0.gir
 %post -n librhythmcat2 -p /sbin/ldconfig
 %postun -n librhythmcat2 -p /sbin/ldconfig
 

@@ -36,11 +36,18 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
+@HAVE_INTROSPECTION_TRUE@am__append_1 = $(gir_DATA) $(typelib_DATA)
 subdir = lib
 DIST_COMMON = $(librhythmcat_2_0include_HEADERS) $(srcdir)/Makefile.am \
 	$(srcdir)/Makefile.in $(srcdir)/librhythmcat-2.0.pc.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
-am__aclocal_m4_deps = $(top_srcdir)/configure.ac
+am__aclocal_m4_deps = $(top_srcdir)/m4/gettext.m4 \
+	$(top_srcdir)/m4/gtk-doc.m4 $(top_srcdir)/m4/iconv.m4 \
+	$(top_srcdir)/m4/intltool.m4 $(top_srcdir)/m4/introspection.m4 \
+	$(top_srcdir)/m4/lib-ld.m4 $(top_srcdir)/m4/lib-link.m4 \
+	$(top_srcdir)/m4/lib-prefix.m4 $(top_srcdir)/m4/nls.m4 \
+	$(top_srcdir)/m4/po.m4 $(top_srcdir)/m4/progtest.m4 \
+	$(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
 mkinstalldirs = $(install_sh) -d
@@ -74,7 +81,8 @@ am__uninstall_files_from_dir = { \
     || { echo " ( cd '$$dir' && rm -f" $$files ")"; \
          $(am__cd) "$$dir" && rm -f $$files; }; \
   }
-am__installdirs = "$(DESTDIR)$(libdir)" "$(DESTDIR)$(pkgconfigdir)" \
+am__installdirs = "$(DESTDIR)$(libdir)" "$(DESTDIR)$(girdir)" \
+	"$(DESTDIR)$(pkgconfigdir)" "$(DESTDIR)$(typelibdir)" \
 	"$(DESTDIR)$(librhythmcat_2_0includedir)"
 LTLIBRARIES = $(lib_LTLIBRARIES)
 librhythmcat_2_0_la_DEPENDENCIES =
@@ -119,7 +127,7 @@ am__v_GEN_ = $(am__v_GEN_@AM_DEFAULT_V@)
 am__v_GEN_0 = @echo "  GEN   " $@;
 SOURCES = $(librhythmcat_2_0_la_SOURCES)
 DIST_SOURCES = $(librhythmcat_2_0_la_SOURCES)
-DATA = $(pkgconfig_DATA)
+DATA = $(gir_DATA) $(pkgconfig_DATA) $(typelib_DATA)
 HEADERS = $(librhythmcat_2_0include_HEADERS)
 ETAGS = etags
 CTAGS = ctags
@@ -155,6 +163,8 @@ EXEEXT = @EXEEXT@
 FGREP = @FGREP@
 GETTEXT_MACRO_VERSION = @GETTEXT_MACRO_VERSION@
 GETTEXT_PACKAGE = @GETTEXT_PACKAGE@
+GINTROSPECTION_CFLAGS = @GINTROSPECTION_CFLAGS@
+GINTROSPECTION_LIBS = @GINTROSPECTION_LIBS@
 GLIB2_CFLAGS = @GLIB2_CFLAGS@
 GLIB2_LIBS = @GLIB2_LIBS@
 GLIB_COMPILE_RESOURCE = @GLIB_COMPILE_RESOURCE@
@@ -166,8 +176,6 @@ GREP = @GREP@
 GSTREAMER_CFLAGS = @GSTREAMER_CFLAGS@
 GSTREAMER_LIBS = @GSTREAMER_LIBS@
 GTKDOC_CHECK = @GTKDOC_CHECK@
-GTKDOC_DEPS_CFLAGS = @GTKDOC_DEPS_CFLAGS@
-GTKDOC_DEPS_LIBS = @GTKDOC_DEPS_LIBS@
 GTKDOC_MKPDF = @GTKDOC_MKPDF@
 GTKDOC_REBASE = @GTKDOC_REBASE@
 GTK_CFLAGS = @GTK_CFLAGS@
@@ -189,6 +197,14 @@ INTLTOOL_V_MERGE_OPTIONS = @INTLTOOL_V_MERGE_OPTIONS@
 INTLTOOL__v_MERGE_ = @INTLTOOL__v_MERGE_@
 INTLTOOL__v_MERGE_0 = @INTLTOOL__v_MERGE_0@
 INTL_MACOSX_LIBS = @INTL_MACOSX_LIBS@
+INTROSPECTION_CFLAGS = @INTROSPECTION_CFLAGS@
+INTROSPECTION_COMPILER = @INTROSPECTION_COMPILER@
+INTROSPECTION_GENERATE = @INTROSPECTION_GENERATE@
+INTROSPECTION_GIRDIR = @INTROSPECTION_GIRDIR@
+INTROSPECTION_LIBS = @INTROSPECTION_LIBS@
+INTROSPECTION_MAKEFILE = @INTROSPECTION_MAKEFILE@
+INTROSPECTION_SCANNER = @INTROSPECTION_SCANNER@
+INTROSPECTION_TYPELIBDIR = @INTROSPECTION_TYPELIBDIR@
 JSON_CFLAGS = @JSON_CFLAGS@
 JSON_LIBS = @JSON_LIBS@
 LD = @LD@
@@ -314,7 +330,7 @@ librhythmcat_2_0_builtsources = rclib-marshal.c
 librhythmcat_2_0_headers = \
     rclib-core.h rclib-cue.h rclib-db.h rclib-tag.h rclib-util.h \
     rclib-player.h rclib-lyric.h rclib-settings.h \
-    rclib-album.h rclib-plugin.h rclib.h rclib-common.h
+    rclib-album.h rclib-plugin.h rclib.h
 
 librhythmcat_2_0_builtheaders = rclib-marshal.h
 librhythmcat_2_0_la_SOURCES = $(librhythmcat_2_0_sources) \
@@ -323,12 +339,27 @@ INCLUDES = @GLIB2_CFLAGS@ @GSTREAMER_CFLAGS@ @JSON_CFLAGS@ \
     -DLOCALEDIR=\"$(localedir)\"
 
 librhythmcat_2_0_la_LIBADD = @GLIB2_LIBS@ @GSTREAMER_LIBS@ @JSON_LIBS@
-CLEAN_FILES = $(BUILT_SOURCES)
+CLEANFILES = $(BUILT_SOURCES) $(am__append_1)
 librhythmcat_2_0includedir = $(includedir)/librhythmcat2
-librhythmcat_2_0include_HEADERS = \
+librhythmcat_2_0include_HEADERS = rclib-common.h \
     $(librhythmcat_2_0_headers) $(librhythmcat_2_0_builtheaders)
 
 librhythmcat_2_0_la_LDFLAGS = -export-dynamic -O2
+@HAVE_INTROSPECTION_TRUE@INTROSPECTION_GIRS = RhythmCatLib-2.0.gir
+@HAVE_INTROSPECTION_TRUE@INTROSPECTION_SCANNER_ARGS = --add-include-path=$(srcdir)/lib
+@HAVE_INTROSPECTION_TRUE@INTROSPECTION_COMPILER_ARGS = --includedir=$(srcdir)/lib
+@HAVE_INTROSPECTION_TRUE@introspection_sources = $(librhythmcat_2_0_sources) $(librhythmcat_2_0_headers)
+@HAVE_INTROSPECTION_TRUE@RhythmCatLib_2_0_gir_SCANNERFLAGS = --identifier-prefix=RCLib --symbol-prefix=rclib
+@HAVE_INTROSPECTION_TRUE@RhythmCatLib_2_0_gir_NAMESPACE = RhythmCatLib
+@HAVE_INTROSPECTION_TRUE@RhythmCatLib_2_0_gir_VERSION = 2.0
+@HAVE_INTROSPECTION_TRUE@RhythmCatLib_2_0_gir_INCLUDES = GObject-2.0 Gst-0.10 GstPbutils-0.10 GstBase-0.10 GstFft-0.10
+@HAVE_INTROSPECTION_TRUE@RhythmCatLib_2_0_gir_CFLAGS = $(INCLUDES)
+@HAVE_INTROSPECTION_TRUE@RhythmCatLib_2_0_gir_LIBS = librhythmcat-2.0.la
+@HAVE_INTROSPECTION_TRUE@RhythmCatLib_2_0_gir_FILES = $(introspection_sources)
+@HAVE_INTROSPECTION_TRUE@girdir = $(datadir)/gir-1.0
+@HAVE_INTROSPECTION_TRUE@gir_DATA = $(INTROSPECTION_GIRS)
+@HAVE_INTROSPECTION_TRUE@typelibdir = $(libdir)/girepository-1.0
+@HAVE_INTROSPECTION_TRUE@typelib_DATA = $(INTROSPECTION_GIRS:.gir=.typelib)
 EXTRA_DIST = rclib-marshal.list librhythmcat-2.0.pc.in
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = librhythmcat-2.0.pc
@@ -447,6 +478,24 @@ mostlyclean-libtool:
 
 clean-libtool:
 	-rm -rf .libs _libs
+install-girDATA: $(gir_DATA)
+	@$(NORMAL_INSTALL)
+	test -z "$(girdir)" || $(MKDIR_P) "$(DESTDIR)$(girdir)"
+	@list='$(gir_DATA)'; test -n "$(girdir)" || list=; \
+	for p in $$list; do \
+	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
+	  echo "$$d$$p"; \
+	done | $(am__base_list) | \
+	while read files; do \
+	  echo " $(INSTALL_DATA) $$files '$(DESTDIR)$(girdir)'"; \
+	  $(INSTALL_DATA) $$files "$(DESTDIR)$(girdir)" || exit $$?; \
+	done
+
+uninstall-girDATA:
+	@$(NORMAL_UNINSTALL)
+	@list='$(gir_DATA)'; test -n "$(girdir)" || list=; \
+	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
+	dir='$(DESTDIR)$(girdir)'; $(am__uninstall_files_from_dir)
 install-pkgconfigDATA: $(pkgconfig_DATA)
 	@$(NORMAL_INSTALL)
 	test -z "$(pkgconfigdir)" || $(MKDIR_P) "$(DESTDIR)$(pkgconfigdir)"
@@ -465,6 +514,24 @@ uninstall-pkgconfigDATA:
 	@list='$(pkgconfig_DATA)'; test -n "$(pkgconfigdir)" || list=; \
 	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
 	dir='$(DESTDIR)$(pkgconfigdir)'; $(am__uninstall_files_from_dir)
+install-typelibDATA: $(typelib_DATA)
+	@$(NORMAL_INSTALL)
+	test -z "$(typelibdir)" || $(MKDIR_P) "$(DESTDIR)$(typelibdir)"
+	@list='$(typelib_DATA)'; test -n "$(typelibdir)" || list=; \
+	for p in $$list; do \
+	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
+	  echo "$$d$$p"; \
+	done | $(am__base_list) | \
+	while read files; do \
+	  echo " $(INSTALL_DATA) $$files '$(DESTDIR)$(typelibdir)'"; \
+	  $(INSTALL_DATA) $$files "$(DESTDIR)$(typelibdir)" || exit $$?; \
+	done
+
+uninstall-typelibDATA:
+	@$(NORMAL_UNINSTALL)
+	@list='$(typelib_DATA)'; test -n "$(typelibdir)" || list=; \
+	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
+	dir='$(DESTDIR)$(typelibdir)'; $(am__uninstall_files_from_dir)
 install-librhythmcat_2_0includeHEADERS: $(librhythmcat_2_0include_HEADERS)
 	@$(NORMAL_INSTALL)
 	test -z "$(librhythmcat_2_0includedir)" || $(MKDIR_P) "$(DESTDIR)$(librhythmcat_2_0includedir)"
@@ -570,7 +637,7 @@ check-am: all-am
 check: check-am
 all-am: Makefile $(LTLIBRARIES) $(DATA) $(HEADERS)
 installdirs:
-	for dir in "$(DESTDIR)$(libdir)" "$(DESTDIR)$(pkgconfigdir)" "$(DESTDIR)$(librhythmcat_2_0includedir)"; do \
+	for dir in "$(DESTDIR)$(libdir)" "$(DESTDIR)$(girdir)" "$(DESTDIR)$(pkgconfigdir)" "$(DESTDIR)$(typelibdir)" "$(DESTDIR)$(librhythmcat_2_0includedir)"; do \
 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
 	done
 install: install-am
@@ -595,6 +662,7 @@ install-strip:
 mostlyclean-generic:
 
 clean-generic:
+	-test -z "$(CLEANFILES)" || rm -f $(CLEANFILES)
 
 distclean-generic:
 	-test -z "$(CONFIG_CLEAN_FILES)" || rm -f $(CONFIG_CLEAN_FILES)
@@ -626,8 +694,9 @@ info: info-am
 
 info-am:
 
-install-data-am: install-librhythmcat_2_0includeHEADERS \
-	install-pkgconfigDATA
+install-data-am: install-girDATA \
+	install-librhythmcat_2_0includeHEADERS install-pkgconfigDATA \
+	install-typelibDATA
 
 install-dvi: install-dvi-am
 
@@ -673,9 +742,9 @@ ps: ps-am
 
 ps-am:
 
-uninstall-am: uninstall-libLTLIBRARIES \
+uninstall-am: uninstall-girDATA uninstall-libLTLIBRARIES \
 	uninstall-librhythmcat_2_0includeHEADERS \
-	uninstall-pkgconfigDATA
+	uninstall-pkgconfigDATA uninstall-typelibDATA
 
 .MAKE: install-am install-strip
 
@@ -684,17 +753,18 @@ uninstall-am: uninstall-libLTLIBRARIES \
 	distclean-compile distclean-generic distclean-libtool \
 	distclean-tags distdir dvi dvi-am html html-am info info-am \
 	install install-am install-data install-data-am install-dvi \
-	install-dvi-am install-exec install-exec-am install-html \
-	install-html-am install-info install-info-am \
+	install-dvi-am install-exec install-exec-am install-girDATA \
+	install-html install-html-am install-info install-info-am \
 	install-libLTLIBRARIES install-librhythmcat_2_0includeHEADERS \
 	install-man install-pdf install-pdf-am install-pkgconfigDATA \
-	install-ps install-ps-am install-strip installcheck \
-	installcheck-am installdirs maintainer-clean \
+	install-ps install-ps-am install-strip install-typelibDATA \
+	installcheck installcheck-am installdirs maintainer-clean \
 	maintainer-clean-generic mostlyclean mostlyclean-compile \
 	mostlyclean-generic mostlyclean-libtool pdf pdf-am ps ps-am \
-	tags uninstall uninstall-am uninstall-libLTLIBRARIES \
+	tags uninstall uninstall-am uninstall-girDATA \
+	uninstall-libLTLIBRARIES \
 	uninstall-librhythmcat_2_0includeHEADERS \
-	uninstall-pkgconfigDATA
+	uninstall-pkgconfigDATA uninstall-typelibDATA
 
 
 rclib-marshal.c: rclib-marshal.list
@@ -704,6 +774,10 @@ rclib-marshal.c: rclib-marshal.list
 rclib-marshal.h: rclib-marshal.list
 	@GLIB_GENMARSHAL@ --prefix=rclib_marshal $(srcdir)/rclib-marshal.list \
         --header > rclib-marshal.h
+
+@HAVE_INTROSPECTION_TRUE@-include $(INTROSPECTION_MAKEFILE)
+
+@HAVE_INTROSPECTION_TRUE@RhythmCatLib-2.0.gir: librhythmcat-2.0.la
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

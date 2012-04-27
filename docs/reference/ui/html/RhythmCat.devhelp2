@@ -41,6 +41,7 @@
     <keyword type="function" name="rc_ui_dialog_save_all_playlist ()" link="RhythmCat-Dialogs.html#rc-ui-dialog-save-all-playlist"/>
     <keyword type="function" name="rc_ui_dialog_save_playlist ()" link="RhythmCat-Dialogs.html#rc-ui-dialog-save-playlist"/>
     <keyword type="function" name="rc_ui_dialog_show_load_autosaved ()" link="RhythmCat-Dialogs.html#rc-ui-dialog-show-load-autosaved"/>
+    <keyword type="function" name="rc_ui_dialog_show_load_legacy ()" link="RhythmCat-Dialogs.html#rc-ui-dialog-show-load-legacy"/>
     <keyword type="function" name="rc_ui_dialog_show_message ()" link="RhythmCat-Dialogs.html#rc-ui-dialog-show-message"/>
     <keyword type="function" name="rc_ui_dialog_show_supported_format ()" link="RhythmCat-Dialogs.html#rc-ui-dialog-show-supported-format"/>
     <keyword type="function" name="rc_ui_effect_window_destroy ()" link="RhythmCat-Audio-Effect-UI.html#rc-ui-effect-window-destroy"/>
@@ -139,11 +140,11 @@
     <keyword type="function" name="rc_ui_style_css_set_file ()" link="RhythmCat-Styles.html#rc-ui-style-css-set-file"/>
     <keyword type="function" name="rc_ui_style_css_set_resource ()" link="RhythmCat-Styles.html#rc-ui-style-css-set-resource"/>
     <keyword type="function" name="rc_ui_style_css_unset ()" link="RhythmCat-Styles.html#rc-ui-style-css-unset"/>
-    <keyword type="function" name="rc_ui_style_embeded_theme_get_length ()" link="RhythmCat-Styles.html#rc-ui-style-embeded-theme-get-length"/>
-    <keyword type="function" name="rc_ui_style_embeded_theme_get_name ()" link="RhythmCat-Styles.html#rc-ui-style-embeded-theme-get-name"/>
-    <keyword type="function" name="rc_ui_style_embeded_theme_set_by_index ()" link="RhythmCat-Styles.html#rc-ui-style-embeded-theme-set-by-index"/>
-    <keyword type="function" name="rc_ui_style_embeded_theme_set_by_name ()" link="RhythmCat-Styles.html#rc-ui-style-embeded-theme-set-by-name"/>
-    <keyword type="function" name="rc_ui_style_embeded_theme_set_default ()" link="RhythmCat-Styles.html#rc-ui-style-embeded-theme-set-default"/>
+    <keyword type="function" name="rc_ui_style_embedded_theme_get_length ()" link="RhythmCat-Styles.html#rc-ui-style-embedded-theme-get-length"/>
+    <keyword type="function" name="rc_ui_style_embedded_theme_get_name ()" link="RhythmCat-Styles.html#rc-ui-style-embedded-theme-get-name"/>
+    <keyword type="function" name="rc_ui_style_embedded_theme_set_by_index ()" link="RhythmCat-Styles.html#rc-ui-style-embedded-theme-set-by-index"/>
+    <keyword type="function" name="rc_ui_style_embedded_theme_set_by_name ()" link="RhythmCat-Styles.html#rc-ui-style-embedded-theme-set-by-name"/>
+    <keyword type="function" name="rc_ui_style_embedded_theme_set_default ()" link="RhythmCat-Styles.html#rc-ui-style-embedded-theme-set-default"/>
     <keyword type="function" name="rc_ui_style_search_theme_paths ()" link="RhythmCat-Styles.html#rc-ui-style-search-theme-paths"/>
     <keyword type="constant" name="RC_UI_CATALOG_COLUMN_TYPE" link="RCUiPlaylistStore.html#RC-UI-CATALOG-COLUMN-TYPE:CAPS"/>
     <keyword type="constant" name="RC_UI_CATALOG_COLUMN_STATE" link="RCUiPlaylistStore.html#RC-UI-CATALOG-COLUMN-STATE:CAPS"/>

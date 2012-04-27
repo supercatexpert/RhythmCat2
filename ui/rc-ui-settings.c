@@ -284,16 +284,16 @@ static void rc_ui_settings_apr_theme_changed(GtkComboBox *widget,
     gchar *theme;
     gchar *theme_settings;
     gchar *theme_file;
-    gboolean embeded_flag;
+    gboolean embedded_flag;
     gboolean theme_flag = FALSE;
     model = gtk_combo_box_get_model(widget);
     if(model==NULL) return;
     if(!gtk_combo_box_get_active_iter(widget, &iter)) return;
-    gtk_tree_model_get(model, &iter, 1, &embeded_flag, 2, &theme, -1);
-    if(embeded_flag)
+    gtk_tree_model_get(model, &iter, 1, &embedded_flag, 2, &theme, -1);
+    if(embedded_flag)
     {
-        theme_settings = g_strdup_printf("embeded-theme:%s", theme);
-        theme_flag = rc_ui_style_embeded_theme_set_by_name(theme);
+        theme_settings = g_strdup_printf("embedded-theme:%s", theme);
+        theme_flag = rc_ui_style_embedded_theme_set_by_name(theme);
         if(theme_flag)
             rclib_settings_set_string("MainUI", "Theme", theme_settings);
         g_free(theme_settings);
@@ -321,13 +321,13 @@ static inline GtkWidget *rc_ui_settings_appearance_build(
     GtkCellRenderer *renderer;
     GtkTreeIter iter;
     GSList *theme_list, *foreach;
-    const gchar *embeded_theme_name;
+    const gchar *embedded_theme_name;
     guint theme_number;
     guint i;
     const gchar *path;
     gchar *theme_name;
     gchar *theme_settings;
-    gboolean theme_embeded_flag = FALSE;
+    gboolean theme_embedded_flag = FALSE;
     appearance_grid = gtk_grid_new();
     theme_frame = gtk_frame_new(NULL);
     frame_label = gtk_label_new(NULL);
@@ -349,22 +349,22 @@ static inline GtkWidget *rc_ui_settings_appearance_build(
     theme_settings = rclib_settings_get_string("MainUI", "Theme", NULL);
     if(theme_settings!=NULL)
     {
-        theme_embeded_flag = g_str_has_prefix(theme_settings,
-            "embeded-theme:");
+        theme_embedded_flag = g_str_has_prefix(theme_settings,
+            "embedded-theme:");
     }
-    theme_number = rc_ui_style_embeded_theme_get_length();
+    theme_number = rc_ui_style_embedded_theme_get_length();
     for(i=0;i<theme_number;i++)
     {
-        embeded_theme_name = rc_ui_style_embeded_theme_get_name(i);
-        theme_name = g_strdup_printf(_("%s (Embeded)"),
-            embeded_theme_name);
+        embedded_theme_name = rc_ui_style_embedded_theme_get_name(i);
+        theme_name = g_strdup_printf(_("%s (Embedded)"),
+            embedded_theme_name);
         gtk_list_store_append(store, &iter);
         gtk_list_store_set(store, &iter, 0, theme_name, 1, TRUE, 2,
-            embeded_theme_name, -1);
+            embedded_theme_name, -1);
         g_free(theme_name);
-        if(theme_embeded_flag)
+        if(theme_embedded_flag)
         {
-            if(g_strcmp0(theme_settings+14, embeded_theme_name)==0)
+            if(g_strcmp0(theme_settings+14, embedded_theme_name)==0)
             {
                 gtk_combo_box_set_active_iter(GTK_COMBO_BOX(
                     priv->apr_theme_combo_box), &iter);

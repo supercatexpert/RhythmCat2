@@ -1005,5 +1005,25 @@ void rc_ui_dialog_show_load_autosaved()
     gtk_widget_show_all(dialog);
 }
 
+/**
+ * rc_ui_dialog_show_load_legacy:
+ *
+ * Ask the user whether to load the playlist file from legacy version.
+ */
 
+void rc_ui_dialog_show_load_legacy()
+{
+    GtkWidget *dialog;
+    gint ret;
+    dialog = gtk_message_dialog_new(NULL, GTK_DIALOG_MODAL,
+        GTK_MESSAGE_QUESTION, GTK_BUTTONS_YES_NO,
+        _("Do you want to load playlist data from legacy version "
+        "of RhythmCat?"));
+    ret = gtk_dialog_run(GTK_DIALOG(dialog));
+    if(ret==GTK_RESPONSE_YES)
+    {
+        rclib_db_load_legacy();
+    }
+    gtk_widget_destroy(dialog);
+}
 

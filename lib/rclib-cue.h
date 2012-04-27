@@ -36,7 +36,7 @@ G_BEGIN_DECLS
  * RCLibCueInputType:
  * @RCLIB_CUE_INPUT_URI: the input data is a URI
  * @RCLIB_CUE_INPUT_PATH: the input data is a file path
- * @RCLIB_CUE_INPUT_EMBEDED: the input data is from a embeded CUE tag
+ * @RCLIB_CUE_INPUT_EMBEDDED: the input data is from a embedded CUE tag
  *
  * The input data type of CUE.
  */
@@ -44,7 +44,7 @@ G_BEGIN_DECLS
 typedef enum {
     RCLIB_CUE_INPUT_URI = 0,
     RCLIB_CUE_INPUT_PATH = 1,
-    RCLIB_CUE_INPUT_EMBEDED = 2
+    RCLIB_CUE_INPUT_EMBEDDED = 2
 }RCLibCueInputType;
 
 typedef struct _RCLibCueTrack RCLibCueTrack;

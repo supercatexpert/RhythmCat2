@@ -65,7 +65,7 @@
 <ANCHOR id="RCLIB-CORE-SOURCE-NONE:CAPS" href="LibRhythmCat/RCLibCore.html#RCLIB-CORE-SOURCE-NONE:CAPS">
 <ANCHOR id="RCLIB-CORE-SOURCE-NORMAL:CAPS" href="LibRhythmCat/RCLibCore.html#RCLIB-CORE-SOURCE-NORMAL:CAPS">
 <ANCHOR id="RCLIB-CORE-SOURCE-CUE:CAPS" href="LibRhythmCat/RCLibCore.html#RCLIB-CORE-SOURCE-CUE:CAPS">
-<ANCHOR id="RCLIB-CORE-SOURCE-EMBEDED-CUE:CAPS" href="LibRhythmCat/RCLibCore.html#RCLIB-CORE-SOURCE-EMBEDED-CUE:CAPS">
+<ANCHOR id="RCLIB-CORE-SOURCE-EMBEDDED-CUE:CAPS" href="LibRhythmCat/RCLibCore.html#RCLIB-CORE-SOURCE-EMBEDDED-CUE:CAPS">
 <ANCHOR id="rclib-core-effect-plugin-add" href="LibRhythmCat/RCLibCore.html#rclib-core-effect-plugin-add">
 <ANCHOR id="rclib-core-effect-plugin-get-list" href="LibRhythmCat/RCLibCore.html#rclib-core-effect-plugin-get-list">
 <ANCHOR id="rclib-core-effect-plugin-remove" href="LibRhythmCat/RCLibCore.html#rclib-core-effect-plugin-remove">
@@ -118,7 +118,7 @@
 <ANCHOR id="RCLibCueInputType" href="LibRhythmCat/LibRhythmCat-Cue-Parser.html#RCLibCueInputType">
 <ANCHOR id="RCLIB-CUE-INPUT-URI:CAPS" href="LibRhythmCat/LibRhythmCat-Cue-Parser.html#RCLIB-CUE-INPUT-URI:CAPS">
 <ANCHOR id="RCLIB-CUE-INPUT-PATH:CAPS" href="LibRhythmCat/LibRhythmCat-Cue-Parser.html#RCLIB-CUE-INPUT-PATH:CAPS">
-<ANCHOR id="RCLIB-CUE-INPUT-EMBEDED:CAPS" href="LibRhythmCat/LibRhythmCat-Cue-Parser.html#RCLIB-CUE-INPUT-EMBEDED:CAPS">
+<ANCHOR id="RCLIB-CUE-INPUT-EMBEDDED:CAPS" href="LibRhythmCat/LibRhythmCat-Cue-Parser.html#RCLIB-CUE-INPUT-EMBEDDED:CAPS">
 <ANCHOR id="RCLibCueTrack" href="LibRhythmCat/LibRhythmCat-Cue-Parser.html#RCLibCueTrack">
 <ANCHOR id="rclib-cue-free" href="LibRhythmCat/LibRhythmCat-Cue-Parser.html#rclib-cue-free">
 <ANCHOR id="rclib-cue-get-fallback-encoding" href="LibRhythmCat/LibRhythmCat-Cue-Parser.html#rclib-cue-get-fallback-encoding">
@@ -158,6 +158,7 @@
 <ANCHOR id="rclib-db-get-instance" href="LibRhythmCat/RCLibDb.html#rclib-db-get-instance">
 <ANCHOR id="rclib-db-init" href="LibRhythmCat/RCLibDb.html#rclib-db-init">
 <ANCHOR id="rclib-db-load-autosaved" href="LibRhythmCat/RCLibDb.html#rclib-db-load-autosaved">
+<ANCHOR id="rclib-db-load-legacy" href="LibRhythmCat/RCLibDb.html#rclib-db-load-legacy">
 <ANCHOR id="rclib-db-playlist-add-directory" href="LibRhythmCat/RCLibDb.html#rclib-db-playlist-add-directory">
 <ANCHOR id="rclib-db-playlist-add-m3u-file" href="LibRhythmCat/RCLibDb.html#rclib-db-playlist-add-m3u-file">
 <ANCHOR id="rclib-db-playlist-add-music" href="LibRhythmCat/RCLibDb.html#rclib-db-playlist-add-music">

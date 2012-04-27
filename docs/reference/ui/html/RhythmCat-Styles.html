@@ -45,14 +45,14 @@
 <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RhythmCat-Styles.html#rc-ui-style-css-set-file" title="rc_ui_style_css_set_file ()">rc_ui_style_css_set_file</a>            (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *filename</code></em>);
 <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RhythmCat-Styles.html#rc-ui-style-css-set-resource" title="rc_ui_style_css_set_resource ()">rc_ui_style_css_set_resource</a>        (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *resource_path</code></em>);
 <span class="returnvalue">void</span>                <a class="link" href="RhythmCat-Styles.html#rc-ui-style-css-unset" title="rc_ui_style_css_unset ()">rc_ui_style_css_unset</a>               ();
-<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="returnvalue">guint</span></a>               <a class="link" href="RhythmCat-Styles.html#rc-ui-style-embeded-theme-get-length" title="rc_ui_style_embeded_theme_get_length ()">rc_ui_style_embeded_theme_get_length</a>
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="returnvalue">guint</span></a>               <a class="link" href="RhythmCat-Styles.html#rc-ui-style-embedded-theme-get-length" title="rc_ui_style_embedded_theme_get_length ()">rc_ui_style_embedded_theme_get_length</a>
                                                         ();
-const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *       <a class="link" href="RhythmCat-Styles.html#rc-ui-style-embeded-theme-get-name" title="rc_ui_style_embeded_theme_get_name ()">rc_ui_style_embeded_theme_get_name</a>  (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> index</code></em>);
-<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RhythmCat-Styles.html#rc-ui-style-embeded-theme-set-by-index" title="rc_ui_style_embeded_theme_set_by_index ()">rc_ui_style_embeded_theme_set_by_index</a>
+const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *       <a class="link" href="RhythmCat-Styles.html#rc-ui-style-embedded-theme-get-name" title="rc_ui_style_embedded_theme_get_name ()">rc_ui_style_embedded_theme_get_name</a> (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> index</code></em>);
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RhythmCat-Styles.html#rc-ui-style-embedded-theme-set-by-index" title="rc_ui_style_embedded_theme_set_by_index ()">rc_ui_style_embedded_theme_set_by_index</a>
                                                         (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> index</code></em>);
-<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RhythmCat-Styles.html#rc-ui-style-embeded-theme-set-by-name" title="rc_ui_style_embeded_theme_set_by_name ()">rc_ui_style_embeded_theme_set_by_name</a>
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RhythmCat-Styles.html#rc-ui-style-embedded-theme-set-by-name" title="rc_ui_style_embedded_theme_set_by_name ()">rc_ui_style_embedded_theme_set_by_name</a>
                                                         (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *name</code></em>);
-<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RhythmCat-Styles.html#rc-ui-style-embeded-theme-set-default" title="rc_ui_style_embeded_theme_set_default ()">rc_ui_style_embeded_theme_set_default</a>
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RhythmCat-Styles.html#rc-ui-style-embedded-theme-set-default" title="rc_ui_style_embedded_theme_set_default ()">rc_ui_style_embedded_theme_set_default</a>
                                                         ();
 <a href="/usr/share/gtk-doc/html/glib/glib-Singly-Linked-Lists.html#GSList"><span class="returnvalue">GSList</span></a> *            <a class="link" href="RhythmCat-Styles.html#rc-ui-style-search-theme-paths" title="rc_ui_style_search_theme_paths ()">rc_ui_style_search_theme_paths</a>      ();
 </pre>
@@ -62,7 +62,7 @@ const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span c
 <p>
 This module provides the configration of the style (theme) of the
 player. The player can use GTK+ 3 CSS style file for setting the
-style, there are also some embeded styles in the player.
+style, there are also some embedded styles in the player.
 </p>
 </div>
 <div class="refsect1">
@@ -145,26 +145,26 @@ Remove CSS style used before.
 </div>
 <hr>
 <div class="refsect2">
-<a name="rc-ui-style-embeded-theme-get-length"></a><h3>rc_ui_style_embeded_theme_get_length ()</h3>
-<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="returnvalue">guint</span></a>               rc_ui_style_embeded_theme_get_length
+<a name="rc-ui-style-embedded-theme-get-length"></a><h3>rc_ui_style_embedded_theme_get_length ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="returnvalue">guint</span></a>               rc_ui_style_embedded_theme_get_length
                                                         ();</pre>
 <p>
-Get the number of the embeded themes in the player.
+Get the number of the embedded themes in the player.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
 <tbody><tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>The number of the embeded themes.</td>
+<td>The number of the embedded themes.</td>
 </tr></tbody>
 </table></div>
 </div>
 <hr>
 <div class="refsect2">
-<a name="rc-ui-style-embeded-theme-get-name"></a><h3>rc_ui_style_embeded_theme_get_name ()</h3>
-<pre class="programlisting">const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *       rc_ui_style_embeded_theme_get_name  (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> index</code></em>);</pre>
+<a name="rc-ui-style-embedded-theme-get-name"></a><h3>rc_ui_style_embedded_theme_get_name ()</h3>
+<pre class="programlisting">const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *       rc_ui_style_embedded_theme_get_name (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> index</code></em>);</pre>
 <p>
-Get the name of the embeded themes in the player by the given index
+Get the name of the embedded themes in the player by the given index
 number.
 </p>
 <div class="variablelist"><table border="0">
@@ -176,18 +176,18 @@ number.
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>The name of the embeded themes.</td>
+<td>The name of the embedded themes.</td>
 </tr>
 </tbody>
 </table></div>
 </div>
 <hr>
 <div class="refsect2">
-<a name="rc-ui-style-embeded-theme-set-by-index"></a><h3>rc_ui_style_embeded_theme_set_by_index ()</h3>
-<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rc_ui_style_embeded_theme_set_by_index
+<a name="rc-ui-style-embedded-theme-set-by-index"></a><h3>rc_ui_style_embedded_theme_set_by_index ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rc_ui_style_embedded_theme_set_by_index
                                                         (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> index</code></em>);</pre>
 <p>
-Use the embeded theme in the player by the given index number.
+Use the embedded theme in the player by the given index number.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -205,11 +205,11 @@ Use the embeded theme in the player by the given index number.
 </div>
 <hr>
 <div class="refsect2">
-<a name="rc-ui-style-embeded-theme-set-by-name"></a><h3>rc_ui_style_embeded_theme_set_by_name ()</h3>
-<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rc_ui_style_embeded_theme_set_by_name
+<a name="rc-ui-style-embedded-theme-set-by-name"></a><h3>rc_ui_style_embedded_theme_set_by_name ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rc_ui_style_embedded_theme_set_by_name
                                                         (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *name</code></em>);</pre>
 <p>
-Use the embeded theme in the player by the given name.
+Use the embedded theme in the player by the given name.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -227,11 +227,11 @@ Use the embeded theme in the player by the given name.
 </div>
 <hr>
 <div class="refsect2">
-<a name="rc-ui-style-embeded-theme-set-default"></a><h3>rc_ui_style_embeded_theme_set_default ()</h3>
-<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rc_ui_style_embeded_theme_set_default
+<a name="rc-ui-style-embedded-theme-set-default"></a><h3>rc_ui_style_embedded_theme_set_default ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rc_ui_style_embedded_theme_set_default
                                                         ();</pre>
 <p>
-Use the default embeded theme in the player.
+Use the default embedded theme in the player.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">

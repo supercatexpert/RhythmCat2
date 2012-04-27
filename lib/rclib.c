@@ -73,7 +73,7 @@ static void rclib_main_update_db_metadata_cb(RCLibCore *core,
     playlist_data->ftype = metadata->ftype;
     playlist_data->tracknum = metadata->track;
     playlist_data->year = metadata->year;
-    if(type==RCLIB_CORE_SOURCE_CUE || type==RCLIB_CORE_SOURCE_EMBEDED_CUE)
+    if(type==RCLIB_CORE_SOURCE_CUE || type==RCLIB_CORE_SOURCE_EMBEDDED_CUE)
         playlist_data->type = RCLIB_DB_PLAYLIST_TYPE_CUE;
     else
         playlist_data->type = RCLIB_DB_PLAYLIST_TYPE_MUSIC;

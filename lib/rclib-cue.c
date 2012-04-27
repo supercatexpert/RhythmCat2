@@ -90,7 +90,7 @@ guint rclib_cue_read_data(const gchar *input, RCLibCueInputType type,
                 g_free(dir);
                 return 0;
             }
-        case RCLIB_CUE_INPUT_EMBEDED:
+        case RCLIB_CUE_INPUT_EMBEDDED:
             break;
         default:
             return 0;
@@ -136,7 +136,7 @@ guint rclib_cue_read_data(const gchar *input, RCLibCueInputType type,
     g_free(cue_tmp_data);
     bzero(data, sizeof(RCLibCueData));
     data->type = type;
-    if(type!=RCLIB_CUE_INPUT_EMBEDED)
+    if(type!=RCLIB_CUE_INPUT_EMBEDDED)
     {
         music_filename_regex = g_regex_new("(FILE \").*[\"]",
             G_REGEX_CASELESS, 0, NULL);

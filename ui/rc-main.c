@@ -36,6 +36,10 @@
 #include "rc-ui-resources.h"
 #include "rc-ui-dialog.h"
 
+#ifdef ENABLE_INTROSPECTION
+#include <girepository.h>
+#endif
+
 /**
  * SECTION: rc-main
  * @Short_description: Main application functions
@@ -104,9 +108,9 @@ static void rc_main_app_activate(GApplication *application)
     theme = rclib_settings_get_string("MainUI", "Theme", NULL);
     if(theme!=NULL && strlen(theme)>0)
     {
-        if(g_str_has_prefix(theme, "embeded-theme:"))
+        if(g_str_has_prefix(theme, "embedded-theme:"))
         {
-            theme_flag = rc_ui_style_embeded_theme_set_by_name(theme+14);
+            theme_flag = rc_ui_style_embedded_theme_set_by_name(theme+14);
         }
         else
         {
@@ -116,12 +120,12 @@ static void rc_main_app_activate(GApplication *application)
         }
         if(!theme_flag)
         {
-            rc_ui_style_embeded_theme_set_default();
+            rc_ui_style_embedded_theme_set_default();
         }
     }
     else
     {
-        rc_ui_style_embeded_theme_set_default();
+        rc_ui_style_embedded_theme_set_default();
     }
     g_free(theme); 
     rclib_settings_apply();
@@ -427,6 +431,10 @@ gint rc_main_run(gint *argc, gchar **argv[])
     g_option_context_add_main_entries(context, options, GETTEXT_PACKAGE);
     g_option_context_add_group(context, gst_init_get_option_group());
     g_option_context_add_group(context, gtk_get_option_group(TRUE));
+    #ifdef ENABLE_INTROSPECTION
+	    g_option_context_add_group(context,
+	        g_irepository_get_option_group());
+    #endif
     if(!g_option_context_parse(context, argc, argv, &error))
     {
         g_print(_("%s\nRun '%s --help' to see a full list of available "

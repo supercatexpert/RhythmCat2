@@ -96,7 +96,6 @@ static void rclib_settings_save(const gchar *filename)
 
 /**
  * rclib_settings_init:
- * @filename: the path of the settings file
  *
  * Initialize the settings module.
  *

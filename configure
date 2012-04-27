@@ -618,6 +618,8 @@ ac_subst_vars='am__EXEEXT_FALSE
 am__EXEEXT_TRUE
 LTLIBOBJS
 LIBOBJS
+GINTROSPECTION_LIBS
+GINTROSPECTION_CFLAGS
 HAVE_LIBCURL_FALSE
 HAVE_LIBCURL_TRUE
 WITH_PYTHON3_PLUGINS_FALSE
@@ -628,6 +630,16 @@ WITH_NATIVE_PLUGINS_FALSE
 WITH_NATIVE_PLUGINS_TRUE
 WITH_GTK_UI_FALSE
 WITH_GTK_UI_TRUE
+HAVE_INTROSPECTION_FALSE
+HAVE_INTROSPECTION_TRUE
+INTROSPECTION_MAKEFILE
+INTROSPECTION_LIBS
+INTROSPECTION_CFLAGS
+INTROSPECTION_TYPELIBDIR
+INTROSPECTION_GIRDIR
+INTROSPECTION_GENERATE
+INTROSPECTION_COMPILER
+INTROSPECTION_SCANNER
 LTLIBINTL
 LIBINTL
 LTLIBICONV
@@ -706,15 +718,13 @@ GTK_DOC_BUILD_HTML_FALSE
 GTK_DOC_BUILD_HTML_TRUE
 ENABLE_GTK_DOC_FALSE
 ENABLE_GTK_DOC_TRUE
-GTKDOC_DEPS_LIBS
-GTKDOC_DEPS_CFLAGS
+PKG_CONFIG_LIBDIR
+PKG_CONFIG_PATH
+PKG_CONFIG
 HTML_DIR
 GTKDOC_MKPDF
 GTKDOC_REBASE
 GTKDOC_CHECK
-PKG_CONFIG_LIBDIR
-PKG_CONFIG_PATH
-PKG_CONFIG
 GLIB_COMPILE_RESOURCE
 GLIB_GENMARSHAL
 CPP
@@ -853,6 +863,7 @@ enable_nls
 enable_rpath
 with_libiconv_prefix
 with_libintl_prefix
+enable_introspection
 with_gtk_ui
 with_native_plugins
 with_python3_plugins
@@ -869,8 +880,6 @@ CPP
 PKG_CONFIG
 PKG_CONFIG_PATH
 PKG_CONFIG_LIBDIR
-GTKDOC_DEPS_CFLAGS
-GTKDOC_DEPS_LIBS
 GLIB2_CFLAGS
 GLIB2_LIBS
 GSTREAMER_CFLAGS
@@ -882,7 +891,9 @@ JSON_LIBS
 LIBCURL_CFLAGS
 LIBCURL_LIBS
 PYTHON3_CFLAGS
-PYTHON3_LIBS'
+PYTHON3_LIBS
+GINTROSPECTION_CFLAGS
+GINTROSPECTION_LIBS'
 
 
 # Initialize some variables set by options.
@@ -1517,6 +1528,8 @@ Optional Features:
   --enable-gtk-doc-pdf    build documentation in pdf format [[default=no]]
   --disable-nls           do not use Native Language Support
   --disable-rpath         do not hardcode runtime library paths
+  --enable-introspection=[no/auto/yes]
+                          Enable introspection for this build
 
 Optional Packages:
   --with-PACKAGE[=ARG]    use PACKAGE [ARG=yes]
@@ -1550,10 +1563,6 @@ Some influential environment variables:
               directories to add to pkg-config's search path
   PKG_CONFIG_LIBDIR
               path overriding pkg-config's built-in search path
-  GTKDOC_DEPS_CFLAGS
-              C compiler flags for GTKDOC_DEPS, overriding pkg-config
-  GTKDOC_DEPS_LIBS
-              linker flags for GTKDOC_DEPS, overriding pkg-config
   GLIB2_CFLAGS
               C compiler flags for GLIB2, overriding pkg-config
   GLIB2_LIBS  linker flags for GLIB2, overriding pkg-config
@@ -1573,6 +1582,10 @@ Some influential environment variables:
               C compiler flags for PYTHON3, overriding pkg-config
   PYTHON3_LIBS
               linker flags for PYTHON3, overriding pkg-config
+  GINTROSPECTION_CFLAGS
+              C compiler flags for GINTROSPECTION, overriding pkg-config
+  GINTROSPECTION_LIBS
+              linker flags for GINTROSPECTION, overriding pkg-config
 
 Use these variables to override the choices made by `configure' or to help
 it to find libraries and programs with nonstandard names/locations.
@@ -11776,7 +11789,6 @@ $as_echo "no" >&6; }
 fi
 
 
-
     # Extract the first word of "gtkdoc-check", so it can be a program name with args.
 set dummy gtkdoc-check; ac_word=$2
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
@@ -11934,99 +11946,6 @@ fi
 else
   as_fn_error $? "You need to have gtk-doc >= 1.14 installed to build $PACKAGE_NAME" "$LINENO" 5
 fi
-        if test "x$PACKAGE_NAME" != "xglib"; then
-
-pkg_failed=no
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for GTKDOC_DEPS" >&5
-$as_echo_n "checking for GTKDOC_DEPS... " >&6; }
-
-if test -n "$GTKDOC_DEPS_CFLAGS"; then
-    pkg_cv_GTKDOC_DEPS_CFLAGS="$GTKDOC_DEPS_CFLAGS"
- elif test -n "$PKG_CONFIG"; then
-    if test -n "$PKG_CONFIG" && \
-    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"glib-2.0 >= 2.10.0 gobject-2.0  >= 2.10.0\""; } >&5
-  ($PKG_CONFIG --exists --print-errors "glib-2.0 >= 2.10.0 gobject-2.0  >= 2.10.0") 2>&5
-  ac_status=$?
-  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
-  test $ac_status = 0; }; then
-  pkg_cv_GTKDOC_DEPS_CFLAGS=`$PKG_CONFIG --cflags "glib-2.0 >= 2.10.0 gobject-2.0  >= 2.10.0" 2>/dev/null`
-		      test "x$?" != "x0" && pkg_failed=yes
-else
-  pkg_failed=yes
-fi
- else
-    pkg_failed=untried
-fi
-if test -n "$GTKDOC_DEPS_LIBS"; then
-    pkg_cv_GTKDOC_DEPS_LIBS="$GTKDOC_DEPS_LIBS"
- elif test -n "$PKG_CONFIG"; then
-    if test -n "$PKG_CONFIG" && \
-    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"glib-2.0 >= 2.10.0 gobject-2.0  >= 2.10.0\""; } >&5
-  ($PKG_CONFIG --exists --print-errors "glib-2.0 >= 2.10.0 gobject-2.0  >= 2.10.0") 2>&5
-  ac_status=$?
-  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
-  test $ac_status = 0; }; then
-  pkg_cv_GTKDOC_DEPS_LIBS=`$PKG_CONFIG --libs "glib-2.0 >= 2.10.0 gobject-2.0  >= 2.10.0" 2>/dev/null`
-		      test "x$?" != "x0" && pkg_failed=yes
-else
-  pkg_failed=yes
-fi
- else
-    pkg_failed=untried
-fi
-
-
-
-if test $pkg_failed = yes; then
-   	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
-$as_echo "no" >&6; }
-
-if $PKG_CONFIG --atleast-pkgconfig-version 0.20; then
-        _pkg_short_errors_supported=yes
-else
-        _pkg_short_errors_supported=no
-fi
-        if test $_pkg_short_errors_supported = yes; then
-	        GTKDOC_DEPS_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors --cflags --libs "glib-2.0 >= 2.10.0 gobject-2.0  >= 2.10.0" 2>&1`
-        else
-	        GTKDOC_DEPS_PKG_ERRORS=`$PKG_CONFIG --print-errors --cflags --libs "glib-2.0 >= 2.10.0 gobject-2.0  >= 2.10.0" 2>&1`
-        fi
-	# Put the nasty error message in config.log where it belongs
-	echo "$GTKDOC_DEPS_PKG_ERRORS" >&5
-
-	as_fn_error $? "Package requirements (glib-2.0 >= 2.10.0 gobject-2.0  >= 2.10.0) were not met:
-
-$GTKDOC_DEPS_PKG_ERRORS
-
-Consider adjusting the PKG_CONFIG_PATH environment variable if you
-installed software in a non-standard prefix.
-
-Alternatively, you may set the environment variables GTKDOC_DEPS_CFLAGS
-and GTKDOC_DEPS_LIBS to avoid the need to call pkg-config.
-See the pkg-config man page for more details." "$LINENO" 5
-elif test $pkg_failed = untried; then
-     	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
-$as_echo "no" >&6; }
-	{ { $as_echo "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
-$as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
-as_fn_error $? "The pkg-config script could not be found or is too old.  Make sure it
-is in your PATH or set the PKG_CONFIG environment variable to the full
-path to pkg-config.
-
-Alternatively, you may set the environment variables GTKDOC_DEPS_CFLAGS
-and GTKDOC_DEPS_LIBS to avoid the need to call pkg-config.
-See the pkg-config man page for more details.
-
-To get pkg-config, see <http://pkg-config.freedesktop.org/>.
-See \`config.log' for more details" "$LINENO" 5; }
-else
-	GTKDOC_DEPS_CFLAGS=$pkg_cv_GTKDOC_DEPS_CFLAGS
-	GTKDOC_DEPS_LIBS=$pkg_cv_GTKDOC_DEPS_LIBS
-        { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
-$as_echo "yes" >&6; }
-
-fi
-    fi
   fi
 
   { $as_echo "$as_me:${as_lineno-$LINENO}: checking whether to build gtk-doc documentation" >&5
@@ -16101,6 +16020,101 @@ $as_echo "#define HAVE_DCGETTEXT 1" >>confdefs.h
 
 
 
+
+
+
+                # Check whether --enable-introspection was given.
+if test "${enable_introspection+set}" = set; then :
+  enableval=$enable_introspection;
+else
+  enable_introspection=auto
+fi
+
+
+    { $as_echo "$as_me:${as_lineno-$LINENO}: checking for gobject-introspection" >&5
+$as_echo_n "checking for gobject-introspection... " >&6; }
+
+        case $enable_introspection in #(
+  no) :
+            found_introspection="no (disabled, use --enable-introspection to enable)"
+     ;; #(
+      yes) :
+            if test -n "$PKG_CONFIG" && \
+    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"gobject-introspection-1.0\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "gobject-introspection-1.0") 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; then
+  :
+else
+  as_fn_error $? "gobject-introspection-1.0 is not installed" "$LINENO" 5
+fi
+        if test -n "$PKG_CONFIG" && \
+    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"gobject-introspection-1.0 >= 1.32.0\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "gobject-introspection-1.0 >= 1.32.0") 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; then
+  found_introspection=yes
+else
+  as_fn_error $? "You need to have gobject-introspection >= 1.32.0 installed to build RhythmCat" "$LINENO" 5
+fi
+     ;; #(
+      auto) :
+            if test -n "$PKG_CONFIG" && \
+    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"gobject-introspection-1.0 >= 1.32.0\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "gobject-introspection-1.0 >= 1.32.0") 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; then
+  found_introspection=yes
+else
+  found_introspection=no
+fi
+		enable_introspection=$found_introspection
+     ;; #(
+  *) :
+                as_fn_error $? "invalid argument passed to --enable-introspection, should be one of [no/auto/yes]" "$LINENO" 5
+     ;;
+esac
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: $found_introspection" >&5
+$as_echo "$found_introspection" >&6; }
+
+    INTROSPECTION_SCANNER=
+    INTROSPECTION_COMPILER=
+    INTROSPECTION_GENERATE=
+    INTROSPECTION_GIRDIR=
+    INTROSPECTION_TYPELIBDIR=
+    if test "x$found_introspection" = "xyes"; then
+       INTROSPECTION_SCANNER=`$PKG_CONFIG --variable=g_ir_scanner gobject-introspection-1.0`
+       INTROSPECTION_COMPILER=`$PKG_CONFIG --variable=g_ir_compiler gobject-introspection-1.0`
+       INTROSPECTION_GENERATE=`$PKG_CONFIG --variable=g_ir_generate gobject-introspection-1.0`
+       INTROSPECTION_GIRDIR=`$PKG_CONFIG --variable=girdir gobject-introspection-1.0`
+       INTROSPECTION_TYPELIBDIR="$($PKG_CONFIG --variable=typelibdir gobject-introspection-1.0)"
+       INTROSPECTION_CFLAGS=`$PKG_CONFIG --cflags gobject-introspection-1.0`
+       INTROSPECTION_LIBS=`$PKG_CONFIG --libs gobject-introspection-1.0`
+       INTROSPECTION_MAKEFILE=`$PKG_CONFIG --variable=datadir gobject-introspection-1.0`/gobject-introspection-1.0/Makefile.introspection
+    fi
+
+
+
+
+
+
+
+
+
+     if test "x$found_introspection" = "xyes"; then
+  HAVE_INTROSPECTION_TRUE=
+  HAVE_INTROSPECTION_FALSE='#'
+else
+  HAVE_INTROSPECTION_TRUE='#'
+  HAVE_INTROSPECTION_FALSE=
+fi
+
+
+
+
 # Checks for features
 
 
@@ -16259,6 +16273,103 @@ else
 fi
 with_console_ui=no
 
+if test "$found_introspection" = "yes"; then
+	enable_introspection=yes
+
+pkg_failed=no
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for GINTROSPECTION" >&5
+$as_echo_n "checking for GINTROSPECTION... " >&6; }
+
+if test -n "$GINTROSPECTION_CFLAGS"; then
+    pkg_cv_GINTROSPECTION_CFLAGS="$GINTROSPECTION_CFLAGS"
+ elif test -n "$PKG_CONFIG"; then
+    if test -n "$PKG_CONFIG" && \
+    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"gobject-introspection-1.0 >= 1.0\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "gobject-introspection-1.0 >= 1.0") 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; then
+  pkg_cv_GINTROSPECTION_CFLAGS=`$PKG_CONFIG --cflags "gobject-introspection-1.0 >= 1.0" 2>/dev/null`
+		      test "x$?" != "x0" && pkg_failed=yes
+else
+  pkg_failed=yes
+fi
+ else
+    pkg_failed=untried
+fi
+if test -n "$GINTROSPECTION_LIBS"; then
+    pkg_cv_GINTROSPECTION_LIBS="$GINTROSPECTION_LIBS"
+ elif test -n "$PKG_CONFIG"; then
+    if test -n "$PKG_CONFIG" && \
+    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"gobject-introspection-1.0 >= 1.0\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "gobject-introspection-1.0 >= 1.0") 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; then
+  pkg_cv_GINTROSPECTION_LIBS=`$PKG_CONFIG --libs "gobject-introspection-1.0 >= 1.0" 2>/dev/null`
+		      test "x$?" != "x0" && pkg_failed=yes
+else
+  pkg_failed=yes
+fi
+ else
+    pkg_failed=untried
+fi
+
+
+
+if test $pkg_failed = yes; then
+   	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+
+if $PKG_CONFIG --atleast-pkgconfig-version 0.20; then
+        _pkg_short_errors_supported=yes
+else
+        _pkg_short_errors_supported=no
+fi
+        if test $_pkg_short_errors_supported = yes; then
+	        GINTROSPECTION_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors --cflags --libs "gobject-introspection-1.0 >= 1.0" 2>&1`
+        else
+	        GINTROSPECTION_PKG_ERRORS=`$PKG_CONFIG --print-errors --cflags --libs "gobject-introspection-1.0 >= 1.0" 2>&1`
+        fi
+	# Put the nasty error message in config.log where it belongs
+	echo "$GINTROSPECTION_PKG_ERRORS" >&5
+
+	as_fn_error $? "Package requirements (gobject-introspection-1.0 >= 1.0) were not met:
+
+$GINTROSPECTION_PKG_ERRORS
+
+Consider adjusting the PKG_CONFIG_PATH environment variable if you
+installed software in a non-standard prefix.
+
+Alternatively, you may set the environment variables GINTROSPECTION_CFLAGS
+and GINTROSPECTION_LIBS to avoid the need to call pkg-config.
+See the pkg-config man page for more details." "$LINENO" 5
+elif test $pkg_failed = untried; then
+     	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+	{ { $as_echo "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
+$as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
+as_fn_error $? "The pkg-config script could not be found or is too old.  Make sure it
+is in your PATH or set the PKG_CONFIG environment variable to the full
+path to pkg-config.
+
+Alternatively, you may set the environment variables GINTROSPECTION_CFLAGS
+and GINTROSPECTION_LIBS to avoid the need to call pkg-config.
+See the pkg-config man page for more details.
+
+To get pkg-config, see <http://pkg-config.freedesktop.org/>.
+See \`config.log' for more details" "$LINENO" 5; }
+else
+	GINTROSPECTION_CFLAGS=$pkg_cv_GINTROSPECTION_CFLAGS
+	GINTROSPECTION_LIBS=$pkg_cv_GINTROSPECTION_LIBS
+        { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
+$as_echo "yes" >&6; }
+
+fi
+else
+	enable_introspection=no
+fi
+
 ac_config_files="$ac_config_files lib/librhythmcat-2.0.pc ui/rhythmcat-2.0.pc Makefile lib/Makefile ui/Makefile data/Makefile data/icons/Makefile data/images/Makefile plugins/Makefile plugins/base/Makefile plugins/extra/Makefile plugins/devel/Makefile plugins/restricted/Makefile docs/Makefile docs/reference/Makefile docs/reference/lib/Makefile docs/reference/ui/Makefile docs/reference/lib/version.xml docs/reference/ui/version.xml po/Makefile.in po/Makefile"
 
 cat >confcache <<\_ACEOF
@@ -16410,6 +16521,10 @@ fi
   ac_config_commands="$ac_config_commands po/stamp-it"
 
 
+if test -z "${HAVE_INTROSPECTION_TRUE}" && test -z "${HAVE_INTROSPECTION_FALSE}"; then
+  as_fn_error $? "conditional \"HAVE_INTROSPECTION\" was never defined.
+Usually this means the macro was only invoked conditionally." "$LINENO" 5
+fi
 if test -z "${WITH_GTK_UI_TRUE}" && test -z "${WITH_GTK_UI_FALSE}"; then
   as_fn_error $? "conditional \"WITH_GTK_UI\" was never defined.
 Usually this means the macro was only invoked conditionally." "$LINENO" 5
@@ -18844,11 +18959,12 @@ Build GTK+ 3 UI............. : $with_gtk_ui
 Build Console UI............ : $with_console_ui
 
 Enable Gtk-Doc...............: $enable_gtk_doc
+Enable GObject Introspection.: $enable_introspection
 
 With Native Plug-ins.........: $with_native_plugins
 With Python3 Plug-ins........: $with_python3_plugins
 
-configure complete, now type \'make\'
+configure complete, now type 'make'
 "
 
 

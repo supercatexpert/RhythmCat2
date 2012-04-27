@@ -28,6 +28,7 @@
 <ANCHOR id="rc-ui-dialog-save-all-playlist" href="RhythmCat/RhythmCat-Dialogs.html#rc-ui-dialog-save-all-playlist">
 <ANCHOR id="rc-ui-dialog-save-playlist" href="RhythmCat/RhythmCat-Dialogs.html#rc-ui-dialog-save-playlist">
 <ANCHOR id="rc-ui-dialog-show-load-autosaved" href="RhythmCat/RhythmCat-Dialogs.html#rc-ui-dialog-show-load-autosaved">
+<ANCHOR id="rc-ui-dialog-show-load-legacy" href="RhythmCat/RhythmCat-Dialogs.html#rc-ui-dialog-show-load-legacy">
 <ANCHOR id="rc-ui-dialog-show-message" href="RhythmCat/RhythmCat-Dialogs.html#rc-ui-dialog-show-message">
 <ANCHOR id="rc-ui-dialog-show-supported-format" href="RhythmCat/RhythmCat-Dialogs.html#rc-ui-dialog-show-supported-format">
 <ANCHOR id="RhythmCat-Audio-Effect-UI" href="RhythmCat/RhythmCat-Audio-Effect-UI.html">
@@ -201,11 +202,11 @@
 <ANCHOR id="rc-ui-style-css-set-file" href="RhythmCat/RhythmCat-Styles.html#rc-ui-style-css-set-file">
 <ANCHOR id="rc-ui-style-css-set-resource" href="RhythmCat/RhythmCat-Styles.html#rc-ui-style-css-set-resource">
 <ANCHOR id="rc-ui-style-css-unset" href="RhythmCat/RhythmCat-Styles.html#rc-ui-style-css-unset">
-<ANCHOR id="rc-ui-style-embeded-theme-get-length" href="RhythmCat/RhythmCat-Styles.html#rc-ui-style-embeded-theme-get-length">
-<ANCHOR id="rc-ui-style-embeded-theme-get-name" href="RhythmCat/RhythmCat-Styles.html#rc-ui-style-embeded-theme-get-name">
-<ANCHOR id="rc-ui-style-embeded-theme-set-by-index" href="RhythmCat/RhythmCat-Styles.html#rc-ui-style-embeded-theme-set-by-index">
-<ANCHOR id="rc-ui-style-embeded-theme-set-by-name" href="RhythmCat/RhythmCat-Styles.html#rc-ui-style-embeded-theme-set-by-name">
-<ANCHOR id="rc-ui-style-embeded-theme-set-default" href="RhythmCat/RhythmCat-Styles.html#rc-ui-style-embeded-theme-set-default">
+<ANCHOR id="rc-ui-style-embedded-theme-get-length" href="RhythmCat/RhythmCat-Styles.html#rc-ui-style-embedded-theme-get-length">
+<ANCHOR id="rc-ui-style-embedded-theme-get-name" href="RhythmCat/RhythmCat-Styles.html#rc-ui-style-embedded-theme-get-name">
+<ANCHOR id="rc-ui-style-embedded-theme-set-by-index" href="RhythmCat/RhythmCat-Styles.html#rc-ui-style-embedded-theme-set-by-index">
+<ANCHOR id="rc-ui-style-embedded-theme-set-by-name" href="RhythmCat/RhythmCat-Styles.html#rc-ui-style-embedded-theme-set-by-name">
+<ANCHOR id="rc-ui-style-embedded-theme-set-default" href="RhythmCat/RhythmCat-Styles.html#rc-ui-style-embedded-theme-set-default">
 <ANCHOR id="rc-ui-style-search-theme-paths" href="RhythmCat/RhythmCat-Styles.html#rc-ui-style-search-theme-paths">
 <ANCHOR id="annotation-glossterm-array" href="RhythmCat/annotation-glossary.html#annotation-glossterm-array">
 <ANCHOR id="annotation-glossterm-allow-none" href="RhythmCat/annotation-glossary.html#annotation-glossterm-allow-none">

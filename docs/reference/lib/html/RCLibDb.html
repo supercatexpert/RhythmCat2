@@ -71,6 +71,7 @@ enum                <a class="link" href="RCLibDb.html#RCLibDbPlaylistType" titl
 <a href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GObject"><span class="returnvalue">GObject</span></a> *           <a class="link" href="RCLibDb.html#rclib-db-get-instance" title="rclib_db_get_instance ()">rclib_db_get_instance</a>               ();
 <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RCLibDb.html#rclib-db-init" title="rclib_db_init ()">rclib_db_init</a>                       (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *file</code></em>);
 <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RCLibDb.html#rclib-db-load-autosaved" title="rclib_db_load_autosaved ()">rclib_db_load_autosaved</a>             ();
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RCLibDb.html#rclib-db-load-legacy" title="rclib_db_load_legacy ()">rclib_db_load_legacy</a>                ();
 <span class="returnvalue">void</span>                <a class="link" href="RCLibDb.html#rclib-db-playlist-add-directory" title="rclib_db_playlist_add_directory ()">rclib_db_playlist_add_directory</a>     (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Sequences.html#GSequenceIter"><span class="type">GSequenceIter</span></a> *iter</code></em>,
                                                          <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Sequences.html#GSequenceIter"><span class="type">GSequenceIter</span></a> *insert_iter</code></em>,
                                                          <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *dir</code></em>);
@@ -635,6 +636,21 @@ Initialize the music library database.
 <p>
 Load all playlist data from auto-saved playlist.
 </p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-db-load-legacy"></a><h3>rclib_db_load_legacy ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rclib_db_load_legacy                ();</pre>
+<p>
+Load legacy playlist file from RhythmCat 1.0.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>Whether the operation succeeds.</td>
+</tr></tbody>
+</table></div>
 </div>
 <hr>
 <div class="refsect2">

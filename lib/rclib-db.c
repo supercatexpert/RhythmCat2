@@ -23,6 +23,7 @@
  * Boston, MA  02110-1301  USA
  */
 
+#include <json.h>
 #include "rclib-db.h"
 #include "rclib-common.h"
 #include "rclib-marshal.h"
@@ -441,7 +442,7 @@ static gpointer rclib_db_playlist_import_thread_cb(gpointer data)
                     g_free(cue_uri);
                     break;
                 }
-                else /* Maybe a embeded CUE audio file? */
+                else /* Maybe a embedded CUE audio file? */
                 {
                     g_free(import_data->uri);
                     import_data->uri = g_strdup(cue_uri);
@@ -450,10 +451,10 @@ static gpointer rclib_db_playlist_import_thread_cb(gpointer data)
             }
             mmd = rclib_tag_read_metadata(import_data->uri);
             if(mmd==NULL) break;
-            if(mmd->emb_cue!=NULL) /* Embeded CUE check */
+            if(mmd->emb_cue!=NULL) /* Embedded CUE check */
             {
                 if(rclib_cue_read_data(mmd->emb_cue,
-                    RCLIB_CUE_INPUT_EMBEDED, &cue_data)>0)
+                    RCLIB_CUE_INPUT_EMBEDDED, &cue_data)>0)
                 {
                     if(track>0)
                     {
@@ -593,7 +594,7 @@ static gpointer rclib_db_playlist_refresh_thread_cb(gpointer data)
                     g_free(cue_uri);
                     break;
                 }
-                else /* Maybe a embeded CUE audio file? */
+                else /* Maybe a embedded CUE audio file? */
                 {
                     g_free(refresh_data->uri);
                     refresh_data->uri = g_strdup(cue_uri);
@@ -601,10 +602,10 @@ static gpointer rclib_db_playlist_refresh_thread_cb(gpointer data)
                 }
             }
             mmd = rclib_tag_read_metadata(refresh_data->uri);
-            if(mmd!=NULL && mmd->emb_cue!=NULL) /* Embeded CUE check */
+            if(mmd!=NULL && mmd->emb_cue!=NULL) /* Embedded CUE check */
             {
                 if(rclib_cue_read_data(mmd->emb_cue,
-                    RCLIB_CUE_INPUT_EMBEDED, &cue_data)>0)
+                    RCLIB_CUE_INPUT_EMBEDDED, &cue_data)>0)
                 {
                     if(track>0)
                     {
@@ -2446,6 +2447,111 @@ void rclib_db_autosaved_remove()
     filename = g_strdup_printf("%s.autosave", priv->filename);
     g_remove(filename);
     g_free(filename);
+}
+
+/**
+ * rclib_db_load_legacy:
+ *
+ * Load legacy playlist file from RhythmCat 1.0.
+ *
+ * Returns: Whether the operation succeeds.
+ */
+
+gboolean rclib_db_load_legacy()
+{
+    RCLibDbPrivate *priv;
+    GFile *file;
+    GFileInputStream *input_stream;
+    GDataInputStream *data_stream;
+    gsize line_len;
+    RCLibDbCatalogData *catalog_data = NULL;
+    RCLibDbPlaylistData *playlist_data = NULL;
+    GSequenceIter *catalog_iter = NULL;
+    GSequenceIter *playlist_iter = NULL;
+    gchar *line = NULL;
+    gint64 timeinfo;
+    gint trackno;
+    gchar *plist_set_file_full_path = NULL;
+    const gchar *home_dir = NULL;
+    if(db_instance==NULL) return FALSE;
+    priv = RCLIB_DB_GET_PRIVATE(RCLIB_DB(db_instance));
+    if(priv==NULL) return FALSE;
+    home_dir = g_getenv("HOME");
+    if(home_dir==NULL)
+        home_dir = g_get_home_dir();
+    plist_set_file_full_path = g_build_filename(home_dir, ".RhythmCat",
+        "playlist.dat", NULL);
+    if(plist_set_file_full_path==NULL) return FALSE;
+    file = g_file_new_for_path(plist_set_file_full_path);
+    if(file==NULL) return FALSE;
+    if(!g_file_query_exists(file, NULL))
+    {
+        g_object_unref(file);
+        return FALSE;
+    }
+    input_stream = g_file_read(file, NULL, NULL);
+    g_object_unref(file);
+    if(input_stream==NULL) return FALSE;
+    data_stream = g_data_input_stream_new(G_INPUT_STREAM(input_stream));
+    g_object_unref(input_stream);
+    if(data_stream==NULL) return FALSE;
+    g_data_input_stream_set_newline_type(data_stream,
+        G_DATA_STREAM_NEWLINE_TYPE_ANY);
+    while((line=g_data_input_stream_read_line(data_stream, &line_len,
+        NULL, NULL))!=NULL)
+    {
+        if(catalog_data!=NULL && strncmp(line, "UR=", 3)==0)
+        {
+            if(playlist_iter!=NULL)
+            {
+                g_signal_emit(db_instance,
+                    db_signals[SIGNAL_PLAYLIST_CHANGED], 0, playlist_iter);
+            }
+            playlist_data = rclib_db_playlist_data_new();
+            playlist_data->uri = g_strdup(line+3);
+            playlist_data->catalog = catalog_iter;
+            playlist_data->type = RCLIB_DB_PLAYLIST_TYPE_MUSIC;
+            playlist_iter = g_sequence_append(catalog_data->playlist,
+                playlist_data);
+            g_signal_emit(db_instance, db_signals[SIGNAL_PLAYLIST_ADDED],
+                0, playlist_iter);
+        }
+        else if(playlist_data!=NULL && strncmp(line, "TI=", 3)==0)
+            playlist_data->title = g_strdup(line+3);
+        else if(playlist_data!=NULL && strncmp(line, "AR=", 3)==0)
+            playlist_data->artist = g_strdup(line+3);
+        else if(playlist_data!=NULL && strncmp(line, "AL=", 3)==0)
+            playlist_data->album = g_strdup(line+3);
+        else if(playlist_data!=NULL && strncmp(line, "TL=", 3)==0)  /* time length */
+        {
+            timeinfo = g_ascii_strtoll(line+3, NULL, 10) * 10;
+            timeinfo *= GST_MSECOND;
+            playlist_data->length = timeinfo;
+        }
+        else if(strncmp(line, "TN=", 3)==0)  /* track number */
+        {
+            sscanf(line+3, "%d", &trackno);
+            playlist_data->tracknum = trackno;
+        }
+        else if(strncmp(line, "LF=", 3)==0)
+            playlist_data->lyricfile = g_strdup(line+3);
+        else if(strncmp(line, "AF=", 3)==0)
+            playlist_data->albumfile = g_strdup(line+3);
+        else if(strncmp(line, "LI=", 3)==0)
+        {
+            catalog_data = rclib_db_catalog_data_new();
+            catalog_data->name = g_strdup(line+3);
+            catalog_data->type = RCLIB_DB_CATALOG_TYPE_PLAYLIST;
+            catalog_data->playlist = g_sequence_new((GDestroyNotify)
+                rclib_db_playlist_data_unref);
+            catalog_iter = g_sequence_append(priv->catalog, catalog_data);
+            g_signal_emit(db_instance, db_signals[SIGNAL_CATALOG_ADDED],
+                0, catalog_iter);
+        }
+        g_free(line);
+    }
+    g_object_unref(data_stream);
+    return TRUE;
 }
 
 
