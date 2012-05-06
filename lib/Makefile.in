@@ -36,7 +36,9 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
-@HAVE_INTROSPECTION_TRUE@am__append_1 = $(gir_DATA) $(typelib_DATA)
+@PLATFORM_WIN32_TRUE@am__append_1 = -lkernel32
+@PLATFORM_WIN32_TRUE@am__append_2 = -mwindows
+@HAVE_INTROSPECTION_TRUE@am__append_3 = $(gir_DATA) $(typelib_DATA)
 subdir = lib
 DIST_COMMON = $(librhythmcat_2_0include_HEADERS) $(srcdir)/Makefile.am \
 	$(srcdir)/Makefile.in $(srcdir)/librhythmcat-2.0.pc.in
@@ -85,7 +87,8 @@ am__installdirs = "$(DESTDIR)$(libdir)" "$(DESTDIR)$(girdir)" \
 	"$(DESTDIR)$(pkgconfigdir)" "$(DESTDIR)$(typelibdir)" \
 	"$(DESTDIR)$(librhythmcat_2_0includedir)"
 LTLIBRARIES = $(lib_LTLIBRARIES)
-librhythmcat_2_0_la_DEPENDENCIES =
+am__DEPENDENCIES_1 =
+librhythmcat_2_0_la_DEPENDENCIES = $(am__DEPENDENCIES_1)
 am__objects_1 = rclib-core.lo rclib-cue.lo rclib-db.lo rclib-tag.lo \
 	rclib-player.lo rclib-util.lo rclib-lyric.lo rclib-settings.lo \
 	rclib-album.lo rclib-plugin.lo rclib.lo
@@ -338,13 +341,14 @@ librhythmcat_2_0_la_SOURCES = $(librhythmcat_2_0_sources) \
 INCLUDES = @GLIB2_CFLAGS@ @GSTREAMER_CFLAGS@ @JSON_CFLAGS@ \
     -DLOCALEDIR=\"$(localedir)\"
 
-librhythmcat_2_0_la_LIBADD = @GLIB2_LIBS@ @GSTREAMER_LIBS@ @JSON_LIBS@
-CLEANFILES = $(BUILT_SOURCES) $(am__append_1)
+librhythmcat_2_0_la_LIBADD = @GLIB2_LIBS@ @GSTREAMER_LIBS@ @JSON_LIBS@ \
+	$(am__append_1)
+CLEANFILES = $(BUILT_SOURCES) $(am__append_3)
 librhythmcat_2_0includedir = $(includedir)/librhythmcat2
 librhythmcat_2_0include_HEADERS = rclib-common.h \
     $(librhythmcat_2_0_headers) $(librhythmcat_2_0_builtheaders)
 
-librhythmcat_2_0_la_LDFLAGS = -export-dynamic -O2
+librhythmcat_2_0_la_LDFLAGS = -export-dynamic -O2 $(am__append_2)
 @HAVE_INTROSPECTION_TRUE@INTROSPECTION_GIRS = RhythmCatLib-2.0.gir
 @HAVE_INTROSPECTION_TRUE@INTROSPECTION_SCANNER_ARGS = --add-include-path=$(srcdir)/lib
 @HAVE_INTROSPECTION_TRUE@INTROSPECTION_COMPILER_ARGS = --includedir=$(srcdir)/lib

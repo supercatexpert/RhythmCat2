@@ -618,6 +618,8 @@ ac_subst_vars='am__EXEEXT_FALSE
 am__EXEEXT_TRUE
 LTLIBOBJS
 LIBOBJS
+PLATFORM_WIN32_FALSE
+PLATFORM_WIN32_TRUE
 GINTROSPECTION_LIBS
 GINTROSPECTION_CFLAGS
 HAVE_LIBCURL_FALSE
@@ -16370,6 +16372,27 @@ else
 	enable_introspection=no
 fi
 
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for Win32 platform" >&5
+$as_echo_n "checking for Win32 platform... " >&6; }
+case "$host" in
+  *-*-mingw*|*-*-cygwin*)
+    platform_win32=yes
+    ;;
+  *)
+    platform_win32=no
+    ;;
+esac
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $platform_win32" >&5
+$as_echo "$platform_win32" >&6; }
+ if test "$platform_win32" = "yes"; then
+  PLATFORM_WIN32_TRUE=
+  PLATFORM_WIN32_FALSE='#'
+else
+  PLATFORM_WIN32_TRUE='#'
+  PLATFORM_WIN32_FALSE=
+fi
+
+
 ac_config_files="$ac_config_files lib/librhythmcat-2.0.pc ui/rhythmcat-2.0.pc Makefile lib/Makefile ui/Makefile data/Makefile data/icons/Makefile data/images/Makefile plugins/Makefile plugins/base/Makefile plugins/extra/Makefile plugins/devel/Makefile plugins/restricted/Makefile docs/Makefile docs/reference/Makefile docs/reference/lib/Makefile docs/reference/ui/Makefile docs/reference/lib/version.xml docs/reference/ui/version.xml po/Makefile.in po/Makefile"
 
 cat >confcache <<\_ACEOF
@@ -16539,6 +16562,10 @@ Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
 if test -z "${HAVE_LIBCURL_TRUE}" && test -z "${HAVE_LIBCURL_FALSE}"; then
   as_fn_error $? "conditional \"HAVE_LIBCURL\" was never defined.
+Usually this means the macro was only invoked conditionally." "$LINENO" 5
+fi
+if test -z "${PLATFORM_WIN32_TRUE}" && test -z "${PLATFORM_WIN32_FALSE}"; then
+  as_fn_error $? "conditional \"PLATFORM_WIN32\" was never defined.
 Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
 

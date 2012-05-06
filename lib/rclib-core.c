@@ -146,7 +146,7 @@ static void rclib_core_metadata_free(RCLibCoreMetadata *metadata)
     g_free(metadata->artist);
     g_free(metadata->album);
     g_free(metadata->ftype);
-    bzero(metadata, sizeof(RCLibCoreMetadata));
+    memset(metadata, 0, sizeof(RCLibCoreMetadata));
 }
 
 static gboolean rclib_core_parse_metadata(const GstTagList *tags,
@@ -1317,7 +1317,7 @@ static void rclib_core_instance_init(RCLibCore *core)
     g_object_set(G_OBJECT(videosink), "sync", TRUE, NULL);
     g_object_set(G_OBJECT(playbin), "audio-sink", audiobin, "video-sink",
         videosink, NULL);
-    bzero(&(priv->metadata), sizeof(RCLibCoreMetadata));
+    memset(&(priv->metadata), 0, sizeof(RCLibCoreMetadata));
     priv->playbin = playbin;
     priv->effectbin = effectbin;
     priv->audiosink = audiosink;

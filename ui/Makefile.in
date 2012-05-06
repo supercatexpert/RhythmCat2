@@ -40,7 +40,9 @@ host_triplet = @host@
 @WITH_GTK_UI_TRUE@bin_PROGRAMS = RhythmCat2$(EXEEXT)
 @HAVE_INTROSPECTION_TRUE@@WITH_GTK_UI_TRUE@am__append_1 = @GINTROSPECTION_LIBS@
 @HAVE_INTROSPECTION_TRUE@@WITH_GTK_UI_TRUE@am__append_2 = -DENABLE_INTROSPECTION @GINTROSPECTION_CFLAGS@
-@HAVE_INTROSPECTION_TRUE@@WITH_GTK_UI_TRUE@am__append_3 = $(gir_DATA) $(typelib_DATA)
+@PLATFORM_WIN32_TRUE@@WITH_GTK_UI_TRUE@am__append_3 = -lkernel32
+@PLATFORM_WIN32_TRUE@@WITH_GTK_UI_TRUE@am__append_4 = -mwindows
+@HAVE_INTROSPECTION_TRUE@@WITH_GTK_UI_TRUE@am__append_5 = $(gir_DATA) $(typelib_DATA)
 subdir = ui
 DIST_COMMON = $(am__librhythmcat_ui_2_0include_HEADERS_DIST) \
 	$(am__noinst_HEADERS_DIST) $(srcdir)/Makefile.am \
@@ -386,17 +388,20 @@ top_srcdir = @top_srcdir@
 @WITH_GTK_UI_TRUE@	@JSON_LIBS@ \
 @WITH_GTK_UI_TRUE@	$(top_builddir)/lib/librhythmcat-2.0.la \
 @WITH_GTK_UI_TRUE@	$(am__append_1)
-@WITH_GTK_UI_TRUE@CLEANFILES = $(BUILT_SOURCES) $(am__append_3)
+@WITH_GTK_UI_TRUE@CLEANFILES = $(BUILT_SOURCES) $(am__append_5)
 @WITH_GTK_UI_TRUE@RhythmCat2_DEPENDENCIES = @LIBOBJS@ librhythmcat-ui-2.0.la
-@WITH_GTK_UI_TRUE@RhythmCat2_LDFLAGS = -export-dynamic -no-undefined -export-symbols-regex "^[[^_]].*" -O2
+@WITH_GTK_UI_TRUE@RhythmCat2_LDFLAGS = -export-dynamic -no-undefined \
+@WITH_GTK_UI_TRUE@	-export-symbols-regex "^[[^_]].*" -O2 \
+@WITH_GTK_UI_TRUE@	$(am__append_4)
 @WITH_GTK_UI_TRUE@INCLUDES = @GLIB2_CFLAGS@ @GTK_CFLAGS@ \
 @WITH_GTK_UI_TRUE@	@GSTREAMER_CFLAGS@ @JSON_CFLAGS@ \
 @WITH_GTK_UI_TRUE@	-DLOCALEDIR=\"$(localedir)\" \
 @WITH_GTK_UI_TRUE@	-I$(top_srcdir)/lib -DLIBDIR=\"$(libdir)\" \
 @WITH_GTK_UI_TRUE@	-DPREFIXDIR=\"$(prefix)\" $(am__append_2)
-@WITH_GTK_UI_TRUE@RhythmCat2_LDADD = @LIBOBJS@ @GLIB2_LIBS@ @GTK_LIBS@ @GSTREAMER_LIBS@ \
-@WITH_GTK_UI_TRUE@    @JSON_LIBS@ $(top_builddir)/lib/librhythmcat-2.0.la librhythmcat-ui-2.0.la
-
+@WITH_GTK_UI_TRUE@RhythmCat2_LDADD = @LIBOBJS@ @GLIB2_LIBS@ @GTK_LIBS@ \
+@WITH_GTK_UI_TRUE@	@GSTREAMER_LIBS@ @JSON_LIBS@ \
+@WITH_GTK_UI_TRUE@	$(top_builddir)/lib/librhythmcat-2.0.la \
+@WITH_GTK_UI_TRUE@	librhythmcat-ui-2.0.la $(am__append_3)
 @WITH_GTK_UI_TRUE@EXTRA_DIST = \
 @WITH_GTK_UI_TRUE@    rhythmcat-2.0.pc.in \
 @WITH_GTK_UI_TRUE@    rc-ui-resources.gresource.xml \

@@ -382,7 +382,7 @@ static gpointer rclib_db_playlist_import_thread_cb(gpointer data)
             if(local_flag && g_regex_match_simple("(.CUE)$",
                 import_data->uri, G_REGEX_CASELESS, 0))
             {
-                bzero(&cue_data, sizeof(RCLibCueData));
+                memset(&cue_data, 0, sizeof(RCLibCueData));
                 if(rclib_cue_read_data(import_data->uri,
                     RCLIB_CUE_INPUT_URI, &cue_data)>0)
                 {
@@ -413,7 +413,7 @@ static gpointer rclib_db_playlist_import_thread_cb(gpointer data)
             if(local_flag && rclib_cue_get_track_num(import_data->uri,
                 &cue_uri, &track))
             {
-                bzero(&cue_data, sizeof(RCLibCueData));
+                memset(&cue_data, 0, sizeof(RCLibCueData));
                 if(rclib_cue_read_data(cue_uri, RCLIB_CUE_INPUT_URI,
                     &cue_data)>0)
                 {
@@ -555,7 +555,7 @@ static gpointer rclib_db_playlist_refresh_thread_cb(gpointer data)
                 if(g_regex_match_simple("(.CUE)$", cue_uri,
                     G_REGEX_CASELESS, 0))
                 {
-                    bzero(&cue_data, sizeof(RCLibCueData));
+                    memset(&cue_data, 0, sizeof(RCLibCueData));
                     if(rclib_cue_read_data(cue_uri, RCLIB_CUE_INPUT_URI,
                         &cue_data)>0)
                     {

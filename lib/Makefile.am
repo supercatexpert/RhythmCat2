@@ -41,6 +41,11 @@ librhythmcat_2_0_la_SOURCES += $(BUILT_SOURCES)
 
 librhythmcat_2_0_la_LDFLAGS = -export-dynamic -O2
 
+if PLATFORM_WIN32
+    librhythmcat_2_0_la_LIBADD += -lkernel32
+    librhythmcat_2_0_la_LDFLAGS += -mwindows
+endif
+
 if HAVE_INTROSPECTION
 -include $(INTROSPECTION_MAKEFILE)
 INTROSPECTION_GIRS = 

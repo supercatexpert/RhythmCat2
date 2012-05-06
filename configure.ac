@@ -133,6 +133,18 @@ else
 	enable_introspection=no
 fi
 
+AC_MSG_CHECKING([for Win32 platform])
+case "$host" in
+  *-*-mingw*|*-*-cygwin*)
+    platform_win32=yes
+    ;;
+  *)
+    platform_win32=no
+    ;;
+esac
+AC_MSG_RESULT([$platform_win32])
+AM_CONDITIONAL(PLATFORM_WIN32, test "$platform_win32" = "yes")
+
 AC_CONFIG_FILES([lib/librhythmcat-2.0.pc ui/rhythmcat-2.0.pc \
     Makefile lib/Makefile ui/Makefile data/Makefile data/icons/Makefile \
     data/images/Makefile plugins/Makefile plugins/base/Makefile \

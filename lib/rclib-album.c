@@ -195,7 +195,7 @@ static void rclib_album_class_init(RCLibAlbumClass *klass)
 static void rclib_album_instance_init(RCLibAlbum *album)
 {
     RCLibAlbumPrivate *priv = RCLIB_ALBUM_GET_PRIVATE(album);
-    bzero(priv, sizeof(RCLibAlbumPrivate));
+    memset(priv, 0, sizeof(RCLibAlbumPrivate));
     priv->tag_found_handler = rclib_core_signal_connect("tag-found",
         G_CALLBACK(rclib_album_tag_found_cb), priv);
     priv->uri_changed_handler = rclib_core_signal_connect("uri-changed",

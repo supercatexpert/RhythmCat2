@@ -260,7 +260,7 @@ static void rclib_plugin_class_init(RCLibPluginClass *klass)
 static void rclib_plugin_instance_init(RCLibPlugin *plugin)
 {
     RCLibPluginPrivate *priv = RCLIB_PLUGIN_GET_PRIVATE(plugin);
-    bzero(priv, sizeof(RCLibPluginPrivate));
+    memset(priv, 0, sizeof(RCLibPluginPrivate));
     priv->plugin_table = g_hash_table_new_full(g_str_hash, g_str_equal,
         g_free, (GDestroyNotify)rclib_plugin_data_unref);
     priv->loader_table = g_hash_table_new_full(g_str_hash, g_str_equal,

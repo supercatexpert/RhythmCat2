@@ -134,7 +134,7 @@ guint rclib_cue_read_data(const gchar *input, RCLibCueInputType type,
         }
     }
     g_free(cue_tmp_data);
-    bzero(data, sizeof(RCLibCueData));
+    memset(data, 0, sizeof(RCLibCueData));
     data->type = type;
     if(type!=RCLIB_CUE_INPUT_EMBEDDED)
     {
@@ -284,7 +284,7 @@ void rclib_cue_free(RCLibCueData *data)
         }
         g_free(data->track);
     }
-    bzero(data, sizeof(RCLibCueData));
+    memset(data, 0, sizeof(RCLibCueData));
 }
 
 /**

@@ -291,7 +291,7 @@ static void rclib_lyric_class_init(RCLibLyricClass *klass)
 static void rclib_lyric_instance_init(RCLibLyric *lyric)
 {
     RCLibLyricPrivate *priv = RCLIB_LYRIC_GET_PRIVATE(lyric);
-    bzero(priv, sizeof(RCLibLyricPrivate));
+    memset(priv, 0, sizeof(RCLibLyricPrivate));
     priv->parsed_data1.seq = g_sequence_new((GDestroyNotify)
         rclib_lyric_lyric_data_free);
     priv->parsed_data2.seq = g_sequence_new((GDestroyNotify)

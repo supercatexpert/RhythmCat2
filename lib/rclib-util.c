@@ -25,6 +25,7 @@
 
 #ifdef G_OS_WIN32
     #include <windows.h>
+    #include <winbase.h>
 #endif
 
 #include "rclib-util.h"
@@ -86,9 +87,10 @@ gchar *rclib_util_get_data_dir(const gchar *name, const gchar *arg0)
         }
     #endif
     #ifdef G_OS_WIN32
-        memset(full_path, 0, PATH_MAX);
-        GetModuleFileName(NULL, full_path, PATH_MAX);
-        bin_dir = g_path_get_dirname(full_path);
+        bin_dir = g_win32_get_package_installation_directory_of_module(NULL);
+        data_dir = g_build_filename(bin_dir, "share", name, NULL);
+        g_free(bin_dir);
+        bin_dir = NULL;
     #endif
     if(bin_dir!=NULL)
     {

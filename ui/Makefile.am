@@ -43,7 +43,7 @@ librhythmcat_ui_2_0include_HEADERS = rc-common.h \
 librhythmcat_ui_2_0_la_LDFLAGS = -export-dynamic -O2 -no-undefined -export-symbols-regex "^[[^_]].*"
 librhythmcat_ui_2_0_la_LIBADD = @LIBOBJS@ @GLIB2_LIBS@ @GTK_LIBS@ @GSTREAMER_LIBS@ \
     @JSON_LIBS@ $(top_builddir)/lib/librhythmcat-2.0.la
-    
+
 if HAVE_INTROSPECTION
     librhythmcat_ui_2_0_la_LIBADD += @GINTROSPECTION_LIBS@
 endif
@@ -63,6 +63,11 @@ endif
 
 RhythmCat2_LDADD = @LIBOBJS@ @GLIB2_LIBS@ @GTK_LIBS@ @GSTREAMER_LIBS@ \
     @JSON_LIBS@ $(top_builddir)/lib/librhythmcat-2.0.la librhythmcat-ui-2.0.la
+    
+if PLATFORM_WIN32
+    RhythmCat2_LDADD += -lkernel32
+    RhythmCat2_LDFLAGS += -mwindows
+endif 
 
 EXTRA_DIST = \
     rhythmcat-2.0.pc.in \
