@@ -99,7 +99,7 @@
     border-style: solid;
     border-color: @rc_borders;
     border-width: 1px;
-    border-radius: 2;
+    border-radius: 2px;
     padding: 0;
 }
 
@@ -228,7 +228,7 @@
 {
     background-image: none;
     background-color: @rc_scrollbar_slider;
-    border-radius: 6;
+    border-radius: 6px;
     border-style: solid;
     border-image: none;
     border-color: transparent;
@@ -325,8 +325,8 @@
 
 #RC2MainWindow #RC2TimeScale.trough
 {
-    border-width: 1;
-    border-radius: 2;
+    border-width: 1px;
+    border-radius: 2px;
     border-style: solid;
     background-color: shade(@rc_scale_fill, 1.5);
     background-image: none;
@@ -346,8 +346,8 @@
 #RC2MainWindow #RC2TimeScale.progressbar
 {
     background-color: @rc_scale_progress_fill;
-    border-width: 1;
-    border-radius: 2;
+    border-width: 1px;
+    border-radius: 2px;
     border-style: none;
 }
 #RC2MainWindow #RC2TimeScale.mark
@@ -358,7 +358,7 @@
 #RC2MainWindow #RC2ControlButton.button,
 #RC2MainWindow #RC2VolumeButton.button
 {
-    padding: 1 4;
+    padding: 1px 4px;
     -GtkWidget-focus-line-width: 2;
     -GtkButton-child-displacement-x: 1;
     -GtkButton-child-displacement-y: 1;
@@ -367,8 +367,8 @@
     -GtkButton-default-border: 0;
     -GtkButton-inner-border: 0;
     color: @rc_text_color;
-    border-radius: 3;
-    border-width: 1;
+    border-radius: 3px;
+    border-width: 1px;
     border-style: none;
     background-image: -gtk-gradient (linear, left top, left bottom,
         from (@rc_button_gradient_color_a),
@@ -406,6 +406,6 @@
 #RC2MainWindow #RC2ControlButton.button.default,
 #RC2MainWindow #RC2VolumeButton.button.default
 {
-    border-width: 1;
+    border-width: 1px;
 }
 

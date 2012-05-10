@@ -5,9 +5,9 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: RhythmCat2 1.9.2\n"
+"Project-Id-Version: RhythmCat2 1.9.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-04-26 19:44+0800\n"
+"POT-Creation-Date: 2012-05-11 00:53+0800\n"
 "PO-Revision-Date: 2012-04-26 16:20+0800\n"
 "Last-Translator: SuperCat <supercatexpert@gmail.com>\n"
 "Language-Team: Japanese\n"
@@ -81,11 +81,11 @@ msgstr "コアはもう初期化された!"
 msgid "Custom"
 msgstr "カスタム"
 
-#: ../lib/rclib-db.c:709
+#: ../lib/rclib-db.c:710
 msgid "Unnamed list"
 msgstr "無名なリスト"
 
-#: ../lib/rclib-db.c:2187 ../ui/rc-ui-listmodel.c:371 ../ui/rc-ui-player.c:143
+#: ../lib/rclib-db.c:2188 ../ui/rc-ui-listmodel.c:371 ../ui/rc-ui-player.c:143
 #: ../ui/rc-ui-player.c:1367
 msgid "Unknown Title"
 msgstr "不明なタイトル"
@@ -837,7 +837,7 @@ msgstr "インポートしている: %d 項残り"
 msgid "Refreshing: %d remaining"
 msgstr "リフレシュしている: %d 項残り"
 
-#: ../ui/rc-main.c:304
+#: ../ui/rc-main.c:308
 #, c-format
 msgid ""
 "RhythmCat2, library version %d.%d.%d\n"
@@ -848,19 +848,19 @@ msgstr ""
 # "RhythmCat2, ライブラリのバージョン %d.%d.%d\n"
 # "版権 (C) 2012 SuperCat <supercatexpert@gmail.com>\n"
 # "A music player based on GTK+ 3.0 & GStreamer 0.10\n"
-#: ../ui/rc-main.c:392
+#: ../ui/rc-main.c:396
 msgid "Enable debug mode"
 msgstr "ディバッグモードを有効する"
 
-#: ../ui/rc-main.c:394
+#: ../ui/rc-main.c:398
 msgid "Use malloc function in stardard C library"
 msgstr "C言語の標準ライブラリのmallocを使う"
 
-#: ../ui/rc-main.c:399
+#: ../ui/rc-main.c:403
 msgid "Output version information and exit"
 msgstr ""
 
-#: ../ui/rc-main.c:432
+#: ../ui/rc-main.c:440
 #, c-format
 msgid ""
 "%s\n"
@@ -869,6 +869,6 @@ msgstr ""
 "%s\n"
 "'%s --help'を使って、ヘルプのオプションを全て表示する。\n"
 
-#: ../ui/rc-main.c:499
+#: ../ui/rc-main.c:507
 msgid "Default Playlist"
 msgstr "デフォルトプレーリスト"

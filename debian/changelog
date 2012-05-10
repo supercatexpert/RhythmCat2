@@ -1,5 +1,5 @@
-rhythmcat2 (1.9.2-1) unstable; urgency=low
+rhythmcat2 (1.9.3-1) unstable; urgency=low
 
-  * The first release package. (Closes: #112233)
+  * Use GTK+ 3.4 as its dependency. (Closes: #112234)
 
- -- SuperCat <supercatexpert@gmail.com>  Sun, 22 Apr 2012 19:19:32 +0800
+ -- SuperCat <supercatexpert@gmail.com>  Fri, 11 May 2012 00:48:32 +0800

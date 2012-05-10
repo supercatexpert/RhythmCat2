@@ -3,7 +3,7 @@ Section: sound
 Priority: extra
 Maintainer: SuperCat Expert <supercatexpert@gmail.com>
 Build-Depends: multiarch-support, cdbs (>= 0.4.90), debhelper (>= 9),
-    autotools-dev, libgtk-3-dev (>= 3.2), libgstreamer0.10-dev (>= 0.10.30),
+    autotools-dev, libgtk-3-dev (>= 3.4), libgstreamer0.10-dev (>= 0.10.30),
     libglib2.0-dev (>= 2.32), libgstreamer-plugins-base0.10-dev (>= 0.10.30),
     libjson0-dev (>= 0.9), libcurl4-openssl-dev, gobject-introspection (>=1.32)
 Build-Depends-Indep: libglib2.0-doc, libgtk-3-doc, gstreamer0.10-doc,
@@ -15,7 +15,7 @@ Homepage: https://github.com/supercatexpert/RhythmCat2/
 
 Package: rhythmcat2
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}, librhythmcat2 (>=1.9.2)
+Depends: ${shlibs:Depends}, ${misc:Depends}, librhythmcat2 (>=1.9.3)
 Pre-Depends: ${misc:Pre-Depends}
 Description: GStreamer based music player with plug-in support
  RhythmCat2 is a music player which can be used under Linux. It is not only a
@@ -45,7 +45,7 @@ Package: rhythmcat2-dev
 Section: libdevel
 Architecture: any
 Multi-Arch: same
-Depends: ${misc:Depends}, librhythmcat2 (>=1.9.2), rhythmcat2 (>=1.9.2)
+Depends: ${misc:Depends}, librhythmcat2 (>=1.9.3), rhythmcat2 (>=1.9.3)
 Pre-Depends: ${misc:Pre-Depends}, multiarch-support
 Description: Development files for RhythmCat2 GTK+ UI
  RhythmCat2 is a music player which can be used under Linux. It is not only a
@@ -60,7 +60,7 @@ Package: librhythmcat2-dev
 Section: libdevel
 Architecture: any
 Multi-Arch: same
-Depends: ${misc:Depends}, librhythmcat2 (>=1.9.2)
+Depends: ${misc:Depends}, librhythmcat2 (>=1.9.3)
 Pre-Depends: ${misc:Pre-Depends}, multiarch-support
 Description: Development files for LibRhythmCat2
  RhythmCat2 is a music player which can be used under Linux. It is not only a
@@ -108,8 +108,8 @@ Description: Development documents for LibRhythmCat2
 Package: rhythmcat2-plugins-base
 Architecture: any
 Multi-Arch: same
-Depends: ${shlibs:Depends}, ${misc:Depends}, librhythmcat2 (>=1.9.2),
-    rhythmcat2 (>=1.9.2)
+Depends: ${shlibs:Depends}, ${misc:Depends}, librhythmcat2 (>=1.9.3),
+    rhythmcat2 (>=1.9.3)
 Pre-Depends: ${misc:Pre-Depends}, multiarch-support
 Description: Base plug-ins for RhythmCat2
  RhythmCat2 is a music player which can be used under Linux. It is not only a
@@ -125,8 +125,8 @@ Description: Base plug-ins for RhythmCat2
 Package: rhythmcat2-plugins-extra
 Architecture: any
 Multi-Arch: same
-Depends: ${shlibs:Depends}, ${misc:Depends}, librhythmcat2 (>=1.9.2),
-    rhythmcat2 (>=1.9.2)
+Depends: ${shlibs:Depends}, ${misc:Depends}, librhythmcat2 (>=1.9.3),
+    rhythmcat2 (>=1.9.3)
 Pre-Depends: ${misc:Pre-Depends}, multiarch-support
 Description: Extra plug-ins for RhythmCat2
  RhythmCat2 is a music player which can be used under Linux. It is not only a
@@ -142,8 +142,8 @@ Description: Extra plug-ins for RhythmCat2
 Package: rhythmcat2-plugins-python3-loader
 Architecture: any
 Multi-Arch: same
-Depends: ${shlibs:Depends}, ${misc:Depends}, librhythmcat2 (>=1.9.2),
-    rhythmcat2 (>=1.9.2)
+Depends: ${shlibs:Depends}, ${misc:Depends}, librhythmcat2 (>=1.9.3),
+    rhythmcat2 (>=1.9.3)
 Pre-Depends: ${misc:Pre-Depends}, multiarch-support
 Description: Python3 plug-in loader for RhythmCat2
  RhythmCat2 is a music player which can be used under Linux. It is not only a
@@ -159,7 +159,7 @@ Description: Python3 plug-in loader for RhythmCat2
 Package: gir1.2-librhythmcat2
 Section: introspection
 Architecture: any
-Depends: ${misc:Depends}, librhythmcat2 (>=1.9.2),
+Depends: ${misc:Depends}, librhythmcat2 (>=1.9.3),
     gobject-introspection (>=1.32), gir1.2-gstreamer-0.10,
     gir1.2-gst-plugins-base-0.10, gir1.2-glib-2.0
 Pre-Depends: ${misc:Pre-Depends}
@@ -176,7 +176,7 @@ Description: GObject introspection data for RhythmCat2 Library
 Package: gir1.2-rhythmcat2
 Section: introspection
 Architecture: any
-Depends: ${misc:Depends}, librhythmcat2 (>=1.9.2), rhythmcat2 (>=1.9.2),
+Depends: ${misc:Depends}, librhythmcat2 (>=1.9.3), rhythmcat2 (>=1.9.3),
     gobject-introspection (>=1.32), gir1.2-gtk-3.0, gir1.2-gstreamer-0.10,
     gir1.2-gst-plugins-base-0.10, gir1.2-glib-2.0
 Pre-Depends: ${misc:Pre-Depends}

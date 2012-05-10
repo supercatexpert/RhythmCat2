@@ -95,7 +95,7 @@ gulong rclib_album_signal_connect(const gchar *name,
     GCallback callback, gpointer data);
 void rclib_album_signal_disconnect(gulong handler_id);
 gboolean rclib_album_get_album_data(RCLibAlbumType *type, gpointer *data);
-gboolean rclib_album_save_file(const gchar *filename); //Not completed!
+gboolean rclib_album_save_file(const gchar *filename);
 
 G_END_DECLS
 

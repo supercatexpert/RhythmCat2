@@ -14,7 +14,7 @@ Developing platform:
 Operating System: Debian Wheezy (Testing) for AMD64
 Compiler: gcc 4.6.3
 Programming Language: C
-Dependent Libraries: glib-2.0 (>=2.32) gtk+-3.0(>=3.2) libjson0 (>=0.9)
+Dependent Libraries: glib-2.0 (>=2.32) gtk+-3.0(>=3.4) libjson0 (>=0.9)
     gstreamer-0.10 (>=0.10.30) gstreamer-plugins-base-0.10 (>=0.10.30)
     gstreamer-plugins-good-0.10 (>=0.10.30)
     

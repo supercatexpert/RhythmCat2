@@ -5,9 +5,9 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: RhythmCat2 1.9.2\n"
+"Project-Id-Version: RhythmCat2 1.9.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-04-26 19:44+0800\n"
+"POT-Creation-Date: 2012-05-11 00:53+0800\n"
 "PO-Revision-Date: 2012-01-20 20:57+0800\n"
 "Last-Translator: SuperCat <supercatexpert@gmail.com>\n"
 "Language-Team: Chinese (simplified)\n"
@@ -81,11 +81,11 @@ msgstr "核心已被初始化!"
 msgid "Custom"
 msgstr "自定义"
 
-#: ../lib/rclib-db.c:709
+#: ../lib/rclib-db.c:710
 msgid "Unnamed list"
 msgstr "未命名列表"
 
-#: ../lib/rclib-db.c:2187 ../ui/rc-ui-listmodel.c:371 ../ui/rc-ui-player.c:143
+#: ../lib/rclib-db.c:2188 ../ui/rc-ui-listmodel.c:371 ../ui/rc-ui-player.c:143
 #: ../ui/rc-ui-player.c:1367
 msgid "Unknown Title"
 msgstr "未知标题"
@@ -839,7 +839,7 @@ msgstr "导入中: 剩余 %d"
 msgid "Refreshing: %d remaining"
 msgstr "刷新中: 剩余 %d"
 
-#: ../ui/rc-main.c:304
+#: ../ui/rc-main.c:308
 #, c-format
 msgid ""
 "RhythmCat2, library version %d.%d.%d\n"
@@ -850,19 +850,19 @@ msgstr ""
 "版权所有 (C) 2012 SuperCat <supercatexpert@gmail.com>\n"
 "一个基于GTK+ 3.0和GStreamer 0.10的音乐播放器\n"
 
-#: ../ui/rc-main.c:392
+#: ../ui/rc-main.c:396
 msgid "Enable debug mode"
 msgstr "开启除错模式"
 
-#: ../ui/rc-main.c:394
+#: ../ui/rc-main.c:398
 msgid "Use malloc function in stardard C library"
 msgstr "使用标准C函数库中的malloc"
 
-#: ../ui/rc-main.c:399
+#: ../ui/rc-main.c:403
 msgid "Output version information and exit"
 msgstr "输出版本信息并退出"
 
-#: ../ui/rc-main.c:432
+#: ../ui/rc-main.c:440
 #, c-format
 msgid ""
 "%s\n"
@@ -871,6 +871,6 @@ msgstr ""
 "%s\n"
 "运行 '%s --help' 来查看全部的可用命令行参数列表。\n"
 
-#: ../ui/rc-main.c:499
+#: ../ui/rc-main.c:507
 msgid "Default Playlist"
 msgstr "默认播放列表"

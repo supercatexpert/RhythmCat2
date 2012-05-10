@@ -54,8 +54,8 @@
 2012-04-25  SuperCat    <supercatexpert@gmail.com>
 
     * Auto-save playlist file if the playlist has been modified (the scan cycle
-      is 120s), if the auto-save playlist exists when the player starts, the user
-      can use that file.
+      is 120s), if the auto-save playlist exists when the player starts, the
+      user can use that file.
     * Debian and Fedora package files are ready.
     
 2012-04-26  SuperCat    <supercatexpert@gmail.com>
@@ -64,8 +64,14 @@
         
 2012-04-27  SuperCat    <supercatexpert@gmail.com>   
 
-    * Added GI(GObject Introspection) support for both LibRhythmCat2 and RhythmCat2.
+    * Added GI(GObject Introspection) support for both LibRhythmCat2 and
+      RhythmCat2.
     * Added GIR (GObject Introspection Repository) package files for Debian.
     * Added GIR files into Fedora RPM packages.
+    
+2012-05-11  SuperCat    <supercatexpert@gmail.com>
+
+    * Change the GTK+ dependency to version 3.4. Fixed css theme compatibility
+      problem on GTK+ 3.4.
     
     

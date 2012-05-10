@@ -1,6 +1,5 @@
 - Language translations (remaining: Japanese)
 - Bug Report Interface
-- Upgrade the dependency to GTK+ 3.4 when it is available on Debian Wheezy
 
 Long-term:
 - Command Line Interface (CLI), based on ncurses

@@ -4,7 +4,7 @@
 AC_CONFIG_MACRO_DIR(m4)
 m4_define([rc_major_version], [1])
 m4_define([rc_minor_version], [9])
-m4_define([rc_micro_version], [2])
+m4_define([rc_micro_version], [3])
 m4_define([rc_version], [rc_major_version.rc_minor_version.rc_micro_version])
 
 AC_PREREQ([2.61])
@@ -60,7 +60,7 @@ PKG_CHECK_MODULES([GLIB2], [glib-2.0 >= 2.32, gthread-2.0 >= 2.32, \
 PKG_CHECK_MODULES([GSTREAMER], [gstreamer-0.10 >= 0.10.30, \
     gstreamer-pbutils-0.10 >= 0.10.30 gstreamer-plugins-base-0.10 >= 0.10.30 \
     gstreamer-fft-0.10])
-PKG_CHECK_MODULES([GTK], [gtk+-3.0 >= 3.0.0], have_gtk3=yes, have_gtk3=no)
+PKG_CHECK_MODULES([GTK], [gtk+-3.0 >= 3.4.0], have_gtk3=yes, have_gtk3=no)
 PKG_CHECK_MODULES([JSON], [json >= 0.9])
 
 # Check additional libraries.
