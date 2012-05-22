@@ -76,9 +76,9 @@ expand_content_files=
 # signals and properties.
 # e.g. GTKDOC_CFLAGS=-I$(top_srcdir) -I$(top_builddir) $(GTK_DEBUG_FLAGS)
 # e.g. GTKDOC_LIBS=$(top_builddir)/gtk/$(gtktargetlib)
-GTKDOC_CFLAGS=-I@GLIB2_CFLAGS@ -I@JSON_CFLAGS@ -I@GSTREAMER_CFLAGS@ \
+GTKDOC_CFLAGS=-I@GLIB2_CFLAGS@ -I@JSON_GLIB_CFLAGS@ -I@GSTREAMER_CFLAGS@ \
     -I$(top_srcdir)/lib
-GTKDOC_LIBS=@GLIB2_LIBS@ @GSTREAMER_LIBS@ @JSON_LIBS@ \
+GTKDOC_LIBS=@GLIB2_LIBS@ @GSTREAMER_LIBS@ @JSON_GLIB_LIBS@ \
     $(top_builddir)/lib/librhythmcat-2.0.la
 
 # This includes the standard gtk-doc make rules, copied by gtkdocize.

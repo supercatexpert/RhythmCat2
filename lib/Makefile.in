@@ -208,8 +208,8 @@ INTROSPECTION_LIBS = @INTROSPECTION_LIBS@
 INTROSPECTION_MAKEFILE = @INTROSPECTION_MAKEFILE@
 INTROSPECTION_SCANNER = @INTROSPECTION_SCANNER@
 INTROSPECTION_TYPELIBDIR = @INTROSPECTION_TYPELIBDIR@
-JSON_CFLAGS = @JSON_CFLAGS@
-JSON_LIBS = @JSON_LIBS@
+JSON_GLIB_CFLAGS = @JSON_GLIB_CFLAGS@
+JSON_GLIB_LIBS = @JSON_GLIB_LIBS@
 LD = @LD@
 LDFLAGS = @LDFLAGS@
 LIBCURL_CFLAGS = @LIBCURL_CFLAGS@
@@ -338,11 +338,11 @@ librhythmcat_2_0_headers = \
 librhythmcat_2_0_builtheaders = rclib-marshal.h
 librhythmcat_2_0_la_SOURCES = $(librhythmcat_2_0_sources) \
 	$(librhythmcat_2_0_builtsources) $(BUILT_SOURCES)
-INCLUDES = @GLIB2_CFLAGS@ @GSTREAMER_CFLAGS@ @JSON_CFLAGS@ \
+INCLUDES = @GLIB2_CFLAGS@ @GSTREAMER_CFLAGS@ @JSON_GLIB_CFLAGS@ \
     -DLOCALEDIR=\"$(localedir)\"
 
-librhythmcat_2_0_la_LIBADD = @GLIB2_LIBS@ @GSTREAMER_LIBS@ @JSON_LIBS@ \
-	$(am__append_1)
+librhythmcat_2_0_la_LIBADD = @GLIB2_LIBS@ @GSTREAMER_LIBS@ \
+	@JSON_GLIB_LIBS@ $(am__append_1)
 CLEANFILES = $(BUILT_SOURCES) $(am__append_3)
 librhythmcat_2_0includedir = $(includedir)/librhythmcat2
 librhythmcat_2_0include_HEADERS = rclib-common.h \

@@ -74,4 +74,7 @@
     * Change the GTK+ dependency to version 3.4. Fixed css theme compatibility
       problem on GTK+ 3.4.
     
-    
+2012-05-23  SuperCat    <supercatexpert@gmail.com>  
+
+    * Use json-glib instead of json-c now.
+

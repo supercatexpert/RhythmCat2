@@ -10,7 +10,7 @@ noinst_LTLIBRARIES =
 
 noinst_HEADERS = lrccrawler-common.h
 
-INCLUDES = @GLIB2_CFLAGS@ @GSTREAMER_CFLAGS@  @JSON_CFLAGS@ \
+INCLUDES = @GLIB2_CFLAGS@ @GSTREAMER_CFLAGS@  @JSON_GLIB_CFLAGS@ \
     -DLOCALEDIR=\"$(localedir)\" -I$(top_srcdir)/lib
 
 if WITH_GTK_UI
@@ -31,7 +31,7 @@ plugin_LTLIBRARIES += \
     lrccrawler.la
     
 lrccrawler_la_SOURCES = lrccrawler.c lrccrawler-common.c
-lrccrawler_la_LIBADD = @GLIB2_LIBS@ @GTK_LIBS@ @GSTREAMER_LIBS@ @JSON_LIBS@ \
+lrccrawler_la_LIBADD = @GLIB2_LIBS@ @GTK_LIBS@ @GSTREAMER_LIBS@ @JSON_GLIB_LIBS@ \
     @LIBCURL_LIBS@ $(top_builddir)/lib/librhythmcat-2.0.la \
     $(top_builddir)/ui/librhythmcat-ui-2.0.la
 lrccrawler_la_LIBTOOLFLAGS = --tag=disable-static

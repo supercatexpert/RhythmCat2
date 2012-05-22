@@ -11,9 +11,9 @@ URL: https://github.com/supercatexpert/RhythmCat2/
 
 Requires: glib2 >= 2.32 gtk3 >= 3.4 gstreamer >= 0.10.30
 Requires: gstreamer-plugins-base >= 0.10.30 gstreamer-plugins-good >= 0.10.30
-Requires: json-c >= 0.9 librhythmcat2 >= 1.9.3
+Requires: json-glib >= 0.14 librhythmcat2 >= 1.9.3
 BuildRequires: glib2-devel >= 2.32 gtk3-devel >= 2.32 gstreamer-devel >= 0.10.30
-BuildRequires: gstreamer-plugins-base-devel >= 0.10.30 json-c-devel >= 0.9
+BuildRequires: gstreamer-plugins-base-devel >= 0.10.30 json-glib-devel >= 0.14
 BuildRequires: desktop-file-utils gobject-introspection gobject-introspection-devel
 
 %global _unpackaged_files_terminate_build 0
@@ -29,8 +29,8 @@ and the UI layout can be customed partially.
 Summary: Core library of RhythmCat Music Player
 Group: System Environment/Libraries
 Requires: glib2 >= 2.32 gstreamer >= 0.10.30 gstreamer-plugins-base >= 0.10.30
-Requires: gstreamer-plugins-good >= 0.10.30 json-c >= 0.9
-BuildRequires: glib2-devel >= 2.32 gstreamer-devel >= 0.10.30 json-c-devel >= 0.9
+Requires: gstreamer-plugins-good >= 0.10.30 json-glib >= 0.14
+BuildRequires: glib2-devel >= 2.32 gstreamer-devel >= 0.10.30 json-glib-devel >= 0.14
 BuildRequires: gstreamer-plugins-base-devel >= 0.10.30 
 %description -n librhythmcat2
 This package provides core backend library of RhythmCat2 Music Player.
@@ -72,9 +72,9 @@ Summary: Base plug-ins for RhythmCat2
 Group: Application/Multimedia
 Requires: glib2 >= 2.32 gtk3 >= 3.4 gstreamer >= 0.10.30
 Requires: gstreamer-plugins-base >= 0.10.30 gstreamer-plugins-good >= 0.10.30
-Requires: json-c >= 0.9 librhythmcat2 >= 1.9.3 rhythmcat2 >= 1.9.3
+Requires: json-glib >= 0.14 librhythmcat2 >= 1.9.3 rhythmcat2 >= 1.9.3
 BuildRequires: glib2-devel >= 2.32 gtk3-devel >= 2.32 gstreamer-devel >= 0.10.30
-BuildRequires: gstreamer-plugins-base-devel >= 0.10.30 json-c-devel >= 0.9
+BuildRequires: gstreamer-plugins-base-devel >= 0.10.30 json-glib-devel >= 0.14
 %description -n rhythmcat2-plugins-base
 This package provides base plug-ins, including: lyric show, desktop lyric, 
 multimedia key supprot, MPRIS2 support, and notify popups.
@@ -84,9 +84,9 @@ Summary: Extra plug-ins for RhythmCat2
 Group: Application/Multimedia
 Requires: glib2 >= 2.32 gtk3 >= 3.4 gstreamer >= 0.10.30
 Requires: gstreamer-plugins-base >= 0.10.30 gstreamer-plugins-good >= 0.10.30
-Requires: json-c >= 0.9 librhythmcat2 >= 1.9.3 rhythmcat2 >= 1.9.3 libcurl
+Requires: json-glib >= 0.14 librhythmcat2 >= 1.9.3 rhythmcat2 >= 1.9.3 libcurl
 BuildRequires: glib2-devel >= 2.32 gtk3-devel >= 2.32 gstreamer-devel >= 0.10.30
-BuildRequires: gstreamer-plugins-base-devel >= 0.10.30 json-c-devel >= 0.9
+BuildRequires: gstreamer-plugins-base-devel >= 0.10.30 json-glib-devel >= 0.14
 BuildRequires: libcurl-devel
 %description -n rhythmcat2-plugins-extra
 This package provides extra plug-ins, including: lyric crawler, and lyric
@@ -97,10 +97,10 @@ Summary: Python3 plug-in loader for RhythmCat2
 Group: Application/Multimedia
 Requires: glib2 >= 2.32 gtk3 >= 3.4 gstreamer >= 0.10.30
 Requires: gstreamer-plugins-base >= 0.10.30 gstreamer-plugins-good >= 0.10.30
-Requires: json-c >= 0.9 librhythmcat2 >= 1.9.3 rhythmcat2 >= 1.9.3 python3 >= 3.2
+Requires: json-glib >= 0.14 librhythmcat2 >= 1.9.3 rhythmcat2 >= 1.9.3 python3 >= 3.2
 Requires: python3-libs >= 3.2 gobject-introspection python3-gobject
 BuildRequires: glib2-devel >= 2.32 gtk3-devel >= 2.32 gstreamer-devel >= 0.10.30
-BuildRequires: gstreamer-plugins-base-devel >= 0.10.30 json-c-devel >= 0.9
+BuildRequires: gstreamer-plugins-base-devel >= 0.10.30 json-glib-devel >= 0.14
 BuildRequires: python3-devel >= 3.2 gobject-introspection-devel
 %description -n rhythmcat2-plugins-python3-loader
 This package provides Python3 plug-in loader, which is used to load Python3

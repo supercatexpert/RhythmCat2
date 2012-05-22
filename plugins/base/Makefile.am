@@ -9,7 +9,7 @@ mpris2_la_LDFLAGS = -module -avoid-version -export-dynamic -O2
 plugin_LTLIBRARIES = 
 noinst_LTLIBRARIES =
 
-INCLUDES = @GLIB2_CFLAGS@ @GSTREAMER_CFLAGS@  @JSON_CFLAGS@ \
+INCLUDES = @GLIB2_CFLAGS@ @GSTREAMER_CFLAGS@  @JSON_GLIB_CFLAGS@ \
     -DLOCALEDIR=\"$(localedir)\" -I$(top_srcdir)/lib
 
 if WITH_GTK_UI
@@ -22,7 +22,7 @@ plugin_LTLIBRARIES += \
     mediakey.la
 
 mediakey_la_SOURCES = mediakey.c
-mediakey_la_LIBADD = @GLIB2_LIBS@ @GSTREAMER_LIBS@ @JSON_LIBS@ \
+mediakey_la_LIBADD = @GLIB2_LIBS@ @GSTREAMER_LIBS@ @JSON_GLIB_LIBS@ \
     $(top_builddir)/lib/librhythmcat-2.0.la 
 mediakey_la_LIBTOOLFLAGS = --tag=disable-static
 
@@ -35,25 +35,25 @@ plugin_LTLIBRARIES += \
     mpris2.la
 
 lyricshow_la_SOURCES = lyricshow.c
-lyricshow_la_LIBADD = @GLIB2_LIBS@ @GTK_LIBS@ @GSTREAMER_LIBS@ @JSON_LIBS@ \
+lyricshow_la_LIBADD = @GLIB2_LIBS@ @GTK_LIBS@ @GSTREAMER_LIBS@ @JSON_GLIB_LIBS@ \
     $(top_builddir)/lib/librhythmcat-2.0.la \
     $(top_builddir)/ui/librhythmcat-ui-2.0.la
 lyricshow_la_LIBTOOLFLAGS = --tag=disable-static
     
 notify_la_SOURCES = notify.c
-notify_la_LIBADD = @GLIB2_LIBS@ @GTK_LIBS@ @GSTREAMER_LIBS@ @JSON_LIBS@ \
+notify_la_LIBADD = @GLIB2_LIBS@ @GTK_LIBS@ @GSTREAMER_LIBS@ @JSON_GLIB_LIBS@ \
     $(top_builddir)/lib/librhythmcat-2.0.la \
     $(top_builddir)/ui/librhythmcat-ui-2.0.la
 notify_la_LIBTOOLFLAGS = --tag=disable-static
 
 desklrc_la_SOURCES = desklrc.c
-desklrc_la_LIBADD = @GLIB2_LIBS@ @GTK_LIBS@ @GSTREAMER_LIBS@ @JSON_LIBS@ \
+desklrc_la_LIBADD = @GLIB2_LIBS@ @GTK_LIBS@ @GSTREAMER_LIBS@ @JSON_GLIB_LIBS@ \
     $(top_builddir)/lib/librhythmcat-2.0.la \
     $(top_builddir)/ui/librhythmcat-ui-2.0.la
 desklrc_la_LIBTOOLFLAGS = --tag=disable-static
 
 mpris2_la_SOURCES = mpris2.c
-mpris2_la_LIBADD = @GLIB2_LIBS@ @GTK_LIBS@ @GSTREAMER_LIBS@ @JSON_LIBS@ \
+mpris2_la_LIBADD = @GLIB2_LIBS@ @GTK_LIBS@ @GSTREAMER_LIBS@ @JSON_GLIB_LIBS@ \
     $(top_builddir)/lib/librhythmcat-2.0.la \
     $(top_builddir)/ui/librhythmcat-ui-2.0.la
 mpris2_la_LIBTOOLFLAGS = --tag=disable-static

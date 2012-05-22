@@ -23,7 +23,7 @@
  * Boston, MA  02110-1301  USA
  */
 
-#include <json.h>
+#include <json-glib/json-glib.h>
 #include "rclib-db.h"
 #include "rclib-common.h"
 #include "rclib-marshal.h"
@@ -66,7 +66,7 @@ typedef struct RCLibDbPrivate
     gulong autosave_timeout;
     GMutex autosave_mutex;
     GCond autosave_cond;
-    json_object *autosave_json_object;
+    JsonNode *autosave_json_node;
 }RCLibDbPrivate;
 
 typedef struct RCLibDbPlaylistImportData
@@ -120,6 +120,7 @@ static GObject *db_instance = NULL;
 static gpointer rclib_db_parent_class = NULL;
 static gint db_signals[SIGNAL_LAST] = {0};
 static gint db_import_depth = 5;
+static const gint db_autosave_timeout = 120;
 
 static gboolean rclib_db_is_iter_valid(GSequence *seq, GSequenceIter *iter)
 {
@@ -664,8 +665,9 @@ static gpointer rclib_db_playlist_refresh_thread_cb(gpointer data)
 static gboolean rclib_db_load_library_db(GSequence *catalog,
     const gchar *file, gboolean *dirty_flag)
 {
-    json_object *root_object, *catalog_object, *playlist_object;
-    json_object *catalog_array, *playlist_array, *tmp;
+    JsonObject *root_object, *catalog_object, *playlist_object;
+    JsonArray *catalog_array, *playlist_array;
+    JsonNode *root_node;
     guint i, j;
     guint catalog_len, playlist_len;
     GError *error = NULL;
@@ -674,255 +676,259 @@ static gboolean rclib_db_load_library_db(GSequence *catalog,
     RCLibDbPlaylistData *playlist_data;
     const gchar *str;
     GSequenceIter *catalog_iter;
-    gchar *json_data;
-    gsize json_size;
-    if(!g_file_get_contents(file, &json_data, &json_size, &error))
+    JsonParser *parser;
+    parser = json_parser_new();
+    if(!json_parser_load_from_file(parser, file, &error))
     {
         g_warning("Cannot load playlist: %s", error->message);
         g_error_free(error);
+        g_object_unref(parser);
         return FALSE;
     }
     else
         g_message("Loading playlist....");
-    root_object = json_tokener_parse(json_data);
-    g_free(json_data);
-    if(root_object==NULL)
+    root_node = json_parser_get_root(parser); 
+    if(root_node==NULL)
     {
         g_warning("Cannot parse playlist!");
+        g_object_unref(parser);
         return FALSE;
     }
     G_STMT_START
     {
-        catalog_array = json_object_object_get(root_object, "RCMusicCatalog");
+        root_object = json_node_get_object(root_node);
+        if(root_object==NULL) break;
+        catalog_array = json_object_get_array_member(root_object,
+            "RCMusicCatalog");
         if(catalog_array==NULL) break;
-        if(!json_object_is_type(catalog_array, json_type_array)) break;
-        catalog_len = json_object_array_length(catalog_array);
+        catalog_len = json_array_get_length(catalog_array);
         for(i=0;i<catalog_len;i++)
         {
-            catalog_object = json_object_array_get_idx(catalog_array, i);
-            if(catalog_object==NULL || !json_object_is_type(catalog_object,
-                json_type_object)) continue;
+            catalog_object = json_array_get_object_element(catalog_array, i);
+            if(catalog_object==NULL) continue;
             catalog_data = rclib_db_catalog_data_new();
-            tmp = json_object_object_get(catalog_object, "Name");
-            if(tmp!=NULL && json_object_is_type(tmp, json_type_string))
-                str = json_object_get_string(tmp);
-            else str = NULL;
+            str = json_object_get_string_member(catalog_object, "Name");
             if(str==NULL) str = _("Unnamed list");
             catalog_data->name = g_strdup(str);
-            tmp = json_object_object_get(catalog_object, "Type");
-            if(tmp!=NULL && json_object_is_type(tmp, json_type_int))
-                 catalog_data->type = json_object_get_int(tmp);
+            catalog_data->type = json_object_get_int_member(catalog_object,
+                "Type");
             playlist = g_sequence_new((GDestroyNotify)
                 rclib_db_playlist_data_unref);
             catalog_data->playlist = playlist;
             catalog_iter = g_sequence_append(catalog, catalog_data);
-            playlist_array = json_object_object_get(catalog_object,
+            playlist_array = json_object_get_array_member(catalog_object,
                 "Playlist");
-            if(playlist_array==NULL || !json_object_is_type(playlist_array,
-                json_type_array)) continue;
-            playlist_len = json_object_array_length(playlist_array);
+            if(playlist_array==NULL) continue;
+            playlist_len = json_array_get_length(playlist_array);
             for(j=0;j<playlist_len;j++)
             {
-                playlist_object = json_object_array_get_idx(playlist_array,
-                    j);
-                if(playlist_object==NULL || !json_object_is_type(
-                    playlist_object, json_type_object)) continue;
+                playlist_object = json_array_get_object_element(
+                    playlist_array, j);
+                if(playlist_object==NULL) continue;
                 playlist_data = rclib_db_playlist_data_new();
                 playlist_data->catalog = catalog_iter;
-                tmp = json_object_object_get(playlist_object, "Type");
-                if(tmp!=NULL && json_object_is_type(tmp, json_type_int))
-                    playlist_data->type = json_object_get_int(tmp);
-                tmp = json_object_object_get(playlist_object, "URI");
-                if(tmp!=NULL && json_object_is_type(tmp, json_type_string))
-                    str = json_object_get_string(tmp);
-                else str = NULL;
+                playlist_data->type = json_object_get_int_member(
+                    playlist_object, "Type");
+                if(json_object_has_member(playlist_object, "URI"))
+                    str = json_object_get_string_member(playlist_object,
+                        "URI");
+                else
+                    str = NULL;
                 playlist_data->uri = g_strdup(str);
-                tmp = json_object_object_get(playlist_object, "Title");
-                if(tmp!=NULL && json_object_is_type(tmp, json_type_string))
-                    str = json_object_get_string(tmp);
-                else str = NULL;
+                if(json_object_has_member(playlist_object, "Title"))
+                    str = json_object_get_string_member(playlist_object,
+                        "Title");
+                else
+                    str = NULL;
                 playlist_data->title = g_strdup(str);
-                tmp = json_object_object_get(playlist_object, "Artist");
-                if(tmp!=NULL && json_object_is_type(tmp, json_type_string))
-                    str = json_object_get_string(tmp);
-                else str = NULL;
+                if(json_object_has_member(playlist_object, "Artist"))
+                    str = json_object_get_string_member(playlist_object,
+                        "Artist");
+                else
+                    str = NULL;
                 playlist_data->artist = g_strdup(str);
-                tmp = json_object_object_get(playlist_object, "Album");
-                if(tmp!=NULL && json_object_is_type(tmp, json_type_string))
-                    str = json_object_get_string(tmp);
-                else str = NULL;
+                if(json_object_has_member(playlist_object, "Album"))
+                    str = json_object_get_string_member(playlist_object,
+                        "Album");
+                else
+                    str = NULL;
                 playlist_data->album = g_strdup(str);
-                tmp = json_object_object_get(playlist_object, "FileType");
-                if(tmp!=NULL && json_object_is_type(tmp, json_type_string))
-                    str = json_object_get_string(tmp);
-                else str = NULL;
+                if(json_object_has_member(playlist_object, "FileType"))
+                    str = json_object_get_string_member(playlist_object,
+                        "FileType");
+                else
+                    str = NULL;
                 playlist_data->ftype = g_strdup(str);
-                tmp = json_object_object_get(playlist_object, "Length");
-                if(tmp!=NULL && json_object_is_type(tmp, json_type_string))
-                    str = json_object_get_string(tmp);
-                else str = NULL;
+                if(json_object_has_member(playlist_object, "Length"))
+                    str = json_object_get_string_member(playlist_object,
+                        "Length");
+                else
+                    str = NULL;
                 if(str!=NULL)
                     playlist_data->length = g_ascii_strtoll(str, NULL, 10);
-                tmp = json_object_object_get(playlist_object, "TrackNum");
-                if(tmp!=NULL && json_object_is_type(tmp, json_type_int))
-                    playlist_data->tracknum = json_object_get_int(tmp);
-                tmp = json_object_object_get(playlist_object, "Year");
-                if(tmp!=NULL && json_object_is_type(tmp, json_type_int))
-                    playlist_data->year = json_object_get_int(tmp);
-                tmp = json_object_object_get(playlist_object, "Rating");
-                if(tmp!=NULL && json_object_is_type(tmp, json_type_int))
-                    playlist_data->rating = json_object_get_int(tmp);
-                tmp = json_object_object_get(playlist_object, "LyricFile");
-                if(tmp!=NULL && json_object_is_type(tmp, json_type_string))
-                    str = json_object_get_string(tmp);
-                else str = NULL;
+                if(json_object_has_member(playlist_object, "TrackNum"))
+                    playlist_data->tracknum = json_object_get_int_member(
+                        playlist_object, "TrackNum");
+                if(json_object_has_member(playlist_object, "Year"))
+                    playlist_data->year = json_object_get_int_member(
+                        playlist_object, "Year");
+                if(json_object_has_member(playlist_object, "Rating"))
+                    playlist_data->rating = json_object_get_int_member(
+                        playlist_object, "Rating");
+                if(json_object_has_member(playlist_object, "LyricFile"))
+                    str = json_object_get_string_member(playlist_object,
+                        "LyricFile");
+                else
+                    str = NULL;
                 playlist_data->lyricfile = g_strdup(str);
-                tmp = json_object_object_get(playlist_object,
-                    "LyricSecondFile");
-                if(tmp!=NULL && json_object_is_type(tmp, json_type_string))
-                    str = json_object_get_string(tmp);
-                else str = NULL;
+                if(json_object_has_member(playlist_object, "LyricSecondFile"))
+                    str = json_object_get_string_member(playlist_object,
+                        "LyricSecondFile");
+                else
+                    str = NULL;
                 playlist_data->lyricsecfile = g_strdup(str);
-                tmp = json_object_object_get(playlist_object, "AlbumFile");
-                if(tmp!=NULL && json_object_is_type(tmp, json_type_string))
-                    str = json_object_get_string(tmp);
-                else str = NULL;
+                if(json_object_has_member(playlist_object, "AlbumFile"))
+                    str = json_object_get_string_member(playlist_object,
+                        "AlbumFile");
+                else
+                    str = NULL;
                 playlist_data->albumfile = g_strdup(str);
                 g_sequence_append(playlist, playlist_data);
             }
         }
     }
     G_STMT_END;
-    json_object_put(root_object);
+    g_object_unref(parser);
     g_message("Playlist loaded.");
     if(dirty_flag!=NULL) *dirty_flag = FALSE;
     return TRUE;
 }
 
-static inline json_object *rclib_db_build_json_object(GSequence *catalog)
+static inline JsonNode *rclib_db_build_json_node(GSequence *catalog)
 {
-    json_object *root_object, *catalog_object, *playlist_object;
-    json_object *catalog_array, *playlist_array, *tmp;
+    JsonObject *root_object, *catalog_object, *playlist_object;
+    JsonArray *catalog_array, *playlist_array;
+    JsonNode *root_node;
     RCLibDbCatalogData *catalog_data;
     RCLibDbPlaylistData *playlist_data;
     GSequenceIter *catalog_iter, *playlist_iter;
     gchar *time;
-    catalog_array = json_object_new_array();
+    catalog_array = json_array_new();
     for(catalog_iter = g_sequence_get_begin_iter(catalog);
         !g_sequence_iter_is_end(catalog_iter);
         catalog_iter = g_sequence_iter_next(catalog_iter))
     {
-        catalog_object = json_object_new_object();
+        catalog_object = json_object_new();
         catalog_data = g_sequence_get(catalog_iter);
         if(catalog_data->name!=NULL)
         {
-            tmp = json_object_new_string(catalog_data->name);
-            json_object_object_add(catalog_object, "Name", tmp);
+            json_object_set_string_member(catalog_object, "Name",
+                catalog_data->name);
         }
-        tmp = json_object_new_int(catalog_data->type);
-        json_object_object_add(catalog_object, "Type", tmp);
-        playlist_array = json_object_new_array();
+        json_object_set_int_member(catalog_object, "Type",
+            catalog_data->type);
+        playlist_array = json_array_new();
         for(playlist_iter = g_sequence_get_begin_iter(catalog_data->playlist);
             !g_sequence_iter_is_end(playlist_iter);
             playlist_iter = g_sequence_iter_next(playlist_iter))
         {
-            playlist_object = json_object_new_object();
+            playlist_object = json_object_new();
             playlist_data = g_sequence_get(playlist_iter);
-            tmp = json_object_new_int(playlist_data->type);
-            json_object_object_add(playlist_object, "Type", tmp);
+            json_object_set_int_member(playlist_object, "Type",
+                playlist_data->type);
             if(playlist_data->uri!=NULL)
             {
-                tmp = json_object_new_string(playlist_data->uri);
-                json_object_object_add(playlist_object, "URI", tmp);
+                json_object_set_string_member(playlist_object, "URI",
+                    playlist_data->uri);
             }
             if(playlist_data->title!=NULL)
             {
-                tmp = json_object_new_string(playlist_data->title);
-                json_object_object_add(playlist_object, "Title", tmp);
+                json_object_set_string_member(playlist_object, "Title",
+                    playlist_data->title);
             }
             if(playlist_data->artist!=NULL)
             {
-                tmp = json_object_new_string(playlist_data->artist);
-                json_object_object_add(playlist_object, "Artist", tmp);
+                json_object_set_string_member(playlist_object, "Artist",
+                    playlist_data->artist);
             }
             if(playlist_data->album!=NULL)
             {
-                tmp = json_object_new_string(playlist_data->album);
-                json_object_object_add(playlist_object, "Album", tmp);
+                json_object_set_string_member(playlist_object, "Album",
+                    playlist_data->album);
             }
             if(playlist_data->ftype!=NULL)
             {
-                tmp = json_object_new_string(playlist_data->ftype);
-                json_object_object_add(playlist_object, "FileType", tmp);
+                json_object_set_string_member(playlist_object, "FileType",
+                    playlist_data->ftype);
             }
             time = g_strdup_printf("%"G_GINT64_FORMAT,
                 playlist_data->length);
-            tmp = json_object_new_string(time);
+            json_object_set_string_member(playlist_object, "Length",
+                time);
             g_free(time);
-            json_object_object_add(playlist_object, "Length", tmp);
-            tmp = json_object_new_int(playlist_data->tracknum);
-            json_object_object_add(playlist_object, "TrackNum", tmp);
-            tmp = json_object_new_int(playlist_data->year);
-            json_object_object_add(playlist_object, "Year", tmp);
-            tmp = json_object_new_int(playlist_data->rating);
-            json_object_object_add(playlist_object, "Rating", tmp);
+            json_object_set_int_member(playlist_object, "TrackNum",
+                playlist_data->tracknum);
+            json_object_set_int_member(playlist_object, "Year",
+                playlist_data->year);
+            json_object_set_int_member(playlist_object, "Rating",
+                playlist_data->rating);
             if(playlist_data->lyricfile!=NULL)
             {
-                tmp = json_object_new_string(playlist_data->lyricfile);
-                json_object_object_add(playlist_object, "LyricFile", tmp);
+                json_object_set_string_member(playlist_object, "LyricFile",
+                    playlist_data->lyricfile);
             }
             if(playlist_data->albumfile!=NULL)
             {
-                tmp = json_object_new_string(playlist_data->albumfile);
-                json_object_object_add(playlist_object, "AlbumFile", tmp);
+                json_object_set_string_member(playlist_object, "AlbumFile",
+                    playlist_data->albumfile);
             }
             if(playlist_data->lyricsecfile!=NULL)
             {
-                tmp = json_object_new_string(playlist_data->lyricsecfile);
-                json_object_object_add(playlist_object, "LyricSecondFile",
-                    tmp);
+                json_object_set_string_member(playlist_object, "LyricSecondFile",
+                    playlist_data->lyricsecfile);
             }
-            json_object_array_add(playlist_array, playlist_object);
+            json_array_add_object_element(playlist_array, playlist_object);
         }
-        json_object_object_add(catalog_object, "Playlist", playlist_array);
-        json_object_array_add(catalog_array, catalog_object);
+        json_object_set_array_member(catalog_object, "Playlist", playlist_array);
+        json_array_add_object_element(catalog_array, catalog_object);
     }
-    root_object = json_object_new_object();
-    json_object_object_add(root_object, "RCMusicCatalog", catalog_array);
-    return root_object;
+    root_object = json_object_new();
+    json_object_set_array_member(root_object, "RCMusicCatalog", catalog_array);
+    root_node = json_node_new(JSON_NODE_OBJECT);
+    json_node_take_object(root_node, root_object);
+    return root_node;
 }
 
 static gboolean rclib_db_save_library_db(GSequence *catalog,
     const gchar *file, gboolean *dirty_flag)
 {
-    const gchar *json_data;
     GError *error = NULL;
-    json_object *root_object;
-    root_object = rclib_db_build_json_object(catalog);
-    if(root_object==NULL) return FALSE;
-    json_data = json_object_to_json_string(root_object);
-    if(json_data!=NULL)
+    JsonNode *root_node;
+    JsonGenerator *generator;
+    root_node = rclib_db_build_json_node(catalog);
+    if(root_node==NULL) return FALSE;
+    generator = json_generator_new();
+    json_generator_set_root(generator, root_node);
+    json_node_free(root_node);
+    if(!json_generator_to_file(generator, file, &error))
     {
-        if(!g_file_set_contents(file, json_data, -1, &error))
-        {
-            g_warning("Cannot save playlist: %s", error->message);
-            g_error_free(error);
-            json_object_put(root_object);
-            return FALSE;
-        }
-        else
-            g_message("Playlist saved.");
+        g_warning("Cannot save playlist: %s", error->message);
+        g_error_free(error);
+        g_object_unref(generator);
+        return FALSE;
     }
-    json_object_put(root_object);
-    if(dirty_flag!=NULL) *dirty_flag = FALSE;
+    else
+        g_message("Playlist saved.");
+    g_object_unref(generator);
+    if(dirty_flag!=NULL) *dirty_flag = FALSE;  
     return TRUE;
 }
 
 static gpointer rclib_db_playlist_autosave_thread_cb(gpointer data)
 {
     RCLibDbPrivate *priv = (RCLibDbPrivate *)data;
-    const gchar *json_data;
     gchar *filename;
+    JsonGenerator *generator;
     if(data==NULL)
     {
         g_thread_exit(NULL);
@@ -932,16 +938,18 @@ static gpointer rclib_db_playlist_autosave_thread_cb(gpointer data)
     {
         g_mutex_lock(&(priv->autosave_mutex));
         g_cond_wait(&(priv->autosave_cond), &(priv->autosave_mutex));
-        json_data = json_object_to_json_string(priv->autosave_json_object);
-        if(json_data!=NULL)
+        if(priv->autosave_json_node!=NULL)
         {
+            generator = json_generator_new();
             filename = g_strdup_printf("%s.autosave", priv->filename);
-            if(g_file_set_contents(filename, json_data, -1, NULL))
+            json_generator_set_root(generator, priv->autosave_json_node);
+            json_node_free(priv->autosave_json_node);
+            priv->autosave_json_node = NULL;
+            if(json_generator_to_file(generator, filename, NULL))
                 g_message("Auto save successfully!");
             g_free(filename);
+            g_object_unref(generator);
         }
-        json_object_put(priv->autosave_json_object);
-        priv->autosave_json_object = NULL;
         priv->dirty_flag = FALSE;
         g_mutex_unlock(&(priv->autosave_mutex));
     }
@@ -955,8 +963,8 @@ static gboolean rclib_db_autosave_timeout_cb(gpointer data)
     if(data==NULL) return FALSE;
     if(!priv->dirty_flag) return TRUE;
     if(priv->filename==NULL) return TRUE;
-    if(priv->autosave_json_object!=NULL) return TRUE;
-    priv->autosave_json_object = rclib_db_build_json_object(priv->catalog);
+    if(priv->autosave_json_node!=NULL) return TRUE;
+    priv->autosave_json_node = rclib_db_build_json_node(priv->catalog);
     g_mutex_lock(&(priv->autosave_mutex));
     g_cond_signal(&(priv->autosave_cond));
     g_mutex_unlock(&(priv->autosave_mutex));
@@ -1187,7 +1195,7 @@ static void rclib_db_instance_init(RCLibDb *db)
     priv->import_work_flag = FALSE;
     priv->refresh_work_flag = FALSE;
     priv->dirty_flag = FALSE;
-    priv->autosave_timeout = g_timeout_add_seconds(120,
+    priv->autosave_timeout = g_timeout_add_seconds(db_autosave_timeout,
         rclib_db_autosave_timeout_cb, priv);
 }
 
