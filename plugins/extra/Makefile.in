@@ -36,7 +36,10 @@ POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
 @WITH_GTK_UI_TRUE@am__append_1 = @GTK_CFLAGS@ -I$(top_srcdir)/ui
-@HAVE_LIBCURL_TRUE@am__append_2 = @LIBCURL_CFLAGS@
+@WITH_GTK_UI_TRUE@@WITH_NATIVE_PLUGINS_TRUE@am__append_2 = \
+@WITH_GTK_UI_TRUE@@WITH_NATIVE_PLUGINS_TRUE@    karaeffect.la \
+@WITH_GTK_UI_TRUE@@WITH_NATIVE_PLUGINS_TRUE@    echoeffect.la
+
 @HAVE_LIBCURL_TRUE@@WITH_GTK_UI_TRUE@@WITH_NATIVE_PLUGINS_TRUE@am__append_3 = \
 @HAVE_LIBCURL_TRUE@@WITH_GTK_UI_TRUE@@WITH_NATIVE_PLUGINS_TRUE@    lrccrawler.la
 
@@ -91,15 +94,39 @@ am__installdirs = "$(DESTDIR)$(crawlermoduledir)" \
 	"$(DESTDIR)$(plugindir)"
 LTLIBRARIES = $(crawlermodule_LTLIBRARIES) $(noinst_LTLIBRARIES) \
 	$(plugin_LTLIBRARIES)
+@WITH_GTK_UI_TRUE@@WITH_NATIVE_PLUGINS_TRUE@echoeffect_la_DEPENDENCIES = $(top_builddir)/lib/librhythmcat-2.0.la \
+@WITH_GTK_UI_TRUE@@WITH_NATIVE_PLUGINS_TRUE@	$(top_builddir)/ui/librhythmcat-ui-2.0.la
+am__echoeffect_la_SOURCES_DIST = echoeffect.c
+@WITH_GTK_UI_TRUE@@WITH_NATIVE_PLUGINS_TRUE@am_echoeffect_la_OBJECTS = echoeffect_la-echoeffect.lo
+echoeffect_la_OBJECTS = $(am_echoeffect_la_OBJECTS)
+AM_V_lt = $(am__v_lt_@AM_V@)
+am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
+am__v_lt_0 = --silent
+echoeffect_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC \
+	$(echoeffect_la_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link \
+	$(CCLD) $(AM_CFLAGS) $(CFLAGS) $(echoeffect_la_LDFLAGS) \
+	$(LDFLAGS) -o $@
+@WITH_GTK_UI_TRUE@@WITH_NATIVE_PLUGINS_TRUE@am_echoeffect_la_rpath =  \
+@WITH_GTK_UI_TRUE@@WITH_NATIVE_PLUGINS_TRUE@	-rpath \
+@WITH_GTK_UI_TRUE@@WITH_NATIVE_PLUGINS_TRUE@	$(plugindir)
+@WITH_GTK_UI_TRUE@@WITH_NATIVE_PLUGINS_TRUE@karaeffect_la_DEPENDENCIES = $(top_builddir)/lib/librhythmcat-2.0.la \
+@WITH_GTK_UI_TRUE@@WITH_NATIVE_PLUGINS_TRUE@	$(top_builddir)/ui/librhythmcat-ui-2.0.la
+am__karaeffect_la_SOURCES_DIST = karaeffect.c
+@WITH_GTK_UI_TRUE@@WITH_NATIVE_PLUGINS_TRUE@am_karaeffect_la_OBJECTS = karaeffect_la-karaeffect.lo
+karaeffect_la_OBJECTS = $(am_karaeffect_la_OBJECTS)
+karaeffect_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC \
+	$(karaeffect_la_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link \
+	$(CCLD) $(AM_CFLAGS) $(CFLAGS) $(karaeffect_la_LDFLAGS) \
+	$(LDFLAGS) -o $@
+@WITH_GTK_UI_TRUE@@WITH_NATIVE_PLUGINS_TRUE@am_karaeffect_la_rpath =  \
+@WITH_GTK_UI_TRUE@@WITH_NATIVE_PLUGINS_TRUE@	-rpath \
+@WITH_GTK_UI_TRUE@@WITH_NATIVE_PLUGINS_TRUE@	$(plugindir)
 lrccrawler_lrc123_la_DEPENDENCIES =
 am__lrccrawler_lrc123_la_SOURCES_DIST = lrccrawler-lrc123.c \
 	lrccrawler-common.c
 @HAVE_LIBCURL_TRUE@@WITH_GTK_UI_TRUE@@WITH_NATIVE_PLUGINS_TRUE@am_lrccrawler_lrc123_la_OBJECTS = lrccrawler_lrc123_la-lrccrawler-lrc123.lo \
 @HAVE_LIBCURL_TRUE@@WITH_GTK_UI_TRUE@@WITH_NATIVE_PLUGINS_TRUE@	lrccrawler_lrc123_la-lrccrawler-common.lo
 lrccrawler_lrc123_la_OBJECTS = $(am_lrccrawler_lrc123_la_OBJECTS)
-AM_V_lt = $(am__v_lt_@AM_V@)
-am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
-am__v_lt_0 = --silent
 lrccrawler_lrc123_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC \
 	$(lrccrawler_lrc123_la_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \
 	--mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
@@ -144,8 +171,11 @@ am__v_CCLD_0 = @echo "  CCLD  " $@;
 AM_V_GEN = $(am__v_GEN_@AM_V@)
 am__v_GEN_ = $(am__v_GEN_@AM_DEFAULT_V@)
 am__v_GEN_0 = @echo "  GEN   " $@;
-SOURCES = $(lrccrawler_lrc123_la_SOURCES) $(lrccrawler_la_SOURCES)
-DIST_SOURCES = $(am__lrccrawler_lrc123_la_SOURCES_DIST) \
+SOURCES = $(echoeffect_la_SOURCES) $(karaeffect_la_SOURCES) \
+	$(lrccrawler_lrc123_la_SOURCES) $(lrccrawler_la_SOURCES)
+DIST_SOURCES = $(am__echoeffect_la_SOURCES_DIST) \
+	$(am__karaeffect_la_SOURCES_DIST) \
+	$(am__lrccrawler_lrc123_la_SOURCES_DIST) \
 	$(am__lrccrawler_la_SOURCES_DIST)
 HEADERS = $(noinst_HEADERS)
 ETAGS = etags
@@ -341,21 +371,37 @@ top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 plugindir = $(libdir)/RhythmCat2/plugins
 crawlermoduledir = $(libdir)/RhythmCat2/plugins/CrawlerModules
+karaeffect_la_LDFLAGS = -module -avoid-version -export-dynamic -O2
+echoeffect_la_LDFLAGS = -module -avoid-version -export-dynamic -O2
 lrccrawler_la_LDFLAGS = -module -avoid-version -export-dynamic -O2
 lrccrawler_lrc123_la_LDFLAGS = -module -avoid-version -export-dynamic -O2
-plugin_LTLIBRARIES = $(am__append_3)
+plugin_LTLIBRARIES = $(am__append_2) $(am__append_3)
 crawlermodule_LTLIBRARIES = $(am__append_4)
 noinst_LTLIBRARIES = 
 noinst_HEADERS = lrccrawler-common.h
 INCLUDES = @GLIB2_CFLAGS@ @GSTREAMER_CFLAGS@ @JSON_GLIB_CFLAGS@ \
 	-DLOCALEDIR=\"$(localedir)\" -I$(top_srcdir)/lib \
-	$(am__append_1) $(am__append_2)
+	$(am__append_1)
+@WITH_GTK_UI_TRUE@@WITH_NATIVE_PLUGINS_TRUE@karaeffect_la_SOURCES = karaeffect.c
+@WITH_GTK_UI_TRUE@@WITH_NATIVE_PLUGINS_TRUE@karaeffect_la_LIBADD = @GLIB2_LIBS@ @GTK_LIBS@ @GSTREAMER_LIBS@ @JSON_GLIB_LIBS@ \
+@WITH_GTK_UI_TRUE@@WITH_NATIVE_PLUGINS_TRUE@    $(top_builddir)/lib/librhythmcat-2.0.la \
+@WITH_GTK_UI_TRUE@@WITH_NATIVE_PLUGINS_TRUE@    $(top_builddir)/ui/librhythmcat-ui-2.0.la
+
+@WITH_GTK_UI_TRUE@@WITH_NATIVE_PLUGINS_TRUE@karaeffect_la_LIBTOOLFLAGS = --tag=disable-static
+@WITH_GTK_UI_TRUE@@WITH_NATIVE_PLUGINS_TRUE@echoeffect_la_SOURCES = echoeffect.c
+@WITH_GTK_UI_TRUE@@WITH_NATIVE_PLUGINS_TRUE@echoeffect_la_LIBADD = @GLIB2_LIBS@ @GTK_LIBS@ @GSTREAMER_LIBS@ @JSON_GLIB_LIBS@ \
+@WITH_GTK_UI_TRUE@@WITH_NATIVE_PLUGINS_TRUE@    $(top_builddir)/lib/librhythmcat-2.0.la \
+@WITH_GTK_UI_TRUE@@WITH_NATIVE_PLUGINS_TRUE@    $(top_builddir)/ui/librhythmcat-ui-2.0.la
+
+@WITH_GTK_UI_TRUE@@WITH_NATIVE_PLUGINS_TRUE@echoeffect_la_LIBTOOLFLAGS = --tag=disable-static
+@HAVE_LIBCURL_TRUE@@WITH_GTK_UI_TRUE@@WITH_NATIVE_PLUGINS_TRUE@lrccrawler_la_INCLUDES = @INCLUDES@ @LIBCURL_CFLAGS@
 @HAVE_LIBCURL_TRUE@@WITH_GTK_UI_TRUE@@WITH_NATIVE_PLUGINS_TRUE@lrccrawler_la_SOURCES = lrccrawler.c lrccrawler-common.c
 @HAVE_LIBCURL_TRUE@@WITH_GTK_UI_TRUE@@WITH_NATIVE_PLUGINS_TRUE@lrccrawler_la_LIBADD = @GLIB2_LIBS@ @GTK_LIBS@ @GSTREAMER_LIBS@ @JSON_GLIB_LIBS@ \
 @HAVE_LIBCURL_TRUE@@WITH_GTK_UI_TRUE@@WITH_NATIVE_PLUGINS_TRUE@    @LIBCURL_LIBS@ $(top_builddir)/lib/librhythmcat-2.0.la \
 @HAVE_LIBCURL_TRUE@@WITH_GTK_UI_TRUE@@WITH_NATIVE_PLUGINS_TRUE@    $(top_builddir)/ui/librhythmcat-ui-2.0.la
 
 @HAVE_LIBCURL_TRUE@@WITH_GTK_UI_TRUE@@WITH_NATIVE_PLUGINS_TRUE@lrccrawler_la_LIBTOOLFLAGS = --tag=disable-static
+@HAVE_LIBCURL_TRUE@@WITH_GTK_UI_TRUE@@WITH_NATIVE_PLUGINS_TRUE@lrccrawler_lrc123_la_INCLUDES = @INCLUDES@ @LIBCURL_CFLAGS@
 @HAVE_LIBCURL_TRUE@@WITH_GTK_UI_TRUE@@WITH_NATIVE_PLUGINS_TRUE@lrccrawler_lrc123_la_SOURCES = lrccrawler-lrc123.c lrccrawler-common.c
 @HAVE_LIBCURL_TRUE@@WITH_GTK_UI_TRUE@@WITH_NATIVE_PLUGINS_TRUE@lrccrawler_lrc123_la_LIBADD = @GLIB2_LIBS@ @GTK_LIBS@ @LIBCURL_LIBS@
 @HAVE_LIBCURL_TRUE@@WITH_GTK_UI_TRUE@@WITH_NATIVE_PLUGINS_TRUE@lrccrawler_lrc123_la_LIBTOOLFLAGS = --tag=disable-static
@@ -465,6 +511,10 @@ clean-pluginLTLIBRARIES:
 	  echo "rm -f \"$${dir}/so_locations\""; \
 	  rm -f "$${dir}/so_locations"; \
 	done
+echoeffect.la: $(echoeffect_la_OBJECTS) $(echoeffect_la_DEPENDENCIES) $(EXTRA_echoeffect_la_DEPENDENCIES) 
+	$(AM_V_CCLD)$(echoeffect_la_LINK) $(am_echoeffect_la_rpath) $(echoeffect_la_OBJECTS) $(echoeffect_la_LIBADD) $(LIBS)
+karaeffect.la: $(karaeffect_la_OBJECTS) $(karaeffect_la_DEPENDENCIES) $(EXTRA_karaeffect_la_DEPENDENCIES) 
+	$(AM_V_CCLD)$(karaeffect_la_LINK) $(am_karaeffect_la_rpath) $(karaeffect_la_OBJECTS) $(karaeffect_la_LIBADD) $(LIBS)
 lrccrawler-lrc123.la: $(lrccrawler_lrc123_la_OBJECTS) $(lrccrawler_lrc123_la_DEPENDENCIES) $(EXTRA_lrccrawler_lrc123_la_DEPENDENCIES) 
 	$(AM_V_CCLD)$(lrccrawler_lrc123_la_LINK) $(am_lrccrawler_lrc123_la_rpath) $(lrccrawler_lrc123_la_OBJECTS) $(lrccrawler_lrc123_la_LIBADD) $(LIBS)
 lrccrawler.la: $(lrccrawler_la_OBJECTS) $(lrccrawler_la_DEPENDENCIES) $(EXTRA_lrccrawler_la_DEPENDENCIES) 
@@ -476,6 +526,8 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/echoeffect_la-echoeffect.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/karaeffect_la-karaeffect.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/lrccrawler_la-lrccrawler-common.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/lrccrawler_la-lrccrawler.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/lrccrawler_lrc123_la-lrccrawler-common.Plo@am__quote@
@@ -501,6 +553,20 @@ distclean-compile:
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='$<' object='$@' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LTCOMPILE) -c -o $@ $<
+
+echoeffect_la-echoeffect.lo: echoeffect.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(echoeffect_la_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT echoeffect_la-echoeffect.lo -MD -MP -MF $(DEPDIR)/echoeffect_la-echoeffect.Tpo -c -o echoeffect_la-echoeffect.lo `test -f 'echoeffect.c' || echo '$(srcdir)/'`echoeffect.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/echoeffect_la-echoeffect.Tpo $(DEPDIR)/echoeffect_la-echoeffect.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='echoeffect.c' object='echoeffect_la-echoeffect.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(echoeffect_la_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o echoeffect_la-echoeffect.lo `test -f 'echoeffect.c' || echo '$(srcdir)/'`echoeffect.c
+
+karaeffect_la-karaeffect.lo: karaeffect.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(karaeffect_la_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT karaeffect_la-karaeffect.lo -MD -MP -MF $(DEPDIR)/karaeffect_la-karaeffect.Tpo -c -o karaeffect_la-karaeffect.lo `test -f 'karaeffect.c' || echo '$(srcdir)/'`karaeffect.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/karaeffect_la-karaeffect.Tpo $(DEPDIR)/karaeffect_la-karaeffect.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='karaeffect.c' object='karaeffect_la-karaeffect.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(karaeffect_la_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o karaeffect_la-karaeffect.lo `test -f 'karaeffect.c' || echo '$(srcdir)/'`karaeffect.c
 
 lrccrawler_lrc123_la-lrccrawler-lrc123.lo: lrccrawler-lrc123.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(lrccrawler_lrc123_la_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT lrccrawler_lrc123_la-lrccrawler-lrc123.lo -MD -MP -MF $(DEPDIR)/lrccrawler_lrc123_la-lrccrawler-lrc123.Tpo -c -o lrccrawler_lrc123_la-lrccrawler-lrc123.lo `test -f 'lrccrawler-lrc123.c' || echo '$(srcdir)/'`lrccrawler-lrc123.c

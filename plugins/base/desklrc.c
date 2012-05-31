@@ -30,7 +30,7 @@
 #include <stdlib.h>
 #include <rclib.h>
 
-#define DESKLRC_ID "rc2-desktop-lyric"
+#define DESKLRC_ID "rc2-native-desktop-lyric"
 #define DESKLRC_OSD_WINDOW_MIN_WIDTH 320
 
 typedef struct RCPluginDesklrcPrivate

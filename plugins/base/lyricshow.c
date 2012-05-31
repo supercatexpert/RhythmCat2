@@ -31,7 +31,7 @@
 #include <rclib.h>
 #include <rc-ui-menu.h>
 
-#define LRCSHOW_ID "rc2-lyric-show"
+#define LRCSHOW_ID "rc2-native-lyric-show"
 
 typedef struct RCPluginLrcshowPriv
 {

@@ -16,8 +16,5 @@ Other ideas:
 - Perl plug-in loader?
 - Vala support
 
-Hint:
-If compile json-c in mingw32/64, please use command below first:
-export ac_cv_func_malloc_0_nonnull=yes
-export ac_cv_func_realloc_0_nonnull=yes
+Remove Echo Effect (and move it to plug-in).
 

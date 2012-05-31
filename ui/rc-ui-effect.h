@@ -32,9 +32,7 @@
 
 G_BEGIN_DECLS
 
-void rc_ui_effect_window_init();
 void rc_ui_effect_window_show();
-void rc_ui_effect_window_hide();
 void rc_ui_effect_window_destroy();
 
 G_END_DECLS

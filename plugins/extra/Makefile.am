@@ -1,6 +1,8 @@
 plugindir = $(libdir)/RhythmCat2/plugins
 crawlermoduledir= $(libdir)/RhythmCat2/plugins/CrawlerModules
 
+karaeffect_la_LDFLAGS = -module -avoid-version -export-dynamic -O2
+echoeffect_la_LDFLAGS = -module -avoid-version -export-dynamic -O2
 lrccrawler_la_LDFLAGS = -module -avoid-version -export-dynamic -O2
 lrccrawler_lrc123_la_LDFLAGS = -module -avoid-version -export-dynamic -O2
 
@@ -10,7 +12,7 @@ noinst_LTLIBRARIES =
 
 noinst_HEADERS = lrccrawler-common.h
 
-INCLUDES = @GLIB2_CFLAGS@ @GSTREAMER_CFLAGS@  @JSON_GLIB_CFLAGS@ \
+INCLUDES = @GLIB2_CFLAGS@ @GSTREAMER_CFLAGS@ @JSON_GLIB_CFLAGS@ \
     -DLOCALEDIR=\"$(localedir)\" -I$(top_srcdir)/lib
 
 if WITH_GTK_UI
@@ -18,18 +20,35 @@ INCLUDES += @GTK_CFLAGS@ -I$(top_srcdir)/ui
 endif
 
 if HAVE_LIBCURL
-INCLUDES += @LIBCURL_CFLAGS@
+
 endif
 
 if WITH_NATIVE_PLUGINS
 
 if WITH_GTK_UI
 
+plugin_LTLIBRARIES += \
+    karaeffect.la \
+    echoeffect.la
+
+karaeffect_la_SOURCES = karaeffect.c
+karaeffect_la_LIBADD = @GLIB2_LIBS@ @GTK_LIBS@ @GSTREAMER_LIBS@ @JSON_GLIB_LIBS@ \
+    $(top_builddir)/lib/librhythmcat-2.0.la \
+    $(top_builddir)/ui/librhythmcat-ui-2.0.la
+karaeffect_la_LIBTOOLFLAGS = --tag=disable-static
+
+echoeffect_la_SOURCES = echoeffect.c
+echoeffect_la_LIBADD = @GLIB2_LIBS@ @GTK_LIBS@ @GSTREAMER_LIBS@ @JSON_GLIB_LIBS@ \
+    $(top_builddir)/lib/librhythmcat-2.0.la \
+    $(top_builddir)/ui/librhythmcat-ui-2.0.la
+echoeffect_la_LIBTOOLFLAGS = --tag=disable-static
+
 if HAVE_LIBCURL
 
 plugin_LTLIBRARIES += \
     lrccrawler.la
-    
+
+lrccrawler_la_INCLUDES = @INCLUDES@ @LIBCURL_CFLAGS@
 lrccrawler_la_SOURCES = lrccrawler.c lrccrawler-common.c
 lrccrawler_la_LIBADD = @GLIB2_LIBS@ @GTK_LIBS@ @GSTREAMER_LIBS@ @JSON_GLIB_LIBS@ \
     @LIBCURL_LIBS@ $(top_builddir)/lib/librhythmcat-2.0.la \
@@ -39,6 +58,7 @@ lrccrawler_la_LIBTOOLFLAGS = --tag=disable-static
 crawlermodule_LTLIBRARIES += \
     lrccrawler-lrc123.la
 
+lrccrawler_lrc123_la_INCLUDES = @INCLUDES@ @LIBCURL_CFLAGS@
 lrccrawler_lrc123_la_SOURCES = lrccrawler-lrc123.c lrccrawler-common.c
 lrccrawler_lrc123_la_LIBADD = @GLIB2_LIBS@ @GTK_LIBS@ @LIBCURL_LIBS@
 lrccrawler_lrc123_la_LIBTOOLFLAGS = --tag=disable-static

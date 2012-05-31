@@ -3,3 +3,9 @@ rhythmcat2 (1.9.3-1) unstable; urgency=low
   * Use GTK+ 3.4 as its dependency. (Closes: #112234)
 
  -- SuperCat <supercatexpert@gmail.com>  Fri, 11 May 2012 00:48:32 +0800
+ 
+rhythmcat2 (1.9.3-2) unstable; urgency=low
+
+  * Added some audio effect plug-ins. (Closes: #112245)
+
+ -- SuperCat <supercatexpert@gmail.com>  Tue, 29 May 2012 04:21:32 +0800

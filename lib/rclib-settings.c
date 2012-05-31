@@ -187,8 +187,6 @@ void rclib_settings_apply()
     gdouble dvalue;
     gdouble *darray;
     gsize size;
-    guint64 delay;
-    gfloat intensity, feedback;
     gchar *encoding, *id3_encoding;
     ivalue = rclib_settings_get_integer("Player", "RepeatMode", &error);
     if(error==NULL)
@@ -241,12 +239,6 @@ void rclib_settings_apply()
     }
     dvalue = rclib_settings_get_double("SoundEffect", "Balance", NULL);
     rclib_core_set_balance(dvalue);
-    delay = rclib_settings_get_integer("SoundEffect", "EchoDelay", NULL);
-    delay *= GST_MSECOND;
-    if(delay==0) delay = 1;
-    feedback = rclib_settings_get_double("SoundEffect", "EchoFeedback", NULL);
-    intensity = rclib_settings_get_double("SoundEffect", "EchoIntensity", NULL);
-    rclib_core_set_echo(delay, feedback, intensity);
     bvalue = rclib_settings_get_boolean("Metadata", "AutoDetectEncoding", NULL);
     if(bvalue)
     {
@@ -303,9 +295,7 @@ void rclib_settings_update()
     gint ivalue;
     gdouble dvalue;
     gdouble eq_array[10] = {0.0};
-    guint64 delay;
     gfloat fvalue;
-    gfloat intensity, feedback;
     GSequenceIter *db_reference;
     RCLibDbPlaylistData *playlist_data;
     ivalue = rclib_player_get_repeat_mode();
@@ -321,13 +311,6 @@ void rclib_settings_update()
     }
     if(rclib_core_get_balance(&fvalue))
         rclib_settings_set_double("SoundEffect", "Balance", fvalue);
-    if(rclib_core_get_echo(&delay, NULL, &feedback, &intensity))
-    {
-        rclib_settings_set_integer("SoundEffect", "EchoDelay",
-            delay/GST_MSECOND);
-        rclib_settings_set_double("SoundEffect", "EchoFeedback", feedback);
-        rclib_settings_set_double("SoundEffect", "EchoIntensity", intensity);
-    }
     db_reference = rclib_core_get_db_reference();
     if(db_reference!=NULL)
     {

@@ -33,7 +33,7 @@
 #endif
 
 #define G_LOG_DOMAIN "KaraokeMixer"
-#define KARAMIXER_ID "rc2-karaoke-mixer"
+#define KARAMIXER_ID "rc2-native-karaoke-mixer"
 
 typedef struct RCPluginKaraMixerPrivate
 {

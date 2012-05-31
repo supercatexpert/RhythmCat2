@@ -41,12 +41,8 @@ typedef struct RCUiAudioEffectPrivate
     GtkWidget *eq_combo_box;
     GtkWidget *eq_scales[10];
     GtkWidget *bal_scale;
-    GtkWidget *echo_delay_scale;
-    GtkWidget *echo_fb_scale;
-    GtkWidget *echo_intensity_scale;
     gulong eq_id;
     gulong balance_id;
-    gulong echo_id;
 }RCUiAudioEffectPrivate;
 
 static RCUiAudioEffectPrivate effect_priv = {0};
@@ -85,57 +81,6 @@ static void rc_ui_effect_window_balance_scale_changed_cb(GtkRange *range,
         G_CALLBACK(rc_ui_effect_window_balance_scale_changed_cb), data);
 }
 
-static void rc_ui_effect_window_echo_delay_scale_changed_cb(GtkRange *range,
-    gpointer data)
-{
-    gdouble value = 0.0;
-    guint64 echo_delay = 0;
-    gfloat echo_feedback = 0.0, echo_intensity = 0.0;
-    value = gtk_range_get_value(range);
-    rclib_core_get_echo(&echo_delay, NULL, &echo_feedback, &echo_intensity);
-    echo_delay = (guint64)value * GST_MSECOND;
-    if(echo_delay==0) echo_delay = 1;
-    g_signal_handlers_block_by_func(range,
-        G_CALLBACK(rc_ui_effect_window_echo_delay_scale_changed_cb), data);
-    rclib_core_set_echo(echo_delay, echo_feedback, echo_intensity);
-    g_signal_handlers_unblock_by_func(range,
-        G_CALLBACK(rc_ui_effect_window_echo_delay_scale_changed_cb), data);
-}
-
-static void rc_ui_effect_window_echo_fb_scale_changed_cb(GtkRange *range,
-    gpointer data)
-{
-    gdouble value = 0.0;
-    guint64 echo_delay = 0;
-    gfloat echo_feedback = 0.0, echo_intensity = 0.0;
-    value = gtk_range_get_value(range);
-    rclib_core_get_echo(&echo_delay, NULL, &echo_feedback, &echo_intensity);
-    echo_feedback = value;
-    g_signal_handlers_block_by_func(range,
-        G_CALLBACK(rc_ui_effect_window_echo_fb_scale_changed_cb), data);
-    rclib_core_set_echo(echo_delay, echo_feedback, echo_intensity);
-    g_signal_handlers_unblock_by_func(range,
-        G_CALLBACK(rc_ui_effect_window_echo_fb_scale_changed_cb), data);
-}
-
-static void rc_ui_effect_window_echo_intensity_scale_changed_cb(
-    GtkRange *range, gpointer data)
-{
-    gdouble value = 0.0;
-    guint64 echo_delay = 0;
-    gfloat echo_feedback = 0.0, echo_intensity = 0.0;
-    value = gtk_range_get_value(range);
-    rclib_core_get_echo(&echo_delay, NULL, &echo_feedback, &echo_intensity);
-    echo_intensity = value;
-    g_signal_handlers_block_by_func(range,
-        G_CALLBACK(rc_ui_effect_window_echo_intensity_scale_changed_cb),
-        data);
-    rclib_core_set_echo(echo_delay, echo_feedback, echo_intensity);
-    g_signal_handlers_unblock_by_func(range,
-        G_CALLBACK(rc_ui_effect_window_echo_intensity_scale_changed_cb),
-        data);
-}
-
 static void rc_ui_effect_eq_changed_cb(RCLibCore *core, RCLibCoreEQType type,
     gdouble *values, gpointer data)
 {
@@ -165,20 +110,6 @@ static void rc_ui_effect_balance_changed_cb(RCLibCore *core, gfloat balance,
 {
     RCUiAudioEffectPrivate *priv = &effect_priv;
     gtk_range_set_value(GTK_RANGE(priv->bal_scale), balance);
-}
-
-static void rc_ui_effect_echo_changed_cb(RCLibCore *core, gpointer data)
-{
-    RCUiAudioEffectPrivate *priv = &effect_priv;
-    guint64 echo_delay = 0;
-    gfloat echo_feedback = 0.0, echo_intensity = 0.0;
-    if(!rclib_core_get_echo(&echo_delay, NULL, &echo_feedback,
-        &echo_intensity)) return;
-    gtk_range_set_value(GTK_RANGE(priv->echo_delay_scale),
-        echo_delay/GST_MSECOND);
-    gtk_range_set_value(GTK_RANGE(priv->echo_fb_scale), echo_feedback);
-    gtk_range_set_value(GTK_RANGE(priv->echo_intensity_scale),
-        echo_intensity);
 }
 
 static void rc_ui_effect_eq_save_setting()
@@ -295,8 +226,6 @@ static void rc_ui_effect_window_destroy_cb(GtkWidget *widget, gpointer data)
         rclib_core_signal_disconnect(priv->eq_id);
     if(priv->balance_id>0)
         rclib_core_signal_disconnect(priv->balance_id);
-    if(priv->echo_id>0)
-        rclib_core_signal_disconnect(priv->echo_id);
     gtk_widget_destroyed(priv->effect_window, &(priv->effect_window));
 }
 
@@ -309,17 +238,14 @@ static void rc_ui_effect_window_destroy_cb(GtkWidget *widget, gpointer data)
 void rc_ui_effect_window_init()
 {
     GtkWidget *effect_notebook;
-    GtkWidget *eq_label, *bal_label, *echo_label;
+    GtkWidget *eq_label, *bal_label;
     GtkWidget *eq_labels[10];
-    GtkWidget *echo_delay_label;
-    GtkWidget *echo_fb_label, *echo_intensity_label;
     GtkWidget *eq_scale_grid;
     GtkWidget *eq_save_button, *eq_open_button;
     GtkWidget *eq_button_hbox;
     GtkWidget *eq_head_grid;
     GtkWidget *eq_main_grid;    
     GtkWidget *bal_main_grid;
-    GtkWidget *echo_main_grid;
     GtkListStore *store;
     GtkCellRenderer *renderer;
     GtkTreeIter iter;
@@ -328,13 +254,9 @@ void rc_ui_effect_window_init()
     RCLibCoreEQType eq_type;
     gdouble eq_bands[10] = {0.0};
     gfloat balance = 0.0;
-    guint64 echo_delay = 0, echo_mdelay = 0;
-    gfloat echo_feedback = 0.0, echo_intensity = 0.0;
     if(priv->effect_window!=NULL) return;
     rclib_core_get_eq(&eq_type, eq_bands);
     rclib_core_get_balance(&balance);
-    rclib_core_get_echo(&echo_delay, &echo_mdelay, &echo_feedback,
-        &echo_intensity);
     priv->effect_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
     effect_notebook = gtk_notebook_new();
     store = gtk_list_store_new(2, G_TYPE_STRING, G_TYPE_INT);
@@ -349,7 +271,6 @@ void rc_ui_effect_window_init()
     eq_open_button = gtk_button_new_from_stock(GTK_STOCK_OPEN);
     eq_label = gtk_label_new(_("Equalizer"));
     bal_label = gtk_label_new(_("Balance"));
-    echo_label = gtk_label_new(_("Echo"));
     eq_labels[0] = gtk_label_new("29Hz");
     eq_labels[1] = gtk_label_new("59Hz");
     eq_labels[2] = gtk_label_new("119Hz");
@@ -391,33 +312,6 @@ void rc_ui_effect_window_init()
     gtk_scale_add_mark(GTK_SCALE(priv->bal_scale), 0.0, GTK_POS_BOTTOM,
         NULL);
     g_object_set(priv->bal_scale, "expand", TRUE, NULL);
-    echo_delay_label = gtk_label_new(_("Delay"));
-    echo_fb_label = gtk_label_new(_("Feedback"));
-    echo_intensity_label = gtk_label_new(_("Intensity"));
-    priv->echo_delay_scale = gtk_scale_new_with_range(
-        GTK_ORIENTATION_HORIZONTAL, 0, echo_mdelay/GST_MSECOND, 1);
-    priv->echo_fb_scale = gtk_scale_new_with_range(
-        GTK_ORIENTATION_HORIZONTAL, 0, 1.0, 0.01);
-    priv->echo_intensity_scale = gtk_scale_new_with_range(
-        GTK_ORIENTATION_HORIZONTAL, 0, 1.0, 0.01);
-    gtk_widget_set_hexpand(priv->echo_delay_scale, TRUE);
-    gtk_widget_set_hexpand(priv->echo_fb_scale, TRUE);
-    gtk_widget_set_hexpand(priv->echo_intensity_scale, TRUE);
-    gtk_range_set_value(GTK_RANGE(priv->echo_delay_scale),
-        echo_delay/GST_MSECOND);   
-    gtk_range_set_value(GTK_RANGE(priv->echo_fb_scale),
-        echo_feedback); 
-    gtk_range_set_value(GTK_RANGE(priv->echo_intensity_scale),
-        echo_intensity);
-    gtk_scale_set_draw_value(GTK_SCALE(priv->echo_delay_scale), TRUE);
-    gtk_scale_set_draw_value(GTK_SCALE(priv->echo_fb_scale), TRUE);
-    gtk_scale_set_draw_value(GTK_SCALE(priv->echo_intensity_scale), TRUE);
-    gtk_scale_set_value_pos(GTK_SCALE(priv->echo_delay_scale),
-        GTK_POS_RIGHT);
-    gtk_scale_set_value_pos(GTK_SCALE(priv->echo_fb_scale),
-        GTK_POS_RIGHT);
-    gtk_scale_set_value_pos(GTK_SCALE(priv->echo_intensity_scale),
-        GTK_POS_RIGHT);
     eq_button_hbox = gtk_button_box_new(GTK_ORIENTATION_HORIZONTAL);
     g_object_set(eq_button_hbox, "layout-style", GTK_BUTTONBOX_END,
         "hexpand-set", TRUE, "hexpand", TRUE, "spacing", 4, NULL);
@@ -436,13 +330,10 @@ void rc_ui_effect_window_init()
     eq_head_grid = gtk_grid_new();
     eq_main_grid = gtk_grid_new();
     bal_main_grid = gtk_grid_new();
-    echo_main_grid = gtk_grid_new();
     gtk_grid_set_column_spacing(GTK_GRID(eq_head_grid), 8);
     g_object_set(eq_head_grid, "margin-left", 2, "margin-right", 2,
         "margin-top", 4, "margin-bottom", 4, NULL);
     gtk_grid_set_row_spacing(GTK_GRID(eq_main_grid), 6);
-    gtk_grid_set_column_spacing(GTK_GRID(echo_main_grid), 3);
-    gtk_grid_set_row_spacing(GTK_GRID(echo_main_grid), 4);
     g_object_set(priv->effect_window, "title", _("Audio Effects"),
         "window-position", GTK_WIN_POS_CENTER, "has-resize-grip", FALSE,
         "type-hint", GDK_WINDOW_TYPE_HINT_DIALOG, NULL);
@@ -455,21 +346,10 @@ void rc_ui_effect_window_init()
     gtk_grid_attach(GTK_GRID(eq_main_grid), eq_head_grid, 0, 0, 1, 1);
     gtk_grid_attach(GTK_GRID(eq_main_grid), eq_scale_grid, 0, 1, 1, 1);
     gtk_grid_attach(GTK_GRID(bal_main_grid), priv->bal_scale, 0, 0, 1, 1);
-    gtk_grid_attach(GTK_GRID(echo_main_grid), echo_delay_label, 0, 0, 1, 1);
-    gtk_grid_attach(GTK_GRID(echo_main_grid), priv->echo_delay_scale, 1, 0,
-        1, 1);
-    gtk_grid_attach(GTK_GRID(echo_main_grid), echo_fb_label, 0, 1, 1, 1);
-    gtk_grid_attach(GTK_GRID(echo_main_grid), priv->echo_fb_scale, 1, 1,
-        1, 1);
-    gtk_grid_attach(GTK_GRID(echo_main_grid), echo_intensity_label, 0, 2, 1, 1);
-    gtk_grid_attach(GTK_GRID(echo_main_grid), priv->echo_intensity_scale, 1, 2,
-        1, 1);
     gtk_notebook_append_page(GTK_NOTEBOOK(effect_notebook), eq_main_grid,
         eq_label);
     gtk_notebook_append_page(GTK_NOTEBOOK(effect_notebook), bal_main_grid,
         bal_label);
-    gtk_notebook_append_page(GTK_NOTEBOOK(effect_notebook), echo_main_grid,
-        echo_label);
     gtk_container_add(GTK_CONTAINER(priv->effect_window), effect_notebook);
     for(i=0;i<10;i++)
     {
@@ -481,27 +361,16 @@ void rc_ui_effect_window_init()
         G_CALLBACK(rc_ui_effect_window_eq_combo_box_changed_cb), NULL);
     g_signal_connect(G_OBJECT(priv->bal_scale), "value-changed",
         G_CALLBACK(rc_ui_effect_window_balance_scale_changed_cb), NULL);
-    g_signal_connect(G_OBJECT(priv->echo_delay_scale), "value-changed",
-        G_CALLBACK(rc_ui_effect_window_echo_delay_scale_changed_cb), NULL);
-    g_signal_connect(G_OBJECT(priv->echo_fb_scale), "value-changed",
-        G_CALLBACK(rc_ui_effect_window_echo_fb_scale_changed_cb), NULL);
-    g_signal_connect(G_OBJECT(priv->echo_intensity_scale), "value-changed",
-        G_CALLBACK(rc_ui_effect_window_echo_intensity_scale_changed_cb),
-        NULL);
     g_signal_connect(G_OBJECT(eq_save_button), "clicked",   
         G_CALLBACK(rc_ui_effect_eq_save_setting), NULL);  
     g_signal_connect(G_OBJECT(eq_open_button), "clicked",   
         G_CALLBACK(rc_ui_effect_eq_load_setting), NULL);
-    g_signal_connect(G_OBJECT(priv->effect_window), "delete-event",
-        G_CALLBACK(gtk_widget_hide_on_delete), NULL);
     g_signal_connect(G_OBJECT(priv->effect_window), "destroy",
         G_CALLBACK(rc_ui_effect_window_destroy_cb), NULL);
     effect_priv.eq_id = rclib_core_signal_connect("eq-changed",
         G_CALLBACK(rc_ui_effect_eq_changed_cb), NULL);
     effect_priv.balance_id = rclib_core_signal_connect("balance-changed",
         G_CALLBACK(rc_ui_effect_balance_changed_cb), NULL);
-    effect_priv.echo_id = rclib_core_signal_connect("echo-changed",
-        G_CALLBACK(rc_ui_effect_echo_changed_cb), NULL);
     gtk_widget_show_all(priv->effect_window);
     gtk_widget_hide(priv->effect_window);
 }
@@ -521,18 +390,6 @@ void rc_ui_effect_window_show()
     }
     else
         gtk_window_present(GTK_WINDOW(effect_priv.effect_window));
-}
-
-/**
- * rc_ui_effect_window_hide:
- *
- * Hide the audio effect configuration window.
- */
-
-void rc_ui_effect_window_hide()
-{
-    if(effect_priv.effect_window!=NULL)
-        gtk_widget_hide(effect_priv.effect_window);
 }
 
 /**

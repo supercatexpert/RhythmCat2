@@ -1491,8 +1491,10 @@ static void rc_ui_player_instance_init(RCUiPlayer *ui)
     rc_ui_player_signal_bind(priv);
     settings = gtk_settings_get_default();
     g_object_set(settings, "gtk-application-prefer-dark-theme", TRUE, NULL);
-    gtk_widget_show_all(priv->main_window);
+    gtk_widget_show_all(priv->progress_eventbox);
     gtk_widget_set_visible(priv->progress_eventbox, FALSE);
+    gtk_widget_set_no_show_all(priv->progress_eventbox, TRUE);
+    gtk_widget_show_all(priv->main_grid);
     rc_ui_player_catalog_listview_selection_changed_cb(catalog_selection,
         NULL);
     rc_ui_player_playlist_listview_selection_changed_cb(playlist_selection,
@@ -1613,6 +1615,21 @@ void rc_ui_player_signal_disconnect(gulong handler_id)
 {
     if(ui_player_instance==NULL) return;
     g_signal_handler_disconnect(ui_player_instance, handler_id);
+}
+
+/**
+ * rc_ui_player_show:
+ *
+ * Show the main window of the player.
+ */
+
+void rc_ui_player_show()
+{
+    RCUiPlayerPrivate *priv = NULL;
+    if(ui_player_instance==NULL) return;
+    priv = RC_UI_PLAYER_GET_PRIVATE(ui_player_instance);
+    if(priv==NULL) return;
+    gtk_widget_show_all(priv->main_window);
 }
 
 /**

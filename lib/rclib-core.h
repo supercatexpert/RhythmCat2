@@ -179,7 +179,6 @@ struct _RCLibCoreClass {
     void (*eq_changed)(RCLibCore *core, RCLibCoreEQType type,
         gdouble *values);
     void (*balance_changed)(RCLibCore *core, gfloat balance);
-    void (*echo_changed)(RCLibCore *core);
     void (*spectrum_updated)(RCLibCore *core, guint rate, guint bands,
         const GValue *magnitudes);
     void (*error)(RCLibCore *core, const gchar *message);
@@ -219,10 +218,6 @@ gboolean rclib_core_get_eq(RCLibCoreEQType *type, gdouble *band);
 const gchar *rclib_core_get_eq_name(RCLibCoreEQType type);
 gboolean rclib_core_set_balance(gfloat balance);
 gboolean rclib_core_get_balance(gfloat *balance);
-gboolean rclib_core_set_echo(guint64 delay, gfloat feedback,
-    gfloat intensity);
-gboolean rclib_core_get_echo(guint64 *delay, guint64 *max_delay,
-    gfloat *feedback, gfloat *intensity);
 gboolean rclib_core_effect_plugin_add(GstElement *element);
 void rclib_core_effect_plugin_remove(GstElement *element);
 GList *rclib_core_effect_plugin_get_list();

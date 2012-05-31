@@ -43,7 +43,7 @@
 #endif
 
 #define G_LOG_DOMAIN "MPRIS-Support"
-#define MPRISSUPPORT_ID "rc2-mpris2-controller"
+#define MPRISSUPPORT_ID "rc2-native-mpris2-controller"
 
 typedef struct RCPluginMPRISPrivate
 {

@@ -61,7 +61,6 @@ typedef struct RCLibCorePrivate
     GstElement *effectbin;
     GstElement *bal_plugin; /* balance: audiopanorama */
     GstElement *eq_plugin; /* equalizer: equalizer-10bands */
-    GstElement *echo_plugin; /* echo: audioecho */
     GList *extra_plugin_list;
     GError *error;
     RCLibCoreSourceType type;
@@ -95,7 +94,6 @@ enum
     SIGNAL_VOLUME_CHANGED,
     SIGNAL_EQ_CHANGED,
     SIGNAL_BALANCE_CHANGED,
-    SIGNAL_ECHO_CHANGED,
     SIGNAL_SPECTRUM_UPDATED,
     SIGNAL_ERROR,
     SIGNAL_LAST
@@ -738,18 +736,6 @@ static void rclib_core_class_init(RCLibCoreClass *klass)
         G_TYPE_NONE, 1, G_TYPE_FLOAT, NULL);
         
     /**
-     * RCLibCore::echo-changed:
-     * @core: the #RCLibCore that received the signal
-     *
-     * The ::echo-changed signal is emitted when new echo settings
-     * were applied.
-     */
-    core_signals[SIGNAL_ECHO_CHANGED] = g_signal_new("echo-changed",
-        RCLIB_CORE_TYPE, G_SIGNAL_RUN_FIRST, G_STRUCT_OFFSET(RCLibCoreClass,
-        echo_changed), NULL, NULL, g_cclosure_marshal_VOID__VOID,
-        G_TYPE_NONE, 0, G_TYPE_NONE, NULL);
-
-    /**
      * RCLibCore::spectrum-updated:
      * @core: the #RCLibCore that received the signal
      * @rate: the sample rate
@@ -779,13 +765,14 @@ static void rclib_core_class_init(RCLibCoreClass *klass)
         G_TYPE_NONE, 1, G_TYPE_STRING, NULL);
 }
 
-static gboolean rclib_core_effect_add_element_nonblock(GstElement *effectbin,
-    GstElement *new_element)
+static gboolean rclib_core_effect_add_element_internal(GstElement *effectbin,
+    GstElement *new_element, gboolean block)
 {
     GstPad *binsinkpad;
     GstPad *binsrcpad;
     GstPad *realpad;
     GstPad *prevpad;
+    GstPad *srcpad, *blockpad;
     GstElement *bin = NULL;
     GstElement *identity = NULL;
     GstElement *audioconvert = NULL;
@@ -819,6 +806,14 @@ static gboolean rclib_core_effect_add_element_nonblock(GstElement *effectbin,
         }
         return FALSE;
     }
+    if(block)
+    {
+        srcpad = gst_element_get_static_pad(effectbin, "sink");
+        blockpad = gst_pad_get_peer(srcpad);
+        gst_object_unref(srcpad);
+        gst_pad_set_blocked(blockpad, TRUE);
+        gst_object_unref(blockpad);
+    }
     realpad = gst_element_get_static_pad(audioconvert, "sink");
     binsinkpad = gst_ghost_pad_new("sink", realpad);
     gst_element_add_pad(bin, binsinkpad);
@@ -838,41 +833,83 @@ static gboolean rclib_core_effect_add_element_nonblock(GstElement *effectbin,
     if(link!=GST_PAD_LINK_OK)
     {
         gst_pad_link(prevpad, realpad);
+        if(block)
+        {
+            srcpad = gst_element_get_static_pad(effectbin, "sink");
+            blockpad = gst_pad_get_peer(srcpad);
+            gst_object_unref(srcpad);
+            gst_pad_set_blocked(blockpad, FALSE);
+            gst_object_unref(blockpad);
+        }
         gst_object_unref(realpad);
         gst_bin_remove(GST_BIN(effectbin), bin);
-        gst_object_unref(bin);
         return FALSE;
     }
     link = gst_pad_link(binsrcpad, realpad);
     gst_object_unref(realpad);
     if(link!=GST_PAD_LINK_OK)
     {
+        if(block)
+        {
+            srcpad = gst_element_get_static_pad(effectbin, "sink");
+            blockpad = gst_pad_get_peer(srcpad);
+            gst_object_unref(srcpad);
+            gst_pad_set_blocked(blockpad, FALSE);
+            gst_object_unref(blockpad);
+        }
         return FALSE;
+    }
+    gst_element_sync_state_with_parent(bin);
+    if(block)
+    {
+        srcpad = gst_element_get_static_pad(effectbin, "sink");
+        blockpad = gst_pad_get_peer(srcpad);
+        gst_object_unref(srcpad);
+        gst_pad_set_blocked(blockpad, FALSE);
+        gst_object_unref(blockpad);
     }
     return TRUE;
 }
 
-static void rclib_core_effect_remove_element_nonblock(GstElement *effectbin,
-    GstElement *element)
+static void rclib_core_effect_remove_element_internal(GstElement *effectbin,
+    GstElement *element, gboolean block)
 {
     GstPad *mypad;
     GstPad *prevpad, *nextpad;
+    GstPad *srcpad, *blockpad;
     GstElement *bin;
     bin = GST_ELEMENT(gst_element_get_parent(element));
     if(bin==NULL) return;
+    gst_object_unref(bin);
+    gst_element_set_state(bin, GST_STATE_NULL);
+    if(block)
+    {
+        srcpad = gst_element_get_static_pad(effectbin, "sink");
+        blockpad = gst_pad_get_peer(srcpad);
+        gst_object_unref(srcpad);
+        gst_pad_set_blocked(blockpad, TRUE);
+        gst_object_unref(blockpad);
+    }
     mypad = gst_element_get_static_pad(bin, "sink");
     prevpad = gst_pad_get_peer(mypad);
     gst_pad_unlink(prevpad, mypad);
     gst_object_unref(mypad);
     mypad = gst_element_get_static_pad (bin, "src");
-    nextpad = gst_pad_get_peer (mypad);
-    gst_pad_unlink (mypad, nextpad);
-    gst_object_unref (mypad);
-    gst_pad_link (prevpad, nextpad);
-    gst_object_unref (prevpad);
-    gst_object_unref (nextpad);
+    nextpad = gst_pad_get_peer(mypad);
+    gst_pad_unlink(mypad, nextpad);
+    gst_object_unref(mypad);
+    gst_pad_link(prevpad, nextpad);
+    gst_object_unref(prevpad);
+    gst_object_unref(nextpad);
+    if(block)
+    {
+        srcpad = gst_element_get_static_pad(effectbin, "sink");
+        blockpad =  gst_pad_get_peer(srcpad);
+        gst_object_unref(srcpad);
+        gst_pad_set_blocked(blockpad, FALSE);
+        gst_object_unref(blockpad);
+    }
     gst_bin_remove(GST_BIN(effectbin), bin);
-    gst_object_unref(bin);
 }
 
 static gboolean rclib_core_bus_callback(GstBus *bus, GstMessage *msg,
@@ -1327,20 +1364,14 @@ static void rclib_core_instance_init(RCLibCore *core)
         "effect-equalizer");
     priv->bal_plugin = gst_element_factory_make("audiopanorama",
         "effect-balance");
-    priv->echo_plugin = gst_element_factory_make("audioecho",
-        "effect-echo");
     if(priv->eq_plugin!=NULL)
-        rclib_core_effect_add_element_nonblock(effectbin, priv->eq_plugin);
+        rclib_core_effect_add_element_internal(effectbin, priv->eq_plugin,
+            FALSE);
     if(priv->bal_plugin!=NULL)
     {
         g_object_set(priv->bal_plugin, "method", 1, NULL);
-        rclib_core_effect_add_element_nonblock(effectbin, priv->bal_plugin);
-    }
-    if(priv->echo_plugin!=NULL)
-    {
-        g_object_set(G_OBJECT(priv->echo_plugin), "max-delay",
-            1 * GST_SECOND, NULL);
-        rclib_core_effect_add_element_nonblock(effectbin, priv->echo_plugin);
+        rclib_core_effect_add_element_internal(effectbin, priv->bal_plugin,
+            FALSE);
     }
     priv->extra_plugin_list = NULL;
     bus = gst_pipeline_get_bus(GST_PIPELINE(playbin));
@@ -2047,60 +2078,6 @@ gboolean rclib_core_get_balance(gfloat *balance)
 }
 
 /**
- * rclib_core_set_echo:
- * @delay: the delay of the echo in nanoseconds
- * @feedback: the amount of feedback
- * @intensity: the intensity of the echo
- *
- * Set the properties of the echo effect.
- *
- * Returns: Whether the properties of the echo effect are set successfully.
- */
-
-gboolean rclib_core_set_echo(guint64 delay, gfloat feedback,
-    gfloat intensity)
-{
-    RCLibCorePrivate *priv;
-    if(core_instance==NULL) return FALSE;
-    priv = RCLIB_CORE_GET_PRIVATE(RCLIB_CORE(core_instance));
-    if(priv->echo_plugin==NULL) return FALSE;
-    g_object_set(G_OBJECT(priv->echo_plugin), "delay", delay, "feedback",
-        feedback, "intensity", intensity, NULL);
-    g_signal_emit(core_instance, core_signals[SIGNAL_ECHO_CHANGED], 0);
-    return TRUE;
-}
-
-/**
- * rclib_core_get_echo:
- * @delay: return the delay of the echo in nanoseconds
- * @max_delay: return the maximum delay of the echo in nanoseconds
- * @feedback: return the amount of feedback
- * @intensity: return the intensity of the echo
- *
- * Get the properties of the echo effect.
- *
- * Returns: Whether the properties of the echo effect are read successfully.
- */
-
-gboolean rclib_core_get_echo(guint64 *delay, guint64 *max_delay,
-    gfloat *feedback, gfloat *intensity)
-{
-    RCLibCorePrivate *priv;
-    guint64 delayv, max_delayv;
-    gfloat feedbackv, intensityv;
-    if(core_instance==NULL) return FALSE;
-    priv = RCLIB_CORE_GET_PRIVATE(RCLIB_CORE(core_instance));
-    if(priv->echo_plugin==NULL) return FALSE;
-    g_object_get(G_OBJECT(priv->echo_plugin), "delay", &delayv, "max-delay",
-        &max_delayv, "feedback", &feedbackv, "intensity", &intensityv, NULL);
-    if(delay!=NULL) *delay = delayv;
-    if(max_delay!=NULL) *max_delay = max_delayv;
-    if(feedback!=NULL) *feedback = feedbackv;
-    if(intensity!=NULL) *intensity = intensityv;
-    return TRUE;
-}
-
-/**
  * rclib_core_effect_plugin_add:
  * @element: a new GStreamer sound effect plugin to add
  * 
@@ -2117,10 +2094,11 @@ gboolean rclib_core_effect_plugin_add(GstElement *element)
     if(core_instance==NULL) return FALSE;
     RCLibCorePrivate *priv = RCLIB_CORE_GET_PRIVATE(core_instance);
     if(priv==NULL || priv->effectbin==NULL) return FALSE;
-    flag = rclib_core_effect_add_element_nonblock(priv->effectbin, element);
+    rclib_core_stop();
+    flag = rclib_core_effect_add_element_internal(priv->effectbin, element,
+        FALSE);
     if(flag)
     {
-        gst_object_ref(element);
         priv->extra_plugin_list = g_list_append(priv->extra_plugin_list,
             element);
     }
@@ -2141,10 +2119,11 @@ void rclib_core_effect_plugin_remove(GstElement *element)
     if(core_instance==NULL) return;
     RCLibCorePrivate *priv = RCLIB_CORE_GET_PRIVATE(core_instance);
     if(priv==NULL || priv->effectbin==NULL) return;
-    rclib_core_effect_remove_element_nonblock(priv->effectbin, element);
+    rclib_core_stop();
+    rclib_core_effect_remove_element_internal(priv->effectbin, element,
+        FALSE);
     priv->extra_plugin_list = g_list_remove(priv->extra_plugin_list,
-        element);
-    gst_object_unref(element);        
+        element);   
 }
 
 /**

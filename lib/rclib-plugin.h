@@ -63,6 +63,8 @@ G_BEGIN_DECLS
     G_MODULE_EXPORT gboolean rcplugin_init(RCLibPluginData *plugin) \
     { \
         plugin->info = &(plugininfo); \
+        if(plugin->info==NULL || plugin->info->id==NULL) return FALSE; \
+        if(rclib_plugin_is_registed(plugin->info->id)) return FALSE; \
         return initfunc((plugin)); \
     }
 
@@ -238,6 +240,7 @@ RCLibPluginData *rclib_plugin_lookup(const gchar *id);
 void rclib_plugin_destroy_all();
 void rclib_plugin_load_from_configure();
 GKeyFile *rclib_plugin_get_keyfile();
+gboolean rclib_plugin_is_registed(const gchar *id);
 
 G_END_DECLS
 

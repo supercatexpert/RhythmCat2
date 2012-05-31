@@ -79,6 +79,12 @@ static inline void rc_main_settings_init()
         rclib_settings_set_boolean("MainUI", "MinimizeWhenClose", FALSE);
 }
 
+static gboolean rc_main_autosave_idle(gpointer data)
+{
+    rc_ui_dialog_show_load_autosaved();
+    return FALSE;
+}
+
 static void rc_main_app_activate(GApplication *application)
 {
     gchar *theme;
@@ -104,7 +110,6 @@ static void rc_main_app_activate(GApplication *application)
         rc_ui_player_init(GTK_APPLICATION(application));
     else
         rc_ui_player_init(NULL);    
-    rc_ui_effect_window_init();
     theme = rclib_settings_get_string("MainUI", "Theme", NULL);
     if(theme!=NULL && strlen(theme)>0)
     {
@@ -251,6 +256,7 @@ static void rc_main_app_activate(GApplication *application)
         if(playlist_iter!=NULL)
             rclib_player_play_db(playlist_iter);
     }
+    rc_ui_player_show();
     if(main_remaining_args!=NULL)
     {
         if(catalog!=NULL)
@@ -271,7 +277,7 @@ static void rc_main_app_activate(GApplication *application)
         }
     }
     if(rclib_db_autosaved_exist())
-        rc_ui_dialog_show_load_autosaved();
+        g_idle_add(rc_main_autosave_idle, NULL);
 }
 
 static void rc_main_app_open(GApplication *application, GFile **files,

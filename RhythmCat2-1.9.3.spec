@@ -2,7 +2,7 @@
 
 Name: rhythmcat2
 Version: 1.9.3
-Release: 1
+Release: 2
 Summary: GTK+ frontend of RhythmCat2 Music Player
 Source0: RhythmCat2-%{version}.tar.gz
 License: GPLv3

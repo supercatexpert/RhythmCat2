@@ -38,7 +38,7 @@
 #endif
 
 #define G_LOG_DOMAIN "Py3Loader"
-#define PY3LD_ID "rc2-python3-loader"
+#define PY3LD_ID "rc2-loader-python3-loader"
 
 static gboolean python_loaded = FALSE;
 

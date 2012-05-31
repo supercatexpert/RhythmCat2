@@ -1,6 +1,6 @@
 SUBDIRS = images icons
 
-EXTRA_DIST = $(man_MANS)
+EXTRA_DIST = $(man_MANS) $(menu_DATA)
 
 RhythmCat_uninstalldir = ${datadir}/RhythmCat2
 

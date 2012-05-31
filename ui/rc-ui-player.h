@@ -82,6 +82,7 @@ GObject *rc_ui_player_get_instance();
 gulong rc_ui_player_signal_connect(const gchar *name,
     GCallback callback, gpointer data);
 void rc_ui_player_signal_disconnect(gulong handler_id);
+void rc_ui_player_show();
 GtkWidget *rc_ui_player_get_main_window();
 GdkPixbuf *rc_ui_player_get_icon_image();
 GtkStatusIcon *rc_ui_player_get_tray_icon();

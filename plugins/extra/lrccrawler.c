@@ -38,7 +38,7 @@
 #endif
 
 #define G_LOG_DOMAIN "LyricCrawler"
-#define LRCCRAWLER_ID "rc2-lyric-crawler"
+#define LRCCRAWLER_ID "rc2-native-lyric-crawler"
 
 enum
 {
@@ -851,8 +851,7 @@ static inline void rc_plugin_lrccrawler_search_window_init(
     gtk_grid_attach(GTK_GRID(main_grid), file_grid, 0, 4, 1, 1);
     gtk_grid_attach(GTK_GRID(main_grid), button_grid, 0, 5, 1, 1);
     gtk_container_add(GTK_CONTAINER(priv->search_window), main_grid);
-    gtk_widget_show_all(priv->search_window);
-    gtk_widget_hide(priv->search_window);
+    gtk_widget_show_all(main_grid);
     g_signal_connect(priv->search_window, "delete-event",
         G_CALLBACK(rc_plugin_lrccrawler_search_window_delete_event_cb),
         priv);

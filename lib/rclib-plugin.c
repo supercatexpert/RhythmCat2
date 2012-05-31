@@ -1035,3 +1035,22 @@ GKeyFile *rclib_plugin_get_keyfile()
     return priv->keyfile;
 }
 
+/**
+ * rclib_plugin_is_registed:
+ * @id: the ID of the plug-in
+ *
+ * Check whether the given ID is registered in the plug-in table.
+ *
+ * Returns: Whether the given ID is registered.
+ */
+
+gboolean rclib_plugin_is_registed(const gchar *id)
+{
+    RCLibPluginPrivate *priv;
+    if(id==NULL) return FALSE;
+    if(plugin_instance==NULL) return FALSE;
+    priv = RCLIB_PLUGIN_GET_PRIVATE(plugin_instance);
+    if(priv==NULL || priv->plugin_table==NULL) return FALSE;
+    return (g_hash_table_lookup(priv->plugin_table, id)!=NULL);
+}
+
