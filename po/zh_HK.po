@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: RhythmCat2 1.9.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-05-11 00:53+0800\n"
+"POT-Creation-Date: 2012-06-02 01:51+0800\n"
 "PO-Revision-Date: 2012-04-20 20:57+0800\n"
 "Last-Translator: SuperCat <supercatexpert@gmail.com>\n"
 "Language-Team: Chinese (trandictional)\n"
@@ -16,125 +16,109 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: ../lib/rclib-core.c:110
+#: ../lib/rclib-core.c:108
 msgid "None"
 msgstr "無"
 
-#: ../lib/rclib-core.c:112
+#: ../lib/rclib-core.c:110
 msgid "Pop"
 msgstr "流行"
 
-#: ../lib/rclib-core.c:114
+#: ../lib/rclib-core.c:112
 msgid "Rock"
 msgstr "搖滾"
 
-#: ../lib/rclib-core.c:116
+#: ../lib/rclib-core.c:114
 msgid "Metal"
 msgstr "金屬"
 
-#: ../lib/rclib-core.c:118
+#: ../lib/rclib-core.c:116
 msgid "Dance"
 msgstr "舞曲"
 
-#: ../lib/rclib-core.c:120
+#: ../lib/rclib-core.c:118
 msgid "Electronic"
 msgstr "電子樂"
 
-#: ../lib/rclib-core.c:122
+#: ../lib/rclib-core.c:120
 msgid "Jazz"
 msgstr "爵士"
 
-#: ../lib/rclib-core.c:124
+#: ../lib/rclib-core.c:122
 msgid "Classical"
 msgstr "古典"
 
-#: ../lib/rclib-core.c:126
+#: ../lib/rclib-core.c:124
 msgid "Blues"
 msgstr "布魯斯"
 
-#: ../lib/rclib-core.c:128
+#: ../lib/rclib-core.c:126
 msgid "Vocal"
 msgstr "語音"
 
-#: ../lib/rclib-core.c:1206 ../lib/rclib-core.c:1215 ../lib/rclib-core.c:1225
-#: ../lib/rclib-core.c:1235 ../lib/rclib-core.c:1245
+#: ../lib/rclib-core.c:1243 ../lib/rclib-core.c:1252 ../lib/rclib-core.c:1262
+#: ../lib/rclib-core.c:1272 ../lib/rclib-core.c:1282
 #, c-format
 msgid "Cannot load necessary plugin: %s"
 msgstr "無法加載必要的插件: %s"
 
-#: ../lib/rclib-core.c:1254 ../lib/rclib-core.c:1278
+#: ../lib/rclib-core.c:1291 ../lib/rclib-core.c:1315
 #, c-format
 msgid "Cannot create bin: %s"
 msgstr "無法創建箱櫃: %s"
 
-#: ../lib/rclib-core.c:1263 ../lib/rclib-core.c:1287
+#: ../lib/rclib-core.c:1300 ../lib/rclib-core.c:1324
 #, c-format
 msgid "Cannot link elements!"
 msgstr "無法連接元件!"
 
-#: ../lib/rclib-core.c:1405
+#: ../lib/rclib-core.c:1436
 #, c-format
 msgid "The core is already initialized!"
 msgstr "核心已被初始化!"
 
-#: ../lib/rclib-core.c:2004
+#: ../lib/rclib-core.c:2035
 msgid "Custom"
 msgstr "自定義"
 
-#: ../lib/rclib-db.c:710
+#: ../lib/rclib-db.c:711
 msgid "Unnamed list"
 msgstr "未命名列表"
 
-#: ../lib/rclib-db.c:2188 ../ui/rc-ui-listmodel.c:371 ../ui/rc-ui-player.c:143
+#: ../lib/rclib-db.c:2196 ../ui/rc-ui-listmodel.c:371 ../ui/rc-ui-player.c:143
 #: ../ui/rc-ui-player.c:1367
 msgid "Unknown Title"
 msgstr "未知標題"
 
-#: ../ui/rc-ui-effect.c:199 ../ui/rc-ui-effect.c:249
+#: ../ui/rc-ui-effect.c:130 ../ui/rc-ui-effect.c:180
 msgid "EQ Setting File (*.EQF)"
 msgstr "均衡器配置檔案 (*.EQF)"
 
-#: ../ui/rc-ui-effect.c:201
+#: ../ui/rc-ui-effect.c:132
 msgid "Save Equalizer Setting..."
 msgstr "保存均衡器配置..."
 
-#: ../ui/rc-ui-effect.c:251
+#: ../ui/rc-ui-effect.c:182
 msgid "Load Equalizer Setting..."
 msgstr "加載均衡器配置..."
 
-#: ../ui/rc-ui-effect.c:350
+#: ../ui/rc-ui-effect.c:272
 msgid "Equalizer"
 msgstr "均衡器"
 
-#: ../ui/rc-ui-effect.c:351
+#: ../ui/rc-ui-effect.c:273
 msgid "Balance"
 msgstr "聲道平衡"
 
-#: ../ui/rc-ui-effect.c:352
-msgid "Echo"
-msgstr "混響"
-
-#: ../ui/rc-ui-effect.c:388
+#: ../ui/rc-ui-effect.c:309
 msgid "Left"
 msgstr "左"
 
-#: ../ui/rc-ui-effect.c:390
+#: ../ui/rc-ui-effect.c:311
 msgid "Right"
 msgstr "右"
 
-#: ../ui/rc-ui-effect.c:394
-msgid "Delay"
-msgstr "延遲"
-
-#: ../ui/rc-ui-effect.c:395
-msgid "Feedback"
-msgstr "反饋"
-
-#: ../ui/rc-ui-effect.c:396
-msgid "Intensity"
-msgstr "強度"
-
-#: ../ui/rc-ui-effect.c:446
+#: ../ui/rc-ui-effect.c:337
 msgid "Audio Effects"
 msgstr "音頻特效"
 
@@ -262,7 +246,7 @@ msgstr "建立一個播放列表"
 msgid "Re_name Playlist"
 msgstr "重命名播放列表(_N)"
 
-#: ../ui/rc-ui-menu.c:197
+#: ../ui/rc-ui-menu.c:197 ../ui/rc-ui-menu.c:301
 msgid "Rename the playlist"
 msgstr "重命名播放列表"
 
@@ -298,7 +282,7 @@ msgstr "導入音樂(_M)"
 msgid "Import music file"
 msgstr "導入音樂檔案"
 
-#: ../ui/rc-ui-menu.c:216
+#: ../ui/rc-ui-menu.c:216 ../ui/rc-ui-menu.c:316
 msgid "Import From _Playlist"
 msgstr "導入播放列表(_P)"
 
@@ -458,17 +442,9 @@ msgstr "從老版本中載入播放列表(_L)"
 msgid "Load playlist data from legacy version of this player"
 msgstr "從老版本的播放器中載入播放列表數據"
 
-#: ../ui/rc-ui-menu.c:301
-msgid "Raname the playlist"
-msgstr "重命名播放列表"
-
 #: ../ui/rc-ui-menu.c:308
 msgid "E_xport Playlist"
 msgstr "導出播放列表(_X)"
-
-#: ../ui/rc-ui-menu.c:316
-msgid "Import from _Playlist"
-msgstr "導入播放列表(_P)"
 
 #: ../ui/rc-ui-menu.c:332
 msgid "R_emove Music"
@@ -839,7 +815,7 @@ msgstr "導入中: 剩餘 %d"
 msgid "Refreshing: %d remaining"
 msgstr "刷新中: 剩餘 %d"
 
-#: ../ui/rc-main.c:308
+#: ../ui/rc-main.c:314
 #, c-format
 msgid ""
 "RhythmCat2, library version %d.%d.%d\n"
@@ -850,19 +826,19 @@ msgstr ""
 "版權所有 (C) 2012 SuperCat <supercatexpert@gmail.com>\n"
 "一個基于GTK+ 3.0和GStreamer 0.10的音樂播放器\n"
 
-#: ../ui/rc-main.c:396
+#: ../ui/rc-main.c:402
 msgid "Enable debug mode"
 msgstr "開啟除錯模式"
 
-#: ../ui/rc-main.c:398
+#: ../ui/rc-main.c:404
 msgid "Use malloc function in stardard C library"
 msgstr "使用標準C函式庫中的malloc"
 
-#: ../ui/rc-main.c:403
+#: ../ui/rc-main.c:409
 msgid "Output version information and exit"
 msgstr "輸出版本信息並退出"
 
-#: ../ui/rc-main.c:440
+#: ../ui/rc-main.c:446
 #, c-format
 msgid ""
 "%s\n"
@@ -871,6 +847,24 @@ msgstr ""
 "%s\n"
 "運行 '%s --help' 來查看全部的可用命令行參數列表。\n"
 
-#: ../ui/rc-main.c:507
+#: ../ui/rc-main.c:513
 msgid "Default Playlist"
 msgstr "預設播放列表"
+
+#~ msgid "Import from _Playlist"
+#~ msgstr "導入播放列表(_P)"
+
+#~ msgid "Raname the playlist"
+#~ msgstr "重命名播放列表"
+
+#~ msgid "Echo"
+#~ msgstr "混響"
+
+#~ msgid "Delay"
+#~ msgstr "延遲"
+
+#~ msgid "Feedback"
+#~ msgstr "反饋"
+
+#~ msgid "Intensity"
+#~ msgstr "強度"

@@ -1490,7 +1490,8 @@ static void rc_ui_player_instance_init(RCUiPlayer *ui)
     rc_ui_player_set_default_style(priv);
     rc_ui_player_signal_bind(priv);
     settings = gtk_settings_get_default();
-    g_object_set(settings, "gtk-application-prefer-dark-theme", TRUE, NULL);
+    g_object_set(settings, "gtk-theme-name", "Adwaita",
+        "gtk-application-prefer-dark-theme", TRUE, NULL);
     gtk_widget_show_all(priv->progress_eventbox);
     gtk_widget_set_visible(priv->progress_eventbox, FALSE);
     gtk_widget_set_no_show_all(priv->progress_eventbox, TRUE);

@@ -16,5 +16,7 @@ Other ideas:
 - Perl plug-in loader?
 - Vala support
 
-Remove Echo Effect (and move it to plug-in).
+* Add an option that the embeded theme can be disabled.
+* Move the two list views to new classes, and make a new class
+  for the main window.
 
