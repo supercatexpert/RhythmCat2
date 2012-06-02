@@ -37,7 +37,7 @@ G_BEGIN_DECLS
 #define RC_UI_CATALOG_STORE(obj) (G_TYPE_CHECK_INSTANCE_CAST((obj), \
     RC_UI_TYPE_CATALOG_STORE, RCUiCatalogStore))
 #define RC_UI_CATALOG_STORE_CLASS(klass) (G_TYPE_CHECK_CLASS_CAST((klass), \
-    RC_UI_TYPE_CATALOG_STORE, GObject))
+    RC_UI_TYPE_CATALOG_STORE, RCUiCatalogStoreClass))
 #define RC_UI_IS_CATALOG_STORE(obj) (G_TYPE_CHECK_INSTANCE_TYPE((obj), \
     RC_UI_TYPE_CATALOG_STORE))
 #define RC_UI_IS_CATALOG_STORE_CLASS(klass) \
@@ -50,7 +50,7 @@ G_BEGIN_DECLS
 #define RC_UI_PLAYLIST_STORE(obj) (G_TYPE_CHECK_INSTANCE_CAST((obj), \
     RC_UI_TYPE_PLAYLIST_STORE, RCUiPlaylistStore))
 #define RC_UI_PLAYLIST_STORE_CLASS(klass) (G_TYPE_CHECK_CLASS_CAST((klass), \
-    RC_UI_TYPE_PLAYLIST_STORE, GObject))
+    RC_UI_TYPE_PLAYLIST_STORE, RCUiPlaylistStoreClass))
 #define RC_UI_IS_PLAYLIST_STORE(obj) (G_TYPE_CHECK_INSTANCE_TYPE((obj), \
     RC_UI_TYPE_PLAYLIST_STORE))
 #define RC_UI_IS_PLAYLIST_STORE_CLASS(klass) \
@@ -118,20 +118,44 @@ typedef struct _RCUiPlaylistStore RCUiPlaylistStore;
 typedef struct _RCUiCatalogStoreClass RCUiCatalogStoreClass;
 typedef struct _RCUiPlaylistStoreClass RCUiPlaylistStoreClass;
 
+/**
+ * RCUiCatalogStore:
+ *
+ * The data structure used for #RCUiCatalogStore class.
+ */
+
 struct _RCUiCatalogStore {
     /*< private >*/
     GObject parent;
 };
+
+/**
+ * RCUiPlaylistStore:
+ *
+ * The data structure used for #RCUiPlaylistStore class.
+ */
 
 struct _RCUiPlaylistStore {
     /*< private >*/
     GObject parent;
 };
 
+/**
+ * RCUiCatalogStoreClass:
+ *
+ * #RCUiCatalogStoreClass class.
+ */
+
 struct _RCUiCatalogStoreClass {
     /*< private >*/
     GObjectClass parent_class;
 };
+
+/**
+ * RCUiPlaylistStoreClass:
+ *
+ * #RCUiPlaylistStoreClass class.
+ */
 
 struct _RCUiPlaylistStoreClass {
     /*< private >*/

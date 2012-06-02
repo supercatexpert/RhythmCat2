@@ -57,10 +57,6 @@ enum                <a class="link" href="RCLibCore.html#RCLibCoreSourceType" ti
 <span class="returnvalue">void</span>                <a class="link" href="RCLibCore.html#rclib-core-exit" title="rclib_core_exit ()">rclib_core_exit</a>                     ();
 <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RCLibCore.html#rclib-core-get-balance" title="rclib_core_get_balance ()">rclib_core_get_balance</a>              (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gfloat"><span class="type">gfloat</span></a> *balance</code></em>);
 <a href="/usr/share/gtk-doc/html/glib/glib-Sequences.html#GSequenceIter"><span class="returnvalue">GSequenceIter</span></a> *     <a class="link" href="RCLibCore.html#rclib-core-get-db-reference" title="rclib_core_get_db_reference ()">rclib_core_get_db_reference</a>         ();
-<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RCLibCore.html#rclib-core-get-echo" title="rclib_core_get_echo ()">rclib_core_get_echo</a>                 (<em class="parameter"><code><span class="type">guint64</span> *delay</code></em>,
-                                                         <em class="parameter"><code><span class="type">guint64</span> *max_delay</code></em>,
-                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gfloat"><span class="type">gfloat</span></a> *feedback</code></em>,
-                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gfloat"><span class="type">gfloat</span></a> *intensity</code></em>);
 <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RCLibCore.html#rclib-core-get-eq" title="rclib_core_get_eq ()">rclib_core_get_eq</a>                   (<em class="parameter"><code><a class="link" href="RCLibCore.html#RCLibCoreEQType" title="enum RCLibCoreEQType"><span class="type">RCLibCoreEQType</span></a> *type</code></em>,
                                                          <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gdouble"><span class="type">gdouble</span></a> *band</code></em>);
 const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *       <a class="link" href="RCLibCore.html#rclib-core-get-eq-name" title="rclib_core_get_eq_name ()">rclib_core_get_eq_name</a>              (<em class="parameter"><code><a class="link" href="RCLibCore.html#RCLibCoreEQType" title="enum RCLibCoreEQType"><span class="type">RCLibCoreEQType</span></a> type</code></em>);
@@ -79,9 +75,6 @@ const <a class="link" href="RCLibCore.html#RCLibCoreMetadata" title="struct RCLi
 <span class="returnvalue">gint64</span>              <a class="link" href="RCLibCore.html#rclib-core-query-duration" title="rclib_core_query_duration ()">rclib_core_query_duration</a>           ();
 <span class="returnvalue">gint64</span>              <a class="link" href="RCLibCore.html#rclib-core-query-position" title="rclib_core_query_position ()">rclib_core_query_position</a>           ();
 <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RCLibCore.html#rclib-core-set-balance" title="rclib_core_set_balance ()">rclib_core_set_balance</a>              (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gfloat"><span class="type">gfloat</span></a> balance</code></em>);
-<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RCLibCore.html#rclib-core-set-echo" title="rclib_core_set_echo ()">rclib_core_set_echo</a>                 (<em class="parameter"><code><span class="type">guint64</span> delay</code></em>,
-                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gfloat"><span class="type">gfloat</span></a> feedback</code></em>,
-                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gfloat"><span class="type">gfloat</span></a> intensity</code></em>);
 <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RCLibCore.html#rclib-core-set-eq" title="rclib_core_set_eq ()">rclib_core_set_eq</a>                   (<em class="parameter"><code><a class="link" href="RCLibCore.html#RCLibCoreEQType" title="enum RCLibCoreEQType"><span class="type">RCLibCoreEQType</span></a> type</code></em>,
                                                          <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gdouble"><span class="type">gdouble</span></a> *band</code></em>);
 <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RCLibCore.html#rclib-core-set-position" title="rclib_core_set_position ()">rclib_core_set_position</a>             (<em class="parameter"><code><span class="type">gint64</span> pos</code></em>);
@@ -110,7 +103,6 @@ const <a class="link" href="RCLibCore.html#RCLibCoreMetadata" title="struct RCLi
 <a name="RCLibCore.signals"></a><h2>Signals</h2>
 <pre class="synopsis">
   "<a class="link" href="RCLibCore.html#RCLibCore-balance-changed" title='The "balance-changed" signal'>balance-changed</a>"                                : <a href="/usr/share/gtk-doc/html/gobject/gobject-Signals.html#G-SIGNAL-RUN-FIRST:CAPS"><code class="literal">Run First</code></a>
-  "<a class="link" href="RCLibCore.html#RCLibCore-echo-changed" title='The "echo-changed" signal'>echo-changed</a>"                                   : <a href="/usr/share/gtk-doc/html/gobject/gobject-Signals.html#G-SIGNAL-RUN-FIRST:CAPS"><code class="literal">Run First</code></a>
   "<a class="link" href="RCLibCore.html#RCLibCore-eos" title='The "eos" signal'>eos</a>"                                            : <a href="/usr/share/gtk-doc/html/gobject/gobject-Signals.html#G-SIGNAL-RUN-FIRST:CAPS"><code class="literal">Run First</code></a>
   "<a class="link" href="RCLibCore.html#RCLibCore-eq-changed" title='The "eq-changed" signal'>eq-changed</a>"                                     : <a href="/usr/share/gtk-doc/html/gobject/gobject-Signals.html#G-SIGNAL-RUN-FIRST:CAPS"><code class="literal">Run First</code></a>
   "<a class="link" href="RCLibCore.html#RCLibCore-error" title='The "error" signal'>error</a>"                                          : <a href="/usr/share/gtk-doc/html/gobject/gobject-Signals.html#G-SIGNAL-RUN-FIRST:CAPS"><code class="literal">Run First</code></a>
@@ -497,42 +489,6 @@ Get the database reference.
 </div>
 <hr>
 <div class="refsect2">
-<a name="rclib-core-get-echo"></a><h3>rclib_core_get_echo ()</h3>
-<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rclib_core_get_echo                 (<em class="parameter"><code><span class="type">guint64</span> *delay</code></em>,
-                                                         <em class="parameter"><code><span class="type">guint64</span> *max_delay</code></em>,
-                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gfloat"><span class="type">gfloat</span></a> *feedback</code></em>,
-                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gfloat"><span class="type">gfloat</span></a> *intensity</code></em>);</pre>
-<p>
-Get the properties of the echo effect.
-</p>
-<div class="variablelist"><table border="0">
-<col align="left" valign="top">
-<tbody>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>delay</code></em> :</span></p></td>
-<td>return the delay of the echo in nanoseconds</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>max_delay</code></em> :</span></p></td>
-<td>return the maximum delay of the echo in nanoseconds</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>feedback</code></em> :</span></p></td>
-<td>return the amount of feedback</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>intensity</code></em> :</span></p></td>
-<td>return the intensity of the echo</td>
-</tr>
-<tr>
-<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>Whether the properties of the echo effect are read successfully.</td>
-</tr>
-</tbody>
-</table></div>
-</div>
-<hr>
-<div class="refsect2">
 <a name="rclib-core-get-eq"></a><h3>rclib_core_get_eq ()</h3>
 <pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rclib_core_get_eq                   (<em class="parameter"><code><a class="link" href="RCLibCore.html#RCLibCoreEQType" title="enum RCLibCoreEQType"><span class="type">RCLibCoreEQType</span></a> *type</code></em>,
                                                          <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gdouble"><span class="type">gdouble</span></a> *band</code></em>);</pre>
@@ -815,37 +771,6 @@ Set the position in stereo panorama.
 </div>
 <hr>
 <div class="refsect2">
-<a name="rclib-core-set-echo"></a><h3>rclib_core_set_echo ()</h3>
-<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rclib_core_set_echo                 (<em class="parameter"><code><span class="type">guint64</span> delay</code></em>,
-                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gfloat"><span class="type">gfloat</span></a> feedback</code></em>,
-                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gfloat"><span class="type">gfloat</span></a> intensity</code></em>);</pre>
-<p>
-Set the properties of the echo effect.
-</p>
-<div class="variablelist"><table border="0">
-<col align="left" valign="top">
-<tbody>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>delay</code></em> :</span></p></td>
-<td>the delay of the echo in nanoseconds</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>feedback</code></em> :</span></p></td>
-<td>the amount of feedback</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>intensity</code></em> :</span></p></td>
-<td>the intensity of the echo</td>
-</tr>
-<tr>
-<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>Whether the properties of the echo effect are set successfully.</td>
-</tr>
-</tbody>
-</table></div>
-</div>
-<hr>
-<div class="refsect2">
 <a name="rclib-core-set-eq"></a><h3>rclib_core_set_eq ()</h3>
 <pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rclib_core_set_eq                   (<em class="parameter"><code><a class="link" href="RCLibCore.html#RCLibCoreEQType" title="enum RCLibCoreEQType"><span class="type">RCLibCoreEQType</span></a> type</code></em>,
                                                          <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gdouble"><span class="type">gdouble</span></a> *band</code></em>);</pre>
@@ -1060,29 +985,6 @@ The ::balance-changed signal is emitted when new balance was applied.
 <tr>
 <td><p><span class="term"><em class="parameter"><code>balance</code></em> :</span></p></td>
 <td>the balance value (from -1.0 (left) to 1.0 (right))</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>user_data</code></em> :</span></p></td>
-<td>user data set when the signal handler was connected.</td>
-</tr>
-</tbody>
-</table></div>
-</div>
-<hr>
-<div class="refsect2">
-<a name="RCLibCore-echo-changed"></a><h3>The <code class="literal">"echo-changed"</code> signal</h3>
-<pre class="programlisting"><span class="returnvalue">void</span>                user_function                      (<a class="link" href="RCLibCore.html" title="RCLibCore"><span class="type">RCLibCore</span></a> *core,
-                                                        <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>   user_data)      : <a href="/usr/share/gtk-doc/html/gobject/gobject-Signals.html#G-SIGNAL-RUN-FIRST:CAPS"><code class="literal">Run First</code></a></pre>
-<p>
-The ::echo-changed signal is emitted when new echo settings
-were applied.
-</p>
-<div class="variablelist"><table border="0">
-<col align="left" valign="top">
-<tbody>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>core</code></em> :</span></p></td>
-<td>the <a class="link" href="RCLibCore.html" title="RCLibCore"><span class="type">RCLibCore</span></a> that received the signal</td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>user_data</code></em> :</span></p></td>

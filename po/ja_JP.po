@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: RhythmCat2 1.9.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-06-02 01:51+0800\n"
+"POT-Creation-Date: 2012-06-03 03:04+0800\n"
 "PO-Revision-Date: 2012-04-26 16:20+0800\n"
 "Last-Translator: SuperCat <supercatexpert@gmail.com>\n"
 "Language-Team: Japanese\n"
@@ -132,40 +132,40 @@ msgstr "不明なアーティスト"
 msgid "Unknown Album"
 msgstr "不明なアルバム"
 
-#: ../ui/rc-ui-listview.c:782
+#: ../ui/rc-ui-listview.c:789
 msgid "Name"
 msgstr "ネーム"
 
-#: ../ui/rc-ui-listview.c:788
+#: ../ui/rc-ui-listview.c:875
 msgid "Title"
 msgstr "タイトル"
 
-#: ../ui/rc-ui-listview.c:791 ../ui/rc-ui-settings.c:602
+#: ../ui/rc-ui-listview.c:878 ../ui/rc-ui-settings.c:602
 msgid "Artist"
 msgstr "アーティスト"
 
-#: ../ui/rc-ui-listview.c:794 ../ui/rc-ui-settings.c:604
+#: ../ui/rc-ui-listview.c:881 ../ui/rc-ui-settings.c:604
 msgid "Album"
 msgstr "アルバム"
 
-#: ../ui/rc-ui-listview.c:797 ../ui/rc-ui-settings.c:606
+#: ../ui/rc-ui-listview.c:884 ../ui/rc-ui-settings.c:606
 msgid "Track"
 msgstr "トラック"
 
-#: ../ui/rc-ui-listview.c:800 ../ui/rc-ui-settings.c:608
+#: ../ui/rc-ui-listview.c:887 ../ui/rc-ui-settings.c:608
 msgid "Year"
 msgstr "年分"
 
-#: ../ui/rc-ui-listview.c:803 ../ui/rc-ui-settings.c:610
+#: ../ui/rc-ui-listview.c:890 ../ui/rc-ui-settings.c:610
 #: ../ui/rc-ui-dialog.c:845
 msgid "Format"
 msgstr "フォーマット"
 
-#: ../ui/rc-ui-listview.c:806
+#: ../ui/rc-ui-listview.c:893
 msgid "Length"
 msgstr "長さ"
 
-#: ../ui/rc-ui-listview.c:1123
+#: ../ui/rc-ui-listview.c:1264
 #, c-format
 msgid "Playlist %u"
 msgstr "プレイリスト %u"
@@ -460,15 +460,15 @@ msgstr ""
 
 #: ../ui/rc-ui-menu.c:344 ../ui/rc-ui-player.c:698
 msgid "Importing: 0 remaining"
-msgstr ""
+msgstr "インポート中: 0件残り"
 
 #: ../ui/rc-ui-menu.c:348 ../ui/rc-ui-player.c:738
 msgid "Refreshing: 0 remaining"
-msgstr ""
+msgstr "リフレシュ中: 0件残り"
 
 #: ../ui/rc-ui-menu.c:352
 msgid "Stop _importing"
-msgstr ""
+msgstr "インポートの終止(_I)"
 
 #: ../ui/rc-ui-menu.c:353
 msgid "Terminate the remaining importing jobs."
@@ -476,7 +476,7 @@ msgstr ""
 
 #: ../ui/rc-ui-menu.c:356
 msgid "Stop _refreshing"
-msgstr ""
+msgstr "リフレシュの終止(_R)"
 
 #: ../ui/rc-ui-menu.c:357
 msgid "Terminate the remaining refreshing jobs."
@@ -548,47 +548,47 @@ msgstr ""
 
 #: ../ui/rc-ui-menu.c:429 ../ui/rc-ui-menu.c:433
 msgid "Always On _Top"
-msgstr ""
+msgstr "常に最上に表示する(_T)"
 
 #: ../ui/rc-ui-menu.c:430 ../ui/rc-ui-menu.c:434
 msgid "Always on top"
-msgstr ""
+msgstr "常に最上に表示する"
 
 #: ../ui/rc-ui-plugin.c:369
 msgid "Plug-in Configuration"
-msgstr ""
+msgstr "プラグイン設定"
 
 #: ../ui/rc-ui-settings.c:120
 msgid "_Auto play on startup"
-msgstr ""
+msgstr "起動時に自動再生する(_A)"
 
 #: ../ui/rc-ui-settings.c:122
 msgid "_Load the last playing position"
-msgstr ""
+msgstr "前回停止した位置から再生する(_L)"
 
 #: ../ui/rc-ui-settings.c:124
 msgid "Minimize to _tray"
-msgstr ""
+msgstr "トレーに最小化する(_T)"
 
 #: ../ui/rc-ui-settings.c:126
 msgid "Minimize the window if the _close button is clicked"
-msgstr ""
+msgstr "ウィンドウを閉じられた場合、ウィンドウを最小化する(_C)"
 
 #: ../ui/rc-ui-settings.c:129
 msgid "<b>General</b>"
-msgstr ""
+msgstr "<b>通常</b>"
 
 #: ../ui/rc-ui-settings.c:224
 msgid "_Auto encoding detect (use system language settings)"
-msgstr ""
+msgstr "エンコードを自動的に検出する (システムの言語設定を使う) (_A)"
 
 #: ../ui/rc-ui-settings.c:228
 msgid "ID3 Tag fallback character encodings"
-msgstr ""
+msgstr "ID3タグの予備エンコード"
 
 #: ../ui/rc-ui-settings.c:230
 msgid "Lyric text fallback character encodings"
-msgstr ""
+msgstr "歌詞の予備エンコード"
 
 #: ../ui/rc-ui-settings.c:233
 msgid "<b>Metadata</b>"
@@ -605,15 +605,15 @@ msgstr "%s (内蔵)"
 
 #: ../ui/rc-ui-settings.c:593
 msgid "Hide cover _image"
-msgstr ""
+msgstr "アルバム映像を隠す(_I)"
 
 #: ../ui/rc-ui-settings.c:595
 msgid "Hide _lyric labels"
-msgstr ""
+msgstr "歌詞を隠す(_L)"
 
 #: ../ui/rc-ui-settings.c:597
 msgid "Hide _spectrum show"
-msgstr ""
+msgstr "スペクトラムを隠す"
 
 #: ../ui/rc-ui-settings.c:599
 msgid "Show _metadata in multi-columns"
@@ -621,11 +621,11 @@ msgstr ""
 
 #: ../ui/rc-ui-settings.c:615
 msgid "<b>Visible Columns</b>"
-msgstr ""
+msgstr "<b>一覧に表示する項目</b>"
 
 #: ../ui/rc-ui-settings.c:618
 msgid "Title column format: "
-msgstr ""
+msgstr "タイトル文字フォーマット: "
 
 #: ../ui/rc-ui-settings.c:620
 msgid ""
@@ -752,7 +752,7 @@ msgstr ""
 
 #: ../ui/rc-ui-dialog.c:782
 msgid "Open Location"
-msgstr ""
+msgstr "場所を開く"
 
 #: ../ui/rc-ui-dialog.c:788
 msgid "Enter the URL of the file you would like to open:"
@@ -760,11 +760,11 @@ msgstr ""
 
 #: ../ui/rc-ui-dialog.c:847
 msgid "Supported"
-msgstr ""
+msgstr "サポートされた"
 
 #: ../ui/rc-ui-dialog.c:857
 msgid "Supported Audio Format"
-msgstr ""
+msgstr "サポートされたオーディオフォーマット"
 
 #: ../ui/rc-ui-dialog.c:1001
 msgid ""

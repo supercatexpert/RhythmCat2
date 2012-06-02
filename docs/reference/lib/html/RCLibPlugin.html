@@ -65,6 +65,7 @@ enum                <a class="link" href="RCLibPlugin.html#RCLibPluginType" titl
 <a href="/usr/share/gtk-doc/html/glib/glib-Key-value-file-parser.html#GKeyFile"><span class="returnvalue">GKeyFile</span></a> *          <a class="link" href="RCLibPlugin.html#rclib-plugin-get-keyfile" title="rclib_plugin_get_keyfile ()">rclib_plugin_get_keyfile</a>            ();
 <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RCLibPlugin.html#rclib-plugin-init" title="rclib_plugin_init ()">rclib_plugin_init</a>                   (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *file</code></em>);
 <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RCLibPlugin.html#rclib-plugin-is-loaded" title="rclib_plugin_is_loaded ()">rclib_plugin_is_loaded</a>              (<em class="parameter"><code><a class="link" href="RCLibPlugin.html#RCLibPluginData" title="struct RCLibPluginData"><span class="type">RCLibPluginData</span></a> *plugin</code></em>);
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RCLibPlugin.html#rclib-plugin-is-registed" title="rclib_plugin_is_registed ()">rclib_plugin_is_registed</a>            (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *id</code></em>);
 <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RCLibPlugin.html#rclib-plugin-load" title="rclib_plugin_load ()">rclib_plugin_load</a>                   (<em class="parameter"><code><a class="link" href="RCLibPlugin.html#RCLibPluginData" title="struct RCLibPluginData"><span class="type">RCLibPluginData</span></a> *plugin</code></em>);
 <span class="returnvalue">void</span>                <a class="link" href="RCLibPlugin.html#rclib-plugin-load-from-configure" title="rclib_plugin_load_from_configure ()">rclib_plugin_load_from_configure</a>    ();
 <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="returnvalue">guint</span></a>               <a class="link" href="RCLibPlugin.html#rclib-plugin-load-from-dir" title="rclib_plugin_load_from_dir ()">rclib_plugin_load_from_dir</a>          (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *dirname</code></em>);
@@ -540,6 +541,27 @@ Check whether the plug-in is loaded.
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
 <td>Whether the plug-in is loaded.</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-plugin-is-registed"></a><h3>rclib_plugin_is_registed ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rclib_plugin_is_registed            (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *id</code></em>);</pre>
+<p>
+Check whether the given ID is registered in the plug-in table.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>id</code></em> :</span></p></td>
+<td>the ID of the plug-in</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>Whether the given ID is registered.</td>
 </tr>
 </tbody>
 </table></div>

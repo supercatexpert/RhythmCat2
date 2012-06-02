@@ -21,64 +21,100 @@
 <td><a accesskey="n" href="RhythmCat-Menus.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
 </tr>
 <tr><td colspan="5" class="shortcuts">
-<a href="#RhythmCat-List-Views.synopsis" class="shortcut">Top</a>
+<a href="#RCUiPlaylistView.synopsis" class="shortcut">Top</a>
                    | 
-                  <a href="#RhythmCat-List-Views.description" class="shortcut">Description</a>
+                  <a href="#RCUiPlaylistView.description" class="shortcut">Description</a>
+                   | 
+                  <a href="#RCUiPlaylistView.object-hierarchy" class="shortcut">Object Hierarchy</a>
+                   | 
+                  <a href="#RCUiPlaylistView.implemented-interfaces" class="shortcut">Implemented Interfaces</a>
 </td></tr>
 </table>
 <div class="refentry">
-<a name="RhythmCat-List-Views"></a><div class="titlepage"></div>
+<a name="RCUiPlaylistView"></a><div class="titlepage"></div>
 <div class="refnamediv"><table width="100%"><tr>
 <td valign="top">
-<h2><span class="refentrytitle"><a name="RhythmCat-List-Views.top_of_page"></a>List Views</span></h2>
+<h2><span class="refentrytitle"><a name="RCUiPlaylistView.top_of_page"></a>List Views</span></h2>
 <p>List Views — Catalog and playlist list views</p>
 </td>
 <td valign="top" align="right"></td>
 </tr></table></div>
 <div class="refsynopsisdiv">
-<a name="RhythmCat-List-Views.synopsis"></a><h2>Synopsis</h2>
-<pre class="synopsis">
+<a name="RCUiPlaylistView.synopsis"></a><h2>Synopsis</h2>
+<a name="RCUiCatalogView"></a><pre class="synopsis">
 #include &lt;rc-ui-listview.h&gt;
 
-enum                <a class="link" href="RhythmCat-List-Views.html#RCUiListViewPlaylistColumnFlags" title="enum RCUiListViewPlaylistColumnFlags">RCUiListViewPlaylistColumnFlags</a>;
-<span class="returnvalue">void</span>                <a class="link" href="RhythmCat-List-Views.html#rc-ui-listview-catalog-delete-items" title="rc_ui_listview_catalog_delete_items ()">rc_ui_listview_catalog_delete_items</a> ();
-<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RhythmCat-List-Views.html#rc-ui-listview-catalog-get-cursor" title="rc_ui_listview_catalog_get_cursor ()">rc_ui_listview_catalog_get_cursor</a>   (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/gtk/GtkTreeModel.html#GtkTreeIter"><span class="type">GtkTreeIter</span></a> *iter</code></em>);
-<a href="/usr/share/gtk-doc/html/gtk/GtkTreeModel.html"><span class="returnvalue">GtkTreeModel</span></a> *      <a class="link" href="RhythmCat-List-Views.html#rc-ui-listview-catalog-get-model" title="rc_ui_listview_catalog_get_model ()">rc_ui_listview_catalog_get_model</a>    ();
-<span class="returnvalue">void</span>                <a class="link" href="RhythmCat-List-Views.html#rc-ui-listview-catalog-new-playlist" title="rc_ui_listview_catalog_new_playlist ()">rc_ui_listview_catalog_new_playlist</a> ();
-<span class="returnvalue">void</span>                <a class="link" href="RhythmCat-List-Views.html#rc-ui-listview-catalog-rename-playlist" title="rc_ui_listview_catalog_rename_playlist ()">rc_ui_listview_catalog_rename_playlist</a>
+struct              <a class="link" href="RCUiPlaylistView.html#RCUiCatalogView-struct" title="struct RCUiCatalogView">RCUiCatalogView</a>;
+struct              <a class="link" href="RCUiPlaylistView.html#RCUiCatalogViewClass" title="struct RCUiCatalogViewClass">RCUiCatalogViewClass</a>;
+enum                <a class="link" href="RCUiPlaylistView.html#RCUiListViewPlaylistColumnFlags" title="enum RCUiListViewPlaylistColumnFlags">RCUiListViewPlaylistColumnFlags</a>;
+struct              <a class="link" href="RCUiPlaylistView.html#RCUiPlaylistView-struct" title="struct RCUiPlaylistView">RCUiPlaylistView</a>;
+struct              <a class="link" href="RCUiPlaylistView.html#RCUiPlaylistViewClass" title="struct RCUiPlaylistViewClass">RCUiPlaylistViewClass</a>;
+<span class="returnvalue">void</span>                <a class="link" href="RCUiPlaylistView.html#rc-ui-listview-catalog-delete-items" title="rc_ui_listview_catalog_delete_items ()">rc_ui_listview_catalog_delete_items</a> ();
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RCUiPlaylistView.html#rc-ui-listview-catalog-get-cursor" title="rc_ui_listview_catalog_get_cursor ()">rc_ui_listview_catalog_get_cursor</a>   (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/gtk/GtkTreeModel.html#GtkTreeIter"><span class="type">GtkTreeIter</span></a> *iter</code></em>);
+<a href="/usr/share/gtk-doc/html/gtk/GtkTreeModel.html"><span class="returnvalue">GtkTreeModel</span></a> *      <a class="link" href="RCUiPlaylistView.html#rc-ui-listview-catalog-get-model" title="rc_ui_listview_catalog_get_model ()">rc_ui_listview_catalog_get_model</a>    ();
+<span class="returnvalue">void</span>                <a class="link" href="RCUiPlaylistView.html#rc-ui-listview-catalog-new-playlist" title="rc_ui_listview_catalog_new_playlist ()">rc_ui_listview_catalog_new_playlist</a> ();
+<span class="returnvalue">void</span>                <a class="link" href="RCUiPlaylistView.html#rc-ui-listview-catalog-rename-playlist" title="rc_ui_listview_catalog_rename_playlist ()">rc_ui_listview_catalog_rename_playlist</a>
                                                         ();
-<span class="returnvalue">void</span>                <a class="link" href="RhythmCat-List-Views.html#rc-ui-listview-catalog-select" title="rc_ui_listview_catalog_select ()">rc_ui_listview_catalog_select</a>       (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/gtk/GtkTreeModel.html#GtkTreeIter"><span class="type">GtkTreeIter</span></a> *iter</code></em>);
-<span class="returnvalue">void</span>                <a class="link" href="RhythmCat-List-Views.html#rc-ui-listview-catalog-set-pango-attributes" title="rc_ui_listview_catalog_set_pango_attributes ()">rc_ui_listview_catalog_set_pango_attributes</a>
+<span class="returnvalue">void</span>                <a class="link" href="RCUiPlaylistView.html#rc-ui-listview-catalog-select" title="rc_ui_listview_catalog_select ()">rc_ui_listview_catalog_select</a>       (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/gtk/GtkTreeModel.html#GtkTreeIter"><span class="type">GtkTreeIter</span></a> *iter</code></em>);
+<span class="returnvalue">void</span>                <a class="link" href="RCUiPlaylistView.html#rc-ui-listview-catalog-set-pango-attributes" title="rc_ui_listview_catalog_set_pango_attributes ()">rc_ui_listview_catalog_set_pango_attributes</a>
                                                         (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/pango/pango-Text-Attributes.html#PangoAttrList"><span class="type">PangoAttrList</span></a> *list</code></em>);
-<a href="/usr/share/gtk-doc/html/gtk/GtkWidget.html"><span class="returnvalue">GtkWidget</span></a> *         <a class="link" href="RhythmCat-List-Views.html#rc-ui-listview-get-catalog-widget" title="rc_ui_listview_get_catalog_widget ()">rc_ui_listview_get_catalog_widget</a>   ();
-<a href="/usr/share/gtk-doc/html/gtk/GtkWidget.html"><span class="returnvalue">GtkWidget</span></a> *         <a class="link" href="RhythmCat-List-Views.html#rc-ui-listview-get-playlist-widget" title="rc_ui_listview_get_playlist_widget ()">rc_ui_listview_get_playlist_widget</a>  ();
-<span class="returnvalue">void</span>                <a class="link" href="RhythmCat-List-Views.html#rc-ui-listview-init" title="rc_ui_listview_init ()">rc_ui_listview_init</a>                 (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/gtk/GtkWidget.html"><span class="type">GtkWidget</span></a> **catalog_widget</code></em>,
+<a href="/usr/share/gtk-doc/html/gtk/GtkWidget.html"><span class="returnvalue">GtkWidget</span></a> *         <a class="link" href="RCUiPlaylistView.html#rc-ui-listview-get-catalog-widget" title="rc_ui_listview_get_catalog_widget ()">rc_ui_listview_get_catalog_widget</a>   ();
+<a href="/usr/share/gtk-doc/html/gtk/GtkWidget.html"><span class="returnvalue">GtkWidget</span></a> *         <a class="link" href="RCUiPlaylistView.html#rc-ui-listview-get-playlist-widget" title="rc_ui_listview_get_playlist_widget ()">rc_ui_listview_get_playlist_widget</a>  ();
+<span class="returnvalue">void</span>                <a class="link" href="RCUiPlaylistView.html#rc-ui-listview-init" title="rc_ui_listview_init ()">rc_ui_listview_init</a>                 (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/gtk/GtkWidget.html"><span class="type">GtkWidget</span></a> **catalog_widget</code></em>,
                                                          <em class="parameter"><code><a href="/usr/share/gtk-doc/html/gtk/GtkWidget.html"><span class="type">GtkWidget</span></a> **playlist_widget</code></em>);
-<span class="returnvalue">void</span>                <a class="link" href="RhythmCat-List-Views.html#rc-ui-listview-playlist-delete-items" title="rc_ui_listview_playlist_delete_items ()">rc_ui_listview_playlist_delete_items</a>
+<span class="returnvalue">void</span>                <a class="link" href="RCUiPlaylistView.html#rc-ui-listview-playlist-delete-items" title="rc_ui_listview_playlist_delete_items ()">rc_ui_listview_playlist_delete_items</a>
                                                         ();
-<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RhythmCat-List-Views.html#rc-ui-listview-playlist-get-column-display-mode" title="rc_ui_listview_playlist_get_column_display_mode ()">rc_ui_listview_playlist_get_column_display_mode</a>
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RCUiPlaylistView.html#rc-ui-listview-playlist-get-column-display-mode" title="rc_ui_listview_playlist_get_column_display_mode ()">rc_ui_listview_playlist_get_column_display_mode</a>
                                                         ();
-<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RhythmCat-List-Views.html#rc-ui-listview-playlist-get-cursor" title="rc_ui_listview_playlist_get_cursor ()">rc_ui_listview_playlist_get_cursor</a>  (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/gtk/GtkTreeModel.html#GtkTreeIter"><span class="type">GtkTreeIter</span></a> *iter</code></em>);
-<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="returnvalue">guint</span></a>               <a class="link" href="RhythmCat-List-Views.html#rc-ui-listview-playlist-get-enabled-columns" title="rc_ui_listview_playlist_get_enabled_columns ()">rc_ui_listview_playlist_get_enabled_columns</a>
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RCUiPlaylistView.html#rc-ui-listview-playlist-get-cursor" title="rc_ui_listview_playlist_get_cursor ()">rc_ui_listview_playlist_get_cursor</a>  (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/gtk/GtkTreeModel.html#GtkTreeIter"><span class="type">GtkTreeIter</span></a> *iter</code></em>);
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="returnvalue">guint</span></a>               <a class="link" href="RCUiPlaylistView.html#rc-ui-listview-playlist-get-enabled-columns" title="rc_ui_listview_playlist_get_enabled_columns ()">rc_ui_listview_playlist_get_enabled_columns</a>
                                                         ();
-<a href="/usr/share/gtk-doc/html/gtk/GtkTreeModel.html"><span class="returnvalue">GtkTreeModel</span></a> *      <a class="link" href="RhythmCat-List-Views.html#rc-ui-listview-playlist-get-model" title="rc_ui_listview_playlist_get_model ()">rc_ui_listview_playlist_get_model</a>   ();
-<span class="returnvalue">void</span>                <a class="link" href="RhythmCat-List-Views.html#rc-ui-listview-playlist-refresh" title="rc_ui_listview_playlist_refresh ()">rc_ui_listview_playlist_refresh</a>     ();
-<span class="returnvalue">void</span>                <a class="link" href="RhythmCat-List-Views.html#rc-ui-listview-playlist-select" title="rc_ui_listview_playlist_select ()">rc_ui_listview_playlist_select</a>      (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/gtk/GtkTreeModel.html#GtkTreeIter"><span class="type">GtkTreeIter</span></a> *iter</code></em>);
-<span class="returnvalue">void</span>                <a class="link" href="RhythmCat-List-Views.html#rc-ui-listview-playlist-select-all" title="rc_ui_listview_playlist_select_all ()">rc_ui_listview_playlist_select_all</a>  ();
-<span class="returnvalue">void</span>                <a class="link" href="RhythmCat-List-Views.html#rc-ui-listview-playlist-set-column-display-mode" title="rc_ui_listview_playlist_set_column_display_mode ()">rc_ui_listview_playlist_set_column_display_mode</a>
+<a href="/usr/share/gtk-doc/html/gtk/GtkTreeModel.html"><span class="returnvalue">GtkTreeModel</span></a> *      <a class="link" href="RCUiPlaylistView.html#rc-ui-listview-playlist-get-model" title="rc_ui_listview_playlist_get_model ()">rc_ui_listview_playlist_get_model</a>   ();
+<span class="returnvalue">void</span>                <a class="link" href="RCUiPlaylistView.html#rc-ui-listview-playlist-refresh" title="rc_ui_listview_playlist_refresh ()">rc_ui_listview_playlist_refresh</a>     ();
+<span class="returnvalue">void</span>                <a class="link" href="RCUiPlaylistView.html#rc-ui-listview-playlist-select" title="rc_ui_listview_playlist_select ()">rc_ui_listview_playlist_select</a>      (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/gtk/GtkTreeModel.html#GtkTreeIter"><span class="type">GtkTreeIter</span></a> *iter</code></em>);
+<span class="returnvalue">void</span>                <a class="link" href="RCUiPlaylistView.html#rc-ui-listview-playlist-select-all" title="rc_ui_listview_playlist_select_all ()">rc_ui_listview_playlist_select_all</a>  ();
+<span class="returnvalue">void</span>                <a class="link" href="RCUiPlaylistView.html#rc-ui-listview-playlist-set-column-display-mode" title="rc_ui_listview_playlist_set_column_display_mode ()">rc_ui_listview_playlist_set_column_display_mode</a>
                                                         (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> mode</code></em>);
-<span class="returnvalue">void</span>                <a class="link" href="RhythmCat-List-Views.html#rc-ui-listview-playlist-set-enabled-columns" title="rc_ui_listview_playlist_set_enabled_columns ()">rc_ui_listview_playlist_set_enabled_columns</a>
+<span class="returnvalue">void</span>                <a class="link" href="RCUiPlaylistView.html#rc-ui-listview-playlist-set-enabled-columns" title="rc_ui_listview_playlist_set_enabled_columns ()">rc_ui_listview_playlist_set_enabled_columns</a>
                                                         (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> column_flags</code></em>,
                                                          <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> enable_flags</code></em>);
-<span class="returnvalue">void</span>                <a class="link" href="RhythmCat-List-Views.html#rc-ui-listview-playlist-set-pango-attributes" title="rc_ui_listview_playlist_set_pango_attributes ()">rc_ui_listview_playlist_set_pango_attributes</a>
+<span class="returnvalue">void</span>                <a class="link" href="RCUiPlaylistView.html#rc-ui-listview-playlist-set-pango-attributes" title="rc_ui_listview_playlist_set_pango_attributes ()">rc_ui_listview_playlist_set_pango_attributes</a>
                                                         (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/pango/pango-Text-Attributes.html#PangoAttrList"><span class="type">PangoAttrList</span></a> *list</code></em>);
-<span class="returnvalue">void</span>                <a class="link" href="RhythmCat-List-Views.html#rc-ui-listview-playlist-set-title-format" title="rc_ui_listview_playlist_set_title_format ()">rc_ui_listview_playlist_set_title_format</a>
+<span class="returnvalue">void</span>                <a class="link" href="RCUiPlaylistView.html#rc-ui-listview-playlist-set-title-format" title="rc_ui_listview_playlist_set_title_format ()">rc_ui_listview_playlist_set_title_format</a>
                                                         (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *format</code></em>);
-<span class="returnvalue">void</span>                <a class="link" href="RhythmCat-List-Views.html#rc-ui-listview-refresh" title="rc_ui_listview_refresh ()">rc_ui_listview_refresh</a>              ();
+<span class="returnvalue">void</span>                <a class="link" href="RCUiPlaylistView.html#rc-ui-listview-refresh" title="rc_ui_listview_refresh ()">rc_ui_listview_refresh</a>              ();
 </pre>
 </div>
 <div class="refsect1">
-<a name="RhythmCat-List-Views.description"></a><h2>Description</h2>
+<a name="RCUiPlaylistView.object-hierarchy"></a><h2>Object Hierarchy</h2>
+<pre class="synopsis">
+  <a href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GObject">GObject</a>
+   +----<a href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GInitiallyUnowned">GInitiallyUnowned</a>
+         +----<a href="/usr/share/gtk-doc/html/gtk/GtkWidget.html">GtkWidget</a>
+               +----<a href="/usr/share/gtk-doc/html/gtk/GtkContainer.html">GtkContainer</a>
+                     +----<a href="/usr/share/gtk-doc/html/gtk/GtkTreeView.html">GtkTreeView</a>
+                           +----RCUiCatalogView
+</pre>
+<pre class="synopsis">
+  <a href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GObject">GObject</a>
+   +----<a href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GInitiallyUnowned">GInitiallyUnowned</a>
+         +----<a href="/usr/share/gtk-doc/html/gtk/GtkWidget.html">GtkWidget</a>
+               +----<a href="/usr/share/gtk-doc/html/gtk/GtkContainer.html">GtkContainer</a>
+                     +----<a href="/usr/share/gtk-doc/html/gtk/GtkTreeView.html">GtkTreeView</a>
+                           +----RCUiPlaylistView
+</pre>
+</div>
+<div class="refsect1">
+<a name="RCUiPlaylistView.implemented-interfaces"></a><h2>Implemented Interfaces</h2>
+<p>
+RCUiCatalogView implements
+ AtkImplementorIface,  <a href="/usr/share/gtk-doc/html/gtk/GtkBuildable.html">GtkBuildable</a> and  <a href="/usr/share/gtk-doc/html/gtk3/GtkScrollable.html">GtkScrollable</a>.</p>
+<p>
+RCUiPlaylistView implements
+ AtkImplementorIface,  <a href="/usr/share/gtk-doc/html/gtk/GtkBuildable.html">GtkBuildable</a> and  <a href="/usr/share/gtk-doc/html/gtk3/GtkScrollable.html">GtkScrollable</a>.</p>
+</div>
+<div class="refsect1">
+<a name="RCUiPlaylistView.description"></a><h2>Description</h2>
 <p>
 This module provides the catalog and playlist list view
 widgets for the player. They show catalog and playlist
@@ -86,7 +122,25 @@ in the main window.
 </p>
 </div>
 <div class="refsect1">
-<a name="RhythmCat-List-Views.details"></a><h2>Details</h2>
+<a name="RCUiPlaylistView.details"></a><h2>Details</h2>
+<div class="refsect2">
+<a name="RCUiCatalogView-struct"></a><h3>struct RCUiCatalogView</h3>
+<pre class="programlisting">struct RCUiCatalogView;</pre>
+<p>
+The data structure used for <a class="link" href="RCUiPlaylistView.html#RCUiCatalogView"><span class="type">RCUiCatalogView</span></a> class.
+</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="RCUiCatalogViewClass"></a><h3>struct RCUiCatalogViewClass</h3>
+<pre class="programlisting">struct RCUiCatalogViewClass {
+};
+</pre>
+<p>
+<a class="link" href="RCUiPlaylistView.html#RCUiCatalogViewClass" title="struct RCUiCatalogViewClass"><span class="type">RCUiCatalogViewClass</span></a> class.
+</p>
+</div>
+<hr>
 <div class="refsect2">
 <a name="RCUiListViewPlaylistColumnFlags"></a><h3>enum RCUiListViewPlaylistColumnFlags</h3>
 <pre class="programlisting">typedef enum {
@@ -130,6 +184,24 @@ The enum type for control the visibility of some columns in the playlist.
 </tr>
 </tbody>
 </table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="RCUiPlaylistView-struct"></a><h3>struct RCUiPlaylistView</h3>
+<pre class="programlisting">struct RCUiPlaylistView;</pre>
+<p>
+The data structure used for <a class="link" href="RCUiPlaylistView.html" title="List Views"><span class="type">RCUiPlaylistView</span></a> class.
+</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="RCUiPlaylistViewClass"></a><h3>struct RCUiPlaylistViewClass</h3>
+<pre class="programlisting">struct RCUiPlaylistViewClass {
+};
+</pre>
+<p>
+<a class="link" href="RCUiPlaylistView.html#RCUiPlaylistViewClass" title="struct RCUiPlaylistViewClass"><span class="type">RCUiPlaylistViewClass</span></a> class.
+</p>
 </div>
 <hr>
 <div class="refsect2">

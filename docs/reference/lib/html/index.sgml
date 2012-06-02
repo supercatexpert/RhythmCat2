@@ -72,7 +72,6 @@
 <ANCHOR id="rclib-core-exit" href="LibRhythmCat/RCLibCore.html#rclib-core-exit">
 <ANCHOR id="rclib-core-get-balance" href="LibRhythmCat/RCLibCore.html#rclib-core-get-balance">
 <ANCHOR id="rclib-core-get-db-reference" href="LibRhythmCat/RCLibCore.html#rclib-core-get-db-reference">
-<ANCHOR id="rclib-core-get-echo" href="LibRhythmCat/RCLibCore.html#rclib-core-get-echo">
 <ANCHOR id="rclib-core-get-eq" href="LibRhythmCat/RCLibCore.html#rclib-core-get-eq">
 <ANCHOR id="rclib-core-get-eq-name" href="LibRhythmCat/RCLibCore.html#rclib-core-get-eq-name">
 <ANCHOR id="rclib-core-get-external-reference" href="LibRhythmCat/RCLibCore.html#rclib-core-get-external-reference">
@@ -88,7 +87,6 @@
 <ANCHOR id="rclib-core-query-duration" href="LibRhythmCat/RCLibCore.html#rclib-core-query-duration">
 <ANCHOR id="rclib-core-query-position" href="LibRhythmCat/RCLibCore.html#rclib-core-query-position">
 <ANCHOR id="rclib-core-set-balance" href="LibRhythmCat/RCLibCore.html#rclib-core-set-balance">
-<ANCHOR id="rclib-core-set-echo" href="LibRhythmCat/RCLibCore.html#rclib-core-set-echo">
 <ANCHOR id="rclib-core-set-eq" href="LibRhythmCat/RCLibCore.html#rclib-core-set-eq">
 <ANCHOR id="rclib-core-set-position" href="LibRhythmCat/RCLibCore.html#rclib-core-set-position">
 <ANCHOR id="rclib-core-set-uri" href="LibRhythmCat/RCLibCore.html#rclib-core-set-uri">
@@ -100,7 +98,6 @@
 <ANCHOR id="rclib-core-update-external-reference" href="LibRhythmCat/RCLibCore.html#rclib-core-update-external-reference">
 <ANCHOR id="RCLibCore.signal-details" href="LibRhythmCat/RCLibCore.html#RCLibCore.signal-details">
 <ANCHOR id="RCLibCore-balance-changed" href="LibRhythmCat/RCLibCore.html#RCLibCore-balance-changed">
-<ANCHOR id="RCLibCore-echo-changed" href="LibRhythmCat/RCLibCore.html#RCLibCore-echo-changed">
 <ANCHOR id="RCLibCore-eos" href="LibRhythmCat/RCLibCore.html#RCLibCore-eos">
 <ANCHOR id="RCLibCore-eq-changed" href="LibRhythmCat/RCLibCore.html#RCLibCore-eq-changed">
 <ANCHOR id="RCLibCore-error" href="LibRhythmCat/RCLibCore.html#RCLibCore-error">
@@ -297,6 +294,7 @@
 <ANCHOR id="rclib-plugin-get-keyfile" href="LibRhythmCat/RCLibPlugin.html#rclib-plugin-get-keyfile">
 <ANCHOR id="rclib-plugin-init" href="LibRhythmCat/RCLibPlugin.html#rclib-plugin-init">
 <ANCHOR id="rclib-plugin-is-loaded" href="LibRhythmCat/RCLibPlugin.html#rclib-plugin-is-loaded">
+<ANCHOR id="rclib-plugin-is-registed" href="LibRhythmCat/RCLibPlugin.html#rclib-plugin-is-registed">
 <ANCHOR id="rclib-plugin-load" href="LibRhythmCat/RCLibPlugin.html#rclib-plugin-load">
 <ANCHOR id="rclib-plugin-load-from-configure" href="LibRhythmCat/RCLibPlugin.html#rclib-plugin-load-from-configure">
 <ANCHOR id="rclib-plugin-load-from-dir" href="LibRhythmCat/RCLibPlugin.html#rclib-plugin-load-from-dir">

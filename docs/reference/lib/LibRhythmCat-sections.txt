@@ -48,7 +48,6 @@ rclib_core_effect_plugin_remove
 rclib_core_exit
 rclib_core_get_balance
 rclib_core_get_db_reference
-rclib_core_get_echo
 rclib_core_get_eq
 rclib_core_get_eq_name
 rclib_core_get_external_reference
@@ -64,7 +63,6 @@ rclib_core_play
 rclib_core_query_duration
 rclib_core_query_position
 rclib_core_set_balance
-rclib_core_set_echo
 rclib_core_set_eq
 rclib_core_set_position
 rclib_core_set_uri
@@ -249,6 +247,7 @@ rclib_plugin_get_instance
 rclib_plugin_get_keyfile
 rclib_plugin_init
 rclib_plugin_is_loaded
+rclib_plugin_is_registed
 rclib_plugin_load
 rclib_plugin_load_from_configure
 rclib_plugin_load_from_dir

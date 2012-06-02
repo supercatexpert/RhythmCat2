@@ -39,8 +39,6 @@ rc_ui_dialog_show_supported_format
 <SECTION>
 <FILE>rc-ui-effect</FILE>
 rc_ui_effect_window_destroy
-rc_ui_effect_window_hide
-rc_ui_effect_window_init
 rc_ui_effect_window_show
 </SECTION>
 
@@ -80,7 +78,13 @@ rc_ui_playlist_store_get_type
 
 <SECTION>
 <FILE>rc-ui-listview</FILE>
+<TITLE>RCUiCatalogView</TITLE>
+<TITLE>RCUiPlaylistView</TITLE>
+RCUiCatalogView
+RCUiCatalogViewClass
 RCUiListViewPlaylistColumnFlags
+RCUiPlaylistView
+RCUiPlaylistViewClass
 rc_ui_listview_catalog_delete_items
 rc_ui_listview_catalog_get_cursor
 rc_ui_listview_catalog_get_model
@@ -104,6 +108,21 @@ rc_ui_listview_playlist_set_enabled_columns
 rc_ui_listview_playlist_set_pango_attributes
 rc_ui_listview_playlist_set_title_format
 rc_ui_listview_refresh
+<SUBSECTION Standard>
+RC_UI_CATALOG_VIEW
+RC_UI_CATALOG_VIEW_CLASS
+RC_UI_CATALOG_VIEW_GET_CLASS
+RC_UI_IS_CATALOG_VIEW
+RC_UI_IS_CATALOG_VIEW_CLASS
+RC_UI_IS_PLAYLIST_VIEW
+RC_UI_IS_PLAYLIST_VIEW_CLASS
+RC_UI_PLAYLIST_VIEW
+RC_UI_PLAYLIST_VIEW_CLASS
+RC_UI_PLAYLIST_VIEW_GET_CLASS
+RC_UI_TYPE_CATALOG_VIEW
+RC_UI_TYPE_PLAYLIST_VIEW
+rc_ui_catalog_view_get_type
+rc_ui_playlist_view_get_type
 </SECTION>
 
 <SECTION>
@@ -134,6 +153,7 @@ rc_ui_player_lyric_labels_set_visible
 rc_ui_player_playlist_scrolled_window_set_horizontal_policy
 rc_ui_player_present_main_window
 rc_ui_player_set_keep_above_state
+rc_ui_player_show
 rc_ui_player_signal_connect
 rc_ui_player_signal_disconnect
 rc_ui_player_spectrum_get_visible
@@ -210,5 +230,10 @@ rc_ui_style_embedded_theme_set_by_index
 rc_ui_style_embedded_theme_set_by_name
 rc_ui_style_embedded_theme_set_default
 rc_ui_style_search_theme_paths
+</SECTION>
+
+<SECTION>
+<FILE>rc-ui-window</FILE>
+
 </SECTION>
 

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: RhythmCat2 1.9.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-06-02 01:51+0800\n"
+"POT-Creation-Date: 2012-06-03 03:04+0800\n"
 "PO-Revision-Date: 2012-04-20 20:57+0800\n"
 "Last-Translator: SuperCat <supercatexpert@gmail.com>\n"
 "Language-Team: Chinese (trandictional)\n"
@@ -132,40 +132,40 @@ msgstr "未知藝術家"
 msgid "Unknown Album"
 msgstr "未知專輯"
 
-#: ../ui/rc-ui-listview.c:782
+#: ../ui/rc-ui-listview.c:789
 msgid "Name"
 msgstr "名稱"
 
-#: ../ui/rc-ui-listview.c:788
+#: ../ui/rc-ui-listview.c:875
 msgid "Title"
 msgstr "標題"
 
-#: ../ui/rc-ui-listview.c:791 ../ui/rc-ui-settings.c:602
+#: ../ui/rc-ui-listview.c:878 ../ui/rc-ui-settings.c:602
 msgid "Artist"
 msgstr "藝術家"
 
-#: ../ui/rc-ui-listview.c:794 ../ui/rc-ui-settings.c:604
+#: ../ui/rc-ui-listview.c:881 ../ui/rc-ui-settings.c:604
 msgid "Album"
 msgstr "專輯"
 
-#: ../ui/rc-ui-listview.c:797 ../ui/rc-ui-settings.c:606
+#: ../ui/rc-ui-listview.c:884 ../ui/rc-ui-settings.c:606
 msgid "Track"
 msgstr "音軌"
 
-#: ../ui/rc-ui-listview.c:800 ../ui/rc-ui-settings.c:608
+#: ../ui/rc-ui-listview.c:887 ../ui/rc-ui-settings.c:608
 msgid "Year"
 msgstr "年份"
 
-#: ../ui/rc-ui-listview.c:803 ../ui/rc-ui-settings.c:610
+#: ../ui/rc-ui-listview.c:890 ../ui/rc-ui-settings.c:610
 #: ../ui/rc-ui-dialog.c:845
 msgid "Format"
 msgstr "格式"
 
-#: ../ui/rc-ui-listview.c:806
+#: ../ui/rc-ui-listview.c:893
 msgid "Length"
 msgstr "長度"
 
-#: ../ui/rc-ui-listview.c:1123
+#: ../ui/rc-ui-listview.c:1264
 #, c-format
 msgid "Playlist %u"
 msgstr "播放列表 %u"

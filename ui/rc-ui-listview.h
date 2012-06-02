@@ -26,9 +26,36 @@
 #define HAVE_RC_UI_LISTVIEW_H
 
 #include <glib.h>
+#include <glib-object.h>
 #include <gtk/gtk.h>
 
 G_BEGIN_DECLS
+
+#define RC_UI_TYPE_CATALOG_VIEW (rc_ui_catalog_view_get_type())
+#define RC_UI_CATALOG_VIEW(obj) (G_TYPE_CHECK_INSTANCE_CAST((obj), \
+    RC_UI_TYPE_CATALOG_VIEW, RCUiCatalogView))
+#define RC_UI_CATALOG_VIEW_CLASS(klass) (G_TYPE_CHECK_CLASS_CAST((klass), \
+    RC_UI_TYPE_CATALOG_VIEW, RCUiCatalogViewClass))
+#define RC_UI_IS_CATALOG_VIEW(obj) (G_TYPE_CHECK_INSTANCE_TYPE((obj), \
+    RC_UI_TYPE_CATALOG_VIEW))
+#define RC_UI_IS_CATALOG_VIEW_CLASS(klass) \
+    (G_TYPE_CHECK_CLASS_TYPE((klass), RC_UI_TYPE_CATALOG_VIEW))
+#define RC_UI_CATALOG_VIEW_GET_CLASS(obj) \
+    (G_TYPE_INSTANCE_GET_CLASS((obj), RC_UI_TYPE_CATALOG_VIEW, \
+    RCUiCatalogView))
+
+#define RC_UI_TYPE_PLAYLIST_VIEW (rc_ui_playlist_view_get_type())
+#define RC_UI_PLAYLIST_VIEW(obj) (G_TYPE_CHECK_INSTANCE_CAST((obj), \
+    RC_UI_TYPE_PLAYLIST_VIEW, RCUiPlaylistView))
+#define RC_UI_PLAYLIST_VIEW_CLASS(klass) (G_TYPE_CHECK_CLASS_CAST((klass), \
+    RC_UI_TYPE_PLAYLIST_VIEW, RCUiPlaylistViewClass))
+#define RC_UI_IS_PLAYLIST_VIEW(obj) (G_TYPE_CHECK_INSTANCE_TYPE((obj), \
+    RC_UI_TYPE_PLAYLIST_VIEW))
+#define RC_UI_IS_PLAYLIST_VIEW_CLASS(klass) \
+    (G_TYPE_CHECK_CLASS_TYPE((klass), RC_UI_TYPE_PLAYLIST_VIEW))
+#define RC_UI_PLAYLIST_VIEW_GET_CLASS(obj) \
+    (G_TYPE_INSTANCE_GET_CLASS((obj), RC_UI_TYPE_PLAYLIST_VIEW, \
+    RCUiPlaylistView))
 
 /**
  * RCUiListViewPlaylistColumnFlags:
@@ -49,6 +76,60 @@ typedef enum {
     RC_UI_LISTVIEW_PLAYLIST_COLUMN_FTYPE = 1<<4
 }RCUiListViewPlaylistColumnFlags;
 
+typedef struct _RCUiCatalogView RCUiCatalogView;
+typedef struct _RCUiPlaylistView RCUiPlaylistView;
+typedef struct _RCUiCatalogViewClass RCUiCatalogViewClass;
+typedef struct _RCUiPlaylistViewClass RCUiPlaylistViewClass;
+
+/**
+ * RCUiCatalogView:
+ *
+ * The data structure used for #RCUiCatalogView class.
+ */
+
+struct _RCUiCatalogView {
+    /*< private >*/
+    GtkTreeView parent;
+};
+
+/**
+ * RCUiPlaylistView:
+ *
+ * The data structure used for #RCUiPlaylistView class.
+ */
+
+struct _RCUiPlaylistView {
+    /*< private >*/
+    GtkTreeView parent;
+};
+
+/**
+ * RCUiCatalogViewClass:
+ *
+ * #RCUiCatalogViewClass class.
+ */
+
+struct _RCUiCatalogViewClass {
+    /*< private >*/
+    GtkTreeViewClass parent_class;
+};
+
+/**
+ * RCUiPlaylistViewClass:
+ *
+ * #RCUiPlaylistViewClass class.
+ */
+
+struct _RCUiPlaylistViewClass {
+    /*< private >*/
+    GtkTreeViewClass parent_class;
+};
+
+/*< private >*/
+GType rc_ui_catalog_view_get_type();
+GType rc_ui_playlist_view_get_type();
+
+/*< public >*/
 void rc_ui_listview_init(GtkWidget **catalog_widget,
     GtkWidget **playlist_widget);
 GtkWidget *rc_ui_listview_get_catalog_widget();

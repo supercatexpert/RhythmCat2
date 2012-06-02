@@ -40,6 +40,11 @@
  * in the main window.
  */
 
+#define RC_UI_CATALOG_VIEW_GET_PRIVATE(obj) G_TYPE_INSTANCE_GET_PRIVATE( \
+    (obj), RC_UI_TYPE_CATALOG_VIEW, RCUiCatalogViewPrivate)
+#define RC_UI_PLAYLIST_VIEW_GET_PRIVATE(obj) G_TYPE_INSTANCE_GET_PRIVATE( \
+    (obj), RC_UI_TYPE_PLAYLIST_VIEW, RCUiPlaylistViewPrivate)
+
 enum
 {
     RC_UI_LISTVIEW_TARGET_INFO_CATALOG,
@@ -47,6 +52,38 @@ enum
     RC_UI_LISTVIEW_TARGET_INFO_FILE,
     RC_UI_LISTVIEW_TARGET_INFO_URILIST
 };
+
+typedef struct RCUiCatalogViewPrivate
+{
+    GtkCellRenderer *state_renderer;
+    GtkCellRenderer *name_renderer;
+    GtkTreeViewColumn *state_column;
+    GtkTreeViewColumn *name_column;
+    gulong catalog_delete_id;
+}RCUiCatalogViewPrivate;
+
+typedef struct RCUiPlaylistViewPrivate
+{
+    GtkCellRenderer *state_renderer;
+    GtkCellRenderer *title_renderer;
+    GtkCellRenderer *artist_renderer;
+    GtkCellRenderer *album_renderer;
+    GtkCellRenderer *tracknum_renderer;
+    GtkCellRenderer *year_renderer;
+    GtkCellRenderer *ftype_renderer;
+    GtkCellRenderer *length_renderer;
+    GtkCellRenderer *rating_renderer; /* Not available now */
+    GtkTreeViewColumn *state_column;
+    GtkTreeViewColumn *title_column;
+    GtkTreeViewColumn *artist_column;
+    GtkTreeViewColumn *album_column;  
+    GtkTreeViewColumn *tracknum_column;
+    GtkTreeViewColumn *year_column;
+    GtkTreeViewColumn *ftype_column;
+    GtkTreeViewColumn *length_column;
+    GtkTreeViewColumn *rating_column; /* Not available now */
+    gboolean display_mode;
+}RCUiPlaylistViewPrivate;
 
 typedef struct RCUiListViewPrivate
 {
@@ -77,7 +114,10 @@ typedef struct RCUiListViewPrivate
     gboolean display_mode;
 }RCUiListViewPrivate;
 
-static RCUiListViewPrivate ui_listview_private = {0};
+static GObject *ui_catalog_view_instance = NULL;
+static GObject *ui_playlist_view_instance = NULL;
+static gpointer rc_ui_catalog_view_parent_class = NULL;
+static gpointer rc_ui_playlist_view_parent_class = NULL;
 
 static gboolean rc_ui_listview_multidrag_selection_block(
     GtkTreeSelection *selection, GtkTreeModel *model, GtkTreePath *path,
@@ -152,10 +192,10 @@ static void rc_ui_listview_dnd_motion(GtkWidget *widget, GdkDragContext *context
     }
 }
 
-void rc_ui_listview_dnd_delete(GtkWidget *widget, GdkDragContext *context,
+static void rc_ui_listview_dnd_delete(GtkWidget *widget, GdkDragContext *context,
     gpointer data)
 {
-    g_signal_stop_emission_by_name(G_OBJECT(widget), "drag-data-delete");
+    g_signal_stop_emission_by_name(widget, "drag-data-delete");
 }
 
 static gint rc_ui_listview_sort_comp_func(const gint a, const gint b,
@@ -239,7 +279,6 @@ static inline gint *rc_ui_listview_reorder_by_selection(GtkTreeModel *model,
 static inline void rc_ui_listview_playlist_move_to_another_catalog(
     GtkSelectionData *seldata, GtkTreeIter *target_iter)
 {
-    RCUiListViewPrivate *priv = &ui_listview_private;
     GList *path_list = NULL;
     GSequenceIter **iters;
     GtkTreeIter iter;
@@ -250,7 +289,8 @@ static inline void rc_ui_listview_playlist_move_to_another_catalog(
     gint i;
     if(seldata==NULL || target_iter==NULL) return;
     if(target_iter->user_data==NULL) return;
-    model = gtk_tree_view_get_model(GTK_TREE_VIEW(priv->playlist_listview));
+    model = gtk_tree_view_get_model(GTK_TREE_VIEW(
+        ui_playlist_view_instance));
     if(model==NULL) return;
     memcpy(&path_list, gtk_selection_data_get_data(seldata),
         sizeof(path_list));
@@ -275,14 +315,14 @@ static inline void rc_ui_listview_playlist_add_uris_by_selection(
     GtkSelectionData *seldata, GSequenceIter *catalog_iter,
     GtkTreeIter *iter, GtkTreeViewDropPosition pos)
 {
-    RCUiListViewPrivate *priv = &ui_listview_private;
     GtkTreeModel *model; 
     gchar *uris;
     gchar **uri_array;
     gint i;
     gchar *filename;
     if(seldata==NULL || catalog_iter==NULL) return;
-    model = gtk_tree_view_get_model(GTK_TREE_VIEW(priv->playlist_listview));
+    model = gtk_tree_view_get_model(GTK_TREE_VIEW(
+        ui_playlist_view_instance));
     if(model==NULL) return;
     uris = gdk_utf8_to_string_target((gchar *)
         gtk_selection_data_get_data(seldata));
@@ -518,7 +558,7 @@ static gboolean rc_ui_listview_playlist_button_release_event(
     return FALSE;
 }
 
-static void rc_ui_listview_catalog_set_drag()
+static void rc_ui_listview_catalog_set_drag(GtkWidget *widget)
 {
     GtkTargetEntry entry[2];   
     entry[0].target = "RhythmCat2/CatalogItem";
@@ -527,14 +567,13 @@ static void rc_ui_listview_catalog_set_drag()
     entry[1].target = "RhythmCat2/PlaylistItem";
     entry[1].flags = GTK_TARGET_SAME_APP;
     entry[1].info = RC_UI_LISTVIEW_TARGET_INFO_PLAYLIST;
-    RCUiListViewPrivate *priv = &ui_listview_private;
-    gtk_drag_source_set(priv->catalog_listview, GDK_BUTTON1_MASK, entry,
-        1, GDK_ACTION_MOVE);
-    gtk_drag_dest_set(priv->catalog_listview, GTK_DEST_DEFAULT_ALL, entry,
-        2, GDK_ACTION_COPY | GDK_ACTION_MOVE | GDK_ACTION_LINK);
+    gtk_drag_source_set(widget, GDK_BUTTON1_MASK, entry, 1,
+        GDK_ACTION_MOVE);
+    gtk_drag_dest_set(widget, GTK_DEST_DEFAULT_ALL, entry, 2,
+        GDK_ACTION_COPY | GDK_ACTION_MOVE | GDK_ACTION_LINK);
 }
 
-static void rc_ui_listview_playlist_set_drag()
+static void rc_ui_listview_playlist_set_drag(GtkWidget *widget)
 {
     GtkTargetEntry entry[4];
     entry[0].target = "RhythmCat2/PlaylistItem";
@@ -549,17 +588,15 @@ static void rc_ui_listview_playlist_set_drag()
     entry[3].target = "text/uri-list";
     entry[3].flags = 0;
     entry[3].info = RC_UI_LISTVIEW_TARGET_INFO_URILIST;
-    RCUiListViewPrivate *priv = &ui_listview_private;
-    gtk_drag_source_set(priv->playlist_listview, GDK_BUTTON1_MASK, entry,
-        1, GDK_ACTION_MOVE);
-    gtk_drag_dest_set(priv->playlist_listview, GTK_DEST_DEFAULT_ALL, entry,
-        4, GDK_ACTION_COPY | GDK_ACTION_MOVE | GDK_ACTION_LINK);
+    gtk_drag_source_set(widget, GDK_BUTTON1_MASK, entry, 1,
+        GDK_ACTION_MOVE);
+    gtk_drag_dest_set(widget, GTK_DEST_DEFAULT_ALL, entry, 4,
+        GDK_ACTION_COPY | GDK_ACTION_MOVE | GDK_ACTION_LINK);
 }
 
 static void rc_ui_listview_catalog_row_selected(GtkTreeView *view,
     gpointer data)
 {
-    RCUiListViewPrivate *priv = &ui_listview_private;
     GtkTreeIter iter;
     GSequenceIter *catalog_iter;
     RCLibDbCatalogData *catalog_data;
@@ -568,7 +605,7 @@ static void rc_ui_listview_catalog_row_selected(GtkTreeView *view,
     if(catalog_iter==NULL) return;
     catalog_data = g_sequence_get(catalog_iter);
     if(!RC_UI_IS_PLAYLIST_STORE(catalog_data->store)) return;
-    gtk_tree_view_set_model(GTK_TREE_VIEW(priv->playlist_listview),
+    gtk_tree_view_set_model(GTK_TREE_VIEW(ui_playlist_view_instance),
         GTK_TREE_MODEL(catalog_data->store));
 }
 
@@ -624,13 +661,14 @@ static void rc_ui_listview_playlist_text_call_data_func(
 static void rc_ui_listview_catalog_delete_cb(RCLibDb *db,
     GSequenceIter *iter, gpointer data)
 {
-    RCUiListViewPrivate *priv = &ui_listview_private;
     GtkTreeModel *model;
-    model = gtk_tree_view_get_model(GTK_TREE_VIEW(priv->playlist_listview));
+    model = gtk_tree_view_get_model(GTK_TREE_VIEW(ui_playlist_view_instance));
     if(model==NULL) return;
     if(iter==rc_ui_list_model_get_catalog_by_model(model))
-        gtk_tree_view_set_model(GTK_TREE_VIEW(priv->playlist_listview),
-        NULL);
+    {
+        gtk_tree_view_set_model(GTK_TREE_VIEW(ui_playlist_view_instance),
+            NULL);
+    }
 }
 
 static gboolean rc_ui_listview_catalog_search_comparison_func(
@@ -675,6 +713,302 @@ static gboolean rc_ui_listview_playlist_search_comparison_func(
     return flag;
 }
 
+static void rc_ui_catalog_view_finalize(GObject *object)
+{
+    RCUiCatalogViewPrivate *priv = NULL;
+    priv = RC_UI_CATALOG_VIEW_GET_PRIVATE(object);
+    if(priv->catalog_delete_id>0)
+        rclib_db_signal_disconnect(priv->catalog_delete_id);
+    G_OBJECT_CLASS(rc_ui_catalog_view_parent_class)->finalize(object);
+}
+
+static void rc_ui_playlist_view_finalize(GObject *object)
+{
+    G_OBJECT_CLASS(rc_ui_playlist_view_parent_class)->finalize(object);
+}
+
+static GObject *rc_ui_catalog_view_constructor(GType type,
+    guint n_construct_params, GObjectConstructParam *construct_params)
+{
+    GObject *retval;
+    if(ui_catalog_view_instance!=NULL) return ui_catalog_view_instance;
+    retval = G_OBJECT_CLASS(rc_ui_catalog_view_parent_class)->constructor(
+        type, n_construct_params, construct_params);
+    ui_catalog_view_instance = retval;
+    g_object_add_weak_pointer(retval, (gpointer)&ui_catalog_view_instance);
+    return retval;
+}
+
+static GObject *rc_ui_playlist_view_constructor(GType type,
+    guint n_construct_params, GObjectConstructParam *construct_params)
+{
+    GObject *retval;
+    if(ui_playlist_view_instance!=NULL) return ui_playlist_view_instance;
+    retval = G_OBJECT_CLASS(rc_ui_playlist_view_parent_class)->constructor(
+        type, n_construct_params, construct_params);
+    ui_playlist_view_instance = retval;
+    g_object_add_weak_pointer(retval, (gpointer)&ui_playlist_view_instance);
+    return retval;
+}
+
+static void rc_ui_catalog_view_class_init(RCUiCatalogViewClass *klass)
+{
+    GObjectClass *object_class = (GObjectClass *)klass;
+    rc_ui_catalog_view_parent_class = g_type_class_peek_parent(klass);
+    object_class->finalize = rc_ui_catalog_view_finalize;
+    object_class->constructor = rc_ui_catalog_view_constructor;
+    g_type_class_add_private(klass, sizeof(RCUiCatalogViewPrivate));
+}
+
+static void rc_ui_playlist_view_class_init(RCUiPlaylistViewClass *klass)
+{
+    GObjectClass *object_class = (GObjectClass *)klass;
+    rc_ui_playlist_view_parent_class = g_type_class_peek_parent(klass);
+    object_class->finalize = rc_ui_playlist_view_finalize;
+    object_class->constructor = rc_ui_playlist_view_constructor;
+    g_type_class_add_private(klass, sizeof(RCUiPlaylistViewPrivate));
+}
+
+static void rc_ui_catalog_view_instance_init(RCUiCatalogView *view)
+{
+    RCUiCatalogViewPrivate *priv = NULL;
+    GtkTreeSelection *selection;
+    priv = RC_UI_CATALOG_VIEW_GET_PRIVATE(view);
+    g_object_set(view, "name", "RC2CatalogListView", "headers-visible",
+        FALSE, "reorderable", FALSE, "rules-hint", TRUE, "enable-search",
+        TRUE, NULL);
+    priv->state_renderer = gtk_cell_renderer_pixbuf_new();
+    priv->name_renderer = gtk_cell_renderer_text_new();
+    gtk_cell_renderer_set_fixed_size(priv->state_renderer, 16, -1);
+    gtk_cell_renderer_set_fixed_size(priv->name_renderer, 80, -1);
+    g_object_set(priv->name_renderer, "ellipsize", PANGO_ELLIPSIZE_END,
+        "ellipsize-set", TRUE, "weight", PANGO_WEIGHT_NORMAL, "weight-set",
+        TRUE, NULL);
+    priv->state_column = gtk_tree_view_column_new_with_attributes("#",
+        priv->state_renderer, "stock-id", RC_UI_CATALOG_COLUMN_STATE, NULL);
+    priv->name_column = gtk_tree_view_column_new_with_attributes(_("Name"),
+        priv->name_renderer, "text", RC_UI_CATALOG_COLUMN_NAME, NULL);
+    gtk_tree_view_column_set_cell_data_func(priv->name_column,
+        priv->name_renderer,
+        rc_ui_listview_catalog_name_call_data_func, NULL, NULL);
+    g_object_set(priv->state_column, "sizing", GTK_TREE_VIEW_COLUMN_FIXED,
+        "fixed-width", 30, "min-width", 30, "max-width", 30, NULL);
+    g_object_set(priv->name_column, "expand", TRUE, NULL);
+    gtk_tree_view_append_column(GTK_TREE_VIEW(view), priv->state_column);
+    gtk_tree_view_append_column(GTK_TREE_VIEW(view), priv->name_column);
+    selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(view));
+    gtk_tree_selection_set_mode(selection, GTK_SELECTION_MULTIPLE);
+    gtk_tree_view_columns_autosize(GTK_TREE_VIEW(view));
+    gtk_tree_view_set_search_equal_func(GTK_TREE_VIEW(view),
+        rc_ui_listview_catalog_search_comparison_func, NULL, NULL);
+    rc_ui_listview_catalog_set_drag(GTK_WIDGET(view));
+    g_signal_connect(priv->name_renderer, "edited",
+        G_CALLBACK(rc_ui_listview_catalog_row_edited), NULL);
+    g_signal_connect(view, "drag-motion",
+        G_CALLBACK(rc_ui_listview_dnd_motion), NULL);
+    g_signal_connect(view, "drag-data-get",
+        G_CALLBACK(rc_ui_listview_dnd_data_get), NULL);
+    g_signal_connect(view, "drag-data-delete",
+        G_CALLBACK(rc_ui_listview_dnd_delete), NULL);
+    g_signal_connect(view, "drag-data-received",
+        G_CALLBACK(rc_ui_listview_catalog_dnd_data_received), NULL);
+    g_signal_connect(view, "button-press-event",
+        G_CALLBACK(rc_ui_listview_button_pressed_event), NULL);
+    g_signal_connect(view, "button-release-event",
+        G_CALLBACK(rc_ui_listview_catalog_button_release_event), NULL);
+    g_signal_connect(view, "cursor-changed",
+        G_CALLBACK(rc_ui_listview_catalog_row_selected), NULL);
+    priv->catalog_delete_id = rclib_db_signal_connect("catalog-delete",
+        G_CALLBACK(rc_ui_listview_catalog_delete_cb), NULL);
+}
+
+static void rc_ui_playlist_view_instance_init(RCUiPlaylistView *view)
+{
+    RCUiPlaylistViewPrivate *priv = NULL;
+    GtkTreeSelection *selection;
+    priv = RC_UI_PLAYLIST_VIEW_GET_PRIVATE(view);
+    g_object_set(view, "name", "RC2PlaylistListView", "headers-visible",
+        FALSE, "reorderable", FALSE, "rules-hint", TRUE, "enable-search",
+        TRUE, NULL);
+    priv->state_renderer = gtk_cell_renderer_pixbuf_new();
+    priv->title_renderer = gtk_cell_renderer_text_new();
+    priv->artist_renderer = gtk_cell_renderer_text_new();
+    priv->album_renderer = gtk_cell_renderer_text_new();
+    priv->tracknum_renderer = gtk_cell_renderer_text_new();
+    priv->year_renderer = gtk_cell_renderer_text_new();
+    priv->ftype_renderer = gtk_cell_renderer_text_new();
+    priv->length_renderer = gtk_cell_renderer_text_new();
+    priv->rating_renderer = NULL;
+    gtk_cell_renderer_set_fixed_size(priv->state_renderer, 16, -1);
+    gtk_cell_renderer_set_fixed_size(priv->title_renderer, 120, -1);
+    gtk_cell_renderer_set_fixed_size(priv->artist_renderer, 60, -1);
+    gtk_cell_renderer_set_fixed_size(priv->album_renderer, 60, -1);
+    gtk_cell_renderer_set_fixed_size(priv->tracknum_renderer,
+        50, -1);
+    gtk_cell_renderer_set_fixed_size(priv->year_renderer, 50, -1);
+    gtk_cell_renderer_set_fixed_size(priv->ftype_renderer, 60, -1);
+    gtk_cell_renderer_set_fixed_size(priv->length_renderer, 55, -1);
+    g_object_set(priv->title_renderer, "ellipsize", 
+        PANGO_ELLIPSIZE_END, "ellipsize-set", TRUE, "weight",
+        PANGO_WEIGHT_NORMAL, "weight-set", TRUE, NULL);
+    g_object_set(priv->artist_renderer, "ellipsize", 
+        PANGO_ELLIPSIZE_END, "ellipsize-set", TRUE, "weight",
+        PANGO_WEIGHT_NORMAL, "weight-set", TRUE, NULL);
+    g_object_set(priv->album_renderer, "ellipsize", 
+        PANGO_ELLIPSIZE_END, "ellipsize-set", TRUE, "weight",
+        PANGO_WEIGHT_NORMAL, "weight-set", TRUE, NULL);
+    g_object_set(priv->tracknum_renderer, "ellipsize", 
+        PANGO_ELLIPSIZE_END, "ellipsize-set", TRUE, "weight",
+        PANGO_WEIGHT_NORMAL, "weight-set", TRUE, NULL);
+    g_object_set(priv->year_renderer, "ellipsize", 
+        PANGO_ELLIPSIZE_END, "ellipsize-set", TRUE, "weight",
+        PANGO_WEIGHT_NORMAL, "weight-set", TRUE, NULL);
+    g_object_set(priv->ftype_renderer, "ellipsize", 
+        PANGO_ELLIPSIZE_END, "ellipsize-set", TRUE, "weight",
+        PANGO_WEIGHT_NORMAL, "weight-set", TRUE, NULL);
+    g_object_set(priv->length_renderer, "xalign", 1.0,
+        "width-chars", 6, NULL);
+    priv->state_column = gtk_tree_view_column_new_with_attributes(
+        "#", priv->state_renderer, "stock-id",
+        RC_UI_PLAYLIST_COLUMN_STATE, NULL);
+    priv->title_column = gtk_tree_view_column_new_with_attributes(
+        _("Title"), priv->title_renderer, "text",
+        RC_UI_PLAYLIST_COLUMN_FTITLE, NULL);
+    priv->artist_column = gtk_tree_view_column_new_with_attributes(
+        _("Artist"), priv->artist_renderer, "text",
+        RC_UI_PLAYLIST_COLUMN_ARTIST, NULL);
+    priv->album_column = gtk_tree_view_column_new_with_attributes(
+        _("Album"), priv->artist_renderer, "text",
+        RC_UI_PLAYLIST_COLUMN_ALBUM, NULL);
+    priv->tracknum_column = gtk_tree_view_column_new_with_attributes(
+        _("Track"), priv->tracknum_renderer, "text",
+        RC_UI_PLAYLIST_COLUMN_TRACK, NULL);
+    priv->year_column = gtk_tree_view_column_new_with_attributes(
+        _("Year"), priv->year_renderer, "text",
+        RC_UI_PLAYLIST_COLUMN_YEAR, NULL);
+    priv->ftype_column = gtk_tree_view_column_new_with_attributes(
+        _("Format"), priv->ftype_renderer, "text",
+        RC_UI_PLAYLIST_COLUMN_FTYPE, NULL);
+    priv->length_column = gtk_tree_view_column_new_with_attributes(
+        _("Length"), priv->length_renderer, "text",
+        RC_UI_PLAYLIST_COLUMN_LENGTH, NULL);
+    priv->rating_column = NULL;
+    gtk_tree_view_column_set_cell_data_func(priv->title_column,
+        priv->title_renderer, rc_ui_listview_playlist_text_call_data_func,
+        NULL, NULL);
+    gtk_tree_view_column_set_cell_data_func(priv->artist_column,
+        priv->artist_renderer, rc_ui_listview_playlist_text_call_data_func,
+        NULL, NULL);
+    gtk_tree_view_column_set_cell_data_func(priv->album_column,
+        priv->album_renderer, rc_ui_listview_playlist_text_call_data_func,
+        NULL, NULL);
+    gtk_tree_view_column_set_cell_data_func(priv->tracknum_column,
+        priv->tracknum_renderer, rc_ui_listview_playlist_text_call_data_func,
+        NULL, NULL);
+    gtk_tree_view_column_set_cell_data_func(priv->year_column,
+        priv->year_renderer, rc_ui_listview_playlist_text_call_data_func,
+        NULL, NULL);
+    gtk_tree_view_column_set_cell_data_func(priv->ftype_column,
+        priv->ftype_renderer, rc_ui_listview_playlist_text_call_data_func,
+        NULL, NULL);
+    gtk_tree_view_column_set_cell_data_func(priv->length_column,
+        priv->length_renderer, rc_ui_listview_playlist_text_call_data_func,
+        NULL, NULL);
+    g_object_set(priv->state_column, "sizing",
+        GTK_TREE_VIEW_COLUMN_FIXED, "fixed-width", 30, "min-width", 30,
+        "max-width", 30, NULL);        
+    g_object_set(priv->title_column, "expand", TRUE, NULL);
+    g_object_set(priv->artist_column, "expand", TRUE, "visible",
+        FALSE, "resizable", TRUE, NULL);
+    g_object_set(priv->album_column, "expand", TRUE, "visible",
+        FALSE, "resizable", TRUE, NULL);
+    g_object_set(priv->tracknum_column, "expand", TRUE, "visible",
+        FALSE, "resizable", TRUE, NULL);
+    g_object_set(priv->year_column, "expand", TRUE, "visible",
+        FALSE, "resizable", TRUE, NULL);
+    g_object_set(priv->ftype_column, "expand", TRUE, "visible",
+        FALSE, "resizable", TRUE, NULL);
+    g_object_set(priv->length_column, "sizing",
+        GTK_TREE_VIEW_COLUMN_FIXED, "fixed-width", 55, "alignment",
+        1.0, NULL);
+    gtk_tree_view_append_column(GTK_TREE_VIEW(view), priv->state_column);
+    gtk_tree_view_append_column(GTK_TREE_VIEW(view), priv->title_column);
+    gtk_tree_view_append_column(GTK_TREE_VIEW(view), priv->artist_column);
+    gtk_tree_view_append_column(GTK_TREE_VIEW(view), priv->album_column);
+    gtk_tree_view_append_column(GTK_TREE_VIEW(view), priv->tracknum_column);
+    gtk_tree_view_append_column(GTK_TREE_VIEW(view), priv->year_column);
+    gtk_tree_view_append_column(GTK_TREE_VIEW(view), priv->ftype_column);
+    gtk_tree_view_append_column(GTK_TREE_VIEW(view), priv->length_column);
+    selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(view));
+    gtk_tree_selection_set_mode(selection, GTK_SELECTION_MULTIPLE);
+    gtk_tree_view_columns_autosize(GTK_TREE_VIEW(view));
+    gtk_tree_view_set_search_equal_func(GTK_TREE_VIEW(view),
+        rc_ui_listview_playlist_search_comparison_func, NULL, NULL);
+    rc_ui_listview_playlist_set_drag(GTK_WIDGET(view));
+    g_signal_connect(view, "drag-motion",
+        G_CALLBACK(rc_ui_listview_dnd_motion), NULL);
+    g_signal_connect(view, "drag-data-get",
+        G_CALLBACK(rc_ui_listview_dnd_data_get), NULL);
+    g_signal_connect(view, "drag-data-delete",
+        G_CALLBACK(rc_ui_listview_dnd_delete), NULL);
+    g_signal_connect(view, "drag-data-received",
+        G_CALLBACK(rc_ui_listview_playlist_dnd_data_received), NULL);
+    g_signal_connect(view, "button-press-event",
+        G_CALLBACK(rc_ui_listview_button_pressed_event), NULL);
+    g_signal_connect(view, "button-release-event",
+        G_CALLBACK(rc_ui_listview_playlist_button_release_event), NULL);
+    g_signal_connect(view, "row-activated",
+        G_CALLBACK(rc_ui_listview_playlist_row_activated), NULL);
+}
+
+GType rc_ui_catalog_view_get_type()
+{
+    static volatile gsize g_define_type_id__volatile = 0;
+    GType g_define_type_id;
+    static const GTypeInfo view_info = {
+        .class_size = sizeof(RCUiCatalogViewClass),
+        .base_init = NULL,
+        .base_finalize = NULL,
+        .class_init = (GClassInitFunc)rc_ui_catalog_view_class_init,
+        .class_finalize = NULL,
+        .class_data = NULL,
+        .instance_size = sizeof(RCUiCatalogView),
+        .n_preallocs = 0,
+        .instance_init = (GInstanceInitFunc)rc_ui_catalog_view_instance_init
+    };
+    if(g_once_init_enter(&g_define_type_id__volatile))
+    {
+        g_define_type_id = g_type_register_static(GTK_TYPE_TREE_VIEW,
+            g_intern_static_string("RCUiCatalogView"), &view_info, 0);
+        g_once_init_leave(&g_define_type_id__volatile, g_define_type_id);
+    }
+    return g_define_type_id__volatile;
+}
+
+GType rc_ui_playlist_view_get_type()
+{
+    static volatile gsize g_define_type_id__volatile = 0;
+    GType g_define_type_id;
+    static const GTypeInfo view_info = {
+        .class_size = sizeof(RCUiPlaylistViewClass),
+        .base_init = NULL,
+        .base_finalize = NULL,
+        .class_init = (GClassInitFunc)rc_ui_playlist_view_class_init,
+        .class_finalize = NULL,
+        .class_data = NULL,
+        .instance_size = sizeof(RCUiPlaylistView),
+        .n_preallocs = 0,
+        .instance_init = (GInstanceInitFunc)rc_ui_playlist_view_instance_init
+    };
+    if(g_once_init_enter(&g_define_type_id__volatile))
+    {
+        g_define_type_id = g_type_register_static(GTK_TYPE_TREE_VIEW,
+            g_intern_static_string("RCUiPlaylistView"), &view_info, 0);
+        g_once_init_leave(&g_define_type_id__volatile, g_define_type_id);
+    }
+    return g_define_type_id__volatile;
+}
+
 /**
  * rc_ui_listview_init:
  * @catalog_widget: return the catalog list view widget
@@ -686,23 +1020,24 @@ static gboolean rc_ui_listview_playlist_search_comparison_func(
 void rc_ui_listview_init(GtkWidget **catalog_widget,
     GtkWidget **playlist_widget)
 {
-    RCUiListViewPrivate *priv = &ui_listview_private;
     GtkTreeModel *catalog_model;
     GtkTreeModel *playlist_model;
     GtkTreeSelection *catalog_selection;
     GtkTreeSelection *playlist_selection;
     GtkTreeIter catalog_iter, playlist_iter;
-    priv->catalog_listview = gtk_tree_view_new();
-    priv->playlist_listview = gtk_tree_view_new();
-    if(catalog_widget!=NULL) *catalog_widget = priv->catalog_listview;
-    if(playlist_widget!=NULL) *playlist_widget = priv->playlist_listview;
+    ui_catalog_view_instance = g_object_new(RC_UI_TYPE_CATALOG_VIEW, NULL);
+    ui_playlist_view_instance = g_object_new(RC_UI_TYPE_PLAYLIST_VIEW, NULL);
+    if(catalog_widget!=NULL)
+        *catalog_widget = GTK_WIDGET(ui_catalog_view_instance);
+    if(playlist_widget!=NULL)
+        *playlist_widget = GTK_WIDGET(ui_playlist_view_instance);
     rc_ui_list_model_init();
     catalog_selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(
-        priv->catalog_listview));
+        ui_catalog_view_instance));
     catalog_model = rc_ui_list_model_get_catalog_store();
     if(catalog_model!=NULL)
     {
-        gtk_tree_view_set_model(GTK_TREE_VIEW(priv->catalog_listview),
+        gtk_tree_view_set_model(GTK_TREE_VIEW(ui_catalog_view_instance),
             catalog_model);
         if(gtk_tree_model_get_iter_first(catalog_model, &catalog_iter))
         {
@@ -711,10 +1046,10 @@ void rc_ui_listview_init(GtkWidget **catalog_widget,
             gtk_tree_selection_select_iter(catalog_selection, &catalog_iter);
             if(playlist_model!=NULL)
             {
-                gtk_tree_view_set_model(GTK_TREE_VIEW(priv->playlist_listview),
-                    playlist_model);
+                gtk_tree_view_set_model(GTK_TREE_VIEW(
+                    ui_playlist_view_instance), playlist_model);
                 playlist_selection = gtk_tree_view_get_selection(
-                    GTK_TREE_VIEW(priv->playlist_listview));
+                    GTK_TREE_VIEW(ui_playlist_view_instance));
                 if(gtk_tree_model_get_iter_first(playlist_model,
                     &playlist_iter))
                 {
@@ -724,203 +1059,6 @@ void rc_ui_listview_init(GtkWidget **catalog_widget,
             }
         }
     }
-    g_object_set(priv->catalog_listview, "name", "RC2CatalogListView",
-        "headers-visible", FALSE, "reorderable", FALSE, "rules-hint", TRUE,
-        NULL);
-    g_object_set(priv->playlist_listview, "name", "RC2PlaylistListView",
-        "headers-visible", FALSE, "reorderable", FALSE, "rules-hint", TRUE,
-        NULL);
-    priv->catalog_state_renderer = gtk_cell_renderer_pixbuf_new();
-    priv->catalog_name_renderer = gtk_cell_renderer_text_new();
-    priv->playlist_state_renderer = gtk_cell_renderer_pixbuf_new();
-    priv->playlist_title_renderer = gtk_cell_renderer_text_new();
-    priv->playlist_artist_renderer = gtk_cell_renderer_text_new();
-    priv->playlist_album_renderer = gtk_cell_renderer_text_new();
-    priv->playlist_tracknum_renderer = gtk_cell_renderer_text_new();
-    priv->playlist_year_renderer = gtk_cell_renderer_text_new();
-    priv->playlist_ftype_renderer = gtk_cell_renderer_text_new();
-    priv->playlist_length_renderer = gtk_cell_renderer_text_new();
-    priv->playlist_rating_renderer = NULL;
-    gtk_cell_renderer_set_fixed_size(priv->catalog_state_renderer, 16, -1);
-    gtk_cell_renderer_set_fixed_size(priv->catalog_name_renderer, 80, -1);
-    gtk_cell_renderer_set_fixed_size(priv->playlist_state_renderer, 16, -1);
-    gtk_cell_renderer_set_fixed_size(priv->playlist_title_renderer, 120, -1);
-    gtk_cell_renderer_set_fixed_size(priv->playlist_artist_renderer, 60, -1);
-    gtk_cell_renderer_set_fixed_size(priv->playlist_album_renderer, 60, -1);
-    gtk_cell_renderer_set_fixed_size(priv->playlist_tracknum_renderer,
-        50, -1);
-    gtk_cell_renderer_set_fixed_size(priv->playlist_year_renderer, 50, -1);
-    gtk_cell_renderer_set_fixed_size(priv->playlist_ftype_renderer, 60, -1);
-    gtk_cell_renderer_set_fixed_size(priv->playlist_length_renderer, 55, -1);
-    g_object_set(priv->catalog_name_renderer, "ellipsize", 
-        PANGO_ELLIPSIZE_END, "ellipsize-set", TRUE, "weight",
-        PANGO_WEIGHT_NORMAL, "weight-set", TRUE, NULL);
-    g_object_set(priv->playlist_title_renderer, "ellipsize", 
-        PANGO_ELLIPSIZE_END, "ellipsize-set", TRUE, "weight",
-        PANGO_WEIGHT_NORMAL, "weight-set", TRUE, NULL);
-    g_object_set(priv->playlist_artist_renderer, "ellipsize", 
-        PANGO_ELLIPSIZE_END, "ellipsize-set", TRUE, "weight",
-        PANGO_WEIGHT_NORMAL, "weight-set", TRUE, NULL);
-    g_object_set(priv->playlist_album_renderer, "ellipsize", 
-        PANGO_ELLIPSIZE_END, "ellipsize-set", TRUE, "weight",
-        PANGO_WEIGHT_NORMAL, "weight-set", TRUE, NULL);
-    g_object_set(priv->playlist_tracknum_renderer, "ellipsize", 
-        PANGO_ELLIPSIZE_END, "ellipsize-set", TRUE, "weight",
-        PANGO_WEIGHT_NORMAL, "weight-set", TRUE, NULL);
-    g_object_set(priv->playlist_year_renderer, "ellipsize", 
-        PANGO_ELLIPSIZE_END, "ellipsize-set", TRUE, "weight",
-        PANGO_WEIGHT_NORMAL, "weight-set", TRUE, NULL);
-    g_object_set(priv->playlist_ftype_renderer, "ellipsize", 
-        PANGO_ELLIPSIZE_END, "ellipsize-set", TRUE, "weight",
-        PANGO_WEIGHT_NORMAL, "weight-set", TRUE, NULL);
-    g_object_set(priv->playlist_length_renderer, "xalign", 1.0,
-        "width-chars", 6, NULL);
-    priv->catalog_state_column = gtk_tree_view_column_new_with_attributes(
-        "#", priv->catalog_state_renderer, "stock-id", 
-        RC_UI_CATALOG_COLUMN_STATE, NULL);
-    priv->catalog_name_column = gtk_tree_view_column_new_with_attributes(
-        _("Name"), priv->catalog_name_renderer, "text",
-        RC_UI_CATALOG_COLUMN_NAME, NULL);
-    priv->playlist_state_column = gtk_tree_view_column_new_with_attributes(
-        "#", priv->playlist_state_renderer, "stock-id",
-        RC_UI_PLAYLIST_COLUMN_STATE, NULL);
-    priv->playlist_title_column = gtk_tree_view_column_new_with_attributes(
-        _("Title"), priv->playlist_title_renderer, "text",
-        RC_UI_PLAYLIST_COLUMN_FTITLE, NULL);
-    priv->playlist_artist_column = gtk_tree_view_column_new_with_attributes(
-        _("Artist"), priv->playlist_artist_renderer, "text",
-        RC_UI_PLAYLIST_COLUMN_ARTIST, NULL);
-    priv->playlist_album_column = gtk_tree_view_column_new_with_attributes(
-        _("Album"), priv->playlist_artist_renderer, "text",
-        RC_UI_PLAYLIST_COLUMN_ALBUM, NULL);
-    priv->playlist_tracknum_column = gtk_tree_view_column_new_with_attributes(
-        _("Track"), priv->playlist_tracknum_renderer, "text",
-        RC_UI_PLAYLIST_COLUMN_TRACK, NULL);
-    priv->playlist_year_column = gtk_tree_view_column_new_with_attributes(
-        _("Year"), priv->playlist_year_renderer, "text",
-        RC_UI_PLAYLIST_COLUMN_YEAR, NULL);
-    priv->playlist_ftype_column = gtk_tree_view_column_new_with_attributes(
-        _("Format"), priv->playlist_ftype_renderer, "text",
-        RC_UI_PLAYLIST_COLUMN_FTYPE, NULL);
-    priv->playlist_length_column = gtk_tree_view_column_new_with_attributes(
-        _("Length"), priv->playlist_length_renderer, "text",
-        RC_UI_PLAYLIST_COLUMN_LENGTH, NULL);
-    priv->playlist_rating_column = NULL;
-    gtk_tree_view_column_set_cell_data_func(priv->catalog_name_column,
-        priv->catalog_name_renderer,
-        rc_ui_listview_catalog_name_call_data_func, NULL, NULL);
-    gtk_tree_view_column_set_cell_data_func(priv->playlist_title_column,
-        priv->playlist_title_renderer,
-        rc_ui_listview_playlist_text_call_data_func, NULL, NULL);
-    gtk_tree_view_column_set_cell_data_func(priv->playlist_artist_column,
-        priv->playlist_artist_renderer,
-        rc_ui_listview_playlist_text_call_data_func, NULL, NULL);
-    gtk_tree_view_column_set_cell_data_func(priv->playlist_album_column,
-        priv->playlist_album_renderer,
-        rc_ui_listview_playlist_text_call_data_func, NULL, NULL);
-    gtk_tree_view_column_set_cell_data_func(priv->playlist_tracknum_column,
-        priv->playlist_tracknum_renderer,
-        rc_ui_listview_playlist_text_call_data_func, NULL, NULL);
-    gtk_tree_view_column_set_cell_data_func(priv->playlist_year_column,
-        priv->playlist_year_renderer,
-        rc_ui_listview_playlist_text_call_data_func, NULL, NULL);
-    gtk_tree_view_column_set_cell_data_func(priv->playlist_ftype_column,
-        priv->playlist_ftype_renderer,
-        rc_ui_listview_playlist_text_call_data_func, NULL, NULL);
-    gtk_tree_view_column_set_cell_data_func(priv->playlist_length_column,
-        priv->playlist_length_renderer,
-        rc_ui_listview_playlist_text_call_data_func, NULL, NULL);
-    g_object_set(priv->catalog_state_column, "sizing",
-        GTK_TREE_VIEW_COLUMN_FIXED, "fixed-width", 30, "min-width", 30,
-        "max-width", 30, NULL);
-    g_object_set(priv->catalog_name_column, "expand", TRUE, NULL);
-    g_object_set(priv->playlist_state_column, "sizing",
-        GTK_TREE_VIEW_COLUMN_FIXED, "fixed-width", 30, "min-width", 30,
-        "max-width", 30, NULL);        
-    g_object_set(priv->playlist_title_column, "expand", TRUE, NULL);
-    g_object_set(priv->playlist_artist_column, "expand", TRUE, "visible",
-        FALSE, "resizable", TRUE, NULL);
-    g_object_set(priv->playlist_album_column, "expand", TRUE, "visible",
-        FALSE, "resizable", TRUE, NULL);
-    g_object_set(priv->playlist_tracknum_column, "expand", TRUE, "visible",
-        FALSE, "resizable", TRUE, NULL);
-    g_object_set(priv->playlist_year_column, "expand", TRUE, "visible",
-        FALSE, "resizable", TRUE, NULL);
-    g_object_set(priv->playlist_ftype_column, "expand", TRUE, "visible",
-        FALSE, "resizable", TRUE, NULL);
-    g_object_set(priv->playlist_length_column, "sizing",
-        GTK_TREE_VIEW_COLUMN_FIXED, "fixed-width", 55, "alignment",
-        1.0, NULL);
-    gtk_tree_view_append_column(GTK_TREE_VIEW(priv->catalog_listview),
-        priv->catalog_state_column);
-    gtk_tree_view_append_column(GTK_TREE_VIEW(priv->catalog_listview),
-        priv->catalog_name_column);
-    gtk_tree_view_append_column(GTK_TREE_VIEW(priv->playlist_listview),
-        priv->playlist_state_column);
-    gtk_tree_view_append_column(GTK_TREE_VIEW(priv->playlist_listview),
-        priv->playlist_title_column);
-    gtk_tree_view_append_column(GTK_TREE_VIEW(priv->playlist_listview),
-        priv->playlist_artist_column);
-    gtk_tree_view_append_column(GTK_TREE_VIEW(priv->playlist_listview),
-        priv->playlist_album_column);
-    gtk_tree_view_append_column(GTK_TREE_VIEW(priv->playlist_listview),
-        priv->playlist_tracknum_column);
-    gtk_tree_view_append_column(GTK_TREE_VIEW(priv->playlist_listview),
-        priv->playlist_year_column);
-    gtk_tree_view_append_column(GTK_TREE_VIEW(priv->playlist_listview),
-        priv->playlist_ftype_column);
-    gtk_tree_view_append_column(GTK_TREE_VIEW(priv->playlist_listview),
-        priv->playlist_length_column);
-    gtk_tree_selection_set_mode(gtk_tree_view_get_selection(
-        GTK_TREE_VIEW(priv->catalog_listview)), GTK_SELECTION_MULTIPLE);
-    gtk_tree_selection_set_mode(gtk_tree_view_get_selection(
-        GTK_TREE_VIEW(priv->playlist_listview)), GTK_SELECTION_MULTIPLE);
-    gtk_tree_view_columns_autosize(GTK_TREE_VIEW(priv->catalog_listview));
-    gtk_tree_view_columns_autosize(GTK_TREE_VIEW(priv->playlist_listview));
-    gtk_tree_view_set_enable_search(GTK_TREE_VIEW(priv->catalog_listview),
-        TRUE);
-    gtk_tree_view_set_enable_search(GTK_TREE_VIEW(priv->playlist_listview),
-        TRUE);
-    gtk_tree_view_set_search_equal_func(GTK_TREE_VIEW(
-        priv->catalog_listview),
-        rc_ui_listview_catalog_search_comparison_func, NULL, NULL);
-    gtk_tree_view_set_search_equal_func(GTK_TREE_VIEW(
-        priv->playlist_listview),
-        rc_ui_listview_playlist_search_comparison_func, NULL, NULL);
-    rc_ui_listview_catalog_set_drag();
-    rc_ui_listview_playlist_set_drag();
-    g_signal_connect(priv->catalog_name_renderer, "edited",
-        G_CALLBACK(rc_ui_listview_catalog_row_edited), NULL);
-    g_signal_connect(priv->catalog_listview, "drag-motion",
-        G_CALLBACK(rc_ui_listview_dnd_motion), NULL);
-    g_signal_connect(priv->playlist_listview, "drag-motion",
-        G_CALLBACK(rc_ui_listview_dnd_motion), NULL);
-    g_signal_connect(priv->catalog_listview, "drag-data-get",
-        G_CALLBACK(rc_ui_listview_dnd_data_get), NULL);
-    g_signal_connect(priv->playlist_listview, "drag-data-get",
-        G_CALLBACK(rc_ui_listview_dnd_data_get), NULL);
-    g_signal_connect(priv->catalog_listview, "drag-data-delete",
-        G_CALLBACK(rc_ui_listview_dnd_delete), NULL);
-    g_signal_connect(priv->playlist_listview, "drag-data-delete",
-        G_CALLBACK(rc_ui_listview_dnd_delete), NULL);
-    g_signal_connect(priv->catalog_listview, "drag-data-received",
-        G_CALLBACK(rc_ui_listview_catalog_dnd_data_received), NULL);
-    g_signal_connect(priv->playlist_listview, "drag-data-received",
-        G_CALLBACK(rc_ui_listview_playlist_dnd_data_received), NULL);
-    g_signal_connect(priv->catalog_listview, "button-press-event",
-        G_CALLBACK(rc_ui_listview_button_pressed_event), NULL);
-    g_signal_connect(priv->playlist_listview, "button-press-event",
-        G_CALLBACK(rc_ui_listview_button_pressed_event), NULL);
-    g_signal_connect(priv->catalog_listview, "button-release-event",
-        G_CALLBACK(rc_ui_listview_catalog_button_release_event), NULL);
-    g_signal_connect(priv->playlist_listview, "button-release-event",
-        G_CALLBACK(rc_ui_listview_playlist_button_release_event), NULL);
-    g_signal_connect(priv->catalog_listview, "cursor-changed",
-        G_CALLBACK(rc_ui_listview_catalog_row_selected), NULL);
-    g_signal_connect(priv->playlist_listview, "row-activated",
-        G_CALLBACK(rc_ui_listview_playlist_row_activated), NULL);
-    rclib_db_signal_connect("catalog-delete",
-        G_CALLBACK(rc_ui_listview_catalog_delete_cb), NULL);
 }
 
 /**
@@ -931,8 +1069,7 @@ void rc_ui_listview_init(GtkWidget **catalog_widget,
 
 GtkWidget *rc_ui_listview_get_catalog_widget()
 {
-    RCUiListViewPrivate *priv = &ui_listview_private;
-    return priv->catalog_listview;
+    return GTK_WIDGET(ui_catalog_view_instance);
 }
 
 /**
@@ -943,8 +1080,7 @@ GtkWidget *rc_ui_listview_get_catalog_widget()
 
 GtkWidget *rc_ui_listview_get_playlist_widget()
 {
-    RCUiListViewPrivate *priv = &ui_listview_private;
-    return priv->playlist_listview;
+    return GTK_WIDGET(ui_playlist_view_instance);
 }
 
 /**
@@ -956,8 +1092,11 @@ GtkWidget *rc_ui_listview_get_playlist_widget()
 
 void rc_ui_listview_catalog_set_pango_attributes(const PangoAttrList *list)
 {
-    RCUiListViewPrivate *priv = &ui_listview_private;
-    g_object_set(priv->catalog_name_renderer, "attributes",list, NULL);
+    RCUiCatalogViewPrivate *priv = NULL;
+    if(ui_catalog_view_instance==NULL) return;
+    priv = RC_UI_CATALOG_VIEW_GET_PRIVATE(ui_catalog_view_instance);
+    if(priv==NULL) return;
+    g_object_set(priv->name_renderer, "attributes", list, NULL);
 }
 
 /**
@@ -969,14 +1108,17 @@ void rc_ui_listview_catalog_set_pango_attributes(const PangoAttrList *list)
 
 void rc_ui_listview_playlist_set_pango_attributes(const PangoAttrList *list)
 {
-    RCUiListViewPrivate *priv = &ui_listview_private;
-    g_object_set(priv->playlist_title_renderer, "attributes", list, NULL);
-    g_object_set(priv->playlist_artist_renderer, "attributes", list, NULL);
-    g_object_set(priv->playlist_album_renderer, "attributes", list, NULL);
-    g_object_set(priv->playlist_tracknum_renderer, "attributes", list, NULL);
-    g_object_set(priv->playlist_year_renderer, "attributes", list, NULL);
-    g_object_set(priv->playlist_ftype_renderer, "attributes", list, NULL);
-    g_object_set(priv->playlist_length_renderer, "attributes", list, NULL);
+    RCUiPlaylistViewPrivate *priv = NULL;
+    if(ui_playlist_view_instance==NULL) return;
+    priv = RC_UI_PLAYLIST_VIEW_GET_PRIVATE(ui_playlist_view_instance);
+    if(priv==NULL) return;
+    g_object_set(priv->title_renderer, "attributes", list, NULL);
+    g_object_set(priv->artist_renderer, "attributes", list, NULL);
+    g_object_set(priv->album_renderer, "attributes", list, NULL);
+    g_object_set(priv->tracknum_renderer, "attributes", list, NULL);
+    g_object_set(priv->year_renderer, "attributes", list, NULL);
+    g_object_set(priv->ftype_renderer, "attributes", list, NULL);
+    g_object_set(priv->length_renderer, "attributes", list, NULL);
 }
 
 /**
@@ -988,15 +1130,14 @@ void rc_ui_listview_playlist_set_pango_attributes(const PangoAttrList *list)
 
 void rc_ui_listview_catalog_select(GtkTreeIter *iter)
 {
-    RCUiListViewPrivate *priv = &ui_listview_private;
     GtkTreePath *path;
     GtkTreeModel *model;
-    if(iter==NULL);
-    model = gtk_tree_view_get_model(GTK_TREE_VIEW(priv->catalog_listview));
+    if(iter==NULL || ui_catalog_view_instance==NULL) return;
+    model = gtk_tree_view_get_model(GTK_TREE_VIEW(ui_catalog_view_instance));
     if(model==NULL) return;
     path = gtk_tree_model_get_path(model, iter);
     if(path==NULL) return;
-    gtk_tree_view_set_cursor(GTK_TREE_VIEW(priv->catalog_listview), path, 
+    gtk_tree_view_set_cursor(GTK_TREE_VIEW(ui_catalog_view_instance), path, 
         NULL, FALSE);
     gtk_tree_path_free(path);
 }
@@ -1010,15 +1151,15 @@ void rc_ui_listview_catalog_select(GtkTreeIter *iter)
 
 void rc_ui_listview_playlist_select(GtkTreeIter *iter)
 {
-    RCUiListViewPrivate *priv = &ui_listview_private;
     GtkTreePath *path;
     GtkTreeModel *model;
-    if(iter==NULL);
-    model = gtk_tree_view_get_model(GTK_TREE_VIEW(priv->playlist_listview));
+    if(iter==NULL || ui_playlist_view_instance==NULL);
+    model = gtk_tree_view_get_model(GTK_TREE_VIEW(
+        ui_playlist_view_instance));
     if(model==NULL) return;
     path = gtk_tree_model_get_path(model, iter);
     if(path==NULL) return;
-    gtk_tree_view_set_cursor(GTK_TREE_VIEW(priv->playlist_listview), path, 
+    gtk_tree_view_set_cursor(GTK_TREE_VIEW(ui_playlist_view_instance), path,
         NULL, FALSE);
     gtk_tree_path_free(path);
 }
@@ -1034,14 +1175,14 @@ void rc_ui_listview_playlist_select(GtkTreeIter *iter)
 
 gboolean rc_ui_listview_catalog_get_cursor(GtkTreeIter *iter)
 {
-    RCUiListViewPrivate *priv = &ui_listview_private;
     GtkTreePath *path;
     GtkTreeModel *model;
     gboolean flag;
-    if(iter==NULL) return FALSE;
-    model = gtk_tree_view_get_model(GTK_TREE_VIEW(priv->catalog_listview));
+    if(iter==NULL || ui_catalog_view_instance==NULL) return FALSE;
+    model = gtk_tree_view_get_model(GTK_TREE_VIEW(
+        ui_catalog_view_instance));
     if(model==NULL) return FALSE;
-    gtk_tree_view_get_cursor(GTK_TREE_VIEW(priv->catalog_listview), &path,
+    gtk_tree_view_get_cursor(GTK_TREE_VIEW(ui_catalog_view_instance), &path,
         NULL);
     if(path==NULL) return FALSE;
     flag = gtk_tree_model_get_iter(model, iter, path);
@@ -1060,15 +1201,15 @@ gboolean rc_ui_listview_catalog_get_cursor(GtkTreeIter *iter)
 
 gboolean rc_ui_listview_playlist_get_cursor(GtkTreeIter *iter)
 {
-    RCUiListViewPrivate *priv = &ui_listview_private;
     GtkTreePath *path;
     GtkTreeModel *model;
     gboolean flag;
-    if(iter==NULL) return FALSE;
-    model = gtk_tree_view_get_model(GTK_TREE_VIEW(priv->playlist_listview));
+    if(iter==NULL || ui_playlist_view_instance==NULL) return FALSE;
+    model = gtk_tree_view_get_model(GTK_TREE_VIEW(
+        ui_playlist_view_instance));
     if(model==NULL) return FALSE;
-    gtk_tree_view_get_cursor(GTK_TREE_VIEW(priv->playlist_listview), &path,
-        NULL);
+    gtk_tree_view_get_cursor(GTK_TREE_VIEW(ui_playlist_view_instance),
+        &path, NULL);
     if(path==NULL) return FALSE;
     flag = gtk_tree_model_get_iter(model, iter, path);
     gtk_tree_path_free(path);
@@ -1085,8 +1226,8 @@ gboolean rc_ui_listview_playlist_get_cursor(GtkTreeIter *iter)
 
 GtkTreeModel *rc_ui_listview_catalog_get_model()
 {
-    RCUiListViewPrivate *priv = &ui_listview_private;
-    return gtk_tree_view_get_model(GTK_TREE_VIEW(priv->catalog_listview));
+    if(ui_catalog_view_instance==NULL) return NULL;
+    return gtk_tree_view_get_model(GTK_TREE_VIEW(ui_catalog_view_instance));
 }
 
 /**
@@ -1100,8 +1241,8 @@ GtkTreeModel *rc_ui_listview_catalog_get_model()
 
 GtkTreeModel *rc_ui_listview_playlist_get_model()
 {
-    RCUiListViewPrivate *priv = &ui_listview_private;
-    return gtk_tree_view_get_model(GTK_TREE_VIEW(priv->playlist_listview));
+    if(ui_playlist_view_instance==NULL) return NULL;
+    return gtk_tree_view_get_model(GTK_TREE_VIEW(ui_playlist_view_instance));
 }
 
 /**
@@ -1113,12 +1254,12 @@ GtkTreeModel *rc_ui_listview_playlist_get_model()
 void rc_ui_listview_catalog_new_playlist()
 {
     static guint i = 1;
-    RCUiListViewPrivate *priv = &ui_listview_private;
     GtkTreeModel *model;
     GtkTreeIter iter, new_iter;
     GSequenceIter *catalog_iter;
     gchar *new_name;
-    model = gtk_tree_view_get_model(GTK_TREE_VIEW(priv->catalog_listview));
+    if(ui_catalog_view_instance==NULL) return;
+    model = gtk_tree_view_get_model(GTK_TREE_VIEW(ui_catalog_view_instance));
     if(model==NULL) return;
     new_name = g_strdup_printf(_("Playlist %u"), i);
     i++;
@@ -1144,21 +1285,24 @@ void rc_ui_listview_catalog_new_playlist()
 
 void rc_ui_listview_catalog_rename_playlist()
 {
-    RCUiListViewPrivate *priv = &ui_listview_private;
+    RCUiCatalogViewPrivate *priv = NULL;
     GtkTreeModel *model;
     GtkTreeIter iter;
     GtkTreePath *path;
-    model = gtk_tree_view_get_model(GTK_TREE_VIEW(priv->catalog_listview));
+    if(ui_catalog_view_instance==NULL) return;
+    priv = RC_UI_CATALOG_VIEW_GET_PRIVATE(ui_catalog_view_instance);
+    if(priv==NULL) return;
+    model = gtk_tree_view_get_model(GTK_TREE_VIEW(ui_catalog_view_instance));
     if(model==NULL) return;
     if(!rc_ui_listview_catalog_get_cursor(&iter)) return;
     path = gtk_tree_model_get_path(model, &iter);
     if(path==NULL) return;
-    g_object_set(priv->catalog_name_renderer, "editable", TRUE,
-        "editable-set", TRUE, NULL);
-    gtk_tree_view_set_cursor(GTK_TREE_VIEW(priv->catalog_listview), path,
-        priv->catalog_name_column, TRUE);
-    g_object_set(priv->catalog_name_renderer, "editable", FALSE,
-        "editable-set", FALSE, NULL);
+    g_object_set(priv->name_renderer, "editable", TRUE, "editable-set",
+        TRUE, NULL);
+    gtk_tree_view_set_cursor(GTK_TREE_VIEW(ui_catalog_view_instance), path,
+        priv->name_column, TRUE);
+    g_object_set(priv->name_renderer, "editable", FALSE, "editable-set",
+        FALSE, NULL);
     gtk_tree_path_free(path);
 }
 
@@ -1170,16 +1314,16 @@ void rc_ui_listview_catalog_rename_playlist()
 
 void rc_ui_listview_catalog_delete_items()
 {
-    RCUiListViewPrivate *priv = &ui_listview_private;
     GtkTreeSelection *selection;
     GList *path_list = NULL;
     GList *list_foreach;
     GtkTreeIter iter;
     GtkTreeModel *model;
-    model = gtk_tree_view_get_model(GTK_TREE_VIEW(priv->catalog_listview));
+    if(ui_catalog_view_instance==NULL) return;
+    model = gtk_tree_view_get_model(GTK_TREE_VIEW(ui_catalog_view_instance));
     if(model==NULL) return;
     selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(
-        priv->catalog_listview));
+        ui_catalog_view_instance));
     if(selection==NULL) return;
     path_list = gtk_tree_selection_get_selected_rows(selection, NULL);
     if(path_list==NULL) return;
@@ -1204,10 +1348,10 @@ void rc_ui_listview_catalog_delete_items()
 
 void rc_ui_listview_playlist_select_all()
 {
-    RCUiListViewPrivate *priv = &ui_listview_private;
     GtkTreeSelection *selection;
+    if(ui_playlist_view_instance==NULL) return;
     selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(
-        priv->playlist_listview));
+        ui_playlist_view_instance));
     gtk_tree_selection_select_all(selection);
 }
 
@@ -1219,16 +1363,16 @@ void rc_ui_listview_playlist_select_all()
 
 void rc_ui_listview_playlist_delete_items()
 {
-    RCUiListViewPrivate *priv = &ui_listview_private;
     GtkTreeSelection *selection;
     GList *path_list = NULL;
     GList *list_foreach;
     GtkTreeIter iter;
     GtkTreeModel *model;
-    model = gtk_tree_view_get_model(GTK_TREE_VIEW(priv->playlist_listview));
+    model = gtk_tree_view_get_model(GTK_TREE_VIEW(
+        ui_playlist_view_instance));
     if(model==NULL) return;
     selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(
-        priv->playlist_listview));
+        ui_playlist_view_instance));
     if(selection==NULL) return;
     path_list = gtk_tree_selection_get_selected_rows(selection, NULL);
     if(path_list==NULL) return;
@@ -1253,10 +1397,9 @@ void rc_ui_listview_playlist_delete_items()
 
 void rc_ui_listview_playlist_refresh()
 {
-    RCUiListViewPrivate *priv = &ui_listview_private;
     GtkTreeModel *model;
     GtkTreeIter iter;
-    model = gtk_tree_view_get_model(GTK_TREE_VIEW(priv->catalog_listview));
+    model = gtk_tree_view_get_model(GTK_TREE_VIEW(ui_catalog_view_instance));
     if(model==NULL) return;
     if(!rc_ui_listview_catalog_get_cursor(&iter)) return;
     if(iter.user_data==NULL) return;
@@ -1274,22 +1417,26 @@ void rc_ui_listview_playlist_refresh()
 
 void rc_ui_listview_playlist_set_column_display_mode(gboolean mode)
 {
-    RCUiListViewPrivate *priv = &ui_listview_private;
-    if(priv->playlist_listview==NULL) return;
+    RCUiPlaylistViewPrivate *priv = NULL;
+    if(ui_playlist_view_instance==NULL) return;
+    priv = RC_UI_PLAYLIST_VIEW_GET_PRIVATE(ui_playlist_view_instance);
+    if(priv==NULL) return;
     priv->display_mode = mode;
     if(mode)
     {
-        g_object_set(priv->playlist_listview, "headers-visible", TRUE, NULL);
+        g_object_set(ui_playlist_view_instance, "headers-visible",
+            TRUE, NULL);
         rc_ui_listview_playlist_set_title_format("%TITLE");
     }
     else
     {
-        g_object_set(priv->playlist_listview, "headers-visible", FALSE, NULL);
-        g_object_set(priv->playlist_artist_column, "visible", FALSE, NULL);
-        g_object_set(priv->playlist_album_column, "visible", FALSE, NULL);
-        g_object_set(priv->playlist_tracknum_column, "visible", FALSE, NULL);
-        g_object_set(priv->playlist_year_column, "visible", FALSE, NULL);
-        g_object_set(priv->playlist_ftype_column, "visible", FALSE, NULL);
+        g_object_set(ui_playlist_view_instance, "headers-visible",
+            FALSE, NULL);
+        g_object_set(priv->artist_column, "visible", FALSE, NULL);
+        g_object_set(priv->album_column, "visible", FALSE, NULL);
+        g_object_set(priv->tracknum_column, "visible", FALSE, NULL);
+        g_object_set(priv->year_column, "visible", FALSE, NULL);
+        g_object_set(priv->ftype_column, "visible", FALSE, NULL);
     }
     rc_ui_player_playlist_scrolled_window_set_horizontal_policy(mode);
 }
@@ -1304,7 +1451,10 @@ void rc_ui_listview_playlist_set_column_display_mode(gboolean mode)
 
 gboolean rc_ui_listview_playlist_get_column_display_mode()
 {
-    RCUiListViewPrivate *priv = &ui_listview_private;
+    RCUiPlaylistViewPrivate *priv = NULL;
+    if(ui_playlist_view_instance==NULL) return FALSE;
+    priv = RC_UI_PLAYLIST_VIEW_GET_PRIVATE(ui_playlist_view_instance);
+    if(priv==NULL) return FALSE;
     return priv->display_mode;
 }
 
@@ -1320,13 +1470,12 @@ gboolean rc_ui_listview_playlist_get_column_display_mode()
 
 void rc_ui_listview_playlist_set_title_format(const gchar *format)
 {
-    RCUiListViewPrivate *priv = &ui_listview_private;
-    if(priv->playlist_listview==NULL) return;
+    if(ui_playlist_view_instance==NULL) return;
     if(format==NULL || g_strstr_len(format, -1, "%TITLE")==NULL)
         rc_ui_list_model_set_playlist_title_format("%TITLE");
     else
         rc_ui_list_model_set_playlist_title_format(format);
-    gtk_widget_queue_draw(priv->playlist_listview);
+    gtk_widget_queue_draw(GTK_WIDGET(ui_playlist_view_instance));
 }
 
 /**
@@ -1342,37 +1491,39 @@ void rc_ui_listview_playlist_set_title_format(const gchar *format)
 void rc_ui_listview_playlist_set_enabled_columns(guint column_flags,
     guint enable_flags)
 {
-    RCUiListViewPrivate *priv = &ui_listview_private;
-    if(priv->playlist_listview==NULL) return;
+    RCUiPlaylistViewPrivate *priv = NULL;
+    if(ui_playlist_view_instance==NULL) return;
+    priv = RC_UI_PLAYLIST_VIEW_GET_PRIVATE(ui_playlist_view_instance);
+    if(priv==NULL) return;
     if(!priv->display_mode) return;
     if(column_flags==0) return;
     if(column_flags & RC_UI_LISTVIEW_PLAYLIST_COLUMN_ARTIST)
     {
-        g_object_set(priv->playlist_artist_column, "visible",
+        g_object_set(priv->artist_column, "visible",
             enable_flags & RC_UI_LISTVIEW_PLAYLIST_COLUMN_ARTIST ?
             TRUE: FALSE, NULL);
     }
     if(column_flags & RC_UI_LISTVIEW_PLAYLIST_COLUMN_ALBUM)
     {
-        g_object_set(priv->playlist_album_column, "visible",
+        g_object_set(priv->album_column, "visible",
             enable_flags & RC_UI_LISTVIEW_PLAYLIST_COLUMN_ALBUM ?
             TRUE: FALSE, NULL);
     }
     if(column_flags & RC_UI_LISTVIEW_PLAYLIST_COLUMN_TRACK)
     {
-        g_object_set(priv->playlist_tracknum_column, "visible",
+        g_object_set(priv->tracknum_column, "visible",
             enable_flags & RC_UI_LISTVIEW_PLAYLIST_COLUMN_TRACK ?
             TRUE: FALSE, NULL);
     }
     if(column_flags & RC_UI_LISTVIEW_PLAYLIST_COLUMN_YEAR)
     {
-        g_object_set(priv->playlist_year_column, "visible",
+        g_object_set(priv->year_column, "visible",
             enable_flags & RC_UI_LISTVIEW_PLAYLIST_COLUMN_YEAR ?
             TRUE: FALSE, NULL);
     }
     if(column_flags & RC_UI_LISTVIEW_PLAYLIST_COLUMN_FTYPE)
     {
-        g_object_set(priv->playlist_ftype_column, "visible",
+        g_object_set(priv->ftype_column, "visible",
             enable_flags & RC_UI_LISTVIEW_PLAYLIST_COLUMN_FTYPE ?
             TRUE: FALSE, NULL);
     }
@@ -1388,23 +1539,25 @@ void rc_ui_listview_playlist_set_enabled_columns(guint column_flags,
 
 guint rc_ui_listview_playlist_get_enabled_columns()
 {
-    RCUiListViewPrivate *priv = &ui_listview_private;
+    RCUiPlaylistViewPrivate *priv = NULL;
     gboolean state;
     guint flags = 0;
-    if(priv->playlist_listview==NULL) return 0;
-    g_object_get(priv->playlist_listview, "headers-visible", &state, NULL);
+    if(ui_playlist_view_instance==NULL) return 0;
+    priv = RC_UI_PLAYLIST_VIEW_GET_PRIVATE(ui_playlist_view_instance);
+    if(priv==NULL) return 0;
+    g_object_get(ui_playlist_view_instance, "headers-visible", &state, NULL);
     if(state)
         flags |= RC_UI_LISTVIEW_PLAYLIST_COLUMN_ARTIST;
-    g_object_get(priv->playlist_artist_column, "visible", &state, NULL);
+    g_object_get(priv->artist_column, "visible", &state, NULL);
     if(state)
         flags |= RC_UI_LISTVIEW_PLAYLIST_COLUMN_ALBUM;
-    g_object_get(priv->playlist_tracknum_column, "visible", &state, NULL);
+    g_object_get(priv->tracknum_column, "visible", &state, NULL);
     if(state)
         flags |= RC_UI_LISTVIEW_PLAYLIST_COLUMN_TRACK;
-    g_object_get(priv->playlist_year_column, "visible", &state, NULL);
+    g_object_get(priv->year_column, "visible", &state, NULL);
     if(state)
         flags |= RC_UI_LISTVIEW_PLAYLIST_COLUMN_YEAR;
-    g_object_get(priv->playlist_ftype_column, "visible", &state, NULL);
+    g_object_get(priv->ftype_column, "visible", &state, NULL);
     if(state)
         flags |= RC_UI_LISTVIEW_PLAYLIST_COLUMN_FTYPE;
     return flags;
@@ -1418,10 +1571,9 @@ guint rc_ui_listview_playlist_get_enabled_columns()
 
 void rc_ui_listview_refresh()
 {
-    RCUiListViewPrivate *priv = &ui_listview_private;
-    if(priv->catalog_listview!=NULL)
-        gtk_widget_queue_draw(priv->catalog_listview);
-    if(priv->playlist_listview)
-        gtk_widget_queue_draw(priv->playlist_listview);
+    if(ui_catalog_view_instance!=NULL)
+        gtk_widget_queue_draw(GTK_WIDGET(ui_catalog_view_instance));
+    if(ui_playlist_view_instance!=NULL)
+        gtk_widget_queue_draw(GTK_WIDGET(ui_playlist_view_instance));
 }
 
