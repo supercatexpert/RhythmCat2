@@ -17,6 +17,7 @@
   <chapter>
     <title>API reference</title>
         <xi:include href="xml/rc-main.xml"/>
+    <xi:include href="xml/rc-ui-window.xml"/>
     <xi:include href="xml/rc-ui-dialog.xml"/>
     <xi:include href="xml/rc-ui-effect.xml"/>
     <xi:include href="xml/rc-ui-listmodel.xml"/>

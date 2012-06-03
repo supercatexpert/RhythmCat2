@@ -338,7 +338,7 @@ librhythmcat_2_0_headers = \
 librhythmcat_2_0_builtheaders = rclib-marshal.h
 librhythmcat_2_0_la_SOURCES = $(librhythmcat_2_0_sources) \
 	$(librhythmcat_2_0_builtsources) $(BUILT_SOURCES)
-INCLUDES = @GLIB2_CFLAGS@ @GSTREAMER_CFLAGS@ @JSON_GLIB_CFLAGS@ \
+AM_CFLAGS = @GLIB2_CFLAGS@ @GSTREAMER_CFLAGS@ @JSON_GLIB_CFLAGS@ \
     -DLOCALEDIR=\"$(localedir)\"
 
 librhythmcat_2_0_la_LIBADD = @GLIB2_LIBS@ @GSTREAMER_LIBS@ \
@@ -357,7 +357,7 @@ librhythmcat_2_0_la_LDFLAGS = -export-dynamic -O2 $(am__append_2)
 @HAVE_INTROSPECTION_TRUE@RhythmCatLib_2_0_gir_NAMESPACE = RhythmCatLib
 @HAVE_INTROSPECTION_TRUE@RhythmCatLib_2_0_gir_VERSION = 2.0
 @HAVE_INTROSPECTION_TRUE@RhythmCatLib_2_0_gir_INCLUDES = GObject-2.0 Gst-0.10 GstPbutils-0.10 GstBase-0.10 GstFft-0.10
-@HAVE_INTROSPECTION_TRUE@RhythmCatLib_2_0_gir_CFLAGS = $(INCLUDES)
+@HAVE_INTROSPECTION_TRUE@RhythmCatLib_2_0_gir_CFLAGS = $(AM_CFLAGS)
 @HAVE_INTROSPECTION_TRUE@RhythmCatLib_2_0_gir_LIBS = librhythmcat-2.0.la
 @HAVE_INTROSPECTION_TRUE@RhythmCatLib_2_0_gir_FILES = $(introspection_sources)
 @HAVE_INTROSPECTION_TRUE@girdir = $(datadir)/gir-1.0

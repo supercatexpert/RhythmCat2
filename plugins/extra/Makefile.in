@@ -129,7 +129,7 @@ am__lrccrawler_lrc123_la_SOURCES_DIST = lrccrawler-lrc123.c \
 lrccrawler_lrc123_la_OBJECTS = $(am_lrccrawler_lrc123_la_OBJECTS)
 lrccrawler_lrc123_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC \
 	$(lrccrawler_lrc123_la_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \
-	--mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
+	--mode=link $(CCLD) $(lrccrawler_lrc123_la_CFLAGS) $(CFLAGS) \
 	$(lrccrawler_lrc123_la_LDFLAGS) $(LDFLAGS) -o $@
 @HAVE_LIBCURL_TRUE@@WITH_GTK_UI_TRUE@@WITH_NATIVE_PLUGINS_TRUE@am_lrccrawler_lrc123_la_rpath = -rpath \
 @HAVE_LIBCURL_TRUE@@WITH_GTK_UI_TRUE@@WITH_NATIVE_PLUGINS_TRUE@	$(crawlermoduledir)
@@ -141,8 +141,8 @@ am__lrccrawler_la_SOURCES_DIST = lrccrawler.c lrccrawler-common.c
 lrccrawler_la_OBJECTS = $(am_lrccrawler_la_OBJECTS)
 lrccrawler_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC \
 	$(lrccrawler_la_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link \
-	$(CCLD) $(AM_CFLAGS) $(CFLAGS) $(lrccrawler_la_LDFLAGS) \
-	$(LDFLAGS) -o $@
+	$(CCLD) $(lrccrawler_la_CFLAGS) $(CFLAGS) \
+	$(lrccrawler_la_LDFLAGS) $(LDFLAGS) -o $@
 @HAVE_LIBCURL_TRUE@@WITH_GTK_UI_TRUE@@WITH_NATIVE_PLUGINS_TRUE@am_lrccrawler_la_rpath = -rpath \
 @HAVE_LIBCURL_TRUE@@WITH_GTK_UI_TRUE@@WITH_NATIVE_PLUGINS_TRUE@	$(plugindir)
 DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)
@@ -379,7 +379,7 @@ plugin_LTLIBRARIES = $(am__append_2) $(am__append_3)
 crawlermodule_LTLIBRARIES = $(am__append_4)
 noinst_LTLIBRARIES = 
 noinst_HEADERS = lrccrawler-common.h
-INCLUDES = @GLIB2_CFLAGS@ @GSTREAMER_CFLAGS@ @JSON_GLIB_CFLAGS@ \
+AM_CFLAGS = @GLIB2_CFLAGS@ @GSTREAMER_CFLAGS@ @JSON_GLIB_CFLAGS@ \
 	-DLOCALEDIR=\"$(localedir)\" -I$(top_srcdir)/lib \
 	$(am__append_1)
 @WITH_GTK_UI_TRUE@@WITH_NATIVE_PLUGINS_TRUE@karaeffect_la_SOURCES = karaeffect.c
@@ -394,14 +394,14 @@ INCLUDES = @GLIB2_CFLAGS@ @GSTREAMER_CFLAGS@ @JSON_GLIB_CFLAGS@ \
 @WITH_GTK_UI_TRUE@@WITH_NATIVE_PLUGINS_TRUE@    $(top_builddir)/ui/librhythmcat-ui-2.0.la
 
 @WITH_GTK_UI_TRUE@@WITH_NATIVE_PLUGINS_TRUE@echoeffect_la_LIBTOOLFLAGS = --tag=disable-static
-@HAVE_LIBCURL_TRUE@@WITH_GTK_UI_TRUE@@WITH_NATIVE_PLUGINS_TRUE@lrccrawler_la_INCLUDES = @INCLUDES@ @LIBCURL_CFLAGS@
+@HAVE_LIBCURL_TRUE@@WITH_GTK_UI_TRUE@@WITH_NATIVE_PLUGINS_TRUE@lrccrawler_la_CFLAGS = $(AM_CFLAGS) @LIBCURL_CFLAGS@
 @HAVE_LIBCURL_TRUE@@WITH_GTK_UI_TRUE@@WITH_NATIVE_PLUGINS_TRUE@lrccrawler_la_SOURCES = lrccrawler.c lrccrawler-common.c
 @HAVE_LIBCURL_TRUE@@WITH_GTK_UI_TRUE@@WITH_NATIVE_PLUGINS_TRUE@lrccrawler_la_LIBADD = @GLIB2_LIBS@ @GTK_LIBS@ @GSTREAMER_LIBS@ @JSON_GLIB_LIBS@ \
 @HAVE_LIBCURL_TRUE@@WITH_GTK_UI_TRUE@@WITH_NATIVE_PLUGINS_TRUE@    @LIBCURL_LIBS@ $(top_builddir)/lib/librhythmcat-2.0.la \
 @HAVE_LIBCURL_TRUE@@WITH_GTK_UI_TRUE@@WITH_NATIVE_PLUGINS_TRUE@    $(top_builddir)/ui/librhythmcat-ui-2.0.la
 
 @HAVE_LIBCURL_TRUE@@WITH_GTK_UI_TRUE@@WITH_NATIVE_PLUGINS_TRUE@lrccrawler_la_LIBTOOLFLAGS = --tag=disable-static
-@HAVE_LIBCURL_TRUE@@WITH_GTK_UI_TRUE@@WITH_NATIVE_PLUGINS_TRUE@lrccrawler_lrc123_la_INCLUDES = @INCLUDES@ @LIBCURL_CFLAGS@
+@HAVE_LIBCURL_TRUE@@WITH_GTK_UI_TRUE@@WITH_NATIVE_PLUGINS_TRUE@lrccrawler_lrc123_la_CFLAGS = $(AM_CFLAGS) @LIBCURL_CFLAGS@
 @HAVE_LIBCURL_TRUE@@WITH_GTK_UI_TRUE@@WITH_NATIVE_PLUGINS_TRUE@lrccrawler_lrc123_la_SOURCES = lrccrawler-lrc123.c lrccrawler-common.c
 @HAVE_LIBCURL_TRUE@@WITH_GTK_UI_TRUE@@WITH_NATIVE_PLUGINS_TRUE@lrccrawler_lrc123_la_LIBADD = @GLIB2_LIBS@ @GTK_LIBS@ @LIBCURL_LIBS@
 @HAVE_LIBCURL_TRUE@@WITH_GTK_UI_TRUE@@WITH_NATIVE_PLUGINS_TRUE@lrccrawler_lrc123_la_LIBTOOLFLAGS = --tag=disable-static
@@ -569,32 +569,32 @@ karaeffect_la-karaeffect.lo: karaeffect.c
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(karaeffect_la_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o karaeffect_la-karaeffect.lo `test -f 'karaeffect.c' || echo '$(srcdir)/'`karaeffect.c
 
 lrccrawler_lrc123_la-lrccrawler-lrc123.lo: lrccrawler-lrc123.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(lrccrawler_lrc123_la_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT lrccrawler_lrc123_la-lrccrawler-lrc123.lo -MD -MP -MF $(DEPDIR)/lrccrawler_lrc123_la-lrccrawler-lrc123.Tpo -c -o lrccrawler_lrc123_la-lrccrawler-lrc123.lo `test -f 'lrccrawler-lrc123.c' || echo '$(srcdir)/'`lrccrawler-lrc123.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(lrccrawler_lrc123_la_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(lrccrawler_lrc123_la_CFLAGS) $(CFLAGS) -MT lrccrawler_lrc123_la-lrccrawler-lrc123.lo -MD -MP -MF $(DEPDIR)/lrccrawler_lrc123_la-lrccrawler-lrc123.Tpo -c -o lrccrawler_lrc123_la-lrccrawler-lrc123.lo `test -f 'lrccrawler-lrc123.c' || echo '$(srcdir)/'`lrccrawler-lrc123.c
 @am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/lrccrawler_lrc123_la-lrccrawler-lrc123.Tpo $(DEPDIR)/lrccrawler_lrc123_la-lrccrawler-lrc123.Plo
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='lrccrawler-lrc123.c' object='lrccrawler_lrc123_la-lrccrawler-lrc123.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(lrccrawler_lrc123_la_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o lrccrawler_lrc123_la-lrccrawler-lrc123.lo `test -f 'lrccrawler-lrc123.c' || echo '$(srcdir)/'`lrccrawler-lrc123.c
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(lrccrawler_lrc123_la_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(lrccrawler_lrc123_la_CFLAGS) $(CFLAGS) -c -o lrccrawler_lrc123_la-lrccrawler-lrc123.lo `test -f 'lrccrawler-lrc123.c' || echo '$(srcdir)/'`lrccrawler-lrc123.c
 
 lrccrawler_lrc123_la-lrccrawler-common.lo: lrccrawler-common.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(lrccrawler_lrc123_la_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT lrccrawler_lrc123_la-lrccrawler-common.lo -MD -MP -MF $(DEPDIR)/lrccrawler_lrc123_la-lrccrawler-common.Tpo -c -o lrccrawler_lrc123_la-lrccrawler-common.lo `test -f 'lrccrawler-common.c' || echo '$(srcdir)/'`lrccrawler-common.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(lrccrawler_lrc123_la_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(lrccrawler_lrc123_la_CFLAGS) $(CFLAGS) -MT lrccrawler_lrc123_la-lrccrawler-common.lo -MD -MP -MF $(DEPDIR)/lrccrawler_lrc123_la-lrccrawler-common.Tpo -c -o lrccrawler_lrc123_la-lrccrawler-common.lo `test -f 'lrccrawler-common.c' || echo '$(srcdir)/'`lrccrawler-common.c
 @am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/lrccrawler_lrc123_la-lrccrawler-common.Tpo $(DEPDIR)/lrccrawler_lrc123_la-lrccrawler-common.Plo
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='lrccrawler-common.c' object='lrccrawler_lrc123_la-lrccrawler-common.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(lrccrawler_lrc123_la_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o lrccrawler_lrc123_la-lrccrawler-common.lo `test -f 'lrccrawler-common.c' || echo '$(srcdir)/'`lrccrawler-common.c
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(lrccrawler_lrc123_la_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(lrccrawler_lrc123_la_CFLAGS) $(CFLAGS) -c -o lrccrawler_lrc123_la-lrccrawler-common.lo `test -f 'lrccrawler-common.c' || echo '$(srcdir)/'`lrccrawler-common.c
 
 lrccrawler_la-lrccrawler.lo: lrccrawler.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(lrccrawler_la_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT lrccrawler_la-lrccrawler.lo -MD -MP -MF $(DEPDIR)/lrccrawler_la-lrccrawler.Tpo -c -o lrccrawler_la-lrccrawler.lo `test -f 'lrccrawler.c' || echo '$(srcdir)/'`lrccrawler.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(lrccrawler_la_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(lrccrawler_la_CFLAGS) $(CFLAGS) -MT lrccrawler_la-lrccrawler.lo -MD -MP -MF $(DEPDIR)/lrccrawler_la-lrccrawler.Tpo -c -o lrccrawler_la-lrccrawler.lo `test -f 'lrccrawler.c' || echo '$(srcdir)/'`lrccrawler.c
 @am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/lrccrawler_la-lrccrawler.Tpo $(DEPDIR)/lrccrawler_la-lrccrawler.Plo
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='lrccrawler.c' object='lrccrawler_la-lrccrawler.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(lrccrawler_la_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o lrccrawler_la-lrccrawler.lo `test -f 'lrccrawler.c' || echo '$(srcdir)/'`lrccrawler.c
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(lrccrawler_la_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(lrccrawler_la_CFLAGS) $(CFLAGS) -c -o lrccrawler_la-lrccrawler.lo `test -f 'lrccrawler.c' || echo '$(srcdir)/'`lrccrawler.c
 
 lrccrawler_la-lrccrawler-common.lo: lrccrawler-common.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(lrccrawler_la_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT lrccrawler_la-lrccrawler-common.lo -MD -MP -MF $(DEPDIR)/lrccrawler_la-lrccrawler-common.Tpo -c -o lrccrawler_la-lrccrawler-common.lo `test -f 'lrccrawler-common.c' || echo '$(srcdir)/'`lrccrawler-common.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(lrccrawler_la_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(lrccrawler_la_CFLAGS) $(CFLAGS) -MT lrccrawler_la-lrccrawler-common.lo -MD -MP -MF $(DEPDIR)/lrccrawler_la-lrccrawler-common.Tpo -c -o lrccrawler_la-lrccrawler-common.lo `test -f 'lrccrawler-common.c' || echo '$(srcdir)/'`lrccrawler-common.c
 @am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/lrccrawler_la-lrccrawler-common.Tpo $(DEPDIR)/lrccrawler_la-lrccrawler-common.Plo
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='lrccrawler-common.c' object='lrccrawler_la-lrccrawler-common.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(lrccrawler_la_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o lrccrawler_la-lrccrawler-common.lo `test -f 'lrccrawler-common.c' || echo '$(srcdir)/'`lrccrawler-common.c
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(lrccrawler_la_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(lrccrawler_la_CFLAGS) $(CFLAGS) -c -o lrccrawler_la-lrccrawler-common.lo `test -f 'lrccrawler-common.c' || echo '$(srcdir)/'`lrccrawler-common.c
 
 mostlyclean-libtool:
 	-rm -f *.lo

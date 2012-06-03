@@ -24,13 +24,14 @@
  */
 
 #include "rc-ui-menu.h"
+#include "rc-ui-player.h"
+#include "rc-ui-window.h"
 #include "rc-ui-listview.h"
 #include "rc-ui-dialog.h"
 #include "rc-ui-plugin.h"
 #include "rc-ui-settings.h"
 #include "rc-ui-effect.h"
 #include "rc-common.h"
-#include "rc-ui-player.h"
 
 /**
  * SECTION: rc-ui-menu
@@ -43,8 +44,17 @@
  * their own menu items into the player.
  */
 
-static GtkUIManager *ui_manager = NULL;
-static GtkActionGroup *ui_actions = NULL;
+typedef struct RCUiMenuPrivate
+{
+    GtkUIManager *ui_manager;
+    GtkActionGroup *ui_actions;
+    gulong state_changed_id;
+    gulong volume_changed_id;
+    gulong repeat_mode_changed_id;
+    gulong random_mode_changed_id;
+}RCUiMenuPrivate;
+
+static RCUiMenuPrivate ui_menu_priv = {0};
 
 static void rc_ui_menu_play_button_clicked_cb()
 {
@@ -144,7 +154,7 @@ static void rc_ui_menu_keep_above_clicked_cb(GtkAction *action,
     active = gtk_toggle_action_get_active(GTK_TOGGLE_ACTION(action));
     g_signal_handlers_block_by_func(action,
         G_CALLBACK(rc_ui_menu_keep_above_clicked_cb), data);
-    rc_ui_player_set_keep_above_state(active);
+    rc_ui_main_window_set_keep_above_state(active);
     g_signal_handlers_unblock_by_func(action,
         G_CALLBACK(rc_ui_menu_keep_above_clicked_cb), data);
 }
@@ -375,7 +385,7 @@ static GtkActionEntry ui_menu_entries[] =
     { "TrayShowPlayer", GTK_STOCK_HOME,
       N_("S_how Player"), NULL,
       N_("Show the window of player"),
-      G_CALLBACK(rc_ui_player_present_main_window) },
+      G_CALLBACK(rc_ui_main_window_present_main_window) },
     { "TrayAbout", GTK_STOCK_ABOUT,
       N_("_About"), NULL,
       N_("About this player"),
@@ -549,35 +559,37 @@ static const gchar *ui_menu_info =
 static void rc_ui_menu_core_state_changed_cb(RCLibCore *core,
     GstState state, gpointer data)
 {
+    RCUiMenuPrivate *priv = (RCUiMenuPrivate *)data;
+    if(data==NULL) return;
     if(state!=GST_STATE_PLAYING && state!=GST_STATE_PAUSED)
     {
-        gtk_action_set_sensitive(gtk_ui_manager_get_action(ui_manager,
+        gtk_action_set_sensitive(gtk_ui_manager_get_action(priv->ui_manager,
             "/RC2MenuBar/ControlMenu/ControlBackward"), FALSE);
-        gtk_action_set_sensitive(gtk_ui_manager_get_action(ui_manager,
+        gtk_action_set_sensitive(gtk_ui_manager_get_action(priv->ui_manager,
             "/RC2MenuBar/ControlMenu/ControlForward"), FALSE);
     }
     else
     {
-        gtk_action_set_sensitive(gtk_ui_manager_get_action(ui_manager,
+        gtk_action_set_sensitive(gtk_ui_manager_get_action(priv->ui_manager,
             "/RC2MenuBar/ControlMenu/ControlBackward"), TRUE);
-        gtk_action_set_sensitive(gtk_ui_manager_get_action(ui_manager,
+        gtk_action_set_sensitive(gtk_ui_manager_get_action(priv->ui_manager,
             "/RC2MenuBar/ControlMenu/ControlForward"), TRUE);
     }
     if(state==GST_STATE_PLAYING)
     {
-        g_object_set(G_OBJECT(gtk_ui_manager_get_action(ui_manager,
+        g_object_set(G_OBJECT(gtk_ui_manager_get_action(priv->ui_manager,
             "/RC2MenuBar/ControlMenu/ControlPlay")), "stock-id",
             GTK_STOCK_MEDIA_PAUSE, NULL);
-        g_object_set(G_OBJECT(gtk_ui_manager_get_action(ui_manager,
+        g_object_set(G_OBJECT(gtk_ui_manager_get_action(priv->ui_manager,
             "/TrayPopupMenu/TrayPlay")), "stock-id",
             GTK_STOCK_MEDIA_PAUSE, NULL);
     }
     else
     {
-        g_object_set(G_OBJECT(gtk_ui_manager_get_action(ui_manager,
+        g_object_set(G_OBJECT(gtk_ui_manager_get_action(priv->ui_manager,
             "/RC2MenuBar/ControlMenu/ControlPlay")), "stock-id",
             GTK_STOCK_MEDIA_PLAY, NULL);
-        g_object_set(G_OBJECT(gtk_ui_manager_get_action(ui_manager,
+        g_object_set(G_OBJECT(gtk_ui_manager_get_action(priv->ui_manager,
             "/TrayPopupMenu/TrayPlay")), "stock-id",
             GTK_STOCK_MEDIA_PLAY, NULL);
     }
@@ -586,114 +598,152 @@ static void rc_ui_menu_core_state_changed_cb(RCLibCore *core,
 static void rc_ui_menu_volume_changed_cb(RCLibCore *core, gdouble volume,
     gpointer data)
 {
+    RCUiMenuPrivate *priv = (RCUiMenuPrivate *)data;
+    if(data==NULL) return;
     if(volume>0.9999)
-        gtk_action_set_sensitive(gtk_ui_manager_get_action(ui_manager,
+        gtk_action_set_sensitive(gtk_ui_manager_get_action(priv->ui_manager,
             "/RC2MenuBar/ControlMenu/ControlVolumeUp"), FALSE);
     else
-        gtk_action_set_sensitive(gtk_ui_manager_get_action(ui_manager,
+        gtk_action_set_sensitive(gtk_ui_manager_get_action(priv->ui_manager,
             "/RC2MenuBar/ControlMenu/ControlVolumeUp"), TRUE);
     if(volume<0.0001)
-        gtk_action_set_sensitive(gtk_ui_manager_get_action(ui_manager,
+        gtk_action_set_sensitive(gtk_ui_manager_get_action(priv->ui_manager,
             "/RC2MenuBar/ControlMenu/ControlVolumeDown"), FALSE);
     else
-        gtk_action_set_sensitive(gtk_ui_manager_get_action(ui_manager,
+        gtk_action_set_sensitive(gtk_ui_manager_get_action(priv->ui_manager,
             "/RC2MenuBar/ControlMenu/ControlVolumeDown"), TRUE);
 }
 
 static void rc_ui_menu_player_repeat_mode_changed_cb(RCLibPlayer *player,
     RCLibPlayerRepeatMode mode, gpointer data)
 {
+    RCUiMenuPrivate *priv = (RCUiMenuPrivate *)data;
+    if(data==NULL) return;
     gtk_radio_action_set_current_value(GTK_RADIO_ACTION(
-        gtk_ui_manager_get_action(ui_manager,
+        gtk_ui_manager_get_action(priv->ui_manager,
         "/RC2MenuBar/ControlMenu/RepeatMenu/RepeatNoRepeat")), mode);
 }
 
 static void rc_ui_menu_player_random_mode_changed_cb(RCLibPlayer *player,
     RCLibPlayerRandomMode mode, gpointer data)
 {
+    RCUiMenuPrivate *priv = (RCUiMenuPrivate *)data;
+    if(data==NULL) return;
     gtk_radio_action_set_current_value(GTK_RADIO_ACTION(
-        gtk_ui_manager_get_action(ui_manager,
+        gtk_ui_manager_get_action(priv->ui_manager,
         "/RC2MenuBar/ControlMenu/RandomMenu/RandomNoRandom")), mode);
 }
 
-/**
- * rc_ui_menu_init:
- *
- * Initialize the menus.
- *
- * Returns: The #GtkUIManager
- */
-
-GtkUIManager *rc_ui_menu_init()
+static void rc_ui_menu_weak_ref_cb(gpointer data, GObject *object)
 {
+    RCUiMenuPrivate *priv = (RCUiMenuPrivate *)data;
+    if(data==NULL) return;
+    priv->ui_manager = NULL;
+    priv->ui_actions = NULL;
+    if(priv->state_changed_id>0)
+    {
+        rclib_core_signal_disconnect(priv->state_changed_id);
+        priv->state_changed_id = 0;
+    }
+    if(priv->volume_changed_id>0)
+    {
+        rclib_core_signal_disconnect(priv->volume_changed_id);
+        priv->volume_changed_id = 0;
+    }
+    if(priv->repeat_mode_changed_id>0)
+    {
+        rclib_player_signal_disconnect(priv->repeat_mode_changed_id);
+        priv->repeat_mode_changed_id = 0;
+    }
+    if(priv->random_mode_changed_id>0)
+    {
+        rclib_player_signal_disconnect(priv->random_mode_changed_id);
+        priv->random_mode_changed_id = 0;
+    }
+}
+
+static gboolean rc_ui_menu_init()
+{
+    RCUiMenuPrivate *priv = &ui_menu_priv;
     GError *error = NULL;
     gdouble volume;
-    ui_manager = gtk_ui_manager_new();
-    ui_actions = gtk_action_group_new("RC2Actions");
-    gtk_action_group_set_translation_domain(ui_actions, GETTEXT_PACKAGE);
-    gtk_action_group_add_actions(ui_actions, ui_menu_entries,
+    priv->ui_manager = gtk_ui_manager_new();
+    priv->ui_actions = gtk_action_group_new("RC2Actions");
+    gtk_action_group_set_translation_domain(priv->ui_actions,
+        GETTEXT_PACKAGE);
+    gtk_action_group_add_actions(priv->ui_actions, ui_menu_entries,
         ui_menu_n_entries, NULL);
-    gtk_action_group_add_radio_actions(ui_actions, ui_menu_repeat_entries,
-        ui_menu_repeat_n_entries, 0,
+    gtk_action_group_add_radio_actions(priv->ui_actions,
+        ui_menu_repeat_entries, ui_menu_repeat_n_entries, 0,
         G_CALLBACK(rc_ui_menu_repeat_clicked_cb), NULL);
-    gtk_action_group_add_radio_actions(ui_actions, ui_menu_random_entries,
-        ui_menu_random_n_entries, 0,
+    gtk_action_group_add_radio_actions(priv->ui_actions,
+        ui_menu_random_entries, ui_menu_random_n_entries, 0,
         G_CALLBACK(rc_ui_menu_random_clicked_cb), NULL);
-    gtk_action_group_add_toggle_actions(ui_actions, ui_menu_toogle_entries,
-        ui_menu_toogle_n_entries, NULL);
-    gtk_ui_manager_insert_action_group(ui_manager, ui_actions, 0);
-    g_object_unref(ui_actions);
-    if(!gtk_ui_manager_add_ui_from_string(ui_manager, ui_menu_info, -1,
+    gtk_action_group_add_toggle_actions(priv->ui_actions,
+        ui_menu_toogle_entries, ui_menu_toogle_n_entries, NULL);
+    gtk_ui_manager_insert_action_group(priv->ui_manager, priv->ui_actions, 0);
+    g_object_unref(priv->ui_actions);
+    if(!gtk_ui_manager_add_ui_from_string(priv->ui_manager, ui_menu_info, -1,
         &error))
     {
         g_warning("Cannot load menu: %s", error->message);
         g_error_free(error);
-        ui_manager = NULL;
-        return NULL;
+        g_object_unref(priv->ui_manager);
+        priv->ui_manager = NULL;
+        return FALSE;
     }
-    gtk_action_set_sensitive(gtk_ui_manager_get_action(ui_manager,
+    gtk_action_set_sensitive(gtk_ui_manager_get_action(priv->ui_manager,
         "/AlbumPopupMenu/AlbumSaveImage"), FALSE);
-    gtk_action_set_sensitive(gtk_ui_manager_get_action(ui_manager,
+    gtk_action_set_sensitive(gtk_ui_manager_get_action(priv->ui_manager,
         "/ProgressPopupMenu/ProgressImportStatus"), FALSE);
-    gtk_action_set_sensitive(gtk_ui_manager_get_action(ui_manager,
+    gtk_action_set_sensitive(gtk_ui_manager_get_action(priv->ui_manager,
         "/ProgressPopupMenu/ProgressRefreshStatus"), FALSE);
-    gtk_action_set_visible(gtk_ui_manager_get_action(ui_manager,
+    gtk_action_set_visible(gtk_ui_manager_get_action(priv->ui_manager,
         "/ProgressPopupMenu/ProgressImportStatus"), FALSE);
-    gtk_action_set_visible(gtk_ui_manager_get_action(ui_manager,
+    gtk_action_set_visible(gtk_ui_manager_get_action(priv->ui_manager,
         "/ProgressPopupMenu/ProgressRefreshStatus"), FALSE);
-    gtk_action_set_visible(gtk_ui_manager_get_action(ui_manager,
+    gtk_action_set_visible(gtk_ui_manager_get_action(priv->ui_manager,
         "/ProgressPopupMenu/ProgressImportCancel"), FALSE);
-    gtk_action_set_visible(gtk_ui_manager_get_action(ui_manager,
+    gtk_action_set_visible(gtk_ui_manager_get_action(priv->ui_manager,
         "/ProgressPopupMenu/ProgressRefreshCancel"), FALSE);
         
     /* Seal the menus that are not available now */
-    gtk_action_set_sensitive(gtk_ui_manager_get_action(ui_manager,
+    gtk_action_set_sensitive(gtk_ui_manager_get_action(priv->ui_manager,
         "/RC2MenuBar/HelpMenu/HelpReport"), FALSE);
 
-    rclib_core_signal_connect("state-changed",
-        G_CALLBACK(rc_ui_menu_core_state_changed_cb), NULL);
-    rclib_core_signal_connect("volume-changed",
-        G_CALLBACK(rc_ui_menu_volume_changed_cb), NULL);
-    rclib_player_signal_connect("repeat-mode-changed",
-        G_CALLBACK(rc_ui_menu_player_repeat_mode_changed_cb), NULL);
-    rclib_player_signal_connect("random-mode-changed",
-        G_CALLBACK(rc_ui_menu_player_random_mode_changed_cb), NULL);
+    g_object_weak_ref(G_OBJECT(priv->ui_manager), rc_ui_menu_weak_ref_cb,
+        priv);
+
+    priv->state_changed_id = rclib_core_signal_connect("state-changed",
+        G_CALLBACK(rc_ui_menu_core_state_changed_cb), priv);
+    priv->volume_changed_id = rclib_core_signal_connect("volume-changed",
+        G_CALLBACK(rc_ui_menu_volume_changed_cb), priv);
+    priv->repeat_mode_changed_id = rclib_player_signal_connect(
+        "repeat-mode-changed",
+        G_CALLBACK(rc_ui_menu_player_repeat_mode_changed_cb), priv);
+    priv->random_mode_changed_id = rclib_player_signal_connect(
+        "random-mode-changed",
+        G_CALLBACK(rc_ui_menu_player_random_mode_changed_cb), priv);
     if(rclib_core_get_volume(&volume))
-        rc_ui_menu_volume_changed_cb(NULL, volume, NULL);   
-    return ui_manager;
+        rc_ui_menu_volume_changed_cb(NULL, volume, priv);
+    return TRUE;
 }
 
 /**
  * rc_ui_menu_get_ui_manager:
  *
- * Get the UI Manager of the menus.
+ * Get the UI Manager of the menus. If it is not initialized
+ * yet, it will be initialized.
  *
  * Returns: The UI Manager object.
  */
 
 GtkUIManager *rc_ui_menu_get_ui_manager()
 {
-    return ui_manager;
+    RCUiMenuPrivate *priv = &ui_menu_priv;
+    if(priv->ui_manager==NULL)
+        if(!rc_ui_menu_init()) return NULL;
+    return priv->ui_manager;
 }
 
 /**
@@ -714,13 +764,14 @@ GtkUIManager *rc_ui_menu_get_ui_manager()
 guint rc_ui_menu_add_menu_action(GtkAction *action, const gchar *path,
     const gchar *name, const gchar *action_name, gboolean top)
 {
+    RCUiMenuPrivate *priv = &ui_menu_priv;
     guint id;
-    if(ui_manager==NULL || ui_actions==NULL || action==NULL || path==NULL ||
+    if(priv->ui_manager==NULL || priv->ui_actions==NULL || action==NULL || path==NULL ||
         name==NULL) return 0;
-    id = gtk_ui_manager_new_merge_id(ui_manager);
-    gtk_ui_manager_add_ui(ui_manager, id, path, name, action_name,
+    id = gtk_ui_manager_new_merge_id(priv->ui_manager);
+    gtk_ui_manager_add_ui(priv->ui_manager, id, path, name, action_name,
         GTK_UI_MANAGER_MENUITEM, top);
-    gtk_action_group_add_action(ui_actions, action);
+    gtk_action_group_add_action(priv->ui_actions, action);
     return id;
 }
 
@@ -734,11 +785,12 @@ guint rc_ui_menu_add_menu_action(GtkAction *action, const gchar *path,
 
 void rc_ui_menu_remove_menu_action(GtkAction *action, guint id)
 {
-    if(ui_manager==NULL || ui_actions==NULL) return;
+    RCUiMenuPrivate *priv = &ui_menu_priv;
+    if(priv->ui_manager==NULL || priv->ui_actions==NULL) return;
     if(action==NULL) return;
     if(id>0)
-        gtk_ui_manager_remove_ui(ui_manager, id);
-    gtk_action_group_remove_action(ui_actions, action);
+        gtk_ui_manager_remove_ui(priv->ui_manager, id);
+    gtk_action_group_remove_action(priv->ui_actions, action);
 }
 
 

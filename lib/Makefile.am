@@ -26,7 +26,7 @@ rclib-marshal.h: rclib-marshal.list
 librhythmcat_2_0_la_SOURCES = \
     $(librhythmcat_2_0_sources) $(librhythmcat_2_0_builtsources)
 
-INCLUDES = @GLIB2_CFLAGS@ @GSTREAMER_CFLAGS@ @JSON_GLIB_CFLAGS@ \
+AM_CFLAGS = @GLIB2_CFLAGS@ @GSTREAMER_CFLAGS@ @JSON_GLIB_CFLAGS@ \
     -DLOCALEDIR=\"$(localedir)\"
 
 librhythmcat_2_0_la_LIBADD = @GLIB2_LIBS@ @GSTREAMER_LIBS@ @JSON_GLIB_LIBS@
@@ -59,7 +59,7 @@ RhythmCatLib_2_0_gir_SCANNERFLAGS = --identifier-prefix=RCLib --symbol-prefix=rc
 RhythmCatLib_2_0_gir_NAMESPACE = RhythmCatLib
 RhythmCatLib_2_0_gir_VERSION = 2.0
 RhythmCatLib_2_0_gir_INCLUDES = GObject-2.0 Gst-0.10 GstPbutils-0.10 GstBase-0.10 GstFft-0.10
-RhythmCatLib_2_0_gir_CFLAGS = $(INCLUDES)
+RhythmCatLib_2_0_gir_CFLAGS = $(AM_CFLAGS)
 RhythmCatLib_2_0_gir_LIBS = librhythmcat-2.0.la
 RhythmCatLib_2_0_gir_FILES = $(introspection_sources)
 INTROSPECTION_GIRS += RhythmCatLib-2.0.gir

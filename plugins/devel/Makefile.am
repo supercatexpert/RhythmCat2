@@ -6,11 +6,11 @@ python3_la_LDFLAGS = -module -avoid-version -export-dynamic -O2
 plugin_LTLIBRARIES =
 noinst_LTLIBRARIES =
 
-INCLUDES = @GLIB2_CFLAGS@ @GSTREAMER_CFLAGS@ @JSON_GLIB_CFLAGS@ \
+AM_CFLAGS = @GLIB2_CFLAGS@ @GSTREAMER_CFLAGS@ @JSON_GLIB_CFLAGS@ \
     -DLOCALEDIR=\"$(localedir)\" -I$(top_srcdir)/lib
 
 if WITH_GTK_UI
-INCLUDES += @GTK_CFLAGS@ -I$(top_srcdir)/ui
+AM_CFLAGS += @GTK_CFLAGS@ -I$(top_srcdir)/ui
 endif
 
 plugin_LTLIBRARIES += \
@@ -31,7 +31,7 @@ plugin_LTLIBRARIES += \
 
 python3_la_SOURCES = python3.c
 python3_la_LIBADD = @GLIB2_LIBS@ @GSTREAMER_LIBS@ @JSON_GLIB_LIBS@ @PYTHON3_LIBS@
-INCLUDES += @PYTHON3_CFLAGS@
+python3_la_CFLAGS = $(AM_CFLAGS) @PYTHON3_CFLAGS@
 python3_la_LIBTOOLFLAGS = --tag=disable-static
 
 endif

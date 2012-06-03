@@ -26,7 +26,7 @@
 #include "rc-ui-listview.h"
 #include "rc-ui-listmodel.h"
 #include "rc-ui-menu.h"
-#include "rc-ui-player.h"
+#include "rc-ui-window.h"
 #include "rc-common.h"
 
 /**
@@ -1009,16 +1009,7 @@ GType rc_ui_playlist_view_get_type()
     return g_define_type_id__volatile;
 }
 
-/**
- * rc_ui_listview_init:
- * @catalog_widget: return the catalog list view widget
- * @playlist_widget: return the playlist list view widget
- * 
- * Initialize the catalog list view & playlist list view.
- */
-
-void rc_ui_listview_init(GtkWidget **catalog_widget,
-    GtkWidget **playlist_widget)
+static void rc_ui_listview_init()
 {
     GtkTreeModel *catalog_model;
     GtkTreeModel *playlist_model;
@@ -1027,11 +1018,6 @@ void rc_ui_listview_init(GtkWidget **catalog_widget,
     GtkTreeIter catalog_iter, playlist_iter;
     ui_catalog_view_instance = g_object_new(RC_UI_TYPE_CATALOG_VIEW, NULL);
     ui_playlist_view_instance = g_object_new(RC_UI_TYPE_PLAYLIST_VIEW, NULL);
-    if(catalog_widget!=NULL)
-        *catalog_widget = GTK_WIDGET(ui_catalog_view_instance);
-    if(playlist_widget!=NULL)
-        *playlist_widget = GTK_WIDGET(ui_playlist_view_instance);
-    rc_ui_list_model_init();
     catalog_selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(
         ui_catalog_view_instance));
     catalog_model = rc_ui_list_model_get_catalog_store();
@@ -1064,22 +1050,28 @@ void rc_ui_listview_init(GtkWidget **catalog_widget,
 /**
  * rc_ui_listview_get_catalog_widget:
  *
- * Get the catalog list view widget.
+ * Get the catalog list view widget. If the widget is not initialized
+ * yet, it will be initialized.
  */
 
 GtkWidget *rc_ui_listview_get_catalog_widget()
 {
+    if(ui_catalog_view_instance==NULL)
+        rc_ui_listview_init();
     return GTK_WIDGET(ui_catalog_view_instance);
 }
 
 /**
  * rc_ui_listview_get_playlist_widget:
  *
- * Get the playlist list view widget.
+ * Get the playlist list view widget. If the widget is not initialized
+ * yet, it will be initialized.
  */
 
 GtkWidget *rc_ui_listview_get_playlist_widget()
 {
+    if(ui_playlist_view_instance==NULL)
+        rc_ui_listview_init();
     return GTK_WIDGET(ui_playlist_view_instance);
 }
 
@@ -1438,7 +1430,7 @@ void rc_ui_listview_playlist_set_column_display_mode(gboolean mode)
         g_object_set(priv->year_column, "visible", FALSE, NULL);
         g_object_set(priv->ftype_column, "visible", FALSE, NULL);
     }
-    rc_ui_player_playlist_scrolled_window_set_horizontal_policy(mode);
+    rc_ui_main_window_playlist_scrolled_window_set_horizontal_policy(mode);
 }
 
 /**

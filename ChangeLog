@@ -78,3 +78,10 @@
 
     * Use json-glib instead of json-c now.
 
+2012-06-04  SuperCat    <supercatexpert@gmail.com>
+
+    * Made some new classes.
+    * Fixed some bugs.
+    
+
+

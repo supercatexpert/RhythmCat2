@@ -67,15 +67,16 @@ am__DEPENDENCIES_1 =
 @WITH_GTK_UI_TRUE@	$(top_builddir)/lib/librhythmcat-2.0.la \
 @WITH_GTK_UI_TRUE@	$(am__DEPENDENCIES_1)
 am__librhythmcat_ui_2_0_la_SOURCES_DIST = rc-ui-listmodel.c \
-	rc-ui-player.c rc-ui-listview.c rc-ui-menu.c rc-ui-dialog.c \
-	rc-ui-slabel.c rc-ui-spectrum.c rc-ui-style.c rc-ui-plugin.c \
-	rc-ui-settings.c rc-ui-effect.c rc-main.c rc-ui-resources.c
+	rc-ui-player.c rc-ui-window.c rc-ui-listview.c rc-ui-menu.c \
+	rc-ui-dialog.c rc-ui-slabel.c rc-ui-spectrum.c rc-ui-style.c \
+	rc-ui-plugin.c rc-ui-settings.c rc-ui-effect.c rc-main.c \
+	rc-ui-resources.c
 @WITH_GTK_UI_TRUE@am__objects_1 = rc-ui-listmodel.lo rc-ui-player.lo \
-@WITH_GTK_UI_TRUE@	rc-ui-listview.lo rc-ui-menu.lo \
-@WITH_GTK_UI_TRUE@	rc-ui-dialog.lo rc-ui-slabel.lo \
-@WITH_GTK_UI_TRUE@	rc-ui-spectrum.lo rc-ui-style.lo \
-@WITH_GTK_UI_TRUE@	rc-ui-plugin.lo rc-ui-settings.lo \
-@WITH_GTK_UI_TRUE@	rc-ui-effect.lo rc-main.lo
+@WITH_GTK_UI_TRUE@	rc-ui-window.lo rc-ui-listview.lo \
+@WITH_GTK_UI_TRUE@	rc-ui-menu.lo rc-ui-dialog.lo \
+@WITH_GTK_UI_TRUE@	rc-ui-slabel.lo rc-ui-spectrum.lo \
+@WITH_GTK_UI_TRUE@	rc-ui-style.lo rc-ui-plugin.lo \
+@WITH_GTK_UI_TRUE@	rc-ui-settings.lo rc-ui-effect.lo rc-main.lo
 @WITH_GTK_UI_TRUE@am__objects_2 = rc-ui-resources.lo
 @WITH_GTK_UI_TRUE@am_librhythmcat_ui_2_0_la_OBJECTS =  \
 @WITH_GTK_UI_TRUE@	$(am__objects_1) $(am__objects_2)
@@ -156,10 +157,10 @@ am__uninstall_files_from_dir = { \
   }
 DATA = $(gir_DATA) $(pkgconfig_DATA) $(typelib_DATA)
 am__librhythmcat_ui_2_0include_HEADERS_DIST = rc-common.h \
-	rc-ui-listmodel.h rc-ui-listview.h rc-ui-player.h rc-ui-menu.h \
-	rc-ui-dialog.h rc-ui-slabel.h rc-ui-style.h rc-ui-spectrum.h \
-	rc-ui-plugin.h rc-ui-settings.h rc-ui-effect.h rc-main.h \
-	rc-ui-resources.h
+	rc-ui-listmodel.h rc-ui-listview.h rc-ui-player.h \
+	rc-ui-window.h rc-ui-menu.h rc-ui-dialog.h rc-ui-slabel.h \
+	rc-ui-style.h rc-ui-spectrum.h rc-ui-plugin.h rc-ui-settings.h \
+	rc-ui-effect.h rc-main.h rc-ui-resources.h
 am__noinst_HEADERS_DIST = rc-ui-img-icon.xpm rc-ui-img-nocov.xpm
 HEADERS = $(librhythmcat_ui_2_0include_HEADERS) $(noinst_HEADERS)
 ETAGS = etags
@@ -358,14 +359,14 @@ top_srcdir = @top_srcdir@
 @WITH_GTK_UI_TRUE@    rc-ui-img-icon.xpm rc-ui-img-nocov.xpm
 
 @WITH_GTK_UI_TRUE@librhythmcat_ui_2_0_sources = \
-@WITH_GTK_UI_TRUE@    rc-ui-listmodel.c rc-ui-player.c rc-ui-listview.c rc-ui-menu.c \
-@WITH_GTK_UI_TRUE@    rc-ui-dialog.c rc-ui-slabel.c rc-ui-spectrum.c rc-ui-style.c \
-@WITH_GTK_UI_TRUE@    rc-ui-plugin.c rc-ui-settings.c rc-ui-effect.c rc-main.c
+@WITH_GTK_UI_TRUE@    rc-ui-listmodel.c rc-ui-player.c rc-ui-window.c rc-ui-listview.c \
+@WITH_GTK_UI_TRUE@    rc-ui-menu.c rc-ui-dialog.c rc-ui-slabel.c rc-ui-spectrum.c \
+@WITH_GTK_UI_TRUE@    rc-ui-style.c rc-ui-plugin.c rc-ui-settings.c rc-ui-effect.c rc-main.c
 
 @WITH_GTK_UI_TRUE@librhythmcat_ui_2_0_headers = \
-@WITH_GTK_UI_TRUE@    rc-ui-listmodel.h rc-ui-listview.h rc-ui-player.h rc-ui-menu.h \
-@WITH_GTK_UI_TRUE@    rc-ui-dialog.h rc-ui-slabel.h rc-ui-style.h rc-ui-spectrum.h \
-@WITH_GTK_UI_TRUE@    rc-ui-plugin.h rc-ui-settings.h rc-ui-effect.h rc-main.h
+@WITH_GTK_UI_TRUE@    rc-ui-listmodel.h rc-ui-listview.h rc-ui-player.h rc-ui-window.h \
+@WITH_GTK_UI_TRUE@    rc-ui-menu.h rc-ui-dialog.h rc-ui-slabel.h rc-ui-style.h \
+@WITH_GTK_UI_TRUE@    rc-ui-spectrum.h rc-ui-plugin.h rc-ui-settings.h rc-ui-effect.h rc-main.h
 
 @WITH_GTK_UI_TRUE@librhythmcat_ui_2_0_builtsources = rc-ui-resources.c
 @WITH_GTK_UI_TRUE@librhythmcat_ui_2_0_builtheaders = rc-ui-resources.h
@@ -393,7 +394,7 @@ top_srcdir = @top_srcdir@
 @WITH_GTK_UI_TRUE@RhythmCat2_LDFLAGS = -export-dynamic -no-undefined \
 @WITH_GTK_UI_TRUE@	-export-symbols-regex "^[[^_]].*" -O2 \
 @WITH_GTK_UI_TRUE@	$(am__append_4)
-@WITH_GTK_UI_TRUE@INCLUDES = @GLIB2_CFLAGS@ @GTK_CFLAGS@ \
+@WITH_GTK_UI_TRUE@AM_CFLAGS = @GLIB2_CFLAGS@ @GTK_CFLAGS@ \
 @WITH_GTK_UI_TRUE@	@GSTREAMER_CFLAGS@ @JSON_GLIB_CFLAGS@ \
 @WITH_GTK_UI_TRUE@	-DLOCALEDIR=\"$(localedir)\" \
 @WITH_GTK_UI_TRUE@	-I$(top_srcdir)/lib -DLIBDIR=\"$(libdir)\" \
@@ -420,7 +421,7 @@ top_srcdir = @top_srcdir@
 @HAVE_INTROSPECTION_TRUE@@WITH_GTK_UI_TRUE@RhythmCat_2_0_gir_NAMESPACE = RhythmCat
 @HAVE_INTROSPECTION_TRUE@@WITH_GTK_UI_TRUE@RhythmCat_2_0_gir_VERSION = 2.0
 @HAVE_INTROSPECTION_TRUE@@WITH_GTK_UI_TRUE@RhythmCat_2_0_gir_INCLUDES = GObject-2.0 Gtk-3.0 Gst-0.10 GstPbutils-0.10 GstBase-0.10 GstFft-0.10
-@HAVE_INTROSPECTION_TRUE@@WITH_GTK_UI_TRUE@RhythmCat_2_0_gir_CFLAGS = $(INCLUDES)
+@HAVE_INTROSPECTION_TRUE@@WITH_GTK_UI_TRUE@RhythmCat_2_0_gir_CFLAGS = $(AM_CFLAGS)
 @HAVE_INTROSPECTION_TRUE@@WITH_GTK_UI_TRUE@RhythmCat_2_0_gir_PROGRAM = $(builddir)/RhythmCat2
 @HAVE_INTROSPECTION_TRUE@@WITH_GTK_UI_TRUE@RhythmCat_2_0_gir_FILES = $(introspection_sources)
 @HAVE_INTROSPECTION_TRUE@@WITH_GTK_UI_TRUE@girdir = $(datadir)/gir-1.0
@@ -541,6 +542,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rc-ui-slabel.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rc-ui-spectrum.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rc-ui-style.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rc-ui-window.Plo@am__quote@
 
 .c.o:
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(COMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<

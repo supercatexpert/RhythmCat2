@@ -35,8 +35,7 @@ POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
 @WITH_GTK_UI_TRUE@am__append_1 = @GTK_CFLAGS@ -I$(top_srcdir)/ui
-@HAVE_LIBCURL_TRUE@am__append_2 = @LIBCURL_CFLAGS@ -I$(top_srcdir)/plugins/extra
-@HAVE_LIBCURL_TRUE@@WITH_GTK_UI_TRUE@@WITH_NATIVE_PLUGINS_TRUE@am__append_3 = \
+@HAVE_LIBCURL_TRUE@@WITH_GTK_UI_TRUE@@WITH_NATIVE_PLUGINS_TRUE@am__append_2 = \
 @HAVE_LIBCURL_TRUE@@WITH_GTK_UI_TRUE@@WITH_NATIVE_PLUGINS_TRUE@    lrccrawler-ttplayer.la
 
 subdir = plugins/restricted
@@ -97,7 +96,7 @@ am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
 am__v_lt_0 = --silent
 lrccrawler_ttplayer_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC \
 	$(lrccrawler_ttplayer_la_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \
-	--mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
+	--mode=link $(CCLD) $(lrccrawler_ttplayer_la_CFLAGS) $(CFLAGS) \
 	$(lrccrawler_ttplayer_la_LDFLAGS) $(LDFLAGS) -o $@
 @HAVE_LIBCURL_TRUE@@WITH_GTK_UI_TRUE@@WITH_NATIVE_PLUGINS_TRUE@am_lrccrawler_ttplayer_la_rpath = -rpath \
 @HAVE_LIBCURL_TRUE@@WITH_GTK_UI_TRUE@@WITH_NATIVE_PLUGINS_TRUE@	$(crawlermoduledir)
@@ -324,12 +323,12 @@ plugindir = $(libdir)/RhythmCat2/plugins
 crawlermoduledir = $(libdir)/RhythmCat2/plugins/CrawlerModules
 lrccrawler_ttplayer_la_LDFLAGS = -module -avoid-version -export-dynamic -O2
 plugin_LTLIBRARIES = 
-crawlermodule_LTLIBRARIES = $(am__append_3)
+crawlermodule_LTLIBRARIES = $(am__append_2)
 noinst_LTLIBRARIES = 
-INCLUDES = @GLIB2_CFLAGS@ @GSTREAMER_CFLAGS@ @GTK_CFLAGS@ \
+AM_CFLAGS = @GLIB2_CFLAGS@ @GSTREAMER_CFLAGS@ @GTK_CFLAGS@ \
 	@JSON_GLIB_CFLAGS@ -DLOCALEDIR=\"$(localedir)\" \
-	-I$(top_srcdir)/lib -I$(top_srcdir)/ui $(am__append_1) \
-	$(am__append_2)
+	-I$(top_srcdir)/lib -I$(top_srcdir)/ui $(am__append_1)
+@HAVE_LIBCURL_TRUE@@WITH_GTK_UI_TRUE@@WITH_NATIVE_PLUGINS_TRUE@lrccrawler_ttplayer_la_CFLAGS = $(AM_CFLAGS) @LIBCURL_CFLAGS@ -I$(top_srcdir)/plugins/extra
 @HAVE_LIBCURL_TRUE@@WITH_GTK_UI_TRUE@@WITH_NATIVE_PLUGINS_TRUE@lrccrawler_ttplayer_la_SOURCES = lrccrawler-ttplayer.c ../extra/lrccrawler-common.c
 @HAVE_LIBCURL_TRUE@@WITH_GTK_UI_TRUE@@WITH_NATIVE_PLUGINS_TRUE@lrccrawler_ttplayer_la_LIBADD = @GLIB2_LIBS@ @GTK_LIBS@ @LIBCURL_LIBS@
 @HAVE_LIBCURL_TRUE@@WITH_GTK_UI_TRUE@@WITH_NATIVE_PLUGINS_TRUE@lrccrawler_ttplayer_la_LIBTOOLFLAGS = --tag=disable-static
@@ -473,18 +472,18 @@ distclean-compile:
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LTCOMPILE) -c -o $@ $<
 
 lrccrawler_ttplayer_la-lrccrawler-ttplayer.lo: lrccrawler-ttplayer.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(lrccrawler_ttplayer_la_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT lrccrawler_ttplayer_la-lrccrawler-ttplayer.lo -MD -MP -MF $(DEPDIR)/lrccrawler_ttplayer_la-lrccrawler-ttplayer.Tpo -c -o lrccrawler_ttplayer_la-lrccrawler-ttplayer.lo `test -f 'lrccrawler-ttplayer.c' || echo '$(srcdir)/'`lrccrawler-ttplayer.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(lrccrawler_ttplayer_la_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(lrccrawler_ttplayer_la_CFLAGS) $(CFLAGS) -MT lrccrawler_ttplayer_la-lrccrawler-ttplayer.lo -MD -MP -MF $(DEPDIR)/lrccrawler_ttplayer_la-lrccrawler-ttplayer.Tpo -c -o lrccrawler_ttplayer_la-lrccrawler-ttplayer.lo `test -f 'lrccrawler-ttplayer.c' || echo '$(srcdir)/'`lrccrawler-ttplayer.c
 @am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/lrccrawler_ttplayer_la-lrccrawler-ttplayer.Tpo $(DEPDIR)/lrccrawler_ttplayer_la-lrccrawler-ttplayer.Plo
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='lrccrawler-ttplayer.c' object='lrccrawler_ttplayer_la-lrccrawler-ttplayer.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(lrccrawler_ttplayer_la_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o lrccrawler_ttplayer_la-lrccrawler-ttplayer.lo `test -f 'lrccrawler-ttplayer.c' || echo '$(srcdir)/'`lrccrawler-ttplayer.c
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(lrccrawler_ttplayer_la_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(lrccrawler_ttplayer_la_CFLAGS) $(CFLAGS) -c -o lrccrawler_ttplayer_la-lrccrawler-ttplayer.lo `test -f 'lrccrawler-ttplayer.c' || echo '$(srcdir)/'`lrccrawler-ttplayer.c
 
 lrccrawler_ttplayer_la-lrccrawler-common.lo: ../extra/lrccrawler-common.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(lrccrawler_ttplayer_la_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT lrccrawler_ttplayer_la-lrccrawler-common.lo -MD -MP -MF $(DEPDIR)/lrccrawler_ttplayer_la-lrccrawler-common.Tpo -c -o lrccrawler_ttplayer_la-lrccrawler-common.lo `test -f '../extra/lrccrawler-common.c' || echo '$(srcdir)/'`../extra/lrccrawler-common.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(lrccrawler_ttplayer_la_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(lrccrawler_ttplayer_la_CFLAGS) $(CFLAGS) -MT lrccrawler_ttplayer_la-lrccrawler-common.lo -MD -MP -MF $(DEPDIR)/lrccrawler_ttplayer_la-lrccrawler-common.Tpo -c -o lrccrawler_ttplayer_la-lrccrawler-common.lo `test -f '../extra/lrccrawler-common.c' || echo '$(srcdir)/'`../extra/lrccrawler-common.c
 @am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/lrccrawler_ttplayer_la-lrccrawler-common.Tpo $(DEPDIR)/lrccrawler_ttplayer_la-lrccrawler-common.Plo
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='../extra/lrccrawler-common.c' object='lrccrawler_ttplayer_la-lrccrawler-common.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(lrccrawler_ttplayer_la_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o lrccrawler_ttplayer_la-lrccrawler-common.lo `test -f '../extra/lrccrawler-common.c' || echo '$(srcdir)/'`../extra/lrccrawler-common.c
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(lrccrawler_ttplayer_la_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(lrccrawler_ttplayer_la_CFLAGS) $(CFLAGS) -c -o lrccrawler_ttplayer_la-lrccrawler-common.lo `test -f '../extra/lrccrawler-common.c' || echo '$(srcdir)/'`../extra/lrccrawler-common.c
 
 mostlyclean-libtool:
 	-rm -f *.lo

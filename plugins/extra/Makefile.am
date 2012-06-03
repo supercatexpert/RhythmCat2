@@ -12,11 +12,11 @@ noinst_LTLIBRARIES =
 
 noinst_HEADERS = lrccrawler-common.h
 
-INCLUDES = @GLIB2_CFLAGS@ @GSTREAMER_CFLAGS@ @JSON_GLIB_CFLAGS@ \
+AM_CFLAGS = @GLIB2_CFLAGS@ @GSTREAMER_CFLAGS@ @JSON_GLIB_CFLAGS@ \
     -DLOCALEDIR=\"$(localedir)\" -I$(top_srcdir)/lib
 
 if WITH_GTK_UI
-INCLUDES += @GTK_CFLAGS@ -I$(top_srcdir)/ui
+AM_CFLAGS += @GTK_CFLAGS@ -I$(top_srcdir)/ui
 endif
 
 if HAVE_LIBCURL
@@ -48,7 +48,7 @@ if HAVE_LIBCURL
 plugin_LTLIBRARIES += \
     lrccrawler.la
 
-lrccrawler_la_INCLUDES = @INCLUDES@ @LIBCURL_CFLAGS@
+lrccrawler_la_CFLAGS = $(AM_CFLAGS) @LIBCURL_CFLAGS@
 lrccrawler_la_SOURCES = lrccrawler.c lrccrawler-common.c
 lrccrawler_la_LIBADD = @GLIB2_LIBS@ @GTK_LIBS@ @GSTREAMER_LIBS@ @JSON_GLIB_LIBS@ \
     @LIBCURL_LIBS@ $(top_builddir)/lib/librhythmcat-2.0.la \
@@ -58,7 +58,7 @@ lrccrawler_la_LIBTOOLFLAGS = --tag=disable-static
 crawlermodule_LTLIBRARIES += \
     lrccrawler-lrc123.la
 
-lrccrawler_lrc123_la_INCLUDES = @INCLUDES@ @LIBCURL_CFLAGS@
+lrccrawler_lrc123_la_CFLAGS = $(AM_CFLAGS) @LIBCURL_CFLAGS@
 lrccrawler_lrc123_la_SOURCES = lrccrawler-lrc123.c lrccrawler-common.c
 lrccrawler_lrc123_la_LIBADD = @GLIB2_LIBS@ @GTK_LIBS@ @LIBCURL_LIBS@
 lrccrawler_lrc123_la_LIBTOOLFLAGS = --tag=disable-static

@@ -29,10 +29,10 @@
 #include <rclib.h>
 #include "rc-main.h"
 #include "rc-ui-player.h"
+#include "rc-ui-window.h"
 #include "rc-ui-listview.h"
 #include "rc-common.h"
 #include "rc-ui-style.h"
-#include "rc-ui-effect.h"
 #include "rc-ui-resources.h"
 #include "rc-ui-dialog.h"
 
@@ -136,17 +136,17 @@ static void rc_main_app_activate(GApplication *application)
     rclib_settings_apply();
     if(rclib_settings_has_key("MainUI", "HideCoverImage", NULL))
     {
-        rc_ui_player_cover_image_set_visible(
+        rc_ui_main_window_cover_image_set_visible(
             !rclib_settings_get_boolean("MainUI", "HideCoverImage", NULL));
     }
     if(rclib_settings_has_key("MainUI", "HideLyricLabels", NULL))
     {
-        rc_ui_player_lyric_labels_set_visible(
+        rc_ui_main_window_lyric_labels_set_visible(
             !rclib_settings_get_boolean("MainUI", "HideLyricLabels", NULL));
     }
     if(rclib_settings_has_key("MainUI", "HideSpectrumWidget", NULL))
     {
-        rc_ui_player_spectrum_set_visible(
+        rc_ui_main_window_spectrum_set_visible(
             !rclib_settings_get_boolean("MainUI", "HideSpectrumWidget",
             NULL));
     }
@@ -256,7 +256,7 @@ static void rc_main_app_activate(GApplication *application)
         if(playlist_iter!=NULL)
             rclib_player_play_db(playlist_iter);
     }
-    rc_ui_player_show();
+    rc_ui_main_window_show();
     if(main_remaining_args!=NULL)
     {
         if(catalog!=NULL)
@@ -535,7 +535,6 @@ gint rc_main_run(gint *argc, gchar **argv[])
 
 void rc_main_exit()
 {
-    rc_ui_effect_window_destroy();
     rc_ui_player_exit();
     rclib_plugin_exit();
     rclib_exit();

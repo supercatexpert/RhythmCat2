@@ -167,8 +167,6 @@ GType rc_ui_catalog_store_get_type();
 GType rc_ui_playlist_store_get_type();
 
 /*< public >*/
-gboolean rc_ui_list_model_init();
-void rc_ui_list_model_exit();
 GtkTreeModel *rc_ui_list_model_get_catalog_store();
 GtkTreeModel *rc_ui_list_model_get_playlist_store(GtkTreeIter *iter);
 GSequenceIter *rc_ui_list_model_get_catalog_by_model(GtkTreeModel *model);

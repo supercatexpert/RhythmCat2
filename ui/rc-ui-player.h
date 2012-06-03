@@ -68,8 +68,6 @@ struct _RCUiPlayerClass {
     /*< private >*/
     GObjectClass parent_class;
     void (*ready)(RCUiPlayer *player);
-    /* To be implemented! */
-    void (*keep_above_changed)(RCUiPlayer *player, gboolean state);
 };
 
 /*< private >*/
@@ -82,21 +80,9 @@ GObject *rc_ui_player_get_instance();
 gulong rc_ui_player_signal_connect(const gchar *name,
     GCallback callback, gpointer data);
 void rc_ui_player_signal_disconnect(gulong handler_id);
-void rc_ui_player_show();
 GtkWidget *rc_ui_player_get_main_window();
 GdkPixbuf *rc_ui_player_get_icon_image();
 GtkStatusIcon *rc_ui_player_get_tray_icon();
-GdkPixbuf *rc_ui_player_get_default_cover_image();
-void rc_ui_player_present_main_window();
-void rc_ui_player_set_keep_above_state(gboolean state);
-void rc_ui_player_cover_image_set_visible(gboolean visible);
-gboolean rc_ui_player_cover_image_get_visible();
-void rc_ui_player_lyric_labels_set_visible(gboolean visible);
-gboolean rc_ui_player_lyric_labels_get_visible();
-void rc_ui_player_spectrum_set_visible(gboolean visible);
-gboolean rc_ui_player_spectrum_get_visible();
-void rc_ui_player_playlist_scrolled_window_set_horizontal_policy(
-    gboolean state);
 
 G_END_DECLS
 

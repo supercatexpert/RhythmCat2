@@ -4,6 +4,7 @@
   <chapters>
     <sub name="API reference" link="ch01.html">
       <sub name="RCMainApplication" link="RCMainApplication.html"/>
+      <sub name="RCUiMainWindow" link="RCUiMainWindow.html"/>
       <sub name="Dialogs" link="RhythmCat-Dialogs.html"/>
       <sub name="Audio Effect UI" link="RhythmCat-Audio-Effect-UI.html"/>
       <sub name="Playlist View Models" link="RCUiPlaylistStore.html"/>
@@ -29,6 +30,22 @@
     <keyword type="function" name="rc_main_get_data_dir ()" link="RCMainApplication.html#rc-main-get-data-dir"/>
     <keyword type="function" name="rc_main_get_user_dir ()" link="RCMainApplication.html#rc-main-get-user-dir"/>
     <keyword type="function" name="rc_main_run ()" link="RCMainApplication.html#rc-main-run"/>
+    <keyword type="struct" name="struct RCUiMainWindow" link="RCUiMainWindow.html#RCUiMainWindow-struct"/>
+    <keyword type="struct" name="struct RCUiMainWindowClass" link="RCUiMainWindow.html#RCUiMainWindowClass"/>
+    <keyword type="macro" name="RC_UI_MAIN_WINDOW_TYPE" link="RCUiMainWindow.html#RC-UI-MAIN-WINDOW-TYPE:CAPS"/>
+    <keyword type="function" name="rc_ui_main_window_cover_image_get_visible ()" link="RCUiMainWindow.html#rc-ui-main-window-cover-image-get-visible"/>
+    <keyword type="function" name="rc_ui_main_window_cover_image_set_visible ()" link="RCUiMainWindow.html#rc-ui-main-window-cover-image-set-visible"/>
+    <keyword type="function" name="rc_ui_main_window_get_default_cover_image ()" link="RCUiMainWindow.html#rc-ui-main-window-get-default-cover-image"/>
+    <keyword type="function" name="rc_ui_main_window_get_widget ()" link="RCUiMainWindow.html#rc-ui-main-window-get-widget"/>
+    <keyword type="function" name="rc_ui_main_window_lyric_labels_get_visible ()" link="RCUiMainWindow.html#rc-ui-main-window-lyric-labels-get-visible"/>
+    <keyword type="function" name="rc_ui_main_window_lyric_labels_set_visible ()" link="RCUiMainWindow.html#rc-ui-main-window-lyric-labels-set-visible"/>
+    <keyword type="function" name="rc_ui_main_window_playlist_scrolled_window_set_horizontal_policy ()" link="RCUiMainWindow.html#rc-ui-main-window-playlist-scrolled-window-set-horizontal-policy"/>
+    <keyword type="function" name="rc_ui_main_window_present_main_window ()" link="RCUiMainWindow.html#rc-ui-main-window-present-main-window"/>
+    <keyword type="function" name="rc_ui_main_window_set_keep_above_state ()" link="RCUiMainWindow.html#rc-ui-main-window-set-keep-above-state"/>
+    <keyword type="function" name="rc_ui_main_window_show ()" link="RCUiMainWindow.html#rc-ui-main-window-show"/>
+    <keyword type="function" name="rc_ui_main_window_spectrum_get_visible ()" link="RCUiMainWindow.html#rc-ui-main-window-spectrum-get-visible"/>
+    <keyword type="function" name="rc_ui_main_window_spectrum_set_visible ()" link="RCUiMainWindow.html#rc-ui-main-window-spectrum-set-visible"/>
+    <keyword type="signal" name="The &quot;keep-above-changed&quot; signal" link="RCUiMainWindow.html#RCUiMainWindow-keep-above-changed"/>
     <keyword type="function" name="rc_ui_dialog_about_player ()" link="RhythmCat-Dialogs.html#rc-ui-dialog-about-player"/>
     <keyword type="function" name="rc_ui_dialog_add_directory ()" link="RhythmCat-Dialogs.html#rc-ui-dialog-add-directory"/>
     <keyword type="function" name="rc_ui_dialog_add_music ()" link="RhythmCat-Dialogs.html#rc-ui-dialog-add-music"/>
@@ -52,12 +69,10 @@
     <keyword type="enum" name="enum RCUiPlaylistColumns" link="RCUiPlaylistStore.html#RCUiPlaylistColumns"/>
     <keyword type="struct" name="struct RCUiPlaylistStore" link="RCUiPlaylistStore.html#RCUiPlaylistStore-struct"/>
     <keyword type="struct" name="struct RCUiPlaylistStoreClass" link="RCUiPlaylistStore.html#RCUiPlaylistStoreClass"/>
-    <keyword type="function" name="rc_ui_list_model_exit ()" link="RCUiPlaylistStore.html#rc-ui-list-model-exit"/>
     <keyword type="function" name="rc_ui_list_model_get_catalog_by_model ()" link="RCUiPlaylistStore.html#rc-ui-list-model-get-catalog-by-model"/>
     <keyword type="function" name="rc_ui_list_model_get_catalog_store ()" link="RCUiPlaylistStore.html#rc-ui-list-model-get-catalog-store"/>
     <keyword type="function" name="rc_ui_list_model_get_playlist_store ()" link="RCUiPlaylistStore.html#rc-ui-list-model-get-playlist-store"/>
     <keyword type="function" name="rc_ui_list_model_get_playlist_title_format ()" link="RCUiPlaylistStore.html#rc-ui-list-model-get-playlist-title-format"/>
-    <keyword type="function" name="rc_ui_list_model_init ()" link="RCUiPlaylistStore.html#rc-ui-list-model-init"/>
     <keyword type="function" name="rc_ui_list_model_set_playlist_title_format ()" link="RCUiPlaylistStore.html#rc-ui-list-model-set-playlist-title-format"/>
     <keyword type="struct" name="struct RCUiCatalogView" link="RCUiPlaylistView.html#RCUiCatalogView-struct"/>
     <keyword type="struct" name="struct RCUiCatalogViewClass" link="RCUiPlaylistView.html#RCUiCatalogViewClass"/>
@@ -73,7 +88,6 @@
     <keyword type="function" name="rc_ui_listview_catalog_set_pango_attributes ()" link="RCUiPlaylistView.html#rc-ui-listview-catalog-set-pango-attributes"/>
     <keyword type="function" name="rc_ui_listview_get_catalog_widget ()" link="RCUiPlaylistView.html#rc-ui-listview-get-catalog-widget"/>
     <keyword type="function" name="rc_ui_listview_get_playlist_widget ()" link="RCUiPlaylistView.html#rc-ui-listview-get-playlist-widget"/>
-    <keyword type="function" name="rc_ui_listview_init ()" link="RCUiPlaylistView.html#rc-ui-listview-init"/>
     <keyword type="function" name="rc_ui_listview_playlist_delete_items ()" link="RCUiPlaylistView.html#rc-ui-listview-playlist-delete-items"/>
     <keyword type="function" name="rc_ui_listview_playlist_get_column_display_mode ()" link="RCUiPlaylistView.html#rc-ui-listview-playlist-get-column-display-mode"/>
     <keyword type="function" name="rc_ui_listview_playlist_get_cursor ()" link="RCUiPlaylistView.html#rc-ui-listview-playlist-get-cursor"/>
@@ -89,31 +103,18 @@
     <keyword type="function" name="rc_ui_listview_refresh ()" link="RCUiPlaylistView.html#rc-ui-listview-refresh"/>
     <keyword type="function" name="rc_ui_menu_add_menu_action ()" link="RhythmCat-Menus.html#rc-ui-menu-add-menu-action"/>
     <keyword type="function" name="rc_ui_menu_get_ui_manager ()" link="RhythmCat-Menus.html#rc-ui-menu-get-ui-manager"/>
-    <keyword type="function" name="rc_ui_menu_init ()" link="RhythmCat-Menus.html#rc-ui-menu-init"/>
     <keyword type="function" name="rc_ui_menu_remove_menu_action ()" link="RhythmCat-Menus.html#rc-ui-menu-remove-menu-action"/>
     <keyword type="struct" name="struct RCUiPlayer" link="RCUiPlayer.html#RCUiPlayer-struct"/>
     <keyword type="struct" name="struct RCUiPlayerClass" link="RCUiPlayer.html#RCUiPlayerClass"/>
     <keyword type="macro" name="RC_UI_PLAYER_TYPE" link="RCUiPlayer.html#RC-UI-PLAYER-TYPE:CAPS"/>
-    <keyword type="function" name="rc_ui_player_cover_image_get_visible ()" link="RCUiPlayer.html#rc-ui-player-cover-image-get-visible"/>
-    <keyword type="function" name="rc_ui_player_cover_image_set_visible ()" link="RCUiPlayer.html#rc-ui-player-cover-image-set-visible"/>
     <keyword type="function" name="rc_ui_player_exit ()" link="RCUiPlayer.html#rc-ui-player-exit"/>
-    <keyword type="function" name="rc_ui_player_get_default_cover_image ()" link="RCUiPlayer.html#rc-ui-player-get-default-cover-image"/>
     <keyword type="function" name="rc_ui_player_get_icon_image ()" link="RCUiPlayer.html#rc-ui-player-get-icon-image"/>
     <keyword type="function" name="rc_ui_player_get_instance ()" link="RCUiPlayer.html#rc-ui-player-get-instance"/>
     <keyword type="function" name="rc_ui_player_get_main_window ()" link="RCUiPlayer.html#rc-ui-player-get-main-window"/>
     <keyword type="function" name="rc_ui_player_get_tray_icon ()" link="RCUiPlayer.html#rc-ui-player-get-tray-icon"/>
     <keyword type="function" name="rc_ui_player_init ()" link="RCUiPlayer.html#rc-ui-player-init"/>
-    <keyword type="function" name="rc_ui_player_lyric_labels_get_visible ()" link="RCUiPlayer.html#rc-ui-player-lyric-labels-get-visible"/>
-    <keyword type="function" name="rc_ui_player_lyric_labels_set_visible ()" link="RCUiPlayer.html#rc-ui-player-lyric-labels-set-visible"/>
-    <keyword type="function" name="rc_ui_player_playlist_scrolled_window_set_horizontal_policy ()" link="RCUiPlayer.html#rc-ui-player-playlist-scrolled-window-set-horizontal-policy"/>
-    <keyword type="function" name="rc_ui_player_present_main_window ()" link="RCUiPlayer.html#rc-ui-player-present-main-window"/>
-    <keyword type="function" name="rc_ui_player_set_keep_above_state ()" link="RCUiPlayer.html#rc-ui-player-set-keep-above-state"/>
-    <keyword type="function" name="rc_ui_player_show ()" link="RCUiPlayer.html#rc-ui-player-show"/>
     <keyword type="function" name="rc_ui_player_signal_connect ()" link="RCUiPlayer.html#rc-ui-player-signal-connect"/>
     <keyword type="function" name="rc_ui_player_signal_disconnect ()" link="RCUiPlayer.html#rc-ui-player-signal-disconnect"/>
-    <keyword type="function" name="rc_ui_player_spectrum_get_visible ()" link="RCUiPlayer.html#rc-ui-player-spectrum-get-visible"/>
-    <keyword type="function" name="rc_ui_player_spectrum_set_visible ()" link="RCUiPlayer.html#rc-ui-player-spectrum-set-visible"/>
-    <keyword type="signal" name="The &quot;keep-above-changed&quot; signal" link="RCUiPlayer.html#RCUiPlayer-keep-above-changed"/>
     <keyword type="signal" name="The &quot;ready&quot; signal" link="RCUiPlayer.html#RCUiPlayer-ready"/>
     <keyword type="function" name="rc_ui_plugin_window_destroy ()" link="RhythmCat-Plug-in-Configuration-UI.html#rc-ui-plugin-window-destroy"/>
     <keyword type="function" name="rc_ui_plugin_window_show ()" link="RhythmCat-Plug-in-Configuration-UI.html#rc-ui-plugin-window-show"/>

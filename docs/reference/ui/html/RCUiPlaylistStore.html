@@ -50,14 +50,12 @@ struct              <a class="link" href="RCUiPlaylistStore.html#RCUiCatalogStor
 enum                <a class="link" href="RCUiPlaylistStore.html#RCUiPlaylistColumns" title="enum RCUiPlaylistColumns">RCUiPlaylistColumns</a>;
 struct              <a class="link" href="RCUiPlaylistStore.html#RCUiPlaylistStore-struct" title="struct RCUiPlaylistStore">RCUiPlaylistStore</a>;
 struct              <a class="link" href="RCUiPlaylistStore.html#RCUiPlaylistStoreClass" title="struct RCUiPlaylistStoreClass">RCUiPlaylistStoreClass</a>;
-<span class="returnvalue">void</span>                <a class="link" href="RCUiPlaylistStore.html#rc-ui-list-model-exit" title="rc_ui_list_model_exit ()">rc_ui_list_model_exit</a>               ();
 <a href="/usr/share/gtk-doc/html/glib/glib-Sequences.html#GSequenceIter"><span class="returnvalue">GSequenceIter</span></a> *     <a class="link" href="RCUiPlaylistStore.html#rc-ui-list-model-get-catalog-by-model" title="rc_ui_list_model_get_catalog_by_model ()">rc_ui_list_model_get_catalog_by_model</a>
                                                         (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/gtk/GtkTreeModel.html"><span class="type">GtkTreeModel</span></a> *model</code></em>);
 <a href="/usr/share/gtk-doc/html/gtk/GtkTreeModel.html"><span class="returnvalue">GtkTreeModel</span></a> *      <a class="link" href="RCUiPlaylistStore.html#rc-ui-list-model-get-catalog-store" title="rc_ui_list_model_get_catalog_store ()">rc_ui_list_model_get_catalog_store</a>  ();
 <a href="/usr/share/gtk-doc/html/gtk/GtkTreeModel.html"><span class="returnvalue">GtkTreeModel</span></a> *      <a class="link" href="RCUiPlaylistStore.html#rc-ui-list-model-get-playlist-store" title="rc_ui_list_model_get_playlist_store ()">rc_ui_list_model_get_playlist_store</a> (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/gtk/GtkTreeModel.html#GtkTreeIter"><span class="type">GtkTreeIter</span></a> *iter</code></em>);
 const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *       <a class="link" href="RCUiPlaylistStore.html#rc-ui-list-model-get-playlist-title-format" title="rc_ui_list_model_get_playlist_title_format ()">rc_ui_list_model_get_playlist_title_format</a>
                                                         ();
-<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RCUiPlaylistStore.html#rc-ui-list-model-init" title="rc_ui_list_model_init ()">rc_ui_list_model_init</a>               ();
 <span class="returnvalue">void</span>                <a class="link" href="RCUiPlaylistStore.html#rc-ui-list-model-set-playlist-title-format" title="rc_ui_list_model_set_playlist_title_format ()">rc_ui_list_model_set_playlist_title_format</a>
                                                         (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *format</code></em>);
 </pre>
@@ -268,14 +266,6 @@ The data structure used for <a class="link" href="RCUiPlaylistStore.html" title=
 </div>
 <hr>
 <div class="refsect2">
-<a name="rc-ui-list-model-exit"></a><h3>rc_ui_list_model_exit ()</h3>
-<pre class="programlisting"><span class="returnvalue">void</span>                rc_ui_list_model_exit               ();</pre>
-<p>
-Unload the list model.
-</p>
-</div>
-<hr>
-<div class="refsect2">
 <a name="rc-ui-list-model-get-catalog-by-model"></a><h3>rc_ui_list_model_get_catalog_by_model ()</h3>
 <pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Sequences.html#GSequenceIter"><span class="returnvalue">GSequenceIter</span></a> *     rc_ui_list_model_get_catalog_by_model
                                                         (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/gtk/GtkTreeModel.html"><span class="type">GtkTreeModel</span></a> *model</code></em>);</pre>
@@ -301,7 +291,8 @@ Get the catalog iter by given playlist store model.
 <a name="rc-ui-list-model-get-catalog-store"></a><h3>rc_ui_list_model_get_catalog_store ()</h3>
 <pre class="programlisting"><a href="/usr/share/gtk-doc/html/gtk/GtkTreeModel.html"><span class="returnvalue">GtkTreeModel</span></a> *      rc_ui_list_model_get_catalog_store  ();</pre>
 <p>
-Get the catalog store.
+Get the catalog store. If the catalog store is not initialize,
+it will be intialized first.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -316,7 +307,8 @@ Get the catalog store.
 <a name="rc-ui-list-model-get-playlist-store"></a><h3>rc_ui_list_model_get_playlist_store ()</h3>
 <pre class="programlisting"><a href="/usr/share/gtk-doc/html/gtk/GtkTreeModel.html"><span class="returnvalue">GtkTreeModel</span></a> *      rc_ui_list_model_get_playlist_store (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/gtk/GtkTreeModel.html#GtkTreeIter"><span class="type">GtkTreeIter</span></a> *iter</code></em>);</pre>
 <p>
-Get the playlist store by the iter in the catalog.
+Get the playlist store by the iter in the catalog. If the store is
+not initialized, it will be initialzed first.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -345,21 +337,6 @@ Get the format string of the title column in the playlist.
 <tbody><tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
 <td>The format string, do not free or modify it.</td>
-</tr></tbody>
-</table></div>
-</div>
-<hr>
-<div class="refsect2">
-<a name="rc-ui-list-model-init"></a><h3>rc_ui_list_model_init ()</h3>
-<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rc_ui_list_model_init               ();</pre>
-<p>
-Initialize the list model (catalog model &amp; playlist model).
-</p>
-<div class="variablelist"><table border="0">
-<col align="left" valign="top">
-<tbody><tr>
-<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>Whether the initialization succeeded.</td>
 </tr></tbody>
 </table></div>
 </div>

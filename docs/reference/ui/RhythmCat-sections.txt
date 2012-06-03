@@ -52,12 +52,10 @@ RCUiCatalogStoreClass
 RCUiPlaylistColumns
 RCUiPlaylistStore
 RCUiPlaylistStoreClass
-rc_ui_list_model_exit
 rc_ui_list_model_get_catalog_by_model
 rc_ui_list_model_get_catalog_store
 rc_ui_list_model_get_playlist_store
 rc_ui_list_model_get_playlist_title_format
-rc_ui_list_model_init
 rc_ui_list_model_set_playlist_title_format
 <SUBSECTION Standard>
 RC_UI_CATALOG_STORE
@@ -94,7 +92,6 @@ rc_ui_listview_catalog_select
 rc_ui_listview_catalog_set_pango_attributes
 rc_ui_listview_get_catalog_widget
 rc_ui_listview_get_playlist_widget
-rc_ui_listview_init
 rc_ui_listview_playlist_delete_items
 rc_ui_listview_playlist_get_column_display_mode
 rc_ui_listview_playlist_get_cursor
@@ -129,7 +126,6 @@ rc_ui_playlist_view_get_type
 <FILE>rc-ui-menu</FILE>
 rc_ui_menu_add_menu_action
 rc_ui_menu_get_ui_manager
-rc_ui_menu_init
 rc_ui_menu_remove_menu_action
 </SECTION>
 
@@ -139,25 +135,14 @@ rc_ui_menu_remove_menu_action
 RCUiPlayer
 RCUiPlayerClass
 RC_UI_PLAYER_TYPE
-rc_ui_player_cover_image_get_visible
-rc_ui_player_cover_image_set_visible
 rc_ui_player_exit
-rc_ui_player_get_default_cover_image
 rc_ui_player_get_icon_image
 rc_ui_player_get_instance
 rc_ui_player_get_main_window
 rc_ui_player_get_tray_icon
 rc_ui_player_init
-rc_ui_player_lyric_labels_get_visible
-rc_ui_player_lyric_labels_set_visible
-rc_ui_player_playlist_scrolled_window_set_horizontal_policy
-rc_ui_player_present_main_window
-rc_ui_player_set_keep_above_state
-rc_ui_player_show
 rc_ui_player_signal_connect
 rc_ui_player_signal_disconnect
-rc_ui_player_spectrum_get_visible
-rc_ui_player_spectrum_set_visible
 <SUBSECTION Standard>
 RC_UI_IS_PLAYER
 RC_UI_IS_PLAYER_CLASS
@@ -234,6 +219,28 @@ rc_ui_style_search_theme_paths
 
 <SECTION>
 <FILE>rc-ui-window</FILE>
-
+<TITLE>RCUiMainWindow</TITLE>
+RCUiMainWindow
+RCUiMainWindowClass
+RC_UI_MAIN_WINDOW_TYPE
+rc_ui_main_window_cover_image_get_visible
+rc_ui_main_window_cover_image_set_visible
+rc_ui_main_window_get_default_cover_image
+rc_ui_main_window_get_widget
+rc_ui_main_window_lyric_labels_get_visible
+rc_ui_main_window_lyric_labels_set_visible
+rc_ui_main_window_playlist_scrolled_window_set_horizontal_policy
+rc_ui_main_window_present_main_window
+rc_ui_main_window_set_keep_above_state
+rc_ui_main_window_show
+rc_ui_main_window_spectrum_get_visible
+rc_ui_main_window_spectrum_set_visible
+<SUBSECTION Standard>
+RC_UI_IS_MAIN_WINDOW
+RC_UI_IS_MAIN_WINDOW_CLASS
+RC_UI_MAIN_WINDOW
+RC_UI_MAIN_WINDOW_CLASS
+RC_UI_MAIN_WINDOW_GET_CLASS
+rc_ui_main_window_get_type
 </SECTION>
 

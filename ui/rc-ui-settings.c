@@ -407,7 +407,7 @@ static void rc_ui_settings_if_hidecovimg_toggled(GtkToggleButton *button,
 {
     gboolean flag = gtk_toggle_button_get_active(button);
     rclib_settings_set_boolean("MainUI", "HideCoverImage", flag);
-    rc_ui_player_cover_image_set_visible(!flag);
+    rc_ui_main_window_cover_image_set_visible(!flag);
 }
 
 static void rc_ui_settings_if_hidelrc_toggled(GtkToggleButton *button,
@@ -415,7 +415,7 @@ static void rc_ui_settings_if_hidelrc_toggled(GtkToggleButton *button,
 {
     gboolean flag = gtk_toggle_button_get_active(button);
     rclib_settings_set_boolean("MainUI", "HideLyricLabels", flag);
-    rc_ui_player_lyric_labels_set_visible(!flag);
+    rc_ui_main_window_lyric_labels_set_visible(!flag);
 }
 
 static void rc_ui_settings_if_hidespr_toggled(GtkToggleButton *button,
@@ -423,7 +423,7 @@ static void rc_ui_settings_if_hidespr_toggled(GtkToggleButton *button,
 {
     gboolean flag = gtk_toggle_button_get_active(button);
     rclib_settings_set_boolean("MainUI", "HideSpectrumWidget", flag);
-    rc_ui_player_spectrum_set_visible(!flag);
+    rc_ui_main_window_spectrum_set_visible(!flag);
 }
 
 static void rc_ui_settings_if_multicolumn_toggled(GtkToggleButton *button,

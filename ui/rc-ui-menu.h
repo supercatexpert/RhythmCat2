@@ -31,7 +31,6 @@
 
 G_BEGIN_DECLS
 
-GtkUIManager *rc_ui_menu_init();
 GtkUIManager *rc_ui_menu_get_ui_manager();
 guint rc_ui_menu_add_menu_action(GtkAction *action, const gchar *path,
     const gchar *name, const gchar *action_name, gboolean top);

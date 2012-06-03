@@ -9,11 +9,11 @@ mpris2_la_LDFLAGS = -module -avoid-version -export-dynamic -O2
 plugin_LTLIBRARIES = 
 noinst_LTLIBRARIES =
 
-INCLUDES = @GLIB2_CFLAGS@ @GSTREAMER_CFLAGS@  @JSON_GLIB_CFLAGS@ \
+AM_CFLAGS = @GLIB2_CFLAGS@ @GSTREAMER_CFLAGS@  @JSON_GLIB_CFLAGS@ \
     -DLOCALEDIR=\"$(localedir)\" -I$(top_srcdir)/lib
 
 if WITH_GTK_UI
-INCLUDES += @GTK_CFLAGS@ -I$(top_srcdir)/ui
+AM_CFLAGS += @GTK_CFLAGS@ -I$(top_srcdir)/ui
 endif
 
 if WITH_NATIVE_PLUGINS

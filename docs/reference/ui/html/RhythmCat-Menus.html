@@ -46,7 +46,6 @@
                                                          <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *action_name</code></em>,
                                                          <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> top</code></em>);
 <a href="/usr/share/gtk-doc/html/gtk/GtkUIManager.html"><span class="returnvalue">GtkUIManager</span></a> *      <a class="link" href="RhythmCat-Menus.html#rc-ui-menu-get-ui-manager" title="rc_ui_menu_get_ui_manager ()">rc_ui_menu_get_ui_manager</a>           ();
-<a href="/usr/share/gtk-doc/html/gtk/GtkUIManager.html"><span class="returnvalue">GtkUIManager</span></a> *      <a class="link" href="RhythmCat-Menus.html#rc-ui-menu-init" title="rc_ui_menu_init ()">rc_ui_menu_init</a>                     ();
 <span class="returnvalue">void</span>                <a class="link" href="RhythmCat-Menus.html#rc-ui-menu-remove-menu-action" title="rc_ui_menu_remove_menu_action ()">rc_ui_menu_remove_menu_action</a>       (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/gtk/GtkAction.html"><span class="type">GtkAction</span></a> *action</code></em>,
                                                          <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> id</code></em>);
 </pre>
@@ -108,29 +107,14 @@ the menu when you do not need it.)</td>
 <a name="rc-ui-menu-get-ui-manager"></a><h3>rc_ui_menu_get_ui_manager ()</h3>
 <pre class="programlisting"><a href="/usr/share/gtk-doc/html/gtk/GtkUIManager.html"><span class="returnvalue">GtkUIManager</span></a> *      rc_ui_menu_get_ui_manager           ();</pre>
 <p>
-Get the UI Manager of the menus.
+Get the UI Manager of the menus. If it is not initialized
+yet, it will be initialized.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
 <tbody><tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
 <td>The UI Manager object.</td>
-</tr></tbody>
-</table></div>
-</div>
-<hr>
-<div class="refsect2">
-<a name="rc-ui-menu-init"></a><h3>rc_ui_menu_init ()</h3>
-<pre class="programlisting"><a href="/usr/share/gtk-doc/html/gtk/GtkUIManager.html"><span class="returnvalue">GtkUIManager</span></a> *      rc_ui_menu_init                     ();</pre>
-<p>
-Initialize the menus.
-</p>
-<div class="variablelist"><table border="0">
-<col align="left" valign="top">
-<tbody><tr>
-<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>The <a href="/usr/share/gtk-doc/html/gtk/GtkUIManager.html"><span class="type">GtkUIManager</span></a>
-</td>
 </tr></tbody>
 </table></div>
 </div>

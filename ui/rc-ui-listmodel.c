@@ -1016,15 +1016,7 @@ static void rc_ui_list_model_playlist_reordered_cb(RCLibDb *db,
     gtk_tree_path_free(path);
 }
 
-/**
- * rc_ui_list_model_init:
- * 
- * Initialize the list model (catalog model & playlist model).
- *
- * Returns: Whether the initialization succeeded.
- */
-
-gboolean rc_ui_list_model_init()
+static gboolean rc_ui_list_model_init()
 {
     RCUiCatalogStorePrivate *catalog_priv;
     RCUiPlaylistStorePrivate *playlist_priv;
@@ -1077,26 +1069,18 @@ gboolean rc_ui_list_model_init()
 }
 
 /**
- * rc_ui_list_model_exit:
- * 
- * Unload the list model.
- */
-
-void rc_ui_list_model_exit()
-{
-    g_object_unref(catalog_model);
-}
-
-/**
  * rc_ui_list_model_get_catalog_store:
  * 
- * Get the catalog store.
+ * Get the catalog store. If the catalog store is not initialize,
+ * it will be intialized first.
  *
  * Returns: The catalog store.
  */
 
 GtkTreeModel *rc_ui_list_model_get_catalog_store()
 {
+    if(catalog_model==NULL)
+        if(!rc_ui_list_model_init()) return NULL;
     return catalog_model;
 }
 
@@ -1104,7 +1088,8 @@ GtkTreeModel *rc_ui_list_model_get_catalog_store()
  * rc_ui_list_model_get_playlist_store:
  * @iter: the iter for the playlist in the catalog
  *
- * Get the playlist store by the iter in the catalog.
+ * Get the playlist store by the iter in the catalog. If the store is
+ * not initialized, it will be initialzed first.
  *
  * Returns: The playlist store, NULL if the iter is invalid.
  */
@@ -1114,6 +1099,8 @@ GtkTreeModel *rc_ui_list_model_get_playlist_store(GtkTreeIter *iter)
     RCLibDbCatalogData *catalog_data;
     GSequenceIter *seq_iter;
     if(iter==NULL || iter->user_data==NULL) return NULL;
+    if(catalog_model==NULL)
+        if(!rc_ui_list_model_init()) return NULL;
     seq_iter = iter->user_data;
     catalog_data = g_sequence_get(seq_iter);
     if(catalog_data==NULL) return NULL;

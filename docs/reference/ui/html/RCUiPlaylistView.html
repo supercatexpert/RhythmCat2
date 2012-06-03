@@ -60,8 +60,6 @@ struct              <a class="link" href="RCUiPlaylistView.html#RCUiPlaylistView
                                                         (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/pango/pango-Text-Attributes.html#PangoAttrList"><span class="type">PangoAttrList</span></a> *list</code></em>);
 <a href="/usr/share/gtk-doc/html/gtk/GtkWidget.html"><span class="returnvalue">GtkWidget</span></a> *         <a class="link" href="RCUiPlaylistView.html#rc-ui-listview-get-catalog-widget" title="rc_ui_listview_get_catalog_widget ()">rc_ui_listview_get_catalog_widget</a>   ();
 <a href="/usr/share/gtk-doc/html/gtk/GtkWidget.html"><span class="returnvalue">GtkWidget</span></a> *         <a class="link" href="RCUiPlaylistView.html#rc-ui-listview-get-playlist-widget" title="rc_ui_listview_get_playlist_widget ()">rc_ui_listview_get_playlist_widget</a>  ();
-<span class="returnvalue">void</span>                <a class="link" href="RCUiPlaylistView.html#rc-ui-listview-init" title="rc_ui_listview_init ()">rc_ui_listview_init</a>                 (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/gtk/GtkWidget.html"><span class="type">GtkWidget</span></a> **catalog_widget</code></em>,
-                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/gtk/GtkWidget.html"><span class="type">GtkWidget</span></a> **playlist_widget</code></em>);
 <span class="returnvalue">void</span>                <a class="link" href="RCUiPlaylistView.html#rc-ui-listview-playlist-delete-items" title="rc_ui_listview_playlist_delete_items ()">rc_ui_listview_playlist_delete_items</a>
                                                         ();
 <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RCUiPlaylistView.html#rc-ui-listview-playlist-get-column-display-mode" title="rc_ui_listview_playlist_get_column_display_mode ()">rc_ui_listview_playlist_get_column_display_mode</a>
@@ -300,7 +298,8 @@ Set the pango attribute for the catalog list view.
 <a name="rc-ui-listview-get-catalog-widget"></a><h3>rc_ui_listview_get_catalog_widget ()</h3>
 <pre class="programlisting"><a href="/usr/share/gtk-doc/html/gtk/GtkWidget.html"><span class="returnvalue">GtkWidget</span></a> *         rc_ui_listview_get_catalog_widget   ();</pre>
 <p>
-Get the catalog list view widget.
+Get the catalog list view widget. If the widget is not initialized
+yet, it will be initialized.
 </p>
 </div>
 <hr>
@@ -308,30 +307,9 @@ Get the catalog list view widget.
 <a name="rc-ui-listview-get-playlist-widget"></a><h3>rc_ui_listview_get_playlist_widget ()</h3>
 <pre class="programlisting"><a href="/usr/share/gtk-doc/html/gtk/GtkWidget.html"><span class="returnvalue">GtkWidget</span></a> *         rc_ui_listview_get_playlist_widget  ();</pre>
 <p>
-Get the playlist list view widget.
+Get the playlist list view widget. If the widget is not initialized
+yet, it will be initialized.
 </p>
-</div>
-<hr>
-<div class="refsect2">
-<a name="rc-ui-listview-init"></a><h3>rc_ui_listview_init ()</h3>
-<pre class="programlisting"><span class="returnvalue">void</span>                rc_ui_listview_init                 (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/gtk/GtkWidget.html"><span class="type">GtkWidget</span></a> **catalog_widget</code></em>,
-                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/gtk/GtkWidget.html"><span class="type">GtkWidget</span></a> **playlist_widget</code></em>);</pre>
-<p>
-Initialize the catalog list view &amp; playlist list view.
-</p>
-<div class="variablelist"><table border="0">
-<col align="left" valign="top">
-<tbody>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>catalog_widget</code></em> :</span></p></td>
-<td>return the catalog list view widget</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>playlist_widget</code></em> :</span></p></td>
-<td>return the playlist list view widget</td>
-</tr>
-</tbody>
-</table></div>
 </div>
 <hr>
 <div class="refsect2">

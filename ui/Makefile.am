@@ -7,14 +7,14 @@ noinst_HEADERS = \
     rc-ui-img-icon.xpm rc-ui-img-nocov.xpm
 
 librhythmcat_ui_2_0_sources = \
-    rc-ui-listmodel.c rc-ui-player.c rc-ui-listview.c rc-ui-menu.c \
-    rc-ui-dialog.c rc-ui-slabel.c rc-ui-spectrum.c rc-ui-style.c \
-    rc-ui-plugin.c rc-ui-settings.c rc-ui-effect.c rc-main.c
+    rc-ui-listmodel.c rc-ui-player.c rc-ui-window.c rc-ui-listview.c \
+    rc-ui-menu.c rc-ui-dialog.c rc-ui-slabel.c rc-ui-spectrum.c \
+    rc-ui-style.c rc-ui-plugin.c rc-ui-settings.c rc-ui-effect.c rc-main.c
 
 librhythmcat_ui_2_0_headers = \
-    rc-ui-listmodel.h rc-ui-listview.h rc-ui-player.h rc-ui-menu.h \
-    rc-ui-dialog.h rc-ui-slabel.h rc-ui-style.h rc-ui-spectrum.h \
-    rc-ui-plugin.h rc-ui-settings.h rc-ui-effect.h rc-main.h
+    rc-ui-listmodel.h rc-ui-listview.h rc-ui-player.h rc-ui-window.h \
+    rc-ui-menu.h rc-ui-dialog.h rc-ui-slabel.h rc-ui-style.h \
+    rc-ui-spectrum.h rc-ui-plugin.h rc-ui-settings.h rc-ui-effect.h rc-main.h
 
 librhythmcat_ui_2_0_builtsources = rc-ui-resources.c
 
@@ -53,12 +53,12 @@ CLEANFILES = $(BUILT_SOURCES)
 RhythmCat2_DEPENDENCIES = @LIBOBJS@ librhythmcat-ui-2.0.la
 RhythmCat2_LDFLAGS = -export-dynamic -no-undefined -export-symbols-regex "^[[^_]].*" -O2
 
-INCLUDES = @GLIB2_CFLAGS@ @GTK_CFLAGS@ @GSTREAMER_CFLAGS@ @JSON_GLIB_CFLAGS@ \
+AM_CFLAGS = @GLIB2_CFLAGS@ @GTK_CFLAGS@ @GSTREAMER_CFLAGS@ @JSON_GLIB_CFLAGS@ \
     -DLOCALEDIR=\"$(localedir)\" -I$(top_srcdir)/lib -DLIBDIR=\"$(libdir)\" \
     -DPREFIXDIR=\"$(prefix)\"
     
 if HAVE_INTROSPECTION
-    INCLUDES += -DENABLE_INTROSPECTION @GINTROSPECTION_CFLAGS@
+    AM_CFLAGS += -DENABLE_INTROSPECTION @GINTROSPECTION_CFLAGS@
 endif
 
 RhythmCat2_LDADD = @LIBOBJS@ @GLIB2_LIBS@ @GTK_LIBS@ @GSTREAMER_LIBS@ \
@@ -91,7 +91,7 @@ RhythmCat_2_0_gir_SCANNERFLAGS = --identifier-prefix=RC --symbol-prefix=rc
 RhythmCat_2_0_gir_NAMESPACE = RhythmCat
 RhythmCat_2_0_gir_VERSION = 2.0
 RhythmCat_2_0_gir_INCLUDES = GObject-2.0 Gtk-3.0 Gst-0.10 GstPbutils-0.10 GstBase-0.10 GstFft-0.10
-RhythmCat_2_0_gir_CFLAGS = $(INCLUDES)
+RhythmCat_2_0_gir_CFLAGS = $(AM_CFLAGS)
 RhythmCat_2_0_gir_PROGRAM = $(builddir)/RhythmCat2
 RhythmCat_2_0_gir_FILES = $(introspection_sources)
 INTROSPECTION_GIRS += RhythmCat-2.0.gir

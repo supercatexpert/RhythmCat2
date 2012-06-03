@@ -28,7 +28,7 @@
 #include <gtk/gtk.h>
 #include <gst/gst.h>
 #include <rclib.h>
-#include <rc-ui-player.h>
+#include <rc-ui-window.h>
 
 #define DBUS_MPRIS_BUS_NAME_PREFIX "org.mpris.MediaPlayer2"
 #define DBUS_MPRIS_OBJECT_NAME "/org/mpris/MediaPlayer2"
@@ -265,7 +265,7 @@ static void rc_plugin_mpris_root_method_call_cb(
     }   
     if(g_strcmp0(method_name, "Raise")==0)
     {
-        rc_ui_player_present_main_window();
+        rc_ui_main_window_present_main_window();
         g_dbus_method_invocation_return_value(invocation, NULL);
     }
     else if(g_strcmp0(method_name, "Quit")==0)

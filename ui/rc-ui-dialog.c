@@ -25,7 +25,7 @@
 
 #include "rc-ui-dialog.h"
 #include "rc-ui-listview.h"
-#include "rc-ui-player.h"
+#include "rc-ui-window.h"
 #include "rc-common.h"
 
 /**
@@ -71,7 +71,7 @@ void rc_ui_dialog_about_player()
         rclib_major_version, rclib_minor_version, rclib_micro_version,
         rclib_build_date);
     g_object_set(about_dialog, "program-name", "RhythmCat2 Music Player",
-        "logo", rc_ui_player_get_icon_image(), "authors",
+        "logo-icon-name", "RhythmCatIcon", "authors",
         dialog_about_authors, "documenters", dialog_about_documenters,
         "artists", dialog_about_artists, "comments",
         _("A music player based on GTK+ 3.0 & GStreamer 0.10"), "website",
@@ -388,7 +388,7 @@ void rc_ui_dialog_bind_lyric()
     reference = gtk_tree_row_reference_new(model, path);
     gtk_tree_path_free(path);
     dialog = gtk_dialog_new_with_buttons(_("Set lyric file binding"),
-        GTK_WINDOW(rc_ui_player_get_main_window()), GTK_DIALOG_MODAL |
+        GTK_WINDOW(rc_ui_main_window_get_widget()), GTK_DIALOG_MODAL |
         GTK_DIALOG_DESTROY_WITH_PARENT, GTK_STOCK_OK, GTK_RESPONSE_ACCEPT,
         GTK_STOCK_CANCEL, GTK_RESPONSE_REJECT, NULL);
     radio_buttons[0] = gtk_radio_button_new_with_mnemonic(NULL,
@@ -585,7 +585,7 @@ void rc_ui_dialog_bind_album()
     reference = gtk_tree_row_reference_new(model, path);
     gtk_tree_path_free(path);
     dialog = gtk_dialog_new_with_buttons(_("Set album file binding"),
-        GTK_WINDOW(rc_ui_player_get_main_window()), GTK_DIALOG_MODAL |
+        GTK_WINDOW(rc_ui_main_window_get_widget()), GTK_DIALOG_MODAL |
         GTK_DIALOG_DESTROY_WITH_PARENT, GTK_STOCK_OK, GTK_RESPONSE_ACCEPT,
         GTK_STOCK_CANCEL, GTK_RESPONSE_REJECT, NULL);
     radio_buttons[0] = gtk_radio_button_new_with_mnemonic(NULL,
@@ -780,7 +780,7 @@ void rc_ui_dialog_open_location()
     const gchar *uri;
     gint ret;
     dialog = gtk_dialog_new_with_buttons(_("Open Location"),
-        GTK_WINDOW(rc_ui_player_get_main_window()), GTK_DIALOG_MODAL |
+        GTK_WINDOW(rc_ui_main_window_get_widget()), GTK_DIALOG_MODAL |
         GTK_DIALOG_DESTROY_WITH_PARENT, GTK_STOCK_OPEN, GTK_RESPONSE_ACCEPT,
         GTK_STOCK_CANCEL, GTK_RESPONSE_REJECT, NULL);
     content_area = gtk_dialog_get_content_area(GTK_DIALOG(dialog));

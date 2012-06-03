@@ -1,5 +1,6 @@
 - Language translations (remaining: Japanese)
 - Bug Report Interface
+- Rating support
 
 Long-term:
 - Command Line Interface (CLI), based on ncurses
@@ -17,5 +18,4 @@ Other ideas:
 - Vala support
 
 * Add an option that the embeded theme can be disabled.
-* Make a new class for the main window.
 
