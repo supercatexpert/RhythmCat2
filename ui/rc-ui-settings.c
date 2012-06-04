@@ -29,6 +29,7 @@
 #include "rc-ui-player.h"
 #include "rc-ui-listmodel.h"
 #include "rc-ui-listview.h"
+#include "rc-ui-window.h"
 
 /**
  * SECTION: rc-ui-settings
@@ -50,6 +51,7 @@ typedef struct RCUiSettingsPrivate
     GtkWidget *pl_autoenc_check_button;
     GtkWidget *pl_id3enc_entry;
     GtkWidget *pl_lrcenc_entry;
+    GtkWidget *apr_disthm_check_button;
     GtkWidget *apr_theme_combo_box;
     GtkWidget *if_hidecovimg_check_button;
     GtkWidget *if_hidelrc_check_button;
@@ -310,6 +312,15 @@ static void rc_ui_settings_apr_theme_changed(GtkComboBox *widget,
     
 }
 
+static void rc_ui_settings_apr_disthm_toggled(GtkToggleButton *button,
+    gpointer data)
+{
+    RCUiSettingsPrivate *priv = &settings_priv;
+    gboolean flag = gtk_toggle_button_get_active(button);
+    rclib_settings_set_boolean("MainUI", "DisableTheme", flag);
+    g_object_set(priv->apr_theme_combo_box, "sensitive", !flag, NULL);
+}
+
 static inline GtkWidget *rc_ui_settings_appearance_build(
     RCUiSettingsPrivate *priv)
 {
@@ -333,6 +344,8 @@ static inline GtkWidget *rc_ui_settings_appearance_build(
     frame_label = gtk_label_new(NULL);
     store = gtk_list_store_new(3, G_TYPE_STRING, G_TYPE_BOOLEAN, G_TYPE_STRING);
         renderer = gtk_cell_renderer_text_new();
+    priv->apr_disthm_check_button = gtk_check_button_new_with_mnemonic(
+        _("Disable theme (need to restart the player)"));
     priv->apr_theme_combo_box = gtk_combo_box_new_with_model(GTK_TREE_MODEL(store));
     g_object_unref(store);
     gtk_cell_layout_pack_start(GTK_CELL_LAYOUT(priv->apr_theme_combo_box),
@@ -392,13 +405,22 @@ static inline GtkWidget *rc_ui_settings_appearance_build(
     g_free(theme_settings);
     if(gtk_combo_box_get_active(GTK_COMBO_BOX(priv->apr_theme_combo_box))<0)
         gtk_combo_box_set_active(GTK_COMBO_BOX(priv->apr_theme_combo_box), 0);
+    if(rclib_settings_get_boolean("MainUI", "DisableTheme", NULL))
+    {
+        g_object_set(priv->apr_theme_combo_box, "sensitive", FALSE, NULL);
+        g_object_set(priv->apr_disthm_check_button, "active", TRUE, NULL);
+    }
     gtk_grid_attach(GTK_GRID(theme_frame_grid),
-        priv->apr_theme_combo_box, 0, 0, 1, 1);
+        priv->apr_disthm_check_button, 0, 0, 1, 1);
+    gtk_grid_attach(GTK_GRID(theme_frame_grid),
+        priv->apr_theme_combo_box, 0, 1, 1, 1);
     gtk_container_add(GTK_CONTAINER(theme_frame), theme_frame_grid);
     gtk_grid_attach(GTK_GRID(appearance_grid), theme_frame, 0, 0,
         1, 1);
     g_signal_connect(priv->apr_theme_combo_box, "changed",
         G_CALLBACK(rc_ui_settings_apr_theme_changed), NULL);
+    g_signal_connect(priv->apr_disthm_check_button, "toggled",
+        G_CALLBACK(rc_ui_settings_apr_disthm_toggled), NULL);
     return appearance_grid;
 }
 
@@ -741,6 +763,16 @@ static inline GtkWidget *rc_ui_settings_interface_build(
     return interface_grid;
 }
 
+static gboolean rc_ui_settings_window_key_press_cb(GtkWidget *widget,
+    GdkEvent *event, gpointer data)
+{
+    guint keyval = event->key.keyval;
+    RCUiSettingsPrivate *priv = &settings_priv;
+    if(keyval==GDK_KEY_Escape)
+        gtk_widget_destroy(priv->settings_window);
+    return FALSE;
+}
+
 static inline void rc_ui_settings_window_init()
 {
     RCUiSettingsPrivate *priv = &settings_priv;
@@ -786,8 +818,10 @@ static inline void rc_ui_settings_window_init()
     gtk_grid_attach(GTK_GRID(main_grid), button_hbox, 0, 1, 1, 1);
     gtk_container_add(GTK_CONTAINER(priv->settings_window), main_grid);
     g_signal_connect(close_button, "clicked",
-        G_CALLBACK(rc_ui_settings_close_button_clicked), NULL); 
-    g_signal_connect(G_OBJECT(priv->settings_window), "destroy",
+        G_CALLBACK(rc_ui_settings_close_button_clicked), NULL);
+    g_signal_connect(priv->settings_window, "key-press-event",
+        G_CALLBACK(rc_ui_settings_window_key_press_cb), NULL);
+    g_signal_connect(priv->settings_window, "destroy",
         G_CALLBACK(rc_ui_settings_window_destroy_cb), NULL);
     gtk_widget_show_all(priv->settings_window);
 }

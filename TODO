@@ -1,6 +1,6 @@
-- Language translations (remaining: Japanese)
 - Bug Report Interface
 - Rating support
+- Accel key bindings
 
 Long-term:
 - Command Line Interface (CLI), based on ncurses
@@ -14,8 +14,6 @@ Long-term:
 
 Other ideas:
 - Better karaoke mode plug-in?
-- Perl plug-in loader?
 - Vala support
 
-* Add an option that the embeded theme can be disabled.
 

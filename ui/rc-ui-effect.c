@@ -229,13 +229,17 @@ static void rc_ui_effect_window_destroy_cb(GtkWidget *widget, gpointer data)
     gtk_widget_destroyed(priv->effect_window, &(priv->effect_window));
 }
 
-/**
- * rc_ui_effect_window_init:
- *
- * Initalize the effect window.
- */
+static gboolean rc_ui_effect_window_key_press_cb(GtkWidget *widget,
+    GdkEvent *event, gpointer data)
+{
+    guint keyval = event->key.keyval;
+    RCUiAudioEffectPrivate *priv = &effect_priv;
+    if(keyval==GDK_KEY_Escape)
+        gtk_widget_destroy(priv->effect_window);
+    return FALSE;
+}
 
-void rc_ui_effect_window_init()
+static void rc_ui_effect_window_init()
 {
     GtkWidget *effect_notebook;
     GtkWidget *eq_label, *bal_label;
@@ -365,6 +369,8 @@ void rc_ui_effect_window_init()
         G_CALLBACK(rc_ui_effect_eq_save_setting), NULL);  
     g_signal_connect(G_OBJECT(eq_open_button), "clicked",   
         G_CALLBACK(rc_ui_effect_eq_load_setting), NULL);
+    g_signal_connect(priv->effect_window, "key-press-event",
+        G_CALLBACK(rc_ui_effect_window_key_press_cb), NULL);
     g_signal_connect(G_OBJECT(priv->effect_window), "destroy",
         G_CALLBACK(rc_ui_effect_window_destroy_cb), NULL);
     effect_priv.eq_id = rclib_core_signal_connect("eq-changed",

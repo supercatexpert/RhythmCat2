@@ -394,7 +394,7 @@ void rc_ui_dialog_bind_lyric()
     radio_buttons[0] = gtk_radio_button_new_with_mnemonic(NULL,
         _("_Bind lyric file to the music"));
     radio_buttons[1] = gtk_radio_button_new_with_mnemonic_from_widget(
-        GTK_RADIO_BUTTON(radio_buttons[0]), _("_Do not bind lryic file"));
+        GTK_RADIO_BUTTON(radio_buttons[0]), _("_Do not bind lyric file"));
     radio_buttons[2] = gtk_radio_button_new_with_mnemonic(NULL,
         _("Bind _secondary lyric file to the music"));
     radio_buttons[3] = gtk_radio_button_new_with_mnemonic_from_widget(

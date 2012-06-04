@@ -24,7 +24,7 @@ RhythmCat2_SOURCES = \
     main.c
 
 librhythmcat_ui_2_0_resourcefiles = \
-    rc-ui-resources.gresource.xml rc-ui-theme-monochrome.css
+    rc-ui-resources.gresource.xml resources/rc-ui-theme-monochrome.css
 
 rc-ui-resources.c: $(librhythmcat_ui_2_0_resourcefiles)
 	@GLIB_COMPILE_RESOURCE@ $(srcdir)/rc-ui-resources.gresource.xml \
@@ -71,8 +71,9 @@ endif
 
 EXTRA_DIST = \
     rhythmcat-2.0.pc.in \
-    rc-ui-resources.gresource.xml \
-    rc-ui-theme-monochrome.css
+    rc-ui-resources.gresource.xml
+    
+SUBDIRS = resources
     
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = rhythmcat-2.0.pc

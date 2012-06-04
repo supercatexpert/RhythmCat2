@@ -162,16 +162,12 @@ static void rc_ui_player_class_init(RCUiPlayerClass *klass)
 static void rc_ui_player_instance_init(RCUiPlayer *ui)
 {
     RCUiPlayerPrivate *priv = RC_UI_PLAYER_GET_PRIVATE(ui);
-    GtkSettings *settings;
     priv->icon_pixbuf = gdk_pixbuf_new_from_xpm_data(
         (const gchar **)&ui_image_icon);
     gtk_icon_theme_add_builtin_icon("RhythmCatIcon", 128, priv->icon_pixbuf);
     priv->tray_icon = gtk_status_icon_new_from_pixbuf(priv->icon_pixbuf);
     priv->main_window = rc_ui_main_window_get_widget();
     priv->ui_manager = rc_ui_menu_get_ui_manager();
-    settings = gtk_settings_get_default();
-    g_object_set(settings, "gtk-theme-name", "Adwaita",
-        "gtk-application-prefer-dark-theme", TRUE, NULL);
     g_signal_connect(priv->tray_icon, "activate", 
         G_CALLBACK(rc_ui_player_tray_icon_activated), priv);
     g_signal_connect(priv->tray_icon, "popup-menu",

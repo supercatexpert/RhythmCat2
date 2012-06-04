@@ -1332,7 +1332,7 @@ static void rc_ui_main_window_instance_init(RCUiMainWindow *window)
         "window-position", GTK_WIN_POS_CENTER, "default-width", 600,
         "default-height", 400, "has-resize-grip", FALSE,
         "role", "RhythmCat2 Music Player Main Window", "startup-id",
-        "RhythmCat2", NULL);
+        "RhythmCat2", "hide-titlebar-when-maximized", TRUE, NULL);
     gtk_window_set_geometry_hints(GTK_WINDOW(window), GTK_WIDGET(window),
         &main_window_hints, GDK_HINT_MIN_SIZE);
     g_object_set(priv->title_label, "name", "RC2TitleLabel", "xalign", 0.0,

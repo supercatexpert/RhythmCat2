@@ -146,13 +146,13 @@ AC_MSG_RESULT([$platform_win32])
 AM_CONDITIONAL(PLATFORM_WIN32, test "$platform_win32" = "yes")
 
 AC_CONFIG_FILES([lib/librhythmcat-2.0.pc ui/rhythmcat-2.0.pc \
-    Makefile lib/Makefile ui/Makefile data/Makefile data/icons/Makefile \
-    data/images/Makefile plugins/Makefile plugins/base/Makefile \
-    plugins/extra/Makefile plugins/devel/Makefile \
-    plugins/restricted/Makefile docs/Makefile docs/reference/Makefile \
-    docs/reference/lib/Makefile docs/reference/ui/Makefile \
-    docs/reference/lib/version.xml docs/reference/ui/version.xml \
-    po/Makefile.in po/Makefile \
+    Makefile lib/Makefile ui/Makefile ui/resources/Makefile \
+    data/Makefile data/icons/Makefile data/images/Makefile \
+    plugins/Makefile plugins/base/Makefile plugins/extra/Makefile \
+    plugins/devel/Makefile plugins/restricted/Makefile docs/Makefile \
+    docs/reference/Makefile docs/reference/lib/Makefile \
+    docs/reference/ui/Makefile docs/reference/lib/version.xml \
+    docs/reference/ui/version.xml po/Makefile.in po/Makefile \
 ])
 AC_OUTPUT
 

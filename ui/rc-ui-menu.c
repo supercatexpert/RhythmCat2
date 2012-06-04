@@ -347,7 +347,7 @@ static GtkActionEntry ui_menu_entries[] =
       N_("Refresh music information in the playlist"),
       G_CALLBACK(rc_ui_listview_playlist_refresh) },
     { "AlbumSaveImage", GTK_STOCK_SAVE_AS,
-      N_("_Save album image as"), NULL,
+      N_("_Save Album Image As"), NULL,
       N_("Save the album image"),
       G_CALLBACK(rc_ui_dialog_save_album) },
     { "ProgressImportStatus", NULL,

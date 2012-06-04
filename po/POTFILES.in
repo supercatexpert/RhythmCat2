@@ -21,6 +21,7 @@ ui/rc-ui-settings.c
 ui/rc-ui-dialog.c
 ui/rc-ui-slabel.c
 ui/rc-ui-player.c
+ui/rc-ui-window.c
 ui/rc-main.c
 
 

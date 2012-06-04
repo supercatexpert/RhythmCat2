@@ -87,6 +87,7 @@ static gboolean rc_main_autosave_idle(gpointer data)
 
 static void rc_main_app_activate(GApplication *application)
 {
+    GtkSettings *settings;
     gchar *theme;
     gchar *theme_file;
     gchar *plugin_dir;
@@ -109,30 +110,37 @@ static void rc_main_app_activate(GApplication *application)
     if(application!=NULL)
         rc_ui_player_init(GTK_APPLICATION(application));
     else
-        rc_ui_player_init(NULL);    
-    theme = rclib_settings_get_string("MainUI", "Theme", NULL);
-    if(theme!=NULL && strlen(theme)>0)
+        rc_ui_player_init(NULL);
+    if(!rclib_settings_get_boolean("MainUI", "DisableTheme", NULL))
     {
-        if(g_str_has_prefix(theme, "embedded-theme:"))
+        settings = gtk_settings_get_default();
+        g_object_set(settings, "gtk-theme-name", "Adwaita",
+            "gtk-application-prefer-dark-theme", TRUE, NULL);
+        theme = rclib_settings_get_string("MainUI", "Theme", NULL);
+        if(theme!=NULL && strlen(theme)>0)
         {
-            theme_flag = rc_ui_style_embedded_theme_set_by_name(theme+14);
+            if(g_str_has_prefix(theme, "embedded-theme:"))
+            {
+                theme_flag = rc_ui_style_embedded_theme_set_by_name(
+                    theme+14);
+            }
+            else
+            {
+                theme_file = g_build_filename(theme, "gtk3.css", NULL);
+                theme_flag = rc_ui_style_css_set_file(theme_file);
+                g_free(theme_file);
+            }
+            if(!theme_flag)
+            {
+                rc_ui_style_embedded_theme_set_default();
+            }
         }
         else
         {
-            theme_file = g_build_filename(theme, "gtk3.css", NULL);
-            theme_flag = rc_ui_style_css_set_file(theme_file);
-            g_free(theme_file);
-        }
-        if(!theme_flag)
-        {
             rc_ui_style_embedded_theme_set_default();
         }
+        g_free(theme); 
     }
-    else
-    {
-        rc_ui_style_embedded_theme_set_default();
-    }
-    g_free(theme); 
     rclib_settings_apply();
     if(rclib_settings_has_key("MainUI", "HideCoverImage", NULL))
     {

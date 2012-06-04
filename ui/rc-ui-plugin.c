@@ -308,6 +308,16 @@ static void rc_ui_plugin_data_foreach(gpointer key, gpointer value,
     g_free(text);
 }
 
+static gboolean rc_ui_plugin_window_key_press_cb(GtkWidget *widget,
+    GdkEvent *event, gpointer data)
+{
+    guint keyval = event->key.keyval;
+    RCUiPluginPrivate *priv = &plugin_priv;
+    if(keyval==GDK_KEY_Escape)
+        gtk_widget_destroy(priv->plugin_window);
+    return FALSE;
+}
+
 static inline void rc_ui_plugin_window_init()
 {
     RCUiPluginPrivate *priv = &plugin_priv;
@@ -412,7 +422,9 @@ static inline void rc_ui_plugin_window_init()
     g_signal_connect(priv->config_button, "clicked",
         G_CALLBACK(rc_ui_plugin_config_button_clicked), NULL);      
     g_signal_connect(close_button, "clicked",
-        G_CALLBACK(rc_ui_plugin_close_button_clicked), NULL);    
+        G_CALLBACK(rc_ui_plugin_close_button_clicked), NULL);  
+    g_signal_connect(priv->plugin_window, "key-press-event",
+        G_CALLBACK(rc_ui_plugin_window_key_press_cb), NULL);  
     g_signal_connect(G_OBJECT(priv->plugin_window), "destroy",
         G_CALLBACK(rc_ui_plugin_window_destroy_cb), NULL);
     priv->registered_id = rclib_plugin_signal_connect("registered",    

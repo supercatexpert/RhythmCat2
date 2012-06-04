@@ -82,6 +82,9 @@
 
     * Made some new classes.
     * Fixed some bugs.
+    * It is possible to close window by using Esc in Preferences,
+      Audio Effect and plug-in configuartion windows now.
+    
     
 
 

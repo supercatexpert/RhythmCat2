@@ -177,6 +177,8 @@ rm -rf %{buildroot}
 
 %files -n rhythmcat2-plugins-extra
 %{_libdir}/RhythmCat2/plugins/lrccrawler.so
+%{_libdir}/RhythmCat2/plugins/echoeffect.so
+%{_libdir}/RhythmCat2/plugins/karaeffect.so
 %{_libdir}/RhythmCat2/plugins/CrawlerModules/lrccrawler-lrc123.so
 
 %files -n rhythmcat2-plugins-python3-loader
