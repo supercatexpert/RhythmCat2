@@ -4,7 +4,7 @@
 
 #ifdef G_ENABLE_DEBUG
 #define g_marshal_value_peek_boolean(v)  g_value_get_boolean (v)
-#define g_marshal_value_peek_char(v)     g_value_get_char (v)
+#define g_marshal_value_peek_char(v)     g_value_get_schar (v)
 #define g_marshal_value_peek_uchar(v)    g_value_get_uchar (v)
 #define g_marshal_value_peek_int(v)      g_value_get_int (v)
 #define g_marshal_value_peek_uint(v)     g_value_get_uint (v)
@@ -49,7 +49,7 @@
 #endif /* !G_ENABLE_DEBUG */
 
 
-/* VOID:INT64 (./rclib-marshal.list:1) */
+/* VOID:INT64 (../lib/rclib-marshal.list:1) */
 void
 rclib_marshal_VOID__INT64 (GClosure     *closure,
                            GValue       *return_value G_GNUC_UNUSED,
@@ -84,7 +84,7 @@ rclib_marshal_VOID__INT64 (GClosure     *closure,
             data2);
 }
 
-/* VOID:POINTER,INT64 (./rclib-marshal.list:2) */
+/* VOID:POINTER,INT64 (../lib/rclib-marshal.list:2) */
 void
 rclib_marshal_VOID__POINTER_INT64 (GClosure     *closure,
                                    GValue       *return_value G_GNUC_UNUSED,
@@ -121,7 +121,7 @@ rclib_marshal_VOID__POINTER_INT64 (GClosure     *closure,
             data2);
 }
 
-/* VOID:POINTER,STRING (./rclib-marshal.list:3) */
+/* VOID:POINTER,STRING (../lib/rclib-marshal.list:3) */
 void
 rclib_marshal_VOID__POINTER_STRING (GClosure     *closure,
                                     GValue       *return_value G_GNUC_UNUSED,
@@ -158,7 +158,7 @@ rclib_marshal_VOID__POINTER_STRING (GClosure     *closure,
             data2);
 }
 
-/* VOID:STRING,POINTER (./rclib-marshal.list:4) */
+/* VOID:STRING,POINTER (../lib/rclib-marshal.list:4) */
 void
 rclib_marshal_VOID__STRING_POINTER (GClosure     *closure,
                                     GValue       *return_value G_GNUC_UNUSED,
@@ -195,7 +195,7 @@ rclib_marshal_VOID__STRING_POINTER (GClosure     *closure,
             data2);
 }
 
-/* VOID:POINTER,POINTER (./rclib-marshal.list:5) */
+/* VOID:POINTER,POINTER (../lib/rclib-marshal.list:5) */
 void
 rclib_marshal_VOID__POINTER_POINTER (GClosure     *closure,
                                      GValue       *return_value G_GNUC_UNUSED,
@@ -232,7 +232,7 @@ rclib_marshal_VOID__POINTER_POINTER (GClosure     *closure,
             data2);
 }
 
-/* VOID:UINT,POINTER,INT64 (./rclib-marshal.list:6) */
+/* VOID:UINT,POINTER,INT64 (../lib/rclib-marshal.list:6) */
 void
 rclib_marshal_VOID__UINT_POINTER_INT64 (GClosure     *closure,
                                         GValue       *return_value G_GNUC_UNUSED,
@@ -271,7 +271,7 @@ rclib_marshal_VOID__UINT_POINTER_INT64 (GClosure     *closure,
             data2);
 }
 
-/* VOID:UINT,INT64,POINTER,INT64 (./rclib-marshal.list:7) */
+/* VOID:UINT,INT64,POINTER,INT64 (../lib/rclib-marshal.list:7) */
 void
 rclib_marshal_VOID__UINT_INT64_POINTER_INT64 (GClosure     *closure,
                                               GValue       *return_value G_GNUC_UNUSED,
@@ -312,7 +312,7 @@ rclib_marshal_VOID__UINT_INT64_POINTER_INT64 (GClosure     *closure,
             data2);
 }
 
-/* VOID:UINT,UINT,FLOAT,POINTER (./rclib-marshal.list:8) */
+/* VOID:UINT,UINT,FLOAT,POINTER (../lib/rclib-marshal.list:8) */
 void
 rclib_marshal_VOID__UINT_UINT_FLOAT_POINTER (GClosure     *closure,
                                              GValue       *return_value G_GNUC_UNUSED,
@@ -353,7 +353,7 @@ rclib_marshal_VOID__UINT_UINT_FLOAT_POINTER (GClosure     *closure,
             data2);
 }
 
-/* BOOLEAN:UINT,POINTER (./rclib-marshal.list:9) */
+/* BOOLEAN:UINT,POINTER (../lib/rclib-marshal.list:9) */
 void
 rclib_marshal_BOOLEAN__UINT_POINTER (GClosure     *closure,
                                      GValue       *return_value G_GNUC_UNUSED,

@@ -11,6 +11,7 @@ lib/rclib-util.c
 lib/rclib-settings.c
 
 ui/rc-ui-effect.c
+ui/rc-ui-cell-renderer-rating.c
 ui/rc-ui-listmodel.c
 ui/rc-ui-listview.c
 ui/rc-ui-menu.c

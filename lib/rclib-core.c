@@ -41,7 +41,7 @@
  */
 
 #define RCLIB_CORE_GET_PRIVATE(obj) G_TYPE_INSTANCE_GET_PRIVATE((obj), \
-    RCLIB_CORE_TYPE, RCLibCorePrivate)
+    RCLIB_TYPE_CORE, RCLibCorePrivate)
 #define RCLIB_CORE_ERROR rclib_core_error_quark()
 
 typedef struct RCLibCoreSpectrumChannel
@@ -642,7 +642,7 @@ static void rclib_core_class_init(RCLibCoreClass *klass)
      * is changed.
      */
     core_signals[SIGNAL_STATE_CHANGED] = g_signal_new("state-changed",
-        RCLIB_CORE_TYPE, G_SIGNAL_RUN_FIRST, G_STRUCT_OFFSET(RCLibCoreClass,
+        RCLIB_TYPE_CORE, G_SIGNAL_RUN_FIRST, G_STRUCT_OFFSET(RCLibCoreClass,
         state_changed), NULL, NULL, g_cclosure_marshal_VOID__INT,
         G_TYPE_NONE, 1, G_TYPE_INT, NULL);
 
@@ -653,7 +653,7 @@ static void rclib_core_class_init(RCLibCoreClass *klass)
      * The ::eos signal is emitted when end-of-stream reached in the
      * current pipeline of the core.
      */
-    core_signals[SIGNAL_EOS] = g_signal_new("eos", RCLIB_CORE_TYPE,
+    core_signals[SIGNAL_EOS] = g_signal_new("eos", RCLIB_TYPE_CORE,
         G_SIGNAL_RUN_FIRST, G_STRUCT_OFFSET(RCLibCoreClass, eos),
         NULL, NULL, g_cclosure_marshal_VOID__VOID,
         G_TYPE_NONE, 0, G_TYPE_NONE, NULL);
@@ -668,7 +668,7 @@ static void rclib_core_class_init(RCLibCoreClass *klass)
      * found.
      */
     core_signals[SIGNAL_TAG_FOUND] = g_signal_new("tag-found",
-        RCLIB_CORE_TYPE, G_SIGNAL_RUN_FIRST, G_STRUCT_OFFSET(RCLibCoreClass,
+        RCLIB_TYPE_CORE, G_SIGNAL_RUN_FIRST, G_STRUCT_OFFSET(RCLibCoreClass,
         tag_found), NULL, NULL, rclib_marshal_VOID__POINTER_STRING,
         G_TYPE_NONE, 2, G_TYPE_POINTER, G_TYPE_STRING, NULL);
 
@@ -681,7 +681,7 @@ static void rclib_core_class_init(RCLibCoreClass *klass)
      * was found.
      */
     core_signals[SIGNAL_NEW_DURATION] = g_signal_new("new-duration",
-        RCLIB_CORE_TYPE, G_SIGNAL_RUN_FIRST, G_STRUCT_OFFSET(RCLibCoreClass,
+        RCLIB_TYPE_CORE, G_SIGNAL_RUN_FIRST, G_STRUCT_OFFSET(RCLibCoreClass,
         new_duration), NULL, NULL, rclib_marshal_VOID__INT64,
         G_TYPE_NONE, 1, G_TYPE_INT64, NULL);
 
@@ -693,7 +693,7 @@ static void rclib_core_class_init(RCLibCoreClass *klass)
      * The ::uri-changed signal is emitted when new URI was set.
      */
     core_signals[SIGNAL_URI_CHANGED] = g_signal_new("uri-changed",
-        RCLIB_CORE_TYPE, G_SIGNAL_RUN_FIRST, G_STRUCT_OFFSET(RCLibCoreClass,
+        RCLIB_TYPE_CORE, G_SIGNAL_RUN_FIRST, G_STRUCT_OFFSET(RCLibCoreClass,
         uri_changed), NULL, NULL, g_cclosure_marshal_VOID__STRING,
         G_TYPE_NONE, 1, G_TYPE_STRING, NULL);
         
@@ -705,7 +705,7 @@ static void rclib_core_class_init(RCLibCoreClass *klass)
      * The ::volume-changed signal is emitted when the volume was changed.
      */
     core_signals[SIGNAL_VOLUME_CHANGED] = g_signal_new("volume-changed",
-        RCLIB_CORE_TYPE, G_SIGNAL_RUN_FIRST, G_STRUCT_OFFSET(RCLibCoreClass,
+        RCLIB_TYPE_CORE, G_SIGNAL_RUN_FIRST, G_STRUCT_OFFSET(RCLibCoreClass,
         volume_changed), NULL, NULL, g_cclosure_marshal_VOID__DOUBLE,
         G_TYPE_NONE, 1, G_TYPE_DOUBLE, NULL);
         
@@ -719,7 +719,7 @@ static void rclib_core_class_init(RCLibCoreClass *klass)
      * applied.
      */
     core_signals[SIGNAL_EQ_CHANGED] = g_signal_new("eq-changed",
-        RCLIB_CORE_TYPE, G_SIGNAL_RUN_FIRST, G_STRUCT_OFFSET(RCLibCoreClass,
+        RCLIB_TYPE_CORE, G_SIGNAL_RUN_FIRST, G_STRUCT_OFFSET(RCLibCoreClass,
         eq_changed), NULL, NULL, g_cclosure_marshal_VOID__UINT_POINTER,
         G_TYPE_NONE, 2, G_TYPE_UINT, G_TYPE_POINTER, NULL);
 
@@ -731,7 +731,7 @@ static void rclib_core_class_init(RCLibCoreClass *klass)
      * The ::balance-changed signal is emitted when new balance was applied.
      */
     core_signals[SIGNAL_BALANCE_CHANGED] = g_signal_new("balance-changed",
-        RCLIB_CORE_TYPE, G_SIGNAL_RUN_FIRST, G_STRUCT_OFFSET(RCLibCoreClass,
+        RCLIB_TYPE_CORE, G_SIGNAL_RUN_FIRST, G_STRUCT_OFFSET(RCLibCoreClass,
         balance_changed), NULL, NULL, g_cclosure_marshal_VOID__FLOAT,
         G_TYPE_NONE, 1, G_TYPE_FLOAT, NULL);
         
@@ -747,7 +747,7 @@ static void rclib_core_class_init(RCLibCoreClass *klass)
      * message is received.
      */
     core_signals[SIGNAL_SPECTRUM_UPDATED] = g_signal_new("spectrum-updated",
-        RCLIB_CORE_TYPE, G_SIGNAL_RUN_FIRST, G_STRUCT_OFFSET(RCLibCoreClass,
+        RCLIB_TYPE_CORE, G_SIGNAL_RUN_FIRST, G_STRUCT_OFFSET(RCLibCoreClass,
         spectrum_updated), NULL, NULL,
         rclib_marshal_VOID__UINT_UINT_FLOAT_POINTER, G_TYPE_NONE, 4,
         G_TYPE_UINT, G_TYPE_UINT, G_TYPE_FLOAT, G_TYPE_POINTER,
@@ -760,7 +760,7 @@ static void rclib_core_class_init(RCLibCoreClass *klass)
      * The ::error signal is emitted when any error in the core occurs.
      */
     core_signals[SIGNAL_ERROR] = g_signal_new("error",
-        RCLIB_CORE_TYPE, G_SIGNAL_RUN_FIRST, G_STRUCT_OFFSET(RCLibCoreClass,
+        RCLIB_TYPE_CORE, G_SIGNAL_RUN_FIRST, G_STRUCT_OFFSET(RCLibCoreClass,
         error), NULL, NULL, g_cclosure_marshal_VOID__STRING,
         G_TYPE_NONE, 1, G_TYPE_STRING, NULL);
 }
@@ -1436,7 +1436,7 @@ gboolean rclib_core_init(GError **error)
             _("The core is already initialized!"));
         return FALSE;
     }
-    core_instance = g_object_new(RCLIB_CORE_TYPE, NULL);
+    core_instance = g_object_new(RCLIB_TYPE_CORE, NULL);
     priv = RCLIB_CORE_GET_PRIVATE(RCLIB_CORE(core_instance));
     if(priv->playbin==NULL)
     {

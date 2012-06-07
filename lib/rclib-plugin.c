@@ -38,7 +38,7 @@
  */
 
 #define RCLIB_PLUGIN_GET_PRIVATE(obj) G_TYPE_INSTANCE_GET_PRIVATE((obj), \
-    RCLIB_PLUGIN_TYPE, RCLibPluginPrivate)
+    RCLIB_TYPE_PLUGIN, RCLibPluginPrivate)
     
 typedef struct RCLibPluginPrivate
 {
@@ -199,7 +199,7 @@ static void rclib_plugin_class_init(RCLibPluginClass *klass)
      * The ::registered signal is emitted when a new plug-in registered.
      */
     plugin_signals[SIGNAL_REGISTERED] = g_signal_new("registered",
-        RCLIB_PLUGIN_TYPE, G_SIGNAL_RUN_FIRST,
+        RCLIB_TYPE_PLUGIN, G_SIGNAL_RUN_FIRST,
         G_STRUCT_OFFSET(RCLibPluginClass, registered), NULL, NULL,
         g_cclosure_marshal_VOID__POINTER, G_TYPE_NONE, 1, G_TYPE_POINTER,
         NULL);
@@ -212,7 +212,7 @@ static void rclib_plugin_class_init(RCLibPluginClass *klass)
      * The ::loaded signal is emitted when a plug-in is loaded.
      */
     plugin_signals[SIGNAL_LOADED] = g_signal_new("loaded",
-        RCLIB_PLUGIN_TYPE, G_SIGNAL_RUN_FIRST,
+        RCLIB_TYPE_PLUGIN, G_SIGNAL_RUN_FIRST,
         G_STRUCT_OFFSET(RCLibPluginClass, loaded), NULL, NULL,
         g_cclosure_marshal_VOID__POINTER, G_TYPE_NONE, 1, G_TYPE_POINTER,
         NULL);
@@ -225,7 +225,7 @@ static void rclib_plugin_class_init(RCLibPluginClass *klass)
      * The ::unloaded signal is emitted when a plug-in is unloaded.
      */
     plugin_signals[SIGNAL_UNLOADED] = g_signal_new("unloaded",
-        RCLIB_PLUGIN_TYPE, G_SIGNAL_RUN_FIRST,
+        RCLIB_TYPE_PLUGIN, G_SIGNAL_RUN_FIRST,
         G_STRUCT_OFFSET(RCLibPluginClass, unloaded), NULL, NULL,
         g_cclosure_marshal_VOID__POINTER, G_TYPE_NONE, 1, G_TYPE_POINTER,
         NULL);
@@ -238,7 +238,7 @@ static void rclib_plugin_class_init(RCLibPluginClass *klass)
      * The ::unregistered signal is emitted when a plug-in is unregistered.
      */    
     plugin_signals[SIGNAL_UNREGISTERED] = g_signal_new("unregistered",
-        RCLIB_PLUGIN_TYPE, G_SIGNAL_RUN_FIRST,
+        RCLIB_TYPE_PLUGIN, G_SIGNAL_RUN_FIRST,
         G_STRUCT_OFFSET(RCLibPluginClass, unregistered), NULL, NULL,
         g_cclosure_marshal_VOID__STRING, G_TYPE_NONE, 1, G_TYPE_STRING,
         NULL);
@@ -252,7 +252,7 @@ static void rclib_plugin_class_init(RCLibPluginClass *klass)
      * data when receive this signal.
      */   
     plugin_signals[SIGNAL_SHUTDOWN] = g_signal_new("shutdown",
-        RCLIB_PLUGIN_TYPE, G_SIGNAL_RUN_FIRST,
+        RCLIB_TYPE_PLUGIN, G_SIGNAL_RUN_FIRST,
         G_STRUCT_OFFSET(RCLibPluginClass, shutdown), NULL, NULL,
         g_cclosure_marshal_VOID__VOID, G_TYPE_NONE, 0, G_TYPE_NONE, NULL);
 }
@@ -306,7 +306,7 @@ gboolean rclib_plugin_init(const gchar *file)
     RCLibPluginPrivate *priv;
     GError *error = NULL;
     g_message("Loading plug-in support system....");
-    plugin_instance = g_object_new(RCLIB_PLUGIN_TYPE, NULL);
+    plugin_instance = g_object_new(RCLIB_TYPE_PLUGIN, NULL);
     if(file!=NULL)
     {
         priv = RCLIB_PLUGIN_GET_PRIVATE(plugin_instance);

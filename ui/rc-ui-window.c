@@ -47,7 +47,7 @@
  
 #define RC_UI_MAIN_WINDOW_COVER_IMAGE_SIZE 160
 #define RC_UI_MAIN_WINDOW_GET_PRIVATE(obj) G_TYPE_INSTANCE_GET_PRIVATE( \
-    (obj), RC_UI_MAIN_WINDOW_TYPE, RCUiMainWindowPrivate)
+    (obj), RC_UI_TYPE_MAIN_WINDOW, RCUiMainWindowPrivate)
 
 typedef struct RCUiMainWindowPrivate
 {
@@ -1257,7 +1257,7 @@ static void rc_ui_main_window_class_init(RCUiMainWindowClass *klass)
      * state of the main window changed.
      */   
     ui_main_window_signals[SIGNAL_KEEP_ABOVE_CHANGED] = g_signal_new(
-        "keep-above-changed", RC_UI_MAIN_WINDOW_TYPE, G_SIGNAL_RUN_FIRST,
+        "keep-above-changed", RC_UI_TYPE_MAIN_WINDOW, G_SIGNAL_RUN_FIRST,
         G_STRUCT_OFFSET(RCUiMainWindowClass, keep_above_changed), NULL, NULL,
         g_cclosure_marshal_VOID__BOOLEAN, G_TYPE_NONE, 1, G_TYPE_BOOLEAN,
         NULL);
@@ -1444,7 +1444,7 @@ GType rc_ui_main_window_get_type()
 
 static void rc_ui_main_window_init()
 {
-    ui_main_window_instance = g_object_new(RC_UI_MAIN_WINDOW_TYPE, NULL);
+    ui_main_window_instance = g_object_new(RC_UI_TYPE_MAIN_WINDOW, NULL);
     
 }
 

@@ -32,17 +32,17 @@
 
 G_BEGIN_DECLS
 
-#define RC_UI_PLAYER_TYPE (rc_ui_player_get_type())
+#define RC_UI_TYPE_PLAYER (rc_ui_player_get_type())
 #define RC_UI_PLAYER(obj) (G_TYPE_CHECK_INSTANCE_CAST((obj), \
-    RC_UI_PLAYER_TYPE, RCUiPlayer))
+    RC_UI_TYPE_PLAYER, RCUiPlayer))
 #define RC_UI_PLAYER_CLASS(k) (G_TYPE_CHECK_CLASS_CAST((k), \
-    RC_UI_PLAYER_TYPE, RCUiPlayerClass))
+    RC_UI_TYPE_PLAYER, RCUiPlayerClass))
 #define RC_UI_IS_PLAYER(o) (G_TYPE_CHECK_INSTANCE_TYPE((o), \
-    RC_UI_PLAYER_TYPE))
+    RC_UI_TYPE_PLAYER))
 #define RC_UI_IS_PLAYER_CLASS(k) (G_TYPE_CHECK_CLASS_TYPE((k), \
-    RC_UI_PLAYER_TYPE))
+    RC_UI_TYPE_PLAYER))
 #define RC_UI_PLAYER_GET_CLASS(o) (G_TYPE_INSTANCE_GET_CLASS((o), \
-    RC_UI_PLAYER_TYPE, RCUiPlayerClass))
+    RC_UI_TYPE_PLAYER, RCUiPlayerClass))
 
 typedef struct _RCUiPlayer RCUiPlayer;
 typedef struct _RCUiPlayerClass RCUiPlayerClass;

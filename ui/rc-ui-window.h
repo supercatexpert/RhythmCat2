@@ -32,17 +32,17 @@
 
 G_BEGIN_DECLS
 
-#define RC_UI_MAIN_WINDOW_TYPE (rc_ui_main_window_get_type())
+#define RC_UI_TYPE_MAIN_WINDOW (rc_ui_main_window_get_type())
 #define RC_UI_MAIN_WINDOW(obj) (G_TYPE_CHECK_INSTANCE_CAST((obj), \
-    RC_UI_MAIN_WINDOW_TYPE, RCUiMainWindow))
+    RC_UI_TYPE_MAIN_WINDOW, RCUiMainWindow))
 #define RC_UI_MAIN_WINDOW_CLASS(k) (G_TYPE_CHECK_CLASS_CAST((k), \
-    RC_UI_MAIN_WINDOW_TYPE, RCUiMainWindowClass))
+    RC_UI_TYPE_MAIN_WINDOW, RCUiMainWindowClass))
 #define RC_UI_IS_MAIN_WINDOW(o) (G_TYPE_CHECK_INSTANCE_TYPE((o), \
-    RC_UI_MAIN_WINDOW_TYPE))
+    RC_UI_TYPE_MAIN_WINDOW))
 #define RC_UI_IS_MAIN_WINDOW_CLASS(k) (G_TYPE_CHECK_CLASS_TYPE((k), \
-    RC_UI_MAIN_WINDOW_TYPE))
+    RC_UI_TYPE_MAIN_WINDOW))
 #define RC_UI_MAIN_WINDOW_GET_CLASS(o) (G_TYPE_INSTANCE_GET_CLASS((o), \
-    RC_UI_MAIN_WINDOW_TYPE, RCUiMainWindowClass))
+    RC_UI_TYPE_MAIN_WINDOW, RCUiMainWindowClass))
 
 typedef struct _RCUiMainWindow RCUiMainWindow;
 typedef struct _RCUiMainWindowClass RCUiMainWindowClass;

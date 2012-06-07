@@ -50,7 +50,8 @@ static RCUiStyleEmbeddedTheme style_embedded_themes[] =
 {
     {
         .name = "Monochrome",
-        .path = "/org/RhythmCat2/ui/style/rc-ui-theme-monochrome.css"
+        .path = "/org/RhythmCat2/ui/style/resources/"
+            "rc-ui-theme-monochrome.css"
     }
 };
 

@@ -34,15 +34,15 @@
 
 G_BEGIN_DECLS
 
-#define RCLIB_DB_TYPE (rclib_db_get_type())
-#define RCLIB_DB(obj) (G_TYPE_CHECK_INSTANCE_CAST((obj), RCLIB_DB_TYPE, \
+#define RCLIB_TYPE_DB (rclib_db_get_type())
+#define RCLIB_DB(obj) (G_TYPE_CHECK_INSTANCE_CAST((obj), RCLIB_TYPE_DB, \
     RCLibDb))
-#define RCLIB_DB_CLASS(k) (G_TYPE_CHECK_CLASS_CAST((k), RCLIB_DB_TYPE, \
+#define RCLIB_DB_CLASS(k) (G_TYPE_CHECK_CLASS_CAST((k), RCLIB_TYPE_DB, \
     RCLibDbClass))
-#define RCLIB_IS_DB(o) (G_TYPE_CHECK_INSTANCE_TYPE((o), RCLIB_DB_TYPE))
-#define RCLIB_IS_DB_CLASS(k) (G_TYPE_CHECK_CLASS_TYPE((k), RCLIB_DB_TYPE))
+#define RCLIB_IS_DB(o) (G_TYPE_CHECK_INSTANCE_TYPE((o), RCLIB_TYPE_DB))
+#define RCLIB_IS_DB_CLASS(k) (G_TYPE_CHECK_CLASS_TYPE((k), RCLIB_TYPE_DB))
 #define RCLIB_DB_GET_CLASS(o) (G_TYPE_INSTANCE_GET_CLASS((o), \
-    RCLIB_DB_TYPE, RCLibDbClass))
+    RCLIB_TYPE_DB, RCLibDbClass))
 
 /**
  * RCLibDbCatalogType:
@@ -131,7 +131,7 @@ struct _RCLibDbPlaylistData {
     gint64 length;
     gint tracknum;
     gint year;
-    guint rating;
+    gfloat rating;
     gchar *lyricfile;
     gchar *lyricsecfile;
     gchar *albumfile;
@@ -207,7 +207,7 @@ void rclib_db_playlist_update_length(GSequenceIter *iter,
     gint64 length);
 void rclib_db_playlist_set_type(GSequenceIter *iter,
     RCLibDbPlaylistType type);
-void rclib_db_playlist_set_rating(GSequenceIter *iter, gint rating);
+void rclib_db_playlist_set_rating(GSequenceIter *iter, gfloat rating);
 void rclib_db_playlist_set_lyric_bind(GSequenceIter *iter,
     const gchar *filename);
 void rclib_db_playlist_set_lyric_secondary_bind(GSequenceIter *iter,

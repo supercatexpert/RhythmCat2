@@ -772,11 +772,11 @@ uninstall-am: uninstall-girDATA uninstall-libLTLIBRARIES \
 
 
 rclib-marshal.c: rclib-marshal.list
-	@GLIB_GENMARSHAL@ --prefix=rclib_marshal $(srcdir)/rclib-marshal.list \
+	@GLIB_GENMARSHAL@ --prefix=rclib_marshal $(top_srcdir)/lib/rclib-marshal.list \
         --body > rclib-marshal.c
 
 rclib-marshal.h: rclib-marshal.list
-	@GLIB_GENMARSHAL@ --prefix=rclib_marshal $(srcdir)/rclib-marshal.list \
+	@GLIB_GENMARSHAL@ --prefix=rclib_marshal $(top_srcdir)/lib/rclib-marshal.list \
         --header > rclib-marshal.h
 
 @HAVE_INTROSPECTION_TRUE@-include $(INTROSPECTION_MAKEFILE)

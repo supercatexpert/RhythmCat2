@@ -34,17 +34,17 @@
 
 G_BEGIN_DECLS
 
-#define RC_UI_SCROLLABLE_LABEL_TYPE (rc_ui_scrollable_label_get_type())
+#define RC_UI_TYPE_SCROLLABLE_LABEL (rc_ui_scrollable_label_get_type())
 #define RC_UI_SCROLLABLE_LABEL(obj) (G_TYPE_CHECK_INSTANCE_CAST ((obj), \
-    RC_UI_SCROLLABLE_LABEL_TYPE, RCUiScrollableLabel))
+    RC_UI_TYPE_SCROLLABLE_LABEL, RCUiScrollableLabel))
 
 #define RC_UI_SCROLLABLE_LABEL_CLASS(klass) \
-    (G_TYPE_CHECK_CLASS_CAST((klass), RC_UI_SCROLLABLE_LABEL_TYPE, \
+    (G_TYPE_CHECK_CLASS_CAST((klass), RC_UI_TYPE_SCROLLABLE_LABEL, \
     RCUiScrollableLabelClass))
-#define IS_RC_UI_SCROLLABLE_LABEL(obj) (G_TYPE_CHECK_INSTANCE_TYPE((obj), \
-    RC_UI_SCROLLABLE_LABEL_TYPE))
-#define IS_RC_UI_SCROLLABLE_LABEL_CLASS(klass) \
-    (G_TYPE_CHECK_CLASS_TYPE((klass), RC_UI_SCROLLABLE_LABEL_TYPE))
+#define RC_UI_IS_SCROLLABLE_LABEL(obj) (G_TYPE_CHECK_INSTANCE_TYPE((obj), \
+    RC_UI_TYPE_SCROLLABLE_LABEL))
+#define RC_UI_IS_SCROLLABLE_LABEL_CLASS(klass) \
+    (G_TYPE_CHECK_CLASS_TYPE((klass), RC_UI_TYPE_SCROLLABLE_LABEL))
 
 typedef struct _RCUiScrollableLabel RCUiScrollableLabel;
 typedef struct _RCUiScrollableLabelClass RCUiScrollableLabelClass;

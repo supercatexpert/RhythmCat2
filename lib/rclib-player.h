@@ -31,17 +31,17 @@
 
 G_BEGIN_DECLS
 
-#define RCLIB_PLAYER_TYPE (rclib_player_get_type())
+#define RCLIB_TYPE_PLAYER (rclib_player_get_type())
 #define RCLIB_PLAYER(obj) (G_TYPE_CHECK_INSTANCE_CAST((obj), \
-    RCLIB_PLAYER_TYPE, RCLibPlayer))
+    RCLIB_TYPE_PLAYER, RCLibPlayer))
 #define RCLIB_PLAYER_CLASS(k) (G_TYPE_CHECK_CLASS_CAST((k), \
-    RCLIB_PLAYER_TYPE, RCLibPlayerClass))
+    RCLIB_TYPE_PLAYER, RCLibPlayerClass))
 #define RCLIB_IS_PLAYER(o) (G_TYPE_CHECK_INSTANCE_TYPE((o), \
-    RCLIB_PLAYER_TYPE))
+    RCLIB_TYPE_PLAYER))
 #define RCLIB_IS_PLAYER_CLASS(k) (G_TYPE_CHECK_CLASS_TYPE((k), \
-    RCLIB_PLAYER_TYPE))
+    RCLIB_TYPE_PLAYER))
 #define RCLIB_PLAYER_GET_CLASS(o) (G_TYPE_INSTANCE_GET_CLASS((o), \
-    RCLIB_PLAYER_TYPE, RCLibPlayerClass))
+    RCLIB_TYPE_PLAYER, RCLibPlayerClass))
 
 /**
  * RCLibPlayerRepeatMode:

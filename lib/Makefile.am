@@ -16,11 +16,11 @@ librhythmcat_2_0_headers = \
 librhythmcat_2_0_builtheaders = rclib-marshal.h
 
 rclib-marshal.c: rclib-marshal.list
-	@GLIB_GENMARSHAL@ --prefix=rclib_marshal $(srcdir)/rclib-marshal.list \
+	@GLIB_GENMARSHAL@ --prefix=rclib_marshal $(top_srcdir)/lib/rclib-marshal.list \
         --body > rclib-marshal.c
 
 rclib-marshal.h: rclib-marshal.list
-	@GLIB_GENMARSHAL@ --prefix=rclib_marshal $(srcdir)/rclib-marshal.list \
+	@GLIB_GENMARSHAL@ --prefix=rclib_marshal $(top_srcdir)/lib/rclib-marshal.list \
         --header > rclib-marshal.h
 
 librhythmcat_2_0_la_SOURCES = \

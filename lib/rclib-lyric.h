@@ -31,17 +31,17 @@
 
 G_BEGIN_DECLS
 
-#define RCLIB_LYRIC_TYPE (rclib_lyric_get_type())
+#define RCLIB_TYPE_LYRIC (rclib_lyric_get_type())
 #define RCLIB_LYRIC(obj) (G_TYPE_CHECK_INSTANCE_CAST((obj), \
-    RCLIB_LYRIC_TYPE, RCLibLyric))
+    RCLIB_TYPE_LYRIC, RCLibLyric))
 #define RCLIB_LYRIC_CLASS(k) (G_TYPE_CHECK_CLASS_CAST((k), \
-    RCLIB_LYRIC_TYPE, RCLibLyricClass))
+    RCLIB_TYPE_LYRIC, RCLibLyricClass))
 #define RCLIB_IS_LYRIC(o) (G_TYPE_CHECK_INSTANCE_TYPE((o), \
-    RCLIB_LYRIC_TYPE))
+    RCLIB_TYPE_LYRIC))
 #define RCLIB_IS_LYRIC_CLASS(k) (G_TYPE_CHECK_CLASS_TYPE((k), \
-    RCLIB_LYRIC_TYPE))
+    RCLIB_TYPE_LYRIC))
 #define RCLIB_LYRIC_GET_CLASS(o) (G_TYPE_INSTANCE_GET_CLASS((o), \
-    RCLIB_LYRIC_TYPE, RCLibLyricClass))
+    RCLIB_TYPE_LYRIC, RCLibLyricClass))
 
 typedef struct _RCLibLyricData RCLibLyricData;
 typedef struct _RCLibLyricParsedData RCLibLyricParsedData;

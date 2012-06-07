@@ -47,7 +47,7 @@
  */
 
 #define RCLIB_DB_GET_PRIVATE(obj) G_TYPE_INSTANCE_GET_PRIVATE((obj), \
-    RCLIB_DB_TYPE, RCLibDbPrivate)
+    RCLIB_TYPE_DB, RCLibDbPrivate)
 #define RCLIB_DB_ERROR rclib_db_error_quark()
 
 typedef struct RCLibDbPrivate
@@ -215,7 +215,7 @@ static gboolean rclib_db_playlist_import_idle_cb(gpointer data)
     playlist_data->length = mmd->length;
     playlist_data->tracknum = mmd->tracknum;
     playlist_data->year = mmd->year;
-    playlist_data->rating = 3;
+    playlist_data->rating = 3.0;
     if(!rclib_db_is_iter_valid(playlist, idle_data->insert_iter))
         idle_data->insert_iter = NULL;
     if(idle_data->insert_iter!=NULL)
@@ -668,6 +668,7 @@ static gboolean rclib_db_load_library_db(GSequence *catalog,
     JsonObject *root_object, *catalog_object, *playlist_object;
     JsonArray *catalog_array, *playlist_array;
     JsonNode *root_node;
+    JsonNode *node_tmp;
     guint i, j;
     guint catalog_len, playlist_len;
     GError *error = NULL;
@@ -773,8 +774,28 @@ static gboolean rclib_db_load_library_db(GSequence *catalog,
                     playlist_data->year = json_object_get_int_member(
                         playlist_object, "Year");
                 if(json_object_has_member(playlist_object, "Rating"))
-                    playlist_data->rating = json_object_get_int_member(
-                        playlist_object, "Rating");
+                {
+                    node_tmp = json_object_get_member(playlist_object,
+                        "Rating");
+                    if(node_tmp!=NULL)
+                    {
+                        switch(json_node_get_value_type(node_tmp))
+                        {
+                            case G_TYPE_INT:
+                            case G_TYPE_INT64:
+                                playlist_data->rating = (gfloat)
+                                    json_node_get_int(node_tmp);
+                                break;
+                            case G_TYPE_FLOAT:
+                            case G_TYPE_DOUBLE:
+                                playlist_data->rating = (gfloat)
+                                    json_node_get_double(node_tmp);
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                }
                 if(json_object_has_member(playlist_object, "LyricFile"))
                     str = json_object_get_string_member(playlist_object,
                         "LyricFile");
@@ -870,8 +891,8 @@ static inline JsonNode *rclib_db_build_json_node(GSequence *catalog)
                 playlist_data->tracknum);
             json_object_set_int_member(playlist_object, "Year",
                 playlist_data->year);
-            json_object_set_int_member(playlist_object, "Rating",
-                playlist_data->rating);
+            json_object_set_double_member(playlist_object, "Rating",
+                (gdouble)playlist_data->rating);
             if(playlist_data->lyricfile!=NULL)
             {
                 json_object_set_string_member(playlist_object, "LyricFile",
@@ -1046,7 +1067,7 @@ static void rclib_db_class_init(RCLibDbClass *klass)
      * added to the catalog.
      */
     db_signals[SIGNAL_CATALOG_ADDED] = g_signal_new("catalog-added",
-        RCLIB_DB_TYPE, G_SIGNAL_RUN_FIRST, G_STRUCT_OFFSET(RCLibDbClass,
+        RCLIB_TYPE_DB, G_SIGNAL_RUN_FIRST, G_STRUCT_OFFSET(RCLibDbClass,
         catalog_added), NULL, NULL, g_cclosure_marshal_VOID__POINTER,
         G_TYPE_NONE, 1, G_TYPE_POINTER, NULL);
 
@@ -1059,7 +1080,7 @@ static void rclib_db_class_init(RCLibDbClass *klass)
      * changed in the catalog.
      */
     db_signals[SIGNAL_CATALOG_CHANGED] = g_signal_new("catalog-changed",
-        RCLIB_DB_TYPE, G_SIGNAL_RUN_FIRST, G_STRUCT_OFFSET(RCLibDbClass,
+        RCLIB_TYPE_DB, G_SIGNAL_RUN_FIRST, G_STRUCT_OFFSET(RCLibDbClass,
         catalog_changed), NULL, NULL, g_cclosure_marshal_VOID__POINTER,
         G_TYPE_NONE, 1, G_TYPE_POINTER, NULL);
         
@@ -1072,7 +1093,7 @@ static void rclib_db_class_init(RCLibDbClass *klass)
      * is about to be deleted.
      */
     db_signals[SIGNAL_CATALOG_DELETE] = g_signal_new("catalog-delete",
-        RCLIB_DB_TYPE, G_SIGNAL_RUN_FIRST, G_STRUCT_OFFSET(RCLibDbClass,
+        RCLIB_TYPE_DB, G_SIGNAL_RUN_FIRST, G_STRUCT_OFFSET(RCLibDbClass,
         catalog_delete), NULL, NULL, g_cclosure_marshal_VOID__POINTER,
         G_TYPE_NONE, 1, G_TYPE_POINTER, NULL);
 
@@ -1087,7 +1108,7 @@ static void rclib_db_class_init(RCLibDbClass *klass)
      * been reordered.
      */
     db_signals[SIGNAL_CATALOG_REORDERED] = g_signal_new("catalog-reordered",
-        RCLIB_DB_TYPE, G_SIGNAL_RUN_FIRST, G_STRUCT_OFFSET(RCLibDbClass,
+        RCLIB_TYPE_DB, G_SIGNAL_RUN_FIRST, G_STRUCT_OFFSET(RCLibDbClass,
         catalog_reordered), NULL, NULL, g_cclosure_marshal_VOID__POINTER,
         G_TYPE_NONE, 1, G_TYPE_POINTER, NULL);
         
@@ -1100,7 +1121,7 @@ static void rclib_db_class_init(RCLibDbClass *klass)
      * added to the playlist.
      */
     db_signals[SIGNAL_PLAYLIST_ADDED] = g_signal_new("playlist-added",
-        RCLIB_DB_TYPE, G_SIGNAL_RUN_FIRST, G_STRUCT_OFFSET(RCLibDbClass,
+        RCLIB_TYPE_DB, G_SIGNAL_RUN_FIRST, G_STRUCT_OFFSET(RCLibDbClass,
         playlist_added), NULL, NULL, g_cclosure_marshal_VOID__POINTER,
         G_TYPE_NONE, 1, G_TYPE_POINTER, NULL);
         
@@ -1113,7 +1134,7 @@ static void rclib_db_class_init(RCLibDbClass *klass)
      * changed in the playlist.
      */
     db_signals[SIGNAL_PLAYLIST_CHANGED] = g_signal_new("playlist-changed",
-        RCLIB_DB_TYPE, G_SIGNAL_RUN_FIRST, G_STRUCT_OFFSET(RCLibDbClass,
+        RCLIB_TYPE_DB, G_SIGNAL_RUN_FIRST, G_STRUCT_OFFSET(RCLibDbClass,
         playlist_changed), NULL, NULL, g_cclosure_marshal_VOID__POINTER,
         G_TYPE_NONE, 1, G_TYPE_POINTER, NULL);
 
@@ -1126,7 +1147,7 @@ static void rclib_db_class_init(RCLibDbClass *klass)
      * is about to be deleted.
      */
     db_signals[SIGNAL_PLAYLIST_DELETE] = g_signal_new("playlist-delete",
-        RCLIB_DB_TYPE, G_SIGNAL_RUN_FIRST, G_STRUCT_OFFSET(RCLibDbClass,
+        RCLIB_TYPE_DB, G_SIGNAL_RUN_FIRST, G_STRUCT_OFFSET(RCLibDbClass,
         playlist_delete), NULL, NULL, g_cclosure_marshal_VOID__POINTER,
         G_TYPE_NONE, 1, G_TYPE_POINTER, NULL);
         
@@ -1143,7 +1164,7 @@ static void rclib_db_class_init(RCLibDbClass *klass)
      * been reordered.
      */
     db_signals[SIGNAL_PLAYLIST_REORDERED] = g_signal_new("playlist-reordered",
-        RCLIB_DB_TYPE, G_SIGNAL_RUN_FIRST, G_STRUCT_OFFSET(RCLibDbClass,
+        RCLIB_TYPE_DB, G_SIGNAL_RUN_FIRST, G_STRUCT_OFFSET(RCLibDbClass,
         playlist_reordered), NULL, NULL, rclib_marshal_VOID__POINTER_POINTER,
         G_TYPE_NONE, 2, G_TYPE_POINTER, G_TYPE_POINTER, NULL);
         
@@ -1156,7 +1177,7 @@ static void rclib_db_class_init(RCLibDbClass *klass)
      * queue have been processed.
      */
     db_signals[SIGNAL_IMPORT_UPDATED] = g_signal_new("import-updated",
-        RCLIB_DB_TYPE, G_SIGNAL_RUN_FIRST, G_STRUCT_OFFSET(RCLibDbClass,
+        RCLIB_TYPE_DB, G_SIGNAL_RUN_FIRST, G_STRUCT_OFFSET(RCLibDbClass,
         import_updated), NULL, NULL, g_cclosure_marshal_VOID__INT,
         G_TYPE_NONE, 1, G_TYPE_INT, NULL);
 
@@ -1169,7 +1190,7 @@ static void rclib_db_class_init(RCLibDbClass *klass)
      * queue have been processed.
      */
     db_signals[SIGNAL_REFRESH_UPDATED] = g_signal_new("refresh-updated",
-        RCLIB_DB_TYPE, G_SIGNAL_RUN_FIRST, G_STRUCT_OFFSET(RCLibDbClass,
+        RCLIB_TYPE_DB, G_SIGNAL_RUN_FIRST, G_STRUCT_OFFSET(RCLibDbClass,
         refresh_updated), NULL, NULL, g_cclosure_marshal_VOID__INT,
         G_TYPE_NONE, 1, G_TYPE_INT, NULL);
 }
@@ -1241,7 +1262,7 @@ gboolean rclib_db_init(const gchar *file)
         g_warning("The database is already initialized!");
         return FALSE;
     }
-    db_instance = g_object_new(RCLIB_DB_TYPE, NULL);
+    db_instance = g_object_new(RCLIB_TYPE_DB, NULL);
     priv = RCLIB_DB_GET_PRIVATE(RCLIB_DB(db_instance));
     if(priv->catalog==NULL || priv->import_queue==NULL ||
         priv->import_thread==NULL)
@@ -1803,11 +1824,13 @@ void rclib_db_playlist_set_type(GSequenceIter *iter,
  * Set the rating in the playlist pointed to by #iter.
  */
 
-void rclib_db_playlist_set_rating(GSequenceIter *iter, gint rating)
+void rclib_db_playlist_set_rating(GSequenceIter *iter, gfloat rating)
 {
     RCLibDbPrivate *priv;
     RCLibDbPlaylistData *playlist_data;
     if(iter==NULL) return;
+    if(rating<0.0) rating = 0.0;
+    if(rating>5.0) rating = 5.0;
     if(db_instance==NULL) return;
     priv = RCLIB_DB_GET_PRIVATE(RCLIB_DB(db_instance));
     if(priv==NULL) return;

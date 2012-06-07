@@ -42,7 +42,7 @@
  */
 
 #define RCLIB_ALBUM_GET_PRIVATE(obj) G_TYPE_INSTANCE_GET_PRIVATE((obj), \
-    RCLIB_ALBUM_TYPE, RCLibAlbumPrivate)
+    RCLIB_TYPE_ALBUM, RCLibAlbumPrivate)
 
 typedef struct RCLibAlbumPrivate
 {
@@ -174,7 +174,7 @@ static void rclib_album_class_init(RCLibAlbumClass *klass)
      * will not be saved in the player.
      */
     album_signals[SIGNAL_ALBUM_FOUND] = g_signal_new("album-found",
-        RCLIB_ALBUM_TYPE, G_SIGNAL_RUN_LAST,
+        RCLIB_TYPE_ALBUM, G_SIGNAL_RUN_LAST,
         G_STRUCT_OFFSET(RCLibAlbumClass, album_found), NULL, NULL,
         rclib_marshal_BOOLEAN__UINT_POINTER, G_TYPE_BOOLEAN, 2, G_TYPE_UINT,
         G_TYPE_POINTER, NULL);
@@ -187,7 +187,7 @@ static void rclib_album_class_init(RCLibAlbumClass *klass)
      * is found.
      */
     album_signals[SIGNAL_ALBUM_NONE] = g_signal_new("album-none",
-        RCLIB_ALBUM_TYPE, G_SIGNAL_RUN_FIRST,
+        RCLIB_TYPE_ALBUM, G_SIGNAL_RUN_FIRST,
         G_STRUCT_OFFSET(RCLibAlbumClass, album_none), NULL, NULL,
         g_cclosure_marshal_VOID__VOID, G_TYPE_NONE, 0, G_TYPE_NONE, NULL);
 }
@@ -235,7 +235,7 @@ GType rclib_album_get_type()
 void rclib_album_init()
 {
     g_message("Loading album image processor....");
-    album_instance = g_object_new(RCLIB_ALBUM_TYPE, NULL);
+    album_instance = g_object_new(RCLIB_TYPE_ALBUM, NULL);
     g_message("Album processor loaded.");
 }
 

@@ -4,35 +4,47 @@ bin_PROGRAMS = RhythmCat2
 noinst_LTLIBRARIES = librhythmcat-ui-2.0.la
 
 noinst_HEADERS = \
-    rc-ui-img-icon.xpm rc-ui-img-nocov.xpm
+    rc-ui-img-icon.xpm rc-ui-img-nocov.xpm rc-ui-unset-star-inline.h \
+    rc-ui-no-star-inline.h rc-ui-set-star-inline.h
 
 librhythmcat_ui_2_0_sources = \
     rc-ui-listmodel.c rc-ui-player.c rc-ui-window.c rc-ui-listview.c \
     rc-ui-menu.c rc-ui-dialog.c rc-ui-slabel.c rc-ui-spectrum.c \
-    rc-ui-style.c rc-ui-plugin.c rc-ui-settings.c rc-ui-effect.c rc-main.c
+    rc-ui-style.c rc-ui-plugin.c rc-ui-settings.c rc-ui-effect.c \
+    rc-ui-cell-renderer-rating.c rc-main.c
 
 librhythmcat_ui_2_0_headers = \
     rc-ui-listmodel.h rc-ui-listview.h rc-ui-player.h rc-ui-window.h \
     rc-ui-menu.h rc-ui-dialog.h rc-ui-slabel.h rc-ui-style.h \
-    rc-ui-spectrum.h rc-ui-plugin.h rc-ui-settings.h rc-ui-effect.h rc-main.h
+    rc-ui-spectrum.h rc-ui-plugin.h rc-ui-settings.h rc-ui-effect.h \
+    rc-ui-cell-renderer-rating.h rc-main.h
 
-librhythmcat_ui_2_0_builtsources = rc-ui-resources.c
+librhythmcat_ui_2_0_builtsources = rc-ui-resources.c rc-marshal.c
 
-librhythmcat_ui_2_0_builtheaders = rc-ui-resources.h
+librhythmcat_ui_2_0_builtheaders = rc-ui-resources.h rc-marshal.h
 
 RhythmCat2_SOURCES = \
     main.c
 
 librhythmcat_ui_2_0_resourcefiles = \
-    rc-ui-resources.gresource.xml resources/rc-ui-theme-monochrome.css
+    rc-ui-resources.gresource.xml \
+    resources/rc-ui-theme-monochrome.css
 
 rc-ui-resources.c: $(librhythmcat_ui_2_0_resourcefiles)
-	@GLIB_COMPILE_RESOURCE@ $(srcdir)/rc-ui-resources.gresource.xml \
+	@GLIB_COMPILE_RESOURCE@ $(top_srcdir)/ui/rc-ui-resources.gresource.xml \
 	    --target=rc-ui-resources.c --generate-source --c-name=rc_ui_resources
 
 rc-ui-resources.h: $(librhythmcat_ui_2_0_resourcefiles)
-	@GLIB_COMPILE_RESOURCE@ $(srcdir)/rc-ui-resources.gresource.xml \
+	@GLIB_COMPILE_RESOURCE@ $(top_srcdir)/ui/rc-ui-resources.gresource.xml \
 	    --target=rc-ui-resources.h --generate-header --c-name=rc_ui_resources
+
+rc-marshal.c: rc-marshal.list
+	@GLIB_GENMARSHAL@ --prefix=rc_marshal $(top_srcdir)/ui/rc-marshal.list \
+        --body > rc-marshal.c
+
+rc-marshal.h: rc-marshal.list
+	@GLIB_GENMARSHAL@ --prefix=rc_marshal $(top_srcdir)/ui/rc-marshal.list \
+        --header > rc-marshal.h
 
 librhythmcat_ui_2_0_la_SOURCES = \
     $(librhythmcat_ui_2_0_sources) $(librhythmcat_ui_2_0_builtsources)
@@ -70,6 +82,7 @@ if PLATFORM_WIN32
 endif 
 
 EXTRA_DIST = \
+    rc-marshal.list \
     rhythmcat-2.0.pc.in \
     rc-ui-resources.gresource.xml
     

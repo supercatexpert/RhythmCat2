@@ -25,6 +25,7 @@
 
 #include "rc-ui-listview.h"
 #include "rc-ui-listmodel.h"
+#include "rc-ui-cell-renderer-rating.h"
 #include "rc-ui-menu.h"
 #include "rc-ui-window.h"
 #include "rc-common.h"
@@ -84,35 +85,6 @@ typedef struct RCUiPlaylistViewPrivate
     GtkTreeViewColumn *rating_column; /* Not available now */
     gboolean display_mode;
 }RCUiPlaylistViewPrivate;
-
-typedef struct RCUiListViewPrivate
-{
-    GtkWidget *catalog_listview;
-    GtkWidget *playlist_listview;
-    GtkCellRenderer *catalog_state_renderer;
-    GtkCellRenderer *catalog_name_renderer;
-    GtkCellRenderer *playlist_state_renderer;
-    GtkCellRenderer *playlist_title_renderer;
-    GtkCellRenderer *playlist_artist_renderer;
-    GtkCellRenderer *playlist_album_renderer;
-    GtkCellRenderer *playlist_tracknum_renderer;
-    GtkCellRenderer *playlist_year_renderer;
-    GtkCellRenderer *playlist_ftype_renderer;
-    GtkCellRenderer *playlist_length_renderer;
-    GtkCellRenderer *playlist_rating_renderer; /* Not available now */
-    GtkTreeViewColumn *catalog_state_column;
-    GtkTreeViewColumn *catalog_name_column;
-    GtkTreeViewColumn *playlist_state_column;
-    GtkTreeViewColumn *playlist_title_column;
-    GtkTreeViewColumn *playlist_artist_column;
-    GtkTreeViewColumn *playlist_album_column;  
-    GtkTreeViewColumn *playlist_tracknum_column;
-    GtkTreeViewColumn *playlist_year_column;
-    GtkTreeViewColumn *playlist_ftype_column;
-    GtkTreeViewColumn *playlist_length_column;
-    GtkTreeViewColumn *playlist_rating_column; /* Not available now */
-    gboolean display_mode;
-}RCUiListViewPrivate;
 
 static GObject *ui_catalog_view_instance = NULL;
 static GObject *ui_playlist_view_instance = NULL;
@@ -713,6 +685,19 @@ static gboolean rc_ui_listview_playlist_search_comparison_func(
     return flag;
 }
 
+static void rc_ui_playlist_view_rated_cb(RCUiCellRendererRating *renderer,
+    const char *path, gfloat rating, gpointer data)
+{
+    GtkTreeModel *model;
+    GtkTreeIter iter = {0};
+    model = gtk_tree_view_get_model(GTK_TREE_VIEW(
+        ui_playlist_view_instance));
+    if(model==NULL) return;
+    if(!gtk_tree_model_get_iter_from_string(model, &iter, path))
+        return;
+    rclib_db_playlist_set_rating((GSequenceIter *)iter.user_data, rating);
+}
+
 static void rc_ui_catalog_view_finalize(GObject *object)
 {
     RCUiCatalogViewPrivate *priv = NULL;
@@ -838,7 +823,7 @@ static void rc_ui_playlist_view_instance_init(RCUiPlaylistView *view)
     priv->year_renderer = gtk_cell_renderer_text_new();
     priv->ftype_renderer = gtk_cell_renderer_text_new();
     priv->length_renderer = gtk_cell_renderer_text_new();
-    priv->rating_renderer = NULL;
+    priv->rating_renderer = rc_ui_cell_renderer_rating_new();
     gtk_cell_renderer_set_fixed_size(priv->state_renderer, 16, -1);
     gtk_cell_renderer_set_fixed_size(priv->title_renderer, 120, -1);
     gtk_cell_renderer_set_fixed_size(priv->artist_renderer, 60, -1);
@@ -892,7 +877,9 @@ static void rc_ui_playlist_view_instance_init(RCUiPlaylistView *view)
     priv->length_column = gtk_tree_view_column_new_with_attributes(
         _("Length"), priv->length_renderer, "text",
         RC_UI_PLAYLIST_COLUMN_LENGTH, NULL);
-    priv->rating_column = NULL;
+    priv->rating_column = gtk_tree_view_column_new_with_attributes(
+        _("Rating"), priv->rating_renderer, "rating",
+        RC_UI_PLAYLIST_COLUMN_RATING, NULL);
     gtk_tree_view_column_set_cell_data_func(priv->title_column,
         priv->title_renderer, rc_ui_listview_playlist_text_call_data_func,
         NULL, NULL);
@@ -931,6 +918,9 @@ static void rc_ui_playlist_view_instance_init(RCUiPlaylistView *view)
     g_object_set(priv->length_column, "sizing",
         GTK_TREE_VIEW_COLUMN_FIXED, "fixed-width", 55, "alignment",
         1.0, NULL);
+    g_object_set(priv->rating_column, "sizing",
+        GTK_TREE_VIEW_COLUMN_FIXED, "fixed-width", 80, "alignment",
+        1.0, "visible", FALSE, NULL);
     gtk_tree_view_append_column(GTK_TREE_VIEW(view), priv->state_column);
     gtk_tree_view_append_column(GTK_TREE_VIEW(view), priv->title_column);
     gtk_tree_view_append_column(GTK_TREE_VIEW(view), priv->artist_column);
@@ -939,6 +929,7 @@ static void rc_ui_playlist_view_instance_init(RCUiPlaylistView *view)
     gtk_tree_view_append_column(GTK_TREE_VIEW(view), priv->year_column);
     gtk_tree_view_append_column(GTK_TREE_VIEW(view), priv->ftype_column);
     gtk_tree_view_append_column(GTK_TREE_VIEW(view), priv->length_column);
+    gtk_tree_view_append_column(GTK_TREE_VIEW(view), priv->rating_column);
     selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(view));
     gtk_tree_selection_set_mode(selection, GTK_SELECTION_MULTIPLE);
     gtk_tree_view_columns_autosize(GTK_TREE_VIEW(view));
@@ -959,6 +950,8 @@ static void rc_ui_playlist_view_instance_init(RCUiPlaylistView *view)
         G_CALLBACK(rc_ui_listview_playlist_button_release_event), NULL);
     g_signal_connect(view, "row-activated",
         G_CALLBACK(rc_ui_listview_playlist_row_activated), NULL);
+    g_signal_connect(priv->rating_renderer, "rated",
+        G_CALLBACK(rc_ui_playlist_view_rated_cb), priv);
 }
 
 GType rc_ui_catalog_view_get_type()
@@ -1429,6 +1422,7 @@ void rc_ui_listview_playlist_set_column_display_mode(gboolean mode)
         g_object_set(priv->tracknum_column, "visible", FALSE, NULL);
         g_object_set(priv->year_column, "visible", FALSE, NULL);
         g_object_set(priv->ftype_column, "visible", FALSE, NULL);
+        g_object_set(priv->rating_column, "visible", FALSE, NULL);
     }
     rc_ui_main_window_playlist_scrolled_window_set_horizontal_policy(mode);
 }
@@ -1519,6 +1513,12 @@ void rc_ui_listview_playlist_set_enabled_columns(guint column_flags,
             enable_flags & RC_UI_LISTVIEW_PLAYLIST_COLUMN_FTYPE ?
             TRUE: FALSE, NULL);
     }
+    if(column_flags & RC_UI_LISTVIEW_PLAYLIST_COLUMN_RATING)
+    {
+        g_object_set(priv->rating_column, "visible",
+            enable_flags & RC_UI_LISTVIEW_PLAYLIST_COLUMN_RATING ?
+            TRUE: FALSE, NULL);
+    }
 }
 
 /**
@@ -1552,6 +1552,9 @@ guint rc_ui_listview_playlist_get_enabled_columns()
     g_object_get(priv->ftype_column, "visible", &state, NULL);
     if(state)
         flags |= RC_UI_LISTVIEW_PLAYLIST_COLUMN_FTYPE;
+    g_object_get(priv->rating_column, "visible", &state, NULL);
+    if(state)
+        flags |= RC_UI_LISTVIEW_PLAYLIST_COLUMN_RATING;
     return flags;
 }
 

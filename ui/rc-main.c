@@ -54,7 +54,7 @@
  */
 
 #define RC_MAIN_APPLICATION_GET_PRIVATE(obj) \
-    G_TYPE_INSTANCE_GET_PRIVATE((obj), RC_MAIN_APPLICATION_TYPE, \
+    G_TYPE_INSTANCE_GET_PRIVATE((obj), RC_TYPE_MAIN_APPLICATION, \
     RCMainApplicationPrivate)
 
 typedef struct RCMainApplicationPrivate
@@ -181,12 +181,17 @@ static void rc_main_app_activate(GApplication *application)
             "PlaylistColumnFileTypeEnabled", NULL);
         if(column_flag)
             column_flags |= RC_UI_LISTVIEW_PLAYLIST_COLUMN_FTYPE;
+        column_flag = rclib_settings_get_boolean("MainUI",
+            "PlaylistColumnRatingEnabled", NULL);
+        if(column_flag)
+            column_flags |= RC_UI_LISTVIEW_PLAYLIST_COLUMN_RATING;
         rc_ui_listview_playlist_set_enabled_columns(
             RC_UI_LISTVIEW_PLAYLIST_COLUMN_ARTIST |
             RC_UI_LISTVIEW_PLAYLIST_COLUMN_ALBUM |
             RC_UI_LISTVIEW_PLAYLIST_COLUMN_TRACK |
             RC_UI_LISTVIEW_PLAYLIST_COLUMN_YEAR |
-            RC_UI_LISTVIEW_PLAYLIST_COLUMN_FTYPE,
+            RC_UI_LISTVIEW_PLAYLIST_COLUMN_FTYPE |
+            RC_UI_LISTVIEW_PLAYLIST_COLUMN_RATING,
             column_flags);
     }
     else
@@ -465,7 +470,7 @@ gint rc_main_run(gint *argc, gchar **argv[])
         ;
     g_set_application_name("RhythmCat2");
     g_set_prgname("RhythmCat2");
-    app = g_object_new(RC_MAIN_APPLICATION_TYPE, "application-id",
+    app = g_object_new(RC_TYPE_MAIN_APPLICATION, "application-id",
         main_app_id, "flags", G_APPLICATION_HANDLES_OPEN, NULL);
     if(app!=NULL)
     {

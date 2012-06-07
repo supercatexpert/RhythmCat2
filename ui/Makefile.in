@@ -69,15 +69,17 @@ am__DEPENDENCIES_1 =
 am__librhythmcat_ui_2_0_la_SOURCES_DIST = rc-ui-listmodel.c \
 	rc-ui-player.c rc-ui-window.c rc-ui-listview.c rc-ui-menu.c \
 	rc-ui-dialog.c rc-ui-slabel.c rc-ui-spectrum.c rc-ui-style.c \
-	rc-ui-plugin.c rc-ui-settings.c rc-ui-effect.c rc-main.c \
-	rc-ui-resources.c
+	rc-ui-plugin.c rc-ui-settings.c rc-ui-effect.c \
+	rc-ui-cell-renderer-rating.c rc-main.c rc-ui-resources.c \
+	rc-marshal.c
 @WITH_GTK_UI_TRUE@am__objects_1 = rc-ui-listmodel.lo rc-ui-player.lo \
 @WITH_GTK_UI_TRUE@	rc-ui-window.lo rc-ui-listview.lo \
 @WITH_GTK_UI_TRUE@	rc-ui-menu.lo rc-ui-dialog.lo \
 @WITH_GTK_UI_TRUE@	rc-ui-slabel.lo rc-ui-spectrum.lo \
 @WITH_GTK_UI_TRUE@	rc-ui-style.lo rc-ui-plugin.lo \
-@WITH_GTK_UI_TRUE@	rc-ui-settings.lo rc-ui-effect.lo rc-main.lo
-@WITH_GTK_UI_TRUE@am__objects_2 = rc-ui-resources.lo
+@WITH_GTK_UI_TRUE@	rc-ui-settings.lo rc-ui-effect.lo \
+@WITH_GTK_UI_TRUE@	rc-ui-cell-renderer-rating.lo rc-main.lo
+@WITH_GTK_UI_TRUE@am__objects_2 = rc-ui-resources.lo rc-marshal.lo
 @WITH_GTK_UI_TRUE@am_librhythmcat_ui_2_0_la_OBJECTS =  \
 @WITH_GTK_UI_TRUE@	$(am__objects_1) $(am__objects_2)
 librhythmcat_ui_2_0_la_OBJECTS = $(am_librhythmcat_ui_2_0_la_OBJECTS)
@@ -167,8 +169,11 @@ am__librhythmcat_ui_2_0include_HEADERS_DIST = rc-common.h \
 	rc-ui-listmodel.h rc-ui-listview.h rc-ui-player.h \
 	rc-ui-window.h rc-ui-menu.h rc-ui-dialog.h rc-ui-slabel.h \
 	rc-ui-style.h rc-ui-spectrum.h rc-ui-plugin.h rc-ui-settings.h \
-	rc-ui-effect.h rc-main.h rc-ui-resources.h
-am__noinst_HEADERS_DIST = rc-ui-img-icon.xpm rc-ui-img-nocov.xpm
+	rc-ui-effect.h rc-ui-cell-renderer-rating.h rc-main.h \
+	rc-ui-resources.h rc-marshal.h
+am__noinst_HEADERS_DIST = rc-ui-img-icon.xpm rc-ui-img-nocov.xpm \
+	rc-ui-unset-star-inline.h rc-ui-no-star-inline.h \
+	rc-ui-set-star-inline.h
 HEADERS = $(librhythmcat_ui_2_0include_HEADERS) $(noinst_HEADERS)
 RECURSIVE_CLEAN_TARGETS = mostlyclean-recursive clean-recursive	\
   distclean-recursive maintainer-clean-recursive
@@ -394,25 +399,29 @@ top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 @WITH_GTK_UI_TRUE@noinst_LTLIBRARIES = librhythmcat-ui-2.0.la
 @WITH_GTK_UI_TRUE@noinst_HEADERS = \
-@WITH_GTK_UI_TRUE@    rc-ui-img-icon.xpm rc-ui-img-nocov.xpm
+@WITH_GTK_UI_TRUE@    rc-ui-img-icon.xpm rc-ui-img-nocov.xpm rc-ui-unset-star-inline.h \
+@WITH_GTK_UI_TRUE@    rc-ui-no-star-inline.h rc-ui-set-star-inline.h
 
 @WITH_GTK_UI_TRUE@librhythmcat_ui_2_0_sources = \
 @WITH_GTK_UI_TRUE@    rc-ui-listmodel.c rc-ui-player.c rc-ui-window.c rc-ui-listview.c \
 @WITH_GTK_UI_TRUE@    rc-ui-menu.c rc-ui-dialog.c rc-ui-slabel.c rc-ui-spectrum.c \
-@WITH_GTK_UI_TRUE@    rc-ui-style.c rc-ui-plugin.c rc-ui-settings.c rc-ui-effect.c rc-main.c
+@WITH_GTK_UI_TRUE@    rc-ui-style.c rc-ui-plugin.c rc-ui-settings.c rc-ui-effect.c \
+@WITH_GTK_UI_TRUE@    rc-ui-cell-renderer-rating.c rc-main.c
 
 @WITH_GTK_UI_TRUE@librhythmcat_ui_2_0_headers = \
 @WITH_GTK_UI_TRUE@    rc-ui-listmodel.h rc-ui-listview.h rc-ui-player.h rc-ui-window.h \
 @WITH_GTK_UI_TRUE@    rc-ui-menu.h rc-ui-dialog.h rc-ui-slabel.h rc-ui-style.h \
-@WITH_GTK_UI_TRUE@    rc-ui-spectrum.h rc-ui-plugin.h rc-ui-settings.h rc-ui-effect.h rc-main.h
+@WITH_GTK_UI_TRUE@    rc-ui-spectrum.h rc-ui-plugin.h rc-ui-settings.h rc-ui-effect.h \
+@WITH_GTK_UI_TRUE@    rc-ui-cell-renderer-rating.h rc-main.h
 
-@WITH_GTK_UI_TRUE@librhythmcat_ui_2_0_builtsources = rc-ui-resources.c
-@WITH_GTK_UI_TRUE@librhythmcat_ui_2_0_builtheaders = rc-ui-resources.h
+@WITH_GTK_UI_TRUE@librhythmcat_ui_2_0_builtsources = rc-ui-resources.c rc-marshal.c
+@WITH_GTK_UI_TRUE@librhythmcat_ui_2_0_builtheaders = rc-ui-resources.h rc-marshal.h
 @WITH_GTK_UI_TRUE@RhythmCat2_SOURCES = \
 @WITH_GTK_UI_TRUE@    main.c
 
 @WITH_GTK_UI_TRUE@librhythmcat_ui_2_0_resourcefiles = \
-@WITH_GTK_UI_TRUE@    rc-ui-resources.gresource.xml resources/rc-ui-theme-monochrome.css
+@WITH_GTK_UI_TRUE@    rc-ui-resources.gresource.xml \
+@WITH_GTK_UI_TRUE@    resources/rc-ui-theme-monochrome.css
 
 @WITH_GTK_UI_TRUE@librhythmcat_ui_2_0_la_SOURCES = \
 @WITH_GTK_UI_TRUE@    $(librhythmcat_ui_2_0_sources) $(librhythmcat_ui_2_0_builtsources)
@@ -442,6 +451,7 @@ top_srcdir = @top_srcdir@
 @WITH_GTK_UI_TRUE@	$(top_builddir)/lib/librhythmcat-2.0.la \
 @WITH_GTK_UI_TRUE@	librhythmcat-ui-2.0.la $(am__append_3)
 @WITH_GTK_UI_TRUE@EXTRA_DIST = \
+@WITH_GTK_UI_TRUE@    rc-marshal.list \
 @WITH_GTK_UI_TRUE@    rhythmcat-2.0.pc.in \
 @WITH_GTK_UI_TRUE@    rc-ui-resources.gresource.xml
 
@@ -568,6 +578,8 @@ distclean-compile:
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/main.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rc-main.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rc-marshal.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rc-ui-cell-renderer-rating.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rc-ui-dialog.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rc-ui-effect.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rc-ui-listmodel.Plo@am__quote@
@@ -1013,12 +1025,20 @@ uninstall-am: uninstall-binPROGRAMS uninstall-girDATA \
 
 
 @WITH_GTK_UI_TRUE@rc-ui-resources.c: $(librhythmcat_ui_2_0_resourcefiles)
-@WITH_GTK_UI_TRUE@	@GLIB_COMPILE_RESOURCE@ $(srcdir)/rc-ui-resources.gresource.xml \
+@WITH_GTK_UI_TRUE@	@GLIB_COMPILE_RESOURCE@ $(top_srcdir)/ui/rc-ui-resources.gresource.xml \
 @WITH_GTK_UI_TRUE@	    --target=rc-ui-resources.c --generate-source --c-name=rc_ui_resources
 
 @WITH_GTK_UI_TRUE@rc-ui-resources.h: $(librhythmcat_ui_2_0_resourcefiles)
-@WITH_GTK_UI_TRUE@	@GLIB_COMPILE_RESOURCE@ $(srcdir)/rc-ui-resources.gresource.xml \
+@WITH_GTK_UI_TRUE@	@GLIB_COMPILE_RESOURCE@ $(top_srcdir)/ui/rc-ui-resources.gresource.xml \
 @WITH_GTK_UI_TRUE@	    --target=rc-ui-resources.h --generate-header --c-name=rc_ui_resources
+
+@WITH_GTK_UI_TRUE@rc-marshal.c: rc-marshal.list
+@WITH_GTK_UI_TRUE@	@GLIB_GENMARSHAL@ --prefix=rc_marshal $(top_srcdir)/ui/rc-marshal.list \
+@WITH_GTK_UI_TRUE@        --body > rc-marshal.c
+
+@WITH_GTK_UI_TRUE@rc-marshal.h: rc-marshal.list
+@WITH_GTK_UI_TRUE@	@GLIB_GENMARSHAL@ --prefix=rc_marshal $(top_srcdir)/ui/rc-marshal.list \
+@WITH_GTK_UI_TRUE@        --header > rc-marshal.h
 
 @HAVE_INTROSPECTION_TRUE@@WITH_GTK_UI_TRUE@-include $(INTROSPECTION_MAKEFILE)
 

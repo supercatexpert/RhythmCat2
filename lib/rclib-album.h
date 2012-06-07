@@ -31,17 +31,17 @@
 
 G_BEGIN_DECLS
 
-#define RCLIB_ALBUM_TYPE (rclib_album_get_type())
+#define RCLIB_TYPE_ALBUM (rclib_album_get_type())
 #define RCLIB_ALBUM(obj) (G_TYPE_CHECK_INSTANCE_CAST((obj), \
-    RCLIB_ALBUM_TYPE, RCLibAlbum))
+    RCLIB_TYPE_ALBUM, RCLibAlbum))
 #define RCLIB_ALBUM_CLASS(k) (G_TYPE_CHECK_CLASS_CAST((k), \
-    RCLIB_ALBUM_TYPE, RCLibAlbumClass))
+    RCLIB_TYPE_ALBUM, RCLibAlbumClass))
 #define RCLIB_IS_ALBUM(o) (G_TYPE_CHECK_INSTANCE_TYPE((o), \
-    RCLIB_ALBUM_TYPE))
+    RCLIB_TYPE_ALBUM))
 #define RCLIB_IS_ALBUM_CLASS(k) (G_TYPE_CHECK_CLASS_TYPE((k), \
-    RCLIB_ALBUM_TYPE))
+    RCLIB_TYPE_ALBUM))
 #define RCLIB_ALBUM_GET_CLASS(o) (G_TYPE_INSTANCE_GET_CLASS((o), \
-    RCLIB_ALBUM_TYPE, RCLibAlbumClass))
+    RCLIB_TYPE_ALBUM, RCLibAlbumClass))
 
 /**
  * RCLibAlbumType:

@@ -42,7 +42,7 @@
  */
 
 #define RCLIB_LYRIC_GET_PRIVATE(obj) G_TYPE_INSTANCE_GET_PRIVATE((obj), \
-    RCLIB_LYRIC_TYPE, RCLibLyricPrivate)
+    RCLIB_TYPE_LYRIC, RCLibLyricPrivate)
 
 typedef struct RCLibLyricPrivate
 {
@@ -237,7 +237,7 @@ static void rclib_lyric_class_init(RCLibLyricClass *klass)
      * ready to be used.
      */
     lyric_signals[SIGNAL_LYRIC_READY] = g_signal_new("lyric-ready",
-        RCLIB_LYRIC_TYPE, G_SIGNAL_RUN_FIRST,
+        RCLIB_TYPE_LYRIC, G_SIGNAL_RUN_FIRST,
         G_STRUCT_OFFSET(RCLibLyricClass, lyric_ready), NULL, NULL,
         g_cclosure_marshal_VOID__UINT, G_TYPE_NONE, 1, G_TYPE_UINT, NULL);
         
@@ -252,7 +252,7 @@ static void rclib_lyric_class_init(RCLibLyricClass *klass)
      * found which matches the current playing position.
      */
     lyric_signals[SIGNAL_LINE_CHANGED] = g_signal_new("line-changed",
-        RCLIB_LYRIC_TYPE, G_SIGNAL_RUN_FIRST,
+        RCLIB_TYPE_LYRIC, G_SIGNAL_RUN_FIRST,
         G_STRUCT_OFFSET(RCLibLyricClass, line_changed), NULL, NULL,
         rclib_marshal_VOID__UINT_POINTER_INT64, G_TYPE_NONE, 3, G_TYPE_UINT,
         G_TYPE_POINTER, G_TYPE_INT64, NULL);
@@ -269,7 +269,7 @@ static void rclib_lyric_class_init(RCLibLyricClass *klass)
      * lyric display.
      */
     lyric_signals[SIGNAL_LYRIC_TIMER] = g_signal_new("lyric-timer",
-        RCLIB_LYRIC_TYPE, G_SIGNAL_RUN_FIRST,
+        RCLIB_TYPE_LYRIC, G_SIGNAL_RUN_FIRST,
         G_STRUCT_OFFSET(RCLibLyricClass, lyric_timer), NULL, NULL,
         rclib_marshal_VOID__UINT_INT64_POINTER_INT64, G_TYPE_NONE, 4,
         G_TYPE_UINT, G_TYPE_INT64, G_TYPE_POINTER, G_TYPE_INT64, NULL);
@@ -282,7 +282,7 @@ static void rclib_lyric_class_init(RCLibLyricClass *klass)
      * the current playing music may not exist.
      */
     lyric_signals[SIGNAL_LYRIC_MAY_MISSING] = g_signal_new(
-        "lyric-may-missing", RCLIB_LYRIC_TYPE, G_SIGNAL_RUN_FIRST,
+        "lyric-may-missing", RCLIB_TYPE_LYRIC, G_SIGNAL_RUN_FIRST,
         G_STRUCT_OFFSET(RCLibLyricClass, lyric_may_missing), NULL, NULL,
         g_cclosure_marshal_VOID__VOID, G_TYPE_NONE, 0,
         G_TYPE_NONE, NULL);   
@@ -347,7 +347,7 @@ void rclib_lyric_init()
         g_warning("Lyric processor is already loaded!");
         return;
     }
-    lyric_instance = g_object_new(RCLIB_LYRIC_TYPE, NULL);
+    lyric_instance = g_object_new(RCLIB_TYPE_LYRIC, NULL);
     priv = RCLIB_LYRIC_GET_PRIVATE(lyric_instance);
     if(priv->parsed_data1.seq==NULL || priv->parsed_data2.seq==NULL)
     {

@@ -26,6 +26,7 @@
 #include "rc-ui-dialog.h"
 #include "rc-ui-listview.h"
 #include "rc-ui-window.h"
+#include "rc-ui-player.h"
 #include "rc-common.h"
 
 /**
@@ -71,7 +72,7 @@ void rc_ui_dialog_about_player()
         rclib_major_version, rclib_minor_version, rclib_micro_version,
         rclib_build_date);
     g_object_set(about_dialog, "program-name", "RhythmCat2 Music Player",
-        "logo-icon-name", "RhythmCatIcon", "authors",
+        "logo", rc_ui_player_get_icon_image(), "authors",
         dialog_about_authors, "documenters", dialog_about_documenters,
         "artists", dialog_about_artists, "comments",
         _("A music player based on GTK+ 3.0 & GStreamer 0.10"), "website",

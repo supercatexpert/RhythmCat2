@@ -35,7 +35,7 @@
  */
 
 #define RC_UI_SCROLLABLE_LABEL_GET_PRIVATE(obj)  \
-    G_TYPE_INSTANCE_GET_PRIVATE((obj), RC_UI_SCROLLABLE_LABEL_TYPE, \
+    G_TYPE_INSTANCE_GET_PRIVATE((obj), RC_UI_TYPE_SCROLLABLE_LABEL, \
     RCUiScrollableLabelPrivate)
 
 typedef struct RCUiScrollableLabelPrivate
@@ -113,7 +113,7 @@ static void rc_ui_scrollable_label_realize(GtkWidget *widget)
     gint attr_mask;
     GtkStyleContext *context;
     g_return_if_fail(widget!=NULL);
-    g_return_if_fail(IS_RC_UI_SCROLLABLE_LABEL(widget));
+    g_return_if_fail(RC_UI_IS_SCROLLABLE_LABEL(widget));
     label = RC_UI_SCROLLABLE_LABEL(widget);
     gtk_widget_set_realized(widget, TRUE);
     gtk_widget_get_allocation(widget, &allocation);
@@ -143,7 +143,7 @@ static void rc_ui_scrollable_label_size_allocate(GtkWidget *widget,
 {
     GdkWindow *window;
     g_return_if_fail(widget!=NULL);
-    g_return_if_fail(IS_RC_UI_SCROLLABLE_LABEL(widget));
+    g_return_if_fail(RC_UI_IS_SCROLLABLE_LABEL(widget));
     gtk_widget_set_allocation(widget, allocation);
     window = gtk_widget_get_window(widget);
     if(gtk_widget_get_realized(widget))
@@ -174,7 +174,7 @@ static gboolean rc_ui_scrollable_label_draw(GtkWidget *widget, cairo_t *cr)
     gint width, height;
     GtkStyleContext *style_context;
     g_return_val_if_fail(widget!=NULL || cr!=NULL, FALSE);
-    g_return_val_if_fail(IS_RC_UI_SCROLLABLE_LABEL(widget), FALSE);
+    g_return_val_if_fail(RC_UI_IS_SCROLLABLE_LABEL(widget), FALSE);
     label = RC_UI_SCROLLABLE_LABEL(widget);
     priv = RC_UI_SCROLLABLE_LABEL_GET_PRIVATE(label);
     style_context = gtk_widget_get_style_context(widget);

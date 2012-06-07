@@ -123,7 +123,6 @@ static GType rc_ui_playlist_store_get_column_type(GtkTreeModel *model,
     {
         case RC_UI_PLAYLIST_COLUMN_TYPE:
         case RC_UI_PLAYLIST_COLUMN_TRACK:
-        case RC_UI_PLAYLIST_COLUMN_RATING:
         case RC_UI_PLAYLIST_COLUMN_YEAR:
             type = G_TYPE_INT;
             break;
@@ -138,6 +137,9 @@ static GType rc_ui_playlist_store_get_column_type(GtkTreeModel *model,
             break;
         case RC_UI_PLAYLIST_COLUMN_PLAYING_FLAG:
             type = G_TYPE_BOOLEAN;
+            break;
+        case RC_UI_PLAYLIST_COLUMN_RATING:
+            type = G_TYPE_FLOAT;
             break;
         default:
             type = G_TYPE_INVALID;
@@ -445,8 +447,8 @@ static void rc_ui_playlist_store_get_value(GtkTreeModel *model,
             g_value_set_int(value, list_data->year);
             break;
         case RC_UI_PLAYLIST_COLUMN_RATING:
-            g_value_init(value, G_TYPE_INT);
-            g_value_set_int(value, list_data->rating);
+            g_value_init(value, G_TYPE_FLOAT);
+            g_value_set_float(value, list_data->rating);
             break;
         case RC_UI_PLAYLIST_COLUMN_PLAYING_FLAG:
             g_value_init(value, G_TYPE_BOOLEAN);

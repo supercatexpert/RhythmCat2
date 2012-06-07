@@ -32,6 +32,9 @@
 #include "rc-ui-slabel.h"
 #include "rc-ui-spectrum.h"
 #include "rc-ui-img-icon.xpm"
+#include "rc-ui-unset-star-inline.h"
+#include "rc-ui-no-star-inline.h"
+#include "rc-ui-set-star-inline.h"
 #include "rc-common.h"
 
 /**
@@ -47,7 +50,7 @@
 #define RC_UI_PLAYER_COVER_IMAGE_SIZE 160
 
 #define RC_UI_PLAYER_GET_PRIVATE(obj) G_TYPE_INSTANCE_GET_PRIVATE((obj), \
-    RC_UI_PLAYER_TYPE, RCUiPlayerPrivate)
+    RC_UI_TYPE_PLAYER, RCUiPlayerPrivate)
 
 typedef struct RCUiPlayerPrivate
 {
@@ -154,7 +157,7 @@ static void rc_ui_player_class_init(RCUiPlayerClass *klass)
      * The ::ready signal is emitted when the main UI is ready.
      */
     ui_player_signals[SIGNAL_READY] = g_signal_new("ready",
-        RC_UI_PLAYER_TYPE, G_SIGNAL_RUN_FIRST,
+        RC_UI_TYPE_PLAYER, G_SIGNAL_RUN_FIRST,
         G_STRUCT_OFFSET(RCUiPlayerClass, ready), NULL, NULL,
         g_cclosure_marshal_VOID__VOID, G_TYPE_NONE, 0, G_TYPE_NONE, NULL);
 }
@@ -162,9 +165,22 @@ static void rc_ui_player_class_init(RCUiPlayerClass *klass)
 static void rc_ui_player_instance_init(RCUiPlayer *ui)
 {
     RCUiPlayerPrivate *priv = RC_UI_PLAYER_GET_PRIVATE(ui);
+    GdkPixbuf *pixbuf;
     priv->icon_pixbuf = gdk_pixbuf_new_from_xpm_data(
         (const gchar **)&ui_image_icon);
     gtk_icon_theme_add_builtin_icon("RhythmCatIcon", 128, priv->icon_pixbuf);
+    pixbuf = gdk_pixbuf_new_from_inline(-1, rc_ui_unset_star_inline, FALSE,
+        NULL);
+    gtk_icon_theme_add_builtin_icon("RCUnsetStar", 16, pixbuf);
+    g_object_unref(pixbuf);   
+    pixbuf = gdk_pixbuf_new_from_inline(-1, rc_ui_no_star_inline, FALSE,
+        NULL);
+    gtk_icon_theme_add_builtin_icon("RCNoStar", 16, pixbuf);
+    g_object_unref(pixbuf);
+    pixbuf = gdk_pixbuf_new_from_inline(-1, rc_ui_set_star_inline, FALSE,
+        NULL);
+    gtk_icon_theme_add_builtin_icon("RCSetStar", 16, pixbuf);
+    g_object_unref(pixbuf);
     priv->tray_icon = gtk_status_icon_new_from_pixbuf(priv->icon_pixbuf);
     priv->main_window = rc_ui_main_window_get_widget();
     priv->ui_manager = rc_ui_menu_get_ui_manager();
@@ -215,7 +231,7 @@ void rc_ui_player_init(GtkApplication *app)
         g_warning("Main UI is already initialized!");
         return;
     }
-    ui_player_instance = g_object_new(RC_UI_PLAYER_TYPE, NULL);
+    ui_player_instance = g_object_new(RC_UI_TYPE_PLAYER, NULL);
     priv = RC_UI_PLAYER_GET_PRIVATE(ui_player_instance);
     if(priv!=NULL && app!=NULL)
     {

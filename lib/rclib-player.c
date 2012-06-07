@@ -40,7 +40,7 @@
  */
 
 #define RCLIB_PLAYER_GET_PRIVATE(obj) G_TYPE_INSTANCE_GET_PRIVATE((obj), \
-    RCLIB_PLAYER_TYPE, RCLibPlayerPrivate)
+    RCLIB_TYPE_PLAYER, RCLibPlayerPrivate)
 
 typedef struct RCLibPlayerPrivate
 {
@@ -200,7 +200,7 @@ static void rclib_player_class_init(RCLibPlayerClass *klass)
      * mode has been set.
      */
     player_signals[SIGNAL_REPEAT_MODE_CHANGED] = g_signal_new(
-        "repeat-mode-changed", RCLIB_PLAYER_TYPE, G_SIGNAL_RUN_FIRST,
+        "repeat-mode-changed", RCLIB_TYPE_PLAYER, G_SIGNAL_RUN_FIRST,
         G_STRUCT_OFFSET(RCLibPlayerClass, repeat_mode_changed), NULL, NULL,
         g_cclosure_marshal_VOID__UINT, G_TYPE_NONE, 1, G_TYPE_UINT, NULL);
         
@@ -213,7 +213,7 @@ static void rclib_player_class_init(RCLibPlayerClass *klass)
      * mode has been set.
      */
     player_signals[SIGNAL_RANDOM_MODE_CHANGED] = g_signal_new(
-        "random-mode-changed", RCLIB_PLAYER_TYPE, G_SIGNAL_RUN_FIRST,
+        "random-mode-changed", RCLIB_TYPE_PLAYER, G_SIGNAL_RUN_FIRST,
         G_STRUCT_OFFSET(RCLibPlayerClass, random_mode_changed), NULL, NULL,
         g_cclosure_marshal_VOID__UINT, G_TYPE_NONE, 1, G_TYPE_UINT, NULL);
 }
@@ -265,7 +265,7 @@ void rclib_player_init()
         g_warning("Player scheduler is already loaded!");
         return;
     }
-    player_instance = g_object_new(RCLIB_PLAYER_TYPE, NULL);
+    player_instance = g_object_new(RCLIB_TYPE_PLAYER, NULL);
     g_message("Player scheduler loaded.");
 }
 

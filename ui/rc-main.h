@@ -31,17 +31,17 @@
 
 G_BEGIN_DECLS
 
-#define RC_MAIN_APPLICATION_TYPE (rc_main_application_get_type())
+#define RC_TYPE_MAIN_APPLICATION (rc_main_application_get_type())
 #define RC_MAIN_APPLICATION(obj) (G_TYPE_CHECK_INSTANCE_CAST((obj), \
-    RC_MAIN_APPLICATION_TYPE, RCMainApplication))
+    RC_TYPE_MAIN_APPLICATION, RCMainApplication))
 #define RC_MAIN_APPLICATION_CLASS(k) (G_TYPE_CHECK_CLASS_CAST((k), \
-    RC_MAIN_APPLICATION_TYPE, RCMainApplicationClass))
+    RC_TYPE_MAIN_APPLICATION, RCMainApplicationClass))
 #define RC_IS_MAIN_APPLICATION(o) (G_TYPE_CHECK_INSTANCE_TYPE((o), \
-    RC_MAIN_APPLICATION_TYPE))
+    RC_TYPE_MAIN_APPLICATION))
 #define RC_IS_MAIN_APPLICATION_CLASS(k) (G_TYPE_CHECK_CLASS_TYPE((k), \
-    RC_MAIN_APPLICATION_TYPE))
+    RC_TYPE_MAIN_APPLICATION))
 #define RC_MAIN_APPLICATION_GET_CLASS(o) (G_TYPE_INSTANCE_GET_CLASS((o), \
-    RC_MAIN_APPLICATION_TYPE, RCMainApplicationClass))
+    RC_TYPE_MAIN_APPLICATION, RCMainApplicationClass))
 
 typedef struct _RCMainApplication RCMainApplication;
 typedef struct _RCMainApplicationClass RCMainApplicationClass;
