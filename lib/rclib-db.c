@@ -23,7 +23,6 @@
  * Boston, MA  02110-1301  USA
  */
 
-#include <json-glib/json-glib.h>
 #include "rclib-db.h"
 #include "rclib-common.h"
 #include "rclib-marshal.h"
@@ -50,6 +49,14 @@
     RCLIB_TYPE_DB, RCLibDbPrivate)
 #define RCLIB_DB_ERROR rclib_db_error_quark()
 
+typedef struct RCLibDbXMLParserData
+{
+    gboolean db_flag;
+    GSequence *catalog;
+    GSequence *playlist;
+    GSequenceIter *catalog_iter;
+}RCLibDbXMLParserData;
+
 typedef struct RCLibDbPrivate
 {
     gchar *filename;
@@ -66,7 +73,7 @@ typedef struct RCLibDbPrivate
     gulong autosave_timeout;
     GMutex autosave_mutex;
     GCond autosave_cond;
-    JsonNode *autosave_json_node;
+    GString *autosave_xml_data;
 }RCLibDbPrivate;
 
 typedef struct RCLibDbPlaylistImportData
@@ -662,294 +669,357 @@ static gpointer rclib_db_playlist_refresh_thread_cb(gpointer data)
     return NULL;
 }
 
+static void rclib_db_xml_parser_start_element_cb(GMarkupParseContext *context,
+    const gchar *element_name, const gchar **attribute_names,
+    const gchar **attribute_values, gpointer data, GError **error)
+{
+    RCLibDbXMLParserData *parser_data = (RCLibDbXMLParserData *)data;
+    RCLibDbCatalogData *catalog_data;
+    RCLibDbPlaylistData *playlist_data;
+    GSequenceIter *catalog_iter;
+    guint i;
+    if(data==NULL) return;
+    if(g_strcmp0(element_name, "rclibdb")==0)
+    {
+        parser_data->db_flag = TRUE;
+        return;
+    }
+    if(!parser_data->db_flag) return;
+    if(parser_data->playlist!=NULL && g_strcmp0(element_name, "item")==0)
+    {
+        playlist_data = rclib_db_playlist_data_new();
+        playlist_data->catalog = parser_data->catalog_iter;
+        for(i=0;attribute_names[i]!=NULL;i++)
+        {
+            if(playlist_data->uri==NULL &&
+                g_strcmp0(attribute_names[i], "uri")==0)
+            {
+                playlist_data->uri = g_strdup(attribute_values[i]);
+            }
+            else if(g_strcmp0(attribute_names[i], "type")==0)
+            {
+                sscanf(attribute_values[i], "%u", &(playlist_data->type));
+            }
+            else if(playlist_data->title==NULL &&
+                g_strcmp0(attribute_names[i], "title")==0)
+            {
+                playlist_data->title = g_strdup(attribute_values[i]);
+            }
+            else if(playlist_data->artist==NULL &&
+                g_strcmp0(attribute_names[i], "artist")==0)
+            {
+                playlist_data->artist = g_strdup(attribute_values[i]);
+            }
+            else if(playlist_data->album==NULL &&
+                g_strcmp0(attribute_names[i], "album")==0)
+            {
+                playlist_data->album = g_strdup(attribute_values[i]);
+            }
+            else if(playlist_data->ftype==NULL &&
+                g_strcmp0(attribute_names[i], "filetype")==0)
+            {
+                playlist_data->ftype = g_strdup(attribute_values[i]);
+            }
+            else if(g_strcmp0(attribute_names[i], "length")==0)
+            {
+                playlist_data->length = g_ascii_strtoll(attribute_values[i],
+                    NULL, 10);
+            }
+            else if(g_strcmp0(attribute_names[i], "tracknum")==0)
+            {
+                sscanf(attribute_values[i], "%d",
+                    &(playlist_data->tracknum));
+            }
+            else if(g_strcmp0(attribute_names[i], "year")==0)
+            {
+                sscanf(attribute_values[i], "%d",
+                    &(playlist_data->year));
+            }
+            else if(g_strcmp0(attribute_names[i], "rating")==0)
+            {
+                sscanf(attribute_values[i], "%f",
+                    &(playlist_data->rating));
+            }
+            else if(playlist_data->lyricfile==NULL &&
+                g_strcmp0(attribute_names[i], "lyricfile")==0)
+            {
+                playlist_data->lyricfile = g_strdup(attribute_values[i]);
+            }
+            else if(playlist_data->albumfile==NULL &&
+                g_strcmp0(attribute_names[i], "albumfile")==0)
+            {
+                playlist_data->albumfile = g_strdup(attribute_values[i]);
+            }
+            else if(playlist_data->lyricsecfile==NULL &&
+                g_strcmp0(attribute_names[i], "lyricsecondfile")==0)
+            {
+                playlist_data->lyricsecfile = g_strdup(attribute_values[i]);
+            }
+        }
+        g_sequence_append(parser_data->playlist, playlist_data);
+    }
+    else if(parser_data->catalog!=NULL &&
+        g_strcmp0(element_name, "playlist")==0)
+    {
+        catalog_data = rclib_db_catalog_data_new();
+        for(i=0;attribute_names[i]!=NULL;i++)
+        {
+            if(catalog_data->name==NULL &&
+                g_strcmp0(attribute_names[i], "name")==0)
+            {
+                catalog_data->name = g_strdup(attribute_values[i]);
+            }
+            else if(g_strcmp0(attribute_names[i], "type")==0)
+            {
+                sscanf(attribute_values[i], "%u", &(catalog_data->type));
+            }
+        }
+        catalog_data->playlist = g_sequence_new((GDestroyNotify)
+            rclib_db_playlist_data_unref);
+        parser_data->playlist = catalog_data->playlist;
+        catalog_iter = g_sequence_append(parser_data->catalog, catalog_data);
+        parser_data->catalog_iter = catalog_iter;
+    }
+}
+
+static void rclib_db_xml_parser_end_element_cb(GMarkupParseContext *context,
+    const gchar *element_name, gpointer data, GError **error)
+{
+    RCLibDbXMLParserData *parser_data = (RCLibDbXMLParserData *)data;
+    if(data==NULL) return;
+    if(g_strcmp0(element_name, "rclibdb")==0)
+    {
+        parser_data->db_flag = FALSE;
+    }
+    else if(g_strcmp0(element_name, "playlist")==0)
+    {
+        parser_data->playlist = NULL;
+        parser_data->catalog_iter = NULL;
+    }
+}
+
 static gboolean rclib_db_load_library_db(GSequence *catalog,
     const gchar *file, gboolean *dirty_flag)
 {
-    JsonObject *root_object, *catalog_object, *playlist_object;
-    JsonArray *catalog_array, *playlist_array;
-    JsonNode *root_node;
-    JsonNode *node_tmp;
-    guint i, j;
-    guint catalog_len, playlist_len;
+    RCLibDbXMLParserData parser_data = {0};
+    GMarkupParseContext *parse_context;
+    GMarkupParser markup_parser =
+    {
+        .start_element = rclib_db_xml_parser_start_element_cb, 
+        .end_element = rclib_db_xml_parser_end_element_cb,
+        .text = NULL,
+        .passthrough = NULL,
+        .error = NULL
+    };
     GError *error = NULL;
-    GSequence *playlist;
-    RCLibDbCatalogData *catalog_data;
-    RCLibDbPlaylistData *playlist_data;
-    const gchar *str;
-    GSequenceIter *catalog_iter;
-    JsonParser *parser;
-    parser = json_parser_new();
-    if(!json_parser_load_from_file(parser, file, &error))
+    GFile *input_file;
+    GZlibDecompressor *decompressor;
+    GFileInputStream *file_istream;
+    GInputStream *decompress_istream;
+    gchar buffer[4096];
+    gssize read_size;
+    input_file = g_file_new_for_path(file);
+    if(input_file==NULL) return FALSE;
+    file_istream = g_file_read(input_file, NULL, &error);
+    g_object_unref(input_file);
+    if(file_istream==NULL)
     {
-        g_warning("Cannot load playlist: %s", error->message);
+        g_warning("Cannot open input stream: %s", error->message);
         g_error_free(error);
-        g_object_unref(parser);
+        error = NULL;
         return FALSE;
     }
-    else
-        g_message("Loading playlist....");
-    root_node = json_parser_get_root(parser); 
-    if(root_node==NULL)
+    decompressor = g_zlib_decompressor_new(G_ZLIB_COMPRESSOR_FORMAT_ZLIB);
+    decompress_istream = g_converter_input_stream_new(G_INPUT_STREAM(
+        file_istream), G_CONVERTER(decompressor));
+    g_object_unref(file_istream);
+    g_object_unref(decompressor);
+    parser_data.catalog = catalog;
+    parse_context = g_markup_parse_context_new(&markup_parser, 0,
+        &parser_data, NULL);
+    while((read_size=g_input_stream_read(decompress_istream, buffer, 4096,
+        NULL, NULL))>0)
     {
-        g_warning("Cannot parse playlist!");
-        g_object_unref(parser);
-        return FALSE;
+        g_markup_parse_context_parse(parse_context, buffer, read_size,
+            NULL);
     }
-    G_STMT_START
-    {
-        root_object = json_node_get_object(root_node);
-        if(root_object==NULL) break;
-        catalog_array = json_object_get_array_member(root_object,
-            "RCMusicCatalog");
-        if(catalog_array==NULL) break;
-        catalog_len = json_array_get_length(catalog_array);
-        for(i=0;i<catalog_len;i++)
-        {
-            catalog_object = json_array_get_object_element(catalog_array, i);
-            if(catalog_object==NULL) continue;
-            catalog_data = rclib_db_catalog_data_new();
-            str = json_object_get_string_member(catalog_object, "Name");
-            if(str==NULL) str = _("Unnamed list");
-            catalog_data->name = g_strdup(str);
-            catalog_data->type = json_object_get_int_member(catalog_object,
-                "Type");
-            playlist = g_sequence_new((GDestroyNotify)
-                rclib_db_playlist_data_unref);
-            catalog_data->playlist = playlist;
-            catalog_iter = g_sequence_append(catalog, catalog_data);
-            playlist_array = json_object_get_array_member(catalog_object,
-                "Playlist");
-            if(playlist_array==NULL) continue;
-            playlist_len = json_array_get_length(playlist_array);
-            for(j=0;j<playlist_len;j++)
-            {
-                playlist_object = json_array_get_object_element(
-                    playlist_array, j);
-                if(playlist_object==NULL) continue;
-                playlist_data = rclib_db_playlist_data_new();
-                playlist_data->catalog = catalog_iter;
-                playlist_data->type = json_object_get_int_member(
-                    playlist_object, "Type");
-                if(json_object_has_member(playlist_object, "URI"))
-                    str = json_object_get_string_member(playlist_object,
-                        "URI");
-                else
-                    str = NULL;
-                playlist_data->uri = g_strdup(str);
-                if(json_object_has_member(playlist_object, "Title"))
-                    str = json_object_get_string_member(playlist_object,
-                        "Title");
-                else
-                    str = NULL;
-                playlist_data->title = g_strdup(str);
-                if(json_object_has_member(playlist_object, "Artist"))
-                    str = json_object_get_string_member(playlist_object,
-                        "Artist");
-                else
-                    str = NULL;
-                playlist_data->artist = g_strdup(str);
-                if(json_object_has_member(playlist_object, "Album"))
-                    str = json_object_get_string_member(playlist_object,
-                        "Album");
-                else
-                    str = NULL;
-                playlist_data->album = g_strdup(str);
-                if(json_object_has_member(playlist_object, "FileType"))
-                    str = json_object_get_string_member(playlist_object,
-                        "FileType");
-                else
-                    str = NULL;
-                playlist_data->ftype = g_strdup(str);
-                if(json_object_has_member(playlist_object, "Length"))
-                    str = json_object_get_string_member(playlist_object,
-                        "Length");
-                else
-                    str = NULL;
-                if(str!=NULL)
-                    playlist_data->length = g_ascii_strtoll(str, NULL, 10);
-                if(json_object_has_member(playlist_object, "TrackNum"))
-                    playlist_data->tracknum = json_object_get_int_member(
-                        playlist_object, "TrackNum");
-                if(json_object_has_member(playlist_object, "Year"))
-                    playlist_data->year = json_object_get_int_member(
-                        playlist_object, "Year");
-                if(json_object_has_member(playlist_object, "Rating"))
-                {
-                    node_tmp = json_object_get_member(playlist_object,
-                        "Rating");
-                    if(node_tmp!=NULL)
-                    {
-                        switch(json_node_get_value_type(node_tmp))
-                        {
-                            case G_TYPE_INT:
-                            case G_TYPE_INT64:
-                                playlist_data->rating = (gfloat)
-                                    json_node_get_int(node_tmp);
-                                break;
-                            case G_TYPE_FLOAT:
-                            case G_TYPE_DOUBLE:
-                                playlist_data->rating = (gfloat)
-                                    json_node_get_double(node_tmp);
-                                break;
-                            default:
-                                break;
-                        }
-                    }
-                }
-                if(json_object_has_member(playlist_object, "LyricFile"))
-                    str = json_object_get_string_member(playlist_object,
-                        "LyricFile");
-                else
-                    str = NULL;
-                playlist_data->lyricfile = g_strdup(str);
-                if(json_object_has_member(playlist_object, "LyricSecondFile"))
-                    str = json_object_get_string_member(playlist_object,
-                        "LyricSecondFile");
-                else
-                    str = NULL;
-                playlist_data->lyricsecfile = g_strdup(str);
-                if(json_object_has_member(playlist_object, "AlbumFile"))
-                    str = json_object_get_string_member(playlist_object,
-                        "AlbumFile");
-                else
-                    str = NULL;
-                playlist_data->albumfile = g_strdup(str);
-                g_sequence_append(playlist, playlist_data);
-            }
-        }
-    }
-    G_STMT_END;
-    g_object_unref(parser);
+    g_markup_parse_context_end_parse(parse_context, NULL);
+    g_object_unref(decompress_istream);
+    g_markup_parse_context_free(parse_context);
     g_message("Playlist loaded.");
     if(dirty_flag!=NULL) *dirty_flag = FALSE;
     return TRUE;
 }
 
-static inline JsonNode *rclib_db_build_json_node(GSequence *catalog)
+static inline GString *rclib_db_build_xml_data(GSequence *catalog)
 {
-    JsonObject *root_object, *catalog_object, *playlist_object;
-    JsonArray *catalog_array, *playlist_array;
-    JsonNode *root_node;
     RCLibDbCatalogData *catalog_data;
     RCLibDbPlaylistData *playlist_data;
     GSequenceIter *catalog_iter, *playlist_iter;
-    gchar *time;
-    catalog_array = json_array_new();
+    GString *data_str;
+    gchar *tmp;
+    extern guint rclib_major_version;
+    extern guint rclib_minor_version;
+    extern guint rclib_micro_version;
+    data_str = g_string_new("<?xml version=\"1.0\" standalone=\"yes\"?>\n");
+    g_string_append_printf(data_str, "<rclibdb version=\"%u.%u.%u\">\n",
+        rclib_major_version, rclib_minor_version, rclib_micro_version);
     for(catalog_iter = g_sequence_get_begin_iter(catalog);
         !g_sequence_iter_is_end(catalog_iter);
         catalog_iter = g_sequence_iter_next(catalog_iter))
     {
-        catalog_object = json_object_new();
         catalog_data = g_sequence_get(catalog_iter);
-        if(catalog_data->name!=NULL)
-        {
-            json_object_set_string_member(catalog_object, "Name",
-                catalog_data->name);
-        }
-        json_object_set_int_member(catalog_object, "Type",
-            catalog_data->type);
-        playlist_array = json_array_new();
+        tmp = g_markup_printf_escaped("  <playlist name=\"%s\" type=\"%u\">\n",
+            catalog_data->name, catalog_data->type);
+        g_string_append(data_str, tmp);
+        g_free(tmp);
         for(playlist_iter = g_sequence_get_begin_iter(catalog_data->playlist);
             !g_sequence_iter_is_end(playlist_iter);
             playlist_iter = g_sequence_iter_next(playlist_iter))
         {
-            playlist_object = json_object_new();
             playlist_data = g_sequence_get(playlist_iter);
-            json_object_set_int_member(playlist_object, "Type",
+            g_string_append_printf(data_str, "    <item type=\"%u\" ",
                 playlist_data->type);
             if(playlist_data->uri!=NULL)
             {
-                json_object_set_string_member(playlist_object, "URI",
+                tmp = g_markup_printf_escaped("uri=\"%s\" ",
                     playlist_data->uri);
+                g_string_append(data_str, tmp);
+                g_free(tmp);
             }
             if(playlist_data->title!=NULL)
             {
-                json_object_set_string_member(playlist_object, "Title",
+                tmp = g_markup_printf_escaped("title=\"%s\" ",
                     playlist_data->title);
+                g_string_append(data_str, tmp);
+                g_free(tmp);
             }
             if(playlist_data->artist!=NULL)
             {
-                json_object_set_string_member(playlist_object, "Artist",
+                tmp = g_markup_printf_escaped("artist=\"%s\" ",
                     playlist_data->artist);
+                g_string_append(data_str, tmp);
+                g_free(tmp);
             }
             if(playlist_data->album!=NULL)
             {
-                json_object_set_string_member(playlist_object, "Album",
+                tmp = g_markup_printf_escaped("album=\"%s\" ",
                     playlist_data->album);
+                g_string_append(data_str, tmp);
+                g_free(tmp);
             }
             if(playlist_data->ftype!=NULL)
             {
-                json_object_set_string_member(playlist_object, "FileType",
+                tmp = g_markup_printf_escaped("filetype=\"%s\" ",
                     playlist_data->ftype);
+                g_string_append(data_str, tmp);
+                g_free(tmp);
             }
-            time = g_strdup_printf("%"G_GINT64_FORMAT,
+            tmp = g_markup_printf_escaped("length=\"%"G_GINT64_FORMAT"\" ",
                 playlist_data->length);
-            json_object_set_string_member(playlist_object, "Length",
-                time);
-            g_free(time);
-            json_object_set_int_member(playlist_object, "TrackNum",
-                playlist_data->tracknum);
-            json_object_set_int_member(playlist_object, "Year",
-                playlist_data->year);
-            json_object_set_double_member(playlist_object, "Rating",
-                (gdouble)playlist_data->rating);
+            g_string_append(data_str, tmp);
+            g_free(tmp);
+            tmp = g_markup_printf_escaped("tracknum=\"%d\" year=\"%d\" "
+                "rating=\"%f\" ", playlist_data->tracknum,
+                playlist_data->year, playlist_data->rating);
+            g_string_append(data_str, tmp);
+            g_free(tmp);
             if(playlist_data->lyricfile!=NULL)
             {
-                json_object_set_string_member(playlist_object, "LyricFile",
+                tmp = g_markup_printf_escaped("lyricfile=\"%s\" ",
                     playlist_data->lyricfile);
+                g_string_append(data_str, tmp);
+                g_free(tmp);
             }
             if(playlist_data->albumfile!=NULL)
             {
-                json_object_set_string_member(playlist_object, "AlbumFile",
+                tmp = g_markup_printf_escaped("albumfile=\"%s\" ",
                     playlist_data->albumfile);
+                g_string_append(data_str, tmp);
+                g_free(tmp);
             }
             if(playlist_data->lyricsecfile!=NULL)
             {
-                json_object_set_string_member(playlist_object, "LyricSecondFile",
+                tmp = g_markup_printf_escaped("lyricsecondfile=\"%s\" ",
                     playlist_data->lyricsecfile);
+                g_string_append(data_str, tmp);
+                g_free(tmp);
             }
-            json_array_add_object_element(playlist_array, playlist_object);
+            g_string_append(data_str, "/>\n");
         }
-        json_object_set_array_member(catalog_object, "Playlist", playlist_array);
-        json_array_add_object_element(catalog_array, catalog_object);
+        g_string_append(data_str, "  </playlist>\n");
     }
-    root_object = json_object_new();
-    json_object_set_array_member(root_object, "RCMusicCatalog", catalog_array);
-    root_node = json_node_new(JSON_NODE_OBJECT);
-    json_node_take_object(root_node, root_object);
-    return root_node;
+    g_string_append(data_str, "</rclibdb>\n");
+    return data_str;
 }
 
 static gboolean rclib_db_save_library_db(GSequence *catalog,
     const gchar *file, gboolean *dirty_flag)
 {
+    GString *xml_str;
+    GZlibCompressor *compressor;
+    GFileOutputStream *file_ostream;
+    GOutputStream *compress_ostream;
+    GFile *output_file;
+    gssize write_size;
     GError *error = NULL;
-    JsonNode *root_node;
-    JsonGenerator *generator;
-    root_node = rclib_db_build_json_node(catalog);
-    if(root_node==NULL) return FALSE;
-    generator = json_generator_new();
-    json_generator_set_root(generator, root_node);
-    json_node_free(root_node);
-    if(!json_generator_to_file(generator, file, &error))
+    gboolean flag = TRUE;
+    output_file = g_file_new_for_path(file);
+    if(output_file==NULL) return FALSE;
+    xml_str = rclib_db_build_xml_data(catalog);
+    if(xml_str==NULL) return FALSE;
+    file_ostream = g_file_replace(output_file, NULL, FALSE,
+        G_FILE_CREATE_PRIVATE, NULL, &error);
+    g_object_unref(output_file);
+    if(file_ostream==NULL)
+    {
+        g_warning("Cannot open output file stream: %s", error->message);
+        g_error_free(error);
+        error = NULL;
+        return FALSE;
+    }
+    compressor = g_zlib_compressor_new(G_ZLIB_COMPRESSOR_FORMAT_ZLIB, 5);
+    compress_ostream = g_converter_output_stream_new(G_OUTPUT_STREAM(
+        file_ostream), G_CONVERTER(compressor));
+    g_object_unref(file_ostream);
+    g_object_unref(compressor);
+    write_size = g_output_stream_write(compress_ostream, xml_str->str,
+        xml_str->len, NULL, &error);
+    if(error!=NULL)
     {
         g_warning("Cannot save playlist: %s", error->message);
         g_error_free(error);
-        g_object_unref(generator);
-        return FALSE;
+        error = NULL;
+        flag = FALSE;
     }
-    else
-        g_message("Playlist saved.");
-    g_object_unref(generator);
+    g_output_stream_close(compress_ostream, NULL, &error);
+    if(error!=NULL)
+    {
+        g_warning("Cannot close file stream: %s", error->message);
+        g_error_free(error);
+        error = NULL;
+        flag = FALSE;
+    }
+    g_object_unref(compress_ostream);
+    if(flag)
+    {
+        g_message("Playlist saved, wrote %ld bytes.", (glong)write_size);
+    }
     if(dirty_flag!=NULL) *dirty_flag = FALSE;  
-    return TRUE;
+    return flag;
 }
 
 static gpointer rclib_db_playlist_autosave_thread_cb(gpointer data)
 {
     RCLibDbPrivate *priv = (RCLibDbPrivate *)data;
     gchar *filename;
-    JsonGenerator *generator;
+    GZlibCompressor *compressor;
+    GFileOutputStream *file_ostream;
+    GOutputStream *compress_ostream;
+    GFile *output_file;
+    gssize write_size;
+    GError *error = NULL;
+    gboolean flag = TRUE;
     if(data==NULL)
     {
         g_thread_exit(NULL);
@@ -959,18 +1029,50 @@ static gpointer rclib_db_playlist_autosave_thread_cb(gpointer data)
     {
         g_mutex_lock(&(priv->autosave_mutex));
         g_cond_wait(&(priv->autosave_cond), &(priv->autosave_mutex));
-        if(priv->autosave_json_node!=NULL)
+        G_STMT_START
         {
-            generator = json_generator_new();
+            if(priv->autosave_xml_data==NULL) break;
             filename = g_strdup_printf("%s.autosave", priv->filename);
-            json_generator_set_root(generator, priv->autosave_json_node);
-            json_node_free(priv->autosave_json_node);
-            priv->autosave_json_node = NULL;
-            if(json_generator_to_file(generator, filename, NULL))
-                g_message("Auto save successfully!");
+            output_file = g_file_new_for_path(filename);
             g_free(filename);
-            g_object_unref(generator);
+            if(output_file==NULL) break;
+            file_ostream = g_file_replace(output_file, NULL, FALSE,
+                G_FILE_CREATE_PRIVATE, NULL, NULL);
+            g_object_unref(output_file);
+            if(file_ostream==NULL) break;
+            compressor = g_zlib_compressor_new(G_ZLIB_COMPRESSOR_FORMAT_ZLIB,
+                5);
+            compress_ostream = g_converter_output_stream_new(G_OUTPUT_STREAM(
+                file_ostream), G_CONVERTER(compressor));
+            g_object_unref(file_ostream);
+            g_object_unref(compressor);
+            write_size = g_output_stream_write(compress_ostream,
+                priv->autosave_xml_data->str, priv->autosave_xml_data->len,
+                NULL, &error);
+            if(error!=NULL)
+            {
+                g_error_free(error);
+                error = NULL;
+                flag = FALSE;
+            }
+            g_output_stream_close(compress_ostream, NULL, &error);
+            if(error!=NULL)
+            {
+                g_error_free(error);
+                error = NULL;
+                flag = FALSE;
+            }
+            g_object_unref(compress_ostream);
+            if(flag)
+            {
+                g_message("Auto save successfully, wrote %ld bytes.",
+                    (glong)write_size);
+            }
         }
+        G_STMT_END;
+        if(priv->autosave_xml_data!=NULL)
+            g_string_free(priv->autosave_xml_data, TRUE);
+        priv->autosave_xml_data = NULL;
         priv->dirty_flag = FALSE;
         g_mutex_unlock(&(priv->autosave_mutex));
     }
@@ -984,8 +1086,8 @@ static gboolean rclib_db_autosave_timeout_cb(gpointer data)
     if(data==NULL) return FALSE;
     if(!priv->dirty_flag) return TRUE;
     if(priv->filename==NULL) return TRUE;
-    if(priv->autosave_json_node!=NULL) return TRUE;
-    priv->autosave_json_node = rclib_db_build_json_node(priv->catalog);
+    if(priv->autosave_xml_data!=NULL) return TRUE;
+    priv->autosave_xml_data = rclib_db_build_xml_data(priv->catalog);
     g_mutex_lock(&(priv->autosave_mutex));
     g_cond_signal(&(priv->autosave_cond));
     g_mutex_unlock(&(priv->autosave_mutex));

@@ -7,7 +7,7 @@ plugin_LTLIBRARIES =
 crawlermodule_LTLIBRARIES =    
 noinst_LTLIBRARIES =
 
-AM_CFLAGS = @GLIB2_CFLAGS@ @GSTREAMER_CFLAGS@ @GTK_CFLAGS@ @JSON_GLIB_CFLAGS@ \
+AM_CFLAGS = @GLIB2_CFLAGS@ @GSTREAMER_CFLAGS@ @GTK_CFLAGS@ \
     -DLOCALEDIR=\"$(localedir)\" -I$(top_srcdir)/lib -I$(top_srcdir)/ui
 
 if WITH_GTK_UI

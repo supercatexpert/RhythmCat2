@@ -61,6 +61,7 @@ typedef struct RCLibCorePrivate
     GstElement *effectbin;
     GstElement *bal_plugin; /* balance: audiopanorama */
     GstElement *eq_plugin; /* equalizer: equalizer-10bands */
+    GstBus *bus;
     GList *extra_plugin_list;
     GError *error;
     RCLibCoreSourceType type;
@@ -73,6 +74,8 @@ typedef struct RCLibCorePrivate
     GSequenceIter *db_reference_pre;
     gpointer ext_reference;
     gpointer ext_reference_pre;
+    gchar *ext_cookie;
+    gchar *ext_cookie_pre;
     guint64 num_frames;
     guint64 num_fft;
     guint64 frames_per_interval;
@@ -82,6 +85,9 @@ typedef struct RCLibCorePrivate
     guint64 accumulated_error;
     RCLibCoreSpectrumChannel *channel_data;
     GstClockTime message_ts;
+    gulong message_id;
+    gulong volume_id;
+    gulong source_id;
 }RCLibCorePrivate;
 
 enum
@@ -95,6 +101,7 @@ enum
     SIGNAL_EQ_CHANGED,
     SIGNAL_BALANCE_CHANGED,
     SIGNAL_SPECTRUM_UPDATED,
+    SIGNAL_BUFFERING,
     SIGNAL_ERROR,
     SIGNAL_LAST
 };
@@ -328,8 +335,20 @@ static void rclib_core_spectrum_reset_state(RCLibCorePrivate *priv)
 static void rclib_core_finalize(GObject *object)
 {
     RCLibCorePrivate *priv = RCLIB_CORE_GET_PRIVATE(RCLIB_CORE(object));
+    if(priv->bus!=NULL)
+    {
+        if(priv->message_id>0)
+            g_signal_handler_disconnect(priv->bus, priv->message_id);
+        gst_object_unref(priv->bus);
+    }
     if(priv->playbin!=NULL)
+    {
+        if(priv->volume_id>0)
+            g_signal_handler_disconnect(priv->playbin, priv->volume_id);
+        if(priv->source_id>0)
+            g_signal_handler_disconnect(priv->playbin, priv->source_id);
         gst_element_set_state(priv->playbin, GST_STATE_NULL);
+    }
     if(priv->extra_plugin_list!=NULL)
         g_list_free(priv->extra_plugin_list);
     rclib_core_spectrum_reset_state(priv);
@@ -754,6 +773,18 @@ static void rclib_core_class_init(RCLibCoreClass *klass)
         NULL);
 
     /**
+     * RCLibCore::buffering:
+     * @core: the #RCLibCore that received the signal
+     * @percent: the buffering percent (0-100)
+     *
+     * The ::buffering signal is emitted when the core is buffering.
+     */
+    core_signals[SIGNAL_BUFFERING] = g_signal_new("buffering",
+        RCLIB_TYPE_CORE, G_SIGNAL_RUN_FIRST, G_STRUCT_OFFSET(RCLibCoreClass,
+        buffering), NULL, NULL, g_cclosure_marshal_VOID__INT, G_TYPE_NONE,
+        1, G_TYPE_INT, NULL);
+
+    /**
      * RCLibCore::error:
      * @core: the #RCLibCore that received the signal
      *
@@ -912,40 +943,33 @@ static void rclib_core_effect_remove_element_internal(GstElement *effectbin,
     gst_bin_remove(GST_BIN(effectbin), bin);
 }
 
-static gboolean rclib_core_bus_callback(GstBus *bus, GstMessage *msg,
+static void rclib_core_bus_callback(GstBus *bus, GstMessage *msg,
     gpointer data)
 {
-    gint64 duration = 0;
-    gchar *uri;
-    GstQuery *query;
-    GstFormat format = GST_FORMAT_TIME;
     RCLibCorePrivate *priv = NULL;
-    GObject *object = G_OBJECT(data);
-    const GstStructure *structure;
-    const GValue *magnitudes;
-    GstTagList *tags;
-    GstState state, pending;
-    GError *error = NULL;
-    gchar *error_msg;
-    GstPad *pad = NULL;
-    const gchar *name;
-    guint bands = 0;
-    guint rate = 0;
-    gdouble threshold = -60;
-    if(object==NULL) return TRUE;
+    GObject *object = G_OBJECT(data);    
+    if(object==NULL) return;
     priv = RCLIB_CORE_GET_PRIVATE(RCLIB_CORE(object));    
     switch(GST_MESSAGE_TYPE(msg))
     {
         case GST_MESSAGE_EOS:
+        {
             gst_element_set_state(priv->playbin, GST_STATE_NULL); 
             gst_element_set_state(priv->playbin, GST_STATE_READY);
             g_signal_emit(object, core_signals[SIGNAL_EOS], 0);
             break;
+        }
         case GST_MESSAGE_TAG:
+        {
+            GstTagList *tags;
+            GstPad *pad = NULL;
+            GstQuery *query;
+            gchar *uri;
             gst_message_parse_tag_full(msg, &pad, &tags);
             query = gst_query_new_uri();
             gst_element_query(priv->playbin, query);
-            gst_query_parse_uri(query, &uri);         
+            gst_query_parse_uri(query, &uri);      
+            gst_query_unref(query);   
             if(rclib_core_parse_metadata(tags, pad, &(priv->metadata),
                 priv->start_time, priv->end_time))
             {
@@ -956,7 +980,10 @@ static gboolean rclib_core_bus_callback(GstBus *bus, GstMessage *msg,
             gst_tag_list_free(tags);
             if(pad!=NULL) gst_object_unref(pad);
             break;
+        }
         case GST_MESSAGE_STATE_CHANGED:
+        {
+            GstState state, pending;
             if(priv!=NULL && GST_MESSAGE_SRC(msg)==GST_OBJECT(priv->playbin))
             {
                 gst_message_parse_state_changed(msg, NULL, &state, &pending);
@@ -970,7 +997,11 @@ static gboolean rclib_core_bus_callback(GstBus *bus, GstMessage *msg,
                 }
             }
             break;
+        }
         case GST_MESSAGE_DURATION:
+        {
+            gint64 duration = 0;
+            GstFormat format = GST_FORMAT_TIME;
             gst_message_parse_duration(msg, &format, &duration);
             if(format!=GST_FORMAT_TIME)
             {
@@ -984,9 +1015,26 @@ static gboolean rclib_core_bus_callback(GstBus *bus, GstMessage *msg,
             g_signal_emit(object, core_signals[SIGNAL_NEW_DURATION], 0,
                 duration);
             break;
-        case GST_MESSAGE_BUFFERING:
+        }
+        case GST_MESSAGE_ASYNC_DONE:
+        {
             break;
+        }
+        case GST_MESSAGE_BUFFERING:
+        {
+            gint buffering = 0;
+            gint64 buffering_left = 0;
+            GstBufferingMode mode;
+            gst_message_parse_buffering(msg, &buffering);
+            gst_message_parse_buffering_stats(msg, &mode, NULL, NULL,
+                &buffering_left);
+            g_signal_emit(object, core_signals[SIGNAL_BUFFERING], 0,
+                buffering);
+            break;
+        }
         case GST_MESSAGE_NEW_CLOCK:
+        {
+            gint64 duration = 0;
             g_debug("A new clock was selected.");
             if(priv->start_time>0)
             {
@@ -999,7 +1047,15 @@ static gboolean rclib_core_bus_callback(GstBus *bus, GstMessage *msg,
                 g_signal_emit(object, core_signals[SIGNAL_NEW_DURATION], 0,
                     duration);
             break;
+        }
         case GST_MESSAGE_ELEMENT:
+        {
+            gdouble threshold = -60;
+            const GstStructure *structure;
+            const GValue *magnitudes;
+            const gchar *name;
+            guint bands = 0;
+            guint rate = 0;
             structure = gst_message_get_structure(msg);
             if(structure==NULL) break;
             name = gst_structure_get_name(structure);
@@ -1015,9 +1071,11 @@ static gboolean rclib_core_bus_callback(GstBus *bus, GstMessage *msg,
                     0, rate, bands, threshold, magnitudes);
             }
             break;
+        }
         case GST_MESSAGE_ERROR:
-            error = NULL;
-            error_msg = NULL;
+        {
+            GError *error = NULL;
+            gchar *error_msg = NULL;
             gst_message_parse_error(msg, &error, &error_msg);
             g_warning("%s\nDEBUG: %s", error->message, error_msg);
             g_error_free(error);
@@ -1027,18 +1085,21 @@ static gboolean rclib_core_bus_callback(GstBus *bus, GstMessage *msg,
                 gst_message_new_eos(GST_OBJECT(priv->playbin))))
                 rclib_core_stop();
             break;
+        }
         case GST_MESSAGE_WARNING:
-            error = NULL;
-            error_msg = NULL;
+        {
+            GError *error = NULL;
+            gchar *error_msg = NULL;
             gst_message_parse_warning(msg, &error, &error_msg);
             g_warning("%s\nDEBUG: %s", error->message, error_msg);
             g_error_free(error);
             g_free(error_msg);
             break;
+        }
         default:
             break;
     }
-    return TRUE;
+    return;
 }
 
 static gboolean rclib_core_pad_buffer_probe_cb(GstPad *pad, GstBuffer *buf,
@@ -1204,10 +1265,22 @@ static void rclib_core_source_notify_cb(GObject *object, GParamSpec *spec,
     if(data==NULL) return;
     priv = (RCLibCorePrivate *)data;
     priv->db_reference = priv->db_reference_pre;
+    if(priv->ext_cookie!=NULL)
+    {
+        g_free(priv->ext_cookie);
+        priv->ext_cookie = NULL;
+    }
     if(priv->db_reference!=NULL)
         priv->ext_reference = NULL;
-    else
+    else if(priv->ext_cookie_pre!=NULL && priv->ext_reference_pre!=NULL)
+    {
+        priv->ext_cookie = g_strdup(priv->ext_cookie_pre);
         priv->ext_reference = priv->ext_reference_pre;
+    }
+    g_free(priv->ext_cookie_pre);
+    priv->db_reference_pre = NULL;
+    priv->ext_cookie_pre = NULL;
+    priv->ext_reference_pre = NULL;
     g_debug("Source changed.");
     g_object_get(object, "uri", &uri, NULL);
     g_signal_emit(core_instance, core_signals[SIGNAL_URI_CHANGED], 0,
@@ -1374,17 +1447,18 @@ static void rclib_core_instance_init(RCLibCore *core)
             FALSE);
     }
     priv->extra_plugin_list = NULL;
-    bus = gst_pipeline_get_bus(GST_PIPELINE(playbin));
-    gst_bus_add_watch(bus, (GstBusFunc)rclib_core_bus_callback,
-        core);
-    gst_object_unref(bus);
+    bus = gst_element_get_bus(playbin);
+    gst_bus_add_signal_watch(bus);
+    priv->message_id = g_signal_connect(bus, "message",
+        G_CALLBACK(rclib_core_bus_callback), core);
+    priv->bus = bus;
     pad = gst_element_get_static_pad(audioconvert, "src");
     gst_pad_add_buffer_probe(pad, G_CALLBACK(rclib_core_pad_buffer_probe_cb),
        core);
     gst_object_unref(pad);
-    g_signal_connect(priv->playbin, "notify::volume",
-        G_CALLBACK(rclib_core_volume_notify_cb), NULL);
-    g_signal_connect(priv->playbin, "notify::source",
+    priv->volume_id = g_signal_connect(priv->playbin, "notify::volume",
+        G_CALLBACK(rclib_core_volume_notify_cb), priv);
+    priv->source_id = g_signal_connect(priv->playbin, "notify::source",
         G_CALLBACK(rclib_core_source_notify_cb), priv);
     gst_element_set_state(playbin, GST_STATE_NULL);
     gst_element_set_state(playbin, GST_STATE_READY);
@@ -1513,17 +1587,14 @@ void rclib_core_signal_disconnect(gulong handler_id)
 /**
  * rclib_core_set_uri:
  * @uri: the URI to play
- * @db_reference: the databse reference to set, set to NULL if not used
- * @external_reference: the exterenal reference to set, the database
- * reference must be set to NULL if you want to use this reference
  *
  * Set the URI to play.
  */
 
-void rclib_core_set_uri(const gchar *uri, GSequenceIter *db_reference,
-    gpointer external_reference)
+void rclib_core_set_uri(const gchar *uri)
 {
     RCLibCorePrivate *priv;
+    GstBus *bus;
     gchar *scheme;
     gchar *cue_uri;
     gint track = 0;
@@ -1534,10 +1605,14 @@ void rclib_core_set_uri(const gchar *uri, GSequenceIter *db_reference,
     if(core_instance==NULL || uri==NULL) return;
     priv = RCLIB_CORE_GET_PRIVATE(RCLIB_CORE(core_instance));
     gst_element_set_state(priv->playbin, GST_STATE_NULL);
+    bus = gst_element_get_bus(priv->playbin);
+    gst_bus_set_flushing(bus, TRUE);
     gst_element_set_state(priv->playbin, GST_STATE_READY);
+    gst_bus_set_flushing(bus, FALSE);
+    gst_object_unref(bus);
     rclib_core_set_position(0);
     priv->db_reference = NULL;
-    priv->ext_reference_pre = NULL;
+    priv->ext_reference = NULL;
     scheme = g_uri_parse_scheme(uri);
     /* We can only read CUE file on local machine. */
     if(g_strcmp0(scheme, "file")==0)
@@ -1574,8 +1649,215 @@ void rclib_core_set_uri(const gchar *uri, GSequenceIter *db_reference,
     }
     g_free(scheme);
     rclib_core_metadata_free(&(priv->metadata));
-    priv->db_reference_pre = db_reference;
-    priv->ext_reference_pre = external_reference;
+    if(cue_flag)
+    {
+        priv->start_time = cue_data.track[track-1].time1;
+        if(track!=cue_data.length)
+            priv->end_time = cue_data.track[track].time1;
+        else
+            priv->end_time = 0;
+        if(cue_data.track[track-1].title!=NULL)
+            priv->metadata.title =
+                g_strdup(cue_data.track[track-1].title);
+        if(cue_data.track[track-1].performer!=NULL)
+            priv->metadata.artist =
+                g_strdup(cue_data.track[track-1].performer);
+        if(cue_data.title!=NULL)
+            priv->metadata.album = g_strdup(cue_data.title);
+        g_object_set(G_OBJECT(priv->playbin), "uri", cue_data.file, NULL);
+        rclib_cue_free(&cue_data);
+        if(emb_cue_flag)
+            priv->type = RCLIB_CORE_SOURCE_EMBEDDED_CUE;
+        else
+            priv->type = RCLIB_CORE_SOURCE_CUE;
+    }
+    else
+    {
+        priv->start_time = 0;
+        priv->end_time = 0;
+        priv->type = RCLIB_CORE_SOURCE_NORMAL;
+        g_object_set(G_OBJECT(priv->playbin), "uri", uri, NULL);
+    }
+    gst_element_set_state(priv->playbin, GST_STATE_PAUSED);
+}
+
+/**
+ * rclib_core_set_uri_with_db_ref:
+ * @uri: the URI to play
+ * @db_ref: the database reference to set, set to NULL if not used.
+ * Reference must be set to NULL if you want to use this reference
+ *
+ * Set the URI and the music DB list iter to play.
+ */
+
+void rclib_core_set_uri_with_db_ref(const gchar *uri,
+    GSequenceIter *db_ref)
+{
+    RCLibCorePrivate *priv;
+    GstBus *bus;
+    gchar *scheme;
+    gchar *cue_uri;
+    gint track = 0;
+    RCLibTagMetadata *cue_mmd;
+    RCLibCueData cue_data;
+    gboolean cue_flag = FALSE;
+    gboolean emb_cue_flag = FALSE;
+    if(core_instance==NULL || uri==NULL || db_ref==NULL)
+        return;
+    priv = RCLIB_CORE_GET_PRIVATE(RCLIB_CORE(core_instance));
+    gst_element_set_state(priv->playbin, GST_STATE_NULL);
+    bus = gst_element_get_bus(priv->playbin);
+    gst_bus_set_flushing(bus, TRUE);
+    gst_element_set_state(priv->playbin, GST_STATE_READY);
+    gst_bus_set_flushing(bus, FALSE);
+    gst_object_unref(bus);
+    rclib_core_set_position(0);
+    priv->db_reference = NULL;
+    priv->ext_reference = NULL;
+    scheme = g_uri_parse_scheme(uri);
+    /* We can only read CUE file on local machine. */
+    if(g_strcmp0(scheme, "file")==0)
+    {
+        if(rclib_cue_get_track_num(uri, &cue_uri, &track))
+        {
+            if(g_regex_match_simple("(.CUE)$", cue_uri, G_REGEX_CASELESS,
+                0))
+            {
+                if(rclib_cue_read_data(cue_uri, RCLIB_CUE_INPUT_URI,
+                    &cue_data)>0)
+                {
+                    cue_flag = TRUE;
+                }
+            }
+            else
+            {
+                cue_mmd = rclib_tag_read_metadata(cue_uri);
+                if(cue_mmd!=NULL && cue_mmd->audio_flag &&
+                    cue_mmd->emb_cue!=NULL)
+                {
+                    if(rclib_cue_read_data(cue_mmd->emb_cue,
+                        RCLIB_CUE_INPUT_EMBEDDED, &cue_data)>0)
+                    {
+                        cue_flag = TRUE;
+                        emb_cue_flag = TRUE;
+                        cue_data.file = g_strdup(cue_uri);
+                    }
+                }
+                if(cue_mmd!=NULL) rclib_tag_free(cue_mmd);
+            }
+            g_free(cue_uri);
+        }
+    }
+    g_free(scheme);
+    rclib_core_metadata_free(&(priv->metadata));
+    priv->db_reference_pre = db_ref;
+    if(cue_flag)
+    {
+        priv->start_time = cue_data.track[track-1].time1;
+        if(track!=cue_data.length)
+            priv->end_time = cue_data.track[track].time1;
+        else
+            priv->end_time = 0;
+        if(cue_data.track[track-1].title!=NULL)
+            priv->metadata.title =
+                g_strdup(cue_data.track[track-1].title);
+        if(cue_data.track[track-1].performer!=NULL)
+            priv->metadata.artist =
+                g_strdup(cue_data.track[track-1].performer);
+        if(cue_data.title!=NULL)
+            priv->metadata.album = g_strdup(cue_data.title);
+        g_object_set(G_OBJECT(priv->playbin), "uri", cue_data.file, NULL);
+        rclib_cue_free(&cue_data);
+        if(emb_cue_flag)
+            priv->type = RCLIB_CORE_SOURCE_EMBEDDED_CUE;
+        else
+            priv->type = RCLIB_CORE_SOURCE_CUE;
+    }
+    else
+    {
+        priv->start_time = 0;
+        priv->end_time = 0;
+        priv->type = RCLIB_CORE_SOURCE_NORMAL;
+        g_object_set(G_OBJECT(priv->playbin), "uri", uri, NULL);
+    }
+    gst_element_set_state(priv->playbin, GST_STATE_PAUSED);
+}
+
+/**
+ * rclib_core_set_uri_with_ext_ref:
+ * @uri: the URI to play
+ * @cookie: the external reference cookie
+ * @external_ref: the databse reference to set, set to NULL if not used.
+ * Reference must be set to NULL if you want to use this reference
+ *
+ * Set the URI to play, with external cookie and reference pointer.
+ */
+
+void rclib_core_set_uri_with_ext_ref(const gchar *uri, const gchar *cookie,
+    GSequenceIter *external_ref)
+{
+    RCLibCorePrivate *priv;
+    GstBus *bus;
+    gchar *scheme;
+    gchar *cue_uri;
+    gint track = 0;
+    RCLibTagMetadata *cue_mmd;
+    RCLibCueData cue_data;
+    gboolean cue_flag = FALSE;
+    gboolean emb_cue_flag = FALSE;
+    if(core_instance==NULL || uri==NULL || cookie==NULL ||
+        external_ref==NULL)
+    {
+        return;
+    }
+    priv = RCLIB_CORE_GET_PRIVATE(RCLIB_CORE(core_instance));
+    gst_element_set_state(priv->playbin, GST_STATE_NULL);
+    bus = gst_element_get_bus(priv->playbin);
+    gst_bus_set_flushing(bus, TRUE);
+    gst_element_set_state(priv->playbin, GST_STATE_READY);
+    gst_bus_set_flushing(bus, FALSE);
+    gst_object_unref(bus);
+    rclib_core_set_position(0);
+    priv->db_reference = NULL;
+    priv->ext_reference = NULL;
+    scheme = g_uri_parse_scheme(uri);
+    /* We can only read CUE file on local machine. */
+    if(g_strcmp0(scheme, "file")==0)
+    {
+        if(rclib_cue_get_track_num(uri, &cue_uri, &track))
+        {
+            if(g_regex_match_simple("(.CUE)$", cue_uri, G_REGEX_CASELESS,
+                0))
+            {
+                if(rclib_cue_read_data(cue_uri, RCLIB_CUE_INPUT_URI,
+                    &cue_data)>0)
+                {
+                    cue_flag = TRUE;
+                }
+            }
+            else
+            {
+                cue_mmd = rclib_tag_read_metadata(cue_uri);
+                if(cue_mmd!=NULL && cue_mmd->audio_flag &&
+                    cue_mmd->emb_cue!=NULL)
+                {
+                    if(rclib_cue_read_data(cue_mmd->emb_cue,
+                        RCLIB_CUE_INPUT_EMBEDDED, &cue_data)>0)
+                    {
+                        cue_flag = TRUE;
+                        emb_cue_flag = TRUE;
+                        cue_data.file = g_strdup(cue_uri);
+                    }
+                }
+                if(cue_mmd!=NULL) rclib_tag_free(cue_mmd);
+            }
+            g_free(cue_uri);
+        }
+    }
+    g_free(scheme);
+    rclib_core_metadata_free(&(priv->metadata));
+    priv->ext_cookie_pre = g_strdup(cookie);
+    priv->ext_reference_pre = external_ref;
     if(cue_flag)
     {
         priv->start_time = cue_data.track[track-1].time1;
@@ -1627,17 +1909,20 @@ void rclib_core_update_db_reference(GSequenceIter *new_ref)
 
 /**
  * rclib_core_update_external_reference:
+ * @cookie: the reference cookie
  * @new_ref: the new databse reference to set, set to NULL if not used
  *
  * Update the external reference.
  */
 
-void rclib_core_update_external_reference(gpointer new_ref)
+void rclib_core_update_external_reference(const gchar *cookie,
+    gpointer new_ref)
 {
     RCLibCorePrivate *priv;
     if(core_instance==NULL) return;
     priv = RCLIB_CORE_GET_PRIVATE(RCLIB_CORE(core_instance));
     if(priv==NULL || priv->db_reference!=NULL) return;
+    if(g_strcmp0(priv->ext_cookie, cookie)!=0) return;
     priv->ext_reference = new_ref;
 }
 
@@ -1679,19 +1964,31 @@ GSequenceIter *rclib_core_get_db_reference()
 
 /**
  * rclib_core_get_external_reference:
+ * @cookie: (out) (allow-none): the reference cookie
+ * @ref: (out) (allow-none): the reference
  *
  * Get the external reference.
  *
- * Returns: The external reference.
+ * Returns: Whether the results are set.
  */
 
-gpointer rclib_core_get_external_reference()
+gboolean rclib_core_get_external_reference(gchar **cookie, gpointer *ref)
 {
     RCLibCorePrivate *priv;
     if(core_instance==NULL) return FALSE;
     priv = RCLIB_CORE_GET_PRIVATE(RCLIB_CORE(core_instance));
-    if(priv==NULL) return NULL;
-    return priv->ext_reference;
+    if(priv==NULL) return FALSE;
+    if(priv->ext_cookie==NULL || priv->ext_reference==NULL)
+        return FALSE;
+    if(cookie!=NULL)
+    {
+        *cookie = g_strdup(priv->ext_cookie);
+    }
+    if(priv->ext_reference!=NULL)
+    {
+        *ref = priv->ext_reference;
+    }
+    return TRUE;
 }
 
 /**
@@ -1812,18 +2109,75 @@ gint64 rclib_core_query_duration()
 }
 
 /**
+ * rclib_core_query_buffering_percent:
+ * @percent: (out) (allow-none): the buffering percent (0-100)
+ * @busy: (out) (allow-none): if buffering is busy
+ *
+ * Get the percentage of buffered data. This is a value between 0 and 100.
+ * The busy indicator is #TRUE when the buffering is in progress.
+ *
+ * Returns: Whether the query succeeded.
+ */
+
+gboolean rclib_core_query_buffering_percent(gint *percent, gboolean *busy)
+{
+    RCLibCorePrivate *priv;
+    GstQuery *query;
+    if(core_instance==NULL) return FALSE;
+    priv = RCLIB_CORE_GET_PRIVATE(RCLIB_CORE(core_instance));
+    if(priv==NULL) return FALSE;
+    query = gst_query_new_buffering(GST_FORMAT_TIME);
+    gst_element_query(priv->playbin, query);
+    gst_query_parse_buffering_percent(query, percent, busy);
+    gst_query_unref(query);
+    return TRUE;
+}
+
+/**
+ * rclib_core_query_buffering_rang:
+ * @start: (out) (allow-none): the start to set, or NULL
+ * @stop: (out) (allow-none): the stop to set, or NULL
+ * @estimated_total: (out) (allow-none): estimated total amount
+ *     of download time, or NULL
+ *
+ * Parse an available query, writing the results into the passed
+ * parameters, if the respective parameters are non-NULL.
+ *
+ * Returns: Whether the query succeeded. 
+ */
+
+gboolean rclib_core_query_buffering_range(gint64 *start, gint64 *stop,
+    gint64 *estimated_total)
+{
+    RCLibCorePrivate *priv;
+    GstQuery *query;
+    GstFormat format = GST_FORMAT_PERCENT; 
+    if(core_instance==NULL) return FALSE;
+    priv = RCLIB_CORE_GET_PRIVATE(RCLIB_CORE(core_instance));
+    if(priv==NULL) return FALSE;
+    query = gst_query_new_buffering(GST_FORMAT_TIME);
+    gst_element_query(priv->playbin, query);
+    gst_query_parse_buffering_range(query, &format, start, stop,
+        estimated_total);
+    gst_query_unref(query);
+    return TRUE;
+}
+
+/**
  * rclib_core_get_state:
- * @state: a pointer to #GstState to hold the state. Can be NULL
- * @pending: a pointer to #GstState to hold the pending state. Can be NULL
+ * @state: (out) (allow-none): a pointer to #GstState to hold the state.
+ *     Can be #NULL
+ * @pending: (out) (allow-none): a pointer to #GstState to hold the
+ *     pending state. Can be #NULL
  * @timeout: a #GstClockTime to specify the timeout for an async state
- * change or GST_CLOCK_TIME_NONE for infinite timeout
+ *     change or GST_CLOCK_TIME_NONE for infinite timeout
  *
  * Gets the state of the element.
  *
  * Returns: #GST_STATE_CHANGE_SUCCESS if the element has no more pending
- * state and the last state change succeeded, #GST_STATE_CHANGE_ASYNC if
- * the element is still performing a state change or
- * #GST_STATE_CHANGE_FAILURE if the last state change failed. MT safe.
+ *     state and the last state change succeeded, #GST_STATE_CHANGE_ASYNC if
+ *     the element is still performing a state change or
+ *     #GST_STATE_CHANGE_FAILURE if the last state change failed. MT safe.
  */
 
 GstStateChangeReturn rclib_core_get_state(GstState *state,
@@ -1895,17 +2249,23 @@ gboolean rclib_core_pause()
 gboolean rclib_core_stop()
 {
     RCLibCorePrivate *priv;
-    gboolean flag;
+    GstBus *bus;
+    GstMessage *msg;
     if(core_instance==NULL) return FALSE;
     priv = RCLIB_CORE_GET_PRIVATE(RCLIB_CORE(core_instance));
-    gst_element_set_state(priv->playbin, GST_STATE_NULL);
-    flag = gst_element_set_state(priv->playbin, GST_STATE_READY);
-    if(flag)
+    bus = gst_element_get_bus(priv->playbin);
+    gst_element_set_state(priv->playbin, GST_STATE_READY);
+    rclib_core_metadata_free(&(priv->metadata));
+    while((msg=gst_bus_pop_filtered(bus, GST_MESSAGE_STATE_CHANGED))!=NULL)
     {
-        rclib_core_set_position(0);
-        rclib_core_metadata_free(&(priv->metadata));
+        gst_bus_async_signal_func(bus, msg, NULL);
+        gst_message_unref(msg);
     }
-    return flag;
+    gst_bus_set_flushing(bus, TRUE);
+    gst_object_unref(bus);
+    gst_element_set_state(priv->playbin, GST_STATE_NULL);
+    rclib_core_set_position(0);
+    return TRUE;
 }
 
 /**
@@ -1928,7 +2288,7 @@ gboolean rclib_core_set_volume(gdouble volume)
 
 /**
  * rclib_core_get_volume:
- * @volume: the volume to return
+ * @volume: (out) (allow-none): the volume to return
  *
  * Get the volume of the player.
  *
@@ -1987,8 +2347,9 @@ gboolean rclib_core_set_eq(RCLibCoreEQType type, gdouble *band)
 
 /**
  * rclib_core_get_eq:
- * @type: the equalizer style type
- * @band: an array (10 elements) of the gains for each frequency band
+ * @type: (out) (allow-none): the equalizer style type
+ * @band: (out) (allow-none): an array (10 elements) of the gains
+ *     for each frequency band
  *
  * Get the equalizer of the player.
  *
@@ -2058,7 +2419,8 @@ gboolean rclib_core_set_balance(gfloat balance)
 
 /**
  * rclib_core_get_balance:
- * @balance: return the value of the position in stereo panorama
+ * @balance: (out) (allow-none): return the value of the position in
+ *     stereo panorama
  *
  * Get the position in stereo panorama.
  *

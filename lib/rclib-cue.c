@@ -43,7 +43,7 @@ static gchar *cue_fallback_encoding = NULL;
  * rclib_cue_read_data:
  * @input: the input data
  * @type: the data type of the input data
- * @data: the parsed CUE data
+ * @data: (out): the parsed CUE data
  *
  * Read and parse data from CUE file or string.
  *
@@ -290,8 +290,8 @@ void rclib_cue_free(RCLibCueData *data)
 /**
  * rclib_cue_get_track_num:
  * @path: the file path or URI
- * @cue_path: the file path or URI of the CUE file
- * @track_num: the track number
+ * @cue_path: (out) (allow-none): the file path or URI of the CUE file
+ * @track_num: (out) (allow-none): the track number
  *
  * Get the CUE path/URI and track number from given path/URI.
  *

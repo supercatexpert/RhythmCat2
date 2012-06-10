@@ -54,7 +54,7 @@ librhythmcat_ui_2_0include_HEADERS = rc-common.h \
 
 librhythmcat_ui_2_0_la_LDFLAGS = -export-dynamic -O2 -no-undefined -export-symbols-regex "^[[^_]].*"
 librhythmcat_ui_2_0_la_LIBADD = @LIBOBJS@ @GLIB2_LIBS@ @GTK_LIBS@ @GSTREAMER_LIBS@ \
-    @JSON_GLIB_LIBS@ $(top_builddir)/lib/librhythmcat-2.0.la
+    $(top_builddir)/lib/librhythmcat-2.0.la
 
 if HAVE_INTROSPECTION
     librhythmcat_ui_2_0_la_LIBADD += @GINTROSPECTION_LIBS@
@@ -65,7 +65,7 @@ CLEANFILES = $(BUILT_SOURCES)
 RhythmCat2_DEPENDENCIES = @LIBOBJS@ librhythmcat-ui-2.0.la
 RhythmCat2_LDFLAGS = -export-dynamic -no-undefined -export-symbols-regex "^[[^_]].*" -O2
 
-AM_CFLAGS = @GLIB2_CFLAGS@ @GTK_CFLAGS@ @GSTREAMER_CFLAGS@ @JSON_GLIB_CFLAGS@ \
+AM_CFLAGS = @GLIB2_CFLAGS@ @GTK_CFLAGS@ @GSTREAMER_CFLAGS@ \
     -DLOCALEDIR=\"$(localedir)\" -I$(top_srcdir)/lib -DLIBDIR=\"$(libdir)\" \
     -DPREFIXDIR=\"$(prefix)\"
     
@@ -74,7 +74,7 @@ if HAVE_INTROSPECTION
 endif
 
 RhythmCat2_LDADD = @LIBOBJS@ @GLIB2_LIBS@ @GTK_LIBS@ @GSTREAMER_LIBS@ \
-    @JSON_GLIB_LIBS@ $(top_builddir)/lib/librhythmcat-2.0.la librhythmcat-ui-2.0.la
+    $(top_builddir)/lib/librhythmcat-2.0.la librhythmcat-ui-2.0.la
     
 if PLATFORM_WIN32
     RhythmCat2_LDADD += -lkernel32

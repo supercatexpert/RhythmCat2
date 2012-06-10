@@ -94,7 +94,7 @@ typedef struct RCUiMainWindowPrivate
     gboolean update_seek_scale;
     gboolean import_work_flag;
     gboolean refresh_work_flag;
-    gulong update_timeout;
+    guint update_timeout;
     gulong tag_found_id;
     gulong new_duration_id;
     gulong state_changed_id;
@@ -1361,8 +1361,9 @@ static void rc_ui_main_window_instance_init(RCUiMainWindow *window)
         "expand", TRUE, "margin-top", 4, NULL);
     g_object_set(priv->album_image, "name", "RC2AlbumImage", NULL);
     g_object_set(priv->progress_spinner, "name", "RC2ProgressSpinner", NULL);
-    g_object_set(priv->time_scale, "name", "RC2TimeScale", "can-focus",
-        FALSE, "draw-value", FALSE, "hexpand-set", TRUE, "hexpand", TRUE,
+    g_object_set(priv->time_scale, "name", "RC2TimeScale", "show-fill-level",
+        TRUE, "restrict-to-fill-level", FALSE, "can-focus", FALSE,
+        "draw-value", FALSE, "hexpand-set", TRUE, "hexpand", TRUE,
         "margin-left", 3, "margin-right", 2, NULL);
     g_object_set(priv->ctrl_play_button, "name", "RC2ControlButton",
         "relief", GTK_RELIEF_NONE, "can-focus", FALSE, NULL);

@@ -753,7 +753,7 @@ void rc_ui_dialog_open_music()
                 GTK_FILE_CHOOSER(file_chooser));
             if(uri!=NULL)
             {
-                rclib_core_set_uri(uri, NULL, NULL);
+                rclib_core_set_uri(uri);
                 rclib_core_play();
             }
             g_free(uri);
@@ -800,7 +800,7 @@ void rc_ui_dialog_open_location()
     if(ret==GTK_RESPONSE_ACCEPT)
     {
         uri = gtk_entry_get_text(GTK_ENTRY(entry));
-        rclib_core_set_uri(uri, NULL, NULL);
+        rclib_core_set_uri(uri);
         rclib_core_play();
     }
     gtk_widget_destroy(dialog);

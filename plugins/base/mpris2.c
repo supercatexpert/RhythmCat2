@@ -430,7 +430,7 @@ static void rc_plugin_mpris_player_method_call_cb(
                 G_DBUS_ERROR, G_DBUS_ERROR_FAILED, "Cannot open URI");
             return;
         }
-        rclib_core_set_uri(uri, NULL, NULL);
+        rclib_core_set_uri(uri);
         g_dbus_method_invocation_return_value(invocation, NULL);
     }
 }

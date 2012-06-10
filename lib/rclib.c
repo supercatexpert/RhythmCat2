@@ -152,7 +152,7 @@ gboolean rclib_init(gint *argc, gchar **argv[], const gchar *dir,
     if(!rclib_core_init(error))
         return FALSE;
     g_mkdir_with_parents(dir, 0700);
-    db_file = g_build_filename(dir, "library.db", NULL);
+    db_file = g_build_filename(dir, "library.zdb", NULL);
     if(!rclib_db_init(db_file))
     {
         rclib_core_exit();

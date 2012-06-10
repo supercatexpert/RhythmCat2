@@ -44,6 +44,8 @@ typedef struct RCUiSpectrumWidgetPrivate
     guint bands;
     gfloat threshold;
     gfloat *magnitudes;
+    guint fps;
+    guint timeout;
 }RCUiSpectrumWidgetPrivate;
 
 static gpointer rc_ui_spectrum_widget_parent_class = NULL;
@@ -173,12 +175,23 @@ static gboolean rc_ui_spectrum_widget_draw(GtkWidget *widget, cairo_t *cr)
     return TRUE;
 }
 
+static gboolean rc_ui_spectrum_draw_timeout_cb(gpointer data)
+{
+    RCUiSpectrumWidget *widget = (RCUiSpectrumWidget *)data;
+    if(data==NULL) return FALSE;
+    gtk_widget_queue_draw(GTK_WIDGET(widget));
+    return TRUE;
+}
+
 static void rc_ui_spectrum_widget_init(RCUiSpectrumWidget *object)
 {
     RCUiSpectrumWidgetPrivate *priv;
     priv = RC_UI_SPECTRUM_WIDGET_GET_PRIVATE(object);
     priv->bands = 0;
     priv->magnitudes = NULL;
+    priv->fps = 60;
+    priv->timeout = g_timeout_add(1000/priv->fps, (GSourceFunc)
+        rc_ui_spectrum_draw_timeout_cb, object);
 }
 
 static void rc_ui_spectrum_widget_finalize(GObject *object)
@@ -187,6 +200,8 @@ static void rc_ui_spectrum_widget_finalize(GObject *object)
     RCUiSpectrumWidgetPrivate *priv;
     priv = RC_UI_SPECTRUM_WIDGET_GET_PRIVATE(spectrum);
     g_free(priv->magnitudes);
+    if(priv->timeout>0)
+        g_source_remove(priv->timeout);
     G_OBJECT_CLASS(rc_ui_spectrum_widget_parent_class)->finalize(object);
 }
 
@@ -314,7 +329,28 @@ void rc_ui_spectrum_widget_set_magnitudes(RCUiSpectrumWidget *spectrum,
         if(mag==NULL) continue;
         priv->magnitudes[i] = g_value_get_float(mag);
     }
-    gtk_widget_queue_draw(GTK_WIDGET(spectrum));
+    //gtk_widget_queue_draw(GTK_WIDGET(spectrum));
+}
+
+/**
+ * rc_ui_spectrum_widget_set_fps:
+ * @spectrum: the #RCUiSpectrumWidget widget
+ * @fps: the update frequency (frames per second), from 10 to 60
+ *
+ * Set the refresh frequency of the widget.
+ */
+
+void rc_ui_spectrum_widget_set_fps(RCUiSpectrumWidget *spectrum, guint fps)
+{
+    RCUiSpectrumWidgetPrivate *priv;
+    if(spectrum==NULL || fps<10 || fps>60) return;
+    priv = RC_UI_SPECTRUM_WIDGET_GET_PRIVATE(spectrum);
+    if(priv==NULL) return;
+    if(priv->timeout>0)
+        g_source_remove(priv->timeout);
+    priv->fps = fps;
+    priv->timeout = g_timeout_add(1000/fps, (GSourceFunc)
+        rc_ui_spectrum_draw_timeout_cb, spectrum);
 }
 
 /**

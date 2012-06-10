@@ -181,6 +181,7 @@ struct _RCLibCoreClass {
     void (*balance_changed)(RCLibCore *core, gfloat balance);
     void (*spectrum_updated)(RCLibCore *core, guint rate, guint bands,
         const GValue *magnitudes);
+    void (*buffering)(RCLibCore *core, gint percent);
     void (*error)(RCLibCore *core, const gchar *message);
 };
 
@@ -194,18 +195,25 @@ GObject *rclib_core_get_instance();
 gulong rclib_core_signal_connect(const gchar *name,
     GCallback callback, gpointer data);
 void rclib_core_signal_disconnect(gulong handler_id);
-void rclib_core_set_uri(const gchar *uri, GSequenceIter *db_reference,
-    gpointer external_reference);
+void rclib_core_set_uri(const gchar *uri);
+void rclib_core_set_uri_with_db_ref(const gchar *uri,
+    GSequenceIter *db_ref);
+void rclib_core_set_uri_with_ext_ref(const gchar *uri, const gchar *cookie,
+    GSequenceIter *external_ref);
 void rclib_core_update_db_reference(GSequenceIter *new_ref);
-void rclib_core_update_external_reference(gpointer new_ref);
+void rclib_core_update_external_reference(const gchar *cookie,
+    gpointer new_ref);
 gchar *rclib_core_get_uri();
 GSequenceIter *rclib_core_get_db_reference();
-gpointer rclib_core_get_external_reference();
+gboolean rclib_core_get_external_reference(gchar **cookie, gpointer *ref);
 RCLibCoreSourceType rclib_core_get_source_type();
 const RCLibCoreMetadata *rclib_core_get_metadata();
 gboolean rclib_core_set_position(gint64 pos);
 gint64 rclib_core_query_position();
 gint64 rclib_core_query_duration();
+gboolean rclib_core_query_buffering_percent(gint *percent, gboolean *busy);
+gboolean rclib_core_query_buffering_range(gint64 *start, gint64 *stop,
+    gint64 *estimated_total);
 GstStateChangeReturn rclib_core_get_state(GstState *state,
     GstState *pending, GstClockTime timeout);
 gboolean rclib_core_play();

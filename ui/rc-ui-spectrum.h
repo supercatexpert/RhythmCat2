@@ -79,6 +79,7 @@ GType rc_ui_spectrum_widget_get_type();
 GtkWidget *rc_ui_spectrum_widget_new();
 void rc_ui_spectrum_widget_set_magnitudes(RCUiSpectrumWidget *spectrum,
     guint rate, guint bands, gfloat threshold, const GValue *magnitudes);
+void rc_ui_spectrum_widget_set_fps(RCUiSpectrumWidget *spectrum, guint fps);
 void rc_ui_spectrum_widget_clean(RCUiSpectrumWidget *spectrum);
 
 G_END_DECLS

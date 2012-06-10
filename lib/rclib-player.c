@@ -344,7 +344,7 @@ void rclib_player_play_db(GSequenceIter *iter)
     if(iter==NULL) return;
     playlist_data = g_sequence_get(iter);
     if(playlist_data==NULL) return;
-    rclib_core_set_uri(playlist_data->uri, iter, NULL);
+    rclib_core_set_uri_with_db_ref(playlist_data->uri, iter);
     rclib_core_play();
 }
 

@@ -38,6 +38,7 @@ typedef struct RCPluginNotifyPrivate
     GDBusProxy *proxy;
     guint32 id;
     guint xid;
+    gboolean update_flag;
     gulong uri_changed_id;
     gulong tag_found_id;
 }RCPluginNotifyPrivate;
@@ -45,18 +46,44 @@ typedef struct RCPluginNotifyPrivate
 static RCPluginNotifyPrivate notify_priv = {0};
 static const gchar *notify_app_name = "RhythmCat";
 
+static void rc_plugin_notify_show_dbus_call_cb(GObject *object,
+    GAsyncResult *res, gpointer data)
+{
+    RCPluginNotifyPrivate *priv = (RCPluginNotifyPrivate *)data;
+    GVariant *result;
+    GError *error = NULL;
+    if(data==NULL) return;
+    result = g_dbus_proxy_call_finish(priv->proxy, res, &error);
+    if(error!=NULL)
+    {
+        g_warning("NotifyPopups: Cannot send D-Bus message: %s",
+            error->message);
+        g_error_free(error);
+        if(result!=NULL) g_variant_unref(result);
+        return;
+    }
+    if(result==NULL) return;
+    if(!g_variant_is_of_type(result, G_VARIANT_TYPE("(u)")))
+    {
+        g_variant_unref(result);
+        g_warning("NotifyPopups: Unexpected reply type!");
+        return;
+    }
+    g_variant_get(result, "(u)", &(priv->id));
+    g_variant_unref(result);
+}
+
 static gboolean rc_plugin_notify_show(RCPluginNotifyPrivate *priv,
     const gchar *title, const gchar *body, GdkPixbuf *pixbuf,
     gint timeout)
 {
-    GError *error = NULL;
     gint width, height, rowstride, bits_per_sample, channels;
     guchar *image;
     gboolean has_alpha;
     gsize image_len;
     GVariant *image_variant = NULL;
     GVariantBuilder actions_builder, hints_builder;
-    GVariant *result;
+
     if(priv==NULL) return FALSE;
     if(pixbuf!=NULL)
     {
@@ -83,27 +110,11 @@ static gboolean rc_plugin_notify_show(RCPluginNotifyPrivate *priv,
         g_variant_builder_add(&hints_builder, "{sv}", "window-xid",
             g_variant_new("(u)", priv->xid));
     }
-    result = g_dbus_proxy_call_sync(priv->proxy, "Notify",
+    g_dbus_proxy_call(priv->proxy, "Notify",
         g_variant_new("(susssasa{sv}i)", notify_app_name, priv->id, "",
         title ? title : "", body ? body : "", &actions_builder,
-        &hints_builder, timeout), G_DBUS_CALL_FLAGS_NONE, -1, NULL, &error);
-    if(error!=NULL)
-    {
-        g_warning("NotifyPopups: Cannot send D-Bus message: %s",
-            error->message);
-        g_error_free(error);
-        if(result!=NULL) g_variant_unref(result);
-        return FALSE;
-    }
-    if(result==NULL) return FALSE;
-    if(!g_variant_is_of_type(result, G_VARIANT_TYPE("(u)")))
-    {
-        g_variant_unref(result);
-        g_warning("NotifyPopups: Unexpected reply type!");
-        return FALSE;
-    }
-    g_variant_get(result, "(u)", &(priv->id));
-    g_variant_unref(result);
+        &hints_builder, timeout), G_DBUS_CALL_FLAGS_NONE, -1, NULL,
+        rc_plugin_notify_show_dbus_call_cb, priv);
     return TRUE;
 }
 
@@ -112,13 +123,16 @@ static void rc_plugin_notify_metadata_changed_cb(RCLibCore *core,
 {
     RCPluginNotifyPrivate *priv = (RCPluginNotifyPrivate *)data;
     GdkPixbufLoader *loader;
-    gchar *filename;
+    gchar *filename = NULL;
     gchar *rtitle = NULL;
     gchar *body;
     GdkPixbuf *pixbuf = NULL;
+    GdkPixbuf *scaled_pixbuf = NULL;
     const gchar *rartist, *ralbum;
     GError *error = NULL;
     if(data==NULL) return;
+    if(uri==NULL || metadata==NULL) return;
+    if(priv->update_flag) return;
     if(metadata->title!=NULL && strlen(metadata->title)>0)
         rtitle = g_strdup(metadata->title);
     else
@@ -146,6 +160,7 @@ static void rc_plugin_notify_metadata_changed_cb(RCLibCore *core,
         {
             pixbuf = gdk_pixbuf_loader_get_pixbuf(loader);
             if(pixbuf!=NULL) g_object_ref(pixbuf);
+            gdk_pixbuf_loader_close(loader, NULL);
         }
         else
         {
@@ -155,10 +170,17 @@ static void rc_plugin_notify_metadata_changed_cb(RCLibCore *core,
         }
         g_object_unref(loader);
     }
-    rc_plugin_notify_show(priv, rtitle, body, pixbuf, 5000);
+    if(pixbuf!=NULL)
+    {
+        scaled_pixbuf = gdk_pixbuf_scale_simple(pixbuf,
+            128, 128, GDK_INTERP_HYPER);
+        g_object_unref(pixbuf);
+    }
+    rc_plugin_notify_show(priv, rtitle, body, scaled_pixbuf, 5000);
     g_free(rtitle);
     g_free(body);
-    if(pixbuf!=NULL) g_object_unref(pixbuf);
+    if(scaled_pixbuf!=NULL) g_object_unref(scaled_pixbuf);
+    priv->update_flag = TRUE;
 }
 
 static void rc_plugin_notify_uri_changed_cb(RCLibCore *core,
@@ -174,6 +196,7 @@ static void rc_plugin_notify_uri_changed_cb(RCLibCore *core,
     g_free(filename);
     rc_plugin_notify_show(priv, rtitle, "", NULL, 5000);
     g_free(rtitle);
+    priv->update_flag = FALSE;
 }
 
 static gboolean rc_plugin_notify_load(RCLibPluginData *plugin)

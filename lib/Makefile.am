@@ -26,10 +26,10 @@ rclib-marshal.h: rclib-marshal.list
 librhythmcat_2_0_la_SOURCES = \
     $(librhythmcat_2_0_sources) $(librhythmcat_2_0_builtsources)
 
-AM_CFLAGS = @GLIB2_CFLAGS@ @GSTREAMER_CFLAGS@ @JSON_GLIB_CFLAGS@ \
+AM_CFLAGS = @GLIB2_CFLAGS@ @GSTREAMER_CFLAGS@ \
     -DLOCALEDIR=\"$(localedir)\"
 
-librhythmcat_2_0_la_LIBADD = @GLIB2_LIBS@ @GSTREAMER_LIBS@ @JSON_GLIB_LIBS@
+librhythmcat_2_0_la_LIBADD = @GLIB2_LIBS@ @GSTREAMER_LIBS@
 
 CLEANFILES = $(BUILT_SOURCES)
 

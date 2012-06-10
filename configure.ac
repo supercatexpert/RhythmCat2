@@ -61,7 +61,6 @@ PKG_CHECK_MODULES([GSTREAMER], [gstreamer-0.10 >= 0.10.30, \
     gstreamer-pbutils-0.10 >= 0.10.30 gstreamer-plugins-base-0.10 >= 0.10.30 \
     gstreamer-fft-0.10])
 PKG_CHECK_MODULES([GTK], [gtk+-3.0 >= 3.4.0], have_gtk3=yes, have_gtk3=no)
-PKG_CHECK_MODULES([JSON_GLIB], [json-glib-1.0 >= 0.14])
 
 # Check additional libraries.
 PKG_CHECK_MODULES([LIBCURL], [libcurl >= 7.0.0], have_libcurl=yes, \

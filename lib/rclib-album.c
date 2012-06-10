@@ -302,8 +302,8 @@ void rclib_album_signal_disconnect(gulong handler_id)
 
 /**
  * rclib_album_get_album_data:
- * @type: (out) (allow-none) the album data type
- * @data: (out) (allow-none) the album data
+ * @type: (out) (allow-none): the album data type
+ * @data: (out) (allow-none): the album data
  *
  * Get the album data.
  *
