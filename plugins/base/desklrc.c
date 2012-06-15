@@ -655,7 +655,7 @@ static gboolean rc_plugin_desklrc_draw(GtkWidget *widget,
     gint64 pos = 0, offset1 = 0, offset2 = 0;
     GSequenceIter *iter1 = NULL, *iter_begin1 = NULL;
     GSequenceIter *iter2 = NULL, *iter_begin2 = NULL;
-    RCLibLyricParsedData *parsed_data1, *parsed_data2;
+    const RCLibLyricParsedData *parsed_data1, *parsed_data2;
     if(data==NULL) return FALSE;
     cairo_set_source_rgba(cr, 1.0, 1.0, 1.0, 0.0);
     cairo_set_operator(cr, CAIRO_OPERATOR_SOURCE);

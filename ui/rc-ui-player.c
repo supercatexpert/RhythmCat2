@@ -263,7 +263,7 @@ void rc_ui_player_exit()
  *
  * Get the running #RCUiPlayer instance.
  *
- * Returns: The running instance.
+ * Returns: (transfer none): The running instance.
  */
 
 GObject *rc_ui_player_get_instance()
@@ -274,7 +274,7 @@ GObject *rc_ui_player_get_instance()
 /**
  * rc_ui_player_signal_connect:
  * @name: the name of the signal
- * @callback: the the #GCallback to connect
+ * @callback: (scope call): the the #GCallback to connect
  * @data: the user data
  *
  * Connect the GCallback function to the given signal for the running
@@ -311,7 +311,7 @@ void rc_ui_player_signal_disconnect(gulong handler_id)
  *
  * Get the main window of this player.
  *
- * Returns: The main window.
+ * Returns: (transfer none): The main window.
  */
 
 GtkWidget *rc_ui_player_get_main_window()
@@ -328,7 +328,7 @@ GtkWidget *rc_ui_player_get_main_window()
  *
  * Get the icon image of this player.
  *
- * Returns: The icon image of this player.
+ * Returns: (transfer none): The icon image of this player.
  */
 
 GdkPixbuf *rc_ui_player_get_icon_image()
@@ -345,7 +345,7 @@ GdkPixbuf *rc_ui_player_get_icon_image()
  *
  * Get the tray icon of this player.
  *
- * Returns: The tray icon.
+ * Returns: (transfer none): The tray icon.
  */
 
 GtkStatusIcon *rc_ui_player_get_tray_icon()

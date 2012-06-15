@@ -257,7 +257,7 @@ void rclib_album_exit()
  *
  * Get the running #RCLibAlbum instance.
  *
- * Returns: The running instance.
+ * Returns: (transfer none): The running instance.
  */
 
 GObject *rclib_album_get_instance()
@@ -268,7 +268,7 @@ GObject *rclib_album_get_instance()
 /**
  * rclib_album_signal_connect:
  * @name: the name of the signal
- * @callback: the the #GCallback to connect
+ * @callback: (scope call): the the #GCallback to connect
  * @data: the user data
  *
  * Connect the GCallback function to the given signal for the running

@@ -49,7 +49,7 @@ endif
 if HAVE_INTROSPECTION
 -include $(INTROSPECTION_MAKEFILE)
 INTROSPECTION_GIRS = 
-INTROSPECTION_SCANNER_ARGS = --add-include-path=$(srcdir)/lib
+INTROSPECTION_SCANNER_ARGS = --add-include-path=$(srcdir)/lib --warn-all
 INTROSPECTION_COMPILER_ARGS = --includedir=$(srcdir)/lib
 
 introspection_sources = $(librhythmcat_2_0_sources) $(librhythmcat_2_0_headers)

@@ -350,6 +350,7 @@
     border-radius: 2px;
     border-style: none;
 }
+
 #RC2MainWindow #RC2TimeScale.mark
 {
     color: shade (@rc_bg_color, 0.56);

@@ -101,6 +101,7 @@ typedef struct RCUiMainWindowPrivate
     gulong uri_changed_id;
     gulong volume_changed_id;
     gulong spectrum_changed_id;
+    gulong buffering_id;
     gulong lyric_timer_id;
     gulong import_updated_id;
     gulong refresh_updated_id;  
@@ -481,16 +482,19 @@ static void rc_ui_main_window_core_state_changed_cb(RCLibCore *core,
     {
         gtk_image_set_from_stock(GTK_IMAGE(priv->ctrl_play_image),
             GTK_STOCK_MEDIA_PAUSE, GTK_ICON_SIZE_SMALL_TOOLBAR);
+        g_object_set(priv->time_scale, "fill-level", 100.0, NULL);
     }
     else
     {
         gtk_image_set_from_stock(GTK_IMAGE(priv->ctrl_play_image),
             GTK_STOCK_MEDIA_PLAY, GTK_ICON_SIZE_SMALL_TOOLBAR);
+        g_object_set(priv->time_scale, "fill-level", 100.0, NULL);
     }
     if(state!=GST_STATE_PLAYING && state!=GST_STATE_PAUSED)
     {
         gtk_widget_set_sensitive(priv->time_scale, FALSE);
         rc_ui_main_window_time_label_set_value(priv, -1);
+        g_object_set(priv->time_scale, "fill-level", 0.0, NULL);
         rc_ui_scrollable_label_set_text(RC_UI_SCROLLABLE_LABEL(
             priv->lyric1_slabel), NULL);
         rc_ui_scrollable_label_set_text(RC_UI_SCROLLABLE_LABEL(
@@ -513,6 +517,16 @@ static void rc_ui_main_window_volume_changed_cb(RCLibCore *core, gdouble volume,
     if(data==NULL || priv==NULL) return;
     gtk_scale_button_set_value(GTK_SCALE_BUTTON(priv->volume_button),
         volume);
+}
+
+static void rc_ui_main_window_buffering_cb(RCLibCore *core, gint percent,
+    gpointer data)
+{
+    RCUiMainWindowPrivate *priv = (RCUiMainWindowPrivate *)data;
+    if(data==NULL || priv==NULL) return;
+    if(percent>100) percent = 100;
+    else if(percent<0) percent = 0;
+    g_object_set(priv->time_scale, "fill-level", (gdouble)percent, NULL);
 }
 
 static void rc_ui_main_window_lyric_timer_cb(RCLibLyric *lyric, guint index,
@@ -1186,6 +1200,8 @@ static void rc_ui_main_window_signal_bind(RCUiMainWindow *window)
         G_CALLBACK(rc_ui_main_window_volume_changed_cb), priv);
     priv->spectrum_changed_id = rclib_core_signal_connect("spectrum-updated",
         G_CALLBACK(rc_ui_main_window_spectrum_updated_cb), priv);
+    priv->buffering_id = rclib_core_signal_connect("buffering",
+        G_CALLBACK(rc_ui_main_window_buffering_cb), priv);
     priv->lyric_timer_id = rclib_lyric_signal_connect("lyric-timer",
         G_CALLBACK(rc_ui_main_window_lyric_timer_cb), priv);
     priv->import_updated_id = rclib_db_signal_connect("import-updated",
@@ -1215,6 +1231,8 @@ static void rc_ui_main_window_finalize(GObject *object)
         rclib_core_signal_disconnect(priv->volume_changed_id);
     if(priv->spectrum_changed_id>0)
         rclib_core_signal_disconnect(priv->spectrum_changed_id);
+    if(priv->buffering_id>0)
+        rclib_core_signal_disconnect(priv->buffering_id);
     if(priv->lyric_timer_id>0)
         rclib_lyric_signal_disconnect(priv->lyric_timer_id);
     if(priv->import_updated_id>0)
@@ -1362,9 +1380,9 @@ static void rc_ui_main_window_instance_init(RCUiMainWindow *window)
     g_object_set(priv->album_image, "name", "RC2AlbumImage", NULL);
     g_object_set(priv->progress_spinner, "name", "RC2ProgressSpinner", NULL);
     g_object_set(priv->time_scale, "name", "RC2TimeScale", "show-fill-level",
-        TRUE, "restrict-to-fill-level", FALSE, "can-focus", FALSE,
-        "draw-value", FALSE, "hexpand-set", TRUE, "hexpand", TRUE,
-        "margin-left", 3, "margin-right", 2, NULL);
+        TRUE, "restrict-to-fill-level", FALSE, "fill-level", 0.0,
+        "can-focus", FALSE, "draw-value", FALSE, "hexpand-set", TRUE, "hexpand",
+        TRUE, "margin-left", 3, "margin-right", 2, NULL);
     g_object_set(priv->ctrl_play_button, "name", "RC2ControlButton",
         "relief", GTK_RELIEF_NONE, "can-focus", FALSE, NULL);
     g_object_set(priv->ctrl_stop_button, "name", "RC2ControlButton",
@@ -1455,7 +1473,7 @@ static void rc_ui_main_window_init()
  * Get the main window widget. If the widget is not initialized
  * yet, it will be initialized.
  *
- * Returns: The main window widget.
+ * Returns: (transfer none): The main window widget.
  */
 
 GtkWidget *rc_ui_main_window_get_widget()
@@ -1482,7 +1500,7 @@ void rc_ui_main_window_show()
  *
  * Get the default cover image of the player.
  *
- * Returns: The default cover image.
+ * Returns: (transfer none): The default cover image.
  */
 
 GdkPixbuf *rc_ui_main_window_get_default_cover_image()

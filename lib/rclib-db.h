@@ -43,6 +43,9 @@ G_BEGIN_DECLS
 #define RCLIB_IS_DB_CLASS(k) (G_TYPE_CHECK_CLASS_TYPE((k), RCLIB_TYPE_DB))
 #define RCLIB_DB_GET_CLASS(o) (G_TYPE_INSTANCE_GET_CLASS((o), \
     RCLIB_TYPE_DB, RCLibDbClass))
+    
+#define RCLIB_TYPE_DB_CATALOG_DATA (rclib_db_catalog_data_get_type())
+#define RCLIB_TYPE_DB_PLAYLIST_DATA (rclib_db_playlist_data_get_type())
 
 /**
  * RCLibDbCatalogType:
@@ -173,6 +176,8 @@ struct _RCLibDbClass {
 
 /*< private >*/
 GType rclib_db_get_type();
+GType rclib_db_catalog_data_get_type();
+GType rclib_db_playlist_data_get_type();
 
 /*< public >*/
 gboolean rclib_db_init(const gchar *file);
@@ -214,9 +219,10 @@ void rclib_db_playlist_set_lyric_secondary_bind(GSequenceIter *iter,
     const gchar *filename);
 void rclib_db_playlist_set_album_bind(GSequenceIter *iter,
     const gchar *filename);
+gboolean rclib_db_playlist_get_rating(GSequenceIter *iter, gfloat *rating);
 const gchar *rclib_db_playlist_get_lyric_bind(GSequenceIter *iter);
 const gchar *rclib_db_playlist_get_lyric_secondary_bind(GSequenceIter *iter);
-const gchar *rclib_db_playlist_get_album_bind(GSequenceIter *iter);  
+const gchar *rclib_db_playlist_get_album_bind(GSequenceIter *iter);
 void rclib_db_playlist_reorder(GSequenceIter *iter, gint *new_order);
 void rclib_db_playlist_move_to_another_catalog(GSequenceIter **iters,
     guint num, GSequenceIter *catalog_iter);

@@ -84,7 +84,23 @@
     * Fixed some bugs.
     * It is possible to close window by using Esc in Preferences,
       Audio Effect and plug-in configuartion windows now.
+
+2012-06-11  SuperCat    <supercatexpert@gmail.com>
+
+    * Fixed some bugs.
+    * Use new data format for playlist database (compressed XML), need a
+      converter if you want to migrate data from old version of RhythmCat2.
+    * Added buffering presentation if playing live media.
+    * Modified some APIs, old plug-ins may not work with new player core
+      library.
     
+2012-06-16  SuperCat    <supercatexpert@gmail.com>
+
+    * Added rating limited playing mode (playing the music whose rating is
+      larger or lesser than the rating you set), the configuration UI is
+      to be finished.
+    * Killed all warnings in GIR Scanner while compiling.
+      
     
 
 

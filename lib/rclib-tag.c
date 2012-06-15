@@ -47,6 +47,21 @@ typedef struct RCLibTagDecodedPadData
 
 static gchar *tag_fallback_encoding = NULL;
 
+GType rclib_tag_metadata_get_type()
+{
+    static volatile gsize g_define_type_id__volatile = 0;
+    GType g_define_type_id;
+    if(g_once_init_enter(&g_define_type_id__volatile))
+    {
+        g_define_type_id = g_boxed_type_register_static(
+            g_intern_static_string("RCLibTagMetadata"),
+            (GBoxedCopyFunc)rclib_tag_copy_data,
+            (GBoxedFreeFunc)rclib_tag_free);
+        g_once_init_leave (&g_define_type_id__volatile, g_define_type_id);
+    }
+    return g_define_type_id__volatile;
+}
+
 /*
  * Get tag from GstTagList.
  */
@@ -304,6 +319,31 @@ RCLibTagMetadata *rclib_tag_read_metadata(const gchar *uri)
     state_ret = gst_element_set_state(pipeline, GST_STATE_NULL);
     gst_object_unref(GST_OBJECT(pipeline));
     return mmd;
+}
+
+/**
+ * rclib_tag_copy_data:
+ * @mmd: the #RCLibTagMetadata data to copy
+ *
+ * Copy the #RCLibTagMetadata data from the given parameter.
+ *
+ * Returns: (transfer full): The copied data.
+ */
+
+RCLibTagMetadata *rclib_tag_copy_data(const RCLibTagMetadata *mmd)
+{
+    RCLibTagMetadata *new_mmd;
+    new_mmd = (RCLibTagMetadata *)g_new0(RCLibTagMetadata, 1);
+    memcpy(new_mmd, mmd, sizeof(RCLibTagMetadata));
+    new_mmd->uri = g_strdup(mmd->uri);
+    new_mmd->title = g_strdup(mmd->title);
+    new_mmd->artist = g_strdup(mmd->artist);
+    new_mmd->album = g_strdup(mmd->album);
+    new_mmd->comment = g_strdup(mmd->comment);
+    new_mmd->ftype = g_strdup(mmd->ftype);
+    new_mmd->emb_cue = g_strdup(mmd->emb_cue);
+    new_mmd->image = gst_buffer_copy(mmd->image);
+    return new_mmd;
 }
 
 /**

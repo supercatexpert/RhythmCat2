@@ -292,6 +292,21 @@ GType rclib_plugin_get_type()
     return g_define_type_id__volatile;
 }
 
+GType rclib_plugin_data_get_type(void)
+{
+    static volatile gsize g_define_type_id__volatile = 0;
+    GType g_define_type_id;
+    if(g_once_init_enter(&g_define_type_id__volatile))
+    {
+        g_define_type_id = g_boxed_type_register_static(
+            g_intern_static_string("RCLibPluginData"),
+            (GBoxedCopyFunc)rclib_plugin_data_ref,
+            (GBoxedFreeFunc)rclib_plugin_data_unref);
+        g_once_init_leave (&g_define_type_id__volatile, g_define_type_id);
+    }
+    return g_define_type_id__volatile;
+}
+
 /**
  * rclib_plugin_init:
  * @file: the configure file path
@@ -351,7 +366,7 @@ void rclib_plugin_exit()
  *
  * Get the running #RCLibPlugin instance.
  *
- * Returns: The running instance.
+ * Returns: (transfer none): The running instance.
  */
 
 GObject *rclib_plugin_get_instance()
@@ -362,7 +377,7 @@ GObject *rclib_plugin_get_instance()
 /**
  * rclib_plugin_signal_connect:
  * @name: the name of the signal
- * @callback: the the #GCallback to connect
+ * @callback: (scope call): the the #GCallback to connect
  * @data: the user data
  *
  * Connect the GCallback function to the given signal for the running
@@ -917,7 +932,7 @@ void rclib_plugin_destroy(RCLibPluginData *plugin)
 
 /**
  * rclib_plugin_foreach:
- * @func: the function to call for each key/value pair
+ * @func: (scope call): the function to call for each key/value pair
  * @data: user data to pass to the function
  *
  * Calls the given function for each of the key/value pairs in the

@@ -1045,6 +1045,8 @@ static void rc_ui_listview_init()
  *
  * Get the catalog list view widget. If the widget is not initialized
  * yet, it will be initialized.
+ *
+ * Returns: (transfer none): the catalog widget.
  */
 
 GtkWidget *rc_ui_listview_get_catalog_widget()
@@ -1059,6 +1061,8 @@ GtkWidget *rc_ui_listview_get_catalog_widget()
  *
  * Get the playlist list view widget. If the widget is not initialized
  * yet, it will be initialized.
+ *
+ * Returns: (transfer none): the playlist widget.
  */
 
 GtkWidget *rc_ui_listview_get_playlist_widget()
@@ -1206,7 +1210,7 @@ gboolean rc_ui_listview_playlist_get_cursor(GtkTreeIter *iter)
  *
  * Get the #GtkTreeModel used in the current catalog list view.
  *
- * Returns: The #GtkTreeModel.
+ * Returns: (transfer none): The #GtkTreeModel.
  */
 
 GtkTreeModel *rc_ui_listview_catalog_get_model()
@@ -1220,7 +1224,7 @@ GtkTreeModel *rc_ui_listview_catalog_get_model()
  *
  * Get the #GtkTreeModel used in the current playlist list view.
  *
- * Returns: The #GtkTreeModel.
+ * Returns: (transfer none): The #GtkTreeModel.
  */
 
 

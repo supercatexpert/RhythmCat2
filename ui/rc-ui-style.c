@@ -50,8 +50,8 @@ static RCUiStyleEmbeddedTheme style_embedded_themes[] =
 {
     {
         .name = "Monochrome",
-        .path = "/org/RhythmCat2/ui/style/resources/"
-            "rc-ui-theme-monochrome.css"
+        .path = "/org/RhythmCat2/ui/resources/themes/Monochrome/"
+            "monochrome.css"
     }
 };
 
@@ -302,7 +302,7 @@ const gchar *rc_ui_style_embedded_theme_get_name(guint index)
  *
  * Get a list of theme paths, which contains theme files.
  *
- * Returns: A list of theme paths.
+ * Returns: (transfer full) (element-type filename): A list of theme paths.
  */
 
 GSList *rc_ui_style_search_theme_paths()

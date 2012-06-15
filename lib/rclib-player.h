@@ -117,12 +117,17 @@ gulong rclib_player_signal_connect(const gchar *name,
 void rclib_player_signal_disconnect(gulong handler_id);
 void rclib_player_play_db(GSequenceIter *iter);
 void rclib_player_play_uri(const gchar *uri);
-void rclib_player_play_prev(gboolean jump, gboolean repeat, gboolean loop);
-void rclib_player_play_next(gboolean jump, gboolean repeat, gboolean loop);
+gboolean rclib_player_play_prev(gboolean jump, gboolean repeat,
+    gboolean loop);
+gboolean rclib_player_play_next(gboolean jump, gboolean repeat,
+    gboolean loop);
 void rclib_player_set_repeat_mode(RCLibPlayerRepeatMode mode);
 void rclib_player_set_random_mode(RCLibPlayerRandomMode mode);
 RCLibPlayerRepeatMode rclib_player_get_repeat_mode();
 RCLibPlayerRandomMode rclib_player_get_random_mode();
+void rclib_player_set_rating_limit(gboolean state, gfloat rating,
+    gboolean condition);
+gboolean rclib_player_get_rating_limit(gfloat *rating, gboolean *condition);
 
 G_END_DECLS
 

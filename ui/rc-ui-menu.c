@@ -735,7 +735,7 @@ static gboolean rc_ui_menu_init()
  * Get the UI Manager of the menus. If it is not initialized
  * yet, it will be initialized.
  *
- * Returns: The UI Manager object.
+ * Returns: (transfer none): The UI Manager object.
  */
 
 GtkUIManager *rc_ui_menu_get_ui_manager()

@@ -136,7 +136,7 @@ const gchar *rclib_lyric_get_search_dir();
 gchar *rclib_lyric_search_lyric(const gchar *uri, const gchar *title,
     const gchar *artist);
 gboolean rclib_lyric_is_available(guint index);
-RCLibLyricParsedData *rclib_lyric_get_parsed_data(guint index);
+const RCLibLyricParsedData *rclib_lyric_get_parsed_data(guint index);
 gint64 rclib_lyric_get_track_time_offset(guint index);
 
 G_END_DECLS

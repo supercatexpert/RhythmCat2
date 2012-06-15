@@ -146,6 +146,7 @@ AM_CONDITIONAL(PLATFORM_WIN32, test "$platform_win32" = "yes")
 
 AC_CONFIG_FILES([lib/librhythmcat-2.0.pc ui/rhythmcat-2.0.pc \
     Makefile lib/Makefile ui/Makefile ui/resources/Makefile \
+    ui/resources/themes/Makefile ui/resources/themes/Monochrome/Makefile \
     data/Makefile data/icons/Makefile data/images/Makefile \
     plugins/Makefile plugins/base/Makefile plugins/extra/Makefile \
     plugins/devel/Makefile plugins/restricted/Makefile docs/Makefile \

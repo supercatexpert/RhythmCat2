@@ -1076,7 +1076,7 @@ static gboolean rc_ui_list_model_init()
  * Get the catalog store. If the catalog store is not initialize,
  * it will be intialized first.
  *
- * Returns: The catalog store.
+ * Returns: (transfer none): The catalog store.
  */
 
 GtkTreeModel *rc_ui_list_model_get_catalog_store()
@@ -1093,7 +1093,7 @@ GtkTreeModel *rc_ui_list_model_get_catalog_store()
  * Get the playlist store by the iter in the catalog. If the store is
  * not initialized, it will be initialzed first.
  *
- * Returns: The playlist store, NULL if the iter is invalid.
+ * Returns: (transfer none): The playlist store, NULL if the iter is invalid.
  */
 
 GtkTreeModel *rc_ui_list_model_get_playlist_store(GtkTreeIter *iter)
@@ -1116,7 +1116,7 @@ GtkTreeModel *rc_ui_list_model_get_playlist_store(GtkTreeIter *iter)
  *
  * Get the catalog iter by given playlist store model.
  *
- * Returns: The catalog iter.
+ * Returns: (transfer none) (skip): The catalog iter.
  */
 
 GSequenceIter *rc_ui_list_model_get_catalog_by_model(GtkTreeModel *model)

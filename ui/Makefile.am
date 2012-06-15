@@ -28,7 +28,7 @@ RhythmCat2_SOURCES = \
 
 librhythmcat_ui_2_0_resourcefiles = \
     rc-ui-resources.gresource.xml \
-    resources/rc-ui-theme-monochrome.css
+    resources/themes/Monochrome/monochrome.css
 
 rc-ui-resources.c: $(librhythmcat_ui_2_0_resourcefiles)
 	@GLIB_COMPILE_RESOURCE@ $(top_srcdir)/ui/rc-ui-resources.gresource.xml \
@@ -52,7 +52,7 @@ librhythmcat_ui_2_0includedir=$(includedir)/rhythmcat2
 librhythmcat_ui_2_0include_HEADERS = rc-common.h \
     $(librhythmcat_ui_2_0_headers) $(librhythmcat_ui_2_0_builtheaders)
 
-librhythmcat_ui_2_0_la_LDFLAGS = -export-dynamic -O2 -no-undefined -export-symbols-regex "^[[^_]].*"
+librhythmcat_ui_2_0_la_LDFLAGS = -fPIC -export-dynamic -O2 -no-undefined -export-symbols-regex "^[[^_]].*"
 librhythmcat_ui_2_0_la_LIBADD = @LIBOBJS@ @GLIB2_LIBS@ @GTK_LIBS@ @GSTREAMER_LIBS@ \
     $(top_builddir)/lib/librhythmcat-2.0.la
 
@@ -95,7 +95,7 @@ if HAVE_INTROSPECTION
 -include $(INTROSPECTION_MAKEFILE)
 INTROSPECTION_GIRS = 
 INTROSPECTION_SCANNER_ARGS = --add-include-path=$(srcdir)/lib \
-    --include-uninstalled=$(top_builddir)/lib/RhythmCatLib-2.0.gir
+    --include-uninstalled=$(top_builddir)/lib/RhythmCatLib-2.0.gir --warn-all
 INTROSPECTION_COMPILER_ARGS = --includedir=$(top_builddir)/lib
 
 introspection_sources = $(librhythmcat_ui_2_0_sources) $(librhythmcat_ui_2_0_headers)

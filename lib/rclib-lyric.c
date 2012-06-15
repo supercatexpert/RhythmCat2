@@ -382,7 +382,7 @@ void rclib_lyric_exit()
  *
  * Get the running #RCLibLyric instance.
  *
- * Returns: The running instance.
+ * Returns: (transfer none): The running instance.
  */
 
 GObject *rclib_lyric_get_instance()
@@ -393,7 +393,7 @@ GObject *rclib_lyric_get_instance()
 /**
  * rclib_lyric_signal_connect:
  * @name: the name of the signal
- * @callback: the the #GCallback to connect
+ * @callback: (scope call): the the #GCallback to connect
  * @data: the user data
  *
  * Connect the GCallback function to the given signal for the running
@@ -727,7 +727,8 @@ const RCLibLyricData *rclib_lyric_get_line(guint index, gint64 time)
  * Find iter of the lyric line which matches to the given time
  * (in nanoseconds).
  *
- * Returns: The #GSequenceIter of the lyric line, NULL if not found.
+ * Returns: (transfer none) (skip): The #GSequenceIter of the lyric line,
+ *     #NULL if not found.
  */
 
 GSequenceIter *rclib_lyric_get_line_iter(guint index, gint64 time)
@@ -962,13 +963,13 @@ gboolean rclib_lyric_is_available(guint index)
  *
  * Get the parsed lyric data by the given track index.
  *
- * Returns: The parsed lyric data.
+ * Returns: (transfer none): The parsed lyric data.
  */
 
-RCLibLyricParsedData *rclib_lyric_get_parsed_data(guint index)
+const RCLibLyricParsedData *rclib_lyric_get_parsed_data(guint index)
 {
     RCLibLyricPrivate *priv;
-    RCLibLyricParsedData *parsed_data;
+    const RCLibLyricParsedData *parsed_data;
     if(lyric_instance==NULL) return NULL;
     priv = RCLIB_LYRIC_GET_PRIVATE(lyric_instance);
     if(priv==NULL) return NULL;

@@ -16313,7 +16313,7 @@ else
 fi
 
 
-ac_config_files="$ac_config_files lib/librhythmcat-2.0.pc ui/rhythmcat-2.0.pc Makefile lib/Makefile ui/Makefile ui/resources/Makefile data/Makefile data/icons/Makefile data/images/Makefile plugins/Makefile plugins/base/Makefile plugins/extra/Makefile plugins/devel/Makefile plugins/restricted/Makefile docs/Makefile docs/reference/Makefile docs/reference/lib/Makefile docs/reference/ui/Makefile docs/reference/lib/version.xml docs/reference/ui/version.xml po/Makefile.in po/Makefile"
+ac_config_files="$ac_config_files lib/librhythmcat-2.0.pc ui/rhythmcat-2.0.pc Makefile lib/Makefile ui/Makefile ui/resources/Makefile ui/resources/themes/Makefile ui/resources/themes/Monochrome/Makefile data/Makefile data/icons/Makefile data/images/Makefile plugins/Makefile plugins/base/Makefile plugins/extra/Makefile plugins/devel/Makefile plugins/restricted/Makefile docs/Makefile docs/reference/Makefile docs/reference/lib/Makefile docs/reference/ui/Makefile docs/reference/lib/version.xml docs/reference/ui/version.xml po/Makefile.in po/Makefile"
 
 cat >confcache <<\_ACEOF
 # This file is a shell script that caches the results of configure
@@ -17376,6 +17376,8 @@ do
     "lib/Makefile") CONFIG_FILES="$CONFIG_FILES lib/Makefile" ;;
     "ui/Makefile") CONFIG_FILES="$CONFIG_FILES ui/Makefile" ;;
     "ui/resources/Makefile") CONFIG_FILES="$CONFIG_FILES ui/resources/Makefile" ;;
+    "ui/resources/themes/Makefile") CONFIG_FILES="$CONFIG_FILES ui/resources/themes/Makefile" ;;
+    "ui/resources/themes/Monochrome/Makefile") CONFIG_FILES="$CONFIG_FILES ui/resources/themes/Monochrome/Makefile" ;;
     "data/Makefile") CONFIG_FILES="$CONFIG_FILES data/Makefile" ;;
     "data/icons/Makefile") CONFIG_FILES="$CONFIG_FILES data/icons/Makefile" ;;
     "data/images/Makefile") CONFIG_FILES="$CONFIG_FILES data/images/Makefile" ;;

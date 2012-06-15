@@ -31,6 +31,8 @@
 
 G_BEGIN_DECLS
 
+#define RCLIB_TYPE_TAG_METADATA (rclib_tag_metadata_get_type())
+
 typedef struct _RCLibTagMetadata RCLibTagMetadata;
 
 /**
@@ -78,7 +80,12 @@ struct _RCLibTagMetadata {
     gpointer user_data;
 };
 
+/*< private >*/
+GType rclib_tag_metadata_get_type();
+
+/*< public >*/
 RCLibTagMetadata *rclib_tag_read_metadata(const gchar *uri);
+RCLibTagMetadata *rclib_tag_copy_data(const RCLibTagMetadata *mmd);
 void rclib_tag_free(RCLibTagMetadata *mmd);
 gchar *rclib_tag_get_name_from_fpath(const gchar *filename);
 gchar *rclib_tag_get_name_from_uri(const gchar *uri);

@@ -353,7 +353,7 @@ static gboolean rc_plugin_lrcshow_drag(GtkWidget *widget, GdkEvent *event,
     GdkWindow *window;
     gint dy = 0;
     gint64 pos = 0;
-    RCLibLyricParsedData *parsed_data;
+    const RCLibLyricParsedData *parsed_data;
     GSequenceIter *iter;
     RCLibLyricData *lrc_data = NULL;
     static gint sy = 0;
@@ -419,7 +419,7 @@ static gboolean rc_plugin_lrcshow_draw(GtkWidget *widget, cairo_t *cr,
 {
     RCPluginLrcshowPriv *priv = (RCPluginLrcshowPriv *)data;
     GSequenceIter *iter, *iter_begin;
-    RCLibLyricParsedData *parsed_data;
+    const RCLibLyricParsedData *parsed_data;
     gint64 pos;
     if(data==NULL) return FALSE;
     rc_plugin_lrcshow_draw_bg(priv, cr);

@@ -48,6 +48,8 @@ G_BEGIN_DECLS
 #define RCLIB_PLUGIN_GET_CLASS(o) (G_TYPE_INSTANCE_GET_CLASS((o), \
     RCLIB_TYPE_PLUGIN, RCLibPluginClass))
 
+#define RCLIB_TYPE_PLUGIN_DATA (rclib_plugin_data_get_type())
+
 /**
  * RCPLUGIN_INIT_PLUGIN:
  * @pluginname: the plug-in name
@@ -217,6 +219,7 @@ struct _RCLibPluginClass {
 
 /*< private >*/
 GType rclib_plugin_get_type();
+GType rclib_plugin_data_get_type();
 
 /*< public >*/
 gboolean rclib_plugin_init(const gchar *file);

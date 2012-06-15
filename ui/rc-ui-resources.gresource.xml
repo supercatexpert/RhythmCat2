@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <gresources>
-  <gresource prefix="/org/RhythmCat2/ui/style">
-    <file compressed="true">resources/rc-ui-theme-monochrome.css</file>
+  <gresource prefix="/org/RhythmCat2/ui">
+    <file compressed="true">resources/themes/Monochrome/monochrome.css</file>
   </gresource>
 </gresources>

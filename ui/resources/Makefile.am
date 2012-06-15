@@ -1,1 +1,2 @@
-EXTRA_DIST = rc-ui-theme-monochrome.css
+EXTRA_DIST = 
+SUBDIRS = themes

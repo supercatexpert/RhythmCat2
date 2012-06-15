@@ -426,8 +426,9 @@ gboolean rclib_settings_get_boolean(const gchar *group_name,
  *
  * Returns the values associated with key under group_name.
  *
- * Returns: A NULL-terminated string array or NULL if the specified key
- * cannot be found. The array should be freed with g_strfreev().
+ * Returns: (transfer full) (array zero-terminated=1 length=length):
+ *     A NULL-terminated string array or NULL if the specified key
+ *     cannot be found. The array should be freed with g_strfreev().
  */
 
 gchar **rclib_settings_get_string_list(const gchar *group_name,
