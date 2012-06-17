@@ -16,7 +16,6 @@
 <ANCHOR id="RCLibAlbum.signals" href="LibRhythmCat/RCLibAlbum.html#RCLibAlbum.signals">
 <ANCHOR id="RCLibAlbum.description" href="LibRhythmCat/RCLibAlbum.html#RCLibAlbum.description">
 <ANCHOR id="RCLibAlbum.details" href="LibRhythmCat/RCLibAlbum.html#RCLibAlbum.details">
-<ANCHOR id="RCLIB-ALBUM-TYPE:CAPS" href="LibRhythmCat/RCLibAlbum.html#RCLIB-ALBUM-TYPE:CAPS">
 <ANCHOR id="RCLibAlbum-struct" href="LibRhythmCat/RCLibAlbum.html#RCLibAlbum-struct">
 <ANCHOR id="RCLibAlbumClass" href="LibRhythmCat/RCLibAlbum.html#RCLibAlbumClass">
 <ANCHOR id="RCLibAlbumType" href="LibRhythmCat/RCLibAlbum.html#RCLibAlbumType">
@@ -38,7 +37,6 @@
 <ANCHOR id="RCLibCore.signals" href="LibRhythmCat/RCLibCore.html#RCLibCore.signals">
 <ANCHOR id="RCLibCore.description" href="LibRhythmCat/RCLibCore.html#RCLibCore.description">
 <ANCHOR id="RCLibCore.details" href="LibRhythmCat/RCLibCore.html#RCLibCore.details">
-<ANCHOR id="RCLIB-CORE-TYPE:CAPS" href="LibRhythmCat/RCLibCore.html#RCLIB-CORE-TYPE:CAPS">
 <ANCHOR id="RCLibCore-struct" href="LibRhythmCat/RCLibCore.html#RCLibCore-struct">
 <ANCHOR id="RCLibCoreClass" href="LibRhythmCat/RCLibCore.html#RCLibCoreClass">
 <ANCHOR id="RCLibCoreEQType" href="LibRhythmCat/RCLibCore.html#RCLibCoreEQType">
@@ -84,12 +82,16 @@
 <ANCHOR id="rclib-core-init" href="LibRhythmCat/RCLibCore.html#rclib-core-init">
 <ANCHOR id="rclib-core-pause" href="LibRhythmCat/RCLibCore.html#rclib-core-pause">
 <ANCHOR id="rclib-core-play" href="LibRhythmCat/RCLibCore.html#rclib-core-play">
+<ANCHOR id="rclib-core-query-buffering-percent" href="LibRhythmCat/RCLibCore.html#rclib-core-query-buffering-percent">
+<ANCHOR id="rclib-core-query-buffering-range" href="LibRhythmCat/RCLibCore.html#rclib-core-query-buffering-range">
 <ANCHOR id="rclib-core-query-duration" href="LibRhythmCat/RCLibCore.html#rclib-core-query-duration">
 <ANCHOR id="rclib-core-query-position" href="LibRhythmCat/RCLibCore.html#rclib-core-query-position">
 <ANCHOR id="rclib-core-set-balance" href="LibRhythmCat/RCLibCore.html#rclib-core-set-balance">
 <ANCHOR id="rclib-core-set-eq" href="LibRhythmCat/RCLibCore.html#rclib-core-set-eq">
 <ANCHOR id="rclib-core-set-position" href="LibRhythmCat/RCLibCore.html#rclib-core-set-position">
 <ANCHOR id="rclib-core-set-uri" href="LibRhythmCat/RCLibCore.html#rclib-core-set-uri">
+<ANCHOR id="rclib-core-set-uri-with-db-ref" href="LibRhythmCat/RCLibCore.html#rclib-core-set-uri-with-db-ref">
+<ANCHOR id="rclib-core-set-uri-with-ext-ref" href="LibRhythmCat/RCLibCore.html#rclib-core-set-uri-with-ext-ref">
 <ANCHOR id="rclib-core-set-volume" href="LibRhythmCat/RCLibCore.html#rclib-core-set-volume">
 <ANCHOR id="rclib-core-signal-connect" href="LibRhythmCat/RCLibCore.html#rclib-core-signal-connect">
 <ANCHOR id="rclib-core-signal-disconnect" href="LibRhythmCat/RCLibCore.html#rclib-core-signal-disconnect">
@@ -98,6 +100,7 @@
 <ANCHOR id="rclib-core-update-external-reference" href="LibRhythmCat/RCLibCore.html#rclib-core-update-external-reference">
 <ANCHOR id="RCLibCore.signal-details" href="LibRhythmCat/RCLibCore.html#RCLibCore.signal-details">
 <ANCHOR id="RCLibCore-balance-changed" href="LibRhythmCat/RCLibCore.html#RCLibCore-balance-changed">
+<ANCHOR id="RCLibCore-buffering" href="LibRhythmCat/RCLibCore.html#RCLibCore-buffering">
 <ANCHOR id="RCLibCore-eos" href="LibRhythmCat/RCLibCore.html#RCLibCore-eos">
 <ANCHOR id="RCLibCore-eq-changed" href="LibRhythmCat/RCLibCore.html#RCLibCore-eq-changed">
 <ANCHOR id="RCLibCore-error" href="LibRhythmCat/RCLibCore.html#RCLibCore-error">
@@ -124,17 +127,18 @@
 <ANCHOR id="rclib-cue-set-fallback-encoding" href="LibRhythmCat/LibRhythmCat-Cue-Parser.html#rclib-cue-set-fallback-encoding">
 <ANCHOR id="RCLibDb" href="LibRhythmCat/RCLibDb.html">
 <ANCHOR id="RCLibDb.synopsis" href="LibRhythmCat/RCLibDb.html#RCLibDb.synopsis">
+<ANCHOR id="RCLibDbCatalogData" href="LibRhythmCat/RCLibDb.html#RCLibDbCatalogData">
+<ANCHOR id="RCLibDbPlaylistData" href="LibRhythmCat/RCLibDb.html#RCLibDbPlaylistData">
 <ANCHOR id="RCLibDb.object-hierarchy" href="LibRhythmCat/RCLibDb.html#RCLibDb.object-hierarchy">
 <ANCHOR id="RCLibDb.signals" href="LibRhythmCat/RCLibDb.html#RCLibDb.signals">
 <ANCHOR id="RCLibDb.description" href="LibRhythmCat/RCLibDb.html#RCLibDb.description">
 <ANCHOR id="RCLibDb.details" href="LibRhythmCat/RCLibDb.html#RCLibDb.details">
-<ANCHOR id="RCLIB-DB-TYPE:CAPS" href="LibRhythmCat/RCLibDb.html#RCLIB-DB-TYPE:CAPS">
 <ANCHOR id="RCLibDb-struct" href="LibRhythmCat/RCLibDb.html#RCLibDb-struct">
-<ANCHOR id="RCLibDbCatalogData" href="LibRhythmCat/RCLibDb.html#RCLibDbCatalogData">
+<ANCHOR id="RCLibDbCatalogData-struct" href="LibRhythmCat/RCLibDb.html#RCLibDbCatalogData-struct">
 <ANCHOR id="RCLibDbCatalogType" href="LibRhythmCat/RCLibDb.html#RCLibDbCatalogType">
 <ANCHOR id="RCLIB-DB-CATALOG-TYPE-PLAYLIST:CAPS" href="LibRhythmCat/RCLibDb.html#RCLIB-DB-CATALOG-TYPE-PLAYLIST:CAPS">
 <ANCHOR id="RCLibDbClass" href="LibRhythmCat/RCLibDb.html#RCLibDbClass">
-<ANCHOR id="RCLibDbPlaylistData" href="LibRhythmCat/RCLibDb.html#RCLibDbPlaylistData">
+<ANCHOR id="RCLibDbPlaylistData-struct" href="LibRhythmCat/RCLibDb.html#RCLibDbPlaylistData-struct">
 <ANCHOR id="RCLibDbPlaylistType" href="LibRhythmCat/RCLibDb.html#RCLibDbPlaylistType">
 <ANCHOR id="RCLIB-DB-PLAYLIST-TYPE-MISSING:CAPS" href="LibRhythmCat/RCLibDb.html#RCLIB-DB-PLAYLIST-TYPE-MISSING:CAPS">
 <ANCHOR id="RCLIB-DB-PLAYLIST-TYPE-MUSIC:CAPS" href="LibRhythmCat/RCLibDb.html#RCLIB-DB-PLAYLIST-TYPE-MUSIC:CAPS">
@@ -170,6 +174,7 @@
 <ANCHOR id="rclib-db-playlist-get-album-bind" href="LibRhythmCat/RCLibDb.html#rclib-db-playlist-get-album-bind">
 <ANCHOR id="rclib-db-playlist-get-lyric-bind" href="LibRhythmCat/RCLibDb.html#rclib-db-playlist-get-lyric-bind">
 <ANCHOR id="rclib-db-playlist-get-lyric-secondary-bind" href="LibRhythmCat/RCLibDb.html#rclib-db-playlist-get-lyric-secondary-bind">
+<ANCHOR id="rclib-db-playlist-get-rating" href="LibRhythmCat/RCLibDb.html#rclib-db-playlist-get-rating">
 <ANCHOR id="rclib-db-playlist-import-cancel" href="LibRhythmCat/RCLibDb.html#rclib-db-playlist-import-cancel">
 <ANCHOR id="rclib-db-playlist-import-queue-get-length" href="LibRhythmCat/RCLibDb.html#rclib-db-playlist-import-queue-get-length">
 <ANCHOR id="rclib-db-playlist-move-to-another-catalog" href="LibRhythmCat/RCLibDb.html#rclib-db-playlist-move-to-another-catalog">
@@ -204,7 +209,6 @@
 <ANCHOR id="RCLibLyric.signals" href="LibRhythmCat/RCLibLyric.html#RCLibLyric.signals">
 <ANCHOR id="RCLibLyric.description" href="LibRhythmCat/RCLibLyric.html#RCLibLyric.description">
 <ANCHOR id="RCLibLyric.details" href="LibRhythmCat/RCLibLyric.html#RCLibLyric.details">
-<ANCHOR id="RCLIB-LYRIC-TYPE:CAPS" href="LibRhythmCat/RCLibLyric.html#RCLIB-LYRIC-TYPE:CAPS">
 <ANCHOR id="RCLibLyric-struct" href="LibRhythmCat/RCLibLyric.html#RCLibLyric-struct">
 <ANCHOR id="RCLibLyricClass" href="LibRhythmCat/RCLibLyric.html#RCLibLyricClass">
 <ANCHOR id="RCLibLyricData" href="LibRhythmCat/RCLibLyric.html#RCLibLyricData">
@@ -237,7 +241,6 @@
 <ANCHOR id="RCLibPlayer.signals" href="LibRhythmCat/RCLibPlayer.html#RCLibPlayer.signals">
 <ANCHOR id="RCLibPlayer.description" href="LibRhythmCat/RCLibPlayer.html#RCLibPlayer.description">
 <ANCHOR id="RCLibPlayer.details" href="LibRhythmCat/RCLibPlayer.html#RCLibPlayer.details">
-<ANCHOR id="RCLIB-PLAYER-TYPE:CAPS" href="LibRhythmCat/RCLibPlayer.html#RCLIB-PLAYER-TYPE:CAPS">
 <ANCHOR id="RCLibPlayer-struct" href="LibRhythmCat/RCLibPlayer.html#RCLibPlayer-struct">
 <ANCHOR id="RCLibPlayerClass" href="LibRhythmCat/RCLibPlayer.html#RCLibPlayerClass">
 <ANCHOR id="RCLibPlayerRandomMode" href="LibRhythmCat/RCLibPlayer.html#RCLibPlayerRandomMode">
@@ -252,6 +255,7 @@
 <ANCHOR id="rclib-player-exit" href="LibRhythmCat/RCLibPlayer.html#rclib-player-exit">
 <ANCHOR id="rclib-player-get-instance" href="LibRhythmCat/RCLibPlayer.html#rclib-player-get-instance">
 <ANCHOR id="rclib-player-get-random-mode" href="LibRhythmCat/RCLibPlayer.html#rclib-player-get-random-mode">
+<ANCHOR id="rclib-player-get-rating-limit" href="LibRhythmCat/RCLibPlayer.html#rclib-player-get-rating-limit">
 <ANCHOR id="rclib-player-get-repeat-mode" href="LibRhythmCat/RCLibPlayer.html#rclib-player-get-repeat-mode">
 <ANCHOR id="rclib-player-init" href="LibRhythmCat/RCLibPlayer.html#rclib-player-init">
 <ANCHOR id="rclib-player-play-db" href="LibRhythmCat/RCLibPlayer.html#rclib-player-play-db">
@@ -259,6 +263,7 @@
 <ANCHOR id="rclib-player-play-prev" href="LibRhythmCat/RCLibPlayer.html#rclib-player-play-prev">
 <ANCHOR id="rclib-player-play-uri" href="LibRhythmCat/RCLibPlayer.html#rclib-player-play-uri">
 <ANCHOR id="rclib-player-set-random-mode" href="LibRhythmCat/RCLibPlayer.html#rclib-player-set-random-mode">
+<ANCHOR id="rclib-player-set-rating-limit" href="LibRhythmCat/RCLibPlayer.html#rclib-player-set-rating-limit">
 <ANCHOR id="rclib-player-set-repeat-mode" href="LibRhythmCat/RCLibPlayer.html#rclib-player-set-repeat-mode">
 <ANCHOR id="rclib-player-signal-connect" href="LibRhythmCat/RCLibPlayer.html#rclib-player-signal-connect">
 <ANCHOR id="rclib-player-signal-disconnect" href="LibRhythmCat/RCLibPlayer.html#rclib-player-signal-disconnect">
@@ -267,6 +272,7 @@
 <ANCHOR id="RCLibPlayer-repeat-mode-changed" href="LibRhythmCat/RCLibPlayer.html#RCLibPlayer-repeat-mode-changed">
 <ANCHOR id="RCLibPlugin" href="LibRhythmCat/RCLibPlugin.html">
 <ANCHOR id="RCLibPlugin.synopsis" href="LibRhythmCat/RCLibPlugin.html#RCLibPlugin.synopsis">
+<ANCHOR id="RCLibPluginData" href="LibRhythmCat/RCLibPlugin.html#RCLibPluginData">
 <ANCHOR id="RCLibPlugin.object-hierarchy" href="LibRhythmCat/RCLibPlugin.html#RCLibPlugin.object-hierarchy">
 <ANCHOR id="RCLibPlugin.signals" href="LibRhythmCat/RCLibPlugin.html#RCLibPlugin.signals">
 <ANCHOR id="RCLibPlugin.description" href="LibRhythmCat/RCLibPlugin.html#RCLibPlugin.description">
@@ -274,10 +280,9 @@
 <ANCHOR id="RCLIB-PLUGIN-MAGIC:CAPS" href="LibRhythmCat/RCLibPlugin.html#RCLIB-PLUGIN-MAGIC:CAPS">
 <ANCHOR id="RCLIB-PLUGIN-MAJOR-VERSION:CAPS" href="LibRhythmCat/RCLibPlugin.html#RCLIB-PLUGIN-MAJOR-VERSION:CAPS">
 <ANCHOR id="RCLIB-PLUGIN-MINOR-VERSION:CAPS" href="LibRhythmCat/RCLibPlugin.html#RCLIB-PLUGIN-MINOR-VERSION:CAPS">
-<ANCHOR id="RCLIB-PLUGIN-TYPE:CAPS" href="LibRhythmCat/RCLibPlugin.html#RCLIB-PLUGIN-TYPE:CAPS">
 <ANCHOR id="RCLibPlugin-struct" href="LibRhythmCat/RCLibPlugin.html#RCLibPlugin-struct">
 <ANCHOR id="RCLibPluginClass" href="LibRhythmCat/RCLibPlugin.html#RCLibPluginClass">
-<ANCHOR id="RCLibPluginData" href="LibRhythmCat/RCLibPlugin.html#RCLibPluginData">
+<ANCHOR id="RCLibPluginData-struct" href="LibRhythmCat/RCLibPlugin.html#RCLibPluginData-struct">
 <ANCHOR id="RCLibPluginInfo" href="LibRhythmCat/RCLibPlugin.html#RCLibPluginInfo">
 <ANCHOR id="RCLibPluginLoaderInfo" href="LibRhythmCat/RCLibPlugin.html#RCLibPluginLoaderInfo">
 <ANCHOR id="RCLibPluginType" href="LibRhythmCat/RCLibPlugin.html#RCLibPluginType">
@@ -340,9 +345,12 @@
 <ANCHOR id="rclib-settings-update" href="LibRhythmCat/LibRhythmCat-Settings.html#rclib-settings-update">
 <ANCHOR id="LibRhythmCat-Tag-Processor" href="LibRhythmCat/LibRhythmCat-Tag-Processor.html">
 <ANCHOR id="LibRhythmCat-Tag-Processor.synopsis" href="LibRhythmCat/LibRhythmCat-Tag-Processor.html#LibRhythmCat-Tag-Processor.synopsis">
+<ANCHOR id="RCLibTagMetadata" href="LibRhythmCat/LibRhythmCat-Tag-Processor.html#RCLibTagMetadata">
+<ANCHOR id="LibRhythmCat-Tag-Processor.object-hierarchy" href="LibRhythmCat/LibRhythmCat-Tag-Processor.html#LibRhythmCat-Tag-Processor.object-hierarchy">
 <ANCHOR id="LibRhythmCat-Tag-Processor.description" href="LibRhythmCat/LibRhythmCat-Tag-Processor.html#LibRhythmCat-Tag-Processor.description">
 <ANCHOR id="LibRhythmCat-Tag-Processor.details" href="LibRhythmCat/LibRhythmCat-Tag-Processor.html#LibRhythmCat-Tag-Processor.details">
-<ANCHOR id="RCLibTagMetadata" href="LibRhythmCat/LibRhythmCat-Tag-Processor.html#RCLibTagMetadata">
+<ANCHOR id="RCLibTagMetadata-struct" href="LibRhythmCat/LibRhythmCat-Tag-Processor.html#RCLibTagMetadata-struct">
+<ANCHOR id="rclib-tag-copy-data" href="LibRhythmCat/LibRhythmCat-Tag-Processor.html#rclib-tag-copy-data">
 <ANCHOR id="rclib-tag-free" href="LibRhythmCat/LibRhythmCat-Tag-Processor.html#rclib-tag-free">
 <ANCHOR id="rclib-tag-get-fallback-encoding" href="LibRhythmCat/LibRhythmCat-Tag-Processor.html#rclib-tag-get-fallback-encoding">
 <ANCHOR id="rclib-tag-get-name-from-fpath" href="LibRhythmCat/LibRhythmCat-Tag-Processor.html#rclib-tag-get-name-from-fpath">
@@ -360,7 +368,11 @@
 <ANCHOR id="rclib-util-is-supported-media" href="LibRhythmCat/LibRhythmCat-Utilities.html#rclib-util-is-supported-media">
 <ANCHOR id="rclib-util-search-cover" href="LibRhythmCat/LibRhythmCat-Utilities.html#rclib-util-search-cover">
 <ANCHOR id="rclib-util-set-cover-search-dir" href="LibRhythmCat/LibRhythmCat-Utilities.html#rclib-util-set-cover-search-dir">
-<ANCHOR id="annotation-glossterm-array" href="LibRhythmCat/annotation-glossary.html#annotation-glossterm-array">
+<ANCHOR id="annotation-glossterm-out" href="LibRhythmCat/annotation-glossary.html#annotation-glossterm-out">
 <ANCHOR id="annotation-glossterm-allow-none" href="LibRhythmCat/annotation-glossary.html#annotation-glossterm-allow-none">
 <ANCHOR id="annotation-glossterm-inout" href="LibRhythmCat/annotation-glossary.html#annotation-glossterm-inout">
+<ANCHOR id="annotation-glossterm-transfer none" href="LibRhythmCat/annotation-glossary.html#annotation-glossterm-transfer none">
+<ANCHOR id="annotation-glossterm-array" href="LibRhythmCat/annotation-glossary.html#annotation-glossterm-array">
+<ANCHOR id="annotation-glossterm-element-type" href="LibRhythmCat/annotation-glossary.html#annotation-glossterm-element-type">
+<ANCHOR id="annotation-glossterm-scope call" href="LibRhythmCat/annotation-glossary.html#annotation-glossterm-scope call">
 <ANCHOR id="annotation-glossterm-transfer full" href="LibRhythmCat/annotation-glossary.html#annotation-glossterm-transfer full">

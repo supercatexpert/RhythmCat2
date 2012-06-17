@@ -48,6 +48,7 @@ void rc_ui_dialog_open_location();
 void rc_ui_dialog_show_supported_format();
 void rc_ui_dialog_show_load_autosaved();
 void rc_ui_dialog_show_load_legacy();
+void rc_ui_dialog_rating_limited_playing();
 
 G_END_DECLS
 

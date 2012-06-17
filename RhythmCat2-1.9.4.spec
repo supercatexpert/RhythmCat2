@@ -1,8 +1,8 @@
 # RhythmCat RPM SPEC File
 
 Name: rhythmcat2
-Version: 1.9.3
-Release: 2
+Version: 1.9.4
+Release: 1
 Summary: GTK+ frontend of RhythmCat2 Music Player
 Source0: RhythmCat2-%{version}.tar.gz
 License: GPLv3
@@ -11,7 +11,7 @@ URL: https://github.com/supercatexpert/RhythmCat2/
 
 Requires: glib2 >= 2.32 gtk3 >= 3.4 gstreamer >= 0.10.30
 Requires: gstreamer-plugins-base >= 0.10.30 gstreamer-plugins-good >= 0.10.30
-Requires: librhythmcat2 >= 1.9.3
+Requires: librhythmcat2 >= 1.9.4
 BuildRequires: glib2-devel >= 2.32 gtk3-devel >= 2.32 gstreamer-devel >= 0.10.30
 BuildRequires: gstreamer-plugins-base-devel >= 0.10.30
 BuildRequires: desktop-file-utils gobject-introspection gobject-introspection-devel
@@ -38,7 +38,7 @@ This package provides core backend library of RhythmCat2 Music Player.
 %package -n rhythmcat2-devel
 Summary: Development files of the GTK+ frontend of RhythmCat2
 Group: Development/Libraries
-Requires: librhythmcat2 >= 1.9.3 rhythmcat2 >= 1.9.3
+Requires: librhythmcat2 >= 1.9.4 rhythmcat2 >= 1.9.4
 %description -n rhythmcat2-devel
 This package is required to build plugins for RhythmCat2
 (GTK+ frontend).
@@ -46,7 +46,7 @@ This package is required to build plugins for RhythmCat2
 %package -n librhythmcat2-devel
 Summary: Development files of LibRhythmCat2
 Group: Development/Libraries
-Requires: librhythmcat2 >= 1.9.3
+Requires: librhythmcat2 >= 1.9.4
 %description -n librhythmcat2-devel
 This package is required to build plugins for RhythmCat2
 (core library).
@@ -72,7 +72,7 @@ Summary: Base plug-ins for RhythmCat2
 Group: Application/Multimedia
 Requires: glib2 >= 2.32 gtk3 >= 3.4 gstreamer >= 0.10.30
 Requires: gstreamer-plugins-base >= 0.10.30 gstreamer-plugins-good >= 0.10.30
-Requires: librhythmcat2 >= 1.9.3 rhythmcat2 >= 1.9.3
+Requires: librhythmcat2 >= 1.9.4 rhythmcat2 >= 1.9.4
 BuildRequires: glib2-devel >= 2.32 gtk3-devel >= 2.32 gstreamer-devel >= 0.10.30
 BuildRequires: gstreamer-plugins-base-devel >= 0.10.30
 %description -n rhythmcat2-plugins-base
@@ -84,7 +84,7 @@ Summary: Extra plug-ins for RhythmCat2
 Group: Application/Multimedia
 Requires: glib2 >= 2.32 gtk3 >= 3.4 gstreamer >= 0.10.30
 Requires: gstreamer-plugins-base >= 0.10.30 gstreamer-plugins-good >= 0.10.30
-Requires: librhythmcat2 >= 1.9.3 rhythmcat2 >= 1.9.3 libcurl
+Requires: librhythmcat2 >= 1.9.4 rhythmcat2 >= 1.9.4 libcurl
 BuildRequires: glib2-devel >= 2.32 gtk3-devel >= 2.32 gstreamer-devel >= 0.10.30
 BuildRequires: gstreamer-plugins-base-devel >= 0.10.30
 BuildRequires: libcurl-devel
@@ -97,7 +97,7 @@ Summary: Python3 plug-in loader for RhythmCat2
 Group: Application/Multimedia
 Requires: glib2 >= 2.32 gtk3 >= 3.4 gstreamer >= 0.10.30
 Requires: gstreamer-plugins-base >= 0.10.30 gstreamer-plugins-good >= 0.10.30
-Requires: librhythmcat2 >= 1.9.3 rhythmcat2 >= 1.9.3 python3 >= 3.2
+Requires: librhythmcat2 >= 1.9.4 rhythmcat2 >= 1.9.4 python3 >= 3.2
 Requires: python3-libs >= 3.2 gobject-introspection python3-gobject
 BuildRequires: glib2-devel >= 2.32 gtk3-devel >= 2.32 gstreamer-devel >= 0.10.30
 BuildRequires: gstreamer-plugins-base-devel >= 0.10.30
@@ -163,10 +163,10 @@ rm -rf %{buildroot}
 %{_libdir}/pkgconfig/librhythmcat-2.0.pc
 
 %files -n rhythmcat2-doc
-%{_datadir}/gtk-doc/html/RhythmCat-1.9.3
+%{_datadir}/gtk-doc/html/RhythmCat-1.9.4
 
 %files -n librhythmcat2-doc
-%{_datadir}/gtk-doc/html/LibRhythmCat-1.9.3
+%{_datadir}/gtk-doc/html/LibRhythmCat-1.9.4
 
 %files -n rhythmcat2-plugins-base
 %{_libdir}/RhythmCat2/plugins/lyricshow.so
@@ -185,6 +185,6 @@ rm -rf %{buildroot}
 %{_libdir}/RhythmCat2/plugins/python3.so
 
 %changelog
-* Mon Apr 23 2012 SuperCat <supercatexpert@gmail.com> - 1.9.3-1
-- The 1.9.3-1 Unstable Version Package.
+* Mon Apr 23 2012 SuperCat <supercatexpert@gmail.com> - 1.9.4-1
+- The 1.9.4-1 Unstable Version Package.
 

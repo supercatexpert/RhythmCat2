@@ -7,7 +7,6 @@
 <ANCHOR id="RCMainApplication.details" href="RhythmCat/RCMainApplication.html#RCMainApplication.details">
 <ANCHOR id="RCMainApplication-struct" href="RhythmCat/RCMainApplication.html#RCMainApplication-struct">
 <ANCHOR id="RCMainApplicationClass" href="RhythmCat/RCMainApplication.html#RCMainApplicationClass">
-<ANCHOR id="RC-MAIN-APPLICATION-TYPE:CAPS" href="RhythmCat/RCMainApplication.html#RC-MAIN-APPLICATION-TYPE:CAPS">
 <ANCHOR id="rc-main-exit" href="RhythmCat/RCMainApplication.html#rc-main-exit">
 <ANCHOR id="rc-main-get-data-dir" href="RhythmCat/RCMainApplication.html#rc-main-get-data-dir">
 <ANCHOR id="rc-main-get-user-dir" href="RhythmCat/RCMainApplication.html#rc-main-get-user-dir">
@@ -21,7 +20,6 @@
 <ANCHOR id="RCUiMainWindow.details" href="RhythmCat/RCUiMainWindow.html#RCUiMainWindow.details">
 <ANCHOR id="RCUiMainWindow-struct" href="RhythmCat/RCUiMainWindow.html#RCUiMainWindow-struct">
 <ANCHOR id="RCUiMainWindowClass" href="RhythmCat/RCUiMainWindow.html#RCUiMainWindowClass">
-<ANCHOR id="RC-UI-MAIN-WINDOW-TYPE:CAPS" href="RhythmCat/RCUiMainWindow.html#RC-UI-MAIN-WINDOW-TYPE:CAPS">
 <ANCHOR id="rc-ui-main-window-cover-image-get-visible" href="RhythmCat/RCUiMainWindow.html#rc-ui-main-window-cover-image-get-visible">
 <ANCHOR id="rc-ui-main-window-cover-image-set-visible" href="RhythmCat/RCUiMainWindow.html#rc-ui-main-window-cover-image-set-visible">
 <ANCHOR id="rc-ui-main-window-get-default-cover-image" href="RhythmCat/RCUiMainWindow.html#rc-ui-main-window-get-default-cover-image">
@@ -48,6 +46,7 @@
 <ANCHOR id="rc-ui-dialog-load-playlist" href="RhythmCat/RhythmCat-Dialogs.html#rc-ui-dialog-load-playlist">
 <ANCHOR id="rc-ui-dialog-open-location" href="RhythmCat/RhythmCat-Dialogs.html#rc-ui-dialog-open-location">
 <ANCHOR id="rc-ui-dialog-open-music" href="RhythmCat/RhythmCat-Dialogs.html#rc-ui-dialog-open-music">
+<ANCHOR id="rc-ui-dialog-rating-limited-playing" href="RhythmCat/RhythmCat-Dialogs.html#rc-ui-dialog-rating-limited-playing">
 <ANCHOR id="rc-ui-dialog-save-album" href="RhythmCat/RhythmCat-Dialogs.html#rc-ui-dialog-save-album">
 <ANCHOR id="rc-ui-dialog-save-all-playlist" href="RhythmCat/RhythmCat-Dialogs.html#rc-ui-dialog-save-all-playlist">
 <ANCHOR id="rc-ui-dialog-save-playlist" href="RhythmCat/RhythmCat-Dialogs.html#rc-ui-dialog-save-playlist">
@@ -112,6 +111,7 @@
 <ANCHOR id="RC-UI-LISTVIEW-PLAYLIST-COLUMN-TRACK:CAPS" href="RhythmCat/RCUiPlaylistView.html#RC-UI-LISTVIEW-PLAYLIST-COLUMN-TRACK:CAPS">
 <ANCHOR id="RC-UI-LISTVIEW-PLAYLIST-COLUMN-YEAR:CAPS" href="RhythmCat/RCUiPlaylistView.html#RC-UI-LISTVIEW-PLAYLIST-COLUMN-YEAR:CAPS">
 <ANCHOR id="RC-UI-LISTVIEW-PLAYLIST-COLUMN-FTYPE:CAPS" href="RhythmCat/RCUiPlaylistView.html#RC-UI-LISTVIEW-PLAYLIST-COLUMN-FTYPE:CAPS">
+<ANCHOR id="RC-UI-LISTVIEW-PLAYLIST-COLUMN-RATING:CAPS" href="RhythmCat/RCUiPlaylistView.html#RC-UI-LISTVIEW-PLAYLIST-COLUMN-RATING:CAPS">
 <ANCHOR id="RCUiPlaylistView-struct" href="RhythmCat/RCUiPlaylistView.html#RCUiPlaylistView-struct">
 <ANCHOR id="RCUiPlaylistViewClass" href="RhythmCat/RCUiPlaylistView.html#RCUiPlaylistViewClass">
 <ANCHOR id="rc-ui-listview-catalog-delete-items" href="RhythmCat/RCUiPlaylistView.html#rc-ui-listview-catalog-delete-items">
@@ -151,7 +151,6 @@
 <ANCHOR id="RCUiPlayer.details" href="RhythmCat/RCUiPlayer.html#RCUiPlayer.details">
 <ANCHOR id="RCUiPlayer-struct" href="RhythmCat/RCUiPlayer.html#RCUiPlayer-struct">
 <ANCHOR id="RCUiPlayerClass" href="RhythmCat/RCUiPlayer.html#RCUiPlayerClass">
-<ANCHOR id="RC-UI-PLAYER-TYPE:CAPS" href="RhythmCat/RCUiPlayer.html#RC-UI-PLAYER-TYPE:CAPS">
 <ANCHOR id="rc-ui-player-exit" href="RhythmCat/RCUiPlayer.html#rc-ui-player-exit">
 <ANCHOR id="rc-ui-player-get-icon-image" href="RhythmCat/RCUiPlayer.html#rc-ui-player-get-icon-image">
 <ANCHOR id="rc-ui-player-get-instance" href="RhythmCat/RCUiPlayer.html#rc-ui-player-get-instance">
@@ -183,7 +182,6 @@
 <ANCHOR id="RCUiScrollableLabel.details" href="RhythmCat/RCUiScrollableLabel.html#RCUiScrollableLabel.details">
 <ANCHOR id="RCUiScrollableLabel-struct" href="RhythmCat/RCUiScrollableLabel.html#RCUiScrollableLabel-struct">
 <ANCHOR id="RCUiScrollableLabelClass" href="RhythmCat/RCUiScrollableLabel.html#RCUiScrollableLabelClass">
-<ANCHOR id="RC-UI-SCROLLABLE-LABEL-TYPE:CAPS" href="RhythmCat/RCUiScrollableLabel.html#RC-UI-SCROLLABLE-LABEL-TYPE:CAPS">
 <ANCHOR id="rc-ui-scrollable-label-get-attributes" href="RhythmCat/RCUiScrollableLabel.html#rc-ui-scrollable-label-get-attributes">
 <ANCHOR id="rc-ui-scrollable-label-get-percent" href="RhythmCat/RCUiScrollableLabel.html#rc-ui-scrollable-label-get-percent">
 <ANCHOR id="rc-ui-scrollable-label-get-text" href="RhythmCat/RCUiScrollableLabel.html#rc-ui-scrollable-label-get-text">
@@ -207,7 +205,22 @@
 <ANCHOR id="RC-UI-SPECTRUM-WIDGET-TYPE:CAPS" href="RhythmCat/RCUiSpectrumWidget.html#RC-UI-SPECTRUM-WIDGET-TYPE:CAPS">
 <ANCHOR id="rc-ui-spectrum-widget-clean" href="RhythmCat/RCUiSpectrumWidget.html#rc-ui-spectrum-widget-clean">
 <ANCHOR id="rc-ui-spectrum-widget-new" href="RhythmCat/RCUiSpectrumWidget.html#rc-ui-spectrum-widget-new">
+<ANCHOR id="rc-ui-spectrum-widget-set-fps" href="RhythmCat/RCUiSpectrumWidget.html#rc-ui-spectrum-widget-set-fps">
 <ANCHOR id="rc-ui-spectrum-widget-set-magnitudes" href="RhythmCat/RCUiSpectrumWidget.html#rc-ui-spectrum-widget-set-magnitudes">
+<ANCHOR id="RCUiCellRendererRating" href="RhythmCat/RCUiCellRendererRating.html">
+<ANCHOR id="RCUiCellRendererRating.synopsis" href="RhythmCat/RCUiCellRendererRating.html#RCUiCellRendererRating.synopsis">
+<ANCHOR id="RCUiCellRendererRating.object-hierarchy" href="RhythmCat/RCUiCellRendererRating.html#RCUiCellRendererRating.object-hierarchy">
+<ANCHOR id="RCUiCellRendererRating.properties" href="RhythmCat/RCUiCellRendererRating.html#RCUiCellRendererRating.properties">
+<ANCHOR id="RCUiCellRendererRating.signals" href="RhythmCat/RCUiCellRendererRating.html#RCUiCellRendererRating.signals">
+<ANCHOR id="RCUiCellRendererRating.description" href="RhythmCat/RCUiCellRendererRating.html#RCUiCellRendererRating.description">
+<ANCHOR id="RCUiCellRendererRating.details" href="RhythmCat/RCUiCellRendererRating.html#RCUiCellRendererRating.details">
+<ANCHOR id="RCUiCellRendererRating-struct" href="RhythmCat/RCUiCellRendererRating.html#RCUiCellRendererRating-struct">
+<ANCHOR id="RCUiCellRendererRatingClass" href="RhythmCat/RCUiCellRendererRating.html#RCUiCellRendererRatingClass">
+<ANCHOR id="rc-ui-cell-renderer-rating-new" href="RhythmCat/RCUiCellRendererRating.html#rc-ui-cell-renderer-rating-new">
+<ANCHOR id="RCUiCellRendererRating.property-details" href="RhythmCat/RCUiCellRendererRating.html#RCUiCellRendererRating.property-details">
+<ANCHOR id="RCUiCellRendererRating--rating" href="RhythmCat/RCUiCellRendererRating.html#RCUiCellRendererRating--rating">
+<ANCHOR id="RCUiCellRendererRating.signal-details" href="RhythmCat/RCUiCellRendererRating.html#RCUiCellRendererRating.signal-details">
+<ANCHOR id="RCUiCellRendererRating-rated" href="RhythmCat/RCUiCellRendererRating.html#RCUiCellRendererRating-rated">
 <ANCHOR id="RhythmCat-Styles" href="RhythmCat/RhythmCat-Styles.html">
 <ANCHOR id="RhythmCat-Styles.synopsis" href="RhythmCat/RhythmCat-Styles.html#RhythmCat-Styles.synopsis">
 <ANCHOR id="RhythmCat-Styles.description" href="RhythmCat/RhythmCat-Styles.html#RhythmCat-Styles.description">
@@ -224,5 +237,8 @@
 <ANCHOR id="rc-ui-style-search-theme-paths" href="RhythmCat/RhythmCat-Styles.html#rc-ui-style-search-theme-paths">
 <ANCHOR id="annotation-glossterm-array" href="RhythmCat/annotation-glossary.html#annotation-glossterm-array">
 <ANCHOR id="annotation-glossterm-allow-none" href="RhythmCat/annotation-glossary.html#annotation-glossterm-allow-none">
+<ANCHOR id="annotation-glossterm-element-type" href="RhythmCat/annotation-glossary.html#annotation-glossterm-element-type">
 <ANCHOR id="annotation-glossterm-inout" href="RhythmCat/annotation-glossary.html#annotation-glossterm-inout">
 <ANCHOR id="annotation-glossterm-transfer full" href="RhythmCat/annotation-glossary.html#annotation-glossterm-transfer full">
+<ANCHOR id="annotation-glossterm-scope call" href="RhythmCat/annotation-glossary.html#annotation-glossterm-scope call">
+<ANCHOR id="annotation-glossterm-transfer none" href="RhythmCat/annotation-glossary.html#annotation-glossterm-transfer none">

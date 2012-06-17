@@ -41,22 +41,21 @@
 </tr></table></div>
 <div class="refsynopsisdiv">
 <a name="RCLibPlugin.synopsis"></a><h2>Synopsis</h2>
-<pre class="synopsis">
+<a name="RCLibPluginData"></a><pre class="synopsis">
 #include &lt;rclib-plugin.h&gt;
 
 #define             <a class="link" href="RCLibPlugin.html#RCLIB-PLUGIN-MAGIC:CAPS" title="RCLIB_PLUGIN_MAGIC">RCLIB_PLUGIN_MAGIC</a>
 #define             <a class="link" href="RCLibPlugin.html#RCLIB-PLUGIN-MAJOR-VERSION:CAPS" title="RCLIB_PLUGIN_MAJOR_VERSION">RCLIB_PLUGIN_MAJOR_VERSION</a>
 #define             <a class="link" href="RCLibPlugin.html#RCLIB-PLUGIN-MINOR-VERSION:CAPS" title="RCLIB_PLUGIN_MINOR_VERSION">RCLIB_PLUGIN_MINOR_VERSION</a>
-#define             <a class="link" href="RCLibPlugin.html#RCLIB-PLUGIN-TYPE:CAPS" title="RCLIB_PLUGIN_TYPE">RCLIB_PLUGIN_TYPE</a>
 struct              <a class="link" href="RCLibPlugin.html#RCLibPlugin-struct" title="struct RCLibPlugin">RCLibPlugin</a>;
 struct              <a class="link" href="RCLibPlugin.html#RCLibPluginClass" title="struct RCLibPluginClass">RCLibPluginClass</a>;
-struct              <a class="link" href="RCLibPlugin.html#RCLibPluginData" title="struct RCLibPluginData">RCLibPluginData</a>;
+struct              <a class="link" href="RCLibPlugin.html#RCLibPluginData-struct" title="struct RCLibPluginData">RCLibPluginData</a>;
 struct              <a class="link" href="RCLibPlugin.html#RCLibPluginInfo" title="struct RCLibPluginInfo">RCLibPluginInfo</a>;
 struct              <a class="link" href="RCLibPlugin.html#RCLibPluginLoaderInfo" title="struct RCLibPluginLoaderInfo">RCLibPluginLoaderInfo</a>;
 enum                <a class="link" href="RCLibPlugin.html#RCLibPluginType" title="enum RCLibPluginType">RCLibPluginType</a>;
-<a class="link" href="RCLibPlugin.html#RCLibPluginData" title="struct RCLibPluginData"><span class="returnvalue">RCLibPluginData</span></a> *   <a class="link" href="RCLibPlugin.html#rclib-plugin-data-ref" title="rclib_plugin_data_ref ()">rclib_plugin_data_ref</a>               (<em class="parameter"><code><a class="link" href="RCLibPlugin.html#RCLibPluginData" title="struct RCLibPluginData"><span class="type">RCLibPluginData</span></a> *plugin</code></em>);
-<span class="returnvalue">void</span>                <a class="link" href="RCLibPlugin.html#rclib-plugin-data-unref" title="rclib_plugin_data_unref ()">rclib_plugin_data_unref</a>             (<em class="parameter"><code><a class="link" href="RCLibPlugin.html#RCLibPluginData" title="struct RCLibPluginData"><span class="type">RCLibPluginData</span></a> *plugin</code></em>);
-<span class="returnvalue">void</span>                <a class="link" href="RCLibPlugin.html#rclib-plugin-destroy" title="rclib_plugin_destroy ()">rclib_plugin_destroy</a>                (<em class="parameter"><code><a class="link" href="RCLibPlugin.html#RCLibPluginData" title="struct RCLibPluginData"><span class="type">RCLibPluginData</span></a> *plugin</code></em>);
+<a class="link" href="RCLibPlugin.html#RCLibPluginData"><span class="returnvalue">RCLibPluginData</span></a> *   <a class="link" href="RCLibPlugin.html#rclib-plugin-data-ref" title="rclib_plugin_data_ref ()">rclib_plugin_data_ref</a>               (<em class="parameter"><code><a class="link" href="RCLibPlugin.html#RCLibPluginData"><span class="type">RCLibPluginData</span></a> *plugin</code></em>);
+<span class="returnvalue">void</span>                <a class="link" href="RCLibPlugin.html#rclib-plugin-data-unref" title="rclib_plugin_data_unref ()">rclib_plugin_data_unref</a>             (<em class="parameter"><code><a class="link" href="RCLibPlugin.html#RCLibPluginData"><span class="type">RCLibPluginData</span></a> *plugin</code></em>);
+<span class="returnvalue">void</span>                <a class="link" href="RCLibPlugin.html#rclib-plugin-destroy" title="rclib_plugin_destroy ()">rclib_plugin_destroy</a>                (<em class="parameter"><code><a class="link" href="RCLibPlugin.html#RCLibPluginData"><span class="type">RCLibPluginData</span></a> *plugin</code></em>);
 <span class="returnvalue">void</span>                <a class="link" href="RCLibPlugin.html#rclib-plugin-destroy-all" title="rclib_plugin_destroy_all ()">rclib_plugin_destroy_all</a>            ();
 <span class="returnvalue">void</span>                <a class="link" href="RCLibPlugin.html#rclib-plugin-exit" title="rclib_plugin_exit ()">rclib_plugin_exit</a>                   ();
 <span class="returnvalue">void</span>                <a class="link" href="RCLibPlugin.html#rclib-plugin-foreach" title="rclib_plugin_foreach ()">rclib_plugin_foreach</a>                (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Hash-Tables.html#GHFunc"><span class="type">GHFunc</span></a> func</code></em>,
@@ -64,20 +63,20 @@ enum                <a class="link" href="RCLibPlugin.html#RCLibPluginType" titl
 <a href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GObject"><span class="returnvalue">GObject</span></a> *           <a class="link" href="RCLibPlugin.html#rclib-plugin-get-instance" title="rclib_plugin_get_instance ()">rclib_plugin_get_instance</a>           ();
 <a href="/usr/share/gtk-doc/html/glib/glib-Key-value-file-parser.html#GKeyFile"><span class="returnvalue">GKeyFile</span></a> *          <a class="link" href="RCLibPlugin.html#rclib-plugin-get-keyfile" title="rclib_plugin_get_keyfile ()">rclib_plugin_get_keyfile</a>            ();
 <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RCLibPlugin.html#rclib-plugin-init" title="rclib_plugin_init ()">rclib_plugin_init</a>                   (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *file</code></em>);
-<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RCLibPlugin.html#rclib-plugin-is-loaded" title="rclib_plugin_is_loaded ()">rclib_plugin_is_loaded</a>              (<em class="parameter"><code><a class="link" href="RCLibPlugin.html#RCLibPluginData" title="struct RCLibPluginData"><span class="type">RCLibPluginData</span></a> *plugin</code></em>);
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RCLibPlugin.html#rclib-plugin-is-loaded" title="rclib_plugin_is_loaded ()">rclib_plugin_is_loaded</a>              (<em class="parameter"><code><a class="link" href="RCLibPlugin.html#RCLibPluginData"><span class="type">RCLibPluginData</span></a> *plugin</code></em>);
 <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RCLibPlugin.html#rclib-plugin-is-registed" title="rclib_plugin_is_registed ()">rclib_plugin_is_registed</a>            (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *id</code></em>);
-<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RCLibPlugin.html#rclib-plugin-load" title="rclib_plugin_load ()">rclib_plugin_load</a>                   (<em class="parameter"><code><a class="link" href="RCLibPlugin.html#RCLibPluginData" title="struct RCLibPluginData"><span class="type">RCLibPluginData</span></a> *plugin</code></em>);
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RCLibPlugin.html#rclib-plugin-load" title="rclib_plugin_load ()">rclib_plugin_load</a>                   (<em class="parameter"><code><a class="link" href="RCLibPlugin.html#RCLibPluginData"><span class="type">RCLibPluginData</span></a> *plugin</code></em>);
 <span class="returnvalue">void</span>                <a class="link" href="RCLibPlugin.html#rclib-plugin-load-from-configure" title="rclib_plugin_load_from_configure ()">rclib_plugin_load_from_configure</a>    ();
 <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="returnvalue">guint</span></a>               <a class="link" href="RCLibPlugin.html#rclib-plugin-load-from-dir" title="rclib_plugin_load_from_dir ()">rclib_plugin_load_from_dir</a>          (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *dirname</code></em>);
-<a class="link" href="RCLibPlugin.html#RCLibPluginData" title="struct RCLibPluginData"><span class="returnvalue">RCLibPluginData</span></a> *   <a class="link" href="RCLibPlugin.html#rclib-plugin-lookup" title="rclib_plugin_lookup ()">rclib_plugin_lookup</a>                 (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *id</code></em>);
-<a class="link" href="RCLibPlugin.html#RCLibPluginData" title="struct RCLibPluginData"><span class="returnvalue">RCLibPluginData</span></a> *   <a class="link" href="RCLibPlugin.html#rclib-plugin-probe" title="rclib_plugin_probe ()">rclib_plugin_probe</a>                  (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *filename</code></em>);
-<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RCLibPlugin.html#rclib-plugin-register" title="rclib_plugin_register ()">rclib_plugin_register</a>               (<em class="parameter"><code><a class="link" href="RCLibPlugin.html#RCLibPluginData" title="struct RCLibPluginData"><span class="type">RCLibPluginData</span></a> *plugin</code></em>);
-<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RCLibPlugin.html#rclib-plugin-reload" title="rclib_plugin_reload ()">rclib_plugin_reload</a>                 (<em class="parameter"><code><a class="link" href="RCLibPlugin.html#RCLibPluginData" title="struct RCLibPluginData"><span class="type">RCLibPluginData</span></a> *plugin</code></em>);
+<a class="link" href="RCLibPlugin.html#RCLibPluginData"><span class="returnvalue">RCLibPluginData</span></a> *   <a class="link" href="RCLibPlugin.html#rclib-plugin-lookup" title="rclib_plugin_lookup ()">rclib_plugin_lookup</a>                 (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *id</code></em>);
+<a class="link" href="RCLibPlugin.html#RCLibPluginData"><span class="returnvalue">RCLibPluginData</span></a> *   <a class="link" href="RCLibPlugin.html#rclib-plugin-probe" title="rclib_plugin_probe ()">rclib_plugin_probe</a>                  (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *filename</code></em>);
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RCLibPlugin.html#rclib-plugin-register" title="rclib_plugin_register ()">rclib_plugin_register</a>               (<em class="parameter"><code><a class="link" href="RCLibPlugin.html#RCLibPluginData"><span class="type">RCLibPluginData</span></a> *plugin</code></em>);
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RCLibPlugin.html#rclib-plugin-reload" title="rclib_plugin_reload ()">rclib_plugin_reload</a>                 (<em class="parameter"><code><a class="link" href="RCLibPlugin.html#RCLibPluginData"><span class="type">RCLibPluginData</span></a> *plugin</code></em>);
 <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gulong"><span class="returnvalue">gulong</span></a>              <a class="link" href="RCLibPlugin.html#rclib-plugin-signal-connect" title="rclib_plugin_signal_connect ()">rclib_plugin_signal_connect</a>         (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *name</code></em>,
                                                          <em class="parameter"><code><a href="/usr/share/gtk-doc/html/gobject/gobject-Closures.html#GCallback"><span class="type">GCallback</span></a> callback</code></em>,
                                                          <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> data</code></em>);
 <span class="returnvalue">void</span>                <a class="link" href="RCLibPlugin.html#rclib-plugin-signal-disconnect" title="rclib_plugin_signal_disconnect ()">rclib_plugin_signal_disconnect</a>      (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gulong"><span class="type">gulong</span></a> handler_id</code></em>);
-<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RCLibPlugin.html#rclib-plugin-unload" title="rclib_plugin_unload ()">rclib_plugin_unload</a>                 (<em class="parameter"><code><a class="link" href="RCLibPlugin.html#RCLibPluginData" title="struct RCLibPluginData"><span class="type">RCLibPluginData</span></a> *plugin</code></em>);
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RCLibPlugin.html#rclib-plugin-unload" title="rclib_plugin_unload ()">rclib_plugin_unload</a>                 (<em class="parameter"><code><a class="link" href="RCLibPlugin.html#RCLibPluginData"><span class="type">RCLibPluginData</span></a> *plugin</code></em>);
 </pre>
 </div>
 <div class="refsect1">
@@ -85,6 +84,10 @@ enum                <a class="link" href="RCLibPlugin.html#RCLibPluginType" titl
 <pre class="synopsis">
   <a href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GObject">GObject</a>
    +----RCLibPlugin
+</pre>
+<pre class="synopsis">
+  GBoxed
+   +----RCLibPluginData
 </pre>
 </div>
 <div class="refsect1">
@@ -126,12 +129,6 @@ player.
 </div>
 <hr>
 <div class="refsect2">
-<a name="RCLIB-PLUGIN-TYPE:CAPS"></a><h3>RCLIB_PLUGIN_TYPE</h3>
-<pre class="programlisting">#define RCLIB_PLUGIN_TYPE (rclib_plugin_get_type())
-</pre>
-</div>
-<hr>
-<div class="refsect2">
 <a name="RCLibPlugin-struct"></a><h3>struct RCLibPlugin</h3>
 <pre class="programlisting">struct RCLibPlugin;</pre>
 <p>
@@ -151,7 +148,7 @@ are private and should only be accessed via the provided API.
 </div>
 <hr>
 <div class="refsect2">
-<a name="RCLibPluginData"></a><h3>struct RCLibPluginData</h3>
+<a name="RCLibPluginData-struct"></a><h3>struct RCLibPluginData</h3>
 <pre class="programlisting">struct RCLibPluginData {
     gboolean native;
     gboolean loaded;
@@ -172,43 +169,43 @@ The plug-in data.
 <col align="left" valign="top">
 <tbody>
 <tr>
-<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> <em class="structfield"><code><a name="RCLibPluginData.native"></a>native</code></em>;</span></p></td>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> <em class="structfield"><code><a name="RCLibPluginData-struct.native"></a>native</code></em>;</span></p></td>
 <td>whether the plug-in is a native C/C++ module</td>
 </tr>
 <tr>
-<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> <em class="structfield"><code><a name="RCLibPluginData.loaded"></a>loaded</code></em>;</span></p></td>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> <em class="structfield"><code><a name="RCLibPluginData-struct.loaded"></a>loaded</code></em>;</span></p></td>
 <td>whether the plug-in is loaded</td>
 </tr>
 <tr>
-<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> <em class="structfield"><code><a name="RCLibPluginData.handle"></a>handle</code></em>;</span></p></td>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> <em class="structfield"><code><a name="RCLibPluginData-struct.handle"></a>handle</code></em>;</span></p></td>
 <td>the handle of the plug-in</td>
 </tr>
 <tr>
-<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *<em class="structfield"><code><a name="RCLibPluginData.path"></a>path</code></em>;</span></p></td>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *<em class="structfield"><code><a name="RCLibPluginData-struct.path"></a>path</code></em>;</span></p></td>
 <td>the file path of the plug-in</td>
 </tr>
 <tr>
-<td><p><span class="term"><a class="link" href="RCLibPlugin.html#RCLibPluginInfo" title="struct RCLibPluginInfo"><span class="type">RCLibPluginInfo</span></a> *<em class="structfield"><code><a name="RCLibPluginData.info"></a>info</code></em>;</span></p></td>
+<td><p><span class="term"><a class="link" href="RCLibPlugin.html#RCLibPluginInfo" title="struct RCLibPluginInfo"><span class="type">RCLibPluginInfo</span></a> *<em class="structfield"><code><a name="RCLibPluginData-struct.info"></a>info</code></em>;</span></p></td>
 <td>the information data (<a class="link" href="RCLibPlugin.html#RCLibPluginInfo" title="struct RCLibPluginInfo"><span class="type">RCLibPluginInfo</span></a>) of the plug-in</td>
 </tr>
 <tr>
-<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *<em class="structfield"><code><a name="RCLibPluginData.error"></a>error</code></em>;</span></p></td>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *<em class="structfield"><code><a name="RCLibPluginData-struct.error"></a>error</code></em>;</span></p></td>
 <td>the error message in the initialization progress</td>
 </tr>
 <tr>
-<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> <em class="structfield"><code><a name="RCLibPluginData.unloadable"></a>unloadable</code></em>;</span></p></td>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> <em class="structfield"><code><a name="RCLibPluginData-struct.unloadable"></a>unloadable</code></em>;</span></p></td>
 <td>whether the plug-in is not loadable</td>
 </tr>
 <tr>
-<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Singly-Linked-Lists.html#GSList"><span class="type">GSList</span></a> *<em class="structfield"><code><a name="RCLibPluginData.dependent-list"></a>dependent_list</code></em>;</span></p></td>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Singly-Linked-Lists.html#GSList"><span class="type">GSList</span></a> *<em class="structfield"><code><a name="RCLibPluginData-struct.dependent-list"></a>dependent_list</code></em>;</span></p></td>
 <td>a list of the dependent plug-ins</td>
 </tr>
 <tr>
-<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> <em class="structfield"><code><a name="RCLibPluginData.extra"></a>extra</code></em>;</span></p></td>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> <em class="structfield"><code><a name="RCLibPluginData-struct.extra"></a>extra</code></em>;</span></p></td>
 <td>extra data</td>
 </tr>
 <tr>
-<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> <em class="structfield"><code><a name="RCLibPluginData.ipc-data"></a>ipc_data</code></em>;</span></p></td>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> <em class="structfield"><code><a name="RCLibPluginData-struct.ipc-data"></a>ipc_data</code></em>;</span></p></td>
 <td>(not used now)</td>
 </tr>
 </tbody>
@@ -385,7 +382,7 @@ The enum type for plug-in type.
 <hr>
 <div class="refsect2">
 <a name="rclib-plugin-data-ref"></a><h3>rclib_plugin_data_ref ()</h3>
-<pre class="programlisting"><a class="link" href="RCLibPlugin.html#RCLibPluginData" title="struct RCLibPluginData"><span class="returnvalue">RCLibPluginData</span></a> *   rclib_plugin_data_ref               (<em class="parameter"><code><a class="link" href="RCLibPlugin.html#RCLibPluginData" title="struct RCLibPluginData"><span class="type">RCLibPluginData</span></a> *plugin</code></em>);</pre>
+<pre class="programlisting"><a class="link" href="RCLibPlugin.html#RCLibPluginData"><span class="returnvalue">RCLibPluginData</span></a> *   rclib_plugin_data_ref               (<em class="parameter"><code><a class="link" href="RCLibPlugin.html#RCLibPluginData"><span class="type">RCLibPluginData</span></a> *plugin</code></em>);</pre>
 <p>
 Increase the reference count of plug-data by 1.
 </p>
@@ -406,7 +403,7 @@ Increase the reference count of plug-data by 1.
 <hr>
 <div class="refsect2">
 <a name="rclib-plugin-data-unref"></a><h3>rclib_plugin_data_unref ()</h3>
-<pre class="programlisting"><span class="returnvalue">void</span>                rclib_plugin_data_unref             (<em class="parameter"><code><a class="link" href="RCLibPlugin.html#RCLibPluginData" title="struct RCLibPluginData"><span class="type">RCLibPluginData</span></a> *plugin</code></em>);</pre>
+<pre class="programlisting"><span class="returnvalue">void</span>                rclib_plugin_data_unref             (<em class="parameter"><code><a class="link" href="RCLibPlugin.html#RCLibPluginData"><span class="type">RCLibPluginData</span></a> *plugin</code></em>);</pre>
 <p>
 Decrease the reference count of plug-data by 1, if the reference
 count down to zero, the data will be freed.
@@ -422,7 +419,7 @@ count down to zero, the data will be freed.
 <hr>
 <div class="refsect2">
 <a name="rclib-plugin-destroy"></a><h3>rclib_plugin_destroy ()</h3>
-<pre class="programlisting"><span class="returnvalue">void</span>                rclib_plugin_destroy                (<em class="parameter"><code><a class="link" href="RCLibPlugin.html#RCLibPluginData" title="struct RCLibPluginData"><span class="type">RCLibPluginData</span></a> *plugin</code></em>);</pre>
+<pre class="programlisting"><span class="returnvalue">void</span>                rclib_plugin_destroy                (<em class="parameter"><code><a class="link" href="RCLibPlugin.html#RCLibPluginData"><span class="type">RCLibPluginData</span></a> *plugin</code></em>);</pre>
 <p>
 Exit the plug-in and destroy the plug-in data.
 </p>
@@ -464,7 +461,8 @@ Calls the given function for each of the key/value pairs in the
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>func</code></em> :</span></p></td>
-<td>the function to call for each key/value pair</td>
+<td>the function to call for each key/value pair. <span class="annotation">[<acronym title="The callback is valid only during the call to the method."><span class="acronym">scope call</span></acronym>]</span>
+</td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>data</code></em> :</span></p></td>
@@ -484,7 +482,8 @@ Get the running <a class="link" href="RCLibPlugin.html" title="RCLibPlugin"><spa
 <col align="left" valign="top">
 <tbody><tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>The running instance.</td>
+<td>The running instance. <span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span>
+</td>
 </tr></tbody>
 </table></div>
 </div>
@@ -527,7 +526,7 @@ Initialize the plug-in support system instance.
 <hr>
 <div class="refsect2">
 <a name="rclib-plugin-is-loaded"></a><h3>rclib_plugin_is_loaded ()</h3>
-<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rclib_plugin_is_loaded              (<em class="parameter"><code><a class="link" href="RCLibPlugin.html#RCLibPluginData" title="struct RCLibPluginData"><span class="type">RCLibPluginData</span></a> *plugin</code></em>);</pre>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rclib_plugin_is_loaded              (<em class="parameter"><code><a class="link" href="RCLibPlugin.html#RCLibPluginData"><span class="type">RCLibPluginData</span></a> *plugin</code></em>);</pre>
 <p>
 Check whether the plug-in is loaded.
 </p>
@@ -569,7 +568,7 @@ Check whether the given ID is registered in the plug-in table.
 <hr>
 <div class="refsect2">
 <a name="rclib-plugin-load"></a><h3>rclib_plugin_load ()</h3>
-<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rclib_plugin_load                   (<em class="parameter"><code><a class="link" href="RCLibPlugin.html#RCLibPluginData" title="struct RCLibPluginData"><span class="type">RCLibPluginData</span></a> *plugin</code></em>);</pre>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rclib_plugin_load                   (<em class="parameter"><code><a class="link" href="RCLibPlugin.html#RCLibPluginData"><span class="type">RCLibPluginData</span></a> *plugin</code></em>);</pre>
 <p>
 Load and run the plug-in.
 </p>
@@ -619,7 +618,7 @@ Load plug-in files from given directory path, and register them.
 <hr>
 <div class="refsect2">
 <a name="rclib-plugin-lookup"></a><h3>rclib_plugin_lookup ()</h3>
-<pre class="programlisting"><a class="link" href="RCLibPlugin.html#RCLibPluginData" title="struct RCLibPluginData"><span class="returnvalue">RCLibPluginData</span></a> *   rclib_plugin_lookup                 (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *id</code></em>);</pre>
+<pre class="programlisting"><a class="link" href="RCLibPlugin.html#RCLibPluginData"><span class="returnvalue">RCLibPluginData</span></a> *   rclib_plugin_lookup                 (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *id</code></em>);</pre>
 <p>
 Lookup a plug-in in the registered plug-in table by the given ID.
 </p>
@@ -640,7 +639,7 @@ Lookup a plug-in in the registered plug-in table by the given ID.
 <hr>
 <div class="refsect2">
 <a name="rclib-plugin-probe"></a><h3>rclib_plugin_probe ()</h3>
-<pre class="programlisting"><a class="link" href="RCLibPlugin.html#RCLibPluginData" title="struct RCLibPluginData"><span class="returnvalue">RCLibPluginData</span></a> *   rclib_plugin_probe                  (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *filename</code></em>);</pre>
+<pre class="programlisting"><a class="link" href="RCLibPlugin.html#RCLibPluginData"><span class="returnvalue">RCLibPluginData</span></a> *   rclib_plugin_probe                  (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *filename</code></em>);</pre>
 <p>
 Probe the plug-in file.
 </p>
@@ -661,7 +660,7 @@ Probe the plug-in file.
 <hr>
 <div class="refsect2">
 <a name="rclib-plugin-register"></a><h3>rclib_plugin_register ()</h3>
-<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rclib_plugin_register               (<em class="parameter"><code><a class="link" href="RCLibPlugin.html#RCLibPluginData" title="struct RCLibPluginData"><span class="type">RCLibPluginData</span></a> *plugin</code></em>);</pre>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rclib_plugin_register               (<em class="parameter"><code><a class="link" href="RCLibPlugin.html#RCLibPluginData"><span class="type">RCLibPluginData</span></a> *plugin</code></em>);</pre>
 <p>
 Register the plug-in to the player.
 </p>
@@ -682,7 +681,7 @@ Register the plug-in to the player.
 <hr>
 <div class="refsect2">
 <a name="rclib-plugin-reload"></a><h3>rclib_plugin_reload ()</h3>
-<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rclib_plugin_reload                 (<em class="parameter"><code><a class="link" href="RCLibPlugin.html#RCLibPluginData" title="struct RCLibPluginData"><span class="type">RCLibPluginData</span></a> *plugin</code></em>);</pre>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rclib_plugin_reload                 (<em class="parameter"><code><a class="link" href="RCLibPlugin.html#RCLibPluginData"><span class="type">RCLibPluginData</span></a> *plugin</code></em>);</pre>
 <p>
 Reload and restart the plug-in.
 </p>
@@ -719,7 +718,8 @@ instance of <a class="link" href="RCLibPlugin.html" title="RCLibPlugin"><span cl
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>callback</code></em> :</span></p></td>
-<td>the the <a href="/usr/share/gtk-doc/html/gobject/gobject-Closures.html#GCallback"><span class="type">GCallback</span></a> to connect</td>
+<td>the the <a href="/usr/share/gtk-doc/html/gobject/gobject-Closures.html#GCallback"><span class="type">GCallback</span></a> to connect. <span class="annotation">[<acronym title="The callback is valid only during the call to the method."><span class="acronym">scope call</span></acronym>]</span>
+</td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>data</code></em> :</span></p></td>
@@ -753,7 +753,7 @@ invalid and may be reused.
 <hr>
 <div class="refsect2">
 <a name="rclib-plugin-unload"></a><h3>rclib_plugin_unload ()</h3>
-<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rclib_plugin_unload                 (<em class="parameter"><code><a class="link" href="RCLibPlugin.html#RCLibPluginData" title="struct RCLibPluginData"><span class="type">RCLibPluginData</span></a> *plugin</code></em>);</pre>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rclib_plugin_unload                 (<em class="parameter"><code><a class="link" href="RCLibPlugin.html#RCLibPluginData"><span class="type">RCLibPluginData</span></a> *plugin</code></em>);</pre>
 <p>
 Stop and unload the plug-in.
 </p>
@@ -791,7 +791,7 @@ The ::loaded signal is emitted when a plug-in is loaded.
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>data</code></em> :</span></p></td>
-<td>the plug-in data (<a class="link" href="RCLibPlugin.html#RCLibPluginData" title="struct RCLibPluginData"><span class="type">RCLibPluginData</span></a>)</td>
+<td>the plug-in data (<a class="link" href="RCLibPlugin.html#RCLibPluginData"><span class="type">RCLibPluginData</span></a>)</td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>user_data</code></em> :</span></p></td>
@@ -818,7 +818,7 @@ The ::registered signal is emitted when a new plug-in registered.
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>data</code></em> :</span></p></td>
-<td>the plug-in data (<a class="link" href="RCLibPlugin.html#RCLibPluginData" title="struct RCLibPluginData"><span class="type">RCLibPluginData</span></a>)</td>
+<td>the plug-in data (<a class="link" href="RCLibPlugin.html#RCLibPluginData"><span class="type">RCLibPluginData</span></a>)</td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>user_data</code></em> :</span></p></td>
@@ -869,7 +869,7 @@ The ::unloaded signal is emitted when a plug-in is unloaded.
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>data</code></em> :</span></p></td>
-<td>the plug-in data (<a class="link" href="RCLibPlugin.html#RCLibPluginData" title="struct RCLibPluginData"><span class="type">RCLibPluginData</span></a>)</td>
+<td>the plug-in data (<a class="link" href="RCLibPlugin.html#RCLibPluginData"><span class="type">RCLibPluginData</span></a>)</td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>user_data</code></em> :</span></p></td>

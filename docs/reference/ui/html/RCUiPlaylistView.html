@@ -146,7 +146,8 @@ The data structure used for <a class="link" href="RCUiPlaylistView.html#RCUiCata
     RC_UI_LISTVIEW_PLAYLIST_COLUMN_ALBUM = 1&lt;&lt;1,
     RC_UI_LISTVIEW_PLAYLIST_COLUMN_TRACK = 1&lt;&lt;2,
     RC_UI_LISTVIEW_PLAYLIST_COLUMN_YEAR = 1&lt;&lt;3,
-    RC_UI_LISTVIEW_PLAYLIST_COLUMN_FTYPE = 1&lt;&lt;4
+    RC_UI_LISTVIEW_PLAYLIST_COLUMN_FTYPE = 1&lt;&lt;4,
+    RC_UI_LISTVIEW_PLAYLIST_COLUMN_RATING = 1&lt;&lt;5
 } RCUiListViewPlaylistColumnFlags;
 </pre>
 <p>
@@ -178,6 +179,11 @@ The enum type for control the visibility of some columns in the playlist.
 <tr>
 <td><p><a name="RC-UI-LISTVIEW-PLAYLIST-COLUMN-FTYPE:CAPS"></a><span class="term"><code class="literal">RC_UI_LISTVIEW_PLAYLIST_COLUMN_FTYPE</code></span></p></td>
 <td>the file type (format) column
+</td>
+</tr>
+<tr>
+<td><p><a name="RC-UI-LISTVIEW-PLAYLIST-COLUMN-RATING:CAPS"></a><span class="term"><code class="literal">RC_UI_LISTVIEW_PLAYLIST_COLUMN_RATING</code></span></p></td>
+<td>the rating column
 </td>
 </tr>
 </tbody>
@@ -241,7 +247,8 @@ Get the <a href="/usr/share/gtk-doc/html/gtk/GtkTreeModel.html"><span class="typ
 <col align="left" valign="top">
 <tbody><tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>The <a href="/usr/share/gtk-doc/html/gtk/GtkTreeModel.html"><span class="type">GtkTreeModel</span></a>.</td>
+<td>The <a href="/usr/share/gtk-doc/html/gtk/GtkTreeModel.html"><span class="type">GtkTreeModel</span></a>. <span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span>
+</td>
 </tr></tbody>
 </table></div>
 </div>
@@ -301,6 +308,14 @@ Set the pango attribute for the catalog list view.
 Get the catalog list view widget. If the widget is not initialized
 yet, it will be initialized.
 </p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>the catalog widget. <span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span>
+</td>
+</tr></tbody>
+</table></div>
 </div>
 <hr>
 <div class="refsect2">
@@ -310,6 +325,14 @@ yet, it will be initialized.
 Get the playlist list view widget. If the widget is not initialized
 yet, it will be initialized.
 </p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>the playlist widget. <span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span>
+</td>
+</tr></tbody>
+</table></div>
 </div>
 <hr>
 <div class="refsect2">
@@ -384,7 +407,8 @@ Get the <a href="/usr/share/gtk-doc/html/gtk/GtkTreeModel.html"><span class="typ
 <col align="left" valign="top">
 <tbody><tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>The <a href="/usr/share/gtk-doc/html/gtk/GtkTreeModel.html"><span class="type">GtkTreeModel</span></a>.</td>
+<td>The <a href="/usr/share/gtk-doc/html/gtk/GtkTreeModel.html"><span class="type">GtkTreeModel</span></a>. <span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span>
+</td>
 </tr></tbody>
 </table></div>
 </div>

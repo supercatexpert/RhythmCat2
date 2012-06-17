@@ -91,6 +91,7 @@ typedef struct RCLibCorePrivate
     gpointer ext_reference_pre;
     gchar *ext_cookie;
     gchar *ext_cookie_pre;
+    GAsyncQueue *tag_update_queue;
     guint64 num_frames;
     guint64 num_fft;
     guint64 frames_per_interval;
@@ -102,7 +103,9 @@ typedef struct RCLibCorePrivate
     GstClockTime message_ts;
     gulong message_id;
     gulong volume_id;
+    gulong audio_tag_changed_id;
     gulong source_id;
+    guint tag_update_id;
 }RCLibCorePrivate;
 
 enum
@@ -182,7 +185,7 @@ static gboolean rclib_core_parse_metadata(const GstTagList *tags,
     GstCaps *caps = NULL;
     GstStructure *structure;
     gint64 duration = 0;
-    GstFormat format = GST_FORMAT_TIME;
+    GstFormat format = GST_FORMAT_TIME;    
     if(gst_tag_list_get_string(tags, GST_TAG_TITLE, &string))
     {
         if(metadata->title==NULL)
@@ -356,14 +359,23 @@ static void rclib_core_finalize(GObject *object)
             g_signal_handler_disconnect(priv->bus, priv->message_id);
         gst_object_unref(priv->bus);
     }
+    if(priv->tag_update_id!=0)
+        g_source_remove(priv->tag_update_id);
     if(priv->playbin!=NULL)
     {
         if(priv->volume_id>0)
             g_signal_handler_disconnect(priv->playbin, priv->volume_id);
+        if(priv->audio_tag_changed_id>0)
+        {
+            g_signal_handler_disconnect(priv->playbin,
+                priv->audio_tag_changed_id);
+        }
         if(priv->source_id>0)
             g_signal_handler_disconnect(priv->playbin, priv->source_id);
         gst_element_set_state(priv->playbin, GST_STATE_NULL);
     }
+    if(priv->tag_update_queue!=NULL)
+        g_async_queue_unref(priv->tag_update_queue);
     if(priv->extra_plugin_list!=NULL)
         g_list_free(priv->extra_plugin_list);
     rclib_core_spectrum_reset_state(priv);
@@ -1282,6 +1294,55 @@ static void rclib_core_source_notify_cb(GObject *object, GParamSpec *spec,
 
 }
 
+static gboolean rclib_core_audio_tags_changed_idle_cb(gpointer data)
+{
+    RCLibCorePrivate *priv = (RCLibCorePrivate *)data;
+    GstTagList *tags;
+    if(data==NULL) return FALSE;
+    if(priv->tag_update_queue==NULL) return FALSE;
+    g_async_queue_lock(priv->tag_update_queue);
+    while((tags=g_async_queue_try_pop_unlocked(priv->tag_update_queue))!=
+        NULL)
+    {
+        if(rclib_core_parse_metadata(tags, NULL, &(priv->metadata),
+            priv->start_time, priv->end_time))
+        {
+            g_signal_emit(core_instance, core_signals[SIGNAL_TAG_FOUND],
+                0, &(priv->metadata), priv->uri);
+        }
+        gst_tag_list_free(tags);
+    }
+    priv->tag_update_id = 0;
+    g_async_queue_unlock(priv->tag_update_queue);
+    return FALSE;
+}
+
+static void rclib_core_audio_tags_changed_cb(GstElement *playbin2,
+    gint stream_id, gpointer data)
+{
+    RCLibCorePrivate *priv = (RCLibCorePrivate *)data;
+    GstTagList *tags = NULL;
+    gint current_stream_id = 0;
+    if(data==NULL) return;
+    if(priv->tag_update_queue==NULL) return;
+    /* This signal callback is not called on main thread! */
+    g_object_get(playbin2, "current-audio", &current_stream_id, NULL);
+    if(current_stream_id!=stream_id) return;
+    g_signal_emit_by_name(playbin2, "get-audio-tags", stream_id, &tags);
+    if(tags==NULL) return;
+    
+    /* This function is not called on main thread, send the data into
+       a GAsyncQueue and then add an idle source. */
+    g_async_queue_lock(priv->tag_update_queue);
+    g_async_queue_push_unlocked(priv->tag_update_queue, tags);
+    if(priv->tag_update_id==0)
+    {
+        priv->tag_update_id = g_idle_add((GSourceFunc)
+            rclib_core_audio_tags_changed_idle_cb, priv);
+    }
+    g_async_queue_unlock(priv->tag_update_queue);
+}
+
 static void rclib_core_instance_init(RCLibCore *core)
 {
     GstElement *playbin = NULL;
@@ -1445,6 +1506,9 @@ static void rclib_core_instance_init(RCLibCore *core)
             FALSE);
     }
     priv->extra_plugin_list = NULL;
+    priv->tag_update_id = 0;
+    priv->tag_update_queue = g_async_queue_new_full((GDestroyNotify)
+        gst_tag_list_free);
     bus = gst_element_get_bus(playbin);
     gst_bus_add_signal_watch(bus);
     priv->message_id = g_signal_connect(bus, "message",
@@ -1458,6 +1522,9 @@ static void rclib_core_instance_init(RCLibCore *core)
         G_CALLBACK(rclib_core_volume_notify_cb), priv);
     priv->source_id = g_signal_connect(priv->playbin, "notify::source",
         G_CALLBACK(rclib_core_source_notify_cb), priv);
+    priv->audio_tag_changed_id = g_signal_connect(priv->playbin,
+        "audio-tags-changed", G_CALLBACK(rclib_core_audio_tags_changed_cb),
+        priv);
     gst_element_set_state(playbin, GST_STATE_NULL);
     gst_element_set_state(playbin, GST_STATE_READY);
     rclib_core_spectrum_reset_state(priv);

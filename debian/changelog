@@ -9,3 +9,9 @@ rhythmcat2 (1.9.3-2) unstable; urgency=low
   * Added some audio effect plug-ins. (Closes: #112245)
 
  -- SuperCat <supercatexpert@gmail.com>  Tue, 29 May 2012 04:21:32 +0800
+ 
+rhythmcat2 (1.9.4-1) unstable; urgency=low
+
+  * Added rating limited playing mode, fixed some bugs. (Closes: #112301)
+
+ -- SuperCat <supercatexpert@gmail.com>  Sun, 17 Jun 2012 04:35:32 +0800

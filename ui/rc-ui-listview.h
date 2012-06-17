@@ -64,6 +64,7 @@ G_BEGIN_DECLS
  * @RC_UI_LISTVIEW_PLAYLIST_COLUMN_TRACK: the track number column
  * @RC_UI_LISTVIEW_PLAYLIST_COLUMN_YEAR: the year column
  * @RC_UI_LISTVIEW_PLAYLIST_COLUMN_FTYPE: the file type (format) column
+ * @RC_UI_LISTVIEW_PLAYLIST_COLUMN_RATING: the rating column
  *
  * The enum type for control the visibility of some columns in the playlist.
  */

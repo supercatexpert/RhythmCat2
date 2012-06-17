@@ -30,6 +30,7 @@
 #include "rc-ui-listmodel.h"
 #include "rc-ui-listview.h"
 #include "rc-ui-window.h"
+#include "rc-ui-dialog.h"
 
 /**
  * SECTION: rc-ui-settings
@@ -51,6 +52,7 @@ typedef struct RCUiSettingsPrivate
     GtkWidget *pl_autoenc_check_button;
     GtkWidget *pl_id3enc_entry;
     GtkWidget *pl_lrcenc_entry;
+    GtkWidget *pl_ldlgc_button;
     GtkWidget *apr_disthm_check_button;
     GtkWidget *apr_theme_combo_box;
     GtkWidget *if_hidecovimg_check_button;
@@ -221,12 +223,17 @@ static inline GtkWidget *rc_ui_settings_playlist_build(
     GtkWidget *metadata_frame_grid;
     GtkWidget *metadata_id3enc_label;
     GtkWidget *metadata_lrcenc_label;
+    GtkWidget *legacy_frame;
+    GtkWidget *legacy_frame_grid;
+    GtkWidget *legacy_button_box;
     gchar *string;
     playlist_grid = gtk_grid_new();    
     priv->pl_autoenc_check_button = gtk_check_button_new_with_mnemonic(
         _("_Auto encoding detect (use system language settings)"));
     priv->pl_id3enc_entry = gtk_entry_new();
     priv->pl_lrcenc_entry = gtk_entry_new();
+    priv->pl_ldlgc_button = gtk_button_new_with_mnemonic(
+        _("Load playlist from _legacy version"));
     metadata_id3enc_label = gtk_label_new(
         _("ID3 Tag fallback character encodings"));
     metadata_lrcenc_label = gtk_label_new(
@@ -243,6 +250,17 @@ static inline GtkWidget *rc_ui_settings_playlist_build(
     g_object_set(priv->pl_lrcenc_entry, "margin-left", 2, "margin-right",
         2, "margin-top", 2, "margin-bottom", 2, "hexpand-set", TRUE,
         "hexpand", TRUE, NULL);
+    legacy_frame = gtk_frame_new(NULL);
+    frame_label = gtk_label_new(NULL); 
+    gtk_label_set_markup(GTK_LABEL(frame_label), _("<b>Legacy Support</b>"));
+    g_object_set(legacy_frame, "label-widget", frame_label, "shadow-type",
+        GTK_SHADOW_NONE, "hexpand-set", TRUE, "hexpand", TRUE, NULL);
+    legacy_frame_grid = gtk_grid_new();
+    legacy_button_box = gtk_button_box_new(GTK_ORIENTATION_HORIZONTAL);
+    g_object_set(legacy_button_box, "margin-left", 2, "margin-right",
+        2, "margin-top", 2, "margin-bottom", 2, "hexpand-set", TRUE,
+        "hexpand", TRUE, NULL, "layout-style", GTK_BUTTONBOX_CENTER,
+        "spacing", 5, NULL);   
     if(rclib_settings_get_boolean("Metadata", "AutoDetectEncoding", NULL))
     {
         g_object_set(priv->pl_autoenc_check_button, "active", TRUE, NULL);
@@ -268,7 +286,14 @@ static inline GtkWidget *rc_ui_settings_playlist_build(
     gtk_grid_attach(GTK_GRID(metadata_frame_grid),
         priv->pl_lrcenc_entry, 1, 2, 1, 1);
     gtk_container_add(GTK_CONTAINER(metadata_frame), metadata_frame_grid);
+    gtk_box_pack_start(GTK_BOX(legacy_button_box), priv->pl_ldlgc_button,
+        FALSE, FALSE, 2);
+    gtk_grid_attach(GTK_GRID(legacy_frame_grid), legacy_button_box,
+        0, 0, 2, 1);
+    gtk_container_add(GTK_CONTAINER(legacy_frame), legacy_frame_grid);
     gtk_grid_attach(GTK_GRID(playlist_grid), metadata_frame, 0, 0,
+        1, 1);
+    gtk_grid_attach(GTK_GRID(playlist_grid), legacy_frame, 0, 1,
         1, 1);
     g_signal_connect(priv->pl_autoenc_check_button, "toggled",
         G_CALLBACK(rc_ui_settings_pl_autoenc_toggled), NULL);        
@@ -276,6 +301,8 @@ static inline GtkWidget *rc_ui_settings_playlist_build(
         G_CALLBACK(rc_ui_settings_pl_id3enc_changed), NULL);
     g_signal_connect(priv->pl_lrcenc_entry, "changed",
         G_CALLBACK(rc_ui_settings_pl_lrcenc_changed), NULL);
+    g_signal_connect(priv->pl_ldlgc_button, "clicked",
+        G_CALLBACK(rc_ui_dialog_show_load_legacy), NULL);
     return playlist_grid;
 }
 

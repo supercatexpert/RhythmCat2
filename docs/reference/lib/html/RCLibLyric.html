@@ -44,7 +44,6 @@
 <pre class="synopsis">
 #include &lt;rclib-lyric.h&gt;
 
-#define             <a class="link" href="RCLibLyric.html#RCLIB-LYRIC-TYPE:CAPS" title="RCLIB_LYRIC_TYPE">RCLIB_LYRIC_TYPE</a>
 struct              <a class="link" href="RCLibLyric.html#RCLibLyric-struct" title="struct RCLibLyric">RCLibLyric</a>;
 struct              <a class="link" href="RCLibLyric.html#RCLibLyricClass" title="struct RCLibLyricClass">RCLibLyricClass</a>;
 struct              <a class="link" href="RCLibLyric.html#RCLibLyricData" title="struct RCLibLyricData">RCLibLyricData</a>;
@@ -57,7 +56,8 @@ const <a class="link" href="RCLibLyric.html#RCLibLyricData" title="struct RCLibL
                                                          <em class="parameter"><code><span class="type">gint64</span> time</code></em>);
 <a href="/usr/share/gtk-doc/html/glib/glib-Sequences.html#GSequenceIter"><span class="returnvalue">GSequenceIter</span></a> *     <a class="link" href="RCLibLyric.html#rclib-lyric-get-line-iter" title="rclib_lyric_get_line_iter ()">rclib_lyric_get_line_iter</a>           (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> index</code></em>,
                                                          <em class="parameter"><code><span class="type">gint64</span> time</code></em>);
-<a class="link" href="RCLibLyric.html#RCLibLyricParsedData" title="struct RCLibLyricParsedData"><span class="returnvalue">RCLibLyricParsedData</span></a> * <a class="link" href="RCLibLyric.html#rclib-lyric-get-parsed-data" title="rclib_lyric_get_parsed_data ()">rclib_lyric_get_parsed_data</a>      (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> index</code></em>);
+const <a class="link" href="RCLibLyric.html#RCLibLyricParsedData" title="struct RCLibLyricParsedData"><span class="returnvalue">RCLibLyricParsedData</span></a> * <a class="link" href="RCLibLyric.html#rclib-lyric-get-parsed-data" title="rclib_lyric_get_parsed_data ()">rclib_lyric_get_parsed_data</a>
+                                                        (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> index</code></em>);
 const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *       <a class="link" href="RCLibLyric.html#rclib-lyric-get-search-dir" title="rclib_lyric_get_search_dir ()">rclib_lyric_get_search_dir</a>          ();
 <span class="returnvalue">gint64</span>              <a class="link" href="RCLibLyric.html#rclib-lyric-get-track-time-offset" title="rclib_lyric_get_track_time_offset ()">rclib_lyric_get_track_time_offset</a>   (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> index</code></em>);
 <span class="returnvalue">void</span>                <a class="link" href="RCLibLyric.html#rclib-lyric-init" title="rclib_lyric_init ()">rclib_lyric_init</a>                    ();
@@ -101,12 +101,6 @@ tracks. The timer inside can send signals for lyric display.
 </div>
 <div class="refsect1">
 <a name="RCLibLyric.details"></a><h2>Details</h2>
-<div class="refsect2">
-<a name="RCLIB-LYRIC-TYPE:CAPS"></a><h3>RCLIB_LYRIC_TYPE</h3>
-<pre class="programlisting">#define RCLIB_LYRIC_TYPE (rclib_lyric_get_type())
-</pre>
-</div>
-<hr>
 <div class="refsect2">
 <a name="RCLibLyric-struct"></a><h3>struct RCLibLyric</h3>
 <pre class="programlisting">struct RCLibLyric;</pre>
@@ -254,7 +248,8 @@ Get the running <a class="link" href="RCLibLyric.html" title="RCLibLyric"><span 
 <col align="left" valign="top">
 <tbody><tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>The running instance.</td>
+<td>The running instance. <span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span>
+</td>
 </tr></tbody>
 </table></div>
 </div>
@@ -306,7 +301,9 @@ Find iter of the lyric line which matches to the given time
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>The <a href="/usr/share/gtk-doc/html/glib/glib-Sequences.html#GSequenceIter"><span class="type">GSequenceIter</span></a> of the lyric line, NULL if not found.</td>
+<td>The <a href="/usr/share/gtk-doc/html/glib/glib-Sequences.html#GSequenceIter"><span class="type">GSequenceIter</span></a> of the lyric line,
+<a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><span class="type">NULL</span></a> if not found. <span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span>
+</td>
 </tr>
 </tbody>
 </table></div>
@@ -314,7 +311,8 @@ Find iter of the lyric line which matches to the given time
 <hr>
 <div class="refsect2">
 <a name="rclib-lyric-get-parsed-data"></a><h3>rclib_lyric_get_parsed_data ()</h3>
-<pre class="programlisting"><a class="link" href="RCLibLyric.html#RCLibLyricParsedData" title="struct RCLibLyricParsedData"><span class="returnvalue">RCLibLyricParsedData</span></a> * rclib_lyric_get_parsed_data      (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> index</code></em>);</pre>
+<pre class="programlisting">const <a class="link" href="RCLibLyric.html#RCLibLyricParsedData" title="struct RCLibLyricParsedData"><span class="returnvalue">RCLibLyricParsedData</span></a> * rclib_lyric_get_parsed_data
+                                                        (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> index</code></em>);</pre>
 <p>
 Get the parsed lyric data by the given track index.
 </p>
@@ -327,7 +325,8 @@ Get the parsed lyric data by the given track index.
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>The parsed lyric data.</td>
+<td>The parsed lyric data. <span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span>
+</td>
 </tr>
 </tbody>
 </table></div>
@@ -503,7 +502,8 @@ instance of <a class="link" href="RCLibLyric.html" title="RCLibLyric"><span clas
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>callback</code></em> :</span></p></td>
-<td>the the <a href="/usr/share/gtk-doc/html/gobject/gobject-Closures.html#GCallback"><span class="type">GCallback</span></a> to connect</td>
+<td>the the <a href="/usr/share/gtk-doc/html/gobject/gobject-Closures.html#GCallback"><span class="type">GCallback</span></a> to connect. <span class="annotation">[<acronym title="The callback is valid only during the call to the method."><span class="acronym">scope call</span></acronym>]</span>
+</td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>data</code></em> :</span></p></td>

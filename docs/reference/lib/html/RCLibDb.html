@@ -41,25 +41,24 @@
 </tr></table></div>
 <div class="refsynopsisdiv">
 <a name="RCLibDb.synopsis"></a><h2>Synopsis</h2>
-<pre class="synopsis">
+<a name="RCLibDbCatalogData"></a><a name="RCLibDbPlaylistData"></a><pre class="synopsis">
 #include &lt;rclib-db.h&gt;
 
-#define             <a class="link" href="RCLibDb.html#RCLIB-DB-TYPE:CAPS" title="RCLIB_DB_TYPE">RCLIB_DB_TYPE</a>
 struct              <a class="link" href="RCLibDb.html#RCLibDb-struct" title="struct RCLibDb">RCLibDb</a>;
-struct              <a class="link" href="RCLibDb.html#RCLibDbCatalogData" title="struct RCLibDbCatalogData">RCLibDbCatalogData</a>;
+struct              <a class="link" href="RCLibDb.html#RCLibDbCatalogData-struct" title="struct RCLibDbCatalogData">RCLibDbCatalogData</a>;
 enum                <a class="link" href="RCLibDb.html#RCLibDbCatalogType" title="enum RCLibDbCatalogType">RCLibDbCatalogType</a>;
 struct              <a class="link" href="RCLibDb.html#RCLibDbClass" title="struct RCLibDbClass">RCLibDbClass</a>;
-struct              <a class="link" href="RCLibDb.html#RCLibDbPlaylistData" title="struct RCLibDbPlaylistData">RCLibDbPlaylistData</a>;
+struct              <a class="link" href="RCLibDb.html#RCLibDbPlaylistData-struct" title="struct RCLibDbPlaylistData">RCLibDbPlaylistData</a>;
 enum                <a class="link" href="RCLibDb.html#RCLibDbPlaylistType" title="enum RCLibDbPlaylistType">RCLibDbPlaylistType</a>;
 <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RCLibDb.html#rclib-db-autosaved-exist" title="rclib_db_autosaved_exist ()">rclib_db_autosaved_exist</a>            ();
 <span class="returnvalue">void</span>                <a class="link" href="RCLibDb.html#rclib-db-autosaved-remove" title="rclib_db_autosaved_remove ()">rclib_db_autosaved_remove</a>           ();
 <a href="/usr/share/gtk-doc/html/glib/glib-Sequences.html#GSequenceIter"><span class="returnvalue">GSequenceIter</span></a> *     <a class="link" href="RCLibDb.html#rclib-db-catalog-add" title="rclib_db_catalog_add ()">rclib_db_catalog_add</a>                (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *name</code></em>,
                                                          <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Sequences.html#GSequenceIter"><span class="type">GSequenceIter</span></a> *iter</code></em>,
                                                          <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> type</code></em>);
-<span class="returnvalue">void</span>                <a class="link" href="RCLibDb.html#rclib-db-catalog-data-free" title="rclib_db_catalog_data_free ()">rclib_db_catalog_data_free</a>          (<em class="parameter"><code><a class="link" href="RCLibDb.html#RCLibDbCatalogData" title="struct RCLibDbCatalogData"><span class="type">RCLibDbCatalogData</span></a> *data</code></em>);
-<a class="link" href="RCLibDb.html#RCLibDbCatalogData" title="struct RCLibDbCatalogData"><span class="returnvalue">RCLibDbCatalogData</span></a> * <a class="link" href="RCLibDb.html#rclib-db-catalog-data-new" title="rclib_db_catalog_data_new ()">rclib_db_catalog_data_new</a>          ();
-<a class="link" href="RCLibDb.html#RCLibDbCatalogData" title="struct RCLibDbCatalogData"><span class="returnvalue">RCLibDbCatalogData</span></a> * <a class="link" href="RCLibDb.html#rclib-db-catalog-data-ref" title="rclib_db_catalog_data_ref ()">rclib_db_catalog_data_ref</a>          (<em class="parameter"><code><a class="link" href="RCLibDb.html#RCLibDbCatalogData" title="struct RCLibDbCatalogData"><span class="type">RCLibDbCatalogData</span></a> *data</code></em>);
-<span class="returnvalue">void</span>                <a class="link" href="RCLibDb.html#rclib-db-catalog-data-unref" title="rclib_db_catalog_data_unref ()">rclib_db_catalog_data_unref</a>         (<em class="parameter"><code><a class="link" href="RCLibDb.html#RCLibDbCatalogData" title="struct RCLibDbCatalogData"><span class="type">RCLibDbCatalogData</span></a> *data</code></em>);
+<span class="returnvalue">void</span>                <a class="link" href="RCLibDb.html#rclib-db-catalog-data-free" title="rclib_db_catalog_data_free ()">rclib_db_catalog_data_free</a>          (<em class="parameter"><code><a class="link" href="RCLibDb.html#RCLibDbCatalogData"><span class="type">RCLibDbCatalogData</span></a> *data</code></em>);
+<a class="link" href="RCLibDb.html#RCLibDbCatalogData"><span class="returnvalue">RCLibDbCatalogData</span></a> * <a class="link" href="RCLibDb.html#rclib-db-catalog-data-new" title="rclib_db_catalog_data_new ()">rclib_db_catalog_data_new</a>          ();
+<a class="link" href="RCLibDb.html#RCLibDbCatalogData"><span class="returnvalue">RCLibDbCatalogData</span></a> * <a class="link" href="RCLibDb.html#rclib-db-catalog-data-ref" title="rclib_db_catalog_data_ref ()">rclib_db_catalog_data_ref</a>          (<em class="parameter"><code><a class="link" href="RCLibDb.html#RCLibDbCatalogData"><span class="type">RCLibDbCatalogData</span></a> *data</code></em>);
+<span class="returnvalue">void</span>                <a class="link" href="RCLibDb.html#rclib-db-catalog-data-unref" title="rclib_db_catalog_data_unref ()">rclib_db_catalog_data_unref</a>         (<em class="parameter"><code><a class="link" href="RCLibDb.html#RCLibDbCatalogData"><span class="type">RCLibDbCatalogData</span></a> *data</code></em>);
 <span class="returnvalue">void</span>                <a class="link" href="RCLibDb.html#rclib-db-catalog-delete" title="rclib_db_catalog_delete ()">rclib_db_catalog_delete</a>             (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Sequences.html#GSequenceIter"><span class="type">GSequenceIter</span></a> *iter</code></em>);
 <span class="returnvalue">void</span>                <a class="link" href="RCLibDb.html#rclib-db-catalog-reorder" title="rclib_db_catalog_reorder ()">rclib_db_catalog_reorder</a>            (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> *new_order</code></em>);
 <span class="returnvalue">void</span>                <a class="link" href="RCLibDb.html#rclib-db-catalog-set-name" title="rclib_db_catalog_set_name ()">rclib_db_catalog_set_name</a>           (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Sequences.html#GSequenceIter"><span class="type">GSequenceIter</span></a> *iter</code></em>,
@@ -85,10 +84,10 @@ enum                <a class="link" href="RCLibDb.html#RCLibDbPlaylistType" titl
                                                         (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Sequences.html#GSequenceIter"><span class="type">GSequenceIter</span></a> *iter</code></em>,
                                                          <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Sequences.html#GSequenceIter"><span class="type">GSequenceIter</span></a> *insert_iter</code></em>,
                                                          <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *uri</code></em>);
-<span class="returnvalue">void</span>                <a class="link" href="RCLibDb.html#rclib-db-playlist-data-free" title="rclib_db_playlist_data_free ()">rclib_db_playlist_data_free</a>         (<em class="parameter"><code><a class="link" href="RCLibDb.html#RCLibDbPlaylistData" title="struct RCLibDbPlaylistData"><span class="type">RCLibDbPlaylistData</span></a> *data</code></em>);
-<a class="link" href="RCLibDb.html#RCLibDbPlaylistData" title="struct RCLibDbPlaylistData"><span class="returnvalue">RCLibDbPlaylistData</span></a> * <a class="link" href="RCLibDb.html#rclib-db-playlist-data-new" title="rclib_db_playlist_data_new ()">rclib_db_playlist_data_new</a>        ();
-<a class="link" href="RCLibDb.html#RCLibDbPlaylistData" title="struct RCLibDbPlaylistData"><span class="returnvalue">RCLibDbPlaylistData</span></a> * <a class="link" href="RCLibDb.html#rclib-db-playlist-data-ref" title="rclib_db_playlist_data_ref ()">rclib_db_playlist_data_ref</a>        (<em class="parameter"><code><a class="link" href="RCLibDb.html#RCLibDbPlaylistData" title="struct RCLibDbPlaylistData"><span class="type">RCLibDbPlaylistData</span></a> *data</code></em>);
-<span class="returnvalue">void</span>                <a class="link" href="RCLibDb.html#rclib-db-playlist-data-unref" title="rclib_db_playlist_data_unref ()">rclib_db_playlist_data_unref</a>        (<em class="parameter"><code><a class="link" href="RCLibDb.html#RCLibDbPlaylistData" title="struct RCLibDbPlaylistData"><span class="type">RCLibDbPlaylistData</span></a> *data</code></em>);
+<span class="returnvalue">void</span>                <a class="link" href="RCLibDb.html#rclib-db-playlist-data-free" title="rclib_db_playlist_data_free ()">rclib_db_playlist_data_free</a>         (<em class="parameter"><code><a class="link" href="RCLibDb.html#RCLibDbPlaylistData"><span class="type">RCLibDbPlaylistData</span></a> *data</code></em>);
+<a class="link" href="RCLibDb.html#RCLibDbPlaylistData"><span class="returnvalue">RCLibDbPlaylistData</span></a> * <a class="link" href="RCLibDb.html#rclib-db-playlist-data-new" title="rclib_db_playlist_data_new ()">rclib_db_playlist_data_new</a>        ();
+<a class="link" href="RCLibDb.html#RCLibDbPlaylistData"><span class="returnvalue">RCLibDbPlaylistData</span></a> * <a class="link" href="RCLibDb.html#rclib-db-playlist-data-ref" title="rclib_db_playlist_data_ref ()">rclib_db_playlist_data_ref</a>        (<em class="parameter"><code><a class="link" href="RCLibDb.html#RCLibDbPlaylistData"><span class="type">RCLibDbPlaylistData</span></a> *data</code></em>);
+<span class="returnvalue">void</span>                <a class="link" href="RCLibDb.html#rclib-db-playlist-data-unref" title="rclib_db_playlist_data_unref ()">rclib_db_playlist_data_unref</a>        (<em class="parameter"><code><a class="link" href="RCLibDb.html#RCLibDbPlaylistData"><span class="type">RCLibDbPlaylistData</span></a> *data</code></em>);
 <span class="returnvalue">void</span>                <a class="link" href="RCLibDb.html#rclib-db-playlist-delete" title="rclib_db_playlist_delete ()">rclib_db_playlist_delete</a>            (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Sequences.html#GSequenceIter"><span class="type">GSequenceIter</span></a> *iter</code></em>);
 <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RCLibDb.html#rclib-db-playlist-export-all-m3u-files" title="rclib_db_playlist_export_all_m3u_files ()">rclib_db_playlist_export_all_m3u_files</a>
                                                         (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *dir</code></em>);
@@ -98,6 +97,8 @@ const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span c
 const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *       <a class="link" href="RCLibDb.html#rclib-db-playlist-get-lyric-bind" title="rclib_db_playlist_get_lyric_bind ()">rclib_db_playlist_get_lyric_bind</a>    (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Sequences.html#GSequenceIter"><span class="type">GSequenceIter</span></a> *iter</code></em>);
 const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *       <a class="link" href="RCLibDb.html#rclib-db-playlist-get-lyric-secondary-bind" title="rclib_db_playlist_get_lyric_secondary_bind ()">rclib_db_playlist_get_lyric_secondary_bind</a>
                                                         (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Sequences.html#GSequenceIter"><span class="type">GSequenceIter</span></a> *iter</code></em>);
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RCLibDb.html#rclib-db-playlist-get-rating" title="rclib_db_playlist_get_rating ()">rclib_db_playlist_get_rating</a>        (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Sequences.html#GSequenceIter"><span class="type">GSequenceIter</span></a> *iter</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gfloat"><span class="type">gfloat</span></a> *rating</code></em>);
 <span class="returnvalue">void</span>                <a class="link" href="RCLibDb.html#rclib-db-playlist-import-cancel" title="rclib_db_playlist_import_cancel ()">rclib_db_playlist_import_cancel</a>     ();
 <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="returnvalue">gint</span></a>                <a class="link" href="RCLibDb.html#rclib-db-playlist-import-queue-get-length" title="rclib_db_playlist_import_queue_get_length ()">rclib_db_playlist_import_queue_get_length</a>
                                                         ();
@@ -119,14 +120,14 @@ const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span c
                                                         (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Sequences.html#GSequenceIter"><span class="type">GSequenceIter</span></a> *iter</code></em>,
                                                          <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *filename</code></em>);
 <span class="returnvalue">void</span>                <a class="link" href="RCLibDb.html#rclib-db-playlist-set-rating" title="rclib_db_playlist_set_rating ()">rclib_db_playlist_set_rating</a>        (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Sequences.html#GSequenceIter"><span class="type">GSequenceIter</span></a> *iter</code></em>,
-                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> rating</code></em>);
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gfloat"><span class="type">gfloat</span></a> rating</code></em>);
 <span class="returnvalue">void</span>                <a class="link" href="RCLibDb.html#rclib-db-playlist-set-type" title="rclib_db_playlist_set_type ()">rclib_db_playlist_set_type</a>          (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Sequences.html#GSequenceIter"><span class="type">GSequenceIter</span></a> *iter</code></em>,
                                                          <em class="parameter"><code><a class="link" href="RCLibDb.html#RCLibDbPlaylistType" title="enum RCLibDbPlaylistType"><span class="type">RCLibDbPlaylistType</span></a> type</code></em>);
 <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RCLibDb.html#rclib-db-playlist-sync" title="rclib_db_playlist_sync ()">rclib_db_playlist_sync</a>              ();
 <span class="returnvalue">void</span>                <a class="link" href="RCLibDb.html#rclib-db-playlist-update-length" title="rclib_db_playlist_update_length ()">rclib_db_playlist_update_length</a>     (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Sequences.html#GSequenceIter"><span class="type">GSequenceIter</span></a> *iter</code></em>,
                                                          <em class="parameter"><code><span class="type">gint64</span> length</code></em>);
 <span class="returnvalue">void</span>                <a class="link" href="RCLibDb.html#rclib-db-playlist-update-metadata" title="rclib_db_playlist_update_metadata ()">rclib_db_playlist_update_metadata</a>   (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Sequences.html#GSequenceIter"><span class="type">GSequenceIter</span></a> *iter</code></em>,
-                                                         <em class="parameter"><code>const <a class="link" href="RCLibDb.html#RCLibDbPlaylistData" title="struct RCLibDbPlaylistData"><span class="type">RCLibDbPlaylistData</span></a> *data</code></em>);
+                                                         <em class="parameter"><code>const <a class="link" href="RCLibDb.html#RCLibDbPlaylistData"><span class="type">RCLibDbPlaylistData</span></a> *data</code></em>);
 <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gulong"><span class="returnvalue">gulong</span></a>              <a class="link" href="RCLibDb.html#rclib-db-signal-connect" title="rclib_db_signal_connect ()">rclib_db_signal_connect</a>             (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *name</code></em>,
                                                          <em class="parameter"><code><a href="/usr/share/gtk-doc/html/gobject/gobject-Closures.html#GCallback"><span class="type">GCallback</span></a> callback</code></em>,
                                                          <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> data</code></em>);
@@ -138,6 +139,14 @@ const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span c
 <pre class="synopsis">
   <a href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GObject">GObject</a>
    +----RCLibDb
+</pre>
+<pre class="synopsis">
+  GBoxed
+   +----RCLibDbCatalogData
+</pre>
+<pre class="synopsis">
+  GBoxed
+   +----RCLibDbPlaylistData
 </pre>
 </div>
 <div class="refsect1">
@@ -169,12 +178,6 @@ asynchronously.
 <div class="refsect1">
 <a name="RCLibDb.details"></a><h2>Details</h2>
 <div class="refsect2">
-<a name="RCLIB-DB-TYPE:CAPS"></a><h3>RCLIB_DB_TYPE</h3>
-<pre class="programlisting">#define RCLIB_DB_TYPE (rclib_db_get_type())
-</pre>
-</div>
-<hr>
-<div class="refsect2">
 <a name="RCLibDb-struct"></a><h3>struct RCLibDb</h3>
 <pre class="programlisting">struct RCLibDb;</pre>
 <p>
@@ -184,7 +187,7 @@ private and should only be accessed via the provided API.
 </div>
 <hr>
 <div class="refsect2">
-<a name="RCLibDbCatalogData"></a><h3>struct RCLibDbCatalogData</h3>
+<a name="RCLibDbCatalogData-struct"></a><h3>struct RCLibDbCatalogData</h3>
 <pre class="programlisting">struct RCLibDbCatalogData {
     GSequence *playlist;
     gchar *name;
@@ -199,19 +202,19 @@ The structure for catalog item data.
 <col align="left" valign="top">
 <tbody>
 <tr>
-<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Sequences.html#GSequence"><span class="type">GSequence</span></a> *<em class="structfield"><code><a name="RCLibDbCatalogData.playlist"></a>playlist</code></em>;</span></p></td>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Sequences.html#GSequence"><span class="type">GSequence</span></a> *<em class="structfield"><code><a name="RCLibDbCatalogData-struct.playlist"></a>playlist</code></em>;</span></p></td>
 <td>a playlist</td>
 </tr>
 <tr>
-<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *<em class="structfield"><code><a name="RCLibDbCatalogData.name"></a>name</code></em>;</span></p></td>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *<em class="structfield"><code><a name="RCLibDbCatalogData-struct.name"></a>name</code></em>;</span></p></td>
 <td>the name</td>
 </tr>
 <tr>
-<td><p><span class="term"><a class="link" href="RCLibDb.html#RCLibDbCatalogType" title="enum RCLibDbCatalogType"><span class="type">RCLibDbCatalogType</span></a> <em class="structfield"><code><a name="RCLibDbCatalogData.type"></a>type</code></em>;</span></p></td>
+<td><p><span class="term"><a class="link" href="RCLibDb.html#RCLibDbCatalogType" title="enum RCLibDbCatalogType"><span class="type">RCLibDbCatalogType</span></a> <em class="structfield"><code><a name="RCLibDbCatalogData-struct.type"></a>type</code></em>;</span></p></td>
 <td>the type of the item in catalog</td>
 </tr>
 <tr>
-<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> <em class="structfield"><code><a name="RCLibDbCatalogData.store"></a>store</code></em>;</span></p></td>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> <em class="structfield"><code><a name="RCLibDbCatalogData-struct.store"></a>store</code></em>;</span></p></td>
 <td>the store, used in UI</td>
 </tr>
 </tbody>
@@ -248,7 +251,7 @@ The enum type for catalog type.
 </div>
 <hr>
 <div class="refsect2">
-<a name="RCLibDbPlaylistData"></a><h3>struct RCLibDbPlaylistData</h3>
+<a name="RCLibDbPlaylistData-struct"></a><h3>struct RCLibDbPlaylistData</h3>
 <pre class="programlisting">struct RCLibDbPlaylistData {
     GSequenceIter *catalog;
     RCLibDbPlaylistType type;
@@ -260,7 +263,7 @@ The enum type for catalog type.
     gint64 length;
     gint tracknum;
     gint year;
-    guint rating;
+    gfloat rating;
     gchar *lyricfile;
     gchar *lyricsecfile;
     gchar *albumfile;
@@ -273,59 +276,59 @@ The structure for playlist item data.
 <col align="left" valign="top">
 <tbody>
 <tr>
-<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Sequences.html#GSequenceIter"><span class="type">GSequenceIter</span></a> *<em class="structfield"><code><a name="RCLibDbPlaylistData.catalog"></a>catalog</code></em>;</span></p></td>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Sequences.html#GSequenceIter"><span class="type">GSequenceIter</span></a> *<em class="structfield"><code><a name="RCLibDbPlaylistData-struct.catalog"></a>catalog</code></em>;</span></p></td>
 <td>the catalog item data</td>
 </tr>
 <tr>
-<td><p><span class="term"><a class="link" href="RCLibDb.html#RCLibDbPlaylistType" title="enum RCLibDbPlaylistType"><span class="type">RCLibDbPlaylistType</span></a> <em class="structfield"><code><a name="RCLibDbPlaylistData.type"></a>type</code></em>;</span></p></td>
+<td><p><span class="term"><a class="link" href="RCLibDb.html#RCLibDbPlaylistType" title="enum RCLibDbPlaylistType"><span class="type">RCLibDbPlaylistType</span></a> <em class="structfield"><code><a name="RCLibDbPlaylistData-struct.type"></a>type</code></em>;</span></p></td>
 <td>the type of the item in playlist</td>
 </tr>
 <tr>
-<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *<em class="structfield"><code><a name="RCLibDbPlaylistData.uri"></a>uri</code></em>;</span></p></td>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *<em class="structfield"><code><a name="RCLibDbPlaylistData-struct.uri"></a>uri</code></em>;</span></p></td>
 <td>the URI</td>
 </tr>
 <tr>
-<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *<em class="structfield"><code><a name="RCLibDbPlaylistData.title"></a>title</code></em>;</span></p></td>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *<em class="structfield"><code><a name="RCLibDbPlaylistData-struct.title"></a>title</code></em>;</span></p></td>
 <td>the title</td>
 </tr>
 <tr>
-<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *<em class="structfield"><code><a name="RCLibDbPlaylistData.artist"></a>artist</code></em>;</span></p></td>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *<em class="structfield"><code><a name="RCLibDbPlaylistData-struct.artist"></a>artist</code></em>;</span></p></td>
 <td>the artist</td>
 </tr>
 <tr>
-<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *<em class="structfield"><code><a name="RCLibDbPlaylistData.album"></a>album</code></em>;</span></p></td>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *<em class="structfield"><code><a name="RCLibDbPlaylistData-struct.album"></a>album</code></em>;</span></p></td>
 <td>the album</td>
 </tr>
 <tr>
-<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *<em class="structfield"><code><a name="RCLibDbPlaylistData.ftype"></a>ftype</code></em>;</span></p></td>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *<em class="structfield"><code><a name="RCLibDbPlaylistData-struct.ftype"></a>ftype</code></em>;</span></p></td>
 <td>the format information</td>
 </tr>
 <tr>
-<td><p><span class="term"><span class="type">gint64</span> <em class="structfield"><code><a name="RCLibDbPlaylistData.length"></a>length</code></em>;</span></p></td>
+<td><p><span class="term"><span class="type">gint64</span> <em class="structfield"><code><a name="RCLibDbPlaylistData-struct.length"></a>length</code></em>;</span></p></td>
 <td>the the duration (length) of the music (unit: nanosecond)</td>
 </tr>
 <tr>
-<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> <em class="structfield"><code><a name="RCLibDbPlaylistData.tracknum"></a>tracknum</code></em>;</span></p></td>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> <em class="structfield"><code><a name="RCLibDbPlaylistData-struct.tracknum"></a>tracknum</code></em>;</span></p></td>
 <td>the track number</td>
 </tr>
 <tr>
-<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> <em class="structfield"><code><a name="RCLibDbPlaylistData.year"></a>year</code></em>;</span></p></td>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> <em class="structfield"><code><a name="RCLibDbPlaylistData-struct.year"></a>year</code></em>;</span></p></td>
 <td>the year</td>
 </tr>
 <tr>
-<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> <em class="structfield"><code><a name="RCLibDbPlaylistData.rating"></a>rating</code></em>;</span></p></td>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gfloat"><span class="type">gfloat</span></a> <em class="structfield"><code><a name="RCLibDbPlaylistData-struct.rating"></a>rating</code></em>;</span></p></td>
 <td>the rating level</td>
 </tr>
 <tr>
-<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *<em class="structfield"><code><a name="RCLibDbPlaylistData.lyricfile"></a>lyricfile</code></em>;</span></p></td>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *<em class="structfield"><code><a name="RCLibDbPlaylistData-struct.lyricfile"></a>lyricfile</code></em>;</span></p></td>
 <td>the lyric binding file path</td>
 </tr>
 <tr>
-<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *<em class="structfield"><code><a name="RCLibDbPlaylistData.lyricsecfile"></a>lyricsecfile</code></em>;</span></p></td>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *<em class="structfield"><code><a name="RCLibDbPlaylistData-struct.lyricsecfile"></a>lyricsecfile</code></em>;</span></p></td>
 <td>the secondary lyric binding file path</td>
 </tr>
 <tr>
-<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *<em class="structfield"><code><a name="RCLibDbPlaylistData.albumfile"></a>albumfile</code></em>;</span></p></td>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *<em class="structfield"><code><a name="RCLibDbPlaylistData-struct.albumfile"></a>albumfile</code></em>;</span></p></td>
 <td>the album cover image binding file path</td>
 </tr>
 </tbody>
@@ -414,7 +417,9 @@ is <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><s
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>The iter to the new playlist in the catalog.</td>
+<td>(skip): The iter to the new playlist in
+the catalog. <span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span>
+</td>
 </tr>
 </tbody>
 </table></div>
@@ -422,9 +427,9 @@ is <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><s
 <hr>
 <div class="refsect2">
 <a name="rclib-db-catalog-data-free"></a><h3>rclib_db_catalog_data_free ()</h3>
-<pre class="programlisting"><span class="returnvalue">void</span>                rclib_db_catalog_data_free          (<em class="parameter"><code><a class="link" href="RCLibDb.html#RCLibDbCatalogData" title="struct RCLibDbCatalogData"><span class="type">RCLibDbCatalogData</span></a> *data</code></em>);</pre>
+<pre class="programlisting"><span class="returnvalue">void</span>                rclib_db_catalog_data_free          (<em class="parameter"><code><a class="link" href="RCLibDb.html#RCLibDbCatalogData"><span class="type">RCLibDbCatalogData</span></a> *data</code></em>);</pre>
 <p>
-Free the <a class="link" href="RCLibDb.html#RCLibDbCatalogData" title="struct RCLibDbCatalogData"><span class="type">RCLibDbCatalogData</span></a> structure.
+Free the <a class="link" href="RCLibDb.html#RCLibDbCatalogData"><span class="type">RCLibDbCatalogData</span></a> structure.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -437,36 +442,37 @@ Free the <a class="link" href="RCLibDb.html#RCLibDbCatalogData" title="struct RC
 <hr>
 <div class="refsect2">
 <a name="rclib-db-catalog-data-new"></a><h3>rclib_db_catalog_data_new ()</h3>
-<pre class="programlisting"><a class="link" href="RCLibDb.html#RCLibDbCatalogData" title="struct RCLibDbCatalogData"><span class="returnvalue">RCLibDbCatalogData</span></a> * rclib_db_catalog_data_new          ();</pre>
+<pre class="programlisting"><a class="link" href="RCLibDb.html#RCLibDbCatalogData"><span class="returnvalue">RCLibDbCatalogData</span></a> * rclib_db_catalog_data_new          ();</pre>
 <p>
-Create a new empty <a class="link" href="RCLibDb.html#RCLibDbCatalogData" title="struct RCLibDbCatalogData"><span class="type">RCLibDbCatalogData</span></a> structure,
+Create a new empty <a class="link" href="RCLibDb.html#RCLibDbCatalogData"><span class="type">RCLibDbCatalogData</span></a> structure,
 and set the reference count to 1.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
 <tbody><tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>The new empty allocated <a class="link" href="RCLibDb.html#RCLibDbCatalogData" title="struct RCLibDbCatalogData"><span class="type">RCLibDbCatalogData</span></a> structure.</td>
+<td>The new empty allocated <a class="link" href="RCLibDb.html#RCLibDbCatalogData"><span class="type">RCLibDbCatalogData</span></a> structure.</td>
 </tr></tbody>
 </table></div>
 </div>
 <hr>
 <div class="refsect2">
 <a name="rclib-db-catalog-data-ref"></a><h3>rclib_db_catalog_data_ref ()</h3>
-<pre class="programlisting"><a class="link" href="RCLibDb.html#RCLibDbCatalogData" title="struct RCLibDbCatalogData"><span class="returnvalue">RCLibDbCatalogData</span></a> * rclib_db_catalog_data_ref          (<em class="parameter"><code><a class="link" href="RCLibDb.html#RCLibDbCatalogData" title="struct RCLibDbCatalogData"><span class="type">RCLibDbCatalogData</span></a> *data</code></em>);</pre>
+<pre class="programlisting"><a class="link" href="RCLibDb.html#RCLibDbCatalogData"><span class="returnvalue">RCLibDbCatalogData</span></a> * rclib_db_catalog_data_ref          (<em class="parameter"><code><a class="link" href="RCLibDb.html#RCLibDbCatalogData"><span class="type">RCLibDbCatalogData</span></a> *data</code></em>);</pre>
 <p>
-Increase the reference of <a class="link" href="RCLibDb.html#RCLibDbCatalogData" title="struct RCLibDbCatalogData"><span class="type">RCLibDbCatalogData</span></a> by 1.
+Increase the reference of <a class="link" href="RCLibDb.html#RCLibDbCatalogData"><span class="type">RCLibDbCatalogData</span></a> by 1.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>data</code></em> :</span></p></td>
-<td>the <a class="link" href="RCLibDb.html#RCLibDbCatalogData" title="struct RCLibDbCatalogData"><span class="type">RCLibDbCatalogData</span></a> structure</td>
+<td>the <a class="link" href="RCLibDb.html#RCLibDbCatalogData"><span class="type">RCLibDbCatalogData</span></a> structure</td>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>The <a class="link" href="RCLibDb.html#RCLibDbCatalogData" title="struct RCLibDbCatalogData"><span class="type">RCLibDbCatalogData</span></a> structure.</td>
+<td>The <a class="link" href="RCLibDb.html#RCLibDbCatalogData"><span class="type">RCLibDbCatalogData</span></a> structure. <span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span>
+</td>
 </tr>
 </tbody>
 </table></div>
@@ -474,9 +480,9 @@ Increase the reference of <a class="link" href="RCLibDb.html#RCLibDbCatalogData"
 <hr>
 <div class="refsect2">
 <a name="rclib-db-catalog-data-unref"></a><h3>rclib_db_catalog_data_unref ()</h3>
-<pre class="programlisting"><span class="returnvalue">void</span>                rclib_db_catalog_data_unref         (<em class="parameter"><code><a class="link" href="RCLibDb.html#RCLibDbCatalogData" title="struct RCLibDbCatalogData"><span class="type">RCLibDbCatalogData</span></a> *data</code></em>);</pre>
+<pre class="programlisting"><span class="returnvalue">void</span>                rclib_db_catalog_data_unref         (<em class="parameter"><code><a class="link" href="RCLibDb.html#RCLibDbCatalogData"><span class="type">RCLibDbCatalogData</span></a> *data</code></em>);</pre>
 <p>
-Decrease the reference of <a class="link" href="RCLibDb.html#RCLibDbCatalogData" title="struct RCLibDbCatalogData"><span class="type">RCLibDbCatalogData</span></a> by 1.
+Decrease the reference of <a class="link" href="RCLibDb.html#RCLibDbCatalogData"><span class="type">RCLibDbCatalogData</span></a> by 1.
 If the reference down to zero, the structure will be freed.
 </p>
 <div class="variablelist"><table border="0">
@@ -484,11 +490,11 @@ If the reference down to zero, the structure will be freed.
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>data</code></em> :</span></p></td>
-<td>the <a class="link" href="RCLibDb.html#RCLibDbCatalogData" title="struct RCLibDbCatalogData"><span class="type">RCLibDbCatalogData</span></a> structure</td>
+<td>the <a class="link" href="RCLibDb.html#RCLibDbCatalogData"><span class="type">RCLibDbCatalogData</span></a> structure</td>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>The <a class="link" href="RCLibDb.html#RCLibDbCatalogData" title="struct RCLibDbCatalogData"><span class="type">RCLibDbCatalogData</span></a> structure.</td>
+<td>The <a class="link" href="RCLibDb.html#RCLibDbCatalogData"><span class="type">RCLibDbCatalogData</span></a> structure.</td>
 </tr>
 </tbody>
 </table></div>
@@ -589,7 +595,9 @@ Get the catalog.
 <col align="left" valign="top">
 <tbody><tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>The catalog, NULL if the catalog does not exist.</td>
+<td>(skip): The catalog, NULL if the catalog does
+not exist. <span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span>
+</td>
 </tr></tbody>
 </table></div>
 </div>
@@ -604,7 +612,8 @@ Get the running <a class="link" href="RCLibDb.html" title="RCLibDb"><span class=
 <col align="left" valign="top">
 <tbody><tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>The running instance.</td>
+<td>The running instance. <span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span>
+</td>
 </tr></tbody>
 </table></div>
 </div>
@@ -766,9 +775,9 @@ if the add operation succeeds.
 <hr>
 <div class="refsect2">
 <a name="rclib-db-playlist-data-free"></a><h3>rclib_db_playlist_data_free ()</h3>
-<pre class="programlisting"><span class="returnvalue">void</span>                rclib_db_playlist_data_free         (<em class="parameter"><code><a class="link" href="RCLibDb.html#RCLibDbPlaylistData" title="struct RCLibDbPlaylistData"><span class="type">RCLibDbPlaylistData</span></a> *data</code></em>);</pre>
+<pre class="programlisting"><span class="returnvalue">void</span>                rclib_db_playlist_data_free         (<em class="parameter"><code><a class="link" href="RCLibDb.html#RCLibDbPlaylistData"><span class="type">RCLibDbPlaylistData</span></a> *data</code></em>);</pre>
 <p>
-Free the <a class="link" href="RCLibDb.html#RCLibDbPlaylistData" title="struct RCLibDbPlaylistData"><span class="type">RCLibDbPlaylistData</span></a> structure.
+Free the <a class="link" href="RCLibDb.html#RCLibDbPlaylistData"><span class="type">RCLibDbPlaylistData</span></a> structure.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -781,36 +790,36 @@ Free the <a class="link" href="RCLibDb.html#RCLibDbPlaylistData" title="struct R
 <hr>
 <div class="refsect2">
 <a name="rclib-db-playlist-data-new"></a><h3>rclib_db_playlist_data_new ()</h3>
-<pre class="programlisting"><a class="link" href="RCLibDb.html#RCLibDbPlaylistData" title="struct RCLibDbPlaylistData"><span class="returnvalue">RCLibDbPlaylistData</span></a> * rclib_db_playlist_data_new        ();</pre>
+<pre class="programlisting"><a class="link" href="RCLibDb.html#RCLibDbPlaylistData"><span class="returnvalue">RCLibDbPlaylistData</span></a> * rclib_db_playlist_data_new        ();</pre>
 <p>
-Create a new empty <a class="link" href="RCLibDb.html#RCLibDbPlaylistData" title="struct RCLibDbPlaylistData"><span class="type">RCLibDbPlaylistData</span></a> structure,
+Create a new empty <a class="link" href="RCLibDb.html#RCLibDbPlaylistData"><span class="type">RCLibDbPlaylistData</span></a> structure,
 and set the reference count to 1.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
 <tbody><tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>The new empty allocated <a class="link" href="RCLibDb.html#RCLibDbPlaylistData" title="struct RCLibDbPlaylistData"><span class="type">RCLibDbPlaylistData</span></a> structure.</td>
+<td>The new empty allocated <a class="link" href="RCLibDb.html#RCLibDbPlaylistData"><span class="type">RCLibDbPlaylistData</span></a> structure.</td>
 </tr></tbody>
 </table></div>
 </div>
 <hr>
 <div class="refsect2">
 <a name="rclib-db-playlist-data-ref"></a><h3>rclib_db_playlist_data_ref ()</h3>
-<pre class="programlisting"><a class="link" href="RCLibDb.html#RCLibDbPlaylistData" title="struct RCLibDbPlaylistData"><span class="returnvalue">RCLibDbPlaylistData</span></a> * rclib_db_playlist_data_ref        (<em class="parameter"><code><a class="link" href="RCLibDb.html#RCLibDbPlaylistData" title="struct RCLibDbPlaylistData"><span class="type">RCLibDbPlaylistData</span></a> *data</code></em>);</pre>
+<pre class="programlisting"><a class="link" href="RCLibDb.html#RCLibDbPlaylistData"><span class="returnvalue">RCLibDbPlaylistData</span></a> * rclib_db_playlist_data_ref        (<em class="parameter"><code><a class="link" href="RCLibDb.html#RCLibDbPlaylistData"><span class="type">RCLibDbPlaylistData</span></a> *data</code></em>);</pre>
 <p>
-Increase the reference of <a class="link" href="RCLibDb.html#RCLibDbPlaylistData" title="struct RCLibDbPlaylistData"><span class="type">RCLibDbPlaylistData</span></a> by 1.
+Increase the reference of <a class="link" href="RCLibDb.html#RCLibDbPlaylistData"><span class="type">RCLibDbPlaylistData</span></a> by 1.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>data</code></em> :</span></p></td>
-<td>the <a class="link" href="RCLibDb.html#RCLibDbPlaylistData" title="struct RCLibDbPlaylistData"><span class="type">RCLibDbPlaylistData</span></a> structure</td>
+<td>the <a class="link" href="RCLibDb.html#RCLibDbPlaylistData"><span class="type">RCLibDbPlaylistData</span></a> structure</td>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>The <a class="link" href="RCLibDb.html#RCLibDbPlaylistData" title="struct RCLibDbPlaylistData"><span class="type">RCLibDbPlaylistData</span></a> structure.</td>
+<td>The <a class="link" href="RCLibDb.html#RCLibDbPlaylistData"><span class="type">RCLibDbPlaylistData</span></a> structure.</td>
 </tr>
 </tbody>
 </table></div>
@@ -818,9 +827,9 @@ Increase the reference of <a class="link" href="RCLibDb.html#RCLibDbPlaylistData
 <hr>
 <div class="refsect2">
 <a name="rclib-db-playlist-data-unref"></a><h3>rclib_db_playlist_data_unref ()</h3>
-<pre class="programlisting"><span class="returnvalue">void</span>                rclib_db_playlist_data_unref        (<em class="parameter"><code><a class="link" href="RCLibDb.html#RCLibDbPlaylistData" title="struct RCLibDbPlaylistData"><span class="type">RCLibDbPlaylistData</span></a> *data</code></em>);</pre>
+<pre class="programlisting"><span class="returnvalue">void</span>                rclib_db_playlist_data_unref        (<em class="parameter"><code><a class="link" href="RCLibDb.html#RCLibDbPlaylistData"><span class="type">RCLibDbPlaylistData</span></a> *data</code></em>);</pre>
 <p>
-Decrease the reference of <a class="link" href="RCLibDb.html#RCLibDbPlaylistData" title="struct RCLibDbPlaylistData"><span class="type">RCLibDbPlaylistData</span></a> by 1.
+Decrease the reference of <a class="link" href="RCLibDb.html#RCLibDbPlaylistData"><span class="type">RCLibDbPlaylistData</span></a> by 1.
 If the reference down to zero, the structure will be freed.
 </p>
 <div class="variablelist"><table border="0">
@@ -828,11 +837,11 @@ If the reference down to zero, the structure will be freed.
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>data</code></em> :</span></p></td>
-<td>the <a class="link" href="RCLibDb.html#RCLibDbPlaylistData" title="struct RCLibDbPlaylistData"><span class="type">RCLibDbPlaylistData</span></a> structure</td>
+<td>the <a class="link" href="RCLibDb.html#RCLibDbPlaylistData"><span class="type">RCLibDbPlaylistData</span></a> structure</td>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>The <a class="link" href="RCLibDb.html#RCLibDbPlaylistData" title="struct RCLibDbPlaylistData"><span class="type">RCLibDbPlaylistData</span></a> structure.</td>
+<td>The <a class="link" href="RCLibDb.html#RCLibDbPlaylistData"><span class="type">RCLibDbPlaylistData</span></a> structure.</td>
 </tr>
 </tbody>
 </table></div>
@@ -959,6 +968,34 @@ to by <span class="type">iter</span>.
 <tr>
 <td><p><span class="term"><em class="parameter"><code>iter</code></em> :</span></p></td>
 <td>the iter to the playlist</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>The lyric file path.</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-db-playlist-get-rating"></a><h3>rclib_db_playlist_get_rating ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rclib_db_playlist_get_rating        (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Sequences.html#GSequenceIter"><span class="type">GSequenceIter</span></a> *iter</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gfloat"><span class="type">gfloat</span></a> *rating</code></em>);</pre>
+<p>
+Get the lyric file bound to the music in the playlist pointed
+to by <span class="type">iter</span>.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>iter</code></em> :</span></p></td>
+<td>the iter to the playlist</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>rating</code></em> :</span></p></td>
+<td>the rating to return. <span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>][<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span>
+</td>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
@@ -1158,7 +1195,7 @@ to by <span class="type">iter</span>.
 <div class="refsect2">
 <a name="rclib-db-playlist-set-rating"></a><h3>rclib_db_playlist_set_rating ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>                rclib_db_playlist_set_rating        (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Sequences.html#GSequenceIter"><span class="type">GSequenceIter</span></a> *iter</code></em>,
-                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> rating</code></em>);</pre>
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gfloat"><span class="type">gfloat</span></a> rating</code></em>);</pre>
 <p>
 Set the rating in the playlist pointed to by <span class="type">iter</span>.
 </p>
@@ -1230,7 +1267,7 @@ by <span class="type">iter</span>.
 <div class="refsect2">
 <a name="rclib-db-playlist-update-metadata"></a><h3>rclib_db_playlist_update_metadata ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>                rclib_db_playlist_update_metadata   (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Sequences.html#GSequenceIter"><span class="type">GSequenceIter</span></a> *iter</code></em>,
-                                                         <em class="parameter"><code>const <a class="link" href="RCLibDb.html#RCLibDbPlaylistData" title="struct RCLibDbPlaylistData"><span class="type">RCLibDbPlaylistData</span></a> *data</code></em>);</pre>
+                                                         <em class="parameter"><code>const <a class="link" href="RCLibDb.html#RCLibDbPlaylistData"><span class="type">RCLibDbPlaylistData</span></a> *data</code></em>);</pre>
 <p>
 Update the metadata in the playlist pointed to by <span class="type">iter</span>.
 Title, artist, album, file type, track number, year information
@@ -1269,7 +1306,8 @@ instance of <a class="link" href="RCLibDb.html" title="RCLibDb"><span class="typ
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>callback</code></em> :</span></p></td>
-<td>the the <a href="/usr/share/gtk-doc/html/gobject/gobject-Closures.html#GCallback"><span class="type">GCallback</span></a> to connect</td>
+<td>the the <a href="/usr/share/gtk-doc/html/gobject/gobject-Closures.html#GCallback"><span class="type">GCallback</span></a> to connect. <span class="annotation">[<acronym title="The callback is valid only during the call to the method."><span class="acronym">scope call</span></acronym>]</span>
+</td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>data</code></em> :</span></p></td>

@@ -101,6 +101,10 @@
       to be finished.
     * Killed all warnings in GIR Scanner while compiling.
       
-    
+2012-06-17  SuperCat    <supercatexpert@gmail.com>
+
+    * Version 1.9.4 released.  
+    * Updated plug-in magic number, so old plug-ins cannot be used.
+    * Fixed some bugs.
 
 

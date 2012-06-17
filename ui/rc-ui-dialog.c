@@ -1028,3 +1028,110 @@ void rc_ui_dialog_show_load_legacy()
     gtk_widget_destroy(dialog);
 }
 
+static void rc_ui_dialog_rating_limited_playing_enable_toggled_cb(
+    GtkToggleButton *button, gpointer data)
+{
+    GtkWidget *grid = GTK_WIDGET(data);
+    gboolean enabled;
+    if(data==NULL) return;
+    enabled = gtk_toggle_button_get_active(button);
+    gtk_widget_set_sensitive(grid, enabled);
+}
+
+/**
+ * rc_ui_dialog_rating_limited_playing:
+ *
+ * Show a dialog to configure the rating limited playing mode.
+ */
+
+void rc_ui_dialog_rating_limited_playing()
+{
+    GtkWidget *dialog;
+    GtkWidget *content_area;
+    GtkWidget *main_grid;
+    GtkWidget *grid;
+    GtkWidget *enable_checkbutton;
+    GtkWidget *condition_radiobutton1;
+    GtkWidget *condition_radiobutton2;
+    GtkWidget *spin_label;
+    GtkWidget *spin_button;
+    gint ret;
+    gboolean condition = FALSE;
+    gfloat rating = 3.0;
+    dialog = gtk_dialog_new_with_buttons(_("Rating Limited Playing Mode"),
+        GTK_WINDOW(rc_ui_main_window_get_widget()), GTK_DIALOG_MODAL |
+        GTK_DIALOG_DESTROY_WITH_PARENT, GTK_STOCK_OK, GTK_RESPONSE_ACCEPT,
+        GTK_STOCK_CANCEL, GTK_RESPONSE_REJECT, NULL);
+    enable_checkbutton = gtk_check_button_new_with_mnemonic(_("_Enable "
+        "rating limited playing mode"));
+    condition_radiobutton1 = gtk_radio_button_new_with_mnemonic(NULL,
+        _("Play the music whose rating is _greater than or equal\nto the "
+        "rating limit value"));
+    condition_radiobutton2 = gtk_radio_button_new_with_mnemonic_from_widget(
+        GTK_RADIO_BUTTON(condition_radiobutton1), _("Play the music whose "
+        "rating is _lesser than or equal to\nthe rating limit value"));
+    spin_label = gtk_label_new(_("Rating limit value"));
+    spin_button = gtk_spin_button_new_with_range(0.0, 5.0, 0.1);
+    content_area = gtk_dialog_get_content_area(GTK_DIALOG(dialog));
+    main_grid = gtk_grid_new();
+    grid = gtk_grid_new();
+    gtk_grid_set_row_spacing(GTK_GRID(main_grid), 2);
+    gtk_grid_set_column_spacing(GTK_GRID(grid), 5);
+    gtk_grid_set_row_spacing(GTK_GRID(grid), 2);
+    gtk_widget_set_hexpand(condition_radiobutton1, TRUE);
+    gtk_widget_set_hexpand(condition_radiobutton2, TRUE);
+    gtk_widget_set_hexpand(grid, TRUE);
+    gtk_widget_set_vexpand(grid, TRUE);
+    if(rclib_player_get_rating_limit(&rating, &condition))
+    {
+        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(
+            enable_checkbutton), TRUE);
+        gtk_widget_set_sensitive(grid, TRUE);
+    }
+    else
+    {
+        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(
+            enable_checkbutton), FALSE);
+        gtk_widget_set_sensitive(grid, FALSE);
+    }
+    if(condition)
+    {
+        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(
+            condition_radiobutton2), TRUE);
+    }
+    else
+    {
+        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(
+            condition_radiobutton1), TRUE);
+    }
+    gtk_spin_button_set_value(GTK_SPIN_BUTTON(spin_button), rating);
+    gtk_grid_attach(GTK_GRID(grid), condition_radiobutton1,
+        0, 0, 2, 1);
+    gtk_grid_attach(GTK_GRID(grid), condition_radiobutton2,
+        0, 1, 2, 1);
+    gtk_grid_attach(GTK_GRID(grid), spin_label,
+        0, 2, 1, 1);
+    gtk_grid_attach(GTK_GRID(grid), spin_button,
+        1, 2, 1, 1);
+    gtk_grid_attach(GTK_GRID(main_grid), enable_checkbutton,
+        0, 0, 1, 1);
+    gtk_grid_attach(GTK_GRID(main_grid), grid,
+        0, 1, 1, 1);
+    gtk_container_add(GTK_CONTAINER(content_area), main_grid);
+    gtk_widget_set_size_request(dialog, 300, -1);
+    g_signal_connect(enable_checkbutton, "toggled",
+        G_CALLBACK(rc_ui_dialog_rating_limited_playing_enable_toggled_cb),
+        grid);
+    gtk_widget_show_all(content_area);
+    ret = gtk_dialog_run(GTK_DIALOG(dialog));
+    if(ret==GTK_RESPONSE_ACCEPT)
+    {
+        rclib_player_set_rating_limit(
+            gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(
+            enable_checkbutton)), gtk_spin_button_get_value(
+            GTK_SPIN_BUTTON(spin_button)), gtk_toggle_button_get_active(
+            GTK_TOGGLE_BUTTON(condition_radiobutton2)));
+    }
+    gtk_widget_destroy(dialog);
+}
+

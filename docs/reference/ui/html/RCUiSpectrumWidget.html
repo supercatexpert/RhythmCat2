@@ -7,7 +7,7 @@
 <link rel="home" href="index.html" title="RhythmCat Reference Manual">
 <link rel="up" href="ch01.html" title="API reference">
 <link rel="prev" href="RCUiScrollableLabel.html" title="RCUiScrollableLabel">
-<link rel="next" href="RhythmCat-Styles.html" title="Styles">
+<link rel="next" href="RCUiCellRendererRating.html" title="RCUiCellRendererRating">
 <meta name="generator" content="GTK-Doc V1.18 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
@@ -18,7 +18,7 @@
 <td><a accesskey="u" href="ch01.html"><img src="up.png" width="24" height="24" border="0" alt="Up"></a></td>
 <td><a accesskey="h" href="index.html"><img src="home.png" width="24" height="24" border="0" alt="Home"></a></td>
 <th width="100%" align="center">RhythmCat Reference Manual</th>
-<td><a accesskey="n" href="RhythmCat-Styles.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
+<td><a accesskey="n" href="RCUiCellRendererRating.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
 </tr>
 <tr><td colspan="5" class="shortcuts">
 <a href="#RCUiSpectrumWidget.synopsis" class="shortcut">Top</a>
@@ -49,6 +49,8 @@ struct              <a class="link" href="RCUiSpectrumWidget.html#RCUiSpectrumWi
 #define             <a class="link" href="RCUiSpectrumWidget.html#RC-UI-SPECTRUM-WIDGET-TYPE:CAPS" title="RC_UI_SPECTRUM_WIDGET_TYPE">RC_UI_SPECTRUM_WIDGET_TYPE</a>
 <span class="returnvalue">void</span>                <a class="link" href="RCUiSpectrumWidget.html#rc-ui-spectrum-widget-clean" title="rc_ui_spectrum_widget_clean ()">rc_ui_spectrum_widget_clean</a>         (<em class="parameter"><code><a class="link" href="RCUiSpectrumWidget.html" title="RCUiSpectrumWidget"><span class="type">RCUiSpectrumWidget</span></a> *spectrum</code></em>);
 <a href="/usr/share/gtk-doc/html/gtk/GtkWidget.html"><span class="returnvalue">GtkWidget</span></a> *         <a class="link" href="RCUiSpectrumWidget.html#rc-ui-spectrum-widget-new" title="rc_ui_spectrum_widget_new ()">rc_ui_spectrum_widget_new</a>           ();
+<span class="returnvalue">void</span>                <a class="link" href="RCUiSpectrumWidget.html#rc-ui-spectrum-widget-set-fps" title="rc_ui_spectrum_widget_set_fps ()">rc_ui_spectrum_widget_set_fps</a>       (<em class="parameter"><code><a class="link" href="RCUiSpectrumWidget.html" title="RCUiSpectrumWidget"><span class="type">RCUiSpectrumWidget</span></a> *spectrum</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> fps</code></em>);
 <span class="returnvalue">void</span>                <a class="link" href="RCUiSpectrumWidget.html#rc-ui-spectrum-widget-set-magnitudes" title="rc_ui_spectrum_widget_set_magnitudes ()">rc_ui_spectrum_widget_set_magnitudes</a>
                                                         (<em class="parameter"><code><a class="link" href="RCUiSpectrumWidget.html" title="RCUiSpectrumWidget"><span class="type">RCUiSpectrumWidget</span></a> *spectrum</code></em>,
                                                          <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> rate</code></em>,
@@ -131,6 +133,28 @@ Create a new <a class="link" href="RCUiSpectrumWidget.html" title="RCUiSpectrumW
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
 <td>A new <a class="link" href="RCUiSpectrumWidget.html" title="RCUiSpectrumWidget"><span class="type">RCUiSpectrumWidget</span></a> widget.</td>
 </tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rc-ui-spectrum-widget-set-fps"></a><h3>rc_ui_spectrum_widget_set_fps ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rc_ui_spectrum_widget_set_fps       (<em class="parameter"><code><a class="link" href="RCUiSpectrumWidget.html" title="RCUiSpectrumWidget"><span class="type">RCUiSpectrumWidget</span></a> *spectrum</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> fps</code></em>);</pre>
+<p>
+Set the refresh frequency of the widget.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>spectrum</code></em> :</span></p></td>
+<td>the <a class="link" href="RCUiSpectrumWidget.html" title="RCUiSpectrumWidget"><span class="type">RCUiSpectrumWidget</span></a> widget</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>fps</code></em> :</span></p></td>
+<td>the update frequency (frames per second), from 10 to 60</td>
+</tr>
+</tbody>
 </table></div>
 </div>
 <hr>

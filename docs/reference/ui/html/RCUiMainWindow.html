@@ -48,7 +48,6 @@
 
 struct              <a class="link" href="RCUiMainWindow.html#RCUiMainWindow-struct" title="struct RCUiMainWindow">RCUiMainWindow</a>;
 struct              <a class="link" href="RCUiMainWindow.html#RCUiMainWindowClass" title="struct RCUiMainWindowClass">RCUiMainWindowClass</a>;
-#define             <a class="link" href="RCUiMainWindow.html#RC-UI-MAIN-WINDOW-TYPE:CAPS" title="RC_UI_MAIN_WINDOW_TYPE">RC_UI_MAIN_WINDOW_TYPE</a>
 <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RCUiMainWindow.html#rc-ui-main-window-cover-image-get-visible" title="rc_ui_main_window_cover_image_get_visible ()">rc_ui_main_window_cover_image_get_visible</a>
                                                         ();
 <span class="returnvalue">void</span>                <a class="link" href="RCUiMainWindow.html#rc-ui-main-window-cover-image-set-visible" title="rc_ui_main_window_cover_image_set_visible ()">rc_ui_main_window_cover_image_set_visible</a>
@@ -125,12 +124,6 @@ The data structure used for <a class="link" href="RCUiMainWindow.html" title="RC
 </div>
 <hr>
 <div class="refsect2">
-<a name="RC-UI-MAIN-WINDOW-TYPE:CAPS"></a><h3>RC_UI_MAIN_WINDOW_TYPE</h3>
-<pre class="programlisting">#define RC_UI_MAIN_WINDOW_TYPE (rc_ui_main_window_get_type())
-</pre>
-</div>
-<hr>
-<div class="refsect2">
 <a name="rc-ui-main-window-cover-image-get-visible"></a><h3>rc_ui_main_window_cover_image_get_visible ()</h3>
 <pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rc_ui_main_window_cover_image_get_visible
                                                         ();</pre>
@@ -173,7 +166,8 @@ Get the default cover image of the player.
 <col align="left" valign="top">
 <tbody><tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>The default cover image.</td>
+<td>The default cover image. <span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span>
+</td>
 </tr></tbody>
 </table></div>
 </div>
@@ -189,7 +183,8 @@ yet, it will be initialized.
 <col align="left" valign="top">
 <tbody><tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>The main window widget.</td>
+<td>The main window widget. <span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span>
+</td>
 </tr></tbody>
 </table></div>
 </div>

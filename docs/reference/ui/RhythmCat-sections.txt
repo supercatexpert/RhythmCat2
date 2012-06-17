@@ -3,7 +3,6 @@
 <TITLE>RCMainApplication</TITLE>
 RCMainApplication
 RCMainApplicationClass
-RC_MAIN_APPLICATION_TYPE
 rc_main_exit
 rc_main_get_data_dir
 rc_main_get_user_dir
@@ -14,7 +13,24 @@ RC_IS_MAIN_APPLICATION_CLASS
 RC_MAIN_APPLICATION
 RC_MAIN_APPLICATION_CLASS
 RC_MAIN_APPLICATION_GET_CLASS
+RC_TYPE_MAIN_APPLICATION
 rc_main_application_get_type
+</SECTION>
+
+<SECTION>
+<FILE>rc-ui-cell-renderer-rating</FILE>
+<TITLE>RCUiCellRendererRating</TITLE>
+RCUiCellRendererRating
+RCUiCellRendererRatingClass
+rc_ui_cell_renderer_rating_new
+<SUBSECTION Standard>
+RC_UI_CELL_RENDERER_RATING
+RC_UI_CELL_RENDERER_RATING_CLASS
+RC_UI_CELL_RENDERER_RATING_GET_CLASS
+RC_UI_IS_CELL_RENDERER_RATING
+RC_UI_IS_CELL_RENDERER_RATING_CLASS
+RC_UI_TYPE_CELL_RENDERER_RATING
+rc_ui_cell_renderer_rating_get_type
 </SECTION>
 
 <SECTION>
@@ -27,6 +43,7 @@ rc_ui_dialog_bind_lyric
 rc_ui_dialog_load_playlist
 rc_ui_dialog_open_location
 rc_ui_dialog_open_music
+rc_ui_dialog_rating_limited_playing
 rc_ui_dialog_save_album
 rc_ui_dialog_save_all_playlist
 rc_ui_dialog_save_playlist
@@ -130,11 +147,15 @@ rc_ui_menu_remove_menu_action
 </SECTION>
 
 <SECTION>
+<FILE>rc-ui-no-star-inline</FILE>
+
+</SECTION>
+
+<SECTION>
 <FILE>rc-ui-player</FILE>
 <TITLE>RCUiPlayer</TITLE>
 RCUiPlayer
 RCUiPlayerClass
-RC_UI_PLAYER_TYPE
 rc_ui_player_exit
 rc_ui_player_get_icon_image
 rc_ui_player_get_instance
@@ -149,6 +170,7 @@ RC_UI_IS_PLAYER_CLASS
 RC_UI_PLAYER
 RC_UI_PLAYER_CLASS
 RC_UI_PLAYER_GET_CLASS
+RC_UI_TYPE_PLAYER
 rc_ui_player_get_type
 </SECTION>
 
@@ -156,6 +178,11 @@ rc_ui_player_get_type
 <FILE>rc-ui-plugin</FILE>
 rc_ui_plugin_window_destroy
 rc_ui_plugin_window_show
+</SECTION>
+
+<SECTION>
+<FILE>rc-ui-set-star-inline</FILE>
+
 </SECTION>
 
 <SECTION>
@@ -169,7 +196,6 @@ rc_ui_settings_window_show
 <TITLE>RCUiScrollableLabel</TITLE>
 RCUiScrollableLabel
 RCUiScrollableLabelClass
-RC_UI_SCROLLABLE_LABEL_TYPE
 rc_ui_scrollable_label_get_attributes
 rc_ui_scrollable_label_get_percent
 rc_ui_scrollable_label_get_text
@@ -179,10 +205,11 @@ rc_ui_scrollable_label_set_attributes
 rc_ui_scrollable_label_set_percent
 rc_ui_scrollable_label_set_text
 <SUBSECTION Standard>
-IS_RC_UI_SCROLLABLE_LABEL
-IS_RC_UI_SCROLLABLE_LABEL_CLASS
+RC_UI_IS_SCROLLABLE_LABEL
+RC_UI_IS_SCROLLABLE_LABEL_CLASS
 RC_UI_SCROLLABLE_LABEL
 RC_UI_SCROLLABLE_LABEL_CLASS
+RC_UI_TYPE_SCROLLABLE_LABEL
 rc_ui_scrollable_label_get_type
 </SECTION>
 
@@ -194,6 +221,7 @@ RCUiSpectrumWidgetClass
 RC_UI_SPECTRUM_WIDGET_TYPE
 rc_ui_spectrum_widget_clean
 rc_ui_spectrum_widget_new
+rc_ui_spectrum_widget_set_fps
 rc_ui_spectrum_widget_set_magnitudes
 <SUBSECTION Standard>
 IS_RC_UI_SPECTRUM_WIDGET
@@ -218,11 +246,15 @@ rc_ui_style_search_theme_paths
 </SECTION>
 
 <SECTION>
+<FILE>rc-ui-unset-star-inline</FILE>
+
+</SECTION>
+
+<SECTION>
 <FILE>rc-ui-window</FILE>
 <TITLE>RCUiMainWindow</TITLE>
 RCUiMainWindow
 RCUiMainWindowClass
-RC_UI_MAIN_WINDOW_TYPE
 rc_ui_main_window_cover_image_get_visible
 rc_ui_main_window_cover_image_set_visible
 rc_ui_main_window_get_default_cover_image
@@ -241,6 +273,7 @@ RC_UI_IS_MAIN_WINDOW_CLASS
 RC_UI_MAIN_WINDOW
 RC_UI_MAIN_WINDOW_CLASS
 RC_UI_MAIN_WINDOW_GET_CLASS
+RC_UI_TYPE_MAIN_WINDOW
 rc_ui_main_window_get_type
 </SECTION>
 

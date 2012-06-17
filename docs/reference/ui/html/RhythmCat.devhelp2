@@ -15,6 +15,7 @@
       <sub name="Settings UI" link="RhythmCat-Settings-UI.html"/>
       <sub name="RCUiScrollableLabel" link="RCUiScrollableLabel.html"/>
       <sub name="RCUiSpectrumWidget" link="RCUiSpectrumWidget.html"/>
+      <sub name="RCUiCellRendererRating" link="RCUiCellRendererRating.html"/>
       <sub name="Styles" link="RhythmCat-Styles.html"/>
     </sub>
     <sub name="Object Hierarchy" link="object-tree.html"/>
@@ -25,14 +26,12 @@
   <functions>
     <keyword type="struct" name="struct RCMainApplication" link="RCMainApplication.html#RCMainApplication-struct"/>
     <keyword type="struct" name="struct RCMainApplicationClass" link="RCMainApplication.html#RCMainApplicationClass"/>
-    <keyword type="macro" name="RC_MAIN_APPLICATION_TYPE" link="RCMainApplication.html#RC-MAIN-APPLICATION-TYPE:CAPS"/>
     <keyword type="function" name="rc_main_exit ()" link="RCMainApplication.html#rc-main-exit"/>
     <keyword type="function" name="rc_main_get_data_dir ()" link="RCMainApplication.html#rc-main-get-data-dir"/>
     <keyword type="function" name="rc_main_get_user_dir ()" link="RCMainApplication.html#rc-main-get-user-dir"/>
     <keyword type="function" name="rc_main_run ()" link="RCMainApplication.html#rc-main-run"/>
     <keyword type="struct" name="struct RCUiMainWindow" link="RCUiMainWindow.html#RCUiMainWindow-struct"/>
     <keyword type="struct" name="struct RCUiMainWindowClass" link="RCUiMainWindow.html#RCUiMainWindowClass"/>
-    <keyword type="macro" name="RC_UI_MAIN_WINDOW_TYPE" link="RCUiMainWindow.html#RC-UI-MAIN-WINDOW-TYPE:CAPS"/>
     <keyword type="function" name="rc_ui_main_window_cover_image_get_visible ()" link="RCUiMainWindow.html#rc-ui-main-window-cover-image-get-visible"/>
     <keyword type="function" name="rc_ui_main_window_cover_image_set_visible ()" link="RCUiMainWindow.html#rc-ui-main-window-cover-image-set-visible"/>
     <keyword type="function" name="rc_ui_main_window_get_default_cover_image ()" link="RCUiMainWindow.html#rc-ui-main-window-get-default-cover-image"/>
@@ -54,6 +53,7 @@
     <keyword type="function" name="rc_ui_dialog_load_playlist ()" link="RhythmCat-Dialogs.html#rc-ui-dialog-load-playlist"/>
     <keyword type="function" name="rc_ui_dialog_open_location ()" link="RhythmCat-Dialogs.html#rc-ui-dialog-open-location"/>
     <keyword type="function" name="rc_ui_dialog_open_music ()" link="RhythmCat-Dialogs.html#rc-ui-dialog-open-music"/>
+    <keyword type="function" name="rc_ui_dialog_rating_limited_playing ()" link="RhythmCat-Dialogs.html#rc-ui-dialog-rating-limited-playing"/>
     <keyword type="function" name="rc_ui_dialog_save_album ()" link="RhythmCat-Dialogs.html#rc-ui-dialog-save-album"/>
     <keyword type="function" name="rc_ui_dialog_save_all_playlist ()" link="RhythmCat-Dialogs.html#rc-ui-dialog-save-all-playlist"/>
     <keyword type="function" name="rc_ui_dialog_save_playlist ()" link="RhythmCat-Dialogs.html#rc-ui-dialog-save-playlist"/>
@@ -106,7 +106,6 @@
     <keyword type="function" name="rc_ui_menu_remove_menu_action ()" link="RhythmCat-Menus.html#rc-ui-menu-remove-menu-action"/>
     <keyword type="struct" name="struct RCUiPlayer" link="RCUiPlayer.html#RCUiPlayer-struct"/>
     <keyword type="struct" name="struct RCUiPlayerClass" link="RCUiPlayer.html#RCUiPlayerClass"/>
-    <keyword type="macro" name="RC_UI_PLAYER_TYPE" link="RCUiPlayer.html#RC-UI-PLAYER-TYPE:CAPS"/>
     <keyword type="function" name="rc_ui_player_exit ()" link="RCUiPlayer.html#rc-ui-player-exit"/>
     <keyword type="function" name="rc_ui_player_get_icon_image ()" link="RCUiPlayer.html#rc-ui-player-get-icon-image"/>
     <keyword type="function" name="rc_ui_player_get_instance ()" link="RCUiPlayer.html#rc-ui-player-get-instance"/>
@@ -122,7 +121,6 @@
     <keyword type="function" name="rc_ui_settings_window_show ()" link="RhythmCat-Settings-UI.html#rc-ui-settings-window-show"/>
     <keyword type="struct" name="struct RCUiScrollableLabel" link="RCUiScrollableLabel.html#RCUiScrollableLabel-struct"/>
     <keyword type="struct" name="struct RCUiScrollableLabelClass" link="RCUiScrollableLabel.html#RCUiScrollableLabelClass"/>
-    <keyword type="macro" name="RC_UI_SCROLLABLE_LABEL_TYPE" link="RCUiScrollableLabel.html#RC-UI-SCROLLABLE-LABEL-TYPE:CAPS"/>
     <keyword type="function" name="rc_ui_scrollable_label_get_attributes ()" link="RCUiScrollableLabel.html#rc-ui-scrollable-label-get-attributes"/>
     <keyword type="function" name="rc_ui_scrollable_label_get_percent ()" link="RCUiScrollableLabel.html#rc-ui-scrollable-label-get-percent"/>
     <keyword type="function" name="rc_ui_scrollable_label_get_text ()" link="RCUiScrollableLabel.html#rc-ui-scrollable-label-get-text"/>
@@ -139,7 +137,13 @@
     <keyword type="macro" name="RC_UI_SPECTRUM_WIDGET_TYPE" link="RCUiSpectrumWidget.html#RC-UI-SPECTRUM-WIDGET-TYPE:CAPS"/>
     <keyword type="function" name="rc_ui_spectrum_widget_clean ()" link="RCUiSpectrumWidget.html#rc-ui-spectrum-widget-clean"/>
     <keyword type="function" name="rc_ui_spectrum_widget_new ()" link="RCUiSpectrumWidget.html#rc-ui-spectrum-widget-new"/>
+    <keyword type="function" name="rc_ui_spectrum_widget_set_fps ()" link="RCUiSpectrumWidget.html#rc-ui-spectrum-widget-set-fps"/>
     <keyword type="function" name="rc_ui_spectrum_widget_set_magnitudes ()" link="RCUiSpectrumWidget.html#rc-ui-spectrum-widget-set-magnitudes"/>
+    <keyword type="struct" name="struct RCUiCellRendererRating" link="RCUiCellRendererRating.html#RCUiCellRendererRating-struct"/>
+    <keyword type="struct" name="struct RCUiCellRendererRatingClass" link="RCUiCellRendererRating.html#RCUiCellRendererRatingClass"/>
+    <keyword type="function" name="rc_ui_cell_renderer_rating_new ()" link="RCUiCellRendererRating.html#rc-ui-cell-renderer-rating-new"/>
+    <keyword type="property" name="The &quot;rating&quot; property" link="RCUiCellRendererRating.html#RCUiCellRendererRating--rating"/>
+    <keyword type="signal" name="The &quot;rated&quot; signal" link="RCUiCellRendererRating.html#RCUiCellRendererRating-rated"/>
     <keyword type="function" name="rc_ui_style_css_set_data ()" link="RhythmCat-Styles.html#rc-ui-style-css-set-data"/>
     <keyword type="function" name="rc_ui_style_css_set_file ()" link="RhythmCat-Styles.html#rc-ui-style-css-set-file"/>
     <keyword type="function" name="rc_ui_style_css_set_resource ()" link="RhythmCat-Styles.html#rc-ui-style-css-set-resource"/>
@@ -173,5 +177,6 @@
     <keyword type="constant" name="RC_UI_LISTVIEW_PLAYLIST_COLUMN_TRACK" link="RCUiPlaylistView.html#RC-UI-LISTVIEW-PLAYLIST-COLUMN-TRACK:CAPS"/>
     <keyword type="constant" name="RC_UI_LISTVIEW_PLAYLIST_COLUMN_YEAR" link="RCUiPlaylistView.html#RC-UI-LISTVIEW-PLAYLIST-COLUMN-YEAR:CAPS"/>
     <keyword type="constant" name="RC_UI_LISTVIEW_PLAYLIST_COLUMN_FTYPE" link="RCUiPlaylistView.html#RC-UI-LISTVIEW-PLAYLIST-COLUMN-FTYPE:CAPS"/>
+    <keyword type="constant" name="RC_UI_LISTVIEW_PLAYLIST_COLUMN_RATING" link="RCUiPlaylistView.html#RC-UI-LISTVIEW-PLAYLIST-COLUMN-RATING:CAPS"/>
   </functions>
 </book>

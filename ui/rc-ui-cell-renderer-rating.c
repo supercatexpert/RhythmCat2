@@ -348,7 +348,7 @@ static void rc_ui_cell_renderer_rating_class_init(
         
     /**
      * RCUiCellRendererRating::rated:
-     * @renderer: the #RBCellRendererRating
+     * @renderer: the #RCUiCellRendererRating
      * @score: the new rating
      * @path: string form of the #GtkTreePath to the row that was changed
      *

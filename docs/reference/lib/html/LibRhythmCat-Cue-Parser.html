@@ -226,11 +226,13 @@ path "/home/test/1.cue", and track number 1.
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>cue_path</code></em> :</span></p></td>
-<td>the file path or URI of the CUE file</td>
+<td>the file path or URI of the CUE file. <span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>][<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span>
+</td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>track_num</code></em> :</span></p></td>
-<td>the track number</td>
+<td>the track number. <span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>][<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span>
+</td>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
@@ -261,7 +263,8 @@ Read and parse data from CUE file or string.
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>data</code></em> :</span></p></td>
-<td>the parsed CUE data</td>
+<td>the parsed CUE data. <span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>]</span>
+</td>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>

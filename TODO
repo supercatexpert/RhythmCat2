@@ -1,6 +1,4 @@
 - Bug Report Interface
-- Rating support (Configuration UI)
-- Accel key bindings
 
 Long-term:
 - Command Line Interface (CLI), based on ncurses

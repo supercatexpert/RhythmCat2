@@ -4,7 +4,7 @@
 AC_CONFIG_MACRO_DIR(m4)
 m4_define([rc_major_version], [1])
 m4_define([rc_minor_version], [9])
-m4_define([rc_micro_version], [3])
+m4_define([rc_micro_version], [4])
 m4_define([rc_version], [rc_major_version.rc_minor_version.rc_micro_version])
 
 AC_PREREQ([2.61])

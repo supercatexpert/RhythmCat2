@@ -120,6 +120,9 @@ gboolean rclib_settings_init()
         RCLIB_PLAYER_RANDOM_NONE);
     rclib_settings_set_double("Player", "Volume", 1.0);
     rclib_settings_set_boolean("Player", "AutoPlayWhenStartup", FALSE);
+    rclib_settings_set_boolean("Player", "RatingLimitEnabled", FALSE);
+    rclib_settings_set_boolean("Player", "RatingLimitCondition", FALSE);
+    rclib_settings_set_double("Player", "RatingLimitValue", 3.0);
     rclib_settings_set_boolean("Player", "LoadLastPosition", FALSE);
     rclib_settings_set_integer("Player", "LastPlayedCatalog", 0);
     rclib_settings_set_integer("Player", "LastPlayedMusic", 0);
@@ -188,6 +191,7 @@ void rclib_settings_apply()
     gdouble *darray;
     gsize size;
     gchar *encoding, *id3_encoding;
+    gboolean bvalue2;
     ivalue = rclib_settings_get_integer("Player", "RepeatMode", &error);
     if(error==NULL)
     {
@@ -216,6 +220,19 @@ void rclib_settings_apply()
         g_error_free(error);
         error = NULL;
     }
+    bvalue = rclib_settings_get_boolean("Player", "RatingLimitEnabled",
+        NULL);
+    dvalue = rclib_settings_get_double("Player", "RatingLimitValue",
+        &error);
+    if(error!=NULL)
+    {
+        g_error_free(error);
+        error = NULL;
+        dvalue = 3.0;
+    }
+    bvalue2 = rclib_settings_get_boolean("Player", "RatingLimitCondition",
+        NULL);
+    rclib_player_set_rating_limit(bvalue, dvalue, bvalue2);
     ivalue = rclib_settings_get_integer("SoundEffect", "EQStyle", &error);
     if(error==NULL)
     {
@@ -296,12 +313,17 @@ void rclib_settings_update()
     gdouble dvalue;
     gdouble eq_array[10] = {0.0};
     gfloat fvalue;
+    gboolean bvalue, bvalue2;
     GSequenceIter *db_reference;
     RCLibDbPlaylistData *playlist_data;
     ivalue = rclib_player_get_repeat_mode();
     rclib_settings_set_integer("Player", "RepeatMode", ivalue);
     ivalue = rclib_player_get_random_mode();
     rclib_settings_set_integer("Player", "RandomMode", ivalue);
+    bvalue = rclib_player_get_rating_limit(&fvalue, &bvalue2);
+    rclib_settings_set_boolean("Player", "RatingLimitEnabled", bvalue);
+    rclib_settings_set_boolean("Player", "RatingLimitCondition", bvalue2);
+    rclib_settings_set_double("Player", "RatingLimitValue", fvalue);
     if(rclib_core_get_volume(&dvalue))
         rclib_settings_set_double("Player", "Volume", dvalue);
     if(rclib_core_get_eq((RCLibCoreEQType *)&ivalue, eq_array))

@@ -46,7 +46,6 @@
 
 struct              <a class="link" href="RCUiPlayer.html#RCUiPlayer-struct" title="struct RCUiPlayer">RCUiPlayer</a>;
 struct              <a class="link" href="RCUiPlayer.html#RCUiPlayerClass" title="struct RCUiPlayerClass">RCUiPlayerClass</a>;
-#define             <a class="link" href="RCUiPlayer.html#RC-UI-PLAYER-TYPE:CAPS" title="RC_UI_PLAYER_TYPE">RC_UI_PLAYER_TYPE</a>
 <span class="returnvalue">void</span>                <a class="link" href="RCUiPlayer.html#rc-ui-player-exit" title="rc_ui_player_exit ()">rc_ui_player_exit</a>                   ();
 <a href="/usr/share/gtk-doc/html/gdk-pixbuf/gdk-pixbuf-The-GdkPixbuf-Structure.html#GdkPixbuf"><span class="returnvalue">GdkPixbuf</span></a> *         <a class="link" href="RCUiPlayer.html#rc-ui-player-get-icon-image" title="rc_ui_player_get_icon_image ()">rc_ui_player_get_icon_image</a>         ();
 <a href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GObject"><span class="returnvalue">GObject</span></a> *           <a class="link" href="RCUiPlayer.html#rc-ui-player-get-instance" title="rc_ui_player_get_instance ()">rc_ui_player_get_instance</a>           ();
@@ -100,12 +99,6 @@ The data structure used for <a class="link" href="RCUiPlayer.html" title="Main U
 </div>
 <hr>
 <div class="refsect2">
-<a name="RC-UI-PLAYER-TYPE:CAPS"></a><h3>RC_UI_PLAYER_TYPE</h3>
-<pre class="programlisting">#define RC_UI_PLAYER_TYPE (rc_ui_player_get_type())
-</pre>
-</div>
-<hr>
-<div class="refsect2">
 <a name="rc-ui-player-exit"></a><h3>rc_ui_player_exit ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>                rc_ui_player_exit                   ();</pre>
 <p>
@@ -123,7 +116,8 @@ Get the icon image of this player.
 <col align="left" valign="top">
 <tbody><tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>The icon image of this player.</td>
+<td>The icon image of this player. <span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span>
+</td>
 </tr></tbody>
 </table></div>
 </div>
@@ -138,7 +132,8 @@ Get the running <a class="link" href="RCUiPlayer.html" title="Main UI"><span cla
 <col align="left" valign="top">
 <tbody><tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>The running instance.</td>
+<td>The running instance. <span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span>
+</td>
 </tr></tbody>
 </table></div>
 </div>
@@ -153,7 +148,8 @@ Get the main window of this player.
 <col align="left" valign="top">
 <tbody><tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>The main window.</td>
+<td>The main window. <span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span>
+</td>
 </tr></tbody>
 </table></div>
 </div>
@@ -168,7 +164,8 @@ Get the tray icon of this player.
 <col align="left" valign="top">
 <tbody><tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>The tray icon.</td>
+<td>The tray icon. <span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span>
+</td>
 </tr></tbody>
 </table></div>
 </div>
@@ -206,7 +203,8 @@ instance of <a class="link" href="RCUiPlayer.html" title="Main UI"><span class="
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>callback</code></em> :</span></p></td>
-<td>the the <a href="/usr/share/gtk-doc/html/gobject/gobject-Closures.html#GCallback"><span class="type">GCallback</span></a> to connect</td>
+<td>the the <a href="/usr/share/gtk-doc/html/gobject/gobject-Closures.html#GCallback"><span class="type">GCallback</span></a> to connect. <span class="annotation">[<acronym title="The callback is valid only during the call to the method."><span class="acronym">scope call</span></acronym>]</span>
+</td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>data</code></em> :</span></p></td>

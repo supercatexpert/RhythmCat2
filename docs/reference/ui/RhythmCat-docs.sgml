@@ -8,7 +8,7 @@
   <bookinfo>
     <title>RhythmCat Reference Manual</title>
     <releaseinfo>
-      for RhythmCat 1.9.3.
+      for RhythmCat 1.9.4.
       The latest version of this documentation can be found on-line at
       <ulink role="online-location" url="https://github.com/supercatexpert/RhythmCat2/">https://github.com/supercatexpert/RhythmCat2/</ulink>.
     </releaseinfo>
@@ -28,6 +28,7 @@
     <xi:include href="xml/rc-ui-settings.xml"/>
     <xi:include href="xml/rc-ui-slabel.xml"/>
     <xi:include href="xml/rc-ui-spectrum.xml"/>
+    <xi:include href="xml/rc-ui-cell-renderer-rating.xml"/>
     <xi:include href="xml/rc-ui-style.xml"/>
 
   </chapter>

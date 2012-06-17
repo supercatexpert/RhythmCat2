@@ -286,6 +286,10 @@ static GtkActionEntry ui_menu_entries[] =
       N_("_Decrease Volume"), "<control>Down",
       N_("Decrease the volume"),
       G_CALLBACK(rc_ui_menu_vol_down_clicked_cb) },
+    { "ControlRatingLimited", NULL,
+      N_("_Configure Rating Limited Mode"), NULL,
+      N_("Configure Rating Limited Playing Mode"),
+      G_CALLBACK(rc_ui_dialog_rating_limited_playing) },
     { "HelpAbout", GTK_STOCK_ABOUT,
       N_("_About"), NULL,
       N_("About this player"),
@@ -298,10 +302,6 @@ static GtkActionEntry ui_menu_entries[] =
       N_("_Supported Format"), NULL,
       N_("Check the supported music format of this player"),
       G_CALLBACK(rc_ui_dialog_show_supported_format) },
-    { "HelpLoadLegacyPlaylist", NULL,  
-      N_("Load Playlist from _Legacy Version"), NULL,
-      N_("Load playlist data from legacy version of this player"),
-      G_CALLBACK(rc_ui_dialog_show_load_legacy) },
     { "CatalogNewList", GTK_STOCK_NEW,
       N_("_New Playlist"), NULL,
       N_("Create a new playlist"),
@@ -500,6 +500,8 @@ static const gchar *ui_menu_info =
     "        <menuitem action='RandomSingleRandom'/>"
     "        <menuitem action='RandomAllRandom'/>"
     "      </menu>"
+    "      <separator name='ControlSep3'/>"
+    "      <menuitem action='ControlRatingLimited'/>"
     "    </menu>"
     "    <menu action='ViewMenu'>"
     "      <menuitem action='ViewEffect'/>"
@@ -511,7 +513,6 @@ static const gchar *ui_menu_info =
     "      <menuitem action='HelpReport'/>"
     "      <menuitem action='HelpAbout'/>"
     "      <menuitem action='HelpSupportedFormat'/>"
-    "      <menuitem action='HelpLoadLegacyPlaylist'/>"
     "    </menu>"
     "  </menubar>"
     "  <popup action='CatalogPopupMenu'>"

@@ -28,7 +28,6 @@
     <keyword type="variable" name="rclib_major_version" link="LibRhythmCat-Main-Module.html#rclib-major-version"/>
     <keyword type="variable" name="rclib_micro_version" link="LibRhythmCat-Main-Module.html#rclib-micro-version"/>
     <keyword type="variable" name="rclib_minor_version" link="LibRhythmCat-Main-Module.html#rclib-minor-version"/>
-    <keyword type="macro" name="RCLIB_ALBUM_TYPE" link="RCLibAlbum.html#RCLIB-ALBUM-TYPE:CAPS"/>
     <keyword type="struct" name="struct RCLibAlbum" link="RCLibAlbum.html#RCLibAlbum-struct"/>
     <keyword type="struct" name="struct RCLibAlbumClass" link="RCLibAlbum.html#RCLibAlbumClass"/>
     <keyword type="enum" name="enum RCLibAlbumType" link="RCLibAlbum.html#RCLibAlbumType"/>
@@ -41,7 +40,6 @@
     <keyword type="function" name="rclib_album_signal_disconnect ()" link="RCLibAlbum.html#rclib-album-signal-disconnect"/>
     <keyword type="signal" name="The &quot;album-found&quot; signal" link="RCLibAlbum.html#RCLibAlbum-album-found"/>
     <keyword type="signal" name="The &quot;album-none&quot; signal" link="RCLibAlbum.html#RCLibAlbum-album-none"/>
-    <keyword type="macro" name="RCLIB_CORE_TYPE" link="RCLibCore.html#RCLIB-CORE-TYPE:CAPS"/>
     <keyword type="struct" name="struct RCLibCore" link="RCLibCore.html#RCLibCore-struct"/>
     <keyword type="struct" name="struct RCLibCoreClass" link="RCLibCore.html#RCLibCoreClass"/>
     <keyword type="enum" name="enum RCLibCoreEQType" link="RCLibCore.html#RCLibCoreEQType"/>
@@ -66,12 +64,16 @@
     <keyword type="function" name="rclib_core_init ()" link="RCLibCore.html#rclib-core-init"/>
     <keyword type="function" name="rclib_core_pause ()" link="RCLibCore.html#rclib-core-pause"/>
     <keyword type="function" name="rclib_core_play ()" link="RCLibCore.html#rclib-core-play"/>
+    <keyword type="function" name="rclib_core_query_buffering_percent ()" link="RCLibCore.html#rclib-core-query-buffering-percent"/>
+    <keyword type="function" name="rclib_core_query_buffering_range ()" link="RCLibCore.html#rclib-core-query-buffering-range"/>
     <keyword type="function" name="rclib_core_query_duration ()" link="RCLibCore.html#rclib-core-query-duration"/>
     <keyword type="function" name="rclib_core_query_position ()" link="RCLibCore.html#rclib-core-query-position"/>
     <keyword type="function" name="rclib_core_set_balance ()" link="RCLibCore.html#rclib-core-set-balance"/>
     <keyword type="function" name="rclib_core_set_eq ()" link="RCLibCore.html#rclib-core-set-eq"/>
     <keyword type="function" name="rclib_core_set_position ()" link="RCLibCore.html#rclib-core-set-position"/>
     <keyword type="function" name="rclib_core_set_uri ()" link="RCLibCore.html#rclib-core-set-uri"/>
+    <keyword type="function" name="rclib_core_set_uri_with_db_ref ()" link="RCLibCore.html#rclib-core-set-uri-with-db-ref"/>
+    <keyword type="function" name="rclib_core_set_uri_with_ext_ref ()" link="RCLibCore.html#rclib-core-set-uri-with-ext-ref"/>
     <keyword type="function" name="rclib_core_set_volume ()" link="RCLibCore.html#rclib-core-set-volume"/>
     <keyword type="function" name="rclib_core_signal_connect ()" link="RCLibCore.html#rclib-core-signal-connect"/>
     <keyword type="function" name="rclib_core_signal_disconnect ()" link="RCLibCore.html#rclib-core-signal-disconnect"/>
@@ -79,6 +81,7 @@
     <keyword type="function" name="rclib_core_update_db_reference ()" link="RCLibCore.html#rclib-core-update-db-reference"/>
     <keyword type="function" name="rclib_core_update_external_reference ()" link="RCLibCore.html#rclib-core-update-external-reference"/>
     <keyword type="signal" name="The &quot;balance-changed&quot; signal" link="RCLibCore.html#RCLibCore-balance-changed"/>
+    <keyword type="signal" name="The &quot;buffering&quot; signal" link="RCLibCore.html#RCLibCore-buffering"/>
     <keyword type="signal" name="The &quot;eos&quot; signal" link="RCLibCore.html#RCLibCore-eos"/>
     <keyword type="signal" name="The &quot;eq-changed&quot; signal" link="RCLibCore.html#RCLibCore-eq-changed"/>
     <keyword type="signal" name="The &quot;error&quot; signal" link="RCLibCore.html#RCLibCore-error"/>
@@ -96,12 +99,11 @@
     <keyword type="function" name="rclib_cue_get_track_num ()" link="LibRhythmCat-Cue-Parser.html#rclib-cue-get-track-num"/>
     <keyword type="function" name="rclib_cue_read_data ()" link="LibRhythmCat-Cue-Parser.html#rclib-cue-read-data"/>
     <keyword type="function" name="rclib_cue_set_fallback_encoding ()" link="LibRhythmCat-Cue-Parser.html#rclib-cue-set-fallback-encoding"/>
-    <keyword type="macro" name="RCLIB_DB_TYPE" link="RCLibDb.html#RCLIB-DB-TYPE:CAPS"/>
     <keyword type="struct" name="struct RCLibDb" link="RCLibDb.html#RCLibDb-struct"/>
-    <keyword type="struct" name="struct RCLibDbCatalogData" link="RCLibDb.html#RCLibDbCatalogData"/>
+    <keyword type="struct" name="struct RCLibDbCatalogData" link="RCLibDb.html#RCLibDbCatalogData-struct"/>
     <keyword type="enum" name="enum RCLibDbCatalogType" link="RCLibDb.html#RCLibDbCatalogType"/>
     <keyword type="struct" name="struct RCLibDbClass" link="RCLibDb.html#RCLibDbClass"/>
-    <keyword type="struct" name="struct RCLibDbPlaylistData" link="RCLibDb.html#RCLibDbPlaylistData"/>
+    <keyword type="struct" name="struct RCLibDbPlaylistData" link="RCLibDb.html#RCLibDbPlaylistData-struct"/>
     <keyword type="enum" name="enum RCLibDbPlaylistType" link="RCLibDb.html#RCLibDbPlaylistType"/>
     <keyword type="function" name="rclib_db_autosaved_exist ()" link="RCLibDb.html#rclib-db-autosaved-exist"/>
     <keyword type="function" name="rclib_db_autosaved_remove ()" link="RCLibDb.html#rclib-db-autosaved-remove"/>
@@ -134,6 +136,7 @@
     <keyword type="function" name="rclib_db_playlist_get_album_bind ()" link="RCLibDb.html#rclib-db-playlist-get-album-bind"/>
     <keyword type="function" name="rclib_db_playlist_get_lyric_bind ()" link="RCLibDb.html#rclib-db-playlist-get-lyric-bind"/>
     <keyword type="function" name="rclib_db_playlist_get_lyric_secondary_bind ()" link="RCLibDb.html#rclib-db-playlist-get-lyric-secondary-bind"/>
+    <keyword type="function" name="rclib_db_playlist_get_rating ()" link="RCLibDb.html#rclib-db-playlist-get-rating"/>
     <keyword type="function" name="rclib_db_playlist_import_cancel ()" link="RCLibDb.html#rclib-db-playlist-import-cancel"/>
     <keyword type="function" name="rclib_db_playlist_import_queue_get_length ()" link="RCLibDb.html#rclib-db-playlist-import-queue-get-length"/>
     <keyword type="function" name="rclib_db_playlist_move_to_another_catalog ()" link="RCLibDb.html#rclib-db-playlist-move-to-another-catalog"/>
@@ -161,7 +164,6 @@
     <keyword type="signal" name="The &quot;playlist-delete&quot; signal" link="RCLibDb.html#RCLibDb-playlist-delete"/>
     <keyword type="signal" name="The &quot;playlist-reordered&quot; signal" link="RCLibDb.html#RCLibDb-playlist-reordered"/>
     <keyword type="signal" name="The &quot;refresh-updated&quot; signal" link="RCLibDb.html#RCLibDb-refresh-updated"/>
-    <keyword type="macro" name="RCLIB_LYRIC_TYPE" link="RCLibLyric.html#RCLIB-LYRIC-TYPE:CAPS"/>
     <keyword type="struct" name="struct RCLibLyric" link="RCLibLyric.html#RCLibLyric-struct"/>
     <keyword type="struct" name="struct RCLibLyricClass" link="RCLibLyric.html#RCLibLyricClass"/>
     <keyword type="struct" name="struct RCLibLyricData" link="RCLibLyric.html#RCLibLyricData"/>
@@ -187,7 +189,6 @@
     <keyword type="signal" name="The &quot;lyric-may-missing&quot; signal" link="RCLibLyric.html#RCLibLyric-lyric-may-missing"/>
     <keyword type="signal" name="The &quot;lyric-ready&quot; signal" link="RCLibLyric.html#RCLibLyric-lyric-ready"/>
     <keyword type="signal" name="The &quot;lyric-timer&quot; signal" link="RCLibLyric.html#RCLibLyric-lyric-timer"/>
-    <keyword type="macro" name="RCLIB_PLAYER_TYPE" link="RCLibPlayer.html#RCLIB-PLAYER-TYPE:CAPS"/>
     <keyword type="struct" name="struct RCLibPlayer" link="RCLibPlayer.html#RCLibPlayer-struct"/>
     <keyword type="struct" name="struct RCLibPlayerClass" link="RCLibPlayer.html#RCLibPlayerClass"/>
     <keyword type="enum" name="enum RCLibPlayerRandomMode" link="RCLibPlayer.html#RCLibPlayerRandomMode"/>
@@ -195,6 +196,7 @@
     <keyword type="function" name="rclib_player_exit ()" link="RCLibPlayer.html#rclib-player-exit"/>
     <keyword type="function" name="rclib_player_get_instance ()" link="RCLibPlayer.html#rclib-player-get-instance"/>
     <keyword type="function" name="rclib_player_get_random_mode ()" link="RCLibPlayer.html#rclib-player-get-random-mode"/>
+    <keyword type="function" name="rclib_player_get_rating_limit ()" link="RCLibPlayer.html#rclib-player-get-rating-limit"/>
     <keyword type="function" name="rclib_player_get_repeat_mode ()" link="RCLibPlayer.html#rclib-player-get-repeat-mode"/>
     <keyword type="function" name="rclib_player_init ()" link="RCLibPlayer.html#rclib-player-init"/>
     <keyword type="function" name="rclib_player_play_db ()" link="RCLibPlayer.html#rclib-player-play-db"/>
@@ -202,6 +204,7 @@
     <keyword type="function" name="rclib_player_play_prev ()" link="RCLibPlayer.html#rclib-player-play-prev"/>
     <keyword type="function" name="rclib_player_play_uri ()" link="RCLibPlayer.html#rclib-player-play-uri"/>
     <keyword type="function" name="rclib_player_set_random_mode ()" link="RCLibPlayer.html#rclib-player-set-random-mode"/>
+    <keyword type="function" name="rclib_player_set_rating_limit ()" link="RCLibPlayer.html#rclib-player-set-rating-limit"/>
     <keyword type="function" name="rclib_player_set_repeat_mode ()" link="RCLibPlayer.html#rclib-player-set-repeat-mode"/>
     <keyword type="function" name="rclib_player_signal_connect ()" link="RCLibPlayer.html#rclib-player-signal-connect"/>
     <keyword type="function" name="rclib_player_signal_disconnect ()" link="RCLibPlayer.html#rclib-player-signal-disconnect"/>
@@ -210,10 +213,9 @@
     <keyword type="macro" name="RCLIB_PLUGIN_MAGIC" link="RCLibPlugin.html#RCLIB-PLUGIN-MAGIC:CAPS"/>
     <keyword type="macro" name="RCLIB_PLUGIN_MAJOR_VERSION" link="RCLibPlugin.html#RCLIB-PLUGIN-MAJOR-VERSION:CAPS"/>
     <keyword type="macro" name="RCLIB_PLUGIN_MINOR_VERSION" link="RCLibPlugin.html#RCLIB-PLUGIN-MINOR-VERSION:CAPS"/>
-    <keyword type="macro" name="RCLIB_PLUGIN_TYPE" link="RCLibPlugin.html#RCLIB-PLUGIN-TYPE:CAPS"/>
     <keyword type="struct" name="struct RCLibPlugin" link="RCLibPlugin.html#RCLibPlugin-struct"/>
     <keyword type="struct" name="struct RCLibPluginClass" link="RCLibPlugin.html#RCLibPluginClass"/>
-    <keyword type="struct" name="struct RCLibPluginData" link="RCLibPlugin.html#RCLibPluginData"/>
+    <keyword type="struct" name="struct RCLibPluginData" link="RCLibPlugin.html#RCLibPluginData-struct"/>
     <keyword type="struct" name="struct RCLibPluginInfo" link="RCLibPlugin.html#RCLibPluginInfo"/>
     <keyword type="struct" name="struct RCLibPluginLoaderInfo" link="RCLibPlugin.html#RCLibPluginLoaderInfo"/>
     <keyword type="enum" name="enum RCLibPluginType" link="RCLibPlugin.html#RCLibPluginType"/>
@@ -266,7 +268,8 @@
     <keyword type="function" name="rclib_settings_set_string_list ()" link="LibRhythmCat-Settings.html#rclib-settings-set-string-list"/>
     <keyword type="function" name="rclib_settings_sync ()" link="LibRhythmCat-Settings.html#rclib-settings-sync"/>
     <keyword type="function" name="rclib_settings_update ()" link="LibRhythmCat-Settings.html#rclib-settings-update"/>
-    <keyword type="struct" name="struct RCLibTagMetadata" link="LibRhythmCat-Tag-Processor.html#RCLibTagMetadata"/>
+    <keyword type="struct" name="struct RCLibTagMetadata" link="LibRhythmCat-Tag-Processor.html#RCLibTagMetadata-struct"/>
+    <keyword type="function" name="rclib_tag_copy_data ()" link="LibRhythmCat-Tag-Processor.html#rclib-tag-copy-data"/>
     <keyword type="function" name="rclib_tag_free ()" link="LibRhythmCat-Tag-Processor.html#rclib-tag-free"/>
     <keyword type="function" name="rclib_tag_get_fallback_encoding ()" link="LibRhythmCat-Tag-Processor.html#rclib-tag-get-fallback-encoding"/>
     <keyword type="function" name="rclib_tag_get_name_from_fpath ()" link="LibRhythmCat-Tag-Processor.html#rclib-tag-get-name-from-fpath"/>

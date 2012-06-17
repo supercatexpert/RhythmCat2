@@ -727,7 +727,7 @@ const RCLibLyricData *rclib_lyric_get_line(guint index, gint64 time)
  * Find iter of the lyric line which matches to the given time
  * (in nanoseconds).
  *
- * Returns: (transfer none) (skip): The #GSequenceIter of the lyric line,
+ * Returns: (transfer none): The #GSequenceIter of the lyric line,
  *     #NULL if not found.
  */
 

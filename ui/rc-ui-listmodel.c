@@ -1116,7 +1116,7 @@ GtkTreeModel *rc_ui_list_model_get_playlist_store(GtkTreeIter *iter)
  *
  * Get the catalog iter by given playlist store model.
  *
- * Returns: (transfer none) (skip): The catalog iter.
+ * Returns: (transfer none): (skip): The catalog iter.
  */
 
 GSequenceIter *rc_ui_list_model_get_catalog_by_model(GtkTreeModel *model)

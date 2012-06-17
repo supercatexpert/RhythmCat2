@@ -12,7 +12,6 @@ rclib_minor_version
 <SECTION>
 <FILE>rclib-album</FILE>
 <TITLE>RCLibAlbum</TITLE>
-RCLIB_ALBUM_TYPE
 RCLibAlbum
 RCLibAlbumClass
 RCLibAlbumType
@@ -29,13 +28,13 @@ RCLIB_ALBUM_CLASS
 RCLIB_ALBUM_GET_CLASS
 RCLIB_IS_ALBUM
 RCLIB_IS_ALBUM_CLASS
+RCLIB_TYPE_ALBUM
 rclib_album_get_type
 </SECTION>
 
 <SECTION>
 <FILE>rclib-core</FILE>
 <TITLE>RCLibCore</TITLE>
-RCLIB_CORE_TYPE
 RCLibCore
 RCLibCoreClass
 RCLibCoreEQType
@@ -60,12 +59,16 @@ rclib_core_get_volume
 rclib_core_init
 rclib_core_pause
 rclib_core_play
+rclib_core_query_buffering_percent
+rclib_core_query_buffering_range
 rclib_core_query_duration
 rclib_core_query_position
 rclib_core_set_balance
 rclib_core_set_eq
 rclib_core_set_position
 rclib_core_set_uri
+rclib_core_set_uri_with_db_ref
+rclib_core_set_uri_with_ext_ref
 rclib_core_set_volume
 rclib_core_signal_connect
 rclib_core_signal_disconnect
@@ -78,6 +81,7 @@ RCLIB_CORE_CLASS
 RCLIB_CORE_GET_CLASS
 RCLIB_IS_CORE
 RCLIB_IS_CORE_CLASS
+RCLIB_TYPE_CORE
 rclib_core_get_type
 </SECTION>
 
@@ -96,7 +100,6 @@ rclib_cue_set_fallback_encoding
 <SECTION>
 <FILE>rclib-db</FILE>
 <TITLE>RCLibDb</TITLE>
-RCLIB_DB_TYPE
 RCLibDb
 RCLibDbCatalogData
 RCLibDbCatalogType
@@ -134,6 +137,7 @@ rclib_db_playlist_export_m3u_file
 rclib_db_playlist_get_album_bind
 rclib_db_playlist_get_lyric_bind
 rclib_db_playlist_get_lyric_secondary_bind
+rclib_db_playlist_get_rating
 rclib_db_playlist_import_cancel
 rclib_db_playlist_import_queue_get_length
 rclib_db_playlist_move_to_another_catalog
@@ -157,13 +161,17 @@ RCLIB_DB_CLASS
 RCLIB_DB_GET_CLASS
 RCLIB_IS_DB
 RCLIB_IS_DB_CLASS
+RCLIB_TYPE_DB
+RCLIB_TYPE_DB_CATALOG_DATA
+RCLIB_TYPE_DB_PLAYLIST_DATA
+rclib_db_catalog_data_get_type
 rclib_db_get_type
+rclib_db_playlist_data_get_type
 </SECTION>
 
 <SECTION>
 <FILE>rclib-lyric</FILE>
 <TITLE>RCLibLyric</TITLE>
-RCLIB_LYRIC_TYPE
 RCLibLyric
 RCLibLyricClass
 RCLibLyricData
@@ -191,13 +199,13 @@ RCLIB_IS_LYRIC_CLASS
 RCLIB_LYRIC
 RCLIB_LYRIC_CLASS
 RCLIB_LYRIC_GET_CLASS
+RCLIB_TYPE_LYRIC
 rclib_lyric_get_type
 </SECTION>
 
 <SECTION>
 <FILE>rclib-player</FILE>
 <TITLE>RCLibPlayer</TITLE>
-RCLIB_PLAYER_TYPE
 RCLibPlayer
 RCLibPlayerClass
 RCLibPlayerRandomMode
@@ -205,6 +213,7 @@ RCLibPlayerRepeatMode
 rclib_player_exit
 rclib_player_get_instance
 rclib_player_get_random_mode
+rclib_player_get_rating_limit
 rclib_player_get_repeat_mode
 rclib_player_init
 rclib_player_play_db
@@ -212,6 +221,7 @@ rclib_player_play_next
 rclib_player_play_prev
 rclib_player_play_uri
 rclib_player_set_random_mode
+rclib_player_set_rating_limit
 rclib_player_set_repeat_mode
 rclib_player_signal_connect
 rclib_player_signal_disconnect
@@ -221,6 +231,7 @@ RCLIB_IS_PLAYER_CLASS
 RCLIB_PLAYER
 RCLIB_PLAYER_CLASS
 RCLIB_PLAYER_GET_CLASS
+RCLIB_TYPE_PLAYER
 rclib_player_get_type
 </SECTION>
 
@@ -230,7 +241,6 @@ rclib_player_get_type
 RCLIB_PLUGIN_MAGIC
 RCLIB_PLUGIN_MAJOR_VERSION
 RCLIB_PLUGIN_MINOR_VERSION
-RCLIB_PLUGIN_TYPE
 RCLibPlugin
 RCLibPluginClass
 RCLibPluginData
@@ -264,7 +274,10 @@ RCLIB_IS_PLUGIN_CLASS
 RCLIB_PLUGIN
 RCLIB_PLUGIN_CLASS
 RCLIB_PLUGIN_GET_CLASS
+RCLIB_TYPE_PLUGIN
+RCLIB_TYPE_PLUGIN_DATA
 RCPLUGIN_INIT_PLUGIN
+rclib_plugin_data_get_type
 rclib_plugin_get_type
 </SECTION>
 
@@ -298,12 +311,16 @@ rclib_settings_update
 <SECTION>
 <FILE>rclib-tag</FILE>
 RCLibTagMetadata
+rclib_tag_copy_data
 rclib_tag_free
 rclib_tag_get_fallback_encoding
 rclib_tag_get_name_from_fpath
 rclib_tag_get_name_from_uri
 rclib_tag_read_metadata
 rclib_tag_set_fallback_encoding
+<SUBSECTION Standard>
+RCLIB_TYPE_TAG_METADATA
+rclib_tag_metadata_get_type
 </SECTION>
 
 <SECTION>
