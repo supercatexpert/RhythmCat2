@@ -266,7 +266,11 @@ target_alias = @target_alias@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-EXTRA_DIST = monochrome.css
+EXTRA_DIST = monochrome.css scale-slider-horz-dark.png \
+    scale-slider-horz-backdrop-dark.png \
+    scale-slider-horz-insensitive-dark.png \
+    scale-slider-horz-backdrop-insensitive-dark.png
+
 all: all-am
 
 .SUFFIXES:

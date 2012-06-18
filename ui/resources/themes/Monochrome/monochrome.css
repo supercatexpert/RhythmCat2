@@ -5,11 +5,12 @@
 @define-color rc_borders #24282a;
 @define-color rc_selected_bg_color #3465a4;
 @define-color rc_selected_fg_color @rc_text_color;
+@define-color rc_unfocused_borders mix(@rc_unfocused_bg_color, @rc_text_color, 0.15);
 @define-color rc_unfocused_base_color @rc_base_color;
 @define-color rc_unfocused_text_color mix(@rc_unfocused_base_color, @rc_text_color, 0.8);
 @define-color rc_unfocused_fg_color mix(@rc_unfocused_bg_color, @rc_text_color, 0.3);
 @define-color rc_unfocused_bg_color @rc_bg_color;
-@define-color rc_unfocused_selected_bg_color @unfocused_borders;
+@define-color rc_unfocused_selected_bg_color mix(@rc_unfocused_bg_color, @rc_text_color, 0.45);
 @define-color rc_unfocused_selected_fg_color @rc_selected_fg_color;
 @define-color rc_insensitive_bg_color alpha(#0b0b0d, 0.0);
 @define-color rc_insensitive_fg_color alpha(#717171, 0.50);
@@ -48,9 +49,26 @@
     font-family: Cantarell, Dejavu Sans
 }
 
+#RC2MainWindow #RC2TitleLabel:backdrop,
+#RC2MainWindow #RC2ArtistLabel:backdrop,
+#RC2MainWindow #RC2AlbumLabel:backdrop,
+#RC2MainWindow #RC2InfoLabel:backdrop,
+#RC2MainWindow #RC2LengthLabel:backdrop,
+#RC2MiniWindow GtkLabel:backdrop
+{
+    color: @rc_unfocused_text_color;
+    font-family: Cantarell, Dejavu Sans
+}
+
 #RC2MainWindow #RC2TimeLabel
 {
     color: #6CD02F;
+    font-family: Cantarell, Dejavu Sans
+}
+
+#RC2MainWindow #RC2TimeLabel:backdrop
+{
+    color: shade(#6CD02F, 0.7);
     font-family: Cantarell, Dejavu Sans
 }
 
@@ -63,11 +81,27 @@
     font-family: Cantarell, Dejavu Sans
 }
 
+#RC2MainWindow #RC2Lyric1ScrollableLabel:backdrop,
+#RC2MainWindow #RC2Lyric2ScrollableLabel:backdrop
+{
+    background-color: @rc_bg_color;
+    background-image: none;
+    color: @rc_unfocused_text_color;
+    font-family: Cantarell, Dejavu Sans
+}
+
 #RC2MainWindow RCUiSpectrumWidget#RC2SpectrumWidget
 {
     background-color: @rc_bg_color;
     background-image: none;
     color: #00A0F0;
+}
+
+#RC2MainWindow RCUiSpectrumWidget#RC2SpectrumWidget:backdrop
+{
+    background-color: @rc_bg_color;
+    background-image: none;
+    color: shade(#00A0F0, 0.5);
 }
 
 #RC2MainWindow #RC2ListPaned
@@ -269,7 +303,8 @@
 }
 
 #RC2MainWindow #RC2CatalogListView,
-#RC2MainWindow #RC2CatalogListView.view,#RC2MainWindow #RC2PlaylistListView,
+#RC2MainWindow #RC2CatalogListView.view,
+#RC2MainWindow #RC2PlaylistListView,
 #RC2MainWindow #RC2PlaylistListView.view
 {
     background-color: @rc_base_color;
@@ -278,10 +313,29 @@
     font-family: Cantarell, Dejavu Sans
 }
 
+#RC2MainWindow #RC2CatalogListView:backdrop,
+#RC2MainWindow #RC2CatalogListView.view:backdrop,
+#RC2MainWindow #RC2PlaylistListView:backdrop,
+#RC2MainWindow #RC2PlaylistListView.view:backdrop
+{
+    background-color: @rc_base_color;
+    background-image: none;
+    color: @rc_unfocused_text_color;
+    font-family: Cantarell, Dejavu Sans
+}
+
 #RC2MainWindow #RC2CatalogListView.view:selected,
 #RC2MainWindow #RC2PlaylistListView.view:selected
 {
     background-color: @rc_selected_bg_color;
+    background-image: none;
+    color: @rc_text_color;
+}
+
+#RC2MainWindow #RC2CatalogListView.view:selected:backdrop,
+#RC2MainWindow #RC2PlaylistListView.view:selected:backdrop
+{
+    background-color: @rc_unfocused_selected_bg_color;
     background-image: none;
     color: @theme_selected_fg_color;
 }
@@ -314,7 +368,9 @@
 
 #RC2MainWindow #RC2TimeScale.slider,
 #RC2MainWindow #RC2TimeScale.slider:hover,
+#RC2MainWindow #RC2TimeScale.slider:backdrop,
 #RC2MainWindow #RC2TimeScale.slider:insensitive
+#RC2MainWindow #RC2TimeScale.slider:insensitive:backdrop
 {
     border-width: 0;
     border-radius: 0;
@@ -324,14 +380,27 @@
 }
 
 #RC2MainWindow #RC2TimeScale.trough
+#RC2MainWindow #RC2TimeScale.trough.highlight,
+#RC2MainWindow #RC2TimeScale.trough.vertical,
+#RC2MainWindow #RC2TimeScale.trough:backdrop
 {
     border-width: 1px;
     border-radius: 2px;
     border-style: solid;
     background-color: shade(@rc_scale_fill, 1.5);
     background-image: none;
-    border-color: shade(@rc_insensitive_border_color, 1.5);
     border-image: none;
+}
+
+#RC2MainWindow #RC2TimeScale.trough,
+#RC2MainWindow #RC2TimeScale.trough.highlight,
+#RC2MainWindow #RC2TimeScale.trough.vertical
+{
+    border-color: @rc_borders;
+}
+
+#RC2MainWindow #RC2TimeScale.trough:backdrop {
+    border-color: @rc_unfocused_borders;
 }
 
 #RC2MainWindow #RC2TimeScale.trough:insensitive
@@ -340,6 +409,7 @@
     background-image: none;
     border-image: none;
     border-style: solid;
+    box-shadow: none;
     border-color: @rc_insensitive_border_color;
 }
 
@@ -351,9 +421,39 @@
     border-style: none;
 }
 
+#RC2MainWindow #RC2TimeScale.progressbar:backdrop
+{
+    background-color: shade(@rc_scale_progress_fill, 0.6);
+    -adwaita-progressbar-pattern: none;
+}
+
 #RC2MainWindow #RC2TimeScale.mark
 {
     color: shade (@rc_bg_color, 0.56);
+}
+
+#RC2MainWindow #RC2TimeScale.slider,
+#RC2MainWindow #RC2TimeScale.slider.horizontal
+{
+    background-image: url("scale-slider-horz-dark.png");
+}
+
+#RC2MainWindow #RC2TimeScale.slider:backdrop,
+#RC2MainWindow #RC2TimeScale.slider.horizontal:backdrop
+{
+    background-image: url("scale-slider-horz-backdrop-dark.png");
+}
+
+#RC2MainWindow #RC2TimeScale.slider:insensitive,
+#RC2MainWindow #RC2TimeScale.slider.horizontal:insensitive
+{
+    background-image: url("scale-slider-horz-insensitive-dark.png");
+}
+
+#RC2MainWindow #RC2TimeScale.slider:backdrop:insensitive,
+#RC2MainWindow #RC2TimeScale.slider.horizontal:backdrop:insensitive
+{
+    background-image: url("scale-slider-horz-backdrop-insensitive-dark.png");
 }
 
 #RC2MainWindow #RC2ControlButton.button,

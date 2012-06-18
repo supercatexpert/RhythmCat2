@@ -162,8 +162,8 @@ static void rc_ui_scrollable_label_get_preferred_height(GtkWidget *widget,
     priv = RC_UI_SCROLLABLE_LABEL_GET_PRIVATE(widget);
     if(priv==NULL) return;
     pango_layout_get_pixel_size(priv->layout, NULL, &height);
-    *min_height = height;
-    *nat_height = height;
+    *min_height = height+2;
+    *nat_height = height+2;
 }
 
 static gboolean rc_ui_scrollable_label_draw(GtkWidget *widget, cairo_t *cr)

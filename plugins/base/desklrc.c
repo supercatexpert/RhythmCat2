@@ -54,7 +54,154 @@ typedef struct RCPluginDesklrcPrivate
     GKeyFile *keyfile;
 }RCPluginDesklrcPrivate;
 
+typedef struct RCPluginDesklrcPixel
+{
+    guint64 alpha;
+    guint64 red;
+    guint64 green;
+    guint64 blue;
+}RCPluginDesklrcPixel;
+
 static RCPluginDesklrcPrivate desklrc_priv = {0};
+
+static inline gint rc_plugin_desklrc_pos_to_index(gint x, gint y,
+    gint width, gint height)
+{
+    if(x >= width || y >= height || x < 0 || y < 0)
+        return -1;
+    return y * width + x;
+}
+
+static inline void rc_plugin_desklrc_num_to_pixel_with_factor(
+    RCPluginDesklrcPixel *pixel, guint32 value, gint factor)
+{
+    if(pixel==NULL) return;
+    /* This only works for type CAIRO_FORMAT_ARGB32 */
+    
+    pixel->alpha = ((value >> 24) & 0xff) * factor;
+    pixel->red = ((value >> 16) & 0xff) * factor;
+    pixel->green = ((value >> 8) & 0xff) * factor;
+    pixel->blue = (value & 0xff) * factor;
+}
+
+static inline guint32 rc_plugin_desklrc_pixel_to_num_with_divisor(
+    RCPluginDesklrcPixel *pixel, gint divisor)
+{
+    guint32 alpha = pixel->alpha / divisor;
+    if(alpha > 0xff) alpha = 0xff;
+    guint32 red = pixel->red / divisor;
+    if(red > 0xff) red = 0xff;
+    guint32 green = pixel->green / divisor;
+    if(green > 0xff) green = 0xff;
+    guint32 blue = pixel->blue / divisor;
+    if(blue > 0xff) blue = 0xff;
+    return (alpha << 24) | (red << 16) | (green << 8) | blue;
+}
+
+static inline void rc_plugin_desklrc_pixel_plus(
+    RCPluginDesklrcPixel *adder_sum, RCPluginDesklrcPixel *adder2)
+{
+    adder_sum->alpha += adder2->alpha;
+    adder_sum->red += adder2->red;
+    adder_sum->green += adder2->green;
+    adder_sum->blue += adder2->blue;
+}
+
+static gint *rc_plugin_desklrc_calc_kernel(gdouble sigma, gint *size)
+{
+    gint kernel_size = ceil (sigma * 6);
+    if(kernel_size%2==0) kernel_size++;
+    gint orig = kernel_size / 2;
+    if(size) *size = kernel_size;
+    gdouble *kernel_double = g_new(double, kernel_size);
+    gdouble sum = 0.0;
+    gint *kernel = g_new(int, kernel_size);
+    gint i;
+    gdouble factor = 1.0 / sqrt (2.0 * M_PI * sigma * sigma);
+    gdouble denom = 1.0 / (2.0 * sigma * sigma);
+    for(i=0;i<kernel_size;i++)
+    {
+        kernel_double[i] = factor*exp(-(i - orig)*(i - orig)*denom);
+        sum+=kernel_double[i];
+    }
+    /* convert to pixed point number */
+    for(i=0;i<kernel_size;i++)
+    {
+        kernel[i] = kernel_double[i]/sum*(1<<(sizeof(gint)/2*8));
+    }
+    g_free(kernel_double);
+    return kernel;
+}
+
+static void rc_plugin_desklrc_apply_kernel(cairo_surface_t *surface,
+    const gint *kernel, gint kernel_size)
+{
+    if(kernel==NULL) return;
+    if(kernel_size<=0 || kernel_size%2==0) return;
+    static const int DIR[2][2] = {{0, 1}, {1, 0}};
+    guint32 *pixels = (guint32 *)cairo_image_surface_get_data(surface);
+    gint width = cairo_image_surface_get_width(surface);
+    gint height = cairo_image_surface_get_height(surface);
+    if(pixels==NULL || width <= 0 || height <= 0)
+    {
+        g_warning("Invalid image surface");
+        return;
+    }
+    gint kernel_orig = kernel_size / 2;
+    gint d, i, x, y;
+    for(d=0;d<2;d++)
+    {
+        guint32 *old_pixels = g_new(guint32, width * height);
+        memcpy(old_pixels, pixels, sizeof(guint32)*width*height);
+        for(x=0;x<width;x++)
+        {
+            for (y = 0; y < height; y++)
+            {
+                RCPluginDesklrcPixel final_value = {0};
+                gint sum = 0;
+                for(i=0;i<kernel_size;i++)
+                {
+                    gint x1 = x + (i - kernel_orig) * DIR[d][0];
+                    gint y1 = y + (i - kernel_orig) * DIR[d][1];
+                    gint index1 = rc_plugin_desklrc_pos_to_index(x1, y1,
+                        width, height);
+                    if(index1>0)
+                    {
+                        sum += kernel[i];
+                        RCPluginDesklrcPixel value;
+                        rc_plugin_desklrc_num_to_pixel_with_factor(&value,
+                            old_pixels[index1], kernel[i]);
+                        rc_plugin_desklrc_pixel_plus (&final_value, &value);
+                    }
+                }
+                gint index = rc_plugin_desklrc_pos_to_index(x, y, width,
+                    height);
+                pixels[index] = rc_plugin_desklrc_pixel_to_num_with_divisor(
+                    &final_value, sum);
+            }
+        }
+        g_free(old_pixels);
+    }
+}
+
+/* The blur shadow effect function from OSDLyric. */
+static void rc_plugin_desklrc_gussian_blur(cairo_surface_t *surface,
+    gdouble sigma)
+{
+    if(surface==NULL) return;
+    if(sigma<=0.0) return;
+    cairo_format_t format = cairo_image_surface_get_format(surface);
+    if(format!=CAIRO_FORMAT_ARGB32)
+    {
+        g_warning("The surface format is %d, only ARGB32 is supported",
+            format);
+        return;
+    }
+    gint kernel_size;
+    gint *kernel = rc_plugin_desklrc_calc_kernel(sigma, &kernel_size);
+    rc_plugin_desklrc_apply_kernel(surface, kernel, kernel_size);
+    g_free(kernel);
+}
 
 static inline void rc_plugin_desklrc_draw_drag_shadow(cairo_t *cr, gint width,
     gint height)
@@ -308,7 +455,8 @@ static void rc_plugin_desklrc_show(GtkWidget *widget,
         {
             cairo_set_source_rgba(cr, 0.0, 0.0, 0.0, 0.5);
             cairo_stroke_preserve(cr);
-        } 
+        }
+        //rc_plugin_desklrc_gussian_blur(cairo_get_target(cr), 1.0);
         cairo_clip(cr);
         pat = cairo_pattern_create_linear(start_x, start_y, start_x,
             start_y+text_height1);

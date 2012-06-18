@@ -28,7 +28,11 @@ RhythmCat2_SOURCES = \
 
 librhythmcat_ui_2_0_resourcefiles = \
     rc-ui-resources.gresource.xml \
-    resources/themes/Monochrome/monochrome.css
+    resources/themes/Monochrome/monochrome.css \
+    resources/themes/Monochrome/scale-slider-horz-dark.png \
+    resources/themes/Monochrome/scale-slider-horz-backdrop-dark.png \
+    resources/themes/Monochrome/scale-slider-horz-insensitive-dark.png \
+    resources/themes/Monochrome/scale-slider-horz-backdrop-insensitive-dark.png
 
 rc-ui-resources.c: $(librhythmcat_ui_2_0_resourcefiles)
 	@GLIB_COMPILE_RESOURCE@ $(top_srcdir)/ui/rc-ui-resources.gresource.xml \

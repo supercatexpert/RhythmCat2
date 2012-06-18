@@ -441,7 +441,11 @@ top_srcdir = @top_srcdir@
 
 @WITH_GTK_UI_TRUE@librhythmcat_ui_2_0_resourcefiles = \
 @WITH_GTK_UI_TRUE@    rc-ui-resources.gresource.xml \
-@WITH_GTK_UI_TRUE@    resources/themes/Monochrome/monochrome.css
+@WITH_GTK_UI_TRUE@    resources/themes/Monochrome/monochrome.css \
+@WITH_GTK_UI_TRUE@    resources/themes/Monochrome/scale-slider-horz-dark.png \
+@WITH_GTK_UI_TRUE@    resources/themes/Monochrome/scale-slider-horz-backdrop-dark.png \
+@WITH_GTK_UI_TRUE@    resources/themes/Monochrome/scale-slider-horz-insensitive-dark.png \
+@WITH_GTK_UI_TRUE@    resources/themes/Monochrome/scale-slider-horz-backdrop-insensitive-dark.png
 
 @WITH_GTK_UI_TRUE@librhythmcat_ui_2_0_la_SOURCES = \
 @WITH_GTK_UI_TRUE@    $(librhythmcat_ui_2_0_sources) $(librhythmcat_ui_2_0_builtsources)
