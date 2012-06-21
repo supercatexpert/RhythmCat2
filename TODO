@@ -1,4 +1,5 @@
 - Bug Report Interface
+- Sort the playlist
 
 Long-term:
 - Command Line Interface (CLI), based on ncurses
@@ -9,9 +10,10 @@ Long-term:
 - Music Library
 - More interfaces in MPRIS v2.1 support
 - Multi-touch support
+- Move to GStreamer 1.0 if it is available in Debian Wheezy (or later
+  release version)
 
 Other ideas:
 - Better karaoke mode plug-in?
 - Vala support
-
 

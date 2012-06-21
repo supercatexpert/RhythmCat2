@@ -57,9 +57,9 @@ m4_ifdef([GTK_DOC_CHECK], [GTK_DOC_CHECK([1.14],[--flavour no-tmpl])], \
 # Checks for libraries.
 PKG_CHECK_MODULES([GLIB2], [glib-2.0 >= 2.32, gthread-2.0 >= 2.32, \
     gmodule-2.0 >= 2.32, gio-2.0 >= 2.32])
-PKG_CHECK_MODULES([GSTREAMER], [gstreamer-0.10 >= 0.10.30, \
-    gstreamer-pbutils-0.10 >= 0.10.30 gstreamer-plugins-base-0.10 >= 0.10.30 \
-    gstreamer-fft-0.10])
+PKG_CHECK_MODULES([GSTREAMER], [gstreamer-0.10 >= 0.10.33, \
+    gstreamer-pbutils-0.10 >= 0.10.33 gstreamer-plugins-base-0.10 >= 0.10.33 \
+    gstreamer-fft-0.10 >= 0.10.33])
 PKG_CHECK_MODULES([GTK], [gtk+-3.0 >= 3.4.0], have_gtk3=yes, have_gtk3=no)
 
 # Check additional libraries.

@@ -76,6 +76,7 @@ typedef struct RCLibCorePrivate
     GstElement *bal_plugin; /* balance: audiopanorama */
     GstElement *eq_plugin; /* equalizer: equalizer-10bands */
     GstBus *bus;
+    GstPad *query_pad;
     GList *extra_plugin_list;
     GError *error;
     gchar *uri;
@@ -84,6 +85,10 @@ typedef struct RCLibCorePrivate
     gint64 start_time;
     gint64 end_time;
     RCLibCoreMetadata metadata;
+    gint64 duration;
+    gint sample_rate;
+    gint channels;
+    gint depth;
     RCLibCoreEQType eq_type;
     GSequenceIter *db_reference;
     GSequenceIter *db_reference_pre;
@@ -92,6 +97,7 @@ typedef struct RCLibCorePrivate
     gchar *ext_cookie;
     gchar *ext_cookie_pre;
     GAsyncQueue *tag_update_queue;
+    gboolean tag_signal_emitted;
     guint64 num_frames;
     guint64 num_fft;
     guint64 frames_per_interval;
@@ -120,6 +126,7 @@ enum
     SIGNAL_BALANCE_CHANGED,
     SIGNAL_SPECTRUM_UPDATED,
     SIGNAL_BUFFERING,
+    SIGNAL_BUFFER_PROBE,
     SIGNAL_ERROR,
     SIGNAL_LAST
 };
@@ -173,76 +180,76 @@ static void rclib_core_metadata_free(RCLibCoreMetadata *metadata)
 }
 
 static gboolean rclib_core_parse_metadata(const GstTagList *tags,
-    GstPad *pad, RCLibCoreMetadata *metadata, guint64 start_time,
+    RCLibCoreMetadata *metadata, guint64 start_time,
     guint64 end_time)
 {
     gchar *string = NULL;
-    guint value = 0;
-    gint intv = 0;
     gboolean update = FALSE;
     GstBuffer *buffer = NULL;
-    GDate *date;
-    GstCaps *caps = NULL;
-    GstStructure *structure;
-    gint64 duration = 0;
-    GstFormat format = GST_FORMAT_TIME;    
+    GDate *date = NULL;
+    guint value = 0;
+    gint intv = 0;    
     if(gst_tag_list_get_string(tags, GST_TAG_TITLE, &string))
     {
-        if(metadata->title==NULL)
+        if(g_strcmp0(string, metadata->title)!=0)
         {
-            metadata->title = string;
+            g_free(metadata->title);
+            metadata->title = g_strdup(string);
             update = TRUE;
         }
-        else g_free(string);
+        g_free(string);
     }
     if(gst_tag_list_get_string(tags, GST_TAG_ARTIST, &string))
     {
-        if(metadata->artist==NULL)
+        if(g_strcmp0(string, metadata->artist)!=0)
         {
-            metadata->artist = string;
+            g_free(metadata->artist);
+            metadata->artist = g_strdup(string);
             update = TRUE;
         }
-        else g_free(string);
+        g_free(string);
     }
     if(gst_tag_list_get_string(tags, GST_TAG_ALBUM, &string))
     {
-        if(metadata->album==NULL)
+        if(g_strcmp0(string, metadata->album)!=0)
         {
-            metadata->album = string;
+            g_free(metadata->album);
+            metadata->album = g_strdup(string);
             update = TRUE;
         }
-        else g_free(string);
+        g_free(string);
     }
     if(gst_tag_list_get_string(tags, GST_TAG_AUDIO_CODEC, &string))
     {
-        if(metadata->ftype==NULL)
+        if(g_strcmp0(string, metadata->ftype)!=0)
         {
-            metadata->ftype = string;
+            g_free(metadata->ftype);
+            metadata->ftype = g_strdup(string);
             update = TRUE;
         }
-        else g_free(string);
+        g_free(string);
     }
     if(gst_tag_list_get_buffer(tags, GST_TAG_IMAGE, &buffer))
     {
         if(metadata->image==NULL)
         {
-            metadata->image = buffer;
+            metadata->image = gst_buffer_ref(buffer);
             update = TRUE;
         }
-        else gst_buffer_unref(buffer);
+        gst_buffer_unref(buffer);
     }
     if(gst_tag_list_get_buffer(tags, GST_TAG_PREVIEW_IMAGE, &buffer))
     {
         if(metadata->image==NULL)
         {
-            metadata->image = buffer;
+            metadata->image = gst_buffer_ref(buffer);
             update = TRUE;
         }
-        else gst_buffer_unref(buffer);
+        gst_buffer_unref(buffer);
     }
     if(gst_tag_list_get_uint(tags, GST_TAG_NOMINAL_BITRATE, &value))
     {
-        if(metadata->bitrate!=value)
+        if(metadata->bitrate==0 && value>0)
         {
             metadata->bitrate = value;
             update = TRUE;
@@ -263,44 +270,6 @@ static gboolean rclib_core_parse_metadata(const GstTagList *tags,
         if(metadata->year!=intv)
         {
             metadata->year = intv;
-            update = TRUE;
-        }
-    }
-    if(pad!=NULL)
-    {
-        caps = gst_pad_get_negotiated_caps(pad);
-        if(caps!=NULL)
-        {
-            structure = gst_caps_get_structure(caps, 0);
-            if(gst_structure_get_int(structure, "rate",
-                &intv))
-            {
-                if(metadata->rate!=intv)
-                {
-                    metadata->rate = intv;
-                    update = TRUE;
-                }
-            }
-            if(gst_structure_get_int(structure, "channels",
-                &intv))
-            {
-                if(metadata->channels!=intv)
-                {
-                    metadata->channels = intv;
-                    update = TRUE;
-                }
-            }
-            gst_caps_unref(caps);
-        }
-        if(end_time>0 && end_time>start_time)
-            duration = end_time - start_time;
-        else if(gst_pad_query_duration(pad, &format, &duration))
-            if(duration<0) duration = 0;
-        if(start_time>0 && duration>start_time)
-            duration = duration - start_time;
-        if(duration>=0 && metadata->duration!=duration)
-        {
-            metadata->duration = duration;
             update = TRUE;
         }
     }
@@ -353,6 +322,10 @@ static void rclib_core_spectrum_reset_state(RCLibCorePrivate *priv)
 static void rclib_core_finalize(GObject *object)
 {
     RCLibCorePrivate *priv = RCLIB_CORE_GET_PRIVATE(RCLIB_CORE(object));
+    if(priv->query_pad!=NULL)
+    {
+        gst_object_unref(priv->query_pad);
+    }
     if(priv->bus!=NULL)
     {
         if(priv->message_id>0)
@@ -810,6 +783,19 @@ static void rclib_core_class_init(RCLibCoreClass *klass)
         RCLIB_TYPE_CORE, G_SIGNAL_RUN_FIRST, G_STRUCT_OFFSET(RCLibCoreClass,
         buffering), NULL, NULL, g_cclosure_marshal_VOID__INT, G_TYPE_NONE,
         1, G_TYPE_INT, NULL);
+        
+    /**
+     * RCLibCore::buffer-probe:
+     * @core: the #RCLibCore that received the signal
+     * @buffer: the #GstBuffer
+     *
+     * The ::buffering signal is emitted when the buffer data pass through
+     *   the pipeline.
+     */
+    core_signals[SIGNAL_BUFFER_PROBE] = g_signal_new("buffer-probe",
+        RCLIB_TYPE_CORE, G_SIGNAL_RUN_FIRST, G_STRUCT_OFFSET(RCLibCoreClass,
+        buffer_probe), NULL, NULL, g_cclosure_marshal_VOID__POINTER,
+        G_TYPE_NONE, 1, G_TYPE_POINTER, NULL);
 
     /**
      * RCLibCore::error:
@@ -988,68 +974,63 @@ static void rclib_core_bus_callback(GstBus *bus, GstMessage *msg,
         }
         case GST_MESSAGE_TAG:
         {
-            GstTagList *tags;
-            GstPad *pad = NULL;
-            GstQuery *query;
-            gchar *uri;
-            query = gst_query_new_uri();
-            gst_element_query(priv->playbin, query);
-            gst_query_parse_uri(query, &uri);
-            gst_query_unref(query);
-            if(g_strcmp0(uri, priv->uri)!=0)
-            {
-                g_free(uri);
-                break;
-            }
-            gst_message_parse_tag_full(msg, &pad, &tags);
-            if(rclib_core_parse_metadata(tags, pad, &(priv->metadata),
-                priv->start_time, priv->end_time))
-            {
-                g_signal_emit(object, core_signals[SIGNAL_TAG_FOUND], 0,
-                    &(priv->metadata), uri);
-            }
-            g_free(uri);
-            gst_tag_list_free(tags);
-            if(pad!=NULL) gst_object_unref(pad);
+            /*
+             * Become useless because the metadata can be got from
+             * the signals from playbin2.
+             */
             break;
         }
         case GST_MESSAGE_STATE_CHANGED:
         {
-            GstState state, pending;
-            if(priv!=NULL && GST_MESSAGE_SRC(msg)==GST_OBJECT(priv->playbin))
-            {
-                gst_message_parse_state_changed(msg, NULL, &state, &pending);
-                if(pending==GST_STATE_VOID_PENDING)
-                {
-                    priv->last_state = state;
-                    g_signal_emit(object, core_signals[SIGNAL_STATE_CHANGED],
-                        0, state);
-                    g_debug("Core state changed to: %s",
-                        gst_element_state_get_name(state));
-                }
-            }
+            GstState old_state, state, pending;
+            if(priv==NULL) break;
+            if(GST_MESSAGE_SRC(msg)!=GST_OBJECT(priv->playbin))
+                break;
+            gst_message_parse_state_changed(msg, &old_state, &state,
+                &pending);
+            if(pending!=GST_STATE_VOID_PENDING) break;
+            priv->last_state = state;
+            g_signal_emit(object, core_signals[SIGNAL_STATE_CHANGED],
+                0, state);
+            g_debug("Core state changed from %s to %s",
+                gst_element_state_get_name(old_state),
+                gst_element_state_get_name(state));
             break;
         }
         case GST_MESSAGE_DURATION:
         {
-            gint64 duration = 0;
-            GstFormat format = GST_FORMAT_TIME;
-            gst_message_parse_duration(msg, &format, &duration);
-            if(format!=GST_FORMAT_TIME)
-            {
-                format = GST_FORMAT_TIME;
-                break;
-            }
-            if(priv->end_time>0 && priv->end_time>priv->start_time)
-                duration = priv->end_time - priv->start_time;
-            else if(priv->start_time>0 && duration>priv->start_time)
-                duration = duration - priv->start_time;
-            g_signal_emit(object, core_signals[SIGNAL_NEW_DURATION], 0,
-                duration);
             break;
         }
         case GST_MESSAGE_ASYNC_DONE:
         {
+            gint64 duration;
+            GstCaps *caps;
+            gint intv;
+            GstStructure *structure;
+            duration = rclib_core_query_duration();
+            if(duration>0)
+            {
+                g_signal_emit(object, core_signals[SIGNAL_NEW_DURATION], 0,
+                    duration);
+            }
+            if(priv->query_pad!=NULL)
+            {
+                caps = gst_pad_get_negotiated_caps(priv->query_pad);
+                structure = gst_caps_get_structure(caps, 0);
+                if(gst_structure_get_int(structure, "rate", &intv))
+                {
+                    priv->sample_rate = intv;
+                }
+                if(gst_structure_get_int(structure, "channels", &intv))
+                {
+                    priv->channels = intv;
+                }
+                if(gst_structure_get_int(structure, "depth", &intv))
+                {
+                    priv->depth = intv;
+                }
+                gst_caps_unref(caps);
+            }
             break;
         }
         case GST_MESSAGE_BUFFERING:
@@ -1088,7 +1069,7 @@ static void rclib_core_bus_callback(GstBus *bus, GstMessage *msg,
             guint bands = 0;
             guint rate = 0;
             structure = gst_message_get_structure(msg);
-            if(structure==NULL) break;
+            if(structure==NULL) break;            
             name = gst_structure_get_name(structure);
             if(g_strcmp0(name, "spectrum")==0)
             {
@@ -1136,6 +1117,7 @@ static void rclib_core_bus_callback(GstBus *bus, GstMessage *msg,
 static gboolean rclib_core_pad_buffer_probe_cb(GstPad *pad, GstBuffer *buf,
     gpointer data)
 {
+    /* WARNING: This function is not called in main thread! */
     GstMessage *msg;
     gint i;
     gint64 pos, len;
@@ -1166,6 +1148,7 @@ static gboolean rclib_core_pad_buffer_probe_cb(GstPad *pad, GstBuffer *buf,
     if(priv==NULL) return TRUE;
     pos = (gint64)GST_BUFFER_TIMESTAMP(buf);
     len = rclib_core_query_duration();
+    if(len>0) priv->duration = len;
     if(priv->end_time>0)
     {
         if(priv->end_time<pos)
@@ -1184,6 +1167,7 @@ static gboolean rclib_core_pad_buffer_probe_cb(GstPad *pad, GstBuffer *buf,
             rclib_core_stop(); 
         g_debug("Out of the duration, EOS message has been emitted.");
     }
+    //g_signal_emit(object, core_signals[SIGNAL_BUFFER_PROBE], 0, buf);
     caps = gst_pad_get_negotiated_caps(pad);
     if(caps==NULL) return TRUE;
     structure = gst_caps_get_structure(caps, 0);
@@ -1195,6 +1179,9 @@ static gboolean rclib_core_pad_buffer_probe_cb(GstPad *pad, GstBuffer *buf,
     gst_caps_unref(caps);
     if(depth==0) depth = width;
     if(rate==0 || width==0 || channels==0) return TRUE;
+    priv->sample_rate = rate;
+    priv->channels = channels;
+    priv->depth = depth;
     width = width / 8;
     frame_size = width * channels;
     max_value = (1UL << (depth - 1)) - 1;
@@ -1296,51 +1283,88 @@ static void rclib_core_source_notify_cb(GObject *object, GParamSpec *spec,
 
 static gboolean rclib_core_audio_tags_changed_idle_cb(gpointer data)
 {
+    /* WARNING: This function is not called in main thread! */
     RCLibCorePrivate *priv = (RCLibCorePrivate *)data;
     GstTagList *tags;
+    GstTagList *merged_tags = NULL;
+    gboolean flag = FALSE;
     if(data==NULL) return FALSE;
     if(priv->tag_update_queue==NULL) return FALSE;
     g_async_queue_lock(priv->tag_update_queue);
     while((tags=g_async_queue_try_pop_unlocked(priv->tag_update_queue))!=
         NULL)
     {
-        if(rclib_core_parse_metadata(tags, NULL, &(priv->metadata),
-            priv->start_time, priv->end_time))
-        {
-            g_signal_emit(core_instance, core_signals[SIGNAL_TAG_FOUND],
-                0, &(priv->metadata), priv->uri);
-        }
+        if(merged_tags==NULL)
+            merged_tags = gst_tag_list_copy(tags);
+        else
+            gst_tag_list_insert(merged_tags, tags, GST_TAG_MERGE_REPLACE);
         gst_tag_list_free(tags);
     }
     priv->tag_update_id = 0;
     g_async_queue_unlock(priv->tag_update_queue);
+    if(merged_tags==NULL) return FALSE;
+    flag = rclib_core_parse_metadata(merged_tags, &(priv->metadata),
+        priv->start_time, priv->end_time);
+    gst_tag_list_free(merged_tags);
+    if(!flag) return FALSE;
+    g_signal_emit(core_instance, core_signals[SIGNAL_TAG_FOUND], 0,
+        &(priv->metadata), priv->uri);
+    priv->tag_signal_emitted = TRUE;
     return FALSE;
 }
 
 static void rclib_core_audio_tags_changed_cb(GstElement *playbin2,
     gint stream_id, gpointer data)
 {
+    /* WARNING: This signal callback is not called on main thread! */
     RCLibCorePrivate *priv = (RCLibCorePrivate *)data;
     GstTagList *tags = NULL;
     gint current_stream_id = 0;
+    GstPad *pad;
+    GstCaps *caps;
+    gint intv;
+    GstStructure *structure;
     if(data==NULL) return;
     if(priv->tag_update_queue==NULL) return;
-    /* This signal callback is not called on main thread! */
     g_object_get(playbin2, "current-audio", &current_stream_id, NULL);
     if(current_stream_id!=stream_id) return;
     g_signal_emit_by_name(playbin2, "get-audio-tags", stream_id, &tags);
-    if(tags==NULL) return;
-    
-    /* This function is not called on main thread, send the data into
-       a GAsyncQueue and then add an idle source. */
-    g_async_queue_lock(priv->tag_update_queue);
-    g_async_queue_push_unlocked(priv->tag_update_queue, tags);
-    if(priv->tag_update_id==0)
+    if(tags!=NULL)
     {
-        priv->tag_update_id = g_idle_add((GSourceFunc)
-            rclib_core_audio_tags_changed_idle_cb, priv);
+        g_async_queue_lock(priv->tag_update_queue);
+        g_async_queue_push_unlocked(priv->tag_update_queue, tags);
+        if(priv->tag_update_id==0)
+        {
+            priv->tag_update_id = g_idle_add((GSourceFunc)
+                rclib_core_audio_tags_changed_idle_cb, priv);
+        }
+        g_async_queue_unlock(priv->tag_update_queue);
     }
-    g_async_queue_unlock(priv->tag_update_queue);
+    g_signal_emit_by_name(playbin2, "get-audio-pad", stream_id, &pad);
+    if(pad!=NULL)
+    {
+        caps = gst_pad_get_negotiated_caps(pad);
+        if(caps!=NULL)
+        {
+            structure = gst_caps_get_structure(caps, 0);
+            if(structure!=NULL)
+            {
+                if(gst_structure_get_int(structure, "rate", &intv))
+                {
+                    if(intv>0) priv->sample_rate = intv;
+                }
+                if(gst_structure_get_int(structure, "channels", &intv))
+                {
+                    if(intv>0) priv->channels = intv;
+                }
+                if(gst_structure_get_int(structure, "depth", &intv))
+                {
+                    if(intv>0) priv->depth = intv;
+                }
+            }
+        }
+        gst_object_unref(pad);
+    }
 }
 
 static void rclib_core_instance_init(RCLibCore *core)
@@ -1484,7 +1508,9 @@ static void rclib_core_instance_init(RCLibCore *core)
         videosink, NULL);
     g_object_get(playbin, "flags", &flags, NULL);
     flags |= GST_PLAY_FLAG_DOWNLOAD;
+    flags |= GST_PLAY_FLAG_BUFFERING;
     flags &= ~GST_PLAY_FLAG_VIDEO;
+    flags &= ~GST_PLAY_FLAG_TEXT;
     g_object_set(playbin, "flags", flags, NULL);
     memset(&(priv->metadata), 0, sizeof(RCLibCoreMetadata));
     priv->playbin = playbin;
@@ -1514,10 +1540,10 @@ static void rclib_core_instance_init(RCLibCore *core)
     priv->message_id = g_signal_connect(bus, "message",
         G_CALLBACK(rclib_core_bus_callback), core);
     priv->bus = bus;
-    pad = gst_element_get_static_pad(audioconvert, "src");
+    pad = gst_element_get_static_pad(audioconvert, "sink");
+    priv->query_pad = pad;
     gst_pad_add_buffer_probe(pad, G_CALLBACK(rclib_core_pad_buffer_probe_cb),
        core);
-    gst_object_unref(pad);
     priv->volume_id = g_signal_connect(priv->playbin, "notify::volume",
         G_CALLBACK(rclib_core_volume_notify_cb), priv);
     priv->source_id = g_signal_connect(priv->playbin, "notify::source",
@@ -1654,7 +1680,6 @@ static inline void rclib_core_set_uri_internal(const gchar *uri,
     GSequenceIter *external_ref)
 {
     RCLibCorePrivate *priv;
-    GstBus *bus;
     gchar *scheme;
     gchar *cue_uri;
     gint track = 0;
@@ -1664,15 +1689,9 @@ static inline void rclib_core_set_uri_internal(const gchar *uri,
     gboolean emb_cue_flag = FALSE;
     if(core_instance==NULL || uri==NULL) return;
     priv = RCLIB_CORE_GET_PRIVATE(RCLIB_CORE(core_instance));
-    gst_element_set_state(priv->playbin, GST_STATE_NULL);
-    bus = gst_element_get_bus(priv->playbin);
-    gst_bus_set_flushing(bus, TRUE);
-    gst_element_set_state(priv->playbin, GST_STATE_READY);
-    gst_bus_set_flushing(bus, FALSE);
-    gst_object_unref(bus);
+    rclib_core_stop();
     g_free(priv->uri);
     priv->uri = NULL;
-    rclib_core_set_position(0);
     priv->db_reference = NULL;
     priv->ext_reference = NULL;
     g_free(priv->ext_cookie);
@@ -1712,7 +1731,7 @@ static inline void rclib_core_set_uri_internal(const gchar *uri,
         }
     }
     g_free(scheme);
-    rclib_core_metadata_free(&(priv->metadata));
+    priv->tag_signal_emitted = FALSE;
     if(cue_flag)
     {
         priv->start_time = cue_data.track[track-1].time1;
@@ -2156,11 +2175,24 @@ gboolean rclib_core_stop()
     RCLibCorePrivate *priv;
     GstBus *bus;
     GstMessage *msg;
+    GstTagList *tags;
     if(core_instance==NULL) return FALSE;
     priv = RCLIB_CORE_GET_PRIVATE(RCLIB_CORE(core_instance));
     bus = gst_element_get_bus(priv->playbin);
     gst_element_set_state(priv->playbin, GST_STATE_READY);
     rclib_core_metadata_free(&(priv->metadata));
+    priv->duration = 0;
+    priv->sample_rate = 0;
+    priv->channels = 0;
+    priv->depth = 0;
+    priv->tag_signal_emitted = FALSE;
+    g_async_queue_lock(priv->tag_update_queue);
+    while((tags=g_async_queue_try_pop_unlocked(priv->tag_update_queue))!=
+        NULL)
+    {
+        gst_tag_list_free(tags);
+    }
+    g_async_queue_unlock(priv->tag_update_queue);
     while((msg=gst_bus_pop_filtered(bus, GST_MESSAGE_STATE_CHANGED))!=NULL)
     {
         gst_bus_async_signal_func(bus, msg, NULL);
@@ -2408,5 +2440,53 @@ GList *rclib_core_effect_plugin_get_list()
     RCLibCorePrivate *priv = RCLIB_CORE_GET_PRIVATE(core_instance);
     if(priv==NULL) return NULL;
     return priv->extra_plugin_list;
+}
+
+/**
+ * rclib_core_query_sample_rate:
+ *
+ * Get the sample rate of the playing stream.
+ *
+ * Returns: The sample rate (unit: Hz).
+ */
+
+gint rclib_core_query_sample_rate()
+{
+    if(core_instance==NULL) return 0;
+    RCLibCorePrivate *priv = RCLIB_CORE_GET_PRIVATE(core_instance);
+    if(priv==NULL) return 0;
+    return priv->sample_rate;
+}
+
+/**
+ * rclib_core_query_channels:
+ *
+ * Get the channel number of the playing stream.
+ *
+ * Returns: The channel number.
+ */
+
+gint rclib_core_query_channels()
+{
+    if(core_instance==NULL) return 0;
+    RCLibCorePrivate *priv = RCLIB_CORE_GET_PRIVATE(core_instance);
+    if(priv==NULL) return 0;
+    return priv->channels;
+}
+
+/**
+ * rclib_core_query_depth:
+ *
+ * Get the depth of the playing stream.
+ *
+ * Returns: The depth.
+ */
+
+gint rclib_core_query_depth()
+{
+    if(core_instance==NULL) return 0;
+    RCLibCorePrivate *priv = RCLIB_CORE_GET_PRIVATE(core_instance);
+    if(priv==NULL) return 0;
+    return priv->depth;
 }
 

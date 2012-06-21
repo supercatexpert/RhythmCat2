@@ -127,8 +127,6 @@ typedef struct _RCLibCoreClass RCLibCoreClass;
  * @duration: the duration of the music (unit: nanosecond)
  * @track: the track number
  * @year: the year
- * @rate: the sample rate
- * @channels: the number of channel
  * @image: the cover image buffer
  *
  * The structure for metadata read from core.
@@ -143,8 +141,6 @@ struct _RCLibCoreMetadata {
     gint64 duration;
     gint track;
     gint year;
-    gint rate;
-    gint channels;
     GstBuffer *image;
 };
 
@@ -182,6 +178,7 @@ struct _RCLibCoreClass {
     void (*spectrum_updated)(RCLibCore *core, guint rate, guint bands,
         const GValue *magnitudes);
     void (*buffering)(RCLibCore *core, gint percent);
+    void (*buffer_probe)(RCLibCore *core, GstBuffer *buffer);
     void (*error)(RCLibCore *core, const gchar *message);
 };
 
@@ -229,6 +226,9 @@ gboolean rclib_core_get_balance(gfloat *balance);
 gboolean rclib_core_effect_plugin_add(GstElement *element);
 void rclib_core_effect_plugin_remove(GstElement *element);
 GList *rclib_core_effect_plugin_get_list();
+gint rclib_core_query_sample_rate();
+gint rclib_core_query_channels();
+gint rclib_core_query_depth();
 
 G_END_DECLS
 

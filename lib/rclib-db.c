@@ -1482,7 +1482,7 @@ void rclib_db_signal_disconnect(gulong handler_id)
 
 RCLibDbCatalogData *rclib_db_catalog_data_new()
 {
-    RCLibDbCatalogData *data = g_new0(RCLibDbCatalogData, 1);
+    RCLibDbCatalogData *data = g_slice_new0(RCLibDbCatalogData);
     data->ref_count = 1;
     return data;
 }
@@ -1532,7 +1532,7 @@ void rclib_db_catalog_data_free(RCLibDbCatalogData *data)
     if(data==NULL) return;
     g_free(data->name);
     if(data->playlist!=NULL) g_sequence_free(data->playlist);
-    g_free(data);
+    g_slice_free(RCLibDbCatalogData, data);
 }
 
 /**
@@ -1546,7 +1546,7 @@ void rclib_db_catalog_data_free(RCLibDbCatalogData *data)
 
 RCLibDbPlaylistData *rclib_db_playlist_data_new()
 {
-    RCLibDbPlaylistData *data = g_new0(RCLibDbPlaylistData, 1);
+    RCLibDbPlaylistData *data = g_slice_new0(RCLibDbPlaylistData);
     data->ref_count = 1;
     return data;
 }
@@ -1602,7 +1602,7 @@ void rclib_db_playlist_data_free(RCLibDbPlaylistData *data)
     g_free(data->lyricfile);
     g_free(data->lyricsecfile);
     g_free(data->albumfile);
-    g_free(data);
+    g_slice_free(RCLibDbPlaylistData, data);
 }
 
 /**
@@ -1884,14 +1884,44 @@ void rclib_db_playlist_update_metadata(GSequenceIter *iter,
     if(priv==NULL) return;
     playlist_data = g_sequence_get(iter);
     if(playlist_data==NULL) return;
-    if((data->title!=NULL && g_strcmp0(playlist_data->title,
-        data->title)!=0) || (data->artist!=NULL &&
-        g_strcmp0(playlist_data->artist, data->artist)!=0) ||
-        (data->album!=NULL && g_strcmp0(playlist_data->album,
-        data->album)!=0) || playlist_data->tracknum!=data->tracknum ||
-        playlist_data->year!=data->year || playlist_data->type!=data->type)
+    if(data->title!=NULL && g_strcmp0(playlist_data->title,
+        data->title)!=0)
     {
         priv->dirty_flag = TRUE;
+        g_debug("Playlist data updated, title: %s -> %s",
+            playlist_data->title, data->title);
+    }
+    if(data->artist!=NULL && g_strcmp0(playlist_data->artist,
+        data->artist)!=0)
+    {
+        priv->dirty_flag = TRUE;
+        g_debug("Playlist data updated, artist: %s -> %s",
+            playlist_data->artist, data->artist);
+    }
+    if(data->album!=NULL && g_strcmp0(playlist_data->album,
+        data->album)!=0)
+    {
+        priv->dirty_flag = TRUE;
+        g_debug("Playlist data updated, album: %s -> %s",
+            playlist_data->album, data->album);
+    }
+    if(playlist_data->tracknum!=data->tracknum)
+    {
+        priv->dirty_flag = TRUE;
+        g_debug("Playlist data updated, track number: %d -> %d",
+            playlist_data->tracknum, data->tracknum);
+    }
+    if(playlist_data->year!=data->year)
+    {
+        priv->dirty_flag = TRUE;
+        g_debug("Playlist data updated, year: %d -> %d",
+            playlist_data->year, data->year);
+    }
+    if(playlist_data->type!=data->type)
+    {
+        priv->dirty_flag = TRUE;
+        g_debug("Playlist data updated, type: %d -> %d",
+            playlist_data->type, data->type);
     }
     g_free(playlist_data->title);
     g_free(playlist_data->artist);

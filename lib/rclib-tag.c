@@ -25,6 +25,7 @@
 
 #include "rclib-tag.h"
 #include "rclib-common.h"
+#include <gst/pbutils/pbutils.h>
 
 /**
  * SECTION: rclib-tag
@@ -35,15 +36,6 @@
  * Process the tags (metadata) of music, and provide some data
  * structures and functions for tag processing.
  */
-
-typedef struct RCLibTagDecodedPadData
-{
-    GstElement *pipeline;
-    GstElement *fakesink;
-    gboolean audio_flag;
-    gboolean video_flag;
-    gboolean non_audio_flag;
-}RCLibTagDecodedPadData;
 
 static gchar *tag_fallback_encoding = NULL;
 
@@ -145,54 +137,6 @@ static void rclib_tag_get_tag_cb(const GstTagList *tags, RCLibTagMetadata *mmd)
     }
 }
 
-/*
- * Callback for creating new decoded pad.
- */
-
-static void rclib_tag_gst_new_decoded_pad_cb(GstElement *decodebin, 
-    GstPad *pad, gboolean last, RCLibTagDecodedPadData *data)
-{
-    GstCaps *caps;
-    GstStructure *structure;
-    const gchar *mimetype;
-    gboolean cancel = FALSE;
-    GstPad *sink_pad;
-    caps = gst_pad_get_caps(pad);
-    /* we get "ANY" caps for text/plain files etc. */
-    if(gst_caps_is_empty(caps) || gst_caps_is_any(caps))
-    {
-        cancel = TRUE;
-        data->non_audio_flag = TRUE;
-    }
-    else
-    {
-        sink_pad = gst_element_get_static_pad(data->fakesink, "sink");
-        gst_pad_link(pad, sink_pad);
-        gst_object_unref(sink_pad);
-        /* Is this pad audio? */
-        structure = gst_caps_get_structure(caps, 0);
-        mimetype = gst_structure_get_name(structure);
-        if(g_str_has_prefix(mimetype, "audio/x-raw"))
-        {
-            data->audio_flag = TRUE;
-        }
-        else if(g_str_has_prefix(mimetype, "video/"))
-        {
-            data->video_flag = TRUE;
-        }
-        else
-        {
-            data->non_audio_flag = TRUE;
-        }
-    }
-    gst_caps_unref(caps);
-    /* If this is non-audio, cancel the operation.
-     * This seems to cause some deadlocks with video files, so only do it
-     * when we get no/any caps.
-     */
-    if(cancel) gst_element_set_state(data->pipeline, GST_STATE_NULL);
-}
-
 /**
  * rclib_tag_read_metadata:
  * @uri: the URI of the music file
@@ -205,119 +149,71 @@ static void rclib_tag_gst_new_decoded_pad_cb(GstElement *decodebin,
 
 RCLibTagMetadata *rclib_tag_read_metadata(const gchar *uri)
 {
-    GstElement *pipeline;
-    GstElement *urisrc;
-    GstElement *decodebin;
-    GstElement *fakesink;
-    GstPad *sink_pad;
-    GstCaps *caps;
-    GstStructure *structure;
-    gint64 dura = 0;
-    GstStateChangeReturn state_ret;
-    GstMessage *msg;
-    GstFormat fmt = GST_FORMAT_TIME;
     RCLibTagMetadata *mmd;
-    RCLibTagDecodedPadData decoded_pad_data;
-    GstTagList *tags = NULL;
+    const GstTagList *tags;
+    GstDiscoverer *discoverer;
+    GstDiscovererInfo *info;
+    GstDiscovererResult ret;
+    GstDiscovererStreamInfo *stream_info;
+    GList *streams;
+    GList *l;
+    GError *error = NULL;
     if(uri==NULL)
     {
         return NULL;
     }
-    urisrc = gst_element_make_from_uri(GST_URI_SRC, uri, "urisrc");
-    if(urisrc==NULL)
+    discoverer = gst_discoverer_new(5 * GST_SECOND, &error);
+    if(discoverer==NULL)
     {
+        g_warning("Cannot make GstDiscoverer for URI %s: %s", uri,
+            error->message);
+        g_error_free(error);
+        error = NULL;
         return NULL;
     }
-    decodebin = gst_element_factory_make("decodebin2", NULL);
-    if(decodebin==NULL)
-        decodebin = gst_element_factory_make("decodebin", NULL);
-    if(decodebin==NULL)
+    info = gst_discoverer_discover_uri(discoverer, uri, &error);
+    g_object_unref(discoverer);
+    if(info==NULL)
     {
-        gst_object_unref(urisrc);
-        return NULL;
+        g_warning("Cannot read metadata from URI %s: %s", uri,
+            error->message);
+        g_error_free(error);
+        error = NULL;
+        return NULL; 
     }
-    fakesink = gst_element_factory_make("fakesink", NULL);
-    if(fakesink==NULL)
+    ret = gst_discoverer_info_get_result(info);
+    if(ret!=GST_DISCOVERER_OK)
     {
-        gst_object_unref(urisrc);
-        gst_object_unref(decodebin);
-        return NULL;
-    }
-    pipeline = gst_pipeline_new("pipeline");
-    if(pipeline==NULL)
-    {
-        gst_object_unref(urisrc);
-        gst_object_unref(decodebin);
-        gst_object_unref(fakesink);
-        return NULL;
-    }
-    gst_bin_add_many(GST_BIN(pipeline), urisrc, decodebin, fakesink, NULL);
-    if(!gst_element_link(urisrc, decodebin))
-    {
-        gst_object_unref(pipeline);
+        g_warning("Cannot read metadata from URI %s, error code: %u",
+            uri, ret);
+        gst_discoverer_info_unref(info);
         return NULL;
     }
     mmd = g_new0(RCLibTagMetadata, 1);
     mmd->uri = g_strdup(uri);
-    decoded_pad_data.pipeline = pipeline;
-    decoded_pad_data.fakesink = fakesink;
-    g_signal_connect(decodebin, "new-decoded-pad",
-        G_CALLBACK(rclib_tag_gst_new_decoded_pad_cb), &decoded_pad_data);
-    gst_element_set_state(pipeline, GST_STATE_NULL);
-    state_ret = gst_element_set_state(pipeline, GST_STATE_PAUSED);
-    if(!state_ret)
+    tags = gst_discoverer_info_get_tags(info);
+    rclib_tag_get_tag_cb(tags, mmd);
+    mmd->length = gst_discoverer_info_get_duration(info);
+    streams = gst_discoverer_info_get_streams(info,
+        GST_TYPE_DISCOVERER_STREAM_INFO);
+    for(l=streams;l!=NULL;l=g_list_next(l))
     {
-        gst_object_unref(pipeline);
-        g_free(mmd);
-        return NULL;
-    }
-    while(1)
-    {
-        msg = gst_bus_timed_pop_filtered(GST_ELEMENT_BUS(pipeline),
-            GST_CLOCK_TIME_NONE, GST_MESSAGE_ASYNC_DONE | GST_MESSAGE_TAG |
-            GST_MESSAGE_ERROR | GST_MESSAGE_DURATION);
-        if(GST_MESSAGE_TYPE(msg)==GST_MESSAGE_DURATION)
+        stream_info = (GstDiscovererStreamInfo *)l->data;
+        if(GST_IS_DISCOVERER_AUDIO_INFO(stream_info))
         {
-            gst_message_parse_duration(msg, &fmt, &dura);
-            if(fmt==GST_FORMAT_TIME)
-                mmd->length = dura;
+            mmd->audio_flag = TRUE;
+            mmd->bitrate = gst_discoverer_audio_info_get_bitrate(
+                GST_DISCOVERER_AUDIO_INFO(stream_info));
+            mmd->channels = gst_discoverer_audio_info_get_channels(
+                GST_DISCOVERER_AUDIO_INFO(stream_info));
+            mmd->samplerate = gst_discoverer_audio_info_get_sample_rate(
+                GST_DISCOVERER_AUDIO_INFO(stream_info));
         }
-        else if(GST_MESSAGE_TYPE(msg)==GST_MESSAGE_TAG)
-        {
-            gst_message_parse_tag(msg, &tags);
-            rclib_tag_get_tag_cb(tags, mmd);
-            gst_tag_list_free(tags);
-        }
-        else
-            break;
-        gst_message_unref(msg);
+        if(GST_IS_DISCOVERER_VIDEO_INFO(stream_info))
+            mmd->video_flag = TRUE;
     }
-    if(GST_MESSAGE_TYPE(msg)==GST_MESSAGE_ERROR)
-        ;
-    gst_message_unref(msg);
-    if(mmd->length<=0)
-    {
-        fmt = GST_FORMAT_TIME;
-        gst_element_query_duration(pipeline, &fmt, &dura);
-        mmd->length = dura;
-    }
-    sink_pad = gst_element_get_static_pad(fakesink, "sink");
-    if(sink_pad!=NULL)
-    {
-        caps = gst_pad_get_negotiated_caps(sink_pad);
-        if(caps!=NULL)
-        {
-            structure = gst_caps_get_structure(caps, 0);
-            gst_structure_get_int(structure, "rate", &mmd->samplerate);
-            gst_structure_get_int(structure, "channels", &mmd->channels);
-            gst_caps_unref(caps);
-        }
-        gst_object_unref(sink_pad);
-    }
-    mmd->audio_flag = decoded_pad_data.audio_flag;
-    mmd->video_flag = decoded_pad_data.video_flag;
-    state_ret = gst_element_set_state(pipeline, GST_STATE_NULL);
-    gst_object_unref(GST_OBJECT(pipeline));
+    gst_discoverer_stream_info_list_free(streams);
+    gst_discoverer_info_unref(info);
     return mmd;
 }
 

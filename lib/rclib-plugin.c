@@ -123,12 +123,12 @@ static void rclib_plugin_data_free(RCLibPluginData *plugin)
     g_free(plugin->path);
     if(plugin->dependent_list!=NULL)
         g_slist_free(plugin->dependent_list);
-    g_free(plugin);
+    g_slice_free(RCLibPluginData, plugin);
 }
 
 static inline RCLibPluginData *rclib_pliugin_data_new()
 {
-    RCLibPluginData *plugin = g_new0(RCLibPluginData, 1);
+    RCLibPluginData *plugin = g_slice_new0(RCLibPluginData);
     plugin->ref_count = 1;
     return plugin;
 }

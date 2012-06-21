@@ -180,6 +180,41 @@ static inline void rc_ui_main_window_time_label_set_value(
         gtk_label_set_text(GTK_LABEL(priv->time_label), "--:--");
 }
 
+
+static inline void rc_ui_main_window_info_label_set_value(
+    RCUiMainWindowPrivate *priv, const gchar *format, gint bitrate,
+    gint sample_rate, gint channels)
+{
+    GString *info;
+    info = g_string_new(NULL);
+    if(format!=NULL && strlen(format)>0)
+        g_string_printf(info, "%s ", format);
+    else
+        g_string_printf(info, "%s ", _("Unknown Format"));
+    if(bitrate>0)
+        g_string_append_printf(info, _("%d kbps "),
+            bitrate / 1000);
+    if(sample_rate>0)
+        g_string_append_printf(info, _("%d Hz "), sample_rate);
+    switch(channels)
+    {
+        case 1:
+            g_string_append(info, _("Mono"));
+            break;
+        case 2:
+            g_string_append(info, _("Stereo"));
+            break;
+        case 0:
+            break;
+        default:
+            g_string_append_printf(info, _("%d channels"),
+                channels);
+            break;
+    }
+    gtk_label_set_text(GTK_LABEL(priv->info_label), info->str);
+    g_string_free(info, TRUE);
+}
+
 static gboolean rc_ui_main_window_cover_image_set_pixbuf(RCUiMainWindowPrivate *priv,
     const GdkPixbuf *pixbuf)
 {
@@ -266,7 +301,6 @@ static void rc_ui_main_window_tag_found_cb(RCLibCore *core,
     RCUiMainWindowPrivate *priv = (RCUiMainWindowPrivate *)data;
     RCLibCoreSourceType type;
     gint ret;
-    GString *info;
     RCLibDbPlaylistData *playlist_data;
     GSequenceIter *iter = rclib_core_get_db_reference();
     if(data==NULL || metadata==NULL || uri==NULL) return;
@@ -281,33 +315,13 @@ static void rc_ui_main_window_tag_found_cb(RCLibCore *core,
     rc_ui_main_window_artist_label_set_value(priv, metadata->artist);
     rc_ui_main_window_album_label_set_value(priv, metadata->album);
     if(metadata->duration>0)
+    {
         rc_ui_main_window_new_duration_cb(core, metadata->duration,
             data);
-    info = g_string_new(NULL);
-    if(metadata->ftype!=NULL && strlen(metadata->ftype)>0)
-        g_string_printf(info, "%s ", metadata->ftype);
-    else
-        g_string_printf(info, "%s ", _("Unknown Format"));
-    if(metadata->bitrate>0)
-        g_string_append_printf(info, _("%d kbps "),
-            metadata->bitrate / 1000);
-    if(metadata->rate>0)
-        g_string_append_printf(info, _("%d Hz "), metadata->rate);
-    switch(metadata->channels)
-    {
-        case 1:
-            g_string_append(info, _("Mono"));
-            break;
-        case 2:
-            g_string_append(info, _("Stereo"));
-            break;
-        default:
-            g_string_append_printf(info, _("%d channels"),
-                metadata->channels);
-            break;
     }
-    gtk_label_set_text(GTK_LABEL(priv->info_label), info->str);
-    g_string_free(info, TRUE);
+    rc_ui_main_window_info_label_set_value(priv, metadata->ftype,
+        metadata->bitrate, rclib_core_query_sample_rate(),
+        rclib_core_query_channels());
 }
 
 static void rc_ui_main_window_uri_changed_cb(RCLibCore *core, const gchar *uri,
@@ -477,6 +491,7 @@ static void rc_ui_main_window_core_state_changed_cb(RCLibCore *core,
     GstState state, gpointer data)
 {
     RCUiMainWindowPrivate *priv = (RCUiMainWindowPrivate *)data;
+    const RCLibCoreMetadata *metadata;
     if(data==NULL) return;
     if(state==GST_STATE_PLAYING)
     {
@@ -505,6 +520,13 @@ static void rc_ui_main_window_core_state_changed_cb(RCLibCore *core,
     else
     {
         gtk_widget_set_sensitive(priv->time_scale, TRUE);
+        metadata = rclib_core_get_metadata();
+        if(metadata!=NULL)
+        {
+            rc_ui_main_window_info_label_set_value(priv, metadata->ftype,
+                metadata->bitrate, rclib_core_query_sample_rate(),
+                rclib_core_query_channels());
+        }
     }
     gtk_widget_queue_draw(priv->catalog_listview);
     gtk_widget_queue_draw(priv->playlist_listview);
