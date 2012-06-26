@@ -84,8 +84,11 @@
 <ANCHOR id="rclib-core-play" href="LibRhythmCat/RCLibCore.html#rclib-core-play">
 <ANCHOR id="rclib-core-query-buffering-percent" href="LibRhythmCat/RCLibCore.html#rclib-core-query-buffering-percent">
 <ANCHOR id="rclib-core-query-buffering-range" href="LibRhythmCat/RCLibCore.html#rclib-core-query-buffering-range">
+<ANCHOR id="rclib-core-query-channels" href="LibRhythmCat/RCLibCore.html#rclib-core-query-channels">
+<ANCHOR id="rclib-core-query-depth" href="LibRhythmCat/RCLibCore.html#rclib-core-query-depth">
 <ANCHOR id="rclib-core-query-duration" href="LibRhythmCat/RCLibCore.html#rclib-core-query-duration">
 <ANCHOR id="rclib-core-query-position" href="LibRhythmCat/RCLibCore.html#rclib-core-query-position">
+<ANCHOR id="rclib-core-query-sample-rate" href="LibRhythmCat/RCLibCore.html#rclib-core-query-sample-rate">
 <ANCHOR id="rclib-core-set-balance" href="LibRhythmCat/RCLibCore.html#rclib-core-set-balance">
 <ANCHOR id="rclib-core-set-eq" href="LibRhythmCat/RCLibCore.html#rclib-core-set-eq">
 <ANCHOR id="rclib-core-set-position" href="LibRhythmCat/RCLibCore.html#rclib-core-set-position">
@@ -100,6 +103,7 @@
 <ANCHOR id="rclib-core-update-external-reference" href="LibRhythmCat/RCLibCore.html#rclib-core-update-external-reference">
 <ANCHOR id="RCLibCore.signal-details" href="LibRhythmCat/RCLibCore.html#RCLibCore.signal-details">
 <ANCHOR id="RCLibCore-balance-changed" href="LibRhythmCat/RCLibCore.html#RCLibCore-balance-changed">
+<ANCHOR id="RCLibCore-buffer-probe" href="LibRhythmCat/RCLibCore.html#RCLibCore-buffer-probe">
 <ANCHOR id="RCLibCore-buffering" href="LibRhythmCat/RCLibCore.html#RCLibCore-buffering">
 <ANCHOR id="RCLibCore-eos" href="LibRhythmCat/RCLibCore.html#RCLibCore-eos">
 <ANCHOR id="RCLibCore-eq-changed" href="LibRhythmCat/RCLibCore.html#RCLibCore-eq-changed">

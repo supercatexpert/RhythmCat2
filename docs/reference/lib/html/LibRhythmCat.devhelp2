@@ -66,8 +66,11 @@
     <keyword type="function" name="rclib_core_play ()" link="RCLibCore.html#rclib-core-play"/>
     <keyword type="function" name="rclib_core_query_buffering_percent ()" link="RCLibCore.html#rclib-core-query-buffering-percent"/>
     <keyword type="function" name="rclib_core_query_buffering_range ()" link="RCLibCore.html#rclib-core-query-buffering-range"/>
+    <keyword type="function" name="rclib_core_query_channels ()" link="RCLibCore.html#rclib-core-query-channels"/>
+    <keyword type="function" name="rclib_core_query_depth ()" link="RCLibCore.html#rclib-core-query-depth"/>
     <keyword type="function" name="rclib_core_query_duration ()" link="RCLibCore.html#rclib-core-query-duration"/>
     <keyword type="function" name="rclib_core_query_position ()" link="RCLibCore.html#rclib-core-query-position"/>
+    <keyword type="function" name="rclib_core_query_sample_rate ()" link="RCLibCore.html#rclib-core-query-sample-rate"/>
     <keyword type="function" name="rclib_core_set_balance ()" link="RCLibCore.html#rclib-core-set-balance"/>
     <keyword type="function" name="rclib_core_set_eq ()" link="RCLibCore.html#rclib-core-set-eq"/>
     <keyword type="function" name="rclib_core_set_position ()" link="RCLibCore.html#rclib-core-set-position"/>
@@ -81,6 +84,7 @@
     <keyword type="function" name="rclib_core_update_db_reference ()" link="RCLibCore.html#rclib-core-update-db-reference"/>
     <keyword type="function" name="rclib_core_update_external_reference ()" link="RCLibCore.html#rclib-core-update-external-reference"/>
     <keyword type="signal" name="The &quot;balance-changed&quot; signal" link="RCLibCore.html#RCLibCore-balance-changed"/>
+    <keyword type="signal" name="The &quot;buffer-probe&quot; signal" link="RCLibCore.html#RCLibCore-buffer-probe"/>
     <keyword type="signal" name="The &quot;buffering&quot; signal" link="RCLibCore.html#RCLibCore-buffering"/>
     <keyword type="signal" name="The &quot;eos&quot; signal" link="RCLibCore.html#RCLibCore-eos"/>
     <keyword type="signal" name="The &quot;eq-changed&quot; signal" link="RCLibCore.html#RCLibCore-eq-changed"/>

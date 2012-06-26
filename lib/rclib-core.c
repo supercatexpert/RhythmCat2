@@ -81,6 +81,7 @@ typedef struct RCLibCorePrivate
     GError *error;
     gchar *uri;
     RCLibCoreSourceType type;
+    RCLibCoreVisualizerType visualizer_style;
     GstState last_state;
     gint64 start_time;
     gint64 end_time;
@@ -98,6 +99,7 @@ typedef struct RCLibCorePrivate
     gchar *ext_cookie_pre;
     GAsyncQueue *tag_update_queue;
     gboolean tag_signal_emitted;
+    guint spectrum_bands;
     guint64 num_frames;
     guint64 num_fft;
     guint64 frames_per_interval;
@@ -179,7 +181,7 @@ static void rclib_core_metadata_free(RCLibCoreMetadata *metadata)
     memset(metadata, 0, sizeof(RCLibCoreMetadata));
 }
 
-static gboolean rclib_core_parse_metadata(const GstTagList *tags,
+static inline gboolean rclib_core_parse_metadata(const GstTagList *tags,
     RCLibCoreMetadata *metadata, guint64 start_time,
     guint64 end_time)
 {
@@ -276,15 +278,15 @@ static gboolean rclib_core_parse_metadata(const GstTagList *tags,
     return update;
 }
 
-static void rclib_core_spectrum_flush(RCLibCorePrivate *priv)
+static inline void rclib_core_spectrum_flush(RCLibCorePrivate *priv)
 {
     priv->num_frames = 0;
     priv->num_fft = 0;
     priv->accumulated_error = 0;
 }
 
-static void rclib_core_spectrum_alloc_channel_data(RCLibCorePrivate *priv,
-    guint bands)
+static inline void rclib_core_spectrum_alloc_channel_data(
+    RCLibCorePrivate *priv, guint bands)
 {
     RCLibCoreSpectrumChannel *cd;
     guint nfft = 2 * bands - 2;
@@ -298,7 +300,8 @@ static void rclib_core_spectrum_alloc_channel_data(RCLibCorePrivate *priv,
     cd->spect_magnitude = g_new0(gfloat, bands);
 }
 
-static void rclib_core_spectrum_free_channel_data(RCLibCorePrivate *priv)
+static inline void rclib_core_spectrum_free_channel_data(
+    RCLibCorePrivate *priv)
 {
     RCLibCoreSpectrumChannel *cd;
     if(priv->channel_data==NULL) return;
@@ -313,7 +316,7 @@ static void rclib_core_spectrum_free_channel_data(RCLibCorePrivate *priv)
     priv->channel_data = NULL;
 }
 
-static void rclib_core_spectrum_reset_state(RCLibCorePrivate *priv)
+static inline void rclib_core_spectrum_reset_state(RCLibCorePrivate *priv)
 {
     rclib_core_spectrum_free_channel_data(priv);
     rclib_core_spectrum_flush(priv);
@@ -369,9 +372,9 @@ static GObject *rclib_core_constructor(GType type, guint n_construct_params,
     return retval;
 }
 
-static void rclib_core_spectrum_input_data_mixed_float(const guint8 *_in,
-    gfloat *out, guint len, guint channels, gfloat max_value, guint op,
-    guint nfft)
+static inline void rclib_core_spectrum_input_data_mixed_float(
+    const guint8 *_in, gfloat *out, guint len, guint channels,
+    gfloat max_value, guint op, guint nfft)
 {
     guint i, j, ip = 0;
     gfloat v;
@@ -386,9 +389,9 @@ static void rclib_core_spectrum_input_data_mixed_float(const guint8 *_in,
     }
 }
 
-static void rclib_core_spectrum_input_data_mixed_double(const guint8 *_in,
-    gfloat *out, guint len, guint channels, gfloat max_value, guint op,
-    guint nfft)
+static inline void rclib_core_spectrum_input_data_mixed_double(
+    const guint8 *_in, gfloat *out, guint len, guint channels,
+    gfloat max_value, guint op, guint nfft)
 {
     guint i, j, ip = 0;
     gfloat v;
@@ -403,9 +406,9 @@ static void rclib_core_spectrum_input_data_mixed_double(const guint8 *_in,
     }
 }
 
-static void rclib_core_spectrum_input_data_mixed_int32(const guint8 *_in,
-    gfloat *out, guint len, guint channels, gfloat max_value, guint op,
-    guint nfft)
+static inline void rclib_core_spectrum_input_data_mixed_int32(
+    const guint8 *_in, gfloat *out, guint len, guint channels,
+    gfloat max_value, guint op, guint nfft)
 {
     guint i, j, ip = 0;
     gint32 *in = (gint32 *)_in;
@@ -420,9 +423,9 @@ static void rclib_core_spectrum_input_data_mixed_int32(const guint8 *_in,
     }
 }
 
-static void rclib_core_spectrum_input_data_mixed_int32_max(const guint8 *_in,
-    gfloat *out, guint len, guint channels, gfloat max_value, guint op,
-    guint nfft)
+static inline void rclib_core_spectrum_input_data_mixed_int32_max(
+    const guint8 *_in, gfloat *out, guint len, guint channels,
+    gfloat max_value, guint op, guint nfft)
 {
     guint i, j, ip = 0;
     gint32 *in = (gint32 *) _in;
@@ -437,9 +440,9 @@ static void rclib_core_spectrum_input_data_mixed_int32_max(const guint8 *_in,
   }
 }
 
-static void rclib_core_spectrum_input_data_mixed_int24(const guint8 *_in,
-    gfloat *out, guint len, guint channels, gfloat max_value, guint op,
-    guint nfft)
+static inline void rclib_core_spectrum_input_data_mixed_int24(
+    const guint8 *_in, gfloat *out, guint len, guint channels,
+    gfloat max_value, guint op, guint nfft)
 {
     guint i, j;
     gfloat v = 0.0;
@@ -463,9 +466,9 @@ static void rclib_core_spectrum_input_data_mixed_int24(const guint8 *_in,
     }
 }
 
-static void rclib_core_spectrum_input_data_mixed_int24_max(const guint8 * _in,
-    gfloat *out, guint len, guint channels, gfloat max_value, guint op,
-    guint nfft)
+static inline void rclib_core_spectrum_input_data_mixed_int24_max(
+    const guint8 * _in, gfloat *out, guint len, guint channels,
+    gfloat max_value, guint op, guint nfft)
 {
     guint i, j;
     gfloat v = 0.0;
@@ -489,9 +492,9 @@ static void rclib_core_spectrum_input_data_mixed_int24_max(const guint8 * _in,
     }
 }
 
-static void rclib_core_spectrum_input_data_mixed_int16(const guint8 *_in,
-    gfloat *out, guint len, guint channels, gfloat max_value, guint op,
-    guint nfft)
+static inline void rclib_core_spectrum_input_data_mixed_int16(
+    const guint8 *_in, gfloat *out, guint len, guint channels,
+    gfloat max_value, guint op, guint nfft)
 {
     guint i, j, ip = 0;
     gint16 *in = (gint16 *)_in;
@@ -506,9 +509,9 @@ static void rclib_core_spectrum_input_data_mixed_int16(const guint8 *_in,
     }
 }
 
-static void rclib_core_spectrum_input_data_mixed_int16_max(const guint8 *_in,
-    gfloat *out, guint len, guint channels, gfloat max_value, guint op,
-    guint nfft)
+static void rclib_core_spectrum_input_data_mixed_int16_max(
+    const guint8 *_in, gfloat *out, guint len, guint channels,
+    gfloat max_value, guint op, guint nfft)
 {
     guint i, j, ip = 0;
     gint16 *in = (gint16 *)_in;
@@ -523,12 +526,10 @@ static void rclib_core_spectrum_input_data_mixed_int16_max(const guint8 *_in,
     }
 }
 
-static void rclib_core_spectrum_input_data(const gchar *mimetype, gint width,
-    gint depth, const guint8 *in, gfloat *out, guint len, guint channels,
-    gfloat _max_value, guint op, guint nfft)
+static inline void rclib_core_spectrum_input_data(const gchar *mimetype,
+    gint width, gint depth, const guint8 *in, gfloat *out, guint len,
+    guint channels, gfloat _max_value, guint op, guint nfft)
 {
-    void (*input_data)(const guint8 *_in, gfloat *out, guint len,
-        guint channels, gfloat max_value, guint op, guint nfft) = NULL;
     gboolean is_float = FALSE;
     guint max_value = (1UL << (depth - 1)) - 1;
     if(g_strcmp0(mimetype, "audio/x-raw-float")==0)
@@ -536,39 +537,45 @@ static void rclib_core_spectrum_input_data(const gchar *mimetype, gint width,
     if(is_float)
     {
         if(width==4)
-            input_data = rclib_core_spectrum_input_data_mixed_float;
+            rclib_core_spectrum_input_data_mixed_float(in, out, len,
+                channels, _max_value, op, nfft);
         else if(width==8)
-            input_data = rclib_core_spectrum_input_data_mixed_double;
+            rclib_core_spectrum_input_data_mixed_double(in, out, len,
+                channels, _max_value, op, nfft);;
     }
     else
     {
         if(width==4)
         {
             if(max_value)
-                input_data = rclib_core_spectrum_input_data_mixed_int32_max;
+                rclib_core_spectrum_input_data_mixed_int32_max(in, out, len,
+                    channels, _max_value, op, nfft);
             else
-                input_data = rclib_core_spectrum_input_data_mixed_int32;
+                rclib_core_spectrum_input_data_mixed_int32(in, out, len,
+                    channels, _max_value, op, nfft);
         }
         else if(width==3)
         {
             if(max_value)
-                input_data = rclib_core_spectrum_input_data_mixed_int24_max;
+                rclib_core_spectrum_input_data_mixed_int24_max(in, out, len,
+                    channels, _max_value, op, nfft);
             else
-                input_data = rclib_core_spectrum_input_data_mixed_int24;
+                rclib_core_spectrum_input_data_mixed_int24(in, out, len,
+                    channels, _max_value, op, nfft);
         }
         else if(width==2)
         {
             if(max_value)
-                input_data = rclib_core_spectrum_input_data_mixed_int16_max;
+                rclib_core_spectrum_input_data_mixed_int16_max(in, out, len,
+                    channels, _max_value, op, nfft);
             else
-                input_data = rclib_core_spectrum_input_data_mixed_int16;
+                rclib_core_spectrum_input_data_mixed_int16(in, out, len,
+                    channels, _max_value, op, nfft);
         }
     }
-    if(input_data!=NULL)
-        input_data(in, out, len, channels, _max_value, op, nfft);
 }
 
-static void rclib_core_spectrum_run_fft(RCLibCoreSpectrumChannel *cd,
+static inline void rclib_core_spectrum_run_fft(RCLibCoreSpectrumChannel *cd,
     guint bands, gfloat threshold, guint input_pos)
 {
     guint i;
@@ -595,8 +602,8 @@ static void rclib_core_spectrum_run_fft(RCLibCoreSpectrumChannel *cd,
     }
 }
 
-static GValue *rclib_core_spectrum_message_add_container(GstStructure *s,
-    GType type, const gchar *name)
+static inline GValue *rclib_core_spectrum_message_add_container(
+    GstStructure *s, GType type, const gchar *name)
 {
     GValue v = {0, };
     g_value_init (&v, type);
@@ -605,8 +612,8 @@ static GValue *rclib_core_spectrum_message_add_container(GstStructure *s,
     return (GValue *)gst_structure_get_value(s, name);
 }
 
-static void rclib_core_spectrum_message_add_array(GValue *cv, gfloat *data,
-    guint num_values)
+static inline void rclib_core_spectrum_message_add_array(GValue *cv,
+    gfloat *data, guint num_values)
 {
     GValue v = {0, };
     guint i;
@@ -619,9 +626,9 @@ static void rclib_core_spectrum_message_add_array(GValue *cv, gfloat *data,
     g_value_unset(&v);
 }
 
-static GstMessage *rclib_core_spectrum_message_new(RCLibCorePrivate *priv,
-    guint bands, guint rate, gfloat threshold, GstClockTime timestamp,
-    GstClockTime duration)
+static inline GstMessage *rclib_core_spectrum_message_new(
+    RCLibCorePrivate *priv, guint bands, guint rate, gfloat threshold,
+    GstClockTime timestamp, GstClockTime duration)
 {
     RCLibCoreSpectrumChannel *cd;
     GstStructure *s;
@@ -684,7 +691,8 @@ static void rclib_core_class_init(RCLibCoreClass *klass)
      * @uri: the URI
      * 
      * The ::tag-found signal is emitted when new metadata (tag) was
-     * found.
+     * found. Notice that this signal may be emitted many times during
+     * the playing.
      */
     core_signals[SIGNAL_TAG_FOUND] = g_signal_new("tag-found",
         RCLIB_TYPE_CORE, G_SIGNAL_RUN_FIRST, G_STRUCT_OFFSET(RCLibCoreClass,
@@ -790,7 +798,8 @@ static void rclib_core_class_init(RCLibCoreClass *klass)
      * @buffer: the #GstBuffer
      *
      * The ::buffering signal is emitted when the buffer data pass through
-     *   the pipeline.
+     *     the pipeline.
+     * Warning: This signal is emitted from the working thread of GStreamer.
      */
     core_signals[SIGNAL_BUFFER_PROBE] = g_signal_new("buffer-probe",
         RCLIB_TYPE_CORE, G_SIGNAL_RUN_FIRST, G_STRUCT_OFFSET(RCLibCoreClass,
@@ -948,7 +957,7 @@ static void rclib_core_effect_remove_element_internal(GstElement *effectbin,
     if(block)
     {
         srcpad = gst_element_get_static_pad(effectbin, "sink");
-        blockpad =  gst_pad_get_peer(srcpad);
+        blockpad = gst_pad_get_peer(srcpad);
         gst_object_unref(srcpad);
         gst_pad_set_blocked(blockpad, FALSE);
         gst_object_unref(blockpad);
@@ -1114,27 +1123,18 @@ static void rclib_core_bus_callback(GstBus *bus, GstMessage *msg,
     return;
 }
 
-static gboolean rclib_core_pad_buffer_probe_cb(GstPad *pad, GstBuffer *buf,
-    gpointer data)
+static inline void rclib_core_spectrum_run(RCLibCorePrivate *priv,
+    GstBuffer *buf, const gchar *mimetype, gint rate, gint channels,
+    gint width, gint depth)
 {
-    /* WARNING: This function is not called in main thread! */
     GstMessage *msg;
     gint i;
-    gint64 pos, len;
-    gint rate = 0;
-    gint channels = 0;
-    gint width = 0;
-    gint depth = 0;
-    GstCaps *caps;
-    GstStructure *structure;
     RCLibCoreSpectrumChannel *cd;
-    RCLibCorePrivate *priv = NULL;
-    GObject *object = G_OBJECT(data);
     const guint8 *buf_data = GST_BUFFER_DATA(buf);
     gfloat max_value;
     gfloat threshold = -60;
-    guint bands = 128;
-    guint nfft = 2 * bands - 2;
+    guint bands;
+    guint nfft;
     guint size = GST_BUFFER_SIZE(buf);
     gint64 interval = GST_SECOND / 10;
     gint frame_size;
@@ -1142,46 +1142,8 @@ static gboolean rclib_core_pad_buffer_probe_cb(GstPad *pad, GstBuffer *buf,
     guint input_pos;
     guint fft_todo, msg_todo, block_size;
     gboolean have_full_interval;
-    const gchar *mimetype;
-    if(object==NULL) return TRUE;
-    priv = RCLIB_CORE_GET_PRIVATE(RCLIB_CORE(object));
-    if(priv==NULL) return TRUE;
-    pos = (gint64)GST_BUFFER_TIMESTAMP(buf);
-    len = rclib_core_query_duration();
-    if(len>0) priv->duration = len;
-    if(priv->end_time>0)
-    {
-        if(priv->end_time<pos)
-        {
-            msg = gst_message_new_eos(GST_OBJECT(priv->playbin));
-            if(!gst_element_post_message(priv->playbin, msg))
-                rclib_core_stop();
-            g_debug("Reached CUE ending time, EOS message has been "
-                "emitted.");
-        }
-    }
-    else if(len>0 && pos-len-priv->start_time>2*GST_SECOND)
-    {
-        msg = gst_message_new_eos(GST_OBJECT(priv->playbin));
-        if(!gst_element_post_message(priv->playbin, msg))
-            rclib_core_stop(); 
-        g_debug("Out of the duration, EOS message has been emitted.");
-    }
-    //g_signal_emit(object, core_signals[SIGNAL_BUFFER_PROBE], 0, buf);
-    caps = gst_pad_get_negotiated_caps(pad);
-    if(caps==NULL) return TRUE;
-    structure = gst_caps_get_structure(caps, 0);
-    mimetype = gst_structure_get_name(structure);
-    gst_structure_get_int(structure, "rate", &rate);
-    gst_structure_get_int(structure, "channels", &channels);
-    gst_structure_get_int(structure, "width", &width);
-    gst_structure_get_int(structure, "depth", &depth);
-    gst_caps_unref(caps);
-    if(depth==0) depth = width;
-    if(rate==0 || width==0 || channels==0) return TRUE;
-    priv->sample_rate = rate;
-    priv->channels = channels;
-    priv->depth = depth;
+    bands = priv->spectrum_bands;
+    nfft = 2*bands - 2;
     width = width / 8;
     frame_size = width * channels;
     max_value = (1UL << (depth - 1)) - 1;
@@ -1216,7 +1178,7 @@ static gboolean rclib_core_pad_buffer_probe_cb(GstPad *pad, GstBuffer *buf,
         rclib_core_spectrum_input_data(mimetype, width, depth,
             (const guint8 *)buf_data, input, block_size, channels,
             max_value, input_pos, nfft);
-        data += block_size * frame_size;
+        buf_data += block_size * frame_size;
         size -= block_size * frame_size;
         input_pos = (input_pos + block_size) % nfft;
         priv->num_frames += block_size;
@@ -1253,6 +1215,79 @@ static gboolean rclib_core_pad_buffer_probe_cb(GstPad *pad, GstBuffer *buf,
         }
     }
     priv->input_pos = input_pos;
+}
+
+static gboolean rclib_core_pad_buffer_probe_cb(GstPad *pad, GstBuffer *buf,
+    gpointer data)
+{
+    /* WARNING: This function is not called in main thread! */
+    GstMessage *msg;
+    gint64 pos, len;
+    gint rate = 0;
+    gint channels = 0;
+    gint width = 0;
+    gint depth = 0;
+    GstCaps *caps;
+    GstStructure *structure;
+    RCLibCorePrivate *priv = NULL;
+    GObject *object = G_OBJECT(data);
+    const gchar *mimetype;
+    if(object==NULL) return TRUE;
+    priv = RCLIB_CORE_GET_PRIVATE(RCLIB_CORE(object));
+    if(priv==NULL) return TRUE;
+    pos = (gint64)GST_BUFFER_TIMESTAMP(buf);
+    len = rclib_core_query_duration();
+    if(len>0) priv->duration = len;
+    if(priv->end_time>0)
+    {
+        if(priv->end_time<pos)
+        {
+            msg = gst_message_new_eos(GST_OBJECT(priv->playbin));
+            if(!gst_element_post_message(priv->playbin, msg))
+                rclib_core_stop();
+            g_debug("Reached CUE ending time, EOS message has been "
+                "emitted.");
+        }
+    }
+    else if(len>0 && pos-len-priv->start_time>2*GST_SECOND)
+    {
+        msg = gst_message_new_eos(GST_OBJECT(priv->playbin));
+        if(!gst_element_post_message(priv->playbin, msg))
+            rclib_core_stop(); 
+        g_debug("Out of the duration, EOS message has been emitted.");
+    }
+    g_signal_emit(object, core_signals[SIGNAL_BUFFER_PROBE], 0, buf);
+    caps = gst_pad_get_negotiated_caps(pad);
+    if(caps==NULL) return TRUE;
+    structure = gst_caps_get_structure(caps, 0);
+    mimetype = gst_structure_get_name(structure);
+    gst_structure_get_int(structure, "rate", &rate);
+    gst_structure_get_int(structure, "channels", &channels);
+    gst_structure_get_int(structure, "width", &width);
+    gst_structure_get_int(structure, "depth", &depth);
+    gst_caps_unref(caps);
+    if(depth==0) depth = width;
+    if(rate==0 || width==0 || channels==0) return TRUE;
+    priv->sample_rate = rate;
+    priv->channels = channels;
+    priv->depth = depth;
+    switch(priv->visualizer_style)
+    {
+        case RCLIB_CORE_VISUALIZER_NONE:
+        {
+            break;
+        }
+        case RCLIB_CORE_VISUALIZER_WAVE:
+        {
+            break;
+        }
+        case RCLIB_CORE_VISUALIZER_SPECTRUM:
+        {
+            rclib_core_spectrum_run(priv, buf, mimetype, rate, channels,
+                width, depth);
+            break;
+        }
+    }
     return TRUE;
 }
 
@@ -1518,6 +1553,8 @@ static void rclib_core_instance_init(RCLibCore *core)
     priv->audiosink = audiosink;
     priv->videosink = videosink;
     priv->channel_data = NULL;
+    priv->visualizer_style = RCLIB_CORE_VISUALIZER_SPECTRUM;
+    priv->spectrum_bands = 128;
     priv->eq_plugin = gst_element_factory_make("equalizer-10bands",
         "effect-equalizer");
     priv->bal_plugin = gst_element_factory_make("audiopanorama",
@@ -2488,5 +2525,67 @@ gint rclib_core_query_depth()
     RCLibCorePrivate *priv = RCLIB_CORE_GET_PRIVATE(core_instance);
     if(priv==NULL) return 0;
     return priv->depth;
+}
+
+/**
+ * rclib_core_visualizer_set_style:
+ * @style: the visualizer style
+ *
+ * Set the audio visualizer style used in the core.
+ */
+
+void rclib_core_visualizer_set_style(RCLibCoreVisualizerType style)
+{
+    if(core_instance==NULL) return;
+    RCLibCorePrivate *priv = RCLIB_CORE_GET_PRIVATE(core_instance);
+    if(priv==NULL) return;
+    priv->visualizer_style = style;
+}
+
+/**
+ * rclib_core_visualizer_get_style:
+ *
+ * Get the audio visualizer style used in the core.
+ *
+ * Returns: The audio visualizer style.
+ */
+
+RCLibCoreVisualizerType rclib_core_visualizer_get_style()
+{
+    if(core_instance==NULL) return RCLIB_CORE_VISUALIZER_NONE;
+    RCLibCorePrivate *priv = RCLIB_CORE_GET_PRIVATE(core_instance);
+    if(priv==NULL) return RCLIB_CORE_VISUALIZER_NONE;
+    return priv->visualizer_style;
+}
+
+/**
+ * rclib_core_spectrum_set_bands:
+ * @bands: the band number
+ *
+ * Set the band number of the spectrum.
+ */
+
+void rclib_core_spectrum_set_bands(guint bands)
+{
+    if(core_instance==NULL) return;
+    RCLibCorePrivate *priv = RCLIB_CORE_GET_PRIVATE(core_instance);
+    if(priv==NULL) return;
+    priv->spectrum_bands = bands;
+}
+
+/**
+ * rclib_core_spectrum_get_bands:
+ *
+ * Get the band number of the spectrum.
+ *
+ * Returns: The band number.
+ */
+
+guint rclib_core_spectrum_get_bands()
+{
+    if(core_instance==NULL) return 0;
+    RCLibCorePrivate *priv = RCLIB_CORE_GET_PRIVATE(core_instance);
+    if(priv==NULL) return 0;
+    return priv->spectrum_bands;
 }
 

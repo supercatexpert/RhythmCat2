@@ -77,8 +77,11 @@ const <a class="link" href="RCLibCore.html#RCLibCoreMetadata" title="struct RCLi
 <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RCLibCore.html#rclib-core-query-buffering-range" title="rclib_core_query_buffering_range ()">rclib_core_query_buffering_range</a>    (<em class="parameter"><code><span class="type">gint64</span> *start</code></em>,
                                                          <em class="parameter"><code><span class="type">gint64</span> *stop</code></em>,
                                                          <em class="parameter"><code><span class="type">gint64</span> *estimated_total</code></em>);
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="returnvalue">gint</span></a>                <a class="link" href="RCLibCore.html#rclib-core-query-channels" title="rclib_core_query_channels ()">rclib_core_query_channels</a>           ();
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="returnvalue">gint</span></a>                <a class="link" href="RCLibCore.html#rclib-core-query-depth" title="rclib_core_query_depth ()">rclib_core_query_depth</a>              ();
 <span class="returnvalue">gint64</span>              <a class="link" href="RCLibCore.html#rclib-core-query-duration" title="rclib_core_query_duration ()">rclib_core_query_duration</a>           ();
 <span class="returnvalue">gint64</span>              <a class="link" href="RCLibCore.html#rclib-core-query-position" title="rclib_core_query_position ()">rclib_core_query_position</a>           ();
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="returnvalue">gint</span></a>                <a class="link" href="RCLibCore.html#rclib-core-query-sample-rate" title="rclib_core_query_sample_rate ()">rclib_core_query_sample_rate</a>        ();
 <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RCLibCore.html#rclib-core-set-balance" title="rclib_core_set_balance ()">rclib_core_set_balance</a>              (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gfloat"><span class="type">gfloat</span></a> balance</code></em>);
 <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RCLibCore.html#rclib-core-set-eq" title="rclib_core_set_eq ()">rclib_core_set_eq</a>                   (<em class="parameter"><code><a class="link" href="RCLibCore.html#RCLibCoreEQType" title="enum RCLibCoreEQType"><span class="type">RCLibCoreEQType</span></a> type</code></em>,
                                                          <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gdouble"><span class="type">gdouble</span></a> *band</code></em>);
@@ -112,6 +115,7 @@ const <a class="link" href="RCLibCore.html#RCLibCoreMetadata" title="struct RCLi
 <a name="RCLibCore.signals"></a><h2>Signals</h2>
 <pre class="synopsis">
   "<a class="link" href="RCLibCore.html#RCLibCore-balance-changed" title='The "balance-changed" signal'>balance-changed</a>"                                : <a href="/usr/share/gtk-doc/html/gobject/gobject-Signals.html#G-SIGNAL-RUN-FIRST:CAPS"><code class="literal">Run First</code></a>
+  "<a class="link" href="RCLibCore.html#RCLibCore-buffer-probe" title='The "buffer-probe" signal'>buffer-probe</a>"                                   : <a href="/usr/share/gtk-doc/html/gobject/gobject-Signals.html#G-SIGNAL-RUN-FIRST:CAPS"><code class="literal">Run First</code></a>
   "<a class="link" href="RCLibCore.html#RCLibCore-buffering" title='The "buffering" signal'>buffering</a>"                                      : <a href="/usr/share/gtk-doc/html/gobject/gobject-Signals.html#G-SIGNAL-RUN-FIRST:CAPS"><code class="literal">Run First</code></a>
   "<a class="link" href="RCLibCore.html#RCLibCore-eos" title='The "eos" signal'>eos</a>"                                            : <a href="/usr/share/gtk-doc/html/gobject/gobject-Signals.html#G-SIGNAL-RUN-FIRST:CAPS"><code class="literal">Run First</code></a>
   "<a class="link" href="RCLibCore.html#RCLibCore-eq-changed" title='The "eq-changed" signal'>eq-changed</a>"                                     : <a href="/usr/share/gtk-doc/html/gobject/gobject-Signals.html#G-SIGNAL-RUN-FIRST:CAPS"><code class="literal">Run First</code></a>
@@ -295,8 +299,6 @@ The enum type for core error messages.
     gint64 duration;
     gint track;
     gint year;
-    gint rate;
-    gint channels;
     GstBuffer *image;
 };
 </pre>
@@ -337,14 +339,6 @@ The structure for metadata read from core.
 <tr>
 <td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> <em class="structfield"><code><a name="RCLibCoreMetadata.year"></a>year</code></em>;</span></p></td>
 <td>the year</td>
-</tr>
-<tr>
-<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> <em class="structfield"><code><a name="RCLibCoreMetadata.rate"></a>rate</code></em>;</span></p></td>
-<td>the sample rate</td>
-</tr>
-<tr>
-<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> <em class="structfield"><code><a name="RCLibCoreMetadata.channels"></a>channels</code></em>;</span></p></td>
-<td>the number of channel</td>
 </tr>
 <tr>
 <td><p><span class="term"><a href="/usr/share/gtk-doc/html/gstreamer-0.10/gstreamer-GstBuffer.html#GstBuffer"><span class="type">GstBuffer</span></a> *<em class="structfield"><code><a name="RCLibCoreMetadata.image"></a>image</code></em>;</span></p></td>
@@ -788,6 +782,36 @@ The busy indicator is <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros
 </div>
 <hr>
 <div class="refsect2">
+<a name="rclib-core-query-channels"></a><h3>rclib_core_query_channels ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="returnvalue">gint</span></a>                rclib_core_query_channels           ();</pre>
+<p>
+Get the channel number of the playing stream.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>The channel number.</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-core-query-depth"></a><h3>rclib_core_query_depth ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="returnvalue">gint</span></a>                rclib_core_query_depth              ();</pre>
+<p>
+Get the depth of the playing stream.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>The depth.</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
 <a name="rclib-core-query-duration"></a><h3>rclib_core_query_duration ()</h3>
 <pre class="programlisting"><span class="returnvalue">gint64</span>              rclib_core_query_duration           ();</pre>
 <p>
@@ -813,6 +837,21 @@ Get the playing position in the player (in nanosecond).
 <tbody><tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
 <td>The playing position (in nanosecond).</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-core-query-sample-rate"></a><h3>rclib_core_query_sample_rate ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="returnvalue">gint</span></a>                rclib_core_query_sample_rate        ();</pre>
+<p>
+Get the sample rate of the playing stream.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>The sample rate (unit: Hz).</td>
 </tr></tbody>
 </table></div>
 </div>
@@ -1099,6 +1138,35 @@ The ::balance-changed signal is emitted when new balance was applied.
 <tr>
 <td><p><span class="term"><em class="parameter"><code>balance</code></em> :</span></p></td>
 <td>the balance value (from -1.0 (left) to 1.0 (right))</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>user_data</code></em> :</span></p></td>
+<td>user data set when the signal handler was connected.</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="RCLibCore-buffer-probe"></a><h3>The <code class="literal">"buffer-probe"</code> signal</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                user_function                      (<a class="link" href="RCLibCore.html" title="RCLibCore"><span class="type">RCLibCore</span></a> *core,
+                                                        <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>   buffer,
+                                                        <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>   user_data)      : <a href="/usr/share/gtk-doc/html/gobject/gobject-Signals.html#G-SIGNAL-RUN-FIRST:CAPS"><code class="literal">Run First</code></a></pre>
+<p>
+The ::buffering signal is emitted when the buffer data pass through
+  the pipeline.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>core</code></em> :</span></p></td>
+<td>the <a class="link" href="RCLibCore.html" title="RCLibCore"><span class="type">RCLibCore</span></a> that received the signal</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>buffer</code></em> :</span></p></td>
+<td>the <a href="/usr/share/gtk-doc/html/gstreamer-0.10/gstreamer-GstBuffer.html#GstBuffer"><span class="type">GstBuffer</span></a>
+</td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>user_data</code></em> :</span></p></td>

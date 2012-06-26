@@ -189,7 +189,7 @@ static void rc_ui_spectrum_widget_init(RCUiSpectrumWidget *object)
     priv = RC_UI_SPECTRUM_WIDGET_GET_PRIVATE(object);
     priv->bands = 0;
     priv->magnitudes = NULL;
-    priv->fps = 60;
+    priv->fps = 15;
     priv->timeout = g_timeout_add(1000/priv->fps, (GSourceFunc)
         rc_ui_spectrum_draw_timeout_cb, object);
 }

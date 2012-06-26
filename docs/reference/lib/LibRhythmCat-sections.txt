@@ -61,8 +61,11 @@ rclib_core_pause
 rclib_core_play
 rclib_core_query_buffering_percent
 rclib_core_query_buffering_range
+rclib_core_query_channels
+rclib_core_query_depth
 rclib_core_query_duration
 rclib_core_query_position
+rclib_core_query_sample_rate
 rclib_core_set_balance
 rclib_core_set_eq
 rclib_core_set_position
