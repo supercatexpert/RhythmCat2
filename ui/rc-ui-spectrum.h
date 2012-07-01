@@ -26,6 +26,7 @@
 #define HAVE_RC_UI_SPECTRUM_H
 
 #include <math.h>
+#include <rclib.h>
 #include <glib.h>
 #include <glib-object.h>
 #include <gst/gst.h>
@@ -45,7 +46,26 @@ G_BEGIN_DECLS
     RC_UI_SPECTRUM_WIDGET_TYPE))
 #define IS_RC_UI_SPECTRUM_WIDGET_CLASS(klass) \
     (G_TYPE_CHECK_CLASS_TYPE((klass), RC_UI_SPECTRUM_WIDGET_TYPE))
-    
+
+/**
+ * RCUiSpectrumStyle:
+ * @RC_UI_SPECTRUM_STYLE_NONE: no visualizer
+ * @RC_UI_SPECTRUM_STYLE_WAVE_MONO: wavescope style visualizer
+ *     (mono channel)
+ * @RC_UI_SPECTRUM_STYLE_WAVE_MULTI: wavescope style visualizer
+ *     (multi-channel)
+ * @RC_UI_SPECTRUM_STYLE_SPECTRUM: spectrum style visualizer
+ * 
+ * The visualizer style of the spectrum widget.
+ */
+
+typedef enum {
+    RC_UI_SPECTRUM_STYLE_NONE,
+    RC_UI_SPECTRUM_STYLE_WAVE_MONO,
+    RC_UI_SPECTRUM_STYLE_WAVE_MULTI,
+    RC_UI_SPECTRUM_STYLE_SPECTRUM,
+}RCUiSpectrumStyle;
+
 typedef struct _RCUiSpectrumWidget RCUiSpectrumWidget;
 typedef struct _RCUiSpectrumWidgetClass RCUiSpectrumWidgetClass;
     
@@ -77,9 +97,12 @@ GType rc_ui_spectrum_widget_get_type();
 
 /*< public >*/
 GtkWidget *rc_ui_spectrum_widget_new();
-void rc_ui_spectrum_widget_set_magnitudes(RCUiSpectrumWidget *spectrum,
-    guint rate, guint bands, gfloat threshold, const GValue *magnitudes);
 void rc_ui_spectrum_widget_set_fps(RCUiSpectrumWidget *spectrum, guint fps);
+void rc_ui_spectrum_widget_set_style(RCUiSpectrumWidget *spectrum,
+    RCUiSpectrumStyle style);
+guint rc_ui_spectrum_widget_get_fps(RCUiSpectrumWidget *spectrum);
+RCUiSpectrumStyle rc_ui_spectrum_widget_get_style(
+    RCUiSpectrumWidget *spectrum);
 void rc_ui_spectrum_widget_clean(RCUiSpectrumWidget *spectrum);
 
 G_END_DECLS

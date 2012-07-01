@@ -132,13 +132,16 @@
     <keyword type="property" name="The &quot;attributes&quot; property" link="RCUiScrollableLabel.html#RCUiScrollableLabel--attributes"/>
     <keyword type="property" name="The &quot;percent&quot; property" link="RCUiScrollableLabel.html#RCUiScrollableLabel--percent"/>
     <keyword type="property" name="The &quot;text&quot; property" link="RCUiScrollableLabel.html#RCUiScrollableLabel--text"/>
+    <keyword type="enum" name="enum RCUiSpectrumStyle" link="RCUiSpectrumWidget.html#RCUiSpectrumStyle"/>
     <keyword type="struct" name="struct RCUiSpectrumWidget" link="RCUiSpectrumWidget.html#RCUiSpectrumWidget-struct"/>
     <keyword type="struct" name="struct RCUiSpectrumWidgetClass" link="RCUiSpectrumWidget.html#RCUiSpectrumWidgetClass"/>
     <keyword type="macro" name="RC_UI_SPECTRUM_WIDGET_TYPE" link="RCUiSpectrumWidget.html#RC-UI-SPECTRUM-WIDGET-TYPE:CAPS"/>
     <keyword type="function" name="rc_ui_spectrum_widget_clean ()" link="RCUiSpectrumWidget.html#rc-ui-spectrum-widget-clean"/>
+    <keyword type="function" name="rc_ui_spectrum_widget_get_fps ()" link="RCUiSpectrumWidget.html#rc-ui-spectrum-widget-get-fps"/>
+    <keyword type="function" name="rc_ui_spectrum_widget_get_style ()" link="RCUiSpectrumWidget.html#rc-ui-spectrum-widget-get-style"/>
     <keyword type="function" name="rc_ui_spectrum_widget_new ()" link="RCUiSpectrumWidget.html#rc-ui-spectrum-widget-new"/>
     <keyword type="function" name="rc_ui_spectrum_widget_set_fps ()" link="RCUiSpectrumWidget.html#rc-ui-spectrum-widget-set-fps"/>
-    <keyword type="function" name="rc_ui_spectrum_widget_set_magnitudes ()" link="RCUiSpectrumWidget.html#rc-ui-spectrum-widget-set-magnitudes"/>
+    <keyword type="function" name="rc_ui_spectrum_widget_set_style ()" link="RCUiSpectrumWidget.html#rc-ui-spectrum-widget-set-style"/>
     <keyword type="struct" name="struct RCUiCellRendererRating" link="RCUiCellRendererRating.html#RCUiCellRendererRating-struct"/>
     <keyword type="struct" name="struct RCUiCellRendererRatingClass" link="RCUiCellRendererRating.html#RCUiCellRendererRatingClass"/>
     <keyword type="function" name="rc_ui_cell_renderer_rating_new ()" link="RCUiCellRendererRating.html#rc-ui-cell-renderer-rating-new"/>
@@ -178,5 +181,9 @@
     <keyword type="constant" name="RC_UI_LISTVIEW_PLAYLIST_COLUMN_YEAR" link="RCUiPlaylistView.html#RC-UI-LISTVIEW-PLAYLIST-COLUMN-YEAR:CAPS"/>
     <keyword type="constant" name="RC_UI_LISTVIEW_PLAYLIST_COLUMN_FTYPE" link="RCUiPlaylistView.html#RC-UI-LISTVIEW-PLAYLIST-COLUMN-FTYPE:CAPS"/>
     <keyword type="constant" name="RC_UI_LISTVIEW_PLAYLIST_COLUMN_RATING" link="RCUiPlaylistView.html#RC-UI-LISTVIEW-PLAYLIST-COLUMN-RATING:CAPS"/>
+    <keyword type="constant" name="RC_UI_SPECTRUM_STYLE_NONE" link="RCUiSpectrumWidget.html#RC-UI-SPECTRUM-STYLE-NONE:CAPS"/>
+    <keyword type="constant" name="RC_UI_SPECTRUM_STYLE_WAVE_MONO" link="RCUiSpectrumWidget.html#RC-UI-SPECTRUM-STYLE-WAVE-MONO:CAPS"/>
+    <keyword type="constant" name="RC_UI_SPECTRUM_STYLE_WAVE_MULTI" link="RCUiSpectrumWidget.html#RC-UI-SPECTRUM-STYLE-WAVE-MULTI:CAPS"/>
+    <keyword type="constant" name="RC_UI_SPECTRUM_STYLE_SPECTRUM" link="RCUiSpectrumWidget.html#RC-UI-SPECTRUM-STYLE-SPECTRUM:CAPS"/>
   </functions>
 </book>

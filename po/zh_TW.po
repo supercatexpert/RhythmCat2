@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: RhythmCat2 1.9.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-06-17 03:47+0800\n"
+"POT-Creation-Date: 2012-07-01 21:47+0800\n"
 "PO-Revision-Date: 2012-04-20 20:57+0800\n"
 "Last-Translator: SuperCat <supercatexpert@gmail.com>\n"
 "Language-Team: Chinese (trandictional)\n"
@@ -16,73 +16,73 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: ../lib/rclib-core.c:133
+#: ../lib/rclib-core.c:121
 msgid "None"
 msgstr "無"
 
-#: ../lib/rclib-core.c:135
+#: ../lib/rclib-core.c:123
 msgid "Pop"
 msgstr "流行"
 
-#: ../lib/rclib-core.c:137
+#: ../lib/rclib-core.c:125
 msgid "Rock"
 msgstr "搖滾"
 
-#: ../lib/rclib-core.c:139
+#: ../lib/rclib-core.c:127
 msgid "Metal"
 msgstr "金屬"
 
-#: ../lib/rclib-core.c:141
+#: ../lib/rclib-core.c:129
 msgid "Dance"
 msgstr "舞曲"
 
-#: ../lib/rclib-core.c:143
+#: ../lib/rclib-core.c:131
 msgid "Electronic"
 msgstr "電子樂"
 
-#: ../lib/rclib-core.c:145
+#: ../lib/rclib-core.c:133
 msgid "Jazz"
 msgstr "爵士"
 
-#: ../lib/rclib-core.c:147
+#: ../lib/rclib-core.c:135
 msgid "Classical"
 msgstr "古典"
 
-#: ../lib/rclib-core.c:149
+#: ../lib/rclib-core.c:137
 msgid "Blues"
 msgstr "布魯斯"
 
-#: ../lib/rclib-core.c:151
+#: ../lib/rclib-core.c:139
 msgid "Vocal"
 msgstr "語音"
 
-#: ../lib/rclib-core.c:1371 ../lib/rclib-core.c:1380 ../lib/rclib-core.c:1390
-#: ../lib/rclib-core.c:1400 ../lib/rclib-core.c:1410
+#: ../lib/rclib-core.c:937 ../lib/rclib-core.c:946 ../lib/rclib-core.c:956
+#: ../lib/rclib-core.c:966 ../lib/rclib-core.c:976
 #, c-format
 msgid "Cannot load necessary plugin: %s"
 msgstr "無法加載必要的插件: %s"
 
-#: ../lib/rclib-core.c:1419 ../lib/rclib-core.c:1443
+#: ../lib/rclib-core.c:985 ../lib/rclib-core.c:1009
 #, c-format
 msgid "Cannot create bin: %s"
 msgstr "無法創建箱櫃: %s"
 
-#: ../lib/rclib-core.c:1428 ../lib/rclib-core.c:1452
+#: ../lib/rclib-core.c:994 ../lib/rclib-core.c:1018
 #, c-format
 msgid "Cannot link elements!"
 msgstr "無法連接元件!"
 
-#: ../lib/rclib-core.c:1575
+#: ../lib/rclib-core.c:1141
 #, c-format
 msgid "The core is already initialized!"
 msgstr "核心已被初始化!"
 
-#: ../lib/rclib-core.c:2301
+#: ../lib/rclib-core.c:1873
 msgid "Custom"
 msgstr "自定義"
 
-#: ../lib/rclib-db.c:2393 ../ui/rc-ui-listmodel.c:373 ../ui/rc-ui-window.c:140
-#: ../ui/rc-ui-window.c:1307
+#: ../lib/rclib-db.c:2423 ../ui/rc-ui-listmodel.c:373 ../ui/rc-ui-window.c:139
+#: ../ui/rc-ui-window.c:1315
 msgid "Unknown Title"
 msgstr "未知標題"
 
@@ -118,13 +118,13 @@ msgstr "右"
 msgid "Audio Effects"
 msgstr "音頻特效"
 
-#: ../ui/rc-ui-listmodel.c:377 ../ui/rc-ui-window.c:151
-#: ../ui/rc-ui-window.c:1308
+#: ../ui/rc-ui-listmodel.c:377 ../ui/rc-ui-window.c:150
+#: ../ui/rc-ui-window.c:1316
 msgid "Unknown Artist"
 msgstr "未知藝術家"
 
-#: ../ui/rc-ui-listmodel.c:381 ../ui/rc-ui-window.c:161
-#: ../ui/rc-ui-window.c:1309
+#: ../ui/rc-ui-listmodel.c:381 ../ui/rc-ui-window.c:160
+#: ../ui/rc-ui-window.c:1317
 msgid "Unknown Album"
 msgstr "未知專輯"
 
@@ -458,11 +458,11 @@ msgstr "保存專輯封面圖像(_S)"
 msgid "Save the album image"
 msgstr "保存專輯封面圖像"
 
-#: ../ui/rc-ui-menu.c:354 ../ui/rc-ui-window.c:708
+#: ../ui/rc-ui-menu.c:354 ../ui/rc-ui-window.c:720
 msgid "Importing: 0 remaining"
 msgstr "導入中: 剩餘 0"
 
-#: ../ui/rc-ui-menu.c:358 ../ui/rc-ui-window.c:748
+#: ../ui/rc-ui-menu.c:358 ../ui/rc-ui-window.c:760
 msgid "Refreshing: 0 remaining"
 msgstr "刷新中: 剩餘 0"
 
@@ -814,39 +814,39 @@ msgstr "播放評等小於等於設定值的音樂(_L)"
 msgid "Rating limit value"
 msgstr "評等限制值"
 
-#: ../ui/rc-ui-window.c:290 ../ui/rc-ui-window.c:349 ../ui/rc-ui-window.c:1310
+#: ../ui/rc-ui-window.c:192 ../ui/rc-ui-window.c:362 ../ui/rc-ui-window.c:1318
 msgid "Unknown Format"
 msgstr "未知格式"
 
-#: ../ui/rc-ui-window.c:292
+#: ../ui/rc-ui-window.c:194
 #, c-format
 msgid "%d kbps "
 msgstr "%d kbps "
 
-#: ../ui/rc-ui-window.c:295
+#: ../ui/rc-ui-window.c:197
 #, c-format
 msgid "%d Hz "
 msgstr "%d Hz "
 
-#: ../ui/rc-ui-window.c:299
+#: ../ui/rc-ui-window.c:201
 msgid "Mono"
 msgstr "單聲道"
 
-#: ../ui/rc-ui-window.c:302
+#: ../ui/rc-ui-window.c:204
 msgid "Stereo"
 msgstr "立體聲"
 
-#: ../ui/rc-ui-window.c:305
+#: ../ui/rc-ui-window.c:209
 #, c-format
 msgid "%d channels"
 msgstr "%d 聲道"
 
-#: ../ui/rc-ui-window.c:693
+#: ../ui/rc-ui-window.c:705
 #, c-format
 msgid "Importing: %d remaining"
 msgstr "導入中: 剩餘 %d"
 
-#: ../ui/rc-ui-window.c:733
+#: ../ui/rc-ui-window.c:745
 #, c-format
 msgid "Refreshing: %d remaining"
 msgstr "刷新中: 剩餘 %d"

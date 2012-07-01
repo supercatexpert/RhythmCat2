@@ -44,19 +44,18 @@
 <pre class="synopsis">
 #include &lt;rc-ui-slabel.h&gt;
 
+enum                <a class="link" href="RCUiSpectrumWidget.html#RCUiSpectrumStyle" title="enum RCUiSpectrumStyle">RCUiSpectrumStyle</a>;
 struct              <a class="link" href="RCUiSpectrumWidget.html#RCUiSpectrumWidget-struct" title="struct RCUiSpectrumWidget">RCUiSpectrumWidget</a>;
 struct              <a class="link" href="RCUiSpectrumWidget.html#RCUiSpectrumWidgetClass" title="struct RCUiSpectrumWidgetClass">RCUiSpectrumWidgetClass</a>;
 #define             <a class="link" href="RCUiSpectrumWidget.html#RC-UI-SPECTRUM-WIDGET-TYPE:CAPS" title="RC_UI_SPECTRUM_WIDGET_TYPE">RC_UI_SPECTRUM_WIDGET_TYPE</a>
 <span class="returnvalue">void</span>                <a class="link" href="RCUiSpectrumWidget.html#rc-ui-spectrum-widget-clean" title="rc_ui_spectrum_widget_clean ()">rc_ui_spectrum_widget_clean</a>         (<em class="parameter"><code><a class="link" href="RCUiSpectrumWidget.html" title="RCUiSpectrumWidget"><span class="type">RCUiSpectrumWidget</span></a> *spectrum</code></em>);
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="returnvalue">guint</span></a>               <a class="link" href="RCUiSpectrumWidget.html#rc-ui-spectrum-widget-get-fps" title="rc_ui_spectrum_widget_get_fps ()">rc_ui_spectrum_widget_get_fps</a>       (<em class="parameter"><code><a class="link" href="RCUiSpectrumWidget.html" title="RCUiSpectrumWidget"><span class="type">RCUiSpectrumWidget</span></a> *spectrum</code></em>);
+<a class="link" href="RCUiSpectrumWidget.html#RCUiSpectrumStyle" title="enum RCUiSpectrumStyle"><span class="returnvalue">RCUiSpectrumStyle</span></a>   <a class="link" href="RCUiSpectrumWidget.html#rc-ui-spectrum-widget-get-style" title="rc_ui_spectrum_widget_get_style ()">rc_ui_spectrum_widget_get_style</a>     (<em class="parameter"><code><a class="link" href="RCUiSpectrumWidget.html" title="RCUiSpectrumWidget"><span class="type">RCUiSpectrumWidget</span></a> *spectrum</code></em>);
 <a href="/usr/share/gtk-doc/html/gtk/GtkWidget.html"><span class="returnvalue">GtkWidget</span></a> *         <a class="link" href="RCUiSpectrumWidget.html#rc-ui-spectrum-widget-new" title="rc_ui_spectrum_widget_new ()">rc_ui_spectrum_widget_new</a>           ();
 <span class="returnvalue">void</span>                <a class="link" href="RCUiSpectrumWidget.html#rc-ui-spectrum-widget-set-fps" title="rc_ui_spectrum_widget_set_fps ()">rc_ui_spectrum_widget_set_fps</a>       (<em class="parameter"><code><a class="link" href="RCUiSpectrumWidget.html" title="RCUiSpectrumWidget"><span class="type">RCUiSpectrumWidget</span></a> *spectrum</code></em>,
                                                          <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> fps</code></em>);
-<span class="returnvalue">void</span>                <a class="link" href="RCUiSpectrumWidget.html#rc-ui-spectrum-widget-set-magnitudes" title="rc_ui_spectrum_widget_set_magnitudes ()">rc_ui_spectrum_widget_set_magnitudes</a>
-                                                        (<em class="parameter"><code><a class="link" href="RCUiSpectrumWidget.html" title="RCUiSpectrumWidget"><span class="type">RCUiSpectrumWidget</span></a> *spectrum</code></em>,
-                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> rate</code></em>,
-                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> bands</code></em>,
-                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gfloat"><span class="type">gfloat</span></a> threshold</code></em>,
-                                                         <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/gobject/gobject-Generic-values.html#GValue"><span class="type">GValue</span></a> *magnitudes</code></em>);
+<span class="returnvalue">void</span>                <a class="link" href="RCUiSpectrumWidget.html#rc-ui-spectrum-widget-set-style" title="rc_ui_spectrum_widget_set_style ()">rc_ui_spectrum_widget_set_style</a>     (<em class="parameter"><code><a class="link" href="RCUiSpectrumWidget.html" title="RCUiSpectrumWidget"><span class="type">RCUiSpectrumWidget</span></a> *spectrum</code></em>,
+                                                         <em class="parameter"><code><a class="link" href="RCUiSpectrumWidget.html#RCUiSpectrumStyle" title="enum RCUiSpectrumStyle"><span class="type">RCUiSpectrumStyle</span></a> style</code></em>);
 </pre>
 </div>
 <div class="refsect1">
@@ -82,6 +81,47 @@ The spectrum show widget. It shows the spectrum gragh in the player.
 </div>
 <div class="refsect1">
 <a name="RCUiSpectrumWidget.details"></a><h2>Details</h2>
+<div class="refsect2">
+<a name="RCUiSpectrumStyle"></a><h3>enum RCUiSpectrumStyle</h3>
+<pre class="programlisting">typedef enum {
+    RC_UI_SPECTRUM_STYLE_NONE,
+    RC_UI_SPECTRUM_STYLE_WAVE_MONO,
+    RC_UI_SPECTRUM_STYLE_WAVE_MULTI,
+    RC_UI_SPECTRUM_STYLE_SPECTRUM,
+} RCUiSpectrumStyle;
+</pre>
+<p>
+The visualizer style of the spectrum widget.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><a name="RC-UI-SPECTRUM-STYLE-NONE:CAPS"></a><span class="term"><code class="literal">RC_UI_SPECTRUM_STYLE_NONE</code></span></p></td>
+<td>no visualizer
+</td>
+</tr>
+<tr>
+<td><p><a name="RC-UI-SPECTRUM-STYLE-WAVE-MONO:CAPS"></a><span class="term"><code class="literal">RC_UI_SPECTRUM_STYLE_WAVE_MONO</code></span></p></td>
+<td>wavescope style visualizer
+    (mono channel)
+</td>
+</tr>
+<tr>
+<td><p><a name="RC-UI-SPECTRUM-STYLE-WAVE-MULTI:CAPS"></a><span class="term"><code class="literal">RC_UI_SPECTRUM_STYLE_WAVE_MULTI</code></span></p></td>
+<td>wavescope style visualizer
+    (multi-channel)
+</td>
+</tr>
+<tr>
+<td><p><a name="RC-UI-SPECTRUM-STYLE-SPECTRUM:CAPS"></a><span class="term"><code class="literal">RC_UI_SPECTRUM_STYLE_SPECTRUM</code></span></p></td>
+<td>spectrum style visualizer
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
 <div class="refsect2">
 <a name="RCUiSpectrumWidget-struct"></a><h3>struct RCUiSpectrumWidget</h3>
 <pre class="programlisting">struct RCUiSpectrumWidget;</pre>
@@ -118,6 +158,48 @@ Clean the spectrum widget.
 <td><p><span class="term"><em class="parameter"><code>spectrum</code></em> :</span></p></td>
 <td>the <a class="link" href="RCUiSpectrumWidget.html" title="RCUiSpectrumWidget"><span class="type">RCUiSpectrumWidget</span></a> widget</td>
 </tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rc-ui-spectrum-widget-get-fps"></a><h3>rc_ui_spectrum_widget_get_fps ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="returnvalue">guint</span></a>               rc_ui_spectrum_widget_get_fps       (<em class="parameter"><code><a class="link" href="RCUiSpectrumWidget.html" title="RCUiSpectrumWidget"><span class="type">RCUiSpectrumWidget</span></a> *spectrum</code></em>);</pre>
+<p>
+Get the refresh frequency (frames per second) of the widget.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>spectrum</code></em> :</span></p></td>
+<td>the <a class="link" href="RCUiSpectrumWidget.html" title="RCUiSpectrumWidget"><span class="type">RCUiSpectrumWidget</span></a> widget</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>The refresh frequency.</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rc-ui-spectrum-widget-get-style"></a><h3>rc_ui_spectrum_widget_get_style ()</h3>
+<pre class="programlisting"><a class="link" href="RCUiSpectrumWidget.html#RCUiSpectrumStyle" title="enum RCUiSpectrumStyle"><span class="returnvalue">RCUiSpectrumStyle</span></a>   rc_ui_spectrum_widget_get_style     (<em class="parameter"><code><a class="link" href="RCUiSpectrumWidget.html" title="RCUiSpectrumWidget"><span class="type">RCUiSpectrumWidget</span></a> *spectrum</code></em>);</pre>
+<p>
+Get the spectrum style of the spectrum widget.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>spectrum</code></em> :</span></p></td>
+<td>the <a class="link" href="RCUiSpectrumWidget.html" title="RCUiSpectrumWidget"><span class="type">RCUiSpectrumWidget</span></a> widget</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>The spectrum style.</td>
+</tr>
+</tbody>
 </table></div>
 </div>
 <hr>
@@ -159,15 +241,11 @@ Set the refresh frequency of the widget.
 </div>
 <hr>
 <div class="refsect2">
-<a name="rc-ui-spectrum-widget-set-magnitudes"></a><h3>rc_ui_spectrum_widget_set_magnitudes ()</h3>
-<pre class="programlisting"><span class="returnvalue">void</span>                rc_ui_spectrum_widget_set_magnitudes
-                                                        (<em class="parameter"><code><a class="link" href="RCUiSpectrumWidget.html" title="RCUiSpectrumWidget"><span class="type">RCUiSpectrumWidget</span></a> *spectrum</code></em>,
-                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> rate</code></em>,
-                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> bands</code></em>,
-                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gfloat"><span class="type">gfloat</span></a> threshold</code></em>,
-                                                         <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/gobject/gobject-Generic-values.html#GValue"><span class="type">GValue</span></a> *magnitudes</code></em>);</pre>
+<a name="rc-ui-spectrum-widget-set-style"></a><h3>rc_ui_spectrum_widget_set_style ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rc_ui_spectrum_widget_set_style     (<em class="parameter"><code><a class="link" href="RCUiSpectrumWidget.html" title="RCUiSpectrumWidget"><span class="type">RCUiSpectrumWidget</span></a> *spectrum</code></em>,
+                                                         <em class="parameter"><code><a class="link" href="RCUiSpectrumWidget.html#RCUiSpectrumStyle" title="enum RCUiSpectrumStyle"><span class="type">RCUiSpectrumStyle</span></a> style</code></em>);</pre>
 <p>
-Set magnitude values for the <a class="link" href="RCUiSpectrumWidget.html" title="RCUiSpectrumWidget"><span class="type">RCUiSpectrumWidget</span></a> widget.
+Set the spectrum style of the spectrum widget.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -177,20 +255,8 @@ Set magnitude values for the <a class="link" href="RCUiSpectrumWidget.html" titl
 <td>the <a class="link" href="RCUiSpectrumWidget.html" title="RCUiSpectrumWidget"><span class="type">RCUiSpectrumWidget</span></a> widget</td>
 </tr>
 <tr>
-<td><p><span class="term"><em class="parameter"><code>rate</code></em> :</span></p></td>
-<td>the sample rate</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>bands</code></em> :</span></p></td>
-<td>the band number</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>threshold</code></em> :</span></p></td>
-<td>the threshold value</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>magnitudes</code></em> :</span></p></td>
-<td>a magniude array</td>
+<td><p><span class="term"><em class="parameter"><code>style</code></em> :</span></p></td>
+<td>the spectrum show style</td>
 </tr>
 </tbody>
 </table></div>

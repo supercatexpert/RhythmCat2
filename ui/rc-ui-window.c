@@ -100,7 +100,6 @@ typedef struct RCUiMainWindowPrivate
     gulong state_changed_id;
     gulong uri_changed_id;
     gulong volume_changed_id;
-    gulong spectrum_changed_id;
     gulong buffering_id;
     gulong lyric_timer_id;
     gulong import_updated_id;
@@ -421,15 +420,6 @@ static void rc_ui_main_window_album_none_cb(RCLibAlbum *album, gpointer data)
         priv->cover_default_pixbuf);
     gtk_action_set_sensitive(gtk_ui_manager_get_action(priv->ui_manager,
         "/AlbumPopupMenu/AlbumSaveImage"), FALSE);
-}
-
-static void rc_ui_main_window_spectrum_updated_cb(RCLibCore *core, guint rate,
-    guint bands, gfloat threshold, const GValue *magnitudes, gpointer data)
-{
-    RCUiMainWindowPrivate *priv = (RCUiMainWindowPrivate *)data;
-    if(data==NULL || magnitudes==NULL) return;
-    rc_ui_spectrum_widget_set_magnitudes(RC_UI_SPECTRUM_WIDGET(
-        priv->spectrum_widget), rate, bands, threshold, magnitudes);
 }
 
 static gboolean rc_ui_main_window_play_button_clicked_cb()
@@ -1220,8 +1210,6 @@ static void rc_ui_main_window_signal_bind(RCUiMainWindow *window)
         G_CALLBACK(rc_ui_main_window_uri_changed_cb), priv);
     priv->volume_changed_id = rclib_core_signal_connect("volume-changed",
         G_CALLBACK(rc_ui_main_window_volume_changed_cb), priv);
-    priv->spectrum_changed_id = rclib_core_signal_connect("spectrum-updated",
-        G_CALLBACK(rc_ui_main_window_spectrum_updated_cb), priv);
     priv->buffering_id = rclib_core_signal_connect("buffering",
         G_CALLBACK(rc_ui_main_window_buffering_cb), priv);
     priv->lyric_timer_id = rclib_lyric_signal_connect("lyric-timer",
@@ -1251,8 +1239,6 @@ static void rc_ui_main_window_finalize(GObject *object)
         rclib_core_signal_disconnect(priv->uri_changed_id);
     if(priv->volume_changed_id>0)
         rclib_core_signal_disconnect(priv->volume_changed_id);
-    if(priv->spectrum_changed_id>0)
-        rclib_core_signal_disconnect(priv->spectrum_changed_id);
     if(priv->buffering_id>0)
         rclib_core_signal_disconnect(priv->buffering_id);
     if(priv->lyric_timer_id>0)

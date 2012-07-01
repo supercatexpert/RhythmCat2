@@ -90,7 +90,6 @@
     <keyword type="signal" name="The &quot;eq-changed&quot; signal" link="RCLibCore.html#RCLibCore-eq-changed"/>
     <keyword type="signal" name="The &quot;error&quot; signal" link="RCLibCore.html#RCLibCore-error"/>
     <keyword type="signal" name="The &quot;new-duration&quot; signal" link="RCLibCore.html#RCLibCore-new-duration"/>
-    <keyword type="signal" name="The &quot;spectrum-updated&quot; signal" link="RCLibCore.html#RCLibCore-spectrum-updated"/>
     <keyword type="signal" name="The &quot;state-changed&quot; signal" link="RCLibCore.html#RCLibCore-state-changed"/>
     <keyword type="signal" name="The &quot;tag-found&quot; signal" link="RCLibCore.html#RCLibCore-tag-found"/>
     <keyword type="signal" name="The &quot;uri-changed&quot; signal" link="RCLibCore.html#RCLibCore-uri-changed"/>

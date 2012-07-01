@@ -107,4 +107,9 @@
     * Updated plug-in magic number, so old plug-ins cannot be used.
     * Fixed some bugs.
 
+2012-07-01  SuperCat    <supercatexpert@gmail.com>
 
+    * Removed spectrum part from LibRhythmCat, and implemented it in UI part.
+    * Add wave scope style in spectrum show.
+
+    

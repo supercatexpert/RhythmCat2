@@ -113,21 +113,6 @@ typedef enum {
     RCLIB_CORE_EQ_TYPE_CUSTOM = 10
 }RCLibCoreEQType;
 
-/**
- * RCLibCoreVisualizerType:
- * @RCLIB_CORE_VISUALIZER_NONE: no visualizer
- * @RCLIB_CORE_VISUALIZER_WAVE: wavescope type visualizer
- * @RCLIB_CORE_VISUALIZER_SPECTRUM: spectrum type visualizer
- * 
- * The audio visualizer type in the core.
- */
-
-typedef enum {
-    RCLIB_CORE_VISUALIZER_NONE = 0,
-    RCLIB_CORE_VISUALIZER_WAVE = 1,
-    RCLIB_CORE_VISUALIZER_SPECTRUM = 2
-}RCLibCoreVisualizerType;
-
 typedef struct _RCLibCoreMetadata RCLibCoreMetadata;
 typedef struct _RCLibCore RCLibCore;
 typedef struct _RCLibCoreClass RCLibCoreClass;
@@ -190,10 +175,8 @@ struct _RCLibCoreClass {
     void (*eq_changed)(RCLibCore *core, RCLibCoreEQType type,
         gdouble *values);
     void (*balance_changed)(RCLibCore *core, gfloat balance);
-    void (*spectrum_updated)(RCLibCore *core, guint rate, guint bands,
-        const GValue *magnitudes);
     void (*buffering)(RCLibCore *core, gint percent);
-    void (*buffer_probe)(RCLibCore *core, GstBuffer *buffer);
+    void (*buffer_probe)(RCLibCore *core, GstPad *pad, GstBuffer *buffer);
     void (*error)(RCLibCore *core, const gchar *message);
 };
 
@@ -244,10 +227,6 @@ GList *rclib_core_effect_plugin_get_list();
 gint rclib_core_query_sample_rate();
 gint rclib_core_query_channels();
 gint rclib_core_query_depth();
-void rclib_core_visualizer_set_style(RCLibCoreVisualizerType style);
-RCLibCoreVisualizerType rclib_core_visualizer_get_style();
-void rclib_core_spectrum_set_bands(guint bands);
-guint rclib_core_spectrum_get_bands();
 
 G_END_DECLS
 

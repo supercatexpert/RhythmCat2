@@ -216,13 +216,16 @@ rc_ui_scrollable_label_get_type
 <SECTION>
 <FILE>rc-ui-spectrum</FILE>
 <TITLE>RCUiSpectrumWidget</TITLE>
+RCUiSpectrumStyle
 RCUiSpectrumWidget
 RCUiSpectrumWidgetClass
 RC_UI_SPECTRUM_WIDGET_TYPE
 rc_ui_spectrum_widget_clean
+rc_ui_spectrum_widget_get_fps
+rc_ui_spectrum_widget_get_style
 rc_ui_spectrum_widget_new
 rc_ui_spectrum_widget_set_fps
-rc_ui_spectrum_widget_set_magnitudes
+rc_ui_spectrum_widget_set_style
 <SUBSECTION Standard>
 IS_RC_UI_SPECTRUM_WIDGET
 IS_RC_UI_SPECTRUM_WIDGET_CLASS

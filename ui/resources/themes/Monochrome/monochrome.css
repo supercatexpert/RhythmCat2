@@ -1,5 +1,5 @@
 @define-color rc_base_color #4f524f;
-@define-color rc_bg_color #363b3b;
+@define-color rc_bg_color #393f3f;
 @define-color rc_text_color #eeeeec;
 @define-color rc_fg_color @rc_text_color;
 @define-color rc_borders #24282a;
@@ -94,6 +94,8 @@
 {
     background-color: @rc_bg_color;
     background-image: none;
+    -RCUiSpectrumWidget-wave-channel1-color: #00F000;
+    -RCUiSpectrumWidget-wave-channel2-color: #F00000;
     color: #00A0F0;
 }
 
@@ -101,6 +103,8 @@
 {
     background-color: @rc_bg_color;
     background-image: none;
+    -RCUiSpectrumWidget-wave-channel1-color: shade(#00F000, 0.6);
+    -RCUiSpectrumWidget-wave-channel2-color: shade(#F00000, 0.6);
     color: shade(#00A0F0, 0.5);
 }
 

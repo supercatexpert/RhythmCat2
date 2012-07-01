@@ -121,7 +121,6 @@ const <a class="link" href="RCLibCore.html#RCLibCoreMetadata" title="struct RCLi
   "<a class="link" href="RCLibCore.html#RCLibCore-eq-changed" title='The "eq-changed" signal'>eq-changed</a>"                                     : <a href="/usr/share/gtk-doc/html/gobject/gobject-Signals.html#G-SIGNAL-RUN-FIRST:CAPS"><code class="literal">Run First</code></a>
   "<a class="link" href="RCLibCore.html#RCLibCore-error" title='The "error" signal'>error</a>"                                          : <a href="/usr/share/gtk-doc/html/gobject/gobject-Signals.html#G-SIGNAL-RUN-FIRST:CAPS"><code class="literal">Run First</code></a>
   "<a class="link" href="RCLibCore.html#RCLibCore-new-duration" title='The "new-duration" signal'>new-duration</a>"                                   : <a href="/usr/share/gtk-doc/html/gobject/gobject-Signals.html#G-SIGNAL-RUN-FIRST:CAPS"><code class="literal">Run First</code></a>
-  "<a class="link" href="RCLibCore.html#RCLibCore-spectrum-updated" title='The "spectrum-updated" signal'>spectrum-updated</a>"                               : <a href="/usr/share/gtk-doc/html/gobject/gobject-Signals.html#G-SIGNAL-RUN-FIRST:CAPS"><code class="literal">Run First</code></a>
   "<a class="link" href="RCLibCore.html#RCLibCore-state-changed" title='The "state-changed" signal'>state-changed</a>"                                  : <a href="/usr/share/gtk-doc/html/gobject/gobject-Signals.html#G-SIGNAL-RUN-FIRST:CAPS"><code class="literal">Run First</code></a>
   "<a class="link" href="RCLibCore.html#RCLibCore-tag-found" title='The "tag-found" signal'>tag-found</a>"                                      : <a href="/usr/share/gtk-doc/html/gobject/gobject-Signals.html#G-SIGNAL-RUN-FIRST:CAPS"><code class="literal">Run First</code></a>
   "<a class="link" href="RCLibCore.html#RCLibCore-uri-changed" title='The "uri-changed" signal'>uri-changed</a>"                                    : <a href="/usr/share/gtk-doc/html/gobject/gobject-Signals.html#G-SIGNAL-RUN-FIRST:CAPS"><code class="literal">Run First</code></a>
@@ -1150,11 +1149,13 @@ The ::balance-changed signal is emitted when new balance was applied.
 <div class="refsect2">
 <a name="RCLibCore-buffer-probe"></a><h3>The <code class="literal">"buffer-probe"</code> signal</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>                user_function                      (<a class="link" href="RCLibCore.html" title="RCLibCore"><span class="type">RCLibCore</span></a> *core,
+                                                        <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>   pad,
                                                         <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>   buffer,
                                                         <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>   user_data)      : <a href="/usr/share/gtk-doc/html/gobject/gobject-Signals.html#G-SIGNAL-RUN-FIRST:CAPS"><code class="literal">Run First</code></a></pre>
 <p>
 The ::buffering signal is emitted when the buffer data pass through
-  the pipeline.
+    the pipeline.
+Warning: This signal is emitted from the working thread of GStreamer.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -1162,6 +1163,11 @@ The ::buffering signal is emitted when the buffer data pass through
 <tr>
 <td><p><span class="term"><em class="parameter"><code>core</code></em> :</span></p></td>
 <td>the <a class="link" href="RCLibCore.html" title="RCLibCore"><span class="type">RCLibCore</span></a> that received the signal</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>pad</code></em> :</span></p></td>
+<td>the <a href="/usr/share/gtk-doc/html/gstreamer-0.10/GstPad.html"><span class="type">GstPad</span></a>
+</td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>buffer</code></em> :</span></p></td>
@@ -1311,49 +1317,6 @@ was found.
 </div>
 <hr>
 <div class="refsect2">
-<a name="RCLibCore-spectrum-updated"></a><h3>The <code class="literal">"spectrum-updated"</code> signal</h3>
-<pre class="programlisting"><span class="returnvalue">void</span>                user_function                      (<a class="link" href="RCLibCore.html" title="RCLibCore"><span class="type">RCLibCore</span></a> *core,
-                                                        <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a>      rate,
-                                                        <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a>      bands,
-                                                        <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gfloat"><span class="type">gfloat</span></a>     threshold,
-                                                        <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>   magnitudes,
-                                                        <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>   user_data)       : <a href="/usr/share/gtk-doc/html/gobject/gobject-Signals.html#G-SIGNAL-RUN-FIRST:CAPS"><code class="literal">Run First</code></a></pre>
-<p>
-The ::spectrum-updated signal is emitted when the spectrum
-message is received.
-</p>
-<div class="variablelist"><table border="0">
-<col align="left" valign="top">
-<tbody>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>core</code></em> :</span></p></td>
-<td>the <a class="link" href="RCLibCore.html" title="RCLibCore"><span class="type">RCLibCore</span></a> that received the signal</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>rate</code></em> :</span></p></td>
-<td>the sample rate</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>bands</code></em> :</span></p></td>
-<td>the band number</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>threshold</code></em> :</span></p></td>
-<td>the threshold</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>magnitudes</code></em> :</span></p></td>
-<td>the magnitude array</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>user_data</code></em> :</span></p></td>
-<td>user data set when the signal handler was connected.</td>
-</tr>
-</tbody>
-</table></div>
-</div>
-<hr>
-<div class="refsect2">
 <a name="RCLibCore-state-changed"></a><h3>The <code class="literal">"state-changed"</code> signal</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>                user_function                      (<a class="link" href="RCLibCore.html" title="RCLibCore"><span class="type">RCLibCore</span></a> *core,
                                                         <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a>       state,
@@ -1389,7 +1352,8 @@ is changed.
                                                         <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>   user_data)      : <a href="/usr/share/gtk-doc/html/gobject/gobject-Signals.html#G-SIGNAL-RUN-FIRST:CAPS"><code class="literal">Run First</code></a></pre>
 <p>
 The ::tag-found signal is emitted when new metadata (tag) was
-found.
+found. Notice that this signal may be emitted many times during
+the playing.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
