@@ -64,7 +64,7 @@ typedef enum {
  * RCLibPlayerRandomMode:
  * @RCLIB_PLAYER_RANDOM_NONE: no random playing 
  * @RCLIB_PLAYER_RANDOM_SINGLE: random playing in current playlist
- * @RCLIB_PlAYER_RANDOM_ALL: random playing in all playlists
+ * @RCLIB_PLAYER_RANDOM_ALL: random playing in all playlists
  *
  * The enum type for random playing mode type.
  */
@@ -72,7 +72,7 @@ typedef enum {
 typedef enum {
     RCLIB_PLAYER_RANDOM_NONE,
     RCLIB_PLAYER_RANDOM_SINGLE,
-    RCLIB_PlAYER_RANDOM_ALL
+    RCLIB_PLAYER_RANDOM_ALL
 }RCLibPlayerRandomMode;
 
 typedef struct _RCLibPlayer RCLibPlayer;

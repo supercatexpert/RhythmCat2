@@ -63,6 +63,7 @@ typedef struct RCLibCorePrivate
     GstElement *playbin;
     GstElement *audiosink;
     GstElement *videosink;
+    GstElement *identity;
     GstElement *effectbin;
     GstElement *bal_plugin; /* balance: audiopanorama */
     GstElement *eq_plugin; /* equalizer: equalizer-10bands */
@@ -89,6 +90,7 @@ typedef struct RCLibCorePrivate
     gchar *ext_cookie_pre;
     GAsyncQueue *tag_update_queue;
     gboolean tag_signal_emitted;
+    gulong identity_id;
     gulong message_id;
     gulong volume_id;
     gulong audio_tag_changed_id;
@@ -273,6 +275,8 @@ static void rclib_core_finalize(GObject *object)
     }
     if(priv->tag_update_id!=0)
         g_source_remove(priv->tag_update_id);
+    if(priv->identity!=NULL && priv->identity_id>0)
+        g_signal_handler_disconnect(priv->identity, priv->identity_id);
     if(priv->playbin!=NULL)
     {
         if(priv->volume_id>0)
@@ -430,11 +434,10 @@ static void rclib_core_class_init(RCLibCoreClass *klass)
         RCLIB_TYPE_CORE, G_SIGNAL_RUN_FIRST, G_STRUCT_OFFSET(RCLibCoreClass,
         buffering), NULL, NULL, g_cclosure_marshal_VOID__INT, G_TYPE_NONE,
         1, G_TYPE_INT, NULL);
-        
+ 
     /**
      * RCLibCore::buffer-probe:
      * @core: the #RCLibCore that received the signal
-     * @pad: the #GstPad
      * @buffer: the #GstBuffer
      *
      * The ::buffering signal is emitted when the buffer data pass through
@@ -443,8 +446,8 @@ static void rclib_core_class_init(RCLibCoreClass *klass)
      */
     core_signals[SIGNAL_BUFFER_PROBE] = g_signal_new("buffer-probe",
         RCLIB_TYPE_CORE, G_SIGNAL_RUN_FIRST, G_STRUCT_OFFSET(RCLibCoreClass,
-        buffer_probe), NULL, NULL, rclib_marshal_VOID__POINTER_POINTER,
-        G_TYPE_NONE, 2, G_TYPE_POINTER, G_TYPE_POINTER, NULL);
+        buffer_probe), NULL, NULL, g_cclosure_marshal_VOID__POINTER,
+        G_TYPE_NONE, 1, G_TYPE_POINTER, NULL);
 
     /**
      * RCLibCore::error:
@@ -587,7 +590,7 @@ static void rclib_core_effect_remove_element_internal(GstElement *effectbin,
     prevpad = gst_pad_get_peer(mypad);
     gst_pad_unlink(prevpad, mypad);
     gst_object_unref(mypad);
-    mypad = gst_element_get_static_pad (bin, "src");
+    mypad = gst_element_get_static_pad(bin, "src");
     nextpad = gst_pad_get_peer(mypad);
     gst_pad_unlink(mypad, nextpad);
     gst_object_unref(mypad);
@@ -743,8 +746,8 @@ static void rclib_core_bus_callback(GstBus *bus, GstMessage *msg,
     return;
 }
 
-static gboolean rclib_core_pad_buffer_probe_cb(GstPad *pad, GstBuffer *buf,
-    gpointer data)
+static void rclib_core_identity_buffer_cb(GstElement *identity,
+    GstBuffer *buf, gpointer data)
 {
     /* WARNING: This function is not called in main thread! */
     GstMessage *msg;
@@ -757,9 +760,9 @@ static gboolean rclib_core_pad_buffer_probe_cb(GstPad *pad, GstBuffer *buf,
     GstStructure *structure;
     RCLibCorePrivate *priv = NULL;
     GObject *object = G_OBJECT(data);
-    if(object==NULL) return TRUE;
+    if(object==NULL) return;
     priv = RCLIB_CORE_GET_PRIVATE(RCLIB_CORE(object));
-    if(priv==NULL) return TRUE;
+    if(priv==NULL) return;
     pos = (gint64)GST_BUFFER_TIMESTAMP(buf);
     len = rclib_core_query_duration();
     if(len>0) priv->duration = len;
@@ -781,9 +784,9 @@ static gboolean rclib_core_pad_buffer_probe_cb(GstPad *pad, GstBuffer *buf,
             rclib_core_stop(); 
         g_debug("Out of the duration, EOS message has been emitted.");
     }
-    g_signal_emit(object, core_signals[SIGNAL_BUFFER_PROBE], 0, pad, buf);
-    caps = gst_pad_get_negotiated_caps(pad);
-    if(caps==NULL) return TRUE;
+    g_signal_emit(object, core_signals[SIGNAL_BUFFER_PROBE], 0, buf);
+    caps = gst_buffer_get_caps(buf);
+    if(caps==NULL) return;
     structure = gst_caps_get_structure(caps, 0);
     gst_structure_get_int(structure, "rate", &rate);
     gst_structure_get_int(structure, "channels", &channels);
@@ -791,11 +794,10 @@ static gboolean rclib_core_pad_buffer_probe_cb(GstPad *pad, GstBuffer *buf,
     gst_structure_get_int(structure, "depth", &depth);
     gst_caps_unref(caps);
     if(depth==0) depth = width;
-    if(rate==0 || width==0 || channels==0) return TRUE;
+    if(rate==0 || width==0 || channels==0) return;
     priv->sample_rate = rate;
     priv->channels = channels;
     priv->depth = depth;
-    return TRUE;
 }
 
 static gboolean rclib_core_volume_changed_idle(GObject *object)
@@ -917,6 +919,7 @@ static void rclib_core_instance_init(RCLibCore *core)
     GstElement *audiosink = NULL;
     GstElement *videosink = NULL;
     GstElement *audioconvert = NULL;
+    GstElement *effidentity = NULL;
     GstElement *identity = NULL;
     GError *error = NULL;
     GstPad *pad;
@@ -945,7 +948,7 @@ static void rclib_core_instance_init(RCLibCore *core)
                 RCLIB_CORE_ERROR_MISSING_CORE_PLUGIN,
                 _("Cannot load necessary plugin: %s"), "fakesink");
             break;
-        }
+        }        
         audiosink = gst_element_factory_make("autoaudiosink",
             "rclib-audiosink");
         if(audiosink==NULL)
@@ -967,8 +970,18 @@ static void rclib_core_instance_init(RCLibCore *core)
             break;
         }
         identity = gst_element_factory_make("identity",
-            "effect-identity");
+            "rclib-identity");
         if(identity==NULL)
+        {
+            g_warning("Cannot load necessary plugin: %s", "identify");
+            g_set_error(&error, RCLIB_CORE_ERROR,
+                RCLIB_CORE_ERROR_MISSING_CORE_PLUGIN,
+                _("Cannot load necessary plugin: %s"), "identity");
+            break;
+        }
+        effidentity = gst_element_factory_make("identity",
+            "effect-identity");
+        if(effidentity==NULL)
         {
             g_warning("Cannot load necessary plugin: %s", "identify");
             g_set_error(&error, RCLIB_CORE_ERROR,
@@ -985,8 +998,8 @@ static void rclib_core_instance_init(RCLibCore *core)
                 _("Cannot create bin: %s"), "effectbin");
             break;
         }
-        gst_bin_add_many(GST_BIN(effectbin), audioconvert, identity, NULL);
-        if(!gst_element_link(audioconvert, identity))
+        gst_bin_add_many(GST_BIN(effectbin), audioconvert, effidentity, NULL);
+        if(!gst_element_link(audioconvert, effidentity))
         {
             g_warning("Cannot link elements!");
             g_set_error(&error, RCLIB_CORE_ERROR,
@@ -997,7 +1010,7 @@ static void rclib_core_instance_init(RCLibCore *core)
         pad = gst_element_get_static_pad(audioconvert, "sink");
         gst_element_add_pad(effectbin, gst_ghost_pad_new("sink", pad));
         gst_object_unref(pad);
-        pad = gst_element_get_static_pad(identity, "src");
+        pad = gst_element_get_static_pad(effidentity, "src");
         gst_element_add_pad(effectbin, gst_ghost_pad_new("src", pad));
         gst_object_unref(pad);
         audiobin = gst_bin_new("rclib-audiobin");
@@ -1009,16 +1022,17 @@ static void rclib_core_instance_init(RCLibCore *core)
                 _("Cannot create bin: %s"), "audiobin");
             break;
         }
-        gst_bin_add_many(GST_BIN(audiobin), effectbin, audiosink, NULL);
-        if(!gst_element_link_many(effectbin, audiosink, NULL))
+        gst_bin_add_many(GST_BIN(audiobin), identity, effectbin,
+            audiosink, NULL);
+        if(!gst_element_link_many(identity, effectbin, audiosink, NULL))
         {
-            g_warning("Cannot link elements!");
+            g_warning("Cannot link identity -> effectbin -> audiosink!");
             g_set_error(&error, RCLIB_CORE_ERROR,
                 RCLIB_CORE_ERROR_LINK_FAILED,
                 _("Cannot link elements!"));
             break;
         }
-        pad = gst_element_get_static_pad(effectbin, "sink");
+        pad = gst_element_get_static_pad(identity, "sink");
         gst_element_add_pad(audiobin, gst_ghost_pad_new(NULL, pad));
         gst_object_unref(pad);
         flag = TRUE;
@@ -1033,18 +1047,19 @@ static void rclib_core_instance_init(RCLibCore *core)
         else
         {
             if(audiosink!=NULL) gst_object_unref(audiosink);
+            if(identity!=NULL) gst_object_unref(identity);
             if(effectbin!=NULL)
                 gst_object_unref(effectbin);
             else
             {
                 if(audioconvert!=NULL) gst_object_unref(audioconvert);
-                if(identity!=NULL) gst_object_unref(identity);
+                if(effidentity!=NULL) gst_object_unref(effidentity);
             }
-
         }
         priv->error = error;
         return;
     }
+    g_object_set(identity, "signal-handoffs", TRUE, NULL);
     g_object_set(videosink, "sync", TRUE, NULL);
     g_object_set(playbin, "audio-sink", audiobin, "video-sink",
         videosink, NULL);
@@ -1083,8 +1098,8 @@ static void rclib_core_instance_init(RCLibCore *core)
     priv->bus = bus;
     pad = gst_element_get_static_pad(audioconvert, "sink");
     priv->query_pad = pad;
-    gst_pad_add_buffer_probe(pad, G_CALLBACK(rclib_core_pad_buffer_probe_cb),
-       core);
+    priv->identity_id = g_signal_connect(identity, "handoff",
+        G_CALLBACK(rclib_core_identity_buffer_cb), core);
     priv->volume_id = g_signal_connect(priv->playbin, "notify::volume",
         G_CALLBACK(rclib_core_volume_notify_cb), priv);
     priv->source_id = g_signal_connect(priv->playbin, "notify::source",

@@ -229,6 +229,8 @@ static void rc_plugin_desklrc_show(GtkWidget *widget,
 {
     GtkAllocation allocation;
     cairo_pattern_t *pat;
+    cairo_t *scr;
+    cairo_surface_t *surface;
     const RCLibLyricData *lrc_data1 = NULL;
     const RCLibLyricData *lrc_data2 = NULL;
     GSequenceIter *iter_now1 = NULL;
@@ -398,6 +400,9 @@ static void rc_plugin_desklrc_show(GtkWidget *widget,
     if(two_track) window_height+=5;
     if(two_line && two_track) window_height+=5;
     gtk_widget_get_allocation(widget, &allocation);
+    surface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32,
+        allocation.width, allocation.height);
+    scr = cairo_create(surface);
     if(allocation.height!=window_height ||
         allocation.width!=priv->osd_window_width)
     {
@@ -407,12 +412,11 @@ static void rc_plugin_desklrc_show(GtkWidget *widget,
     gtk_widget_get_allocation(widget, &allocation);
     if(priv->notify_flag)
     {
-        rc_plugin_desklrc_draw_drag_shadow(cr, allocation.width,
+        rc_plugin_desklrc_draw_drag_shadow(scr, allocation.width,
             allocation.height);
     }
     if(iter_now1!=NULL)
     {
-        cairo_save(cr);
         index1 = g_sequence_iter_get_position(iter_now1);
         lrc_data1 = g_sequence_get(iter_now1);
         if(lrc_data1!=NULL)
@@ -448,16 +452,19 @@ static void rc_plugin_desklrc_show(GtkWidget *widget,
         {
             start_y = 10;
         }
-        cairo_move_to(cr, start_x, start_y);
-        pango_cairo_update_layout(cr, priv->layout);
-        pango_cairo_layout_path(cr, priv->layout);
+        cairo_move_to(scr, start_x, start_y);
+        cairo_save(scr);
+        //pango_cairo_update_layout(scr, priv->layout);
+        pango_cairo_layout_path(scr, priv->layout);
         if(priv->draw_stroke)
         {
-            cairo_set_source_rgba(cr, 0.0, 0.0, 0.0, 0.5);
-            cairo_stroke_preserve(cr);
+            cairo_set_source_rgba(scr, 0.0, 0.0, 0.0, 0.5);
+            cairo_stroke_preserve(scr);
+            rc_plugin_desklrc_gussian_blur(cairo_get_target(scr), 1.0);
         }
-        //rc_plugin_desklrc_gussian_blur(cairo_get_target(cr), 1.0);
-        cairo_clip(cr);
+        cairo_restore(scr);
+        cairo_save(scr);
+        cairo_new_path(scr);
         pat = cairo_pattern_create_linear(start_x, start_y, start_x,
             start_y+text_height1);
         cairo_pattern_add_color_stop_rgb(pat, 0.0, priv->bg_color2.red,
@@ -466,9 +473,12 @@ static void rc_plugin_desklrc_show(GtkWidget *widget,
             priv->bg_color1.green, priv->bg_color1.blue);
         cairo_pattern_add_color_stop_rgb(pat, 1.0, priv->bg_color2.red,
             priv->bg_color2.green, priv->bg_color2.blue);
-        cairo_set_source(cr, pat);
-        cairo_rectangle(cr, start_x, start_y, text_width1, text_height1);
-        cairo_fill(cr);
+        cairo_set_source(scr, pat);
+        cairo_set_operator(scr, CAIRO_OPERATOR_OVER);
+        //cairo_rectangle(scr, start_x, start_y, text_width1, text_height1);
+        //cairo_fill(scr);
+        cairo_move_to(cr, start_x, start_y);
+        pango_cairo_show_layout(scr, priv->layout);
         cairo_pattern_destroy(pat);
         fill_width = percent1 * (gfloat)text_width1;
         pat = cairo_pattern_create_linear(start_x, start_y, start_x,
@@ -479,15 +489,15 @@ static void rc_plugin_desklrc_show(GtkWidget *widget,
             priv->fg_color1.green, priv->fg_color1.blue);
         cairo_pattern_add_color_stop_rgb(pat, 1.0, priv->fg_color2.red,
             priv->fg_color2.green, priv->fg_color2.blue);
-        cairo_set_source(cr, pat);
-        cairo_rectangle(cr, start_x, start_y, fill_width, text_height1);
-        cairo_fill(cr);
+        cairo_set_source(scr, pat);
+        cairo_rectangle(scr, start_x, start_y, fill_width, text_height1);
+        cairo_fill(scr);
         cairo_pattern_destroy(pat);
-        cairo_restore(cr);
+        cairo_restore(scr);
     }
     if(iter_next1!=NULL)
     {
-        cairo_save(cr);
+        cairo_save(scr);
         index1 = g_sequence_iter_get_position(iter_next1);
         lrc_data1 = g_sequence_get(iter_next1);
         if(lrc_data1!=NULL)
@@ -520,15 +530,18 @@ static void rc_plugin_desklrc_show(GtkWidget *widget,
         {
             start_y = 10;
         }
-        cairo_move_to(cr, start_x, start_y);
-        pango_cairo_update_layout(cr, priv->layout);
-        pango_cairo_layout_path(cr, priv->layout);
+        cairo_move_to(scr, start_x, start_y);
+        cairo_save(scr);
+        pango_cairo_update_layout(scr, priv->layout);
+        pango_cairo_layout_path(scr, priv->layout);
         if(priv->draw_stroke)
         {
-            cairo_set_source_rgba(cr, 0.0, 0.0, 0.0, 0.5);
-            cairo_stroke_preserve(cr);
+            cairo_set_source_rgba(scr, 0.0, 0.0, 0.0, 0.5);
+            cairo_stroke_preserve(scr);
+            rc_plugin_desklrc_gussian_blur(cairo_get_target(scr), 1.0);
         }
-        cairo_clip(cr);
+        cairo_restore(scr);
+        cairo_clip(scr);
         pat = cairo_pattern_create_linear(start_x, start_y, start_x,
             start_y+text_next_height1);
         if(percent1<0.5)
@@ -549,16 +562,16 @@ static void rc_plugin_desklrc_show(GtkWidget *widget,
             cairo_pattern_add_color_stop_rgb(pat, 1.0, priv->bg_color2.red,
                 priv->bg_color2.green, priv->bg_color2.blue);
         }
-        cairo_set_source(cr, pat);
-        cairo_rectangle(cr, start_x, start_y, text_next_width1,
+        cairo_set_source(scr, pat);
+        cairo_rectangle(scr, start_x, start_y, text_next_width1,
             text_next_height1);
-        cairo_fill(cr);
+        cairo_fill(scr);
         cairo_pattern_destroy(pat);
-        cairo_restore(cr);
+        cairo_restore(scr);
     }
     if(iter_now2!=NULL)
     {
-        cairo_save(cr);
+        cairo_save(scr);
         index2 = g_sequence_iter_get_position(iter_now2);
         lrc_data2 = g_sequence_get(iter_now2);
         if(lrc_data2!=NULL)
@@ -587,15 +600,18 @@ static void rc_plugin_desklrc_show(GtkWidget *widget,
         {
             start_y = 15 + text_height1;
         }
-        cairo_move_to(cr, start_x, start_y);
-        pango_cairo_update_layout(cr, priv->layout);
-        pango_cairo_layout_path(cr, priv->layout);
+        cairo_move_to(scr, start_x, start_y);
+        cairo_save(scr);
+        pango_cairo_update_layout(scr, priv->layout);
+        pango_cairo_layout_path(scr, priv->layout);
         if(priv->draw_stroke)
         {
-            cairo_set_source_rgba(cr, 0.0, 0.0, 0.0, 0.5);
-            cairo_stroke_preserve(cr);
+            cairo_set_source_rgba(scr, 0.0, 0.0, 0.0, 0.5);
+            cairo_stroke_preserve(scr);
+            rc_plugin_desklrc_gussian_blur(cairo_get_target(scr), 1.0);
         }
-        cairo_clip(cr);
+        cairo_restore(scr);
+        cairo_clip(scr);
         pat = cairo_pattern_create_linear(start_x, start_y, start_x,
             start_y+text_height2);
         cairo_pattern_add_color_stop_rgb(pat, 0.0, priv->bg_color2.red,
@@ -604,9 +620,9 @@ static void rc_plugin_desklrc_show(GtkWidget *widget,
             priv->bg_color1.green, priv->bg_color1.blue);
         cairo_pattern_add_color_stop_rgb(pat, 1.0, priv->bg_color2.red,
             priv->bg_color2.green, priv->bg_color2.blue);
-        cairo_set_source(cr, pat);
-        cairo_rectangle(cr, start_x, start_y, text_width2, text_height2);
-        cairo_fill(cr);
+        cairo_set_source(scr, pat);
+        cairo_rectangle(scr, start_x, start_y, text_width2, text_height2);
+        cairo_fill(scr);
         cairo_pattern_destroy(pat);
         fill_width = percent2 * (gfloat)text_width2;
         pat = cairo_pattern_create_linear(start_x, start_y, start_x,
@@ -617,15 +633,15 @@ static void rc_plugin_desklrc_show(GtkWidget *widget,
             priv->fg_color1.green, priv->fg_color1.blue);
         cairo_pattern_add_color_stop_rgb(pat, 1.0, priv->fg_color2.red,
             priv->fg_color2.green, priv->fg_color2.blue);
-        cairo_set_source(cr, pat);
-        cairo_rectangle(cr, start_x, start_y, fill_width, text_height2);
-        cairo_fill(cr);
+        cairo_set_source(scr, pat);
+        cairo_rectangle(scr, start_x, start_y, fill_width, text_height2);
+        cairo_fill(scr);
         cairo_pattern_destroy(pat);
-        cairo_restore(cr);
+        cairo_restore(scr);
     }
     if(iter_next2!=NULL)
     {
-        cairo_save(cr);
+        cairo_save(scr);
         index2 = g_sequence_iter_get_position(iter_next2);
         lrc_data2 = g_sequence_get(iter_next2);
         if(lrc_data2!=NULL)
@@ -651,15 +667,18 @@ static void rc_plugin_desklrc_show(GtkWidget *widget,
         {
             start_y = 20 + text_height1;
         }
-        cairo_move_to(cr, start_x, start_y);
-        pango_cairo_update_layout(cr, priv->layout);
-        pango_cairo_layout_path(cr, priv->layout);
+        cairo_move_to(scr, start_x, start_y);
+        cairo_save(scr);
+        pango_cairo_update_layout(scr, priv->layout);
+        pango_cairo_layout_path(scr, priv->layout);
         if(priv->draw_stroke)
         {
-            cairo_set_source_rgba(cr, 0.0, 0.0, 0.0, 0.5);
-            cairo_stroke_preserve(cr);
+            cairo_set_source_rgba(scr, 0.0, 0.0, 0.0, 0.5);
+            cairo_stroke_preserve(scr);
+            rc_plugin_desklrc_gussian_blur(cairo_get_target(scr), 1.0);
         }
-        cairo_clip(cr);
+        cairo_restore(scr);
+        cairo_clip(scr);
         pat = cairo_pattern_create_linear(start_x, start_y, start_x,
             start_y+text_next_height2);
         if(percent2<0.5)
@@ -680,13 +699,18 @@ static void rc_plugin_desklrc_show(GtkWidget *widget,
             cairo_pattern_add_color_stop_rgb(pat, 1.0, priv->bg_color2.red,
                 priv->bg_color2.green, priv->bg_color2.blue);
         }
-        cairo_set_source(cr, pat);
-        cairo_rectangle(cr, start_x, start_y, text_next_width2,
+        cairo_set_source(scr, pat);
+        cairo_rectangle(scr, start_x, start_y, text_next_width2,
             text_next_height2);
-        cairo_fill(cr);
+        cairo_fill(scr);
         cairo_pattern_destroy(pat);
-        cairo_restore(cr);
+        cairo_restore(scr);
     }
+    cairo_destroy(scr);
+    cairo_set_source_surface(cr, surface, 0, 0);
+    cairo_set_operator(cr, CAIRO_OPERATOR_SOURCE);
+    cairo_paint(cr);
+    cairo_surface_destroy(surface);
 }
 
 static gboolean rc_plugin_desklrc_drag(GtkWidget *widget, GdkEvent *event,

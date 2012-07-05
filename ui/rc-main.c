@@ -35,6 +35,7 @@
 #include "rc-ui-style.h"
 #include "rc-ui-resources.h"
 #include "rc-ui-dialog.h"
+#include "rc-ui-spectrum.h"
 
 #ifdef ENABLE_INTROSPECTION
 #include <girepository.h>
@@ -77,6 +78,11 @@ static inline void rc_main_settings_init()
         rclib_settings_set_boolean("MainUI", "MinimizeToTray", FALSE);
     if(!rclib_settings_has_key("MainUI", "MinimizeWhenClose", NULL))
         rclib_settings_set_boolean("MainUI", "MinimizeWhenClose", FALSE);
+    if(!rclib_settings_has_key("MainUI", "SpectrumStyle", NULL))
+    {
+        rclib_settings_set_integer("MainUI", "SpectrumStyle",
+            RC_UI_SPECTRUM_STYLE_WAVE_MULTI);
+    }
 }
 
 static gboolean rc_main_autosave_idle(gpointer data)
@@ -107,6 +113,7 @@ static void rc_main_app_activate(GApplication *application)
     guint column_flags = 0;
     guint plugin_number = 0;
     gchar *tmp_string;
+    GError *error = NULL;
     if(application!=NULL)
         rc_ui_player_init(GTK_APPLICATION(application));
     else
@@ -201,6 +208,20 @@ static void rc_main_app_activate(GApplication *application)
         if(tmp_string!=NULL && g_strstr_len(tmp_string, -1, "%TITLE")!=NULL)
             rc_ui_listview_playlist_set_title_format(tmp_string);
         g_free(tmp_string);
+    }
+    error = NULL;
+    i = rclib_settings_get_integer("MainUI", "SpectrumStyle",
+        &error);
+    if(error==NULL)
+    {
+        rc_ui_main_window_spectrum_set_style(i);
+    }
+    else
+    {
+        rc_ui_main_window_spectrum_set_style(
+            RC_UI_SPECTRUM_STYLE_WAVE_MULTI);
+        g_error_free(error);
+        error = NULL;
     }
     plugin_conf = g_build_filename(main_user_dir, "plugins.conf",
         NULL);

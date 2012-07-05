@@ -87,6 +87,7 @@ void rc_ui_main_window_spectrum_set_visible(gboolean visible);
 gboolean rc_ui_main_window_spectrum_get_visible();
 void rc_ui_main_window_playlist_scrolled_window_set_horizontal_policy(
     gboolean state);
+void rc_ui_main_window_spectrum_set_style(guint style);
 
 G_END_DECLS
 

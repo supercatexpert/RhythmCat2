@@ -31,6 +31,7 @@
 #include "rc-ui-plugin.h"
 #include "rc-ui-settings.h"
 #include "rc-ui-effect.h"
+#include "rc-ui-spectrum.h"
 #include "rc-common.h"
 
 /**
@@ -144,6 +145,17 @@ static void rc_ui_menu_random_clicked_cb(GtkAction *action,
     rclib_player_set_random_mode(value);
     g_signal_handlers_unblock_by_func(action,
         G_CALLBACK(rc_ui_menu_random_clicked_cb), data);
+}
+
+static void rc_ui_menu_spectrum_clicked_cb(GtkAction *action,
+    GtkRadioAction *current, gpointer data)
+{
+    gint value = gtk_radio_action_get_current_value(current);
+    g_signal_handlers_block_by_func(action,
+        G_CALLBACK(rc_ui_menu_spectrum_clicked_cb), data);
+    rc_ui_main_window_spectrum_set_style(value);
+    g_signal_handlers_unblock_by_func(action,
+        G_CALLBACK(rc_ui_menu_spectrum_clicked_cb), data);
 }
 
 static void rc_ui_menu_keep_above_clicked_cb(GtkAction *action,
@@ -428,12 +440,31 @@ static GtkRadioActionEntry ui_menu_random_entries[] =
     { "RandomAllRandom", NULL,
       N_("_All Playlists Random"), NULL,
       N_("Random playing a music in all playlists"),
-      RCLIB_PlAYER_RANDOM_ALL }
+      RCLIB_PLAYER_RANDOM_ALL }
 };
 
 static guint ui_menu_random_n_entries = G_N_ELEMENTS(ui_menu_random_entries);
 
-static GtkToggleActionEntry ui_menu_toogle_entries[] =
+static GtkRadioActionEntry ui_menu_spectrum_entries[] =
+{
+    { "SpectrumNoStyle", NULL,
+      N_("_No Visualize"), NULL,
+      N_("Disable visualize style"), RC_UI_SPECTRUM_STYLE_NONE },
+    { "SpectrumWaveMono", NULL,
+      N_("_Mono Wavescope"), NULL,
+      N_("Wavescope with one channel"), RC_UI_SPECTRUM_STYLE_WAVE_MONO },
+    { "SpectrumWaveMulti", NULL,
+      N_("Multi-_channel Wavescope"), NULL,
+      N_("Wavescope with multi-channel"), RC_UI_SPECTRUM_STYLE_WAVE_MULTI },
+    { "SpectrumSpectrum", NULL,
+      N_("_Spectrum"), NULL,
+      N_("Spectrum"), RC_UI_SPECTRUM_STYLE_SPECTRUM }
+};
+
+static guint ui_menu_spectrum_n_entries =
+    G_N_ELEMENTS(ui_menu_spectrum_entries);
+
+static GtkToggleActionEntry ui_menu_toggle_entries[] =
 {
     { "ViewAlwaysOnTop", GTK_STOCK_GOTO_TOP,
       N_("Always On _Top"), NULL,
@@ -445,7 +476,7 @@ static GtkToggleActionEntry ui_menu_toogle_entries[] =
       G_CALLBACK(rc_ui_menu_keep_above_clicked_cb), FALSE }
 };
 
-static guint ui_menu_toogle_n_entries = G_N_ELEMENTS(ui_menu_toogle_entries);
+static guint ui_menu_toogle_n_entries = G_N_ELEMENTS(ui_menu_toggle_entries);
 
 static const gchar *ui_menu_info =
     "<ui>"
@@ -553,7 +584,12 @@ static const gchar *ui_menu_info =
     "    <separator/>"
     "    <menuitem action='TrayQuit'/>"
     "  </popup>"
-    "  <popup action='CoverPopupMenu'>"
+    "  <popup action='SpectrumPopupMenu'>"
+    "    <menuitem action='SpectrumNoStyle'/>"
+    "    <separator/>"
+    "    <menuitem action='SpectrumWaveMono'/>"
+    "    <menuitem action='SpectrumWaveMulti'/>"
+    "    <menuitem action='SpectrumSpectrum'/>"
     "  </popup>"
     "</ui>";
 
@@ -680,8 +716,11 @@ static gboolean rc_ui_menu_init()
     gtk_action_group_add_radio_actions(priv->ui_actions,
         ui_menu_random_entries, ui_menu_random_n_entries, 0,
         G_CALLBACK(rc_ui_menu_random_clicked_cb), NULL);
+    gtk_action_group_add_radio_actions(priv->ui_actions,
+        ui_menu_spectrum_entries, ui_menu_spectrum_n_entries, 0,
+        G_CALLBACK(rc_ui_menu_spectrum_clicked_cb), NULL);
     gtk_action_group_add_toggle_actions(priv->ui_actions,
-        ui_menu_toogle_entries, ui_menu_toogle_n_entries, NULL);
+        ui_menu_toggle_entries, ui_menu_toogle_n_entries, NULL);
     gtk_ui_manager_insert_action_group(priv->ui_manager, priv->ui_actions, 0);
     g_object_unref(priv->ui_actions);
     if(!gtk_ui_manager_add_ui_from_string(priv->ui_manager, ui_menu_info, -1,

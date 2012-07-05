@@ -442,7 +442,7 @@ static void rclib_player_eos_cb(RCLibCore *core, gpointer data)
             case RCLIB_PLAYER_RANDOM_SINGLE:
                 rclib_player_random_single(priv);
                 break;
-            case RCLIB_PlAYER_RANDOM_ALL:
+            case RCLIB_PLAYER_RANDOM_ALL:
                 rclib_player_random_all_play(priv);
                 break;
             default:

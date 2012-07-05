@@ -40,6 +40,8 @@
 
 #define RC_UI_SPECTRUM_STYLE_PARAM_READABLE G_PARAM_READABLE | \
     G_PARAM_STATIC_NAME | G_PARAM_STATIC_NICK | G_PARAM_STATIC_BLURB
+    
+#define RC_UI_SPECTRUM_BANDS 4096
 
 typedef struct RCUiSpectrumChannel
 {
@@ -52,74 +54,65 @@ typedef struct RCUiSpectrumChannel
 
 typedef struct RCUiSpectrumWidgetPrivate
 {
-    guint rate;
-    guint bands;
-    gfloat threshold;
-    gfloat *magnitudes;
     guint fps;
-    guint width;
-    guint height;
     RCUiSpectrumStyle style;
     GstBuffer *buffer;
     GMutex buffer_mutex; 
-    guint spectrum_bands;
     guint64 spectrum_num_frames;
     guint64 spectrum_num_fft;
-    guint64 spectrum_frames_per_interval;
-    guint64 spectrum_frames_todo;
-    guint spectrum_input_pos;
-    guint64 spectrum_error_per_interval;
     guint64 spectrum_accumulated_error;
     RCUiSpectrumChannel *spectrum_channel_data;
-    GMutex spectrum_mutex;
-    GstStructure *spectrum_structure;
-    GstClockTime spectrum_message_ts;
-    guint spectrum_idle_id;
+    guint spectrum_rate;
+    gfloat spectrum_threshold;
+    gfloat *spectrum_data;
+    gfloat *spectrum_band_data;
+    guint spectrum_data_size;
+    guint32 *wave_vdata;
+    guint wave_vdata_size;
     guint timeout_id;
     gulong buffer_probe_id;
 }RCUiSpectrumWidgetPrivate;
 
 static gpointer rc_ui_spectrum_widget_parent_class = NULL;
 
-#define rc_ui_spectrum_draw_dot(_vd, _x, _y, _st, _c) G_STMT_START {      \
-    _vd[(_y * _st) + _x] = _c;                                            \
+#define rc_ui_spectrum_draw_dot(_vd, _s, _x, _y, _st, _c)                 \
+    G_STMT_START {                                                        \
+    guint p = (_y * _st) + _x;                                            \
+    if(p>=_s/sizeof(guint32)) break;                                      \
+    _vd[p] = _c;                                                          \
 } G_STMT_END
 
-#define rc_ui_spectrum_draw_dot_c(_vd, _x, _y, _st, _c) G_STMT_START {    \
-    _vd[(_y * _st) + _x] |= _c;                                           \
-} G_STMT_END
-
-#define rc_ui_spectrum_draw_dot_aa(_vd, _x, _y, _st, _c, _f)              \
+#define rc_ui_spectrum_draw_dot_aa(_vd, _s, _x, _y, _st, _c, _f)          \
     G_STMT_START {                                                        \
     guint32 _oc, _c1, _c2, _c3;                                           \
-                                                                          \
-    _oc = _vd[(_y * _st) + _x];                                           \
+    guint p = (_y * _st) + _x;                                            \
+    if(p>=_s/sizeof(guint32)) break;                                      \
+    _oc = _vd[p];                                                         \
     _c3 = (_oc & 0xff) + ((_c & 0xff) * _f);                              \
     _c3 = MIN(_c3, 255);                                                  \
     _c2 = ((_oc & 0xff00) >> 8) + (((_c & 0xff00) >> 8) * _f);            \
     _c2 = MIN(_c2, 255);                                                  \
     _c1 = ((_oc & 0xff0000) >> 16) + (((_c & 0xff0000) >> 16) * _f);      \
     _c1 = MIN(_c1, 255);                                                  \
-    _vd[(_y * _st) + _x] = (_c1 << 16) | (_c2 << 8) | _c3;                \
+    _vd[p] = (_c1 << 16) | (_c2 << 8) | _c3;                              \
 } G_STMT_END
 
-#define rc_ui_spectrum_draw_line(_vd, _x1, _x2, _y1, _y2, _st, _c)        \
+#define rc_ui_spectrum_draw_line(_vd, _s, _x1, _x2, _y1, _y2, _st, _c)    \
     G_STMT_START {                                                        \
     guint _i, _j, _x, _y;                                                 \
     gint _dx = _x2 - _x1, _dy = _y2 - _y1;                                \
     gfloat _f;                                                            \
-                                                                          \
     _j = abs (_dx) > abs (_dy) ? abs (_dx) : abs (_dy);                   \
     for (_i = 0; _i < _j; _i++)                                           \
     {                                                                     \
         _f = (gfloat) _i / (gfloat) _j;                                   \
         _x = _x1 + _dx * _f;                                              \
         _y = _y1 + _dy * _f;                                              \
-        rc_ui_spectrum_draw_dot(_vd, _x, _y, _st, _c);                    \
+        rc_ui_spectrum_draw_dot(_vd, _s, _x, _y, _st, _c);                \
     }                                                                     \
 } G_STMT_END
 
-#define rc_ui_spectrum_draw_line_aa(_vd, _x1, _x2, _y1, _y2, _st, _c)     \
+#define rc_ui_spectrum_draw_line_aa(_vd, _s, _x1, _x2, _y1, _y2, _st, _c) \
     G_STMT_START {                                                        \
     guint _i, _j, _x, _y;                                                 \
     gint _dx = _x2 - _x1, _dy = _y2 - _y1;                                \
@@ -135,13 +128,14 @@ static gpointer rc_ui_spectrum_widget_parent_class = NULL;
         _fx = _rx - (gfloat)_x;                                           \
         _fy = _ry - (gfloat)_y;                                           \
         _f = ((1.0 - _fx) + (1.0 - _fy)) / 2.0;                           \
-        rc_ui_spectrum_draw_dot_aa(_vd, _x, _y, _st, _c, _f);             \
+        rc_ui_spectrum_draw_dot_aa(_vd, _s, _x, _y, _st, _c, _f);         \
         _f = (_fx + (1.0 - _fy)) / 2.0;                                   \
-        rc_ui_spectrum_draw_dot_aa (_vd, (_x + 1), _y, _st, _c, _f);      \
+        rc_ui_spectrum_draw_dot_aa (_vd, _s, (_x + 1), _y, _st, _c, _f);  \
         _f = ((1.0 - _fx) + _fy) / 2.0;                                   \
-        rc_ui_spectrum_draw_dot_aa (_vd, _x, (_y + 1), _st, _c, _f);      \
+        rc_ui_spectrum_draw_dot_aa (_vd, _s, _x, (_y + 1), _st, _c, _f);  \
         _f = (_fx + _fy) / 2.0;                                           \
-        rc_ui_spectrum_draw_dot_aa (_vd, (_x + 1), (_y + 1), _st, _c, _f);\
+        rc_ui_spectrum_draw_dot_aa (_vd, _s, (_x + 1), (_y + 1), _st,     \
+            _c, _f);                                                      \
     }                                                                     \
 } G_STMT_END
 
@@ -420,163 +414,15 @@ static inline void rc_ui_spectrum_run_fft(RCUiSpectrumChannel *cd,
     }
 }
 
-static inline GValue *rc_ui_spectrum_structure_add_container(
-    GstStructure *s, GType type, const gchar *name)
-{
-    GValue v = {0, };
-    g_value_init (&v, type);
-    gst_structure_set_value(s, name, &v);
-    g_value_unset(&v);
-    return (GValue *)gst_structure_get_value(s, name);
-}
-
-static inline void rc_ui_spectrum_structure_add_array(GValue *cv,
-    gfloat *data, guint num_values)
-{
-    GValue v = {0, };
-    guint i;
-    g_value_init(&v, G_TYPE_FLOAT);
-    for(i=0;i<num_values;i++)
-    {
-        g_value_set_float(&v, data[i]);
-        gst_value_array_append_value(cv, &v);
-    }
-    g_value_unset(&v);
-}
-
-static inline GstStructure *rc_ui_spectrum_structure_new(
-    RCUiSpectrumWidgetPrivate *priv, guint bands, guint rate,
-    gfloat threshold, GstClockTime timestamp, GstClockTime duration)
-{
-    RCUiSpectrumChannel *cd;
-    GstStructure *s;
-    GValue *mcv = NULL;
-    s = gst_structure_new("spectrum", "timestamp", G_TYPE_UINT64,
-        timestamp, "duration", G_TYPE_UINT64, duration, "rate",
-        G_TYPE_UINT, rate, "bands", G_TYPE_UINT, bands, "threshold",
-        G_TYPE_DOUBLE, threshold, NULL);
-    cd = priv->spectrum_channel_data;
-    mcv = rc_ui_spectrum_structure_add_container(s, GST_TYPE_ARRAY,
-        "magnitude");
-    rc_ui_spectrum_structure_add_array(mcv, cd->spect_magnitude, bands);
-    return s;
-}
-
-static inline void rc_ui_spectrum_reset_structure_data(guint bands,
-    RCUiSpectrumChannel *cd)
-{
-    gfloat *spect_magnitude = cd->spect_magnitude;
-    memset(spect_magnitude, 0, bands * sizeof(gfloat));
-}
-
-
-static inline void rc_ui_spectrum_widget_set_magnitudes(
-    RCUiSpectrumWidget *spectrum, guint rate, guint bands, gfloat threshold,
-    const GValue *magnitudes)
-{
-    RCUiSpectrumWidgetPrivate *priv;
-    const GValue *mag;
-    gfloat fvalue;
-    gint i;
-    guint bands_copy;
-    if(spectrum==NULL || magnitudes==NULL || bands==0) return;
-    priv = RC_UI_SPECTRUM_WIDGET_GET_PRIVATE(spectrum);
-    if(priv==NULL) return;
-    if(priv->style!=RC_UI_SPECTRUM_STYLE_SPECTRUM) return;
-    bands_copy = 5 * bands / 16;
-    priv->rate = rate;
-    priv->threshold = threshold;
-    if(priv->bands!=bands_copy)
-    {
-        g_free(priv->magnitudes);
-        priv->magnitudes = g_new0(gfloat, bands_copy);
-        priv->bands = bands_copy;
-    }
-    for(i=0;i<bands;i++)
-    {
-        mag = gst_value_array_get_value(magnitudes, i);
-        if(mag==NULL) continue;
-        fvalue = g_value_get_float(mag);
-        if(i>=0 && i<bands/16)
-        {
-            /* Range: 0 - bands/16 */
-            priv->magnitudes[i] = fvalue;
-        }
-        else if(i>=bands/16 && i<bands/8)
-        {
-            /* Range: bands/16 - bands/8 */
-            priv->magnitudes[bands/16+i/2] += fvalue / 2; 
-        }
-        else if(i>=bands/8 && i<bands/4)
-        {
-            /* Range: bands/8 - 3*bands/16 */
-            priv->magnitudes[2*bands/16+i/4] += fvalue / 4;
-        }
-        else if(i>=bands/4 && i<bands/2)
-        {
-            /* Range: 3*bands/16 - bands/4 */
-            priv->magnitudes[3*bands/16+i/8] += fvalue / 8;
-        }
-        else if(i>=bands/2)
-        {
-            /* Range: bands/4 - 5*bands/16 */
-            priv->magnitudes[4*bands/16+i/16] += fvalue / 16;
-        }
-    }
-    for(i=0;i<bands_copy;i++)
-    {
-        mag = gst_value_array_get_value(magnitudes, i);
-        if(mag==NULL) continue;
-        priv->magnitudes[i] = g_value_get_float(mag);
-    }
-}
-
-static gboolean rc_ui_spectrum_run_idle(gpointer data)
-{
-    RCUiSpectrumWidget *spectrum = RC_UI_SPECTRUM_WIDGET(data);
-    RCUiSpectrumWidgetPrivate *priv;
-    gdouble threshold = -60;
-    const GValue *magnitudes;
-    const gchar *name;
-    guint bands = 0;
-    guint rate = 0;
-    if(data==NULL) return FALSE;
-    priv = RC_UI_SPECTRUM_WIDGET_GET_PRIVATE(spectrum);
-    if(priv==NULL) return FALSE;
-    g_mutex_lock(&(priv->spectrum_mutex));
-    if(priv->spectrum_structure==NULL)
-    {
-        g_mutex_unlock(&(priv->spectrum_mutex));
-        return FALSE;
-    }
-    name = gst_structure_get_name(priv->spectrum_structure);
-    G_STMT_START
-    {
-        if(g_strcmp0(name, "spectrum")!=0) break;
-        gst_structure_get_uint(priv->spectrum_structure, "bands", &bands);
-        gst_structure_get_uint(priv->spectrum_structure, "rate", &rate);
-        gst_structure_get_double(priv->spectrum_structure, "threshold",
-            &threshold);
-        magnitudes = gst_structure_get_value(priv->spectrum_structure,
-            "magnitude");
-        if(bands==0 || rate==0 || magnitudes==NULL) break;
-        rc_ui_spectrum_widget_set_magnitudes(spectrum, rate, bands,
-            threshold, magnitudes);
-    }
-    G_STMT_END;
-    gst_structure_free(priv->spectrum_structure);
-    priv->spectrum_structure = NULL;
-    g_mutex_unlock(&(priv->spectrum_mutex));
-    priv->spectrum_idle_id = 0;
-    return FALSE;
-}
-
 static inline void rc_ui_spectrum_run(RCUiSpectrumWidget *spectrum,
     GstBuffer *buf, const gchar *mimetype, gint rate, gint channels,
     gint width, gint depth)
 {
     RCUiSpectrumWidgetPrivate *priv;
-    GstStructure *structure;
+    static guint spectrum_input_pos = 0;
+    static guint64 spectrum_error_per_interval = 0;
+    static guint64 spectrum_frames_per_interval = 0;
+    static guint64 spectrum_frames_todo = 0;
     gint i;
     RCUiSpectrumChannel *cd;
     const guint8 *buf_data = GST_BUFFER_DATA(buf);
@@ -597,29 +443,27 @@ static inline void rc_ui_spectrum_run(RCUiSpectrumWidget *spectrum,
     width = width / 8;
     frame_size = width * channels;
     max_value = (1UL << (depth - 1)) - 1;
-    bands = priv->spectrum_bands;
+    bands = RC_UI_SPECTRUM_BANDS;
     nfft = 2*bands - 2;
     if(GST_BUFFER_IS_DISCONT(buf)) /* Discontinuity detect */
         rc_ui_spectrum_flush(priv);
     if(priv->spectrum_channel_data==NULL)
     {
         rc_ui_spectrum_alloc_channel_data(priv, bands);
-        priv->spectrum_frames_per_interval = gst_util_uint64_scale(interval,
+        spectrum_frames_per_interval = gst_util_uint64_scale(interval,
             rate, GST_SECOND);
-        priv->spectrum_frames_todo = priv->spectrum_frames_per_interval;
-        priv->spectrum_error_per_interval = (interval * rate) % GST_SECOND;
-        if(priv->spectrum_frames_per_interval==0)
-            priv->spectrum_frames_per_interval = 1;
-        priv->spectrum_input_pos = 0;
+        spectrum_frames_todo = spectrum_frames_per_interval;
+        spectrum_error_per_interval = (interval * rate) % GST_SECOND;
+        if(spectrum_frames_per_interval==0)
+            spectrum_frames_per_interval = 1;
+        spectrum_input_pos = 0;
         rc_ui_spectrum_flush(priv);
     }
-    if(priv->spectrum_num_frames==0)
-        priv->spectrum_message_ts = GST_BUFFER_TIMESTAMP(buf);
-    input_pos = priv->spectrum_input_pos;
+    input_pos = spectrum_input_pos;
     while(size>=frame_size)
     {
         fft_todo = nfft - (priv->spectrum_num_frames % nfft);
-        msg_todo = priv->spectrum_frames_todo - priv->spectrum_num_frames;
+        msg_todo = spectrum_frames_todo - priv->spectrum_num_frames;
         block_size = msg_todo;
         if(block_size > (size / frame_size))
             block_size = (size / frame_size);
@@ -635,7 +479,7 @@ static inline void rc_ui_spectrum_run(RCUiSpectrumWidget *spectrum,
         input_pos = (input_pos + block_size) % nfft;
         priv->spectrum_num_frames += block_size;
         have_full_interval = (priv->spectrum_num_frames ==
-            priv->spectrum_frames_todo);
+            spectrum_frames_todo);
         if((priv->spectrum_num_frames % nfft == 0) ||
             (have_full_interval && !priv->spectrum_num_fft))
         { 
@@ -645,57 +489,46 @@ static inline void rc_ui_spectrum_run(RCUiSpectrumWidget *spectrum,
         }
         if(have_full_interval)
         {
-            priv->spectrum_frames_todo = priv->spectrum_frames_per_interval;
+            spectrum_frames_todo = spectrum_frames_per_interval;
             if(priv->spectrum_accumulated_error >= GST_SECOND)
             {
                 priv->spectrum_accumulated_error -= GST_SECOND;
-                priv->spectrum_frames_todo++;
+                spectrum_frames_todo++;
             }
             priv->spectrum_accumulated_error +=
-                priv->spectrum_error_per_interval;
+                spectrum_error_per_interval;
             cd = priv->spectrum_channel_data;
             for(i=0;i<bands;i++)
+            {
                 cd->spect_magnitude[i] /= priv->spectrum_num_fft;
-            structure = rc_ui_spectrum_structure_new(priv, bands, rate,
-                threshold, priv->spectrum_message_ts, interval);
-            g_mutex_lock(&(priv->spectrum_mutex));
-            if(priv->spectrum_structure!=NULL)
-            {
-                gst_structure_free(priv->spectrum_structure);
-                priv->spectrum_structure = NULL;
+                priv->spectrum_band_data[i] = cd->spect_magnitude[i];
             }
-            priv->spectrum_structure = structure;
-            g_mutex_unlock(&(priv->spectrum_mutex));
-            priv->spectrum_idle_id = g_idle_add((GSourceFunc)
-                rc_ui_spectrum_run_idle, spectrum);
-            if(GST_CLOCK_TIME_IS_VALID(priv->spectrum_message_ts))
-            {
-                priv->spectrum_message_ts += gst_util_uint64_scale(
-                    priv->spectrum_num_frames, GST_SECOND, rate);
-            }
+            priv->spectrum_rate = rate;
+            priv->spectrum_threshold = threshold;            
             cd = priv->spectrum_channel_data;
-            rc_ui_spectrum_reset_structure_data(bands, cd);
+            memset(cd->spect_magnitude, 0, bands*sizeof(gfloat));
             priv->spectrum_num_frames = 0;
             priv->spectrum_num_fft = 0;
         }
     }
-    priv->spectrum_input_pos = input_pos;
+    spectrum_input_pos = input_pos;
 }
 
 static inline gfloat rc_ui_spectrum_wave_get_unit_data(const guint8 *adata,
-    guint s, gboolean is_float, gint depth)
+    guint asize, guint s, gboolean is_float, gint width)
 {
     gfloat ret = 0.0;
+    if(s*width > asize) return 0.0;
     if(is_float)
     {
-        if(depth==8)
+        if(width==8)
             ret = (gfloat)((gdouble *)adata)[s];
-        else
+        else if(width==4)
             ret = (gfloat)((gfloat *)adata)[s];
     }
     else
     {
-        switch(depth)
+        switch(width)
         {
             case 4:
                 ret = (gfloat)((gint32 *)adata)[s];
@@ -717,7 +550,7 @@ static inline gfloat rc_ui_spectrum_wave_get_unit_data(const guint8 *adata,
                 ret = (gfloat)((gint16 *)adata)[s];
                 break;
             case 1:
-                ret = (gfloat)((gint8 *)adata)[s];
+                ret = (gfloat)((guint8 *)adata)[s] - 128;
                     break;
             default:
                 break;
@@ -726,10 +559,64 @@ static inline gfloat rc_ui_spectrum_wave_get_unit_data(const guint8 *adata,
     return ret;
 }
 
+static inline void rc_ui_spectrum_spectrum_calculate(gfloat *sdata,
+    guint ssize, gfloat *bands, guint bsize, gint rate, gfloat threshold)
+{
+    const gdouble maxfreq = 20000;
+    const gdouble midfreq = 1000;
+    gdouble midlog;
+    gdouble level;
+    gdouble lower, upper, mid;
+    gdouble freq1, freq2;
+    gint i, j;
+    guint l, u;
+    gfloat value;
+    midlog = log2(maxfreq/midfreq);
+    level = 2 * midlog / (ssize);
+    for(i=0;i<ssize;i++)
+    {
+        if(i==0)
+            lower = 0;
+        else
+            lower = maxfreq / pow(2, (level * (ssize - i)));
+        upper = maxfreq / pow(2, (level * (ssize - i - 1)));
+        l = (lower/rate*2) * bsize;
+        u = (upper/rate*2) * bsize;
+        if(l>=bsize) break;
+        value = 0.0;
+        if(u-l>1)
+        {
+            for(j=l;j<u;j++)
+            {
+                if(j>=bsize) break;
+                value += bands[j];
+            }
+            value = value / (j-l);
+        }
+        else
+        {
+            mid = (lower + upper) / 2;
+            freq1 = l * rate / 2 / bsize;
+            freq2 = (l+1) * rate / 2 /bsize;
+            freq1 = ABS(freq1 - mid);
+            freq2 = ABS(freq2 - mid);
+            if(l+1<bsize)
+            {
+                value = bands[l] * freq2 / (freq1+freq2) +
+                    bands[l+1] * freq1 / (freq1+freq2);
+            }
+            else
+                value = bands[l];
+        }
+        sdata[i] = value;
+    }
+}
+
 static inline void rc_ui_spectrum_wave_render_lines(guint32 *vdata,
-    guint width, guint height, const guint8 *adata, const gchar *mimetype,
-    guint num_samples, gint channels, gint depth, guint32 bg_color,
-    guint32 fg_color1, guint32 fg_color2, gboolean multi_channel)
+    guint vsize, guint vwidth, guint vheight, const guint8 *adata,
+    guint asize, const gchar *mimetype, guint num_samples, gint channels,
+    gint awidth, gint adepth, guint32 bg_color, guint32 fg_color1,
+    guint32 fg_color2, gboolean multi_channel)
 {
     guint i, c, s, x = 0, y = 0, oy;
     gfloat dx, dy;
@@ -737,8 +624,8 @@ static inline void rc_ui_spectrum_wave_render_lines(guint32 *vdata,
     guint tsize;
     guint32 fg_color;
     gboolean is_float = FALSE;
-    gfloat max_value = (1UL << (depth));
-    tsize = width * height;
+    gfloat max_value = (1UL << (adepth));
+    tsize = vwidth * vheight;
     for(i=0;i<tsize;i++)
         vdata[i] = bg_color;
     if(g_strcmp0(mimetype, "audio/x-raw-float")==0)
@@ -752,18 +639,18 @@ static inline void rc_ui_spectrum_wave_render_lines(guint32 *vdata,
         num_samples /= 4;
     else if(num_samples>=1024)
         num_samples /= 2;
-    dx = (gfloat) (width - 1) / (gfloat) num_samples;
-    dy = (height - 1) / max_value;
-    oy = (height - 1) / 2;
-    depth = depth / 8;
+    dx = (gfloat) (vwidth - 1) / (gfloat) num_samples;
+    dy = (vheight - 1) / max_value;
+    oy = (vheight - 1) / 2;
+    awidth = awidth / 8;
     if(multi_channel)
     {
         for(c=0;c<channels;c++)
         {
             s = c;
             x2 = 0;
-            y2 = (guint)(oy + rc_ui_spectrum_wave_get_unit_data(adata, s,
-                is_float, depth) * dy);
+            y2 = (guint)(oy + rc_ui_spectrum_wave_get_unit_data(adata, asize,
+                s, is_float, awidth) * dy);
             if(c%2==1)
                 fg_color = fg_color2;
             else
@@ -771,14 +658,14 @@ static inline void rc_ui_spectrum_wave_render_lines(guint32 *vdata,
             for(i=1;i<num_samples;i++)
             {
                 x = (guint)((gfloat) i * dx);
-                y = (guint)(oy + rc_ui_spectrum_wave_get_unit_data(adata, s,
-                    is_float, depth) * dy);
+                y = (guint)(oy + rc_ui_spectrum_wave_get_unit_data(adata,
+                    asize, s, is_float, awidth) * dy);
                 s += channels;
-                x = CLAMP(x, 0, width-1);
-                y = CLAMP(y, 0, height-1);
-                x2 = CLAMP(x2, 0, width-1);
-                y2 = CLAMP(y2, 0, height-1);
-                rc_ui_spectrum_draw_line_aa(vdata, x2, x, y2, y, width,
+                x = CLAMP(x, 0, vwidth-1);
+                y = CLAMP(y, 0, vheight-1);
+                x2 = CLAMP(x2, 0, vwidth-1);
+                y2 = CLAMP(y2, 0, vheight-1);
+                rc_ui_spectrum_draw_line_aa(vdata, vsize, x2, x, y2, y, vwidth,
                     fg_color);
                 x2 = x;
                 y2 = y;
@@ -792,8 +679,8 @@ static inline void rc_ui_spectrum_wave_render_lines(guint32 *vdata,
         y2 = 0;
         for(c=0;c<channels;c++)
         {
-            y2 += (guint)(oy + rc_ui_spectrum_wave_get_unit_data(adata, s+c,
-                is_float, depth) * dy);
+            y2 += (guint)(oy + rc_ui_spectrum_wave_get_unit_data(adata, asize,
+                s+c, is_float, awidth) * dy);
         }
         y2 = y2 / channels;
         for(i=1;i<num_samples;i++)
@@ -803,15 +690,15 @@ static inline void rc_ui_spectrum_wave_render_lines(guint32 *vdata,
             for(c=0;c<channels;c++)
             {
                 y += (guint)(oy + rc_ui_spectrum_wave_get_unit_data(adata,
-                    s+c, is_float, depth) * dy);
+                    asize, s+c, is_float, awidth) * dy);
             }
             y = y / channels;
             s += channels;
-            x = CLAMP(x, 0, width-1);
-            y = CLAMP(y, 0, height-1);
-            x2 = CLAMP(x2, 0, width-1);
-            y2 = CLAMP(y2, 0, height-1);
-            rc_ui_spectrum_draw_line_aa(vdata, x2, x, y2, y, width,
+            x = CLAMP(x, 0, vwidth-1);
+            y = CLAMP(y, 0, vheight-1);
+            x2 = CLAMP(x2, 0, vwidth-1);
+            y2 = CLAMP(y2, 0, vheight-1);
+            rc_ui_spectrum_draw_line_aa(vdata, vsize, x2, x, y2, y, vwidth,
                 fg_color1);
             x2 = x;
             y2 = y;
@@ -819,8 +706,8 @@ static inline void rc_ui_spectrum_wave_render_lines(guint32 *vdata,
     }
 }
 
-static void rc_ui_spectrum_buffer_probe_cb(RCLibCore *core, GstPad *pad,
-    GstBuffer *buf, gpointer data)
+static void rc_ui_spectrum_buffer_probe_cb(RCLibCore *core, GstBuffer *buf,
+    gpointer data)
 {
     /* WARNING: This function is not called in main thread! */
     RCUiSpectrumWidget *spectrum;
@@ -837,18 +724,13 @@ static void rc_ui_spectrum_buffer_probe_cb(RCLibCore *core, GstPad *pad,
     if(spectrum==NULL) return;
     priv = RC_UI_SPECTRUM_WIDGET_GET_PRIVATE(spectrum);
     if(priv==NULL) return;
-    if(buf!=NULL)
-    {
-        g_mutex_lock(&(priv->buffer_mutex));
-        if(priv->buffer!=NULL)
-            gst_buffer_unref(priv->buffer);
-        priv->buffer = gst_buffer_ref(buf);
-        g_mutex_unlock(&(priv->buffer_mutex));
-    }
-    if(pad==NULL || buf==NULL) return;
+    if(buf==NULL) return;
+    g_mutex_lock(&(priv->buffer_mutex));
+    gst_buffer_replace(&(priv->buffer), buf);
+    g_mutex_unlock(&(priv->buffer_mutex));
     if(priv->style==RC_UI_SPECTRUM_STYLE_SPECTRUM)
     {
-        caps = gst_pad_get_negotiated_caps(pad);
+        caps = gst_buffer_get_caps(buf);
         if(caps==NULL) return;
         structure = gst_caps_get_structure(caps, 0);
         mimetype = gst_structure_get_name(structure);
@@ -861,30 +743,6 @@ static void rc_ui_spectrum_buffer_probe_cb(RCLibCore *core, GstPad *pad,
         if(rate==0 || width==0 || channels==0) return;
         rc_ui_spectrum_run(spectrum, buf, mimetype, rate, channels,
             width, depth);
-    }
-}
-
-static void rc_ui_spectrum_widget_interpolate(gfloat *in_array,
-    guint in_size, gfloat *out_array, guint out_size)
-{
-    guint i;
-    gfloat pos = 0.0;
-    gdouble error;
-    gulong offset;
-    gulong index_left, index_right;
-    gfloat step = (gfloat)in_size / out_size;
-    for(i=0;i<out_size;i++, pos+=step)
-    {
-        error = pos - floor(pos);
-        offset = (gulong)pos;
-        index_left = offset + 0;
-        if(index_left>=in_size)
-            index_left = in_size - 1;
-        index_right = offset + 1;
-        if(index_right>=in_size)
-            index_right = in_size - 1;
-        out_array[i] = in_array[index_left] * (1.0 - error) +
-            in_array[index_right] * error;
     }
 }
 
@@ -926,7 +784,6 @@ static void rc_ui_spectrum_widget_size_allocate(GtkWidget *widget,
     GtkAllocation *allocation)
 {
     GdkWindow *window;
-    RCUiSpectrumWidgetPrivate *priv;
     g_return_if_fail(widget!=NULL);
     g_return_if_fail(IS_RC_UI_SPECTRUM_WIDGET(widget));
     gtk_widget_set_allocation(widget, allocation);
@@ -936,9 +793,6 @@ static void rc_ui_spectrum_widget_size_allocate(GtkWidget *widget,
         gdk_window_move_resize(window, allocation->x, allocation->y,
             allocation->width, allocation->height);
     }
-    priv = RC_UI_SPECTRUM_WIDGET_GET_PRIVATE(widget);
-    priv->width = allocation->width;
-    priv->height = allocation->height;
 }
 
 static void rc_ui_spectrum_widget_get_preferred_height(GtkWidget *widget,
@@ -955,18 +809,12 @@ static gboolean rc_ui_spectrum_widget_draw(GtkWidget *widget, cairo_t *cr)
     GstCaps *caps;
     GstStructure *structure;
     GtkAllocation allocation;
+    GstBuffer *buffer = NULL;
     const guint8 *adata;
-    guint num_samples;
-    gint rate = 0;
-    gint channels = 0;
-    gint width = 0;
-    gint depth = 0;
-    const gchar *mimetype;
-    guint num;
-    guint swidth = 4;
-    guint sheight;
-    guint space = 1;
-    gfloat *narray;
+    guint asize;
+    guint num_samples = 0;
+    gint rate = 0, channels = 0, width = 0, depth = 0;
+    const gchar *mimetype = NULL;
     gfloat percent;
     gint i;
     GdkRGBA color;
@@ -980,123 +828,145 @@ static gboolean rc_ui_spectrum_widget_draw(GtkWidget *widget, cairo_t *cr)
     priv = RC_UI_SPECTRUM_WIDGET_GET_PRIVATE(spectrum);
     if(priv==NULL) return FALSE;
     gtk_widget_get_allocation(widget, &allocation);
+    if(allocation.width<=0 || allocation.height<=0) return FALSE;
     style_context = gtk_widget_get_style_context(widget);
     gtk_style_context_get_color(style_context, GTK_STATE_FLAG_NORMAL,
         &color);
     gtk_style_context_get_background_color(style_context,
         GTK_STATE_FLAG_NORMAL, &bg_color);
-    switch(priv->style)
+    g_mutex_lock(&(priv->buffer_mutex));
+    if(priv->buffer!=NULL)
+        buffer = gst_buffer_ref(priv->buffer);
+    g_mutex_unlock(&(priv->buffer_mutex));
+    G_STMT_START
     {
-        case RC_UI_SPECTRUM_STYLE_NONE:
-            break;
-        case RC_UI_SPECTRUM_STYLE_WAVE_MONO:
-        case RC_UI_SPECTRUM_STYLE_WAVE_MULTI:
+        if(buffer==NULL) break;
+        caps = gst_buffer_get_caps(buffer);
+        if(caps==NULL) break;
+        structure = gst_caps_get_structure(caps, 0);
+        if(structure==NULL)
         {
-            guint32 *vdata;
-            guint32 bg_icolor;
-            gboolean multi_channel;
-            guint32 c1_icolor = 0xFF00FF00, c2_icolor = 0xFFFF0000;
-            cairo_surface_t *surface;
-            g_mutex_lock(&(priv->buffer_mutex));
-            if(priv->buffer==NULL)
-            {
-                g_mutex_unlock(&(priv->buffer_mutex));
-                break;
-            }
-            caps = gst_buffer_get_caps(priv->buffer);
-            if(caps==NULL)
-            {
-                g_mutex_unlock(&(priv->buffer_mutex));
-                break;
-            }
-            structure = gst_caps_get_structure(caps, 0);
-            if(structure==NULL)
-            {
-                gst_caps_unref(caps);
-                g_mutex_unlock(&(priv->buffer_mutex));
-                break;
-            }
-            mimetype = gst_structure_get_name(structure);
-            gst_structure_get_int(structure, "rate", &rate);
-            gst_structure_get_int(structure, "channels", &channels);
-            gst_structure_get_int(structure, "width", &width);
-            gst_structure_get_int(structure, "depth", &depth);
             gst_caps_unref(caps);
-            if(depth==0) depth = width;
-            if(rate==0 || depth==0 || channels==0)
-            {
-                g_mutex_unlock(&(priv->buffer_mutex));
-                break;
-            }
-            adata = GST_BUFFER_DATA(priv->buffer);
-            num_samples = GST_BUFFER_SIZE(priv->buffer) /
-                (channels * depth / 8);
-            vdata = g_new(guint32, allocation.width * allocation.height);
-            bg_icolor = 0xFF000000 + ((guint32)(0xFF * bg_color.red)<<16) +
-                ((guint32)(0xFF * bg_color.green)<<8) +
-                (guint32)(0xFF * bg_color.blue);
-            gtk_widget_style_get(widget, "wave-channel1-color",
-                &wave_channel_color1, "wave-channel2-color",
-                &wave_channel_color2, NULL);
-            if(wave_channel_color1!=NULL)
-            {
-                c1_icolor = 0xFF000000 +
-                    ((guint32)(wave_channel_color1->red>>8)<<16) +
-                    ((guint32)(wave_channel_color1->green>>8)<<8) +
-                    (guint32)(wave_channel_color1->blue>>8);
-                gdk_color_free(wave_channel_color1);
-            }
-            if(wave_channel_color2!=NULL)
-            {
-                c2_icolor = 0xFF000000 +
-                    ((guint32)(wave_channel_color2->red>>8)<<16) +
-                    ((guint32)(wave_channel_color2->green>>8)<<8) +
-                    (guint32)(wave_channel_color2->blue>>8);
-                gdk_color_free(wave_channel_color2);
-            }
-            multi_channel = (priv->style==RC_UI_SPECTRUM_STYLE_WAVE_MULTI);
-            rc_ui_spectrum_wave_render_lines(vdata, allocation.width,
-                allocation.height, adata, mimetype, num_samples, channels,
-                depth, bg_icolor, c1_icolor, c2_icolor, multi_channel);
-            g_mutex_unlock(&(priv->buffer_mutex));
-            surface = cairo_image_surface_create_for_data(
-                (guchar *)vdata, CAIRO_FORMAT_ARGB32,
-                allocation.width, allocation.height,
-                cairo_format_stride_for_width(CAIRO_FORMAT_ARGB32,
-                allocation.width));
-            cairo_set_source_surface(cr, surface, 0, 0);
-            cairo_set_operator(cr, CAIRO_OPERATOR_SOURCE);
-            cairo_paint(cr);
-            cairo_surface_destroy(surface);
-            g_free(vdata);
             break;
         }
-        case RC_UI_SPECTRUM_STYLE_SPECTRUM:
-        {      
-            num = allocation.width / (swidth + space);
-            cairo_set_source_rgba(cr, color.red, color.green,
-                color.blue, color.alpha);  
-            if(priv->bands>0 && priv->magnitudes!=NULL)
+        mimetype = gst_structure_get_name(structure);
+        gst_structure_get_int(structure, "rate", &rate);
+        gst_structure_get_int(structure, "channels", &channels);
+        gst_structure_get_int(structure, "width", &width);
+        gst_structure_get_int(structure, "depth", &depth);
+        gst_caps_unref(caps);
+        if(depth==0) depth = width;
+        if(rate==0 || width==0 || channels==0) break;
+        adata = GST_BUFFER_DATA(buffer);
+        asize = GST_BUFFER_SIZE(buffer);
+        num_samples = GST_BUFFER_SIZE(buffer) / (channels * width / 8);
+        switch(priv->style)
+        {
+            case RC_UI_SPECTRUM_STYLE_NONE:
+                break;
+            case RC_UI_SPECTRUM_STYLE_WAVE_MONO:
+            case RC_UI_SPECTRUM_STYLE_WAVE_MULTI:
             {
-                narray = g_new0(gfloat, num);
-                rc_ui_spectrum_widget_interpolate(priv->magnitudes,
-                    priv->bands, narray, num);
+                guint vsize;
+                guint32 bg_icolor;
+                gboolean multi_channel;
+                guint32 c1_icolor = 0xFF00FF00, c2_icolor = 0xFFFF0000;
+                cairo_surface_t *surface;
+                vsize = sizeof(guint32) * allocation.width *
+                    allocation.height;
+                if(priv->wave_vdata==NULL)
+                {
+                    priv->wave_vdata = g_new(guint32, vsize/sizeof(guint32));
+                    priv->wave_vdata_size = vsize;
+                }
+                if(priv->wave_vdata_size!=vsize)
+                {
+                    priv->wave_vdata = g_renew(guint32, priv->wave_vdata,
+                        vsize/sizeof(guint32));
+                    priv->wave_vdata_size = vsize;
+                }
+                bg_icolor = 0xFF000000 +
+                    ((guint32)(0xFF * bg_color.red)<<16) +
+                    ((guint32)(0xFF * bg_color.green)<<8) +
+                    (guint32)(0xFF * bg_color.blue);
+                gtk_widget_style_get(widget, "wave-channel1-color",
+                    &wave_channel_color1, "wave-channel2-color",
+                    &wave_channel_color2, NULL);
+                if(wave_channel_color1!=NULL)
+                {
+                    c1_icolor = 0xFF000000 +
+                        ((guint32)(wave_channel_color1->red>>8)<<16) +
+                        ((guint32)(wave_channel_color1->green>>8)<<8) +
+                        (guint32)(wave_channel_color1->blue>>8);
+                    gdk_color_free(wave_channel_color1);
+                }
+                if(wave_channel_color2!=NULL)
+                {
+                    c2_icolor = 0xFF000000 +
+                        ((guint32)(wave_channel_color2->red>>8)<<16) +
+                        ((guint32)(wave_channel_color2->green>>8)<<8) +
+                        (guint32)(wave_channel_color2->blue>>8);
+                    gdk_color_free(wave_channel_color2);
+                }
+                multi_channel =
+                    (priv->style==RC_UI_SPECTRUM_STYLE_WAVE_MULTI);
+                rc_ui_spectrum_wave_render_lines(priv->wave_vdata, vsize,
+                    allocation.width, allocation.height, adata, asize,
+                    mimetype, num_samples, channels, width, depth,
+                    bg_icolor, c1_icolor, c2_icolor, multi_channel);
+                surface = cairo_image_surface_create_for_data(
+                    (guchar *)priv->wave_vdata, CAIRO_FORMAT_ARGB32,
+                    allocation.width, allocation.height,
+                    cairo_format_stride_for_width(CAIRO_FORMAT_ARGB32,
+                    allocation.width));
+                cairo_set_source_surface(cr, surface, 0, 0);
+                cairo_set_operator(cr, CAIRO_OPERATOR_SOURCE);
+                cairo_paint(cr);
+                cairo_surface_destroy(surface);
+                break;
+            }
+            case RC_UI_SPECTRUM_STYLE_SPECTRUM:
+            {
+                guint num;
+                guint swidth = 4;
+                guint sheight;
+                guint space = 1;
+                num = allocation.width / (swidth + space);
+                cairo_set_source_rgba(cr, color.red, color.green,
+                    color.blue, color.alpha);
+                if(priv->spectrum_band_data==NULL) break;
+                if(priv->spectrum_data==NULL)
+                {
+                    priv->spectrum_data = g_new0(gfloat, num);
+                    priv->spectrum_data_size = num;
+                }
+                if(priv->spectrum_data_size!=num)
+                {
+                    priv->spectrum_data = g_renew(gfloat,
+                        priv->spectrum_data, num);
+                    priv->spectrum_data_size = num;
+                }
+                rc_ui_spectrum_spectrum_calculate(priv->spectrum_data, num,
+                    priv->spectrum_band_data, RC_UI_SPECTRUM_BANDS,
+                    priv->spectrum_rate, priv->spectrum_threshold);
                 for(i=0;i<num;i++)
                 {
-                    percent = (narray[i] - priv->threshold)/30;
+                    percent = (priv->spectrum_data[i] -
+                        priv->spectrum_threshold)/30;
                     if(percent>1) percent = 1.0;
                     sheight = (gfloat)allocation.height * percent;
                     cairo_rectangle(cr, (swidth+space)*i,
                         allocation.height-sheight, swidth, sheight);
                     cairo_fill(cr);
                 }
-                g_free(narray);     
+                break;               
             }
-            break;
+            default:
+                break;
         }
-        default:
-            break;
     }
+    G_STMT_END;
+    if(buffer!=NULL) gst_buffer_unref(buffer);
     return TRUE;
 }
 
@@ -1112,13 +982,10 @@ static void rc_ui_spectrum_widget_init(RCUiSpectrumWidget *object)
 {
     RCUiSpectrumWidgetPrivate *priv;
     priv = RC_UI_SPECTRUM_WIDGET_GET_PRIVATE(object);
-    priv->bands = 0;
-    priv->magnitudes = NULL;
     priv->fps = 10;
     priv->style = RC_UI_SPECTRUM_STYLE_WAVE_MULTI;
-    priv->spectrum_bands = 128;
+    priv->spectrum_band_data = g_new(gfloat, RC_UI_SPECTRUM_BANDS);
     g_mutex_init(&(priv->buffer_mutex));
-    g_mutex_init(&(priv->spectrum_mutex));
     priv->timeout_id = g_timeout_add(1000/priv->fps, (GSourceFunc)
         rc_ui_spectrum_draw_timeout_cb, object);
     priv->buffer_probe_id = rclib_core_signal_connect("buffer-probe",
@@ -1130,8 +997,6 @@ static void rc_ui_spectrum_widget_finalize(GObject *object)
     RCUiSpectrumWidget *spectrum = RC_UI_SPECTRUM_WIDGET(object);
     RCUiSpectrumWidgetPrivate *priv;
     priv = RC_UI_SPECTRUM_WIDGET_GET_PRIVATE(spectrum);
-    if(priv->spectrum_idle_id>0)
-        g_source_remove(priv->spectrum_idle_id);
     rc_ui_spectrum_reset_state(priv);
     if(priv->buffer_probe_id>0)
         rclib_core_signal_disconnect(priv->buffer_probe_id);
@@ -1139,11 +1004,11 @@ static void rc_ui_spectrum_widget_finalize(GObject *object)
     if(priv->buffer!=NULL)
         gst_buffer_unref(priv->buffer);
     g_mutex_unlock(&(priv->buffer_mutex));
-    g_mutex_clear(&(priv->spectrum_mutex));
     g_mutex_clear(&(priv->buffer_mutex));
-    g_free(priv->magnitudes);
     if(priv->timeout_id>0)
         g_source_remove(priv->timeout_id);
+    g_free(priv->wave_vdata);
+    g_free(priv->spectrum_band_data);
     G_OBJECT_CLASS(rc_ui_spectrum_widget_parent_class)->finalize(object);
 }
 
@@ -1300,18 +1165,21 @@ void rc_ui_spectrum_widget_clean(RCUiSpectrumWidget *spectrum)
 {
     RCUiSpectrumWidgetPrivate *priv;
     if(spectrum==NULL) return;
+    GstBuffer *buffer;
     priv = RC_UI_SPECTRUM_WIDGET_GET_PRIVATE(spectrum);
     if(priv==NULL) return;
-    g_free(priv->magnitudes);
-    priv->magnitudes = NULL;
-    priv->bands = 0;
     g_mutex_lock(&(priv->buffer_mutex));
-    if(priv->buffer!=NULL)
-    {
-        gst_buffer_unref(priv->buffer);
-        priv->buffer = NULL;
-    }
+    buffer = priv->buffer;
+    priv->buffer = NULL;
+    if(buffer!=NULL)
+        gst_buffer_unref(buffer);
     g_mutex_unlock(&(priv->buffer_mutex));
+    g_free(priv->wave_vdata);
+    g_free(priv->spectrum_data);
+    priv->wave_vdata = NULL;
+    priv->spectrum_data = NULL;
+    priv->wave_vdata_size = 0;
+    priv->spectrum_data_size = 0;
     gtk_widget_queue_draw(GTK_WIDGET(spectrum));
 }
 

@@ -795,6 +795,18 @@ static gboolean rc_ui_main_window_album_menu_popup(GtkWidget *widget,
     return FALSE;
 }
 
+static gboolean rc_ui_main_window_spectrum_menu_popup(GtkWidget *widget,
+    GdkEventButton *event, gpointer data)
+{
+    RCUiMainWindowPrivate *priv = (RCUiMainWindowPrivate *)data;
+    if(data==NULL) return FALSE;
+    if(event->button!=3) return FALSE;
+    gtk_menu_popup(GTK_MENU(gtk_ui_manager_get_widget(priv->ui_manager,
+        "/SpectrumPopupMenu")), NULL, NULL, NULL, widget, 1,
+        event->time);
+    return FALSE;
+}
+
 static gboolean rc_ui_main_window_progress_menu_popup(GtkWidget *widget,
     GdkEventButton *event, gpointer data)  
 {
@@ -1176,8 +1188,10 @@ static void rc_ui_main_window_signal_bind(RCUiMainWindow *window)
         G_CALLBACK(rc_ui_main_window_next_button_clicked_cb), priv);
     g_signal_connect(priv->ctrl_open_button, "clicked",
         G_CALLBACK(rc_ui_main_window_open_button_clicked_cb), priv);
-    g_signal_connect(priv->album_eventbox, "button-release-event",
+    g_signal_connect(priv->album_eventbox, "button-press-event",
         G_CALLBACK(rc_ui_main_window_album_menu_popup), priv);
+    g_signal_connect(priv->spectrum_widget, "button-press-event",
+        G_CALLBACK(rc_ui_main_window_spectrum_menu_popup), priv);
     g_signal_connect(priv->progress_eventbox, "button-press-event",
         G_CALLBACK(rc_ui_main_window_progress_menu_popup), priv);
     g_signal_connect(priv->volume_button, "value-changed",
@@ -1417,6 +1431,7 @@ static void rc_ui_main_window_instance_init(RCUiMainWindow *window)
         "margin-left", 6, "margin-right", 6, NULL);
     gtk_widget_set_size_request(priv->album_image, priv->cover_image_width,
         priv->cover_image_height);
+    gtk_widget_add_events(priv->spectrum_widget, GDK_BUTTON_PRESS_MASK);
     gtk_container_add(GTK_CONTAINER(priv->ctrl_play_button),
         priv->ctrl_play_image);
     gtk_container_add(GTK_CONTAINER(priv->ctrl_stop_button),
@@ -1683,4 +1698,24 @@ void rc_ui_main_window_playlist_scrolled_window_set_horizontal_policy(
     g_object_set(priv->playlist_scr_window, "hscrollbar-policy", type, NULL);
 }
 
+/**
+ * rc_ui_main_window_spectrum_set_style:
+ * @style: the visualize style
+ *
+ * Set the visualize style of the spectrum widget in the player.
+ */
+
+void rc_ui_main_window_spectrum_set_style(guint style)
+{
+    RCUiMainWindowPrivate *priv = NULL;
+    if(ui_main_window_instance==NULL) return;
+    priv = RC_UI_MAIN_WINDOW_GET_PRIVATE(ui_main_window_instance);
+    if(priv==NULL || priv->spectrum_widget==NULL) return;
+    rc_ui_spectrum_widget_set_style(RC_UI_SPECTRUM_WIDGET(
+        priv->spectrum_widget), style);
+    gtk_radio_action_set_current_value(GTK_RADIO_ACTION(
+        gtk_ui_manager_get_action(priv->ui_manager,
+        "/SpectrumPopupMenu/SpectrumNoStyle")), style);
+    rclib_settings_set_integer("MainUI", "SpectrumStyle", style);
+}
 
