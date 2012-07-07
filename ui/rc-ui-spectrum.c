@@ -573,6 +573,7 @@ static inline void rc_ui_spectrum_spectrum_calculate(gfloat *sdata,
     gfloat value;
     midlog = log2(maxfreq/midfreq);
     level = 2 * midlog / (ssize);
+    for(i=0;i<ssize;i++) sdata[i] = threshold;
     for(i=0;i<ssize;i++)
     {
         if(i==0)
@@ -586,12 +587,12 @@ static inline void rc_ui_spectrum_spectrum_calculate(gfloat *sdata,
         value = 0.0;
         if(u-l>1)
         {
+            value = bands[l];
             for(j=l;j<u;j++)
             {
                 if(j>=bsize) break;
-                value += bands[j];
+                value = MAX(value, bands[j]);
             }
-            value = value / (j-l);
         }
         else
         {
