@@ -112,4 +112,8 @@
     * Removed spectrum part from LibRhythmCat, and implemented it in UI part.
     * Add wave scope style in spectrum show.
 
+2012-07-19  SuperCat    <supercatexpert@gmail.com>
+
+    * Rewrited the text rendering part of the desktop lyric plug-in, lowered
+      the CPU usage, and shadow effect is also implemented.
     

@@ -40,29 +40,49 @@
 #define DESKLRC_BORDER_WIDTH 5
 #define DESKLRC_DEFAULT_WIDTH 1024
 
-typedef enum {
-    RC_PLUGIN_DESKLRC_WINDOW_NORMAL,
-    RC_PLUGIN_DESKLRC_WINDOW_DOCK,
-}RCPluginDesklrcWindowMode;
+#define DESKLRC_MARGIN_TOP 10
+#define DESKLRC_MARGIN_BOTTOM 10
+#define DESKLRC_MARGIN_LEFT 10
+#define DESKLRC_MARGIN_RIGHT 10
+#define DESKLRC_LINE_PADDING 5
 
-typedef struct RCPluginDesklrcRenderContext
+typedef enum {
+    DESKLRC_WINDOW_NORMAL,
+    DESKLRC_WINDOW_DOCK,
+}DesklrcWindowMode;
+
+typedef enum {
+    DESKLRC_LAYOUT_TEXT1_LINE1 = 0,
+    DESKLRC_LAYOUT_TEXT1_LINE2 = 1,
+    DESKLRC_LAYOUT_TEXT2_LINE1 = 2,
+    DESKLRC_LAYOUT_TEXT2_LINE2 = 3,
+    DESKLRC_LAYOUT_LAST = 4
+}DesklrcTextLayout;
+
+typedef struct DesklrcRenderContext
 {
     gchar *font_name;
     gint outline_width;
-    GdkRGBA linear_colors[3];
+    GdkRGBA linear_normal_colors[3];
+    GdkRGBA linear_active_colors[3];
     gdouble linear_pos[3];
     PangoContext *pango_context;
     PangoLayout *pango_layout;
     gchar *text;
     gdouble blur_radius;
     gint font_height;
-}RCPluginDesklrcRenderContext;
+}DesklrcRenderContext;
 
-typedef struct RCPluginDesklrcPrivate
+typedef struct DesklrcPrivate
 {
     GtkWidget *window;
-    RCPluginDesklrcRenderContext *render_context;
-    RCPluginDesklrcWindowMode mode;
+    DesklrcRenderContext *render_context;
+    DesklrcWindowMode mode;
+    cairo_surface_t *lyric_surface[DESKLRC_LAYOUT_LAST];
+    cairo_surface_t *lyric_active_surface[2];
+    gchar *lyric_text[DESKLRC_LAYOUT_LAST];
+    gdouble lyric_percent[2];
+    gint lyric_line_num[2];
     gboolean composited;
     gboolean movable;
     gboolean notify_flag;
@@ -70,31 +90,33 @@ typedef struct RCPluginDesklrcPrivate
     PangoLayout *layout;
     GdkRGBA bg_color1;
     GdkRGBA bg_color2;
+    GdkRGBA bg_color3;
     GdkRGBA fg_color1;
     GdkRGBA fg_color2;
+    GdkRGBA fg_color3;
     GdkPixbuf *bg_pixbuf;
     gchar *font_string;
     gboolean two_line;
-    gboolean draw_stroke;
+    gboolean two_track;
     gint osd_window_width;
     gint osd_window_pos_x;
     gint osd_window_pos_y;
     gulong timeout_id;
     gulong shutdown_id;
     GKeyFile *keyfile;
-}RCPluginDesklrcPrivate;
+}DesklrcPrivate;
 
-typedef struct RCPluginDesklrcPixel
+typedef struct DesklrcPixel
 {
     guint64 alpha;
     guint64 red;
     guint64 green;
     guint64 blue;
-}RCPluginDesklrcPixel;
+}DesklrcPixel;
 
-static RCPluginDesklrcPrivate desklrc_priv = {0};
+static DesklrcPrivate desklrc_priv = {0};
 
-static inline gint rc_plugin_desklrc_pos_to_index(gint x, gint y,
+static inline gint desklrc_pos_to_index(gint x, gint y,
     gint width, gint height)
 {
     if(x >= width || y >= height || x < 0 || y < 0)
@@ -102,8 +124,8 @@ static inline gint rc_plugin_desklrc_pos_to_index(gint x, gint y,
     return y * width + x;
 }
 
-static inline void rc_plugin_desklrc_num_to_pixel_with_factor(
-    RCPluginDesklrcPixel *pixel, guint32 value, gint factor)
+static inline void desklrc_num_to_pixel_with_factor(
+    DesklrcPixel *pixel, guint32 value, gint factor)
 {
     if(pixel==NULL) return;
     /* This only works for type CAIRO_FORMAT_ARGB32 */
@@ -114,8 +136,8 @@ static inline void rc_plugin_desklrc_num_to_pixel_with_factor(
     pixel->blue = (value & 0xff) * factor;
 }
 
-static inline guint32 rc_plugin_desklrc_pixel_to_num_with_divisor(
-    RCPluginDesklrcPixel *pixel, gint divisor)
+static inline guint32 desklrc_pixel_to_num_with_divisor(
+    DesklrcPixel *pixel, gint divisor)
 {
     guint32 alpha = pixel->alpha / divisor;
     if(alpha > 0xff) alpha = 0xff;
@@ -128,8 +150,8 @@ static inline guint32 rc_plugin_desklrc_pixel_to_num_with_divisor(
     return (alpha << 24) | (red << 16) | (green << 8) | blue;
 }
 
-static inline void rc_plugin_desklrc_pixel_plus(
-    RCPluginDesklrcPixel *adder_sum, RCPluginDesklrcPixel *adder2)
+static inline void desklrc_pixel_plus(
+    DesklrcPixel *adder_sum, DesklrcPixel *adder2)
 {
     adder_sum->alpha += adder2->alpha;
     adder_sum->red += adder2->red;
@@ -137,7 +159,7 @@ static inline void rc_plugin_desklrc_pixel_plus(
     adder_sum->blue += adder2->blue;
 }
 
-static gint *rc_plugin_desklrc_calc_kernel(gdouble sigma, gint *size)
+static gint *desklrc_calc_kernel(gdouble sigma, gint *size)
 {
     gint kernel_size = ceil (sigma * 6);
     if(kernel_size%2==0) kernel_size++;
@@ -163,7 +185,7 @@ static gint *rc_plugin_desklrc_calc_kernel(gdouble sigma, gint *size)
     return kernel;
 }
 
-static void rc_plugin_desklrc_apply_kernel(cairo_surface_t *surface,
+static void desklrc_apply_kernel(cairo_surface_t *surface,
     const gint *kernel, gint kernel_size)
 {
     if(kernel==NULL) return;
@@ -187,26 +209,26 @@ static void rc_plugin_desklrc_apply_kernel(cairo_surface_t *surface,
         {
             for (y = 0; y < height; y++)
             {
-                RCPluginDesklrcPixel final_value = {0};
+                DesklrcPixel final_value = {0};
                 gint sum = 0;
                 for(i=0;i<kernel_size;i++)
                 {
                     gint x1 = x + (i - kernel_orig) * DIR[d][0];
                     gint y1 = y + (i - kernel_orig) * DIR[d][1];
-                    gint index1 = rc_plugin_desklrc_pos_to_index(x1, y1,
+                    gint index1 = desklrc_pos_to_index(x1, y1,
                         width, height);
                     if(index1>0)
                     {
                         sum += kernel[i];
-                        RCPluginDesklrcPixel value;
-                        rc_plugin_desklrc_num_to_pixel_with_factor(&value,
+                        DesklrcPixel value;
+                        desklrc_num_to_pixel_with_factor(&value,
                             old_pixels[index1], kernel[i]);
-                        rc_plugin_desklrc_pixel_plus (&final_value, &value);
+                        desklrc_pixel_plus (&final_value, &value);
                     }
                 }
-                gint index = rc_plugin_desklrc_pos_to_index(x, y, width,
+                gint index = desklrc_pos_to_index(x, y, width,
                     height);
-                pixels[index] = rc_plugin_desklrc_pixel_to_num_with_divisor(
+                pixels[index] = desklrc_pixel_to_num_with_divisor(
                     &final_value, sum);
             }
         }
@@ -215,7 +237,7 @@ static void rc_plugin_desklrc_apply_kernel(cairo_surface_t *surface,
 }
 
 /* The blur shadow effect function from OSDLyric. */
-static void rc_plugin_desklrc_gussian_blur(cairo_surface_t *surface,
+static void desklrc_gussian_blur(cairo_surface_t *surface,
     gdouble sigma)
 {
     if(surface==NULL) return;
@@ -228,12 +250,12 @@ static void rc_plugin_desklrc_gussian_blur(cairo_surface_t *surface,
         return;
     }
     gint kernel_size;
-    gint *kernel = rc_plugin_desklrc_calc_kernel(sigma, &kernel_size);
-    rc_plugin_desklrc_apply_kernel(surface, kernel, kernel_size);
+    gint *kernel = desklrc_calc_kernel(sigma, &kernel_size);
+    desklrc_apply_kernel(surface, kernel, kernel_size);
     g_free(kernel);
 }
 
-static void rc_plugin_desklrc_paint_pixbuf_rect(cairo_t *cr,
+static void desklrc_paint_pixbuf_rect(cairo_t *cr,
     GdkPixbuf *source, gdouble src_x, gdouble src_y, gdouble src_w,
     gdouble src_h, gdouble des_x, gdouble des_y, gdouble des_w,
     gdouble des_h)
@@ -252,7 +274,7 @@ static void rc_plugin_desklrc_paint_pixbuf_rect(cairo_t *cr,
     cairo_restore(cr);
 }
 
-static void rc_plugin_desklrc_clear_cairo(cairo_t *cr)
+static void desklrc_clear_cairo(cairo_t *cr)
 {
     if(cr==NULL) return;
     cairo_save(cr);
@@ -262,8 +284,8 @@ static void rc_plugin_desklrc_clear_cairo(cairo_t *cr)
     cairo_restore(cr);
 }
 
-static void rc_plugin_desklrc_render_update_font_height(
-    RCPluginDesklrcRenderContext *context)
+static void desklrc_render_update_font_height(
+    DesklrcRenderContext *context)
 {
     PangoFontMetrics *metrics;
     gint ascent, descent;
@@ -280,36 +302,48 @@ static void rc_plugin_desklrc_render_update_font_height(
     context->font_height += PANGO_PIXELS(ascent + descent);
 }
 
-static void rc_plugin_desklrc_render_update_font(
-    RCPluginDesklrcRenderContext *context)
+static void desklrc_render_update_font(DesklrcRenderContext *context)
 {
     PangoFontDescription *font_desc;
     if(context==NULL) return;
     font_desc = pango_font_description_from_string(context->font_name);
     pango_layout_set_font_description(context->pango_layout, font_desc);
     pango_font_description_free(font_desc);
-    rc_plugin_desklrc_render_update_font_height(context);
+    desklrc_render_update_font_height(context);
 }
 
-static RCPluginDesklrcRenderContext *rc_plugin_desklrc_render_context_new()
+static void desklrc_render_set_font_name(DesklrcRenderContext *context,
+    const gchar *font_name)
 {
-    RCPluginDesklrcRenderContext *context = g_new0(
-        RCPluginDesklrcRenderContext, 1);
+    if(context==NULL || font_name==NULL) return;
+    g_free(context->font_name);
+    context->font_name = g_strdup(font_name);
+    desklrc_render_update_font(context);
+}
+
+static DesklrcRenderContext *desklrc_render_context_new()
+{
+    DesklrcRenderContext *context = g_new0(DesklrcRenderContext, 1);
     context->font_name = g_strdup(DESKLRC_DEFAULT_FONT_NAME);
     context->linear_pos[0] = 0.0;
     context->linear_pos[1] = 0.5;
     context->linear_pos[2] = 1.0;
+    gdk_rgba_parse(&(context->linear_normal_colors[0]), "#4CFFFF");
+    gdk_rgba_parse(&(context->linear_normal_colors[1]), "#0000FF");
+    gdk_rgba_parse(&(context->linear_normal_colors[2]), "#4CFFFF");
+    gdk_rgba_parse(&(context->linear_active_colors[0]), "#FFFF00");
+    gdk_rgba_parse(&(context->linear_active_colors[1]), "#FF4C4C");
+    gdk_rgba_parse(&(context->linear_active_colors[2]), "#FFFF00");
     context->pango_context = gdk_pango_context_get();
     context->pango_layout = pango_layout_new(context->pango_context);
     context->text = NULL;
     context->blur_radius = 0.0;
-    rc_plugin_desklrc_render_update_font(context);
+    desklrc_render_update_font(context);
     context->outline_width = DESKLRC_DEFAULT_OUTLINE_WIDTH;
     return context;
 }
 
-static void rc_plugin_desklrc_render_context_destroy(
-    RCPluginDesklrcRenderContext *context)
+static void desklrc_render_context_destroy(DesklrcRenderContext *context)
 {
     if(context==NULL) return;
     g_free(context->font_name);
@@ -321,8 +355,8 @@ static void rc_plugin_desklrc_render_context_destroy(
     g_free(context);
 }
 
-static void rc_plugin_desklrc_render_set_text(
-    RCPluginDesklrcRenderContext *context, const gchar *text)
+static void desklrc_render_set_text(DesklrcRenderContext *context,
+    const gchar *text)
 {
     if(context==NULL || text==NULL) return;
     if(context->text!=NULL)
@@ -335,13 +369,12 @@ static void rc_plugin_desklrc_render_set_text(
     pango_layout_set_text(context->pango_layout, text, -1);
 }
 
-static void rc_plugin_desklrc_render_get_pixel_size(
-    RCPluginDesklrcRenderContext *context, const gchar *text,
-    gint *width, gint *height)
+static void desklrc_render_get_pixel_size(DesklrcRenderContext *context,
+    const gchar *text, gint *width, gint *height)
 {
     gint w, h;
     if(context==NULL || text==NULL || width==NULL || height==NULL) return;
-    rc_plugin_desklrc_render_set_text(context, text);
+    desklrc_render_set_text(context, text);
     pango_layout_get_pixel_size (context->pango_layout, &w, &h);
     if(width!=NULL)
     {
@@ -355,22 +388,22 @@ static void rc_plugin_desklrc_render_get_pixel_size(
     }
 }
 
-static void rc_plugin_desklrc_render_paint_text(
-    RCPluginDesklrcRenderContext *context, cairo_t *cr, const gchar *text,
-    gdouble xpos, gdouble ypos)
+static void desklrc_render_paint_text(DesklrcRenderContext *context,
+    cairo_t *cr, const gchar *text, gdouble xpos, gdouble ypos,
+    gboolean active)
 {
     gint width, height;
     gint i;
     cairo_pattern_t *pattern;
     if(context==NULL || cr==NULL || text==NULL) return;
-    rc_plugin_desklrc_render_set_text(context, text);
+    desklrc_render_set_text(context, text);
     xpos += context->outline_width / 2.0 + context->blur_radius;
     ypos += context->outline_width / 2.0 + context->blur_radius;
     pango_layout_get_pixel_size(context->pango_layout, &width, &height);
     cairo_move_to(cr, xpos, ypos);
     cairo_save(cr);
     pango_cairo_layout_path(cr, context->pango_layout);
-    cairo_set_source_rgb(cr, 0.0, 0.0, 0.0);
+    cairo_set_source_rgba(cr, 0.0, 0.0, 0.0, 0.8);
     if(context->outline_width>0)
     {
         cairo_set_line_width(cr, context->outline_width);
@@ -378,7 +411,7 @@ static void rc_plugin_desklrc_render_paint_text(
         {
             cairo_stroke_preserve(cr);
             cairo_fill(cr);
-            rc_plugin_desklrc_gussian_blur(cairo_get_target(cr),
+            desklrc_gussian_blur(cairo_get_target(cr),
                 context->blur_radius);
         }
         else
@@ -390,11 +423,22 @@ static void rc_plugin_desklrc_render_paint_text(
     cairo_save(cr);
     cairo_new_path(cr);
     pattern = cairo_pattern_create_linear(xpos, ypos, xpos, ypos+height);
-    for(i=0;i<3; i++)
+    for(i=0;i<3;i++)
     {
-        cairo_pattern_add_color_stop_rgb(pattern, context->linear_pos[i],
-             context->linear_colors[i].red, context->linear_colors[i].green,
-             context->linear_colors[i].blue);
+        if(active)
+        {
+            cairo_pattern_add_color_stop_rgb(pattern, context->linear_pos[i],
+                context->linear_active_colors[i].red,
+                context->linear_active_colors[i].green,
+                context->linear_active_colors[i].blue);
+        }
+        else
+        {
+            cairo_pattern_add_color_stop_rgb(pattern, context->linear_pos[i],
+                context->linear_normal_colors[i].red,
+                context->linear_normal_colors[i].green,
+                context->linear_normal_colors[i].blue);
+        }
     }
     cairo_set_source(cr, pattern);
     cairo_set_operator(cr, CAIRO_OPERATOR_OVER);
@@ -404,16 +448,14 @@ static void rc_plugin_desklrc_render_paint_text(
     cairo_restore(cr);
 }
 
-static gboolean rc_plugin_desklrc_window_panel_visible(
-    RCPluginDesklrcPrivate *priv)
+static gboolean desklrc_window_panel_visible(DesklrcPrivate *priv)
 {
     if(priv==NULL) return FALSE;
-    return (priv->mode==RC_PLUGIN_DESKLRC_WINDOW_NORMAL) ||
+    return (priv->mode==DESKLRC_WINDOW_NORMAL) ||
         (priv->movable && priv->notify_flag);
 }
 
-static gboolean rc_plugin_desklrc_paint_bg(RCPluginDesklrcPrivate *priv,
-    cairo_t *cr)
+static gboolean desklrc_paint_bg(DesklrcPrivate *priv, cairo_t *cr)
 {
     GtkAllocation allocation;
     gint w, h;
@@ -424,14 +466,14 @@ static gboolean rc_plugin_desklrc_paint_bg(RCPluginDesklrcPrivate *priv,
     gtk_widget_get_allocation(priv->window, &allocation);
     w = allocation.width;
     h = allocation.height;
-    rc_plugin_desklrc_clear_cairo(cr);
-    if(rc_plugin_desklrc_window_panel_visible(priv))
+    desklrc_clear_cairo(cr);
+    if(desklrc_window_panel_visible(priv))
     {
         if(priv->bg_pixbuf!=NULL)
         {
             if(priv->composited)
             {
-                rc_plugin_desklrc_clear_cairo(cr);
+                desklrc_clear_cairo(cr);
             }
             else
             {
@@ -443,41 +485,41 @@ static gboolean rc_plugin_desklrc_paint_bg(RCPluginDesklrcPrivate *priv,
             cairo_set_operator(cr, CAIRO_OPERATOR_OVER);
             sw = gdk_pixbuf_get_width(priv->bg_pixbuf);
             sh = gdk_pixbuf_get_height(priv->bg_pixbuf);
-            rc_plugin_desklrc_paint_pixbuf_rect(cr, priv->bg_pixbuf,
+            desklrc_paint_pixbuf_rect(cr, priv->bg_pixbuf,
                 0, 0, DESKLRC_BORDER_WIDTH, DESKLRC_BORDER_WIDTH,
                 0, 0, DESKLRC_BORDER_WIDTH, DESKLRC_BORDER_WIDTH);
-            rc_plugin_desklrc_paint_pixbuf_rect(cr, priv->bg_pixbuf,
+            desklrc_paint_pixbuf_rect(cr, priv->bg_pixbuf,
                 0, sh - DESKLRC_BORDER_WIDTH, DESKLRC_BORDER_WIDTH,
                 DESKLRC_BORDER_WIDTH, 0, h - DESKLRC_BORDER_WIDTH,
                 DESKLRC_BORDER_WIDTH, DESKLRC_BORDER_WIDTH);
-            rc_plugin_desklrc_paint_pixbuf_rect(cr, priv->bg_pixbuf,
+            desklrc_paint_pixbuf_rect(cr, priv->bg_pixbuf,
                 sw - DESKLRC_BORDER_WIDTH, 0, DESKLRC_BORDER_WIDTH,
                 DESKLRC_BORDER_WIDTH, w - DESKLRC_BORDER_WIDTH, 0,
                 DESKLRC_BORDER_WIDTH, DESKLRC_BORDER_WIDTH);
-            rc_plugin_desklrc_paint_pixbuf_rect(cr, priv->bg_pixbuf,
+            desklrc_paint_pixbuf_rect(cr, priv->bg_pixbuf,
                 sw - DESKLRC_BORDER_WIDTH, sh - DESKLRC_BORDER_WIDTH,
                 DESKLRC_BORDER_WIDTH, DESKLRC_BORDER_WIDTH,
                 w - DESKLRC_BORDER_WIDTH, h - DESKLRC_BORDER_WIDTH,
                 DESKLRC_BORDER_WIDTH, DESKLRC_BORDER_WIDTH);
-            rc_plugin_desklrc_paint_pixbuf_rect(cr, priv->bg_pixbuf,
+            desklrc_paint_pixbuf_rect(cr, priv->bg_pixbuf,
                 0, DESKLRC_BORDER_WIDTH, DESKLRC_BORDER_WIDTH,
                 sh - DESKLRC_BORDER_WIDTH * 2, 0, DESKLRC_BORDER_WIDTH,
                 DESKLRC_BORDER_WIDTH, h - DESKLRC_BORDER_WIDTH * 2);
-            rc_plugin_desklrc_paint_pixbuf_rect(cr, priv->bg_pixbuf,
+            desklrc_paint_pixbuf_rect(cr, priv->bg_pixbuf,
                 sw - DESKLRC_BORDER_WIDTH, DESKLRC_BORDER_WIDTH,
                 DESKLRC_BORDER_WIDTH, sh - DESKLRC_BORDER_WIDTH * 2,
                 w - DESKLRC_BORDER_WIDTH, DESKLRC_BORDER_WIDTH,
                 DESKLRC_BORDER_WIDTH, h - DESKLRC_BORDER_WIDTH * 2);
-            rc_plugin_desklrc_paint_pixbuf_rect(cr, priv->bg_pixbuf,
+            desklrc_paint_pixbuf_rect(cr, priv->bg_pixbuf,
                 DESKLRC_BORDER_WIDTH, 0, sw - DESKLRC_BORDER_WIDTH * 2,
                 DESKLRC_BORDER_WIDTH, DESKLRC_BORDER_WIDTH, 0,
                 w - DESKLRC_BORDER_WIDTH * 2, DESKLRC_BORDER_WIDTH);
-            rc_plugin_desklrc_paint_pixbuf_rect(cr, priv->bg_pixbuf,
+            desklrc_paint_pixbuf_rect(cr, priv->bg_pixbuf,
                 DESKLRC_BORDER_WIDTH, sh - DESKLRC_BORDER_WIDTH,
                 sw - DESKLRC_BORDER_WIDTH * 2, DESKLRC_BORDER_WIDTH,
                 DESKLRC_BORDER_WIDTH, h - DESKLRC_BORDER_WIDTH,
                 w - DESKLRC_BORDER_WIDTH * 2, DESKLRC_BORDER_WIDTH);
-            rc_plugin_desklrc_paint_pixbuf_rect(cr, priv->bg_pixbuf,
+            desklrc_paint_pixbuf_rect(cr, priv->bg_pixbuf,
                 DESKLRC_BORDER_WIDTH, DESKLRC_BORDER_WIDTH,
                 sw - DESKLRC_BORDER_WIDTH * 2, sh - DESKLRC_BORDER_WIDTH * 2,
                 DESKLRC_BORDER_WIDTH, DESKLRC_BORDER_WIDTH,
@@ -492,7 +534,7 @@ static gboolean rc_plugin_desklrc_paint_bg(RCPluginDesklrcPrivate *priv,
     return TRUE;
 }
 
-static gboolean rc_plugin_desklrc_is_string_empty(const gchar *str)
+static gboolean desklrc_is_string_empty(const gchar *str)
 {
     gint i;
     guint len;
@@ -506,37 +548,49 @@ static gboolean rc_plugin_desklrc_is_string_empty(const gchar *str)
     return TRUE;
 }
 
-static void rc_plugin_desklrc_draw_lyric_surface(RCPluginDesklrcPrivate *priv,
-    cairo_surface_t **surface, const gchar *lyric)
+static void desklrc_draw_lyric_surface(DesklrcPrivate *priv,
+    cairo_surface_t **surface, const gchar *lyric, gboolean active)
 {
-    gint w, h;
+    gint w = 0, h = 0;
     cairo_t *cr;
-    if(priv==NULL || surface==NULL || lyric==NULL) return;
+    if(priv==NULL || surface==NULL) return;
     if(*surface!=NULL)
     {
         cairo_surface_destroy(*surface);
         *surface = NULL;
     }
-    if(!rc_plugin_desklrc_is_string_empty(lyric) && *surface==NULL)
+    if(lyric==NULL) return;
+    if(!gtk_widget_get_realized(priv->window))
+        gtk_widget_realize(priv->window);
+    desklrc_render_get_pixel_size(priv->render_context, lyric, &w, &h);
+    *surface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, w, h);
+    cr = cairo_create(*surface);
+    cairo_set_source_rgba(cr, 1.0, 1.0, 1.0, 0.0);
+    cairo_set_operator(cr, CAIRO_OPERATOR_SOURCE);
+    cairo_paint(cr);
+    if(!desklrc_is_string_empty(lyric))
     {
-        if(!gtk_widget_get_realized(priv->window))
-            gtk_widget_realize(priv->window);
-        rc_plugin_desklrc_render_get_pixel_size(priv->render_context,
-            lyric, &w, &h);
-        *surface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, w, h);
-        cr = cairo_create(*surface);
-        cairo_set_source_rgba(cr, 1.0, 1.0, 1.0, 0.0);
-        cairo_set_operator(cr, CAIRO_OPERATOR_SOURCE);
-        cairo_paint(cr);
-        rc_plugin_desklrc_render_paint_text(priv->render_context, cr,
-            lyric, 0, 0);
-        cairo_destroy(cr);
+        desklrc_render_paint_text(priv->render_context, cr, lyric,
+            0, 0, active);
     }
+    cairo_destroy(cr);
 }
 
-static inline void rc_plugin_desklrc_draw_drag_shadow(cairo_t *cr, gint width,
+static inline void desklrc_update_color(DesklrcPrivate *priv)
+{
+    if(priv==NULL || priv->render_context==NULL) return;
+    priv->render_context->linear_normal_colors[0] = priv->bg_color1;
+    priv->render_context->linear_normal_colors[1] = priv->bg_color2;
+    priv->render_context->linear_normal_colors[2] = priv->bg_color3;
+    priv->render_context->linear_active_colors[0] = priv->fg_color1;
+    priv->render_context->linear_active_colors[1] = priv->fg_color2;
+    priv->render_context->linear_active_colors[2] = priv->fg_color3;
+}
+
+static inline void desklrc_draw_drag_shadow(cairo_t *cr, gint width,
     gint height)
 {
+    cairo_save(cr);
     cairo_set_source_rgba(cr, 0.0, 0.0, 0.0, 0.4);
     cairo_move_to(cr, 0 + 5, 0);
     cairo_line_to(cr, 0 + width - 5, 0);
@@ -551,521 +605,272 @@ static inline void rc_plugin_desklrc_draw_drag_shadow(cairo_t *cr, gint width,
     cairo_arc(cr, 0 + width - 5, 0 + height - 5, 5, 0, G_PI / 2);
     cairo_arc(cr, 0 + 5, 0 + height - 5, 5, G_PI / 2, G_PI);
     cairo_fill(cr);
+    cairo_restore(cr);
 }
 
-static void rc_plugin_desklrc_paint(RCPluginDesklrcPrivate *priv,
-    cairo_t *cr)
-{
-    if(priv==NULL || cr==NULL) return;
-    rc_plugin_desklrc_paint_bg(priv, cr);
-    /*
-    rc_plugin_paint_lyrics(priv, cr);
-    if(priv->update_shape)
-        rc_plugin_desklrc_update_shape(priv);
-    */
-    cairo_destroy(cr);
-}
-
-
-
-
-
-
-
-
-
-static void rc_plugin_desklrc_show(GtkWidget *widget,
-    RCPluginDesklrcPrivate *priv, cairo_t *cr, gint64 pos, gint64 offset1,
-    GSequenceIter *iter1, GSequenceIter *iter_begin1, gint64 offset2,
-    GSequenceIter *iter2, GSequenceIter *iter_begin2)
+static void desklrc_show(GtkWidget *widget, DesklrcPrivate *priv, cairo_t *cr)
 {
     GtkAllocation allocation;
-    cairo_pattern_t *pat;
-    cairo_t *scr;
     cairo_surface_t *surface;
-    const RCLibLyricData *lrc_data1 = NULL;
-    const RCLibLyricData *lrc_data2 = NULL;
-    GSequenceIter *iter_now1 = NULL;
-    GSequenceIter *iter_now2 = NULL;
-    GSequenceIter *iter_next1 = NULL;
-    GSequenceIter *iter_next2 = NULL;
+    gint surface_width, surface_height;
     gint index1 = 0, index2 = 0;
     gboolean two_track = FALSE;
     gboolean two_line = FALSE;
     gfloat percent1 = 0.0, percent2 = 0.0;
-    gint64 time_passed1 = 0, time_length1 = 0;
-    gint64 time_passed2 = 0, time_length2 = 0;
-    gint text_width1 = 0, text_height1 = 0;
-    gint text_next_width1 = 0, text_next_height1 = 0;
-    gint text_width2 = 0, text_height2 = 0;
-    gint text_next_width2 = 0, text_next_height2 = 0;
-    gint window_height;
-    gfloat start_x, start_y, fill_width;
-    if(widget==NULL || priv==NULL || priv->layout==NULL || cr==NULL)
-        return;
-    if(iter1!=NULL)
-        iter_now1 = iter1;
-    else
-        iter_now1 = iter_begin1;
-    if(iter2!=NULL)
-        iter_now2 = iter2;
-    else
-        iter_now2 = iter_begin2;
-    if(iter_now1==NULL && iter_now2==NULL)
-    {
-        if(priv->notify_flag)
-        {
-            gtk_widget_get_allocation(widget, &allocation);
-            rc_plugin_desklrc_draw_drag_shadow(cr, allocation.width,
-                allocation.height);
-        }
-        return;
-    }
-    if(iter_now1==NULL && iter_now2!=NULL)
-    {
-        iter_now1 = iter_now2;
-        iter1 = iter2;
-        iter_begin1 = iter_begin2;
-        iter_now2 = NULL;
-        iter2 = NULL;
-        iter_begin2 = NULL;
-    }
-    if(iter_now1!=NULL && iter_now2!=NULL) two_track = TRUE;
-    two_line = priv->two_line;
-    if(iter1!=NULL)
-    {
-        lrc_data1 = g_sequence_get(iter1);
-        if(lrc_data1!=NULL)
-        {
-            time_passed1 = pos - (lrc_data1->time+offset1);
-            if(lrc_data1->length>0)
-                time_length1 = lrc_data1->length;
-            else
-                time_length1 = rclib_core_query_duration() -
-                    (lrc_data1->time+offset1);
-            if(time_passed1>0)
-                percent1 = (gdouble)time_passed1 / time_length1;
-        }
-    }
-    if(iter2!=NULL)
-    {
-        lrc_data2 = g_sequence_get(iter2);
-        if(lrc_data2!=NULL)
-        {
-            time_passed2 = pos - (lrc_data2->time+offset2);
-            if(lrc_data2->length>0)
-                time_length2 = lrc_data2->length;
-            else
-                time_length2 = rclib_core_query_duration() -
-                    (lrc_data2->time+offset2);
-            if(time_passed2>0)
-                percent2 = (gdouble)time_passed2 / time_length2;
-        }
-    }
-    if(two_line)
-    {
-        if(!g_sequence_iter_is_begin(iter_now1))
-        {
-            if(percent1>=0.5)
-                iter_next1 = g_sequence_iter_next(iter_now1);
-            else
-                iter_next1 = g_sequence_iter_prev(iter_now1);
-            if(g_sequence_iter_is_end(iter_next1))
-                iter_next1 = NULL;
-        }
-        else
-        {
-            if(percent1>=0.5)
-                iter_next1 = g_sequence_iter_next(iter_now1);
-            else
-                iter_next1 = NULL;
-        }
-        if(iter_now2!=NULL)
-        {
-            if(!g_sequence_iter_is_begin(iter_now2))
-            {
-                if(percent2>=0.5)
-                    iter_next2 = g_sequence_iter_next(iter_now2);
-                else
-                    iter_next2 = g_sequence_iter_prev(iter_now2);
-                if(g_sequence_iter_is_end(iter_next2))
-                    iter_next2 = NULL;
-            }
-            else
-            {
-                if(percent2>=0.5)
-                    iter_next2 = g_sequence_iter_next(iter_now2);
-                else
-                    iter_next2 = NULL;
-            }
-        }
-    }
-    if(iter_now1!=NULL)
-    {
-        lrc_data1 = g_sequence_get(iter_now1);
-        if(lrc_data1!=NULL)
-        {
-            pango_layout_set_text(priv->layout, lrc_data1->text, -1);
-            pango_layout_get_pixel_size(priv->layout, &text_width1,
-                &text_height1);
-        }
-    }
-    if(two_line)
-    {
-        if(iter_next1!=NULL)
-            lrc_data1 = g_sequence_get(iter_next1);
-        else
-            lrc_data1 = NULL;
-        if(lrc_data1!=NULL)
-            pango_layout_set_text(priv->layout, lrc_data1->text, -1);
-        else
-            pango_layout_set_text(priv->layout, "", -1);
-        pango_layout_get_pixel_size(priv->layout, &text_next_width1,
-            &text_next_height1);
-    }
-    if(iter_now2!=NULL)
-    {
-        lrc_data2 = g_sequence_get(iter_now2);
-        if(lrc_data2!=NULL)
-        {
-            pango_layout_set_text(priv->layout, lrc_data2->text, -1);
-            pango_layout_get_pixel_size(priv->layout, &text_width2,
-                &text_height2);
-        }
-    }
-    if(two_line && two_track)
-    {
-        if(iter_next2!=NULL)
-            lrc_data2 = g_sequence_get(iter_next2);
-        else
-            lrc_data2 = NULL;
-        if(lrc_data2!=NULL)
-            pango_layout_set_text(priv->layout, lrc_data2->text, -1);
-        else
-            pango_layout_set_text(priv->layout, "", -1);
-        pango_layout_get_pixel_size(priv->layout, &text_next_width2,
-            &text_next_height2);
-    }
-    window_height = ((text_height1 + text_next_height1 + text_height2 +
-        text_next_height2) / 10) * 10 + 20;
-    if(two_line) window_height+=5;
-    if(two_track) window_height+=5;
-    if(two_line && two_track) window_height+=5;
-    gtk_widget_get_allocation(widget, &allocation);
-    surface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32,
-        allocation.width, allocation.height);
-    scr = cairo_create(surface);
-    if(allocation.height!=window_height ||
-        allocation.width!=priv->osd_window_width)
-    {
-        gtk_window_resize(GTK_WINDOW(widget), priv->osd_window_width,
-            window_height);  
-    }
+    gfloat start_x, start_y;
+    gfloat percent_lower, percent_upper;
+    gfloat percent_text;
     gtk_widget_get_allocation(widget, &allocation);
     if(priv->notify_flag)
     {
-        rc_plugin_desklrc_draw_drag_shadow(scr, allocation.width,
+        desklrc_draw_drag_shadow(cr, allocation.width,
             allocation.height);
     }
-    if(iter_now1!=NULL)
+    
+    index1 = priv->lyric_line_num[0];
+    percent1 = priv->lyric_percent[0];
+    
+    /* Draw the first track lyric of line 1 */
+    surface = priv->lyric_surface[DESKLRC_LAYOUT_TEXT1_LINE1];
+    if(surface!=NULL)
     {
-        index1 = g_sequence_iter_get_position(iter_now1);
-        lrc_data1 = g_sequence_get(iter_now1);
-        if(lrc_data1!=NULL)
-        {
-            pango_layout_set_text(priv->layout, lrc_data1->text, -1);
-            pango_layout_get_pixel_size(priv->layout, &text_width1,
-                &text_height1);
-        }
+        surface_width = cairo_image_surface_get_width(surface);
+        surface_height = cairo_image_surface_get_height(surface);
+        if(priv->lyric_surface[DESKLRC_LAYOUT_TEXT2_LINE1]!=NULL)
+            two_track = TRUE;
+        if(priv->lyric_surface[DESKLRC_LAYOUT_TEXT1_LINE2]!=NULL)
+            two_line = TRUE;
         if(two_line)
-            start_x = 10 + (index1%2)*allocation.width/3;
+            start_x = DESKLRC_MARGIN_LEFT + (index1%2)*allocation.width/3;
         else
-            start_x = 10;
-        if(start_x+text_width1>allocation.width)
+            start_x = DESKLRC_MARGIN_LEFT;
+        if(start_x+surface_width>allocation.width)
         {
-            start_x += (gfloat)(allocation.width-text_width1-start_x-20) *
-                percent1;
+            percent_lower = (gfloat)(allocation.width - start_x) / 2 /
+                surface_width;
+            percent_upper = 1.0 - percent_lower;
+            if(percent1>=percent_upper)
+                percent_text = 1.0;
+            else if(percent1>=percent_lower)
+            {
+                percent_text = (percent1 - percent_lower) /
+                    (percent_upper - percent_lower);
+            }
+            else
+                percent_text = 0.0;
+            
+            start_x += (gfloat)(allocation.width - surface_width - start_x -
+                DESKLRC_MARGIN_LEFT - DESKLRC_MARGIN_RIGHT) * percent_text;
         }
         if(two_line && two_track)
         {
             if(index1%2==0)
-                start_y = 10;
+                start_y = DESKLRC_MARGIN_TOP;
             else
-                start_y = 5 + window_height /2;
+            {
+                start_y = DESKLRC_MARGIN_TOP + 2 * (DESKLRC_LINE_PADDING +
+                    priv->render_context->font_height);
+            }
         }
         else if(two_line && !two_track)
         {
             if(index1%2==0)
-                start_y = 10;
+                start_y = DESKLRC_MARGIN_TOP;
             else
-                start_y = window_height - 10 - text_height1;
+                start_y = DESKLRC_MARGIN_TOP + DESKLRC_LINE_PADDING +
+                    priv->render_context->font_height;
         }
         else
         {
-            start_y = 10;
+            start_y = DESKLRC_MARGIN_TOP;
         }
-        cairo_move_to(scr, start_x, start_y);
-        cairo_save(scr);
-        pango_cairo_update_layout(scr, priv->layout);
-        pango_cairo_layout_path(scr, priv->layout);
-        if(priv->draw_stroke)
+        cairo_save(cr);
+        if(priv->lyric_active_surface[0]!=NULL)
         {
-            cairo_set_source_rgba(scr, 0.0, 0.0, 0.0, 0.5);
-            cairo_stroke_preserve(scr);
-            rc_plugin_desklrc_gussian_blur(cairo_get_target(scr), 1.0);
+            cairo_rectangle(cr, start_x + surface_width * percent1, start_y,
+                surface_width * (1.0 - percent1), surface_height);
         }
-        cairo_restore(scr);
-        cairo_save(scr);
-        cairo_clip(scr);
-        pat = cairo_pattern_create_linear(start_x, start_y, start_x,
-            start_y+text_height1);
-        cairo_pattern_add_color_stop_rgb(pat, 0.0, priv->bg_color2.red,
-            priv->bg_color2.green, priv->bg_color2.blue);
-        cairo_pattern_add_color_stop_rgb(pat, 0.5, priv->bg_color1.red,
-            priv->bg_color1.green, priv->bg_color1.blue);
-        cairo_pattern_add_color_stop_rgb(pat, 1.0, priv->bg_color2.red,
-            priv->bg_color2.green, priv->bg_color2.blue);
-        cairo_set_source(scr, pat);
-        cairo_set_operator(scr, CAIRO_OPERATOR_OVER);
-        cairo_rectangle(scr, start_x, start_y, text_width1, text_height1);
-        cairo_fill(scr);
-        cairo_move_to(cr, start_x, start_y);
-        pango_cairo_show_layout(scr, priv->layout);
-        cairo_pattern_destroy(pat);
-        fill_width = percent1 * (gfloat)text_width1;
-        pat = cairo_pattern_create_linear(start_x, start_y, start_x,
-            start_y+text_height1);
-        cairo_pattern_add_color_stop_rgb(pat, 0.0, priv->fg_color2.red,
-            priv->fg_color2.green, priv->fg_color2.blue);
-        cairo_pattern_add_color_stop_rgb(pat, 0.5, priv->fg_color1.red,
-            priv->fg_color1.green, priv->fg_color1.blue);
-        cairo_pattern_add_color_stop_rgb(pat, 1.0, priv->fg_color2.red,
-            priv->fg_color2.green, priv->fg_color2.blue);
-        cairo_set_source(scr, pat);
-        cairo_rectangle(scr, start_x, start_y, fill_width, text_height1);
-        cairo_fill(scr);
-        cairo_pattern_destroy(pat);
-        cairo_restore(scr);
+        else
+        {
+            cairo_rectangle(cr, start_x, start_y, surface_width,
+                surface_height);
+        }
+        cairo_clip(cr);
+        cairo_set_source_surface(cr, surface, start_x, start_y);
+        cairo_set_operator(cr, CAIRO_OPERATOR_OVER);
+        cairo_paint(cr);
+        cairo_restore(cr);
+        if(priv->lyric_active_surface[0]!=NULL)
+        {
+            cairo_save(cr);
+            cairo_rectangle(cr, start_x, start_y, surface_width * percent1,
+                surface_height);
+            cairo_clip(cr);
+            cairo_set_source_surface(cr, priv->lyric_active_surface[0],
+                start_x, start_y);
+            cairo_set_operator(cr, CAIRO_OPERATOR_OVER);
+            cairo_paint(cr);
+            cairo_restore(cr);
+        }
     }
-    if(iter_next1!=NULL)
+
+    /* Draw the first track lyric of line 2 */
+    surface = priv->lyric_surface[DESKLRC_LAYOUT_TEXT1_LINE2];
+    index1++;
+    if(surface!=NULL)
     {
-        cairo_save(scr);
-        index1 = g_sequence_iter_get_position(iter_next1);
-        lrc_data1 = g_sequence_get(iter_next1);
-        if(lrc_data1!=NULL)
+        surface_width = cairo_image_surface_get_width(surface);
+        surface_height = cairo_image_surface_get_height(surface);
+        start_x = DESKLRC_MARGIN_LEFT + (index1%2)*allocation.width/3;
+        if(percent1<0.5 && start_x+surface_width>allocation.width)
         {
-            pango_layout_set_text(priv->layout, lrc_data1->text, -1);
-            pango_layout_get_pixel_size(priv->layout, &text_next_width1,
-                &text_next_height1);
+            start_x += allocation.width - surface_width - start_x -
+                DESKLRC_MARGIN_LEFT - DESKLRC_MARGIN_RIGHT;
         }
-        start_x = 10 + (index1%2)*allocation.width/3;
-        if(percent1<0.5 && start_x+text_next_width1>allocation.width)
-        {
-            start_x += (gfloat)
-                (allocation.width-text_next_width1-start_x-20);
-        }
-        if(two_line && two_track)
+        if(two_track)
         {
             if(index1%2==0)
-                start_y = 10;
+            {
+                start_y = DESKLRC_MARGIN_TOP;
+            }
             else
-                start_y = 5 + window_height /2;
+            {
+                start_y = DESKLRC_MARGIN_TOP + 2 * (DESKLRC_LINE_PADDING +
+                    priv->render_context->font_height);
+            }
         }
-        else if(two_line && !two_track)
+        else
         {
             if(index1%2==0)
-                start_y = 10;
+                start_y = DESKLRC_MARGIN_TOP;
             else
-                start_y = window_height - 10 - text_next_height1;
+                start_y = DESKLRC_MARGIN_TOP + DESKLRC_LINE_PADDING +
+                    priv->render_context->font_height;
         }
-        else
-        {
-            start_y = 10;
-        }
-        cairo_move_to(scr, start_x, start_y);
-        cairo_save(scr);
-        pango_cairo_update_layout(scr, priv->layout);
-        pango_cairo_layout_path(scr, priv->layout);
-        if(priv->draw_stroke)
-        {
-            cairo_set_source_rgba(scr, 0.0, 0.0, 0.0, 0.5);
-            cairo_stroke_preserve(scr);
-            rc_plugin_desklrc_gussian_blur(cairo_get_target(scr), 1.0);
-        }
-        cairo_restore(scr);
-        cairo_clip(scr);
-        pat = cairo_pattern_create_linear(start_x, start_y, start_x,
-            start_y+text_next_height1);
-        if(percent1<0.5)
-        {
-            cairo_pattern_add_color_stop_rgb(pat, 0.0, priv->fg_color2.red,
-                priv->fg_color2.green, priv->fg_color2.blue);
-            cairo_pattern_add_color_stop_rgb(pat, 0.5, priv->fg_color1.red,
-                priv->fg_color1.green, priv->fg_color1.blue);
-            cairo_pattern_add_color_stop_rgb(pat, 1.0, priv->fg_color2.red,
-                priv->fg_color2.green, priv->fg_color2.blue);
-        }
-        else
-        {
-            cairo_pattern_add_color_stop_rgb(pat, 0.0, priv->bg_color2.red,
-                priv->bg_color2.green, priv->bg_color2.blue);
-            cairo_pattern_add_color_stop_rgb(pat, 0.5, priv->bg_color1.red,
-                priv->bg_color1.green, priv->bg_color1.blue);
-            cairo_pattern_add_color_stop_rgb(pat, 1.0, priv->bg_color2.red,
-                priv->bg_color2.green, priv->bg_color2.blue);
-        }
-        cairo_set_source(scr, pat);
-        cairo_rectangle(scr, start_x, start_y, text_next_width1,
-            text_next_height1);
-        cairo_fill(scr);
-        cairo_pattern_destroy(pat);
-        cairo_restore(scr);
+        cairo_save(cr);
+        cairo_rectangle(cr, start_x, start_y, surface_width,
+            surface_height);
+        cairo_clip(cr);
+        cairo_set_source_surface(cr, surface, start_x, start_y);
+        cairo_set_operator(cr, CAIRO_OPERATOR_OVER);
+        cairo_paint(cr);
+        cairo_restore(cr);
     }
-    if(iter_now2!=NULL)
+
+    index2 = priv->lyric_line_num[1];
+    percent2 = priv->lyric_percent[1];
+    
+    /* Draw the second track lyric of line 1 */
+    surface = priv->lyric_surface[DESKLRC_LAYOUT_TEXT2_LINE1];
+    if(surface!=NULL)
     {
-        cairo_save(scr);
-        index2 = g_sequence_iter_get_position(iter_now2);
-        lrc_data2 = g_sequence_get(iter_now2);
-        if(lrc_data2!=NULL)
-        {
-            pango_layout_set_text(priv->layout, lrc_data2->text, -1);
-            pango_layout_get_pixel_size(priv->layout, &text_width2,
-                &text_height2);
-        }
+        surface_width = cairo_image_surface_get_width(surface);
+        surface_height = cairo_image_surface_get_height(surface);
+        if(priv->lyric_surface[DESKLRC_LAYOUT_TEXT2_LINE2]!=NULL)
+            two_line = TRUE;
         if(two_line)
-            start_x = 10 + (index2%2)*allocation.width/3;
+            start_x = DESKLRC_MARGIN_LEFT + (index2%2)*allocation.width/3;
         else
-            start_x = 10;
-        if(start_x+text_width2>allocation.width)
+            start_x = DESKLRC_MARGIN_LEFT;
+        if(start_x+surface_width>allocation.width)
         {
-            start_x += (gfloat)(allocation.width-text_width2-start_x-20) *
-                percent2;
+            percent_lower = (gfloat)(allocation.width - start_x) / 2 /
+                surface_width;
+            percent_upper = 1.0 - percent_lower;
+            if(percent2>=percent_upper)
+                percent_text = 1.0;
+            else if(percent2>=percent_lower)
+            {
+                percent_text = (percent2 - percent_lower) /
+                    (percent_upper - percent_lower);
+            }
+            else
+                percent_text = 0.0;
+            start_x += (gfloat)(allocation.width - surface_width - start_x -
+                DESKLRC_MARGIN_LEFT - DESKLRC_MARGIN_RIGHT) * percent_text;
         }
         if(two_line)
         {
             if(index2%2==0)
-                start_y = 15 + text_height1;
+                start_y = DESKLRC_MARGIN_TOP + DESKLRC_LINE_PADDING +
+                    priv->render_context->font_height;
             else
-                start_y = window_height - 10 - text_height2;
+            {
+                start_y = DESKLRC_MARGIN_TOP + 3 * (DESKLRC_LINE_PADDING +
+                    priv->render_context->font_height);
+            }
         }
         else
         {
-            start_y = 15 + text_height1;
+            start_y = DESKLRC_MARGIN_TOP + DESKLRC_LINE_PADDING +
+                priv->render_context->font_height;
         }
-        cairo_move_to(scr, start_x, start_y);
-        cairo_save(scr);
-        pango_cairo_update_layout(scr, priv->layout);
-        pango_cairo_layout_path(scr, priv->layout);
-        if(priv->draw_stroke)
+        cairo_save(cr);
+        if(priv->lyric_active_surface[1]!=NULL)
         {
-            cairo_set_source_rgba(scr, 0.0, 0.0, 0.0, 0.5);
-            cairo_stroke_preserve(scr);
-            rc_plugin_desklrc_gussian_blur(cairo_get_target(scr), 1.0);
+            cairo_rectangle(cr, start_x + surface_width * percent2, start_y,
+                surface_width * (1.0 - percent2), surface_height);
         }
-        cairo_restore(scr);
-        cairo_clip(scr);
-        pat = cairo_pattern_create_linear(start_x, start_y, start_x,
-            start_y+text_height2);
-        cairo_pattern_add_color_stop_rgb(pat, 0.0, priv->bg_color2.red,
-            priv->bg_color2.green, priv->bg_color2.blue);
-        cairo_pattern_add_color_stop_rgb(pat, 0.5, priv->bg_color1.red,
-            priv->bg_color1.green, priv->bg_color1.blue);
-        cairo_pattern_add_color_stop_rgb(pat, 1.0, priv->bg_color2.red,
-            priv->bg_color2.green, priv->bg_color2.blue);
-        cairo_set_source(scr, pat);
-        cairo_rectangle(scr, start_x, start_y, text_width2, text_height2);
-        cairo_fill(scr);
-        cairo_pattern_destroy(pat);
-        fill_width = percent2 * (gfloat)text_width2;
-        pat = cairo_pattern_create_linear(start_x, start_y, start_x,
-            start_y+text_height2);
-        cairo_pattern_add_color_stop_rgb(pat, 0.0, priv->fg_color2.red,
-            priv->fg_color2.green, priv->fg_color2.blue);
-        cairo_pattern_add_color_stop_rgb(pat, 0.5, priv->fg_color1.red,
-            priv->fg_color1.green, priv->fg_color1.blue);
-        cairo_pattern_add_color_stop_rgb(pat, 1.0, priv->fg_color2.red,
-            priv->fg_color2.green, priv->fg_color2.blue);
-        cairo_set_source(scr, pat);
-        cairo_rectangle(scr, start_x, start_y, fill_width, text_height2);
-        cairo_fill(scr);
-        cairo_pattern_destroy(pat);
-        cairo_restore(scr);
+        else
+        {
+            cairo_rectangle(cr, start_x, start_y, surface_width,
+                surface_height);
+        }
+        cairo_clip(cr);
+        cairo_set_source_surface(cr, surface, start_x, start_y);
+        cairo_set_operator(cr, CAIRO_OPERATOR_OVER);
+        cairo_paint(cr);
+        cairo_restore(cr);
+        if(priv->lyric_active_surface[1]!=NULL)
+        {
+            cairo_save(cr);
+            cairo_rectangle(cr, start_x, start_y, surface_width * percent2,
+                surface_height);
+            cairo_clip(cr);
+            cairo_set_source_surface(cr, priv->lyric_active_surface[1],
+                start_x, start_y);
+            cairo_set_operator(cr, CAIRO_OPERATOR_OVER);
+            cairo_paint(cr);
+            cairo_restore(cr);
+        }
     }
-    if(iter_next2!=NULL)
+
+    /* Draw the second track lyric of line 2 */
+    surface = priv->lyric_surface[DESKLRC_LAYOUT_TEXT2_LINE2];
+    index2++;
+    if(surface!=NULL)
     {
-        cairo_save(scr);
-        index2 = g_sequence_iter_get_position(iter_next2);
-        lrc_data2 = g_sequence_get(iter_next2);
-        if(lrc_data2!=NULL)
+        surface_width = cairo_image_surface_get_width(surface);
+        surface_height = cairo_image_surface_get_height(surface);
+        start_x = DESKLRC_MARGIN_LEFT + (index2%2)*allocation.width/3;
+        if(percent2<0.5 && start_x+surface_width>allocation.width)
         {
-            pango_layout_set_text(priv->layout, lrc_data2->text, -1);
-            pango_layout_get_pixel_size(priv->layout, &text_next_width2,
-                &text_next_height2);
+            start_x += allocation.width - surface_width - start_x -
+                DESKLRC_MARGIN_LEFT - DESKLRC_MARGIN_RIGHT;
         }
-        start_x = 10 + (index2%2)*allocation.width/3;
-        if(percent2<0.5 && start_x+text_next_width2>allocation.width)
+        if(index2%2==0)
         {
-            start_x += (gfloat)
-                (allocation.width-text_next_width2-start_x-20);
-        }
-        if(two_line)
-        {
-            if(index2%2==0)
-                start_y = 15 + text_height1;
-            else
-                start_y = window_height - 15 - text_height2;
+            start_y = DESKLRC_MARGIN_TOP + DESKLRC_LINE_PADDING +
+                priv->render_context->font_height;
         }
         else
         {
-            start_y = 20 + text_height1;
+            start_y = DESKLRC_MARGIN_TOP + 3 * (DESKLRC_LINE_PADDING +
+                priv->render_context->font_height);
         }
-        cairo_move_to(scr, start_x, start_y);
-        cairo_save(scr);
-        pango_cairo_update_layout(scr, priv->layout);
-        pango_cairo_layout_path(scr, priv->layout);
-        if(priv->draw_stroke)
-        {
-            cairo_set_source_rgba(scr, 0.0, 0.0, 0.0, 0.5);
-            cairo_stroke_preserve(scr);
-            rc_plugin_desklrc_gussian_blur(cairo_get_target(scr), 1.0);
-        }
-        cairo_restore(scr);
-        cairo_clip(scr);
-        pat = cairo_pattern_create_linear(start_x, start_y, start_x,
-            start_y+text_next_height2);
-        if(percent2<0.5)
-        {
-            cairo_pattern_add_color_stop_rgb(pat, 0.0, priv->fg_color2.red,
-                priv->fg_color2.green, priv->fg_color2.blue);
-            cairo_pattern_add_color_stop_rgb(pat, 0.5, priv->fg_color1.red,
-                priv->fg_color1.green, priv->fg_color1.blue);
-            cairo_pattern_add_color_stop_rgb(pat, 1.0, priv->fg_color2.red,
-                priv->fg_color2.green, priv->fg_color2.blue);
-        }
-        else
-        {
-            cairo_pattern_add_color_stop_rgb(pat, 0.0, priv->bg_color2.red,
-                priv->bg_color2.green, priv->bg_color2.blue);
-            cairo_pattern_add_color_stop_rgb(pat, 0.5, priv->bg_color1.red,
-                priv->bg_color1.green, priv->bg_color1.blue);
-            cairo_pattern_add_color_stop_rgb(pat, 1.0, priv->bg_color2.red,
-                priv->bg_color2.green, priv->bg_color2.blue);
-        }
-        cairo_set_source(scr, pat);
-        cairo_rectangle(scr, start_x, start_y, text_next_width2,
-            text_next_height2);
-        cairo_fill(scr);
-        cairo_pattern_destroy(pat);
-        cairo_restore(scr);
+        cairo_save(cr);
+        cairo_rectangle(cr, start_x, start_y, surface_width,
+            surface_height);
+        cairo_clip(cr);
+        cairo_set_source_surface(cr, surface, start_x, start_y);
+        cairo_set_operator(cr, CAIRO_OPERATOR_OVER);
+        cairo_paint(cr);
+        cairo_restore(cr);
     }
-    cairo_destroy(scr);
-    cairo_set_source_surface(cr, surface, 0, 0);
-    cairo_set_operator(cr, CAIRO_OPERATOR_SOURCE);
-    cairo_paint(cr);
-    cairo_surface_destroy(surface);
+
 }
 
-static gboolean rc_plugin_desklrc_drag(GtkWidget *widget, GdkEvent *event,
+static gboolean desklrc_drag(GtkWidget *widget, GdkEvent *event,
     gpointer data)
 {
     static gint move_x = 0;
@@ -1077,7 +882,7 @@ static gboolean rc_plugin_desklrc_drag(GtkWidget *widget, GdkEvent *event,
     GdkCursor *cursor = NULL;
     gint x, y;
     gint width = 0;
-    RCPluginDesklrcPrivate *priv = (RCPluginDesklrcPrivate *)data;
+    DesklrcPrivate *priv = (DesklrcPrivate *)data;
     if(data==NULL) return FALSE;
     if(!priv->movable) return FALSE;
     window = gtk_widget_get_window(widget);
@@ -1164,32 +969,209 @@ static gboolean rc_plugin_desklrc_drag(GtkWidget *widget, GdkEvent *event,
     return FALSE;
 }
 
-static gboolean rc_plugin_desklrc_update(gpointer data)
+static gboolean desklrc_update(gpointer data)
 {
-    RCPluginDesklrcPrivate *priv = (RCPluginDesklrcPrivate *)data;
+    DesklrcPrivate *priv = (DesklrcPrivate *)data;
     if(data==NULL) return TRUE;
     gtk_widget_queue_draw(priv->window);
     return TRUE;   
 }
 
-static gboolean rc_plugin_desklrc_draw(GtkWidget *widget, 
-    cairo_t *cr, gpointer data)
+static inline void desklrc_render_lyric_surface(DesklrcPrivate *priv,
+    GSequenceIter *iter1, GSequenceIter *iter_begin1, GSequenceIter *iter2,
+    GSequenceIter *iter_begin2)
 {
-    RCPluginDesklrcPrivate *priv = (RCPluginDesklrcPrivate *)data;
+    const RCLibLyricData *lyric_data;
+    const gchar *text;
+    guint line;
+    gboolean active;
+       
+    /* Render the lyric layout of the first track, line 1 */
+    line = DESKLRC_LAYOUT_TEXT1_LINE1;
+    text = NULL;
+    G_STMT_START
+    {
+        if(iter1==NULL) iter1 = iter_begin1;
+        if(iter1==NULL) break;
+        lyric_data = g_sequence_get(iter1);
+        if(lyric_data==NULL) break;
+        text = lyric_data->text;
+    }
+    G_STMT_END;
+    if(g_strcmp0(priv->lyric_text[line], text)!=0)
+    {
+        desklrc_draw_lyric_surface(priv, &(priv->lyric_surface[line]),
+            text, FALSE);
+        desklrc_draw_lyric_surface(priv, &(priv->lyric_active_surface[0]),
+            text, TRUE);
+        g_free(priv->lyric_text[line]);
+        priv->lyric_text[line] = g_strdup(text);
+    }
+    
+    /* Render the lyric layout of the first track, line 2 */
+    line = DESKLRC_LAYOUT_TEXT1_LINE2;
+    if(priv->two_line)
+    {
+        text = NULL;
+        G_STMT_START
+        {
+            if(iter1==NULL) iter1 = iter_begin1;
+            if(iter1==NULL) break;
+            if(priv->lyric_percent[0]>=0.5)
+            {
+                iter1 = g_sequence_iter_next(iter1);
+            }
+            else
+            {
+                if(g_sequence_iter_is_begin(iter1)) break;
+                iter1 = g_sequence_iter_prev(iter1);
+            }
+            if(iter1==NULL || g_sequence_iter_is_end(iter1)) break;
+            lyric_data = g_sequence_get(iter1);
+            if(lyric_data==NULL) break;
+            text = lyric_data->text;
+        }
+        G_STMT_END;
+        if(g_strcmp0(priv->lyric_text[line], text)!=0)
+        {
+            if(priv->lyric_percent[0]>=0.5) active = FALSE;
+            else active = TRUE;
+            desklrc_draw_lyric_surface(priv, &(priv->lyric_surface[line]),
+                text, active);
+            g_free(priv->lyric_text[line]);
+            priv->lyric_text[line] = g_strdup(text);
+        }    
+    }
+    else
+    {
+        if(priv->lyric_surface[line]!=NULL)
+        {
+            cairo_surface_destroy(priv->lyric_surface[line]);
+            priv->lyric_surface[line] = NULL;
+        }
+        g_free(priv->lyric_text[line]);
+        priv->lyric_text[line] = NULL;
+    }
+
+    if(iter_begin2!=NULL)
+    {
+        /* Render the lyric layout of the second track, line 1 */
+        line = DESKLRC_LAYOUT_TEXT2_LINE1;
+        text = NULL;
+        G_STMT_START
+        {
+            if(iter2==NULL) iter2 = iter_begin2;
+            if(iter2==NULL) break;
+            lyric_data = g_sequence_get(iter2);
+            if(lyric_data==NULL) break;
+            text = lyric_data->text;
+        }
+        G_STMT_END;
+        if(g_strcmp0(priv->lyric_text[line], text)!=0)
+        {
+            desklrc_draw_lyric_surface(priv, &(priv->lyric_surface[line]),
+                text, FALSE);
+            desklrc_draw_lyric_surface(priv,
+                &(priv->lyric_active_surface[1]), text, TRUE);
+            g_free(priv->lyric_text[line]);
+            priv->lyric_text[line] = g_strdup(text);
+        }
+    
+        /* Render the lyric layout of the second track, line 2 */
+        line = DESKLRC_LAYOUT_TEXT2_LINE2;
+        if(priv->two_line)
+        {
+            text = NULL;
+            G_STMT_START
+            {
+                if(iter2==NULL) iter2 = iter_begin2;
+                if(iter2==NULL) break;
+                if(priv->lyric_percent[1]>=0.5)
+                {
+                    iter2 = g_sequence_iter_next(iter2);
+                }
+                else
+                {
+                    if(g_sequence_iter_is_begin(iter2)) break;
+                    iter2 = g_sequence_iter_prev(iter2);
+                }
+                if(iter2==NULL || g_sequence_iter_is_end(iter2)) break;
+                lyric_data = g_sequence_get(iter2);
+                if(lyric_data==NULL) break;
+                text = lyric_data->text;
+            }
+            G_STMT_END;
+            if(g_strcmp0(priv->lyric_text[line], text)!=0)
+            {
+                if(priv->lyric_percent[1]>=0.5) active = FALSE;
+                else active = TRUE;
+                desklrc_draw_lyric_surface(priv,
+                    &(priv->lyric_surface[line]), text, active);
+                g_free(priv->lyric_text[line]);
+                priv->lyric_text[line] = g_strdup(text);
+            }    
+        }
+        else
+        {
+            if(priv->lyric_surface[line]!=NULL)
+            {
+                cairo_surface_destroy(priv->lyric_surface[line]);
+                priv->lyric_surface[line] = NULL;
+            }
+            g_free(priv->lyric_text[line]);
+            priv->lyric_text[line] = NULL;
+        }
+    }
+    else
+    {
+        for(line=DESKLRC_LAYOUT_TEXT2_LINE1;line<=DESKLRC_LAYOUT_TEXT2_LINE2;
+            line++)
+        {
+            if(priv->lyric_surface[line]!=NULL)
+            {
+                cairo_surface_destroy(priv->lyric_surface[line]);
+                priv->lyric_surface[line] = NULL;
+            }
+            g_free(priv->lyric_text[line]);
+            priv->lyric_text[line] = NULL;
+        }
+        if(priv->lyric_active_surface[1]!=NULL)
+        {
+            cairo_surface_destroy(priv->lyric_active_surface[1]);
+            priv->lyric_active_surface[1] = NULL;
+        }
+    } 
+}
+
+static gboolean desklrc_draw(GtkWidget *widget, cairo_t *cr, gpointer data)
+{
+    DesklrcPrivate *priv = (DesklrcPrivate *)data;
+    GtkAllocation allocation;
     gint64 pos = 0, offset1 = 0, offset2 = 0;
     GSequenceIter *iter1 = NULL, *iter_begin1 = NULL;
     GSequenceIter *iter2 = NULL, *iter_begin2 = NULL;
-    const RCLibLyricParsedData *parsed_data1, *parsed_data2;
+    const RCLibLyricParsedData *parsed_data1 = NULL;
+    const RCLibLyricParsedData *parsed_data2 = NULL;
+    const RCLibLyricData *lyric_data;
+    gint64 duration = 0;
+    gint64 time_passed = 0, time_length = 0;
+    guint line = 1;
+    gint alloc_height = 0;
     if(data==NULL) return FALSE;
-    rc_plugin_desklrc_paint_bg(priv, cr);
+    gtk_widget_get_allocation(widget, &allocation);
+    desklrc_paint_bg(priv, cr);
     cairo_set_source_rgba(cr, 1.0, 1.0, 1.0, 0.0);
     cairo_set_operator(cr, CAIRO_OPERATOR_SOURCE);
     cairo_paint(cr);
     pos = rclib_core_query_position();
+    duration = rclib_core_query_duration();
     parsed_data1 = rclib_lyric_get_parsed_data(0);
-    parsed_data2 = rclib_lyric_get_parsed_data(1);
     iter1 = rclib_lyric_get_line_iter(0, pos);
-    iter2 = rclib_lyric_get_line_iter(1, pos);
+    if(priv->two_track)
+    {
+        parsed_data2 = rclib_lyric_get_parsed_data(1);
+        iter2 = rclib_lyric_get_line_iter(1, pos);
+    }
     if(iter1!=NULL && g_sequence_iter_is_end(iter1)) iter1 = NULL;
     if(iter2!=NULL && g_sequence_iter_is_end(iter2)) iter2 = NULL;
     if(parsed_data1!=NULL)
@@ -1205,13 +1187,69 @@ static gboolean rc_plugin_desklrc_draw(GtkWidget *widget,
     if(iter_begin1!=NULL && g_sequence_iter_is_end(iter_begin1))
         iter_begin1 = NULL;
     if(iter_begin2!=NULL && g_sequence_iter_is_end(iter_begin2))
+        iter_begin2 = NULL; 
+    if(iter1==NULL && iter_begin1==NULL && iter_begin2!=NULL)
+    {
+        iter1 = iter2;
+        iter_begin1 = iter_begin2;
+        iter2 = NULL;
         iter_begin2 = NULL;
-    rc_plugin_desklrc_show(widget, priv, cr, pos, offset1, iter1,
-        iter_begin1, offset2, iter2, iter_begin2);
+    }
+    priv->lyric_percent[0] = 0.0;
+    priv->lyric_percent[1] = 0.0;
+    priv->lyric_line_num[0] = 0;
+    priv->lyric_line_num[1] = 0;
+    if(iter1!=NULL)
+    {
+        lyric_data = g_sequence_get(iter1);
+        if(lyric_data!=NULL)
+        {
+            time_passed = pos - (lyric_data->time+offset1);
+            if(lyric_data->length>0)
+                time_length = lyric_data->length;
+            else
+                time_length = duration - (lyric_data->time+offset1);
+            if(time_passed>0)
+                priv->lyric_percent[0] = (gdouble)time_passed / time_length;
+            priv->lyric_line_num[0] = g_sequence_iter_get_position(iter1);
+        }
+    }
+    if(iter2!=NULL)
+    {
+        lyric_data = g_sequence_get(iter2);
+        if(lyric_data!=NULL)
+        {
+            line = 2;
+            time_passed = pos - (lyric_data->time+offset2);
+            if(lyric_data->length>0)
+                time_length = lyric_data->length;
+            else
+                time_length = duration - (lyric_data->time+offset2);
+            if(time_passed>0)
+                priv->lyric_percent[1] = (gdouble)time_passed / time_length;
+            priv->lyric_line_num[1] = g_sequence_iter_get_position(iter2);
+        }
+    }    
+    if(priv->two_line)
+        line *= 2;
+    alloc_height = line * priv->render_context->font_height +
+        (line - 1) * DESKLRC_LINE_PADDING +
+        priv->render_context->outline_width + DESKLRC_MARGIN_TOP +
+        DESKLRC_MARGIN_BOTTOM;
+    if(allocation.width!=priv->osd_window_width ||
+        allocation.height!=alloc_height)
+    {
+        gtk_window_resize(GTK_WINDOW(widget), priv->osd_window_width,
+            alloc_height);
+    }
+    gtk_widget_get_allocation(widget, &allocation);    
+    desklrc_render_lyric_surface(priv, iter1, iter_begin1, iter2,
+        iter_begin2);
+    desklrc_show(widget, priv, cr);
     return FALSE;
 }
 
-static void rc_plugin_desklrc_load_conf(RCPluginDesklrcPrivate *priv)
+static void desklrc_load_conf(DesklrcPrivate *priv)
 {
     gchar *string = NULL;
     gint ivalue = 0;
@@ -1228,6 +1266,7 @@ static void rc_plugin_desklrc_load_conf(RCPluginDesklrcPrivate *priv)
     else
         gdk_rgba_parse(&(priv->bg_color1), "#4CFFFF");
     g_free(string);
+    priv->bg_color3 = priv->bg_color1;
     string = g_key_file_get_string(priv->keyfile, DESKLRC_ID,
         "NormalColor2", NULL);
     if(string!=NULL)
@@ -1248,6 +1287,7 @@ static void rc_plugin_desklrc_load_conf(RCPluginDesklrcPrivate *priv)
     else
         gdk_rgba_parse(&(priv->fg_color1), "#FF4C4C");
     g_free(string);
+    priv->fg_color3 = priv->fg_color1;
     string = g_key_file_get_string(priv->keyfile, DESKLRC_ID,
         "HighLightColor2", NULL);
     if(string!=NULL)
@@ -1298,9 +1338,9 @@ static void rc_plugin_desklrc_load_conf(RCPluginDesklrcPrivate *priv)
         error = NULL;
     }
     bvalue = g_key_file_get_boolean(priv->keyfile, DESKLRC_ID,
-        "DrawStroke", &error);
+        "ShowTwoTrack", &error);
     if(error==NULL)
-        priv->draw_stroke = bvalue;
+        priv->two_track = bvalue;
     else
     {
         g_error_free(error);
@@ -1317,7 +1357,7 @@ static void rc_plugin_desklrc_load_conf(RCPluginDesklrcPrivate *priv)
     }
 }
 
-static void rc_plugin_desklrc_save_conf(RCPluginDesklrcPrivate *priv)
+static void desklrc_save_conf(DesklrcPrivate *priv)
 {
     gchar *string;
     if(priv==NULL || priv->keyfile==NULL) return;
@@ -1354,12 +1394,12 @@ static void rc_plugin_desklrc_save_conf(RCPluginDesklrcPrivate *priv)
     g_key_file_set_boolean(priv->keyfile, DESKLRC_ID,
         "OSDWindowMovable", priv->movable);
     g_key_file_set_boolean(priv->keyfile, DESKLRC_ID,
-        "DrawStroke", priv->draw_stroke);
+        "ShowTwoTrack", priv->two_track);
     g_key_file_set_boolean(priv->keyfile, DESKLRC_ID,
         "ShowTwoLine", priv->two_line);
 }
 
-static void rc_plugin_desklrc_apply_movable(RCPluginDesklrcPrivate *priv)
+static void desklrc_apply_movable(DesklrcPrivate *priv)
 {
     cairo_region_t *region;
     GdkWindow *window;
@@ -1376,21 +1416,19 @@ static void rc_plugin_desklrc_apply_movable(RCPluginDesklrcPrivate *priv)
     }
 }
 
-static void rc_plugin_desklrc_shutdown_cb(RCLibPlugin *plugin,
+static void desklrc_shutdown_cb(RCLibPlugin *plugin,
     gpointer data)
 {
-    RCPluginDesklrcPrivate *priv = (RCPluginDesklrcPrivate *)data;
+    DesklrcPrivate *priv = (DesklrcPrivate *)data;
     if(data==NULL) return;
-    rc_plugin_desklrc_save_conf(priv);
+    desklrc_save_conf(priv);
 }
 
-static gboolean rc_plugin_desklrc_load(RCLibPluginData *plugin)
+static gboolean desklrc_load(RCLibPluginData *plugin)
 {
-    RCPluginDesklrcPrivate *priv = &desklrc_priv;
-    PangoFontDescription *desc;
+    DesklrcPrivate *priv = &desklrc_priv;
     GdkScreen *screen;
     GdkVisual *visual;
-    gint width, height;
     GdkGeometry window_hints =
     {
         .min_width = 500,
@@ -1406,7 +1444,9 @@ static gboolean rc_plugin_desklrc_load(RCLibPluginData *plugin)
             "this plug-in cannot be enabled!");
         return FALSE;
     }
-    priv->render_context = rc_plugin_desklrc_render_context_new();
+    priv->render_context = desklrc_render_context_new();
+    desklrc_render_set_font_name(priv->render_context, priv->font_string);
+    desklrc_update_color(priv);
     priv->window = gtk_window_new(GTK_WINDOW_POPUP);
     screen = gtk_widget_get_screen(priv->window);
     visual = gdk_screen_get_rgba_visual(screen);
@@ -1422,12 +1462,6 @@ static gboolean rc_plugin_desklrc_load(RCLibPluginData *plugin)
     g_object_set(priv->window, "title", _("OSD Lyric Window"),
         "app-paintable", TRUE, "type-hint", GDK_WINDOW_TYPE_HINT_DOCK,
         "window-position", GTK_WIN_POS_CENTER, "decorated", FALSE, NULL);    
-    priv->layout = gtk_widget_create_pango_layout(priv->window, NULL);
-    desc = pango_font_description_from_string(priv->font_string);
-    pango_layout_set_font_description(priv->layout, desc);
-    pango_font_description_free(desc);
-    pango_layout_set_text(priv->layout, _("RhythmCat Music Player"), -1);
-    pango_layout_get_pixel_size(priv->layout, &width, &height);
     gtk_window_set_geometry_hints(GTK_WINDOW(priv->window), 
         GTK_WIDGET(priv->window), &window_hints,
         GDK_HINT_MIN_SIZE);
@@ -1443,28 +1477,28 @@ static gboolean rc_plugin_desklrc_load(RCLibPluginData *plugin)
         GDK_BUTTON_RELEASE_MASK | GDK_POINTER_MOTION_MASK |
         GDK_POINTER_MOTION_HINT_MASK);
     gtk_widget_realize(priv->window);
-    rc_plugin_desklrc_apply_movable(priv);
+    desklrc_apply_movable(priv);
     g_signal_connect(priv->window, "draw",
-        G_CALLBACK(rc_plugin_desklrc_draw), priv);
+        G_CALLBACK(desklrc_draw), priv);
     g_signal_connect(priv->window, "button-press-event",
-        G_CALLBACK(rc_plugin_desklrc_drag), priv);
+        G_CALLBACK(desklrc_drag), priv);
     g_signal_connect(priv->window, "motion-notify-event",
-        G_CALLBACK(rc_plugin_desklrc_drag), priv);
+        G_CALLBACK(desklrc_drag), priv);
     g_signal_connect(priv->window, "button-release-event",
-        G_CALLBACK(rc_plugin_desklrc_drag), priv);
+        G_CALLBACK(desklrc_drag), priv);
     g_signal_connect(priv->window, "enter-notify-event",
-        G_CALLBACK(rc_plugin_desklrc_drag), priv);
+        G_CALLBACK(desklrc_drag), priv);
     g_signal_connect(priv->window, "leave-notify-event",
-        G_CALLBACK(rc_plugin_desklrc_drag), priv);
+        G_CALLBACK(desklrc_drag), priv);
     priv->timeout_id = g_timeout_add(100,
-        (GSourceFunc)rc_plugin_desklrc_update, priv);
+        (GSourceFunc)desklrc_update, priv);
     gtk_widget_show_all(priv->window);
     return TRUE;
 }
 
-static gboolean rc_plugin_desklrc_unload(RCLibPluginData *plugin)
+static gboolean desklrc_unload(RCLibPluginData *plugin)
 {
-    RCPluginDesklrcPrivate *priv = &desklrc_priv;
+    DesklrcPrivate *priv = &desklrc_priv;
     if(priv->timeout_id>0)
         g_source_remove(priv->timeout_id);
     if(priv->window!=NULL)
@@ -1474,16 +1508,15 @@ static gboolean rc_plugin_desklrc_unload(RCLibPluginData *plugin)
     }
     if(priv->render_context!=NULL)
     {
-        rc_plugin_desklrc_render_context_destroy(priv->render_context);
+        desklrc_render_context_destroy(priv->render_context);
         priv->render_context = NULL;
     }
     return TRUE;
 }
 
-static gboolean rc_plugin_desklrc_configure(RCLibPluginData *plugin)
+static gboolean desklrc_configure(RCLibPluginData *plugin)
 {
-    RCPluginDesklrcPrivate *priv = &desklrc_priv;
-    PangoFontDescription *desc;
+    DesklrcPrivate *priv = &desklrc_priv;
     GtkWidget *dialog;
     GtkWidget *content_area;
     GtkWidget *label[4];
@@ -1496,7 +1529,7 @@ static gboolean rc_plugin_desklrc_configure(RCLibPluginData *plugin)
     GtkWidget *hi_color_button2;
     GtkWidget *window_width_spin;
     GtkWidget *window_movable_checkbox;
-    GtkWidget *draw_stroke_checkbox;
+    GtkWidget *two_track_checkbox;
     GtkWidget *two_line_mode_checkbox;
     gint i, result;
     dialog = gtk_dialog_new_with_buttons(_("Desktop Lyric Preferences"), NULL,
@@ -1519,10 +1552,10 @@ static gboolean rc_plugin_desklrc_configure(RCLibPluginData *plugin)
     window_width_spin = gtk_spin_button_new_with_range(0, 4000, 1);
     window_movable_checkbox = gtk_check_button_new_with_mnemonic(
         _("Movable OSD Window"));
-    draw_stroke_checkbox = gtk_check_button_new_with_mnemonic(
-        _("Draw strokes on the lyric text"));
+    two_track_checkbox = gtk_check_button_new_with_mnemonic(
+        _("Draw two tracks the lyric texts"));
     two_line_mode_checkbox = gtk_check_button_new_with_mnemonic(
-        _("Draw two lines of lyric text"));
+        _("Draw two lines of lyric texts"));
     for(i=0;i<4;i++)
     {
         g_object_set(label[i], "xalign", 0.0, "yalign", 0.5, NULL);
@@ -1543,9 +1576,9 @@ static gboolean rc_plugin_desklrc_configure(RCLibPluginData *plugin)
     g_object_set(window_movable_checkbox, "hexpand-set", TRUE, "hexpand",
         TRUE, "vexpand-set", TRUE, "vexpand", FALSE, "active",
         priv->movable, NULL);
-    g_object_set(draw_stroke_checkbox, "hexpand-set", TRUE, "hexpand",
+    g_object_set(two_track_checkbox, "hexpand-set", TRUE, "hexpand",
         TRUE, "vexpand-set", TRUE, "vexpand", FALSE, "active",
-        priv->draw_stroke, NULL);
+        priv->two_track, NULL);
     g_object_set(two_line_mode_checkbox, "hexpand-set", TRUE, "hexpand",
         TRUE, "vexpand-set", TRUE, "vexpand", FALSE, "active",
         priv->two_line, NULL);
@@ -1563,7 +1596,7 @@ static gboolean rc_plugin_desklrc_configure(RCLibPluginData *plugin)
     gtk_grid_attach(GTK_GRID(grid), label[3], 0, 2, 1, 1);
     gtk_grid_attach(GTK_GRID(grid), window_width_spin, 1, 2, 1, 1);
     gtk_grid_attach(GTK_GRID(grid), window_movable_checkbox, 0, 3, 2, 1);
-    gtk_grid_attach(GTK_GRID(grid), draw_stroke_checkbox, 0, 4, 2, 1);
+    gtk_grid_attach(GTK_GRID(grid), two_track_checkbox, 0, 4, 2, 1);
     gtk_grid_attach(GTK_GRID(grid), two_line_mode_checkbox, 0, 5, 2, 1);
     content_area = gtk_dialog_get_content_area(GTK_DIALOG(dialog));
     gtk_container_add(GTK_CONTAINER(content_area), grid);
@@ -1578,42 +1611,50 @@ static gboolean rc_plugin_desklrc_configure(RCLibPluginData *plugin)
             &(priv->bg_color1));
         gtk_color_button_get_rgba(GTK_COLOR_BUTTON(bg_color_button2),
             &(priv->bg_color2));
+        priv->bg_color3 = priv->bg_color1;
         gtk_color_button_get_rgba(GTK_COLOR_BUTTON(hi_color_button1),
             &(priv->fg_color1));
         gtk_color_button_get_rgba(GTK_COLOR_BUTTON(hi_color_button2),
             &(priv->fg_color2));
+        priv->fg_color3 = priv->fg_color1;
         priv->osd_window_width = gtk_spin_button_get_value_as_int(
             GTK_SPIN_BUTTON(window_width_spin));
         priv->movable = gtk_toggle_button_get_active(
             GTK_TOGGLE_BUTTON(window_movable_checkbox));
-        priv->draw_stroke = gtk_toggle_button_get_active(
-            GTK_TOGGLE_BUTTON(draw_stroke_checkbox));
+        priv->two_track = gtk_toggle_button_get_active(
+            GTK_TOGGLE_BUTTON(two_track_checkbox));
         priv->two_line = gtk_toggle_button_get_active(
             GTK_TOGGLE_BUTTON(two_line_mode_checkbox));
-        desc = pango_font_description_from_string(priv->font_string);
-        pango_layout_set_font_description(priv->layout, desc);
-        pango_font_description_free(desc);
-        rc_plugin_desklrc_apply_movable(priv);
+        if(priv->render_context!=NULL)
+        {
+            desklrc_render_set_font_name(priv->render_context,
+                priv->font_string);
+        }
+        desklrc_update_color(priv);
+        desklrc_apply_movable(priv);
         if(priv->window!=NULL)
             gtk_widget_queue_draw(priv->window);
-        rc_plugin_desklrc_save_conf(priv);
+        desklrc_save_conf(priv);
     }
     gtk_widget_destroy(dialog);
     return TRUE;
 }
 
-static gboolean rc_plugin_desklrc_init(RCLibPluginData *plugin)
+static gboolean desklrc_init(RCLibPluginData *plugin)
 {
-    RCPluginDesklrcPrivate *priv = &desklrc_priv;
+    DesklrcPrivate *priv = &desklrc_priv;
     GdkScreen *screen;
     gint screen_width, screen_height;
     priv->movable = TRUE;
     priv->two_line = TRUE;
+    priv->two_track = TRUE;
     priv->font_string = g_strdup("Monospace 22");
     gdk_rgba_parse(&(priv->bg_color1), "#4CFFFF");
     gdk_rgba_parse(&(priv->bg_color2), "#0000FF");
+    gdk_rgba_parse(&(priv->bg_color3), "#4CFFFF");
     gdk_rgba_parse(&(priv->fg_color1), "#FF4C4C");
     gdk_rgba_parse(&(priv->fg_color2), "#FFFF00");
+    gdk_rgba_parse(&(priv->fg_color3), "#4CFFFF");
     screen = gdk_screen_get_default();
     screen_width = gdk_screen_get_width(screen);
     screen_height = gdk_screen_get_height(screen);
@@ -1632,15 +1673,15 @@ static gboolean rc_plugin_desklrc_init(RCLibPluginData *plugin)
     else
         priv->osd_window_pos_y = 100;
     priv->keyfile = rclib_plugin_get_keyfile();
-    rc_plugin_desklrc_load_conf(priv);
+    desklrc_load_conf(priv);
     priv->shutdown_id = rclib_plugin_signal_connect("shutdown",
-        G_CALLBACK(rc_plugin_desklrc_shutdown_cb), priv);
+        G_CALLBACK(desklrc_shutdown_cb), priv);
     return TRUE;
 }
 
-static void rc_plugin_desklrc_destroy(RCLibPluginData *plugin)
+static void desklrc_destroy(RCLibPluginData *plugin)
 {
-    RCPluginDesklrcPrivate *priv = &desklrc_priv;
+    DesklrcPrivate *priv = &desklrc_priv;
     if(priv->shutdown_id>0)
         rclib_plugin_signal_disconnect(priv->shutdown_id);
     g_free(priv->font_string);
@@ -1657,14 +1698,14 @@ static RCLibPluginInfo rcplugin_info = {
     .description = N_("Show lyrics on your desktop~!"),
     .author = "SuperCat",
     .homepage = "http://supercat-lab.org/",
-    .load = rc_plugin_desklrc_load,
-    .unload = rc_plugin_desklrc_unload,
-    .configure = rc_plugin_desklrc_configure,
-    .destroy = rc_plugin_desklrc_destroy,
+    .load = desklrc_load,
+    .unload = desklrc_unload,
+    .configure = desklrc_configure,
+    .destroy = desklrc_destroy,
     .extra_info = NULL
 };
 
-RCPLUGIN_INIT_PLUGIN(rcplugin_info.id, rc_plugin_desklrc_init, rcplugin_info);
+RCPLUGIN_INIT_PLUGIN(rcplugin_info.id, desklrc_init, rcplugin_info);
 
 
 
