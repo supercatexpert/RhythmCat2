@@ -116,4 +116,9 @@
 
     * Rewrited the text rendering part of the desktop lyric plug-in, lowered
       the CPU usage, and shadow effect is also implemented.
-    
+
+2012-08-05  SuperCat    <supercatexpert@gmail.com>
+
+    * Rewrited the text rendering part of the lyric show plug-in.
+    * Added X11 multimedia key support in mediakey plug-in for non-GNOME users.
+

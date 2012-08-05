@@ -82,12 +82,17 @@ static gpointer rc_ui_spectrum_widget_parent_class = NULL;
     _vd[p] = _c;                                                          \
 } G_STMT_END
 
-#define rc_ui_spectrum_draw_dot_aa(_vd, _s, _x, _y, _st, _c, _f)          \
+#define rc_ui_spectrum_draw_dot_aa(_vd, _s, _x, _y, _st, _c, _f, _bc)     \
     G_STMT_START {                                                        \
     guint32 _oc, _c1, _c2, _c3;                                           \
     guint p = (_y * _st) + _x;                                            \
     if(p>=_s/sizeof(guint32)) break;                                      \
     _oc = _vd[p];                                                         \
+    if(_oc==_bc)                                                          \
+    {                                                                     \
+        _vd[p] = _c;                                                      \
+        break;                                                            \
+    }                                                                     \
     _c3 = (_oc & 0xff) + ((_c & 0xff) * _f);                              \
     _c3 = MIN(_c3, 255);                                                  \
     _c2 = ((_oc & 0xff00) >> 8) + (((_c & 0xff00) >> 8) * _f);            \
@@ -112,7 +117,8 @@ static gpointer rc_ui_spectrum_widget_parent_class = NULL;
     }                                                                     \
 } G_STMT_END
 
-#define rc_ui_spectrum_draw_line_aa(_vd, _s, _x1, _x2, _y1, _y2, _st, _c) \
+#define rc_ui_spectrum_draw_line_aa(_vd, _s, _x1, _x2, _y1, _y2, _st, _c, \
+    _bc) \
     G_STMT_START {                                                        \
     guint _i, _j, _x, _y;                                                 \
     gint _dx = _x2 - _x1, _dy = _y2 - _y1;                                \
@@ -128,14 +134,16 @@ static gpointer rc_ui_spectrum_widget_parent_class = NULL;
         _fx = _rx - (gfloat)_x;                                           \
         _fy = _ry - (gfloat)_y;                                           \
         _f = ((1.0 - _fx) + (1.0 - _fy)) / 2.0;                           \
-        rc_ui_spectrum_draw_dot_aa(_vd, _s, _x, _y, _st, _c, _f);         \
+        rc_ui_spectrum_draw_dot_aa(_vd, _s, _x, _y, _st, _c, _f, _bc);    \
         _f = (_fx + (1.0 - _fy)) / 2.0;                                   \
-        rc_ui_spectrum_draw_dot_aa (_vd, _s, (_x + 1), _y, _st, _c, _f);  \
+        rc_ui_spectrum_draw_dot_aa (_vd, _s, (_x + 1), _y, _st, _c, _f,   \
+            _bc);                                                         \
         _f = ((1.0 - _fx) + _fy) / 2.0;                                   \
-        rc_ui_spectrum_draw_dot_aa (_vd, _s, _x, (_y + 1), _st, _c, _f);  \
+        rc_ui_spectrum_draw_dot_aa (_vd, _s, _x, (_y + 1), _st, _c, _f,   \
+            _bc);                                                         \
         _f = (_fx + _fy) / 2.0;                                           \
         rc_ui_spectrum_draw_dot_aa (_vd, _s, (_x + 1), (_y + 1), _st,     \
-            _c, _f);                                                      \
+            _c, _f, _bc);                                                      \
     }                                                                     \
 } G_STMT_END
 
@@ -667,7 +675,7 @@ static inline void rc_ui_spectrum_wave_render_lines(guint32 *vdata,
                 x2 = CLAMP(x2, 0, vwidth-1);
                 y2 = CLAMP(y2, 0, vheight-1);
                 rc_ui_spectrum_draw_line_aa(vdata, vsize, x2, x, y2, y, vwidth,
-                    fg_color);
+                    fg_color, bg_color);
                 x2 = x;
                 y2 = y;
             }
@@ -700,7 +708,7 @@ static inline void rc_ui_spectrum_wave_render_lines(guint32 *vdata,
             x2 = CLAMP(x2, 0, vwidth-1);
             y2 = CLAMP(y2, 0, vheight-1);
             rc_ui_spectrum_draw_line_aa(vdata, vsize, x2, x, y2, y, vwidth,
-                fg_color1);
+                fg_color1, bg_color);
             x2 = x;
             y2 = y;
         }

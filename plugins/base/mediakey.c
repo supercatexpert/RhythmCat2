@@ -25,7 +25,14 @@
 
 #include <glib.h>
 #include <gio/gio.h>
+#include <gdk/gdk.h>
 #include <rclib.h>
+
+#ifdef GDK_WINDOWING_X11
+    #include <X11/Xlib.h>
+    #include <X11/XF86keysym.h>
+    #include <gdk/gdkx.h>
+#endif
 
 #define DBUS_MEDIAKEY_NAME "org.gnome.SettingsDaemon"
 #define DBUS_MEDIAKEY_OBJECT_PATH "/org/gnome/SettingsDaemon/MediaKeys"
@@ -98,9 +105,9 @@ static void rc_plugin_mediakey_proxy_signal_cb(GDBusProxy *proxy,
     g_free(key);
 }
 
-static gboolean rc_plugin_mediakey_load(RCLibPluginData *plugin)
+static gboolean rc_plugin_mediakey_gnome_initialize(
+    RCPluginMediaKeyPrivate *priv)
 {
-    RCPluginMediaKeyPrivate *priv = &mediakey_priv;
     GDBusConnection *connection;
     GError *error = NULL;
     GVariant *variant;
@@ -153,12 +160,199 @@ static gboolean rc_plugin_mediakey_load(RCLibPluginData *plugin)
     return TRUE;
 }
 
+#ifdef GDK_WINDOWING_X11
+
+static void rc_plugin_mediakey_grab_mmkey(gint key_code, GdkWindow *root)
+{
+    Display *display;
+    gdk_error_trap_push();
+
+    display = GDK_DISPLAY_XDISPLAY(gdk_display_get_default());
+    XGrabKey(display, key_code, 0, GDK_WINDOW_XID(root), True, GrabModeAsync,
+        GrabModeAsync);
+    XGrabKey(display, key_code, Mod2Mask, GDK_WINDOW_XID (root), True,
+        GrabModeAsync, GrabModeAsync);
+    XGrabKey(display, key_code, Mod5Mask, GDK_WINDOW_XID(root), True,
+        GrabModeAsync, GrabModeAsync);
+    XGrabKey(display, key_code, LockMask, GDK_WINDOW_XID (root), True,
+        GrabModeAsync, GrabModeAsync);
+    XGrabKey(display, key_code, Mod2Mask | Mod5Mask, GDK_WINDOW_XID(root),
+        True, GrabModeAsync, GrabModeAsync);
+    XGrabKey(display, key_code, Mod2Mask | LockMask, GDK_WINDOW_XID(root),
+        True, GrabModeAsync, GrabModeAsync);
+    XGrabKey(display, key_code, Mod5Mask | LockMask, GDK_WINDOW_XID(root),
+        True, GrabModeAsync, GrabModeAsync);
+    XGrabKey(display, key_code, Mod2Mask | Mod5Mask | LockMask,
+        GDK_WINDOW_XID(root), True, GrabModeAsync, GrabModeAsync);
+
+    gdk_flush ();
+
+    if(gdk_error_trap_pop ())
+    {
+        g_warning("Cannot grabbing key!");
+    }
+}
+
+static void rc_plugin_mediakey_ungrab_mmkey(gint key_code, GdkWindow *root)
+{
+    Display *display;
+    gdk_error_trap_push();
+
+    display = GDK_DISPLAY_XDISPLAY(gdk_display_get_default());
+    XUngrabKey (display, key_code, 0, GDK_WINDOW_XID(root));
+    XUngrabKey (display, key_code, Mod2Mask, GDK_WINDOW_XID(root));
+    XUngrabKey (display, key_code, Mod5Mask, GDK_WINDOW_XID(root));
+    XUngrabKey (display, key_code, LockMask, GDK_WINDOW_XID(root));
+    XUngrabKey (display, key_code, Mod2Mask | Mod5Mask, GDK_WINDOW_XID(root));
+    XUngrabKey (display, key_code, Mod2Mask | LockMask, GDK_WINDOW_XID(root));
+    XUngrabKey (display, key_code, Mod5Mask | LockMask, GDK_WINDOW_XID(root));
+    XUngrabKey (display, key_code, Mod2Mask | Mod5Mask | LockMask,
+        GDK_WINDOW_XID (root));
+
+    gdk_flush ();
+
+    if(gdk_error_trap_pop ())
+    {
+        g_warning("Cannot ungrab key!");
+    }
+}
+
+static GdkFilterReturn rc_plugin_mediakey_filter_mmkeys(GdkXEvent *xevent,
+    GdkEvent *event, gpointer data)
+{
+    GstState state;
+    XEvent *xev;
+    XKeyEvent *key;
+    Display *display;
+    xev = (XEvent *) xevent;
+    if(xev->type != KeyPress)
+    {
+        return GDK_FILTER_CONTINUE;
+    }
+
+    key = (XKeyEvent *) xevent;
+
+    display = GDK_DISPLAY_XDISPLAY(gdk_display_get_default());
+
+    if(XKeysymToKeycode(display, XF86XK_AudioPlay)==key->keycode)
+    {
+        rclib_core_get_state(&state, NULL, 0);    
+        if(state==GST_STATE_PLAYING)
+            rclib_core_pause();
+        else
+            rclib_core_play();
+        return GDK_FILTER_REMOVE;
+    }
+    else if(XKeysymToKeycode (display, XF86XK_AudioPause)==key->keycode)
+    {
+        rclib_core_pause();
+        return GDK_FILTER_REMOVE;
+    }
+    else if(XKeysymToKeycode(display, XF86XK_AudioStop)==key->keycode)
+    {
+        rclib_core_stop();
+        return GDK_FILTER_REMOVE;
+    }
+    else if(XKeysymToKeycode(display, XF86XK_AudioPrev)==key->keycode)
+    {
+        rclib_player_play_prev(FALSE, TRUE, FALSE);
+        return GDK_FILTER_REMOVE;
+    }
+    else if(XKeysymToKeycode(display, XF86XK_AudioNext)==key->keycode)
+    {
+        rclib_player_play_next(FALSE, TRUE, FALSE);
+        return GDK_FILTER_REMOVE;
+    }
+    else
+    {
+        return GDK_FILTER_CONTINUE;
+    }
+}
+
+static void rc_plugin_mediakey_mmkeys_grab(gboolean grab)
+{
+    gint keycodes[] = {0, 0, 0, 0, 0};
+    GdkDisplay *display;
+    GdkScreen *screen;
+    GdkWindow *root;
+    guint i, j;
+
+    display = gdk_display_get_default();
+    keycodes[0] = XKeysymToKeycode(GDK_DISPLAY_XDISPLAY(display),
+        XF86XK_AudioPlay);
+    keycodes[1] = XKeysymToKeycode(GDK_DISPLAY_XDISPLAY(display),
+        XF86XK_AudioStop);
+    keycodes[2] = XKeysymToKeycode(GDK_DISPLAY_XDISPLAY(display),
+        XF86XK_AudioPrev);
+    keycodes[3] = XKeysymToKeycode(GDK_DISPLAY_XDISPLAY(display),
+        XF86XK_AudioNext);
+    keycodes[4] = XKeysymToKeycode(GDK_DISPLAY_XDISPLAY(display),
+        XF86XK_AudioPause);
+
+    for(i=0;i<gdk_display_get_n_screens(display); i++)
+    {
+        screen = gdk_display_get_screen (display, i);
+
+        if(screen!=NULL)
+        {
+            root = gdk_screen_get_root_window (screen);
+
+            for(j=0;j<G_N_ELEMENTS(keycodes);j++)
+            {
+                if(keycodes[j]!=0)
+                {
+                    if(grab)
+                        rc_plugin_mediakey_grab_mmkey(keycodes[j], root);
+                    else
+                        rc_plugin_mediakey_ungrab_mmkey(keycodes[j], root);
+                }
+
+            }
+
+            if(grab)
+            {
+                gdk_window_add_filter(root, rc_plugin_mediakey_filter_mmkeys,
+                    NULL);
+            }
+            else
+            {
+                gdk_window_remove_filter(root,
+                    rc_plugin_mediakey_filter_mmkeys, NULL);
+            }
+        }
+    }
+}
+
+#endif
+
+
+static gboolean rc_plugin_mediakey_load(RCLibPluginData *plugin)
+{
+    RCPluginMediaKeyPrivate *priv = &mediakey_priv;
+
+    if(rc_plugin_mediakey_gnome_initialize(priv)) return TRUE;
+
+    #ifdef GDK_WINDOWING_X11
+        rc_plugin_mediakey_mmkeys_grab(TRUE);
+        g_message("Use X11 multimedia key grab as fallback support.");
+        return TRUE;
+    #endif
+   
+    return FALSE;
+}
+
 
 static gboolean rc_plugin_mediakey_unload(RCLibPluginData *plugin)
 {
     RCPluginMediaKeyPrivate *priv = &mediakey_priv;
     if(priv->proxy!=NULL) g_object_unref(priv->proxy);
     priv->proxy = NULL;
+
+    #ifdef GDK_WINDOWING_X11
+        rc_plugin_mediakey_mmkeys_grab(FALSE);
+        return TRUE;
+    #endif
+
     return TRUE;
 }
 

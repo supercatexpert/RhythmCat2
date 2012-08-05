@@ -638,7 +638,8 @@ static void desklrc_show(GtkWidget *widget, DesklrcPrivate *priv, cairo_t *cr)
         surface_height = cairo_image_surface_get_height(surface);
         if(priv->lyric_surface[DESKLRC_LAYOUT_TEXT2_LINE1]!=NULL)
             two_track = TRUE;
-        two_line = priv->two_line;
+        if(priv->lyric_surface[DESKLRC_LAYOUT_TEXT1_LINE2]!=NULL)
+            two_line = TRUE;
         if(two_line)
             start_x = DESKLRC_MARGIN_LEFT + (index1%2)*allocation.width/3;
         else

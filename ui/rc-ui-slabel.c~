@@ -474,6 +474,9 @@ gdouble rc_ui_scrollable_label_get_percent(RCUiScrollableLabel *widget)
 gint rc_ui_scrollable_label_get_width(RCUiScrollableLabel *widget)
 {
     RCUiScrollableLabelPrivate *priv;
+    PangoFontMetrics *metrics;
+    PangoContext *context;
+    gint ascent, descent;
     gint width = 0;
     if(widget==NULL) return 0;
     priv = RC_UI_SCROLLABLE_LABEL_GET_PRIVATE(widget);

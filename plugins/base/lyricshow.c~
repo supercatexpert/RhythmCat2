@@ -40,13 +40,9 @@ typedef struct RCPluginLrcshowPriv
     GtkToggleAction *action;
     guint menu_id;
     PangoLayout *layout;
-    cairo_surface_t **lrc_normal_surface;
-    cairo_surface_t **lrc_active_surface;
-    guint lrc_number;
     gint mode;
     guint track;
     gchar *font_string;
-    gint font_height;
     guint line_distance;
     gint drag_to_linenum;
     gint drag_from_linenum;
@@ -66,49 +62,6 @@ typedef struct RCPluginLrcshowPriv
 }RCPluginLrcshowPriv;
 
 static RCPluginLrcshowPriv lrcshow_priv = {0};
-
-static inline void rc_plugin_lrcshow_update_font_height(
-    RCPluginLrcshowPriv *priv)
-{
-    PangoContext *context;
-    PangoFontMetrics *metrics;
-    gint ascent, descent;
-    if(priv==NULL || priv->layout==NULL) return;
-    context = pango_layout_get_context(priv->layout);
-    if(context==NULL) return;
-    metrics = pango_context_get_metrics(context,
-        pango_layout_get_font_description(priv->layout), NULL);
-    if(metrics==NULL)
-    {
-        g_warning("Cannot get font metrics!");
-    }
-    priv->font_height = 0;
-    ascent = pango_font_metrics_get_ascent(metrics);
-    descent = pango_font_metrics_get_descent(metrics);
-    pango_font_metrics_unref(metrics);
-    priv->font_height += PANGO_PIXELS(ascent + descent);
-}
-
-static inline void rc_plugin_lrcshow_update_font(RCPluginLrcshowPriv *priv)
-{
-    PangoFontDescription *desc;
-    if(priv==NULL || priv->layout==NULL) return;
-    if(priv->font_string!=NULL)
-        desc = pango_font_description_from_string(priv->font_string);
-    else
-        desc = pango_font_description_from_string("Monospace 10");
-    pango_layout_set_font_description(priv->layout, desc);
-    pango_font_description_free(desc);
-    rc_plugin_lrcshow_update_font_height(priv);
-}
-
-static inline void rc_plugin_lrcshow_set_font(RCPluginLrcshowPriv *priv,
-    const gchar *font_string)
-{
-    if(priv==NULL || priv->layout==NULL) return;
-    g_free(priv->font_string);
-    priv->font_string = g_strdup(font_string);
-}
 
 static void rc_plugin_lrcshow_load_conf(RCPluginLrcshowPriv *priv)
 {
@@ -238,12 +191,13 @@ static void rc_plugin_lrcshow_show(GtkWidget *widget,
     GSequenceIter *iter, GSequenceIter *iter_begin)
 {
     GtkAllocation allocation;
-    cairo_surface_t *surface;
-    gint surface_width, surface_height;
+    PangoFontMetrics *metrics;
+    PangoContext *context;
     GSequenceIter *iter_now, *iter_foreach;
-    GSequence *seq;
+    gchar *text;
     const RCLibLyricData *lrc_data = NULL;
-    gint t_height;
+    gfloat lrc_height, lrc_width;
+    gint t_height, t_width;
     gfloat lrc_x, lrc_y;
     gfloat lrc_y_offset = 0.0;
     gfloat line_height;
@@ -252,7 +206,7 @@ static void rc_plugin_lrcshow_show(GtkWidget *widget,
     gfloat low, high;
     gint64 time_passed = 0;
     gint64 time_length = 0;
-    gint index_now, index_foreach;
+    gint ascent, descent;
     if(widget==NULL || priv==NULL || priv->layout==NULL || cr==NULL)
         return;
     if(iter!=NULL)
@@ -261,9 +215,20 @@ static void rc_plugin_lrcshow_show(GtkWidget *widget,
         iter_now = iter_begin;
     if(iter_now==NULL) return;
     if(g_sequence_iter_is_end(iter_now)) return;
+    context = pango_layout_get_context(priv->layout);
+    if(context==NULL) return;
+    metrics = pango_context_get_metrics(context,
+        pango_layout_get_font_description(priv->layout), NULL);
+    if(metrics==NULL) return;
     gtk_widget_get_allocation(widget, &allocation);
-    t_height = priv->font_height;
-    line_height = t_height + priv->line_distance;
+    pango_layout_set_text(priv->layout, "FontSizeTest", -1);
+    pango_layout_get_pixel_size(priv->layout, &t_width, NULL);
+    ascent = pango_font_metrics_get_ascent(metrics);
+    descent = pango_font_metrics_get_descent(metrics);
+    pango_font_metrics_unref(metrics);
+    t_height = PANGO_PIXELS(ascent + descent);
+    lrc_height = (gfloat)t_height;
+    line_height = lrc_height + priv->line_distance;
     cairo_set_operator(cr, CAIRO_OPERATOR_OVER);
     if(priv->drag_action)
     {
@@ -295,46 +260,19 @@ static void rc_plugin_lrcshow_show(GtkWidget *widget,
                 percent = (gdouble)time_passed / time_length;
         }
         lrc_y_offset = line_height * percent;
-    }
-
-    seq = g_sequence_iter_get_sequence(iter_now);
-    if(iter!=NULL)
-        index_now = g_sequence_iter_get_position(iter_now);
-    else
-        index_now = -1;
-    
-    for(iter_foreach = g_sequence_get_begin_iter(seq);
-        !g_sequence_iter_is_end(iter_foreach);
-        iter_foreach = g_sequence_iter_next(iter_foreach))
+    } 
+    lrc_data = g_sequence_get(iter_now);
+    lrc_y = (gfloat)allocation.height/2 - lrc_y_offset;
+    if(lrc_data!=NULL)
     {
-        index_foreach = g_sequence_iter_get_position(iter_foreach);
-        lrc_y = (gfloat)allocation.height/2 - lrc_y_offset +
-            (t_height + priv->line_distance) * (gfloat)
-            (index_foreach - index_now);
-        lrc_y = roundf(lrc_y);
-        if(lrc_y<0 || lrc_y>allocation.height) continue;
-        if(index_foreach!=index_now)
+        pango_layout_set_text(priv->layout, lrc_data->text, -1);
+        pango_layout_get_pixel_size(priv->layout, &t_width, &t_height);
+        lrc_width = (gfloat)t_width;
+        if(iter!=NULL)
         {
-            surface = priv->lrc_normal_surface[index_foreach];
-            surface_width = cairo_image_surface_get_width(surface);
-            surface_height = cairo_image_surface_get_height(surface);
-            lrc_x = roundf((allocation.width - surface_width) / 2);
-            cairo_save(cr);
-            cairo_rectangle(cr, lrc_x, lrc_y, surface_width, surface_height);
-            cairo_clip(cr);
-            cairo_set_source_surface(cr, surface, lrc_x, lrc_y);
-            cairo_set_operator(cr, CAIRO_OPERATOR_OVER);
-            cairo_paint(cr);
-            cairo_restore(cr);
-        }
-        else
-        {
-            surface = priv->lrc_active_surface[index_foreach];
-            surface_width = cairo_image_surface_get_width(surface);
-            surface_height = cairo_image_surface_get_height(surface);
-            if(surface_width>allocation.width && !priv->drag_action)
+            if(lrc_width>allocation.width && !priv->drag_action)
             {
-                low = (gfloat)allocation.width / surface_width /2;
+                low = (gfloat)allocation.width / lrc_width /2;
                 high = 1.0 - low;
                 if(percent<=low)
                     text_percent = 0.0;
@@ -342,19 +280,80 @@ static void rc_plugin_lrcshow_show(GtkWidget *widget,
                     text_percent = (percent-low) / (high-low);
                 else
                     text_percent = 1.0;
-                lrc_x = 10 + (allocation.width-surface_width-20)*text_percent;
+                lrc_x = 10 + (allocation.width-lrc_width-20)*text_percent;
             }
             else
-                lrc_x = (allocation.width - surface_width) / 2;
-            lrc_x = roundf(lrc_x);
-            cairo_save(cr);
-            cairo_rectangle(cr, lrc_x, lrc_y, surface_width, surface_height);
-            cairo_clip(cr);
-            cairo_set_source_surface(cr, surface, lrc_x, lrc_y);
-            cairo_set_operator(cr, CAIRO_OPERATOR_OVER);
-            cairo_paint(cr);
-            cairo_restore(cr);
+                lrc_x = (allocation.width - lrc_width) / 2;
+            cairo_move_to(cr, lrc_x, lrc_y);
+            gdk_cairo_set_source_rgba(cr, &(priv->text_hilight));
         }
+        else
+        {
+            lrc_x = (allocation.width - lrc_width) / 2;
+            cairo_move_to(cr, lrc_x, lrc_y);
+            gdk_cairo_set_source_rgba(cr, &(priv->text_color));
+        }
+        pango_cairo_show_layout(cr, priv->layout);
+        lrc_y+=(gfloat)t_height+priv->line_distance;
+    }
+    gdk_cairo_set_source_rgba(cr, &(priv->text_color));
+    iter_foreach = g_sequence_iter_next(iter_now);
+    for(;!g_sequence_iter_is_end(iter_foreach);
+        iter_foreach = g_sequence_iter_next(iter_foreach))
+    {
+        lrc_data = g_sequence_get(iter_foreach);
+        if(lrc_data==NULL) continue;
+        pango_layout_set_text(priv->layout, lrc_data->text, -1);
+        pango_layout_get_pixel_size(priv->layout, &t_width, &t_height);
+        lrc_width = (gfloat)t_width;
+        lrc_x = (allocation.width - lrc_width) / 2;
+        cairo_move_to(cr, lrc_x, lrc_y);
+        pango_cairo_show_layout(cr, priv->layout);
+        lrc_y+=(gfloat)t_height+priv->line_distance;
+        if(lrc_y>allocation.height) break;
+    }
+    if(!g_sequence_iter_is_begin(iter_now))
+    {
+        lrc_y = (gfloat)allocation.height/2 - lrc_y_offset;
+        iter_foreach = iter_now;
+        do
+        {
+            iter_foreach = g_sequence_iter_prev(iter_foreach);
+            lrc_data = g_sequence_get(iter_foreach);
+            if(lrc_data==NULL) continue;
+            pango_layout_set_text(priv->layout, lrc_data->text, -1);
+            pango_layout_get_pixel_size(priv->layout, &t_width, &t_height);
+            lrc_width = (gfloat)t_width;
+            lrc_x = (allocation.width - lrc_width) / 2;
+            lrc_y-=(gfloat)t_height + priv->line_distance;
+            cairo_move_to(cr, lrc_x, lrc_y);
+            pango_cairo_show_layout(cr, priv->layout);
+            if(lrc_y<0) break;
+        }
+        while(!g_sequence_iter_is_begin(iter_foreach));
+    }
+    if(priv->drag_action)
+    {
+        cairo_move_to(cr, 0, (gfloat)allocation.height/2);
+        cairo_set_source_rgba(cr, priv->text_color.red,
+            priv->text_color.green, priv->text_color.blue,
+            priv->text_color.alpha * 0.8);
+        cairo_line_to(cr, (gfloat)allocation.width,
+            (gfloat)allocation.height/2);
+        cairo_stroke(cr);
+        lrc_data = g_sequence_get(iter_now);
+        if(lrc_data!=NULL)
+            time_passed = (lrc_data->time+offset) / GST_SECOND;
+        else
+            time_passed = 0;
+        text = g_strdup_printf("%02d:%02d", (gint)time_passed/60,
+            (gint)time_passed%60);
+        pango_layout_set_text(priv->layout, text, -1);
+        g_free(text);
+        pango_layout_get_pixel_size(priv->layout, &t_width, &t_height);
+        cairo_move_to(cr, allocation.width - t_width,
+            allocation.height/2 - t_height);
+        pango_cairo_show_layout(cr, priv->layout);
     }
 }
 
@@ -498,13 +497,6 @@ static void rc_plugin_lrcshow_lyric_ready_cb(RCLibLyric *lyric, guint index,
    gpointer data)
 {
     RCPluginLrcshowPriv *priv = (RCPluginLrcshowPriv *)data;
-    RCLibLyricData *lyric_data;
-    cairo_t *cr;
-    gint w, h;
-    gint lrc_number = 0;
-    gint i;
-    GSequenceIter *iter, *iter_begin;
-    const RCLibLyricParsedData *parsed_data;
     if(data==NULL) return;
     if(priv->mode>0)
     {
@@ -512,61 +504,6 @@ static void rc_plugin_lrcshow_lyric_ready_cb(RCLibLyric *lyric, guint index,
         else priv->track = 0;
     }
     else priv->track = 0;
-
-    /* Draw the text on the image surface. */
-    parsed_data = rclib_lyric_get_parsed_data(priv->track);
-    if(parsed_data==NULL || parsed_data->seq==NULL)
-        return;
-    lrc_number = g_sequence_get_length(parsed_data->seq);
-    priv->lrc_number = lrc_number;
-    if(priv->lrc_normal_surface!=NULL)
-    {
-        for(i=0;priv->lrc_normal_surface[i]!=NULL;i++)
-            cairo_surface_destroy(priv->lrc_normal_surface[i]);
-        g_free(priv->lrc_normal_surface);
-        priv->lrc_normal_surface = NULL;
-    }
-    if(priv->lrc_active_surface!=NULL)
-    {
-        for(i=0;priv->lrc_active_surface[i]!=NULL;i++)
-            cairo_surface_destroy(priv->lrc_active_surface[i]);
-        g_free(priv->lrc_active_surface);
-        priv->lrc_active_surface = NULL;
-    }
-    priv->lrc_normal_surface = g_new0(cairo_surface_t *, lrc_number+1);
-    priv->lrc_active_surface = g_new0(cairo_surface_t *, lrc_number+1);
-    iter_begin = g_sequence_get_begin_iter(parsed_data->seq);
-    iter = iter_begin;
-    for(i=0;i<lrc_number;i++)
-    {
-        lyric_data = g_sequence_get(iter);
-        if(lyric_data==NULL) continue;
-        pango_layout_set_text(priv->layout, lyric_data->text, -1);
-        pango_layout_get_pixel_size(priv->layout, &w, &h);
-
-        priv->lrc_normal_surface[i] = cairo_image_surface_create(
-            CAIRO_FORMAT_ARGB32, w, h);
-        cr = cairo_create(priv->lrc_normal_surface[i]);
-        cairo_set_source_rgba(cr, 1.0, 1.0, 1.0, 0.0);
-        cairo_set_operator(cr, CAIRO_OPERATOR_SOURCE);
-        cairo_paint(cr);
-        cairo_move_to(cr, 0, 0);
-        gdk_cairo_set_source_rgba(cr, &(priv->text_color));
-        pango_cairo_show_layout(cr, priv->layout);
-        cairo_destroy(cr);
-
-        priv->lrc_active_surface[i] = cairo_image_surface_create(
-            CAIRO_FORMAT_ARGB32, w, h);
-        cr = cairo_create(priv->lrc_active_surface[i]);
-        cairo_set_source_rgba(cr, 1.0, 1.0, 1.0, 0.0);
-        cairo_set_operator(cr, CAIRO_OPERATOR_SOURCE);
-        cairo_paint(cr);
-        cairo_move_to(cr, 0, 0);
-        gdk_cairo_set_source_rgba(cr, &(priv->text_hilight));
-        pango_cairo_show_layout(cr, priv->layout);
-        cairo_destroy(cr);
-        iter = g_sequence_iter_next(iter);
-    }
 }
 
 static void rc_plugin_lrcshow_shutdown_cb(RCLibPlugin *plugin, gpointer data)
@@ -584,6 +521,7 @@ static void rc_plugin_lrcshow_shutdown_cb(RCLibPlugin *plugin, gpointer data)
 static gboolean rc_plugin_lrcshow_load(RCLibPluginData *plugin)
 {
     RCPluginLrcshowPriv *priv = &lrcshow_priv;
+    PangoFontDescription *desc;
     priv->lrc_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
     priv->lrc_scene = gtk_drawing_area_new();
     gtk_widget_set_size_request(priv->lrc_window, 300, 400);
@@ -591,7 +529,9 @@ static gboolean rc_plugin_lrcshow_load(RCLibPluginData *plugin)
         GDK_BUTTON_RELEASE_MASK | GDK_BUTTON_MOTION_MASK |
         GDK_POINTER_MOTION_HINT_MASK);
     priv->layout = gtk_widget_create_pango_layout(priv->lrc_scene, NULL);
-    rc_plugin_lrcshow_update_font(priv);
+    desc = pango_font_description_from_string(priv->font_string);
+    pango_layout_set_font_description(priv->layout, desc);
+    pango_font_description_free(desc);
     priv->action = gtk_toggle_action_new("RC2ViewPluginLyricShow",
         _("Lyric Show"), _("Show/hide lyric show window"), NULL);
     gtk_toggle_action_set_active(priv->action, TRUE);
@@ -659,6 +599,7 @@ static gboolean rc_plugin_lrcshow_unload(RCLibPluginData *plugin)
 static gboolean rc_plugin_lrcshow_configure(RCLibPluginData *plugin)
 {
     RCPluginLrcshowPriv *priv = &lrcshow_priv;
+    PangoFontDescription *desc;
     GtkWidget *dialog;
     GtkWidget *content_area;
     GtkWidget *label[5];
@@ -722,7 +663,9 @@ static gboolean rc_plugin_lrcshow_configure(RCLibPluginData *plugin)
         g_free(priv->font_string);
         priv->font_string = g_strdup(gtk_font_button_get_font_name(
             GTK_FONT_BUTTON(font_button)));
-        rc_plugin_lrcshow_update_font(priv);
+        desc = pango_font_description_from_string(priv->font_string);
+        pango_layout_set_font_description(priv->layout, desc);
+        pango_font_description_free(desc);
         priv->line_distance = gtk_spin_button_get_value_as_int(
             GTK_SPIN_BUTTON(space_spin));
         gtk_color_button_get_rgba(GTK_COLOR_BUTTON(bg_color_button),

@@ -1,17 +1,20 @@
 - Bug Report Interface
 - Sort the playlist
+- New information and control pad
+- New way to render the text in lyric show plug-in
+- Move the playlist functions from db module into a new playlist module.
 
 Long-term:
 - Command Line Interface (CLI), based on ncurses
-- Mini mode (plug-in? based on Clutter?)
+- Mini mode (plug-in?)
 - More plug-ins
-- More spectrum style
 - Non-Unix platform support
 - Music Library
 - More interfaces in MPRIS v2.1 support
 - Multi-touch support
 - Move to GStreamer 1.0 if it is available in Debian Wheezy (or later
   release version)
+- New icon and default cover image.
 
 Other ideas:
 - Better karaoke mode plug-in?

@@ -22,7 +22,7 @@ plugin_LTLIBRARIES += \
     mediakey.la
 
 mediakey_la_SOURCES = mediakey.c
-mediakey_la_LIBADD = @GLIB2_LIBS@ @GSTREAMER_LIBS@ \
+mediakey_la_LIBADD = @GLIB2_LIBS@ @GSTREAMER_LIBS@ @GTK_LIBS@ \
     $(top_builddir)/lib/librhythmcat-2.0.la 
 mediakey_la_LIBTOOLFLAGS = --tag=disable-static
 
