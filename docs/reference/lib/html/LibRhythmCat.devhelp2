@@ -318,7 +318,7 @@
     <keyword type="constant" name="RCLIB_DB_PLAYLIST_TYPE_CUE" link="RCLibDb.html#RCLIB-DB-PLAYLIST-TYPE-CUE:CAPS"/>
     <keyword type="constant" name="RCLIB_PLAYER_RANDOM_NONE" link="RCLibPlayer.html#RCLIB-PLAYER-RANDOM-NONE:CAPS"/>
     <keyword type="constant" name="RCLIB_PLAYER_RANDOM_SINGLE" link="RCLibPlayer.html#RCLIB-PLAYER-RANDOM-SINGLE:CAPS"/>
-    <keyword type="constant" name="RCLIB_PlAYER_RANDOM_ALL" link="RCLibPlayer.html#RCLIB-PlAYER-RANDOM-ALL"/>
+    <keyword type="constant" name="RCLIB_PLAYER_RANDOM_ALL" link="RCLibPlayer.html#RCLIB-PLAYER-RANDOM-ALL:CAPS"/>
     <keyword type="constant" name="RCLIB_PLAYER_REPEAT_NONE" link="RCLibPlayer.html#RCLIB-PLAYER-REPEAT-NONE:CAPS"/>
     <keyword type="constant" name="RCLIB_PLAYER_REPEAT_SINGLE" link="RCLibPlayer.html#RCLIB-PLAYER-REPEAT-SINGLE:CAPS"/>
     <keyword type="constant" name="RCLIB_PLAYER_REPEAT_LIST" link="RCLibPlayer.html#RCLIB-PLAYER-REPEAT-LIST:CAPS"/>

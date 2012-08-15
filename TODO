@@ -1,7 +1,6 @@
 - Bug Report Interface
 - Sort the playlist
 - New information and control pad
-- New way to render the text in lyric show plug-in
 - Move the playlist functions from db module into a new playlist module.
 
 Long-term:

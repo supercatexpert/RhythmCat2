@@ -122,3 +122,8 @@
     * Rewrited the text rendering part of the lyric show plug-in.
     * Added X11 multimedia key support in mediakey plug-in for non-GNOME users.
 
+2012-08-16  SuperCat    <supercatexpert@gmail.com>
+
+    * Moved some playlist functions to a new source file.
+
+
