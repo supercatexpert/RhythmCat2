@@ -46,10 +46,8 @@
  */
  
 #define RC_UI_MAIN_WINDOW_COVER_IMAGE_SIZE 160
-#define RC_UI_MAIN_WINDOW_GET_PRIVATE(obj) G_TYPE_INSTANCE_GET_PRIVATE( \
-    (obj), RC_UI_TYPE_MAIN_WINDOW, RCUiMainWindowPrivate)
 
-typedef struct RCUiMainWindowPrivate
+struct _RCUiMainWindowPrivate
 {
     GtkUIManager *ui_manager;
     GtkWidget *main_grid;
@@ -106,7 +104,7 @@ typedef struct RCUiMainWindowPrivate
     gulong refresh_updated_id;  
     gulong album_found_id;
     gulong album_none_id;
-}RCUiMainWindowPrivate;
+};
 
 enum
 {
@@ -1086,7 +1084,7 @@ static void rc_ui_main_window_set_default_style(RCUiMainWindowPrivate *priv)
 
 static void rc_ui_main_window_layout_init(RCUiMainWindow *window)
 {
-    RCUiMainWindowPrivate *priv = RC_UI_MAIN_WINDOW_GET_PRIVATE(window);
+    RCUiMainWindowPrivate *priv = window->priv;
     GtkWidget *panel_grid;
     GtkWidget *panel_right_grid;
     GtkWidget *info_grid;
@@ -1170,7 +1168,7 @@ static void rc_ui_main_window_layout_init(RCUiMainWindow *window)
 
 static void rc_ui_main_window_signal_bind(RCUiMainWindow *window)
 {
-    RCUiMainWindowPrivate *priv = RC_UI_MAIN_WINDOW_GET_PRIVATE(window);
+    RCUiMainWindowPrivate *priv = window->priv;
     GtkTreeSelection *catalog_selection, *playlist_selection;
     catalog_selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(
         priv->catalog_listview));
@@ -1240,7 +1238,7 @@ static void rc_ui_main_window_signal_bind(RCUiMainWindow *window)
 
 static void rc_ui_main_window_finalize(GObject *object)
 {
-    RCUiMainWindowPrivate *priv = RC_UI_MAIN_WINDOW_GET_PRIVATE(object);
+    RCUiMainWindowPrivate *priv = RC_UI_MAIN_WINDOW(object)->priv;
     if(priv->update_timeout>0)
         g_source_remove(priv->update_timeout);
     if(priv->tag_found_id>0)
@@ -1305,7 +1303,9 @@ static void rc_ui_main_window_class_init(RCUiMainWindowClass *klass)
 
 static void rc_ui_main_window_instance_init(RCUiMainWindow *window)
 {
-    RCUiMainWindowPrivate *priv = RC_UI_MAIN_WINDOW_GET_PRIVATE(window);
+    RCUiMainWindowPrivate *priv = G_TYPE_INSTANCE_GET_PRIVATE(window,
+        RC_UI_TYPE_MAIN_WINDOW, RCUiMainWindowPrivate);
+    window->priv = priv;
     GdkPixbuf *icon_pixbuf;
     GdkGeometry main_window_hints =
     {
@@ -1530,7 +1530,7 @@ GdkPixbuf *rc_ui_main_window_get_default_cover_image()
 {
     RCUiMainWindowPrivate *priv = NULL;
     if(ui_main_window_instance==NULL) return NULL;
-    priv = RC_UI_MAIN_WINDOW_GET_PRIVATE(ui_main_window_instance);
+    priv = RC_UI_MAIN_WINDOW(ui_main_window_instance)->priv;
     if(priv==NULL) return NULL;
     return priv->cover_default_pixbuf;
 }
@@ -1560,7 +1560,7 @@ void rc_ui_main_window_set_keep_above_state(gboolean state)
 {
     RCUiMainWindowPrivate *priv = NULL;
     if(ui_main_window_instance==NULL) return;
-    priv = RC_UI_MAIN_WINDOW_GET_PRIVATE(ui_main_window_instance);
+    priv = RC_UI_MAIN_WINDOW(ui_main_window_instance)->priv;
     if(priv==NULL) return;
     gtk_window_set_keep_above(GTK_WINDOW(ui_main_window_instance), state);
     gtk_toggle_action_set_active(GTK_TOGGLE_ACTION(
@@ -1584,7 +1584,7 @@ void rc_ui_main_window_cover_image_set_visible(gboolean visible)
 {
     RCUiMainWindowPrivate *priv = NULL;
     if(ui_main_window_instance==NULL) return;
-    priv = RC_UI_MAIN_WINDOW_GET_PRIVATE(ui_main_window_instance);
+    priv = RC_UI_MAIN_WINDOW(ui_main_window_instance)->priv;
     if(priv==NULL || priv->album_frame==NULL) return;
     gtk_widget_set_visible(priv->album_frame, visible);
 }
@@ -1601,7 +1601,7 @@ gboolean rc_ui_main_window_cover_image_get_visible()
 {
     RCUiMainWindowPrivate *priv = NULL;
     if(ui_main_window_instance==NULL) return FALSE;
-    priv = RC_UI_MAIN_WINDOW_GET_PRIVATE(ui_main_window_instance);
+    priv = RC_UI_MAIN_WINDOW(ui_main_window_instance)->priv;
     if(priv==NULL || priv->album_frame==NULL) return FALSE;
     return gtk_widget_get_visible(priv->album_frame);
 }
@@ -1617,7 +1617,7 @@ void rc_ui_main_window_lyric_labels_set_visible(gboolean visible)
 {
     RCUiMainWindowPrivate *priv = NULL;
     if(ui_main_window_instance==NULL) return;
-    priv = RC_UI_MAIN_WINDOW_GET_PRIVATE(ui_main_window_instance);
+    priv = RC_UI_MAIN_WINDOW(ui_main_window_instance)->priv;
     if(priv==NULL || priv->lyric1_slabel==NULL || priv->lyric2_slabel==NULL)
         return;
     gtk_widget_set_visible(priv->lyric1_slabel, visible);
@@ -1636,7 +1636,7 @@ gboolean rc_ui_main_window_lyric_labels_get_visible()
 {
     RCUiMainWindowPrivate *priv = NULL;
     if(ui_main_window_instance==NULL) return FALSE;
-    priv = RC_UI_MAIN_WINDOW_GET_PRIVATE(ui_main_window_instance);
+    priv = RC_UI_MAIN_WINDOW(ui_main_window_instance)->priv;
     if(priv==NULL || priv->lyric1_slabel==NULL || priv->lyric2_slabel==NULL)
         return FALSE;
     return  gtk_widget_get_visible(priv->lyric1_slabel) &&
@@ -1654,7 +1654,7 @@ void rc_ui_main_window_spectrum_set_visible(gboolean visible)
 {
     RCUiMainWindowPrivate *priv = NULL;
     if(ui_main_window_instance==NULL) return;
-    priv = RC_UI_MAIN_WINDOW_GET_PRIVATE(ui_main_window_instance);
+    priv = RC_UI_MAIN_WINDOW(ui_main_window_instance)->priv;
     if(priv==NULL || priv->spectrum_widget==NULL) return;
     gtk_widget_set_visible(priv->spectrum_widget, visible);
 }
@@ -1671,7 +1671,7 @@ gboolean rc_ui_main_window_spectrum_get_visible()
 {
     RCUiMainWindowPrivate *priv = NULL;
     if(ui_main_window_instance==NULL) return FALSE;
-    priv = RC_UI_MAIN_WINDOW_GET_PRIVATE(ui_main_window_instance);
+    priv = RC_UI_MAIN_WINDOW(ui_main_window_instance)->priv;
     if(priv==NULL || priv->spectrum_widget==NULL) return FALSE;
     return gtk_widget_get_visible(priv->spectrum_widget);
 }
@@ -1689,7 +1689,7 @@ void rc_ui_main_window_playlist_scrolled_window_set_horizontal_policy(
     RCUiMainWindowPrivate *priv = NULL;
     GtkPolicyType type;
     if(ui_main_window_instance==NULL) return;
-    priv = RC_UI_MAIN_WINDOW_GET_PRIVATE(ui_main_window_instance);
+    priv = RC_UI_MAIN_WINDOW(ui_main_window_instance)->priv;
     if(priv==NULL || priv->album_frame==NULL) return;
     if(state)
         type = GTK_POLICY_AUTOMATIC;
@@ -1709,7 +1709,7 @@ void rc_ui_main_window_spectrum_set_style(guint style)
 {
     RCUiMainWindowPrivate *priv = NULL;
     if(ui_main_window_instance==NULL) return;
-    priv = RC_UI_MAIN_WINDOW_GET_PRIVATE(ui_main_window_instance);
+    priv = RC_UI_MAIN_WINDOW(ui_main_window_instance)->priv;
     if(priv==NULL || priv->spectrum_widget==NULL) return;
     rc_ui_spectrum_widget_set_style(RC_UI_SPECTRUM_WIDGET(
         priv->spectrum_widget), style);

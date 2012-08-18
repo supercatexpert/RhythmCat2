@@ -43,6 +43,7 @@
     <keyword type="function" name="rc_ui_main_window_set_keep_above_state ()" link="RCUiMainWindow.html#rc-ui-main-window-set-keep-above-state"/>
     <keyword type="function" name="rc_ui_main_window_show ()" link="RCUiMainWindow.html#rc-ui-main-window-show"/>
     <keyword type="function" name="rc_ui_main_window_spectrum_get_visible ()" link="RCUiMainWindow.html#rc-ui-main-window-spectrum-get-visible"/>
+    <keyword type="function" name="rc_ui_main_window_spectrum_set_style ()" link="RCUiMainWindow.html#rc-ui-main-window-spectrum-set-style"/>
     <keyword type="function" name="rc_ui_main_window_spectrum_set_visible ()" link="RCUiMainWindow.html#rc-ui-main-window-spectrum-set-visible"/>
     <keyword type="signal" name="The &quot;keep-above-changed&quot; signal" link="RCUiMainWindow.html#RCUiMainWindow-keep-above-changed"/>
     <keyword type="function" name="rc_ui_dialog_about_player ()" link="RhythmCat-Dialogs.html#rc-ui-dialog-about-player"/>

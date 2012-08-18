@@ -58,6 +58,7 @@ typedef enum {
 
 typedef struct _RCLibAlbum RCLibAlbum;
 typedef struct _RCLibAlbumClass RCLibAlbumClass;
+typedef struct _RCLibAlbumPrivate RCLibAlbumPrivate;
 
 /**
  * RCLibAlbum:
@@ -69,6 +70,7 @@ typedef struct _RCLibAlbumClass RCLibAlbumClass;
 struct _RCLibAlbum {
     /*< private >*/
     GObject parent;
+    RCLibAlbumPrivate *priv;
 };
 
 /**

@@ -27,8 +27,6 @@
 
 #include "rclib-tag.h"
 
-#define RCLIB_DB_GET_PRIVATE(obj) G_TYPE_INSTANCE_GET_PRIVATE((obj), \
-    RCLIB_TYPE_DB, RCLibDbPrivate)
 #define RCLIB_DB_ERROR rclib_db_error_quark()
 
 typedef struct RCLibDbPlaylistImportData
@@ -63,7 +61,7 @@ typedef struct RCLibDbPlaylistRefreshIdleData
     RCLibDbPlaylistType type;
 }RCLibDbPlaylistRefreshIdleData;
 
-typedef struct RCLibDbPrivate
+struct _RCLibDbPrivate
 {
     gchar *filename;
     GSequence *catalog;
@@ -80,7 +78,7 @@ typedef struct RCLibDbPrivate
     GMutex autosave_mutex;
     GCond autosave_cond;
     GString *autosave_xml_data;
-}RCLibDbPrivate;
+};
 
 /*< private >*/
 gboolean _rclib_db_instance_init_playlist(RCLibDb *db, RCLibDbPrivate *priv);

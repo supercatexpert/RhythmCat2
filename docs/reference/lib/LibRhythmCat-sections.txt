@@ -29,6 +29,7 @@ RCLIB_ALBUM_GET_CLASS
 RCLIB_IS_ALBUM
 RCLIB_IS_ALBUM_CLASS
 RCLIB_TYPE_ALBUM
+RCLibAlbumPrivate
 rclib_album_get_type
 </SECTION>
 
@@ -85,6 +86,7 @@ RCLIB_CORE_GET_CLASS
 RCLIB_IS_CORE
 RCLIB_IS_CORE_CLASS
 RCLIB_TYPE_CORE
+RCLibCorePrivate
 rclib_core_get_type
 </SECTION>
 
@@ -167,6 +169,7 @@ RCLIB_IS_DB_CLASS
 RCLIB_TYPE_DB
 RCLIB_TYPE_DB_CATALOG_DATA
 RCLIB_TYPE_DB_PLAYLIST_DATA
+RCLibDbPrivate
 rclib_db_catalog_data_get_type
 rclib_db_get_type
 rclib_db_playlist_data_get_type
@@ -203,6 +206,7 @@ RCLIB_LYRIC
 RCLIB_LYRIC_CLASS
 RCLIB_LYRIC_GET_CLASS
 RCLIB_TYPE_LYRIC
+RCLibLyricPrivate
 rclib_lyric_get_type
 </SECTION>
 
@@ -235,6 +239,7 @@ RCLIB_PLAYER
 RCLIB_PLAYER_CLASS
 RCLIB_PLAYER_GET_CLASS
 RCLIB_TYPE_PLAYER
+RCLibPlayerPrivate
 rclib_player_get_type
 </SECTION>
 
@@ -279,6 +284,7 @@ RCLIB_PLUGIN_CLASS
 RCLIB_PLUGIN_GET_CLASS
 RCLIB_TYPE_PLUGIN
 RCLIB_TYPE_PLUGIN_DATA
+RCLibPluginPrivate
 RCPLUGIN_INIT_PLUGIN
 rclib_plugin_data_get_type
 rclib_plugin_get_type

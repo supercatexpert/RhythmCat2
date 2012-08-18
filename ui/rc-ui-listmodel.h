@@ -117,6 +117,8 @@ typedef struct _RCUiCatalogStore RCUiCatalogStore;
 typedef struct _RCUiPlaylistStore RCUiPlaylistStore;
 typedef struct _RCUiCatalogStoreClass RCUiCatalogStoreClass;
 typedef struct _RCUiPlaylistStoreClass RCUiPlaylistStoreClass;
+typedef struct _RCUiCatalogStorePrivate RCUiCatalogStorePrivate;
+typedef struct _RCUiPlaylistStorePrivate RCUiPlaylistStorePrivate;
 
 /**
  * RCUiCatalogStore:
@@ -127,6 +129,7 @@ typedef struct _RCUiPlaylistStoreClass RCUiPlaylistStoreClass;
 struct _RCUiCatalogStore {
     /*< private >*/
     GObject parent;
+    RCUiCatalogStorePrivate *priv;
 };
 
 /**
@@ -138,6 +141,7 @@ struct _RCUiCatalogStore {
 struct _RCUiPlaylistStore {
     /*< private >*/
     GObject parent;
+    RCUiPlaylistStorePrivate *priv;
 };
 
 /**

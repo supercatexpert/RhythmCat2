@@ -39,10 +39,7 @@
  * easily by the given API.
  */
 
-#define RCLIB_PLAYER_GET_PRIVATE(obj) G_TYPE_INSTANCE_GET_PRIVATE((obj), \
-    RCLIB_TYPE_PLAYER, RCLibPlayerPrivate)
-
-typedef struct RCLibPlayerPrivate
+struct _RCLibPlayerPrivate
 {
     RCLibPlayerRepeatMode repeat_mode;
     RCLibPlayerRandomMode random_mode;
@@ -50,7 +47,7 @@ typedef struct RCLibPlayerPrivate
     gboolean limit_state;
     gfloat limit_rating;
     gboolean limit_condition;
-}RCLibPlayerPrivate;
+};
 
 enum
 {
@@ -434,7 +431,7 @@ static void rclib_player_eos_cb(RCLibCore *core, gpointer data)
     RCLibPlayerPrivate *priv;
     if(data==NULL) return;
     player = RCLIB_PLAYER(data);
-    priv = RCLIB_PLAYER_GET_PRIVATE(player);
+    priv = player->priv;
     if(priv->random_mode!=RCLIB_PLAYER_RANDOM_NONE)
     {
         switch(priv->random_mode)
@@ -472,7 +469,7 @@ static void rclib_player_eos_cb(RCLibCore *core, gpointer data)
 
 static void rclib_player_finalize(GObject *object)
 {
-    RCLibPlayerPrivate *priv = RCLIB_PLAYER_GET_PRIVATE(RCLIB_PLAYER(object));
+    RCLibPlayerPrivate *priv = RCLIB_PLAYER(object)->priv;
     rclib_core_signal_disconnect(priv->eos_handler);
     G_OBJECT_CLASS(rclib_player_parent_class)->finalize(object);
 }
@@ -526,7 +523,9 @@ static void rclib_player_class_init(RCLibPlayerClass *klass)
 
 static void rclib_player_instance_init(RCLibPlayer *player)
 {
-    RCLibPlayerPrivate *priv = RCLIB_PLAYER_GET_PRIVATE(player);
+    RCLibPlayerPrivate *priv = G_TYPE_INSTANCE_GET_PRIVATE(player,
+        RCLIB_TYPE_PLAYER, RCLibPlayerPrivate);
+    player->priv = priv;
     priv->repeat_mode = RCLIB_PLAYER_REPEAT_NONE;
     priv->random_mode = RCLIB_PLAYER_RANDOM_NONE;
     priv->eos_handler = rclib_core_signal_connect("eos",
@@ -819,7 +818,7 @@ void rclib_player_set_repeat_mode(RCLibPlayerRepeatMode mode)
 {
     RCLibPlayerPrivate *priv;
     if(player_instance==NULL) return;
-    priv = RCLIB_PLAYER_GET_PRIVATE(player_instance);
+    priv = RCLIB_PLAYER(player_instance)->priv;
     if(priv==NULL) return;
     priv->repeat_mode = mode;
     g_signal_emit(player_instance,
@@ -837,7 +836,7 @@ void rclib_player_set_random_mode(RCLibPlayerRandomMode mode)
 {
     RCLibPlayerPrivate *priv;
     if(player_instance==NULL) return;
-    priv = RCLIB_PLAYER_GET_PRIVATE(player_instance);
+    priv = RCLIB_PLAYER(player_instance)->priv;
     if(priv==NULL) return;
     priv->random_mode = mode;
     g_signal_emit(player_instance,
@@ -856,7 +855,7 @@ RCLibPlayerRepeatMode rclib_player_get_repeat_mode()
 {
     RCLibPlayerPrivate *priv;
     if(player_instance==NULL) return 0;
-    priv = RCLIB_PLAYER_GET_PRIVATE(player_instance);
+    priv = RCLIB_PLAYER(player_instance)->priv;
     if(priv==NULL) return 0;
     return priv->repeat_mode;
 }
@@ -873,7 +872,7 @@ RCLibPlayerRandomMode rclib_player_get_random_mode()
 {
     RCLibPlayerPrivate *priv;
     if(player_instance==NULL) return 0;
-    priv = RCLIB_PLAYER_GET_PRIVATE(player_instance);
+    priv = RCLIB_PLAYER(player_instance)->priv;
     if(priv==NULL) return 0;
     return priv->random_mode;
 }
@@ -895,7 +894,7 @@ void rclib_player_set_rating_limit(gboolean state, gfloat rating,
 {
     RCLibPlayerPrivate *priv;
     if(player_instance==NULL) return;
-    priv = RCLIB_PLAYER_GET_PRIVATE(player_instance);
+    priv = RCLIB_PLAYER(player_instance)->priv;
     if(priv==NULL) return;
     priv->limit_state = state;
     if(rating>5.0) rating = 5.0;
@@ -918,7 +917,7 @@ gboolean rclib_player_get_rating_limit(gfloat *rating, gboolean *condition)
 {
     RCLibPlayerPrivate *priv;
     if(player_instance==NULL) return FALSE;
-    priv = RCLIB_PLAYER_GET_PRIVATE(player_instance);
+    priv = RCLIB_PLAYER(player_instance)->priv;
     if(priv==NULL) return FALSE;
     if(rating!=NULL) *rating = priv->limit_rating;
     if(condition!=NULL) *condition = priv->limit_condition;

@@ -41,10 +41,7 @@
  * tracks. The timer inside can send signals for lyric display.
  */
 
-#define RCLIB_LYRIC_GET_PRIVATE(obj) G_TYPE_INSTANCE_GET_PRIVATE((obj), \
-    RCLIB_TYPE_LYRIC, RCLibLyricPrivate)
-
-typedef struct RCLibLyricPrivate
+struct _RCLibLyricPrivate
 {
     gchar *search_dir;
     gchar *encoding;
@@ -54,7 +51,7 @@ typedef struct RCLibLyricPrivate
     RCLibLyricParsedData parsed_data2;
     gulong tag_found_handler;
     gulong uri_changed_handler;
-}RCLibLyricPrivate;
+};
 
 enum
 {
@@ -126,7 +123,7 @@ static void rclib_lyric_tag_found_cb(RCLibCore *core,
     gchar *lyric_path;
     if(data==NULL || uri==NULL) return;
     lyric = RCLIB_LYRIC(data);
-    priv = RCLIB_LYRIC_GET_PRIVATE(RCLIB_LYRIC(lyric));
+    priv = lyric->priv;
     if(priv==NULL) return;
     if(priv->parsed_data1.filename==NULL)
     {
@@ -184,7 +181,7 @@ static void rclib_lyric_uri_changed_cb(RCLibCore *core, const gchar *uri,
 
 static void rclib_lyric_finalize(GObject *object)
 {
-    RCLibLyricPrivate *priv = RCLIB_LYRIC_GET_PRIVATE(RCLIB_LYRIC(object));
+    RCLibLyricPrivate *priv = RCLIB_LYRIC(object)->priv;
     if(priv->tag_found_handler>0)
         rclib_core_signal_disconnect(priv->tag_found_handler);
     if(priv->uri_changed_handler>0)
@@ -290,8 +287,9 @@ static void rclib_lyric_class_init(RCLibLyricClass *klass)
 
 static void rclib_lyric_instance_init(RCLibLyric *lyric)
 {
-    RCLibLyricPrivate *priv = RCLIB_LYRIC_GET_PRIVATE(lyric);
-    memset(priv, 0, sizeof(RCLibLyricPrivate));
+    RCLibLyricPrivate *priv = G_TYPE_INSTANCE_GET_PRIVATE(lyric,
+        RCLIB_TYPE_LYRIC, RCLibLyricPrivate);
+    lyric->priv = priv;
     priv->parsed_data1.seq = g_sequence_new((GDestroyNotify)
         rclib_lyric_lyric_data_free);
     priv->parsed_data2.seq = g_sequence_new((GDestroyNotify)
@@ -348,7 +346,7 @@ void rclib_lyric_init()
         return;
     }
     lyric_instance = g_object_new(RCLIB_TYPE_LYRIC, NULL);
-    priv = RCLIB_LYRIC_GET_PRIVATE(lyric_instance);
+    priv = RCLIB_LYRIC(lyric_instance)->priv;
     if(priv->parsed_data1.seq==NULL || priv->parsed_data2.seq==NULL)
     {
         g_warning("Cannot load lyric sequence!");
@@ -436,7 +434,7 @@ void rclib_lyric_set_fallback_encoding(const gchar *encoding)
 {
     RCLibLyricPrivate *priv;
     if(lyric_instance==NULL) return;
-    priv = RCLIB_LYRIC_GET_PRIVATE(lyric_instance);
+    priv = RCLIB_LYRIC(lyric_instance)->priv;
     if(priv==NULL) return;
     g_free(priv->encoding);
     priv->encoding = g_strdup(encoding);
@@ -454,7 +452,7 @@ const gchar *rclib_lyric_get_fallback_encoding()
 {
     RCLibLyricPrivate *priv;
     if(lyric_instance==NULL) return NULL;
-    priv = RCLIB_LYRIC_GET_PRIVATE(lyric_instance);
+    priv = RCLIB_LYRIC(lyric_instance)->priv;
     if(priv==NULL) return NULL;
     return priv->encoding;
 }
@@ -613,7 +611,7 @@ gboolean rclib_lyric_load_file(const gchar *filename, guint index)
     rclib_lyric_clean(index);
     if(lyric_instance==NULL) return FALSE;
     if(filename==NULL) return FALSE;
-    priv = RCLIB_LYRIC_GET_PRIVATE(lyric_instance);
+    priv = RCLIB_LYRIC(lyric_instance)->priv;
     if(priv==NULL) return FALSE;
     file = g_file_new_for_path(filename);
     if(file==NULL) return FALSE;
@@ -674,7 +672,7 @@ void rclib_lyric_clean(guint index)
     RCLibLyricPrivate *priv;
     GSequenceIter *begin_iter, *end_iter;
     if(lyric_instance==NULL) return;
-    priv = RCLIB_LYRIC_GET_PRIVATE(lyric_instance);
+    priv = RCLIB_LYRIC(lyric_instance)->priv;
     if(priv==NULL) return;
     if(index==1)
         parsed_data = &(priv->parsed_data2);
@@ -739,7 +737,7 @@ GSequenceIter *rclib_lyric_get_line_iter(guint index, gint64 time)
     GSequenceIter *begin, *end, *iter;
     gint64 offset;
     if(lyric_instance==NULL) return NULL;
-    priv = RCLIB_LYRIC_GET_PRIVATE(lyric_instance);
+    priv = RCLIB_LYRIC(lyric_instance)->priv;
     if(priv==NULL) return NULL;
     if(index==1)
         parsed_data = &(priv->parsed_data2);
@@ -785,7 +783,7 @@ void rclib_lyric_set_search_dir(const gchar *dir)
 {
     RCLibLyricPrivate *priv;
     if(lyric_instance==NULL) return;
-    priv = RCLIB_LYRIC_GET_PRIVATE(lyric_instance);
+    priv = RCLIB_LYRIC(lyric_instance)->priv;
     if(priv==NULL) return;
     g_free(priv->search_dir);
     priv->search_dir = g_strdup(dir);
@@ -803,7 +801,7 @@ const gchar *rclib_lyric_get_search_dir()
 {
     RCLibLyricPrivate *priv;
     if(lyric_instance==NULL) return NULL;
-    priv = RCLIB_LYRIC_GET_PRIVATE(lyric_instance);
+    priv = RCLIB_LYRIC(lyric_instance)->priv;
     if(priv==NULL) return NULL;
     return priv->search_dir;
 }
@@ -910,7 +908,7 @@ gchar *rclib_lyric_search_lyric(const gchar *uri, const gchar *title,
         g_regex_unref(regex);
         return NULL;
     }
-    priv = RCLIB_LYRIC_GET_PRIVATE(lyric_instance);
+    priv = RCLIB_LYRIC(lyric_instance)->priv;
     if(priv==NULL || priv->search_dir==NULL)
     {
         g_regex_unref(regex);
@@ -948,7 +946,7 @@ gboolean rclib_lyric_is_available(guint index)
     RCLibLyricPrivate *priv;
     RCLibLyricParsedData *parsed_data;
     if(lyric_instance==NULL) return FALSE;
-    priv = RCLIB_LYRIC_GET_PRIVATE(lyric_instance);
+    priv = RCLIB_LYRIC(lyric_instance)->priv;
     if(priv==NULL) return FALSE;
     if(index==1)
         parsed_data = &(priv->parsed_data2);
@@ -971,7 +969,7 @@ const RCLibLyricParsedData *rclib_lyric_get_parsed_data(guint index)
     RCLibLyricPrivate *priv;
     const RCLibLyricParsedData *parsed_data;
     if(lyric_instance==NULL) return NULL;
-    priv = RCLIB_LYRIC_GET_PRIVATE(lyric_instance);
+    priv = RCLIB_LYRIC(lyric_instance)->priv;
     if(priv==NULL) return NULL;
     if(index==1)
         parsed_data = &(priv->parsed_data2);
@@ -994,7 +992,7 @@ gint64 rclib_lyric_get_track_time_offset(guint index)
     RCLibLyricPrivate *priv;
     RCLibLyricParsedData *parsed_data;
     if(lyric_instance==NULL) return 0;
-    priv = RCLIB_LYRIC_GET_PRIVATE(lyric_instance);
+    priv = RCLIB_LYRIC(lyric_instance)->priv;
     if(priv==NULL) return 0;
     if(index==1)
         parsed_data = &(priv->parsed_data2);

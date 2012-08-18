@@ -50,10 +50,12 @@ G_BEGIN_DECLS
 
 typedef struct _RCUiCellRendererRating RCUiCellRendererRating;
 typedef struct _RCUiCellRendererRatingClass RCUiCellRendererRatingClass;
+typedef struct _RCUiCellRendererRatingPrivate RCUiCellRendererRatingPrivate;
 
 struct _RCUiCellRendererRating {
     /*< private >*/
     GtkCellRenderer parent;
+    RCUiCellRendererRatingPrivate *priv;
 };
 
 struct _RCUiCellRendererRatingClass {

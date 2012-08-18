@@ -504,7 +504,7 @@ static void rclib_db_finalize(GObject *object)
     RCLibDbPlaylistImportData *import_data;
     RCLibDbPlaylistRefreshData *refresh_data;
     gchar *autosave_file;
-    RCLibDbPrivate *priv = RCLIB_DB_GET_PRIVATE(RCLIB_DB(object));
+    RCLibDbPrivate *priv = RCLIB_DB(object)->priv;
     priv->work_flag = FALSE;
     g_mutex_lock(&(priv->autosave_mutex));
     g_cond_signal(&(priv->autosave_cond));
@@ -694,7 +694,9 @@ static void rclib_db_class_init(RCLibDbClass *klass)
 
 static void rclib_db_instance_init(RCLibDb *db)
 {
-    RCLibDbPrivate *priv = RCLIB_DB_GET_PRIVATE(db);
+    RCLibDbPrivate *priv = G_TYPE_INSTANCE_GET_PRIVATE(db, RCLIB_TYPE_DB,
+        RCLibDbPrivate);
+    db->priv = priv;
     priv->work_flag = TRUE;
     _rclib_db_instance_init_playlist(db, priv);
     priv->autosave_thread = g_thread_new("RC2-Autosave-Thread",
@@ -779,7 +781,7 @@ gboolean rclib_db_init(const gchar *file)
         return FALSE;
     }
     db_instance = g_object_new(RCLIB_TYPE_DB, NULL);
-    priv = RCLIB_DB_GET_PRIVATE(RCLIB_DB(db_instance));
+    priv = RCLIB_DB(db_instance)->priv;
     if(priv->catalog==NULL || priv->import_queue==NULL ||
         priv->import_thread==NULL)
     {
@@ -868,7 +870,7 @@ GSequence *rclib_db_get_catalog()
 {
     RCLibDbPrivate *priv;
     if(db_instance==NULL) return NULL;
-    priv = RCLIB_DB_GET_PRIVATE(RCLIB_DB(db_instance));
+    priv = RCLIB_DB(db_instance)->priv;
     if(priv==NULL) return NULL;
     return priv->catalog;
 }
@@ -885,7 +887,7 @@ gboolean rclib_db_sync()
 {
     RCLibDbPrivate *priv;
     if(db_instance==NULL) return FALSE;
-    priv = RCLIB_DB_GET_PRIVATE(RCLIB_DB(db_instance));
+    priv = RCLIB_DB(db_instance)->priv;
     if(priv==NULL || priv->catalog==NULL || priv->filename==NULL)
         return FALSE;
     if(!priv->dirty_flag) return TRUE;
@@ -906,7 +908,7 @@ gboolean rclib_db_load_autosaved()
     gchar *filename;
     gboolean flag;
     if(db_instance==NULL) return FALSE;
-    priv = RCLIB_DB_GET_PRIVATE(RCLIB_DB(db_instance));
+    priv = RCLIB_DB(db_instance)->priv;
     if(priv==NULL || priv->catalog==NULL || priv->filename==NULL)
         return FALSE;
     while(g_sequence_get_length(priv->catalog)>0)
@@ -945,7 +947,7 @@ gboolean rclib_db_autosaved_exist()
     gchar *filename;
     gboolean flag = FALSE;
     if(db_instance==NULL) return FALSE;
-    priv = RCLIB_DB_GET_PRIVATE(RCLIB_DB(db_instance));
+    priv = RCLIB_DB(db_instance)->priv;
     if(priv==NULL || priv->catalog==NULL || priv->filename==NULL)
         return FALSE;
     filename = g_strdup_printf("%s.autosave", priv->filename);
@@ -965,7 +967,7 @@ void rclib_db_autosaved_remove()
     RCLibDbPrivate *priv;
     gchar *filename;
     if(db_instance==NULL) return;
-    priv = RCLIB_DB_GET_PRIVATE(RCLIB_DB(db_instance));
+    priv = RCLIB_DB(db_instance)->priv;
     if(priv==NULL || priv->catalog==NULL || priv->filename==NULL)
         return;
     filename = g_strdup_printf("%s.autosave", priv->filename);
@@ -998,7 +1000,7 @@ gboolean rclib_db_load_legacy()
     gchar *plist_set_file_full_path = NULL;
     const gchar *home_dir = NULL;
     if(db_instance==NULL) return FALSE;
-    priv = RCLIB_DB_GET_PRIVATE(RCLIB_DB(db_instance));
+    priv = RCLIB_DB(db_instance)->priv;
     if(priv==NULL) return FALSE;
     home_dir = g_getenv("HOME");
     if(home_dir==NULL)

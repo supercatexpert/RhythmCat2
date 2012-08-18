@@ -41,11 +41,6 @@
  * in the main window.
  */
 
-#define RC_UI_CATALOG_VIEW_GET_PRIVATE(obj) G_TYPE_INSTANCE_GET_PRIVATE( \
-    (obj), RC_UI_TYPE_CATALOG_VIEW, RCUiCatalogViewPrivate)
-#define RC_UI_PLAYLIST_VIEW_GET_PRIVATE(obj) G_TYPE_INSTANCE_GET_PRIVATE( \
-    (obj), RC_UI_TYPE_PLAYLIST_VIEW, RCUiPlaylistViewPrivate)
-
 enum
 {
     RC_UI_LISTVIEW_TARGET_INFO_CATALOG,
@@ -54,16 +49,16 @@ enum
     RC_UI_LISTVIEW_TARGET_INFO_URILIST
 };
 
-typedef struct RCUiCatalogViewPrivate
+struct _RCUiCatalogViewPrivate
 {
     GtkCellRenderer *state_renderer;
     GtkCellRenderer *name_renderer;
     GtkTreeViewColumn *state_column;
     GtkTreeViewColumn *name_column;
     gulong catalog_delete_id;
-}RCUiCatalogViewPrivate;
+};
 
-typedef struct RCUiPlaylistViewPrivate
+struct _RCUiPlaylistViewPrivate
 {
     GtkCellRenderer *state_renderer;
     GtkCellRenderer *title_renderer;
@@ -84,7 +79,7 @@ typedef struct RCUiPlaylistViewPrivate
     GtkTreeViewColumn *length_column;
     GtkTreeViewColumn *rating_column; /* Not available now */
     gboolean display_mode;
-}RCUiPlaylistViewPrivate;
+};
 
 static GObject *ui_catalog_view_instance = NULL;
 static GObject *ui_playlist_view_instance = NULL;
@@ -701,7 +696,7 @@ static void rc_ui_playlist_view_rated_cb(RCUiCellRendererRating *renderer,
 static void rc_ui_catalog_view_finalize(GObject *object)
 {
     RCUiCatalogViewPrivate *priv = NULL;
-    priv = RC_UI_CATALOG_VIEW_GET_PRIVATE(object);
+    priv = RC_UI_CATALOG_VIEW(object)->priv;
     if(priv->catalog_delete_id>0)
         rclib_db_signal_disconnect(priv->catalog_delete_id);
     G_OBJECT_CLASS(rc_ui_catalog_view_parent_class)->finalize(object);
@@ -758,7 +753,9 @@ static void rc_ui_catalog_view_instance_init(RCUiCatalogView *view)
 {
     RCUiCatalogViewPrivate *priv = NULL;
     GtkTreeSelection *selection;
-    priv = RC_UI_CATALOG_VIEW_GET_PRIVATE(view);
+    priv = G_TYPE_INSTANCE_GET_PRIVATE(view, RC_UI_TYPE_CATALOG_VIEW,
+        RCUiCatalogViewPrivate);
+    view->priv = priv;
     g_object_set(view, "name", "RC2CatalogListView", "headers-visible",
         FALSE, "reorderable", FALSE, "rules-hint", TRUE, "enable-search",
         TRUE, NULL);
@@ -811,7 +808,9 @@ static void rc_ui_playlist_view_instance_init(RCUiPlaylistView *view)
 {
     RCUiPlaylistViewPrivate *priv = NULL;
     GtkTreeSelection *selection;
-    priv = RC_UI_PLAYLIST_VIEW_GET_PRIVATE(view);
+    priv = G_TYPE_INSTANCE_GET_PRIVATE(view, RC_UI_TYPE_PLAYLIST_VIEW,
+        RCUiPlaylistViewPrivate);
+    view->priv = priv;
     g_object_set(view, "name", "RC2PlaylistListView", "headers-visible",
         FALSE, "reorderable", FALSE, "rules-hint", TRUE, "enable-search",
         TRUE, NULL);
@@ -1083,7 +1082,7 @@ void rc_ui_listview_catalog_set_pango_attributes(const PangoAttrList *list)
 {
     RCUiCatalogViewPrivate *priv = NULL;
     if(ui_catalog_view_instance==NULL) return;
-    priv = RC_UI_CATALOG_VIEW_GET_PRIVATE(ui_catalog_view_instance);
+    priv = RC_UI_CATALOG_VIEW(ui_catalog_view_instance)->priv;
     if(priv==NULL) return;
     g_object_set(priv->name_renderer, "attributes", list, NULL);
 }
@@ -1099,7 +1098,7 @@ void rc_ui_listview_playlist_set_pango_attributes(const PangoAttrList *list)
 {
     RCUiPlaylistViewPrivate *priv = NULL;
     if(ui_playlist_view_instance==NULL) return;
-    priv = RC_UI_PLAYLIST_VIEW_GET_PRIVATE(ui_playlist_view_instance);
+    priv = RC_UI_PLAYLIST_VIEW(ui_playlist_view_instance)->priv;
     if(priv==NULL) return;
     g_object_set(priv->title_renderer, "attributes", list, NULL);
     g_object_set(priv->artist_renderer, "attributes", list, NULL);
@@ -1279,7 +1278,7 @@ void rc_ui_listview_catalog_rename_playlist()
     GtkTreeIter iter;
     GtkTreePath *path;
     if(ui_catalog_view_instance==NULL) return;
-    priv = RC_UI_CATALOG_VIEW_GET_PRIVATE(ui_catalog_view_instance);
+    priv = RC_UI_CATALOG_VIEW(ui_catalog_view_instance)->priv;
     if(priv==NULL) return;
     model = gtk_tree_view_get_model(GTK_TREE_VIEW(ui_catalog_view_instance));
     if(model==NULL) return;
@@ -1408,7 +1407,7 @@ void rc_ui_listview_playlist_set_column_display_mode(gboolean mode)
 {
     RCUiPlaylistViewPrivate *priv = NULL;
     if(ui_playlist_view_instance==NULL) return;
-    priv = RC_UI_PLAYLIST_VIEW_GET_PRIVATE(ui_playlist_view_instance);
+    priv = RC_UI_PLAYLIST_VIEW(ui_playlist_view_instance)->priv;
     if(priv==NULL) return;
     priv->display_mode = mode;
     if(mode)
@@ -1443,7 +1442,7 @@ gboolean rc_ui_listview_playlist_get_column_display_mode()
 {
     RCUiPlaylistViewPrivate *priv = NULL;
     if(ui_playlist_view_instance==NULL) return FALSE;
-    priv = RC_UI_PLAYLIST_VIEW_GET_PRIVATE(ui_playlist_view_instance);
+    priv = RC_UI_PLAYLIST_VIEW(ui_playlist_view_instance)->priv;
     if(priv==NULL) return FALSE;
     return priv->display_mode;
 }
@@ -1483,7 +1482,7 @@ void rc_ui_listview_playlist_set_enabled_columns(guint column_flags,
 {
     RCUiPlaylistViewPrivate *priv = NULL;
     if(ui_playlist_view_instance==NULL) return;
-    priv = RC_UI_PLAYLIST_VIEW_GET_PRIVATE(ui_playlist_view_instance);
+    priv = RC_UI_PLAYLIST_VIEW(ui_playlist_view_instance)->priv;
     if(priv==NULL) return;
     if(!priv->display_mode) return;
     if(column_flags==0) return;
@@ -1539,7 +1538,7 @@ guint rc_ui_listview_playlist_get_enabled_columns()
     gboolean state;
     guint flags = 0;
     if(ui_playlist_view_instance==NULL) return 0;
-    priv = RC_UI_PLAYLIST_VIEW_GET_PRIVATE(ui_playlist_view_instance);
+    priv = RC_UI_PLAYLIST_VIEW(ui_playlist_view_instance)->priv;
     if(priv==NULL) return 0;
     g_object_get(ui_playlist_view_instance, "headers-visible", &state, NULL);
     if(state)

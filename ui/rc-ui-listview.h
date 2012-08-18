@@ -82,6 +82,8 @@ typedef struct _RCUiCatalogView RCUiCatalogView;
 typedef struct _RCUiPlaylistView RCUiPlaylistView;
 typedef struct _RCUiCatalogViewClass RCUiCatalogViewClass;
 typedef struct _RCUiPlaylistViewClass RCUiPlaylistViewClass;
+typedef struct _RCUiCatalogViewPrivate RCUiCatalogViewPrivate;
+typedef struct _RCUiPlaylistViewPrivate RCUiPlaylistViewPrivate;
 
 /**
  * RCUiCatalogView:
@@ -92,6 +94,7 @@ typedef struct _RCUiPlaylistViewClass RCUiPlaylistViewClass;
 struct _RCUiCatalogView {
     /*< private >*/
     GtkTreeView parent;
+    RCUiCatalogViewPrivate *priv;
 };
 
 /**
@@ -103,6 +106,7 @@ struct _RCUiCatalogView {
 struct _RCUiPlaylistView {
     /*< private >*/
     GtkTreeView parent;
+    RCUiPlaylistViewPrivate *priv;
 };
 
 /**

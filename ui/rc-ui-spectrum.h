@@ -68,6 +68,7 @@ typedef enum {
 
 typedef struct _RCUiSpectrumWidget RCUiSpectrumWidget;
 typedef struct _RCUiSpectrumWidgetClass RCUiSpectrumWidgetClass;
+typedef struct _RCUiSpectrumWidgetPrivate RCUiSpectrumWidgetPrivate;
     
 /**
  * RCUiSpectrumWidget:
@@ -78,6 +79,7 @@ typedef struct _RCUiSpectrumWidgetClass RCUiSpectrumWidgetClass;
 struct _RCUiSpectrumWidget {
     /*< private >*/
     GtkWidget widget;
+    RCUiSpectrumWidgetPrivate *priv;
 };
 
 /**

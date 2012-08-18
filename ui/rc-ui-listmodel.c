@@ -38,26 +38,20 @@
  * catalog list, and #RCUiPlaylistStore contains the playlist.
  */
 
-#define RC_UI_CATALOG_STORE_GET_PRIVATE(o) \
-    (G_TYPE_INSTANCE_GET_PRIVATE((o), RC_UI_TYPE_CATALOG_STORE, \
-    RCUiCatalogStorePrivate))
-
-#define RC_UI_PLAYLIST_STORE_GET_PRIVATE(o) \
-    (G_TYPE_INSTANCE_GET_PRIVATE((o), RC_UI_TYPE_PLAYLIST_STORE, \
-    RCUiPlaylistStorePrivate))
-
-typedef struct RCUiCatalogStorePrivate {
+struct _RCUiCatalogStorePrivate
+{
     GSequence *catalog;
     gint stamp;
     gint n_columns;
-}RCUiCatalogStorePrivate; 
+};
 
-typedef struct RCUiPlaylistStorePrivate {
+struct _RCUiPlaylistStorePrivate
+{
     GSequence *playlist;
     GSequenceIter *catalog_iter;
     gint stamp;
     gint n_columns;
-}RCUiPlaylistStorePrivate;
+};
 
 static GtkTreeModel *catalog_model = NULL;
 static gchar *format_string = NULL;
@@ -157,7 +151,7 @@ static gboolean rc_ui_catalog_store_get_iter(GtkTreeModel *model,
     g_return_val_if_fail(RC_UI_IS_CATALOG_STORE(model), FALSE);
     g_return_val_if_fail(path!=NULL, FALSE);
     store = RC_UI_CATALOG_STORE(model);
-    priv = RC_UI_CATALOG_STORE_GET_PRIVATE(store);
+    priv = store->priv;
     i = gtk_tree_path_get_indices(path)[0];
     if(i>=g_sequence_get_length(priv->catalog))
         return FALSE;
@@ -177,7 +171,7 @@ static gboolean rc_ui_playlist_store_get_iter(GtkTreeModel *model,
     g_return_val_if_fail(RC_UI_IS_PLAYLIST_STORE(model), FALSE);
     g_return_val_if_fail(path!=NULL, FALSE);
     store = RC_UI_PLAYLIST_STORE(model);
-    priv = RC_UI_PLAYLIST_STORE_GET_PRIVATE(store);
+    priv = RC_UI_PLAYLIST_STORE(store)->priv;
     i = gtk_tree_path_get_indices(path)[0];
     if(i>=g_sequence_get_length(priv->playlist))
         return FALSE;
@@ -196,7 +190,7 @@ static GtkTreePath *rc_ui_catalog_store_get_path(GtkTreeModel *model,
     GtkTreePath *path;
     g_return_val_if_fail(RC_UI_IS_CATALOG_STORE(model), NULL);
     store = RC_UI_CATALOG_STORE(model);
-    priv = RC_UI_CATALOG_STORE_GET_PRIVATE(store);
+    priv = store->priv;
     g_return_val_if_fail(priv!=NULL, NULL);
     g_return_val_if_fail(iter->stamp==priv->stamp, NULL);
     if(g_sequence_iter_is_end(iter->user_data)) return NULL;
@@ -214,7 +208,7 @@ static GtkTreePath *rc_ui_playlist_store_get_path(GtkTreeModel *model,
     GtkTreePath *path;
     g_return_val_if_fail(RC_UI_IS_PLAYLIST_STORE(model), NULL);
     store = RC_UI_PLAYLIST_STORE(model);
-    priv = RC_UI_PLAYLIST_STORE_GET_PRIVATE(store);
+    priv = RC_UI_PLAYLIST_STORE(store)->priv;
     g_return_val_if_fail(priv!=NULL, NULL);
     g_return_val_if_fail(iter->stamp==priv->stamp, NULL);
     if(g_sequence_iter_is_end(iter->user_data)) return NULL;
@@ -236,7 +230,7 @@ static void rc_ui_catalog_store_get_value(GtkTreeModel *model,
     g_return_if_fail(RC_UI_IS_CATALOG_STORE(model));
     g_return_if_fail(iter!=NULL);
     store = RC_UI_CATALOG_STORE(model);
-    priv = RC_UI_CATALOG_STORE_GET_PRIVATE(store);
+    priv = store->priv;
     g_return_if_fail(priv!=NULL);
     g_return_if_fail(column<priv->n_columns);
     seq_iter = iter->user_data;
@@ -320,7 +314,7 @@ static void rc_ui_playlist_store_get_value(GtkTreeModel *model,
     g_return_if_fail(RC_UI_IS_PLAYLIST_STORE(model));
     g_return_if_fail(iter!=NULL);
     store = RC_UI_PLAYLIST_STORE(model);
-    priv = RC_UI_PLAYLIST_STORE_GET_PRIVATE(store);
+    priv = RC_UI_PLAYLIST_STORE(store)->priv;
     g_return_if_fail(priv!=NULL);
     g_return_if_fail(column<priv->n_columns);
     seq_iter = iter->user_data;
@@ -474,7 +468,7 @@ static gboolean rc_ui_catalog_store_iter_next(GtkTreeModel *model,
     g_return_val_if_fail(RC_UI_IS_CATALOG_STORE(model), FALSE);
     g_return_val_if_fail(iter!=NULL, FALSE);
     store = RC_UI_CATALOG_STORE(model);
-    priv = RC_UI_CATALOG_STORE_GET_PRIVATE(store);
+    priv = store->priv;
     g_return_val_if_fail(priv!=NULL, FALSE);
     g_return_val_if_fail(priv->stamp==iter->stamp, FALSE);
     iter->user_data = g_sequence_iter_next(iter->user_data);
@@ -496,7 +490,7 @@ static gboolean rc_ui_playlist_store_iter_next(GtkTreeModel *model,
     g_return_val_if_fail(RC_UI_IS_PLAYLIST_STORE(model), FALSE);
     g_return_val_if_fail(iter!=NULL, FALSE);
     store = RC_UI_PLAYLIST_STORE(model);
-    priv = RC_UI_PLAYLIST_STORE_GET_PRIVATE(store);
+    priv = RC_UI_PLAYLIST_STORE(store)->priv;
     g_return_val_if_fail(priv!=NULL, FALSE);
     g_return_val_if_fail(priv->stamp==iter->stamp, FALSE);
     iter->user_data = g_sequence_iter_next(iter->user_data);
@@ -518,7 +512,7 @@ static gboolean rc_ui_catalog_store_iter_prev(GtkTreeModel *model,
     g_return_val_if_fail(RC_UI_IS_CATALOG_STORE(model), FALSE);
     g_return_val_if_fail(iter!=NULL, FALSE);
     store = RC_UI_CATALOG_STORE(model);
-    priv = RC_UI_CATALOG_STORE_GET_PRIVATE(store);
+    priv = store->priv;
     g_return_val_if_fail(priv!=NULL, FALSE);
     g_return_val_if_fail(priv->stamp==iter->stamp, FALSE);
     if(g_sequence_iter_is_begin(iter->user_data))
@@ -540,7 +534,7 @@ static gboolean rc_ui_playlist_store_iter_prev(GtkTreeModel *model,
     g_return_val_if_fail(RC_UI_IS_PLAYLIST_STORE(model), FALSE);
     g_return_val_if_fail(iter!=NULL, FALSE);
     store = RC_UI_PLAYLIST_STORE(model);
-    priv = RC_UI_PLAYLIST_STORE_GET_PRIVATE(store);
+    priv = RC_UI_PLAYLIST_STORE(store)->priv;
     g_return_val_if_fail(priv!=NULL, FALSE);
     g_return_val_if_fail(priv->stamp==iter->stamp, FALSE);
     if(g_sequence_iter_is_begin(iter->user_data))
@@ -561,7 +555,7 @@ static gboolean rc_ui_catalog_store_iter_children(GtkTreeModel *model,
     RCUiCatalogStorePrivate *priv;
     g_return_val_if_fail(RC_UI_IS_CATALOG_STORE(model), FALSE);
     store = RC_UI_CATALOG_STORE(model);
-    priv = RC_UI_CATALOG_STORE_GET_PRIVATE(store);
+    priv = RC_UI_CATALOG_STORE(store)->priv;
     g_return_val_if_fail(priv!=NULL, FALSE);
     if(parent!=NULL)
     {
@@ -588,7 +582,7 @@ static gboolean rc_ui_playlist_store_iter_children(GtkTreeModel *model,
     RCUiPlaylistStorePrivate *priv;
     g_return_val_if_fail(RC_UI_IS_PLAYLIST_STORE(model), FALSE);
     store = RC_UI_PLAYLIST_STORE(model);
-    priv = RC_UI_PLAYLIST_STORE_GET_PRIVATE(store);
+    priv = RC_UI_PLAYLIST_STORE(store)->priv;
     g_return_val_if_fail(priv!=NULL, FALSE);
     if(parent!=NULL)
     {
@@ -625,7 +619,7 @@ static gint rc_ui_catalog_store_iter_n_children(GtkTreeModel *model,
 {
     RCUiCatalogStorePrivate *priv;
     g_return_val_if_fail(RC_UI_IS_CATALOG_STORE(model), -1);
-    priv = RC_UI_CATALOG_STORE_GET_PRIVATE(model);
+    priv = RC_UI_CATALOG_STORE(model)->priv;
     g_return_val_if_fail(priv!=NULL, -1);
     if(iter==NULL)
         return g_sequence_get_length(priv->catalog);
@@ -638,7 +632,7 @@ static gint rc_ui_playlist_store_iter_n_children(GtkTreeModel *model,
 {
     RCUiPlaylistStorePrivate *priv;
     g_return_val_if_fail(RC_UI_IS_PLAYLIST_STORE(model), -1);
-    priv = RC_UI_PLAYLIST_STORE_GET_PRIVATE(model);
+    priv = RC_UI_PLAYLIST_STORE(model)->priv;
     g_return_val_if_fail(priv!=NULL, -1);
     if(iter==NULL)
         return g_sequence_get_length(priv->playlist);
@@ -654,7 +648,7 @@ static gboolean rc_ui_catalog_store_iter_nth_child (GtkTreeModel *model,
     GSequenceIter *child;
     g_return_val_if_fail(RC_UI_IS_CATALOG_STORE(model), FALSE);
     store = RC_UI_CATALOG_STORE(model);
-    priv = RC_UI_CATALOG_STORE_GET_PRIVATE(store);
+    priv = store->priv;
     g_return_val_if_fail(priv!=NULL, FALSE);
     if(parent!=NULL) return FALSE;
     child = g_sequence_get_iter_at_pos(priv->catalog, n);
@@ -672,7 +666,7 @@ static gboolean rc_ui_playlist_store_iter_nth_child (GtkTreeModel *model,
     GSequenceIter *child;
     g_return_val_if_fail(RC_UI_IS_PLAYLIST_STORE(model), FALSE);
     store = RC_UI_PLAYLIST_STORE(model);
-    priv = RC_UI_PLAYLIST_STORE_GET_PRIVATE(store);
+    priv = RC_UI_PLAYLIST_STORE(store)->priv;
     g_return_val_if_fail(priv!=NULL, FALSE);
     if(parent!=NULL) return FALSE;
     child = g_sequence_get_iter_at_pos(priv->playlist, n);
@@ -763,7 +757,9 @@ static void rc_ui_catalog_store_init(RCUiCatalogStore *store)
 {
     RCUiCatalogStorePrivate *priv;
     g_return_if_fail(RC_UI_IS_CATALOG_STORE(store));
-    priv = RC_UI_CATALOG_STORE_GET_PRIVATE(store);
+    priv = G_TYPE_INSTANCE_GET_PRIVATE(store, RC_UI_TYPE_CATALOG_STORE,
+        RCUiCatalogStorePrivate);
+    store->priv = priv;
     g_return_if_fail(priv!=NULL);
     priv->catalog = NULL;
 	priv->stamp = g_random_int();
@@ -774,7 +770,9 @@ static void rc_ui_playlist_store_init(RCUiPlaylistStore *store)
 {
     RCUiPlaylistStorePrivate *priv;
     g_return_if_fail(RC_UI_IS_PLAYLIST_STORE(store));
-    priv = RC_UI_PLAYLIST_STORE_GET_PRIVATE(store);
+    priv = G_TYPE_INSTANCE_GET_PRIVATE(store, RC_UI_TYPE_PLAYLIST_STORE,
+        RCUiPlaylistStorePrivate);
+    store->priv = priv;
     g_return_if_fail(priv!=NULL);
 	priv->stamp = g_random_int();
     priv->playlist = NULL;
@@ -857,12 +855,12 @@ static void rc_ui_list_model_catalog_added_cb(RCLibDb *db,
     gint pos;
     g_return_if_fail(iter!=NULL);
     g_return_if_fail(RC_UI_IS_CATALOG_STORE(catalog_model));
-    priv = RC_UI_CATALOG_STORE_GET_PRIVATE(catalog_model);
+    priv = RC_UI_CATALOG_STORE(catalog_model)->priv;
     g_return_if_fail(priv!=NULL);
     catalog_data = g_sequence_get(iter);
     playlist_model = GTK_TREE_MODEL(g_object_new(
         RC_UI_TYPE_PLAYLIST_STORE, NULL));
-    playlist_priv = RC_UI_PLAYLIST_STORE_GET_PRIVATE(playlist_model);
+    playlist_priv = RC_UI_PLAYLIST_STORE(playlist_model)->priv;
     playlist_priv->playlist = (GSequence *)catalog_data->playlist;
     playlist_priv->catalog_iter = iter;
     catalog_data->store = playlist_model;
@@ -884,7 +882,7 @@ static void rc_ui_list_model_catalog_changed_cb(RCLibDb *db,
     gint pos;
     g_return_if_fail(iter!=NULL);
     g_return_if_fail(RC_UI_IS_CATALOG_STORE(catalog_model));
-    priv = RC_UI_CATALOG_STORE_GET_PRIVATE(catalog_model);
+    priv = RC_UI_CATALOG_STORE(catalog_model)->priv;
     g_return_if_fail(priv!=NULL);
     pos = g_sequence_iter_get_position(iter);
     path = gtk_tree_path_new();
@@ -939,7 +937,7 @@ static void rc_ui_list_model_playlist_added_cb(RCLibDb *db,
     catalog_data = g_sequence_get(playlist_data->catalog);
     playlist_model = GTK_TREE_MODEL(catalog_data->store);
     g_return_if_fail(RC_UI_IS_PLAYLIST_STORE(playlist_model));
-    priv = RC_UI_PLAYLIST_STORE_GET_PRIVATE(playlist_model);
+    priv = RC_UI_PLAYLIST_STORE(playlist_model)->priv;
     g_return_if_fail(priv!=NULL);
     pos = g_sequence_iter_get_position(iter);
     path = gtk_tree_path_new();
@@ -966,7 +964,7 @@ static void rc_ui_list_model_playlist_changed_cb(RCLibDb *db,
     catalog_data = g_sequence_get(playlist_data->catalog);
     playlist_model = GTK_TREE_MODEL(catalog_data->store);
     g_return_if_fail(RC_UI_IS_PLAYLIST_STORE(playlist_model));
-    priv = RC_UI_PLAYLIST_STORE_GET_PRIVATE(playlist_model);
+    priv = RC_UI_PLAYLIST_STORE(playlist_model)->priv;
     g_return_if_fail(priv!=NULL);
     pos = g_sequence_iter_get_position(iter);
     path = gtk_tree_path_new();
@@ -992,7 +990,7 @@ static void rc_ui_list_model_playlist_delete_cb(RCLibDb *db,
     catalog_data = g_sequence_get(playlist_data->catalog);
     playlist_model = GTK_TREE_MODEL(catalog_data->store);
     g_return_if_fail(RC_UI_IS_PLAYLIST_STORE(playlist_model));
-    priv = RC_UI_PLAYLIST_STORE_GET_PRIVATE(playlist_model);
+    priv = RC_UI_PLAYLIST_STORE(playlist_model)->priv;
     g_return_if_fail(priv!=NULL);
     pos = g_sequence_iter_get_position(iter);
     path = gtk_tree_path_new();
@@ -1037,7 +1035,7 @@ static gboolean rc_ui_list_model_init()
         format_string = g_strdup("%TITLE");
     catalog_model = GTK_TREE_MODEL(g_object_new(
         RC_UI_TYPE_CATALOG_STORE, NULL));
-    catalog_priv = RC_UI_CATALOG_STORE_GET_PRIVATE(catalog_model);
+    catalog_priv = RC_UI_CATALOG_STORE(catalog_model)->priv;
     catalog_priv->catalog = catalog_seq;
     for(catalog_iter = g_sequence_get_begin_iter(catalog_seq);
         !g_sequence_iter_is_end(catalog_iter);
@@ -1045,7 +1043,7 @@ static gboolean rc_ui_list_model_init()
     {
         playlist_model = GTK_TREE_MODEL(g_object_new(
             RC_UI_TYPE_PLAYLIST_STORE, NULL));
-        playlist_priv = RC_UI_PLAYLIST_STORE_GET_PRIVATE(playlist_model);
+        playlist_priv = RC_UI_PLAYLIST_STORE(playlist_model)->priv;
         catalog_data = g_sequence_get(catalog_iter);
         catalog_data->store = playlist_model;
         playlist_priv->playlist = catalog_data->playlist;
@@ -1126,7 +1124,7 @@ GSequenceIter *rc_ui_list_model_get_catalog_by_model(GtkTreeModel *model)
     if(model==NULL) return NULL;
     if(!RC_UI_IS_PLAYLIST_STORE(model)) return NULL;
     store = RC_UI_PLAYLIST_STORE(model);
-    priv = RC_UI_PLAYLIST_STORE_GET_PRIVATE(store);
+    priv = RC_UI_PLAYLIST_STORE(store)->priv;
     if(priv==NULL) return NULL;
     return priv->catalog_iter;
 }

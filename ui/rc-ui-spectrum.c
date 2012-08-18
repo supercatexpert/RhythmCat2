@@ -34,10 +34,6 @@
  * The spectrum show widget. It shows the spectrum gragh in the player.
  */
 
-#define RC_UI_SPECTRUM_WIDGET_GET_PRIVATE(obj)  \
-    G_TYPE_INSTANCE_GET_PRIVATE((obj), RC_UI_SPECTRUM_WIDGET_TYPE, \
-    RCUiSpectrumWidgetPrivate)
-
 #define RC_UI_SPECTRUM_STYLE_PARAM_READABLE G_PARAM_READABLE | \
     G_PARAM_STATIC_NAME | G_PARAM_STATIC_NICK | G_PARAM_STATIC_BLURB
     
@@ -52,7 +48,7 @@ typedef struct RCUiSpectrumChannel
     GstFFTF32 *fft_ctx;
 }RCUiSpectrumChannel;
 
-typedef struct RCUiSpectrumWidgetPrivate
+struct _RCUiSpectrumWidgetPrivate
 {
     guint fps;
     RCUiSpectrumStyle style;
@@ -71,7 +67,7 @@ typedef struct RCUiSpectrumWidgetPrivate
     guint wave_vdata_size;
     guint timeout_id;
     gulong buffer_probe_id;
-}RCUiSpectrumWidgetPrivate;
+};
 
 static gpointer rc_ui_spectrum_widget_parent_class = NULL;
 
@@ -446,7 +442,7 @@ static inline void rc_ui_spectrum_run(RCUiSpectrumWidget *spectrum,
     guint fft_todo, msg_todo, block_size;
     gboolean have_full_interval;
     if(spectrum==NULL) return;
-    priv = RC_UI_SPECTRUM_WIDGET_GET_PRIVATE(spectrum);
+    priv = spectrum->priv;
     if(priv==NULL) return;
     width = width / 8;
     frame_size = width * channels;
@@ -731,7 +727,7 @@ static void rc_ui_spectrum_buffer_probe_cb(RCLibCore *core, GstBuffer *buf,
     if(data==NULL) return;
     spectrum = RC_UI_SPECTRUM_WIDGET(data);
     if(spectrum==NULL) return;
-    priv = RC_UI_SPECTRUM_WIDGET_GET_PRIVATE(spectrum);
+    priv = spectrum->priv;
     if(priv==NULL) return;
     if(buf==NULL) return;
     g_mutex_lock(&(priv->buffer_mutex));
@@ -834,7 +830,7 @@ static gboolean rc_ui_spectrum_widget_draw(GtkWidget *widget, cairo_t *cr)
     g_return_val_if_fail(widget!=NULL || cr!=NULL, FALSE);
     g_return_val_if_fail(IS_RC_UI_SPECTRUM_WIDGET(widget), FALSE);
     spectrum = RC_UI_SPECTRUM_WIDGET(widget);
-    priv = RC_UI_SPECTRUM_WIDGET_GET_PRIVATE(spectrum);
+    priv = spectrum->priv;
     if(priv==NULL) return FALSE;
     gtk_widget_get_allocation(widget, &allocation);
     if(allocation.width<=0 || allocation.height<=0) return FALSE;
@@ -987,25 +983,26 @@ static gboolean rc_ui_spectrum_draw_timeout_cb(gpointer data)
     return TRUE;
 }
 
-static void rc_ui_spectrum_widget_init(RCUiSpectrumWidget *object)
+static void rc_ui_spectrum_widget_init(RCUiSpectrumWidget *spectrum)
 {
     RCUiSpectrumWidgetPrivate *priv;
-    priv = RC_UI_SPECTRUM_WIDGET_GET_PRIVATE(object);
+    priv = G_TYPE_INSTANCE_GET_PRIVATE(spectrum, RC_UI_SPECTRUM_WIDGET_TYPE,
+        RCUiSpectrumWidgetPrivate);
     priv->fps = 10;
     priv->style = RC_UI_SPECTRUM_STYLE_WAVE_MULTI;
     priv->spectrum_band_data = g_new(gfloat, RC_UI_SPECTRUM_BANDS);
     g_mutex_init(&(priv->buffer_mutex));
     priv->timeout_id = g_timeout_add(1000/priv->fps, (GSourceFunc)
-        rc_ui_spectrum_draw_timeout_cb, object);
+        rc_ui_spectrum_draw_timeout_cb, spectrum);
     priv->buffer_probe_id = rclib_core_signal_connect("buffer-probe",
-        G_CALLBACK(rc_ui_spectrum_buffer_probe_cb), object);
+        G_CALLBACK(rc_ui_spectrum_buffer_probe_cb), spectrum);
 }
 
 static void rc_ui_spectrum_widget_finalize(GObject *object)
 {
     RCUiSpectrumWidget *spectrum = RC_UI_SPECTRUM_WIDGET(object);
     RCUiSpectrumWidgetPrivate *priv;
-    priv = RC_UI_SPECTRUM_WIDGET_GET_PRIVATE(spectrum);
+    priv = spectrum->priv;
     rc_ui_spectrum_reset_state(priv);
     if(priv->buffer_probe_id>0)
         rclib_core_signal_disconnect(priv->buffer_probe_id);
@@ -1099,7 +1096,7 @@ void rc_ui_spectrum_widget_set_fps(RCUiSpectrumWidget *spectrum, guint fps)
 {
     RCUiSpectrumWidgetPrivate *priv;
     if(spectrum==NULL || fps<10 || fps>60) return;
-    priv = RC_UI_SPECTRUM_WIDGET_GET_PRIVATE(spectrum);
+    priv = RC_UI_SPECTRUM_WIDGET(spectrum)->priv;
     if(priv==NULL) return;
     if(priv->timeout_id>0)
         g_source_remove(priv->timeout_id);
@@ -1120,7 +1117,7 @@ void rc_ui_spectrum_widget_set_style(RCUiSpectrumWidget *spectrum,
     RCUiSpectrumStyle style)
 {
     RCUiSpectrumWidgetPrivate *priv;
-    priv = RC_UI_SPECTRUM_WIDGET_GET_PRIVATE(spectrum);
+    priv = RC_UI_SPECTRUM_WIDGET(spectrum)->priv;
     if(priv==NULL) return;
     priv->style = style;
     rc_ui_spectrum_widget_clean(spectrum);
@@ -1139,7 +1136,7 @@ guint rc_ui_spectrum_widget_get_fps(RCUiSpectrumWidget *spectrum)
 {
     RCUiSpectrumWidgetPrivate *priv;
     if(spectrum==NULL) return 0;
-    priv = RC_UI_SPECTRUM_WIDGET_GET_PRIVATE(spectrum);
+    priv = RC_UI_SPECTRUM_WIDGET(spectrum)->priv;
     if(priv==NULL) return 0;
     return priv->fps;
 }
@@ -1158,7 +1155,7 @@ RCUiSpectrumStyle rc_ui_spectrum_widget_get_style(
 {
     RCUiSpectrumWidgetPrivate *priv;
     if(spectrum==NULL) return RC_UI_SPECTRUM_STYLE_NONE;
-    priv = RC_UI_SPECTRUM_WIDGET_GET_PRIVATE(spectrum);
+    priv = RC_UI_SPECTRUM_WIDGET(spectrum)->priv;
     if(priv==NULL) return RC_UI_SPECTRUM_STYLE_NONE;
     return priv->style;
 }
@@ -1175,7 +1172,7 @@ void rc_ui_spectrum_widget_clean(RCUiSpectrumWidget *spectrum)
     RCUiSpectrumWidgetPrivate *priv;
     if(spectrum==NULL) return;
     GstBuffer *buffer;
-    priv = RC_UI_SPECTRUM_WIDGET_GET_PRIVATE(spectrum);
+    priv = RC_UI_SPECTRUM_WIDGET(spectrum)->priv;
     if(priv==NULL) return;
     g_mutex_lock(&(priv->buffer_mutex));
     buffer = priv->buffer;

@@ -8,6 +8,7 @@ rc_main_get_data_dir
 rc_main_get_user_dir
 rc_main_run
 <SUBSECTION Standard>
+RCMainApplicationPrivate
 RC_IS_MAIN_APPLICATION
 RC_IS_MAIN_APPLICATION_CLASS
 RC_MAIN_APPLICATION
@@ -24,6 +25,7 @@ RCUiCellRendererRating
 RCUiCellRendererRatingClass
 rc_ui_cell_renderer_rating_new
 <SUBSECTION Standard>
+RCUiCellRendererRatingPrivate
 RC_UI_CELL_RENDERER_RATING
 RC_UI_CELL_RENDERER_RATING_CLASS
 RC_UI_CELL_RENDERER_RATING_GET_CLASS
@@ -75,6 +77,8 @@ rc_ui_list_model_get_playlist_store
 rc_ui_list_model_get_playlist_title_format
 rc_ui_list_model_set_playlist_title_format
 <SUBSECTION Standard>
+RCUiCatalogStorePrivate
+RCUiPlaylistStorePrivate
 RC_UI_CATALOG_STORE
 RC_UI_CATALOG_STORE_CLASS
 RC_UI_CATALOG_STORE_GET_CLASS
@@ -123,6 +127,8 @@ rc_ui_listview_playlist_set_pango_attributes
 rc_ui_listview_playlist_set_title_format
 rc_ui_listview_refresh
 <SUBSECTION Standard>
+RCUiCatalogViewPrivate
+RCUiPlaylistViewPrivate
 RC_UI_CATALOG_VIEW
 RC_UI_CATALOG_VIEW_CLASS
 RC_UI_CATALOG_VIEW_GET_CLASS
@@ -165,6 +171,7 @@ rc_ui_player_init
 rc_ui_player_signal_connect
 rc_ui_player_signal_disconnect
 <SUBSECTION Standard>
+RCUiPlayerPrivate
 RC_UI_IS_PLAYER
 RC_UI_IS_PLAYER_CLASS
 RC_UI_PLAYER
@@ -205,6 +212,7 @@ rc_ui_scrollable_label_set_attributes
 rc_ui_scrollable_label_set_percent
 rc_ui_scrollable_label_set_text
 <SUBSECTION Standard>
+RCUiScrollableLabelPrivate
 RC_UI_IS_SCROLLABLE_LABEL
 RC_UI_IS_SCROLLABLE_LABEL_CLASS
 RC_UI_SCROLLABLE_LABEL
@@ -229,6 +237,7 @@ rc_ui_spectrum_widget_set_style
 <SUBSECTION Standard>
 IS_RC_UI_SPECTRUM_WIDGET
 IS_RC_UI_SPECTRUM_WIDGET_CLASS
+RCUiSpectrumWidgetPrivate
 RC_UI_SPECTRUM_WIDGET
 RC_UI_SPECTRUM_WIDGET_CLASS
 rc_ui_spectrum_widget_get_type
@@ -269,8 +278,10 @@ rc_ui_main_window_present_main_window
 rc_ui_main_window_set_keep_above_state
 rc_ui_main_window_show
 rc_ui_main_window_spectrum_get_visible
+rc_ui_main_window_spectrum_set_style
 rc_ui_main_window_spectrum_set_visible
 <SUBSECTION Standard>
+RCUiMainWindowPrivate
 RC_UI_IS_MAIN_WINDOW
 RC_UI_IS_MAIN_WINDOW_CLASS
 RC_UI_MAIN_WINDOW

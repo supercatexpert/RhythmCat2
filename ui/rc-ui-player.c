@@ -49,17 +49,14 @@
 
 #define RC_UI_PLAYER_COVER_IMAGE_SIZE 160
 
-#define RC_UI_PLAYER_GET_PRIVATE(obj) G_TYPE_INSTANCE_GET_PRIVATE((obj), \
-    RC_UI_TYPE_PLAYER, RCUiPlayerPrivate)
-
-typedef struct RCUiPlayerPrivate
+struct _RCUiPlayerPrivate
 {
     GtkApplication *app;
     GtkWidget *main_window;
     GtkUIManager *ui_manager;
     GtkStatusIcon *tray_icon;
     GdkPixbuf *icon_pixbuf;
-}RCUiPlayerPrivate;
+};
 
 enum
 {
@@ -109,7 +106,7 @@ static void rc_ui_player_tray_icon_activated(GtkStatusIcon *icon,
 
 static void rc_ui_player_finalize(GObject *object)
 {
-    RCUiPlayerPrivate *priv = RC_UI_PLAYER_GET_PRIVATE(RC_UI_PLAYER(object));
+    RCUiPlayerPrivate *priv = RC_UI_PLAYER(object)->priv;
     GList *window_list = NULL;
     if(priv->main_window!=NULL)
         gtk_widget_destroy(priv->main_window);
@@ -164,7 +161,9 @@ static void rc_ui_player_class_init(RCUiPlayerClass *klass)
 
 static void rc_ui_player_instance_init(RCUiPlayer *ui)
 {
-    RCUiPlayerPrivate *priv = RC_UI_PLAYER_GET_PRIVATE(ui);
+    RCUiPlayerPrivate *priv = G_TYPE_INSTANCE_GET_PRIVATE(ui,
+        RC_UI_TYPE_PLAYER, RCUiPlayerPrivate);
+    ui->priv = priv;
     GdkPixbuf *pixbuf;
     priv->icon_pixbuf = gdk_pixbuf_new_from_xpm_data(
         (const gchar **)&ui_image_icon);
@@ -232,7 +231,7 @@ void rc_ui_player_init(GtkApplication *app)
         return;
     }
     ui_player_instance = g_object_new(RC_UI_TYPE_PLAYER, NULL);
-    priv = RC_UI_PLAYER_GET_PRIVATE(ui_player_instance);
+    priv = RC_UI_PLAYER(ui_player_instance)->priv;
     if(priv!=NULL && app!=NULL)
     {
         priv->app = g_object_ref(app);
@@ -318,7 +317,7 @@ GtkWidget *rc_ui_player_get_main_window()
 {
     RCUiPlayerPrivate *priv = NULL;
     if(ui_player_instance==NULL) return NULL;
-    priv = RC_UI_PLAYER_GET_PRIVATE(ui_player_instance);
+    priv = RC_UI_PLAYER(ui_player_instance)->priv;
     if(priv==NULL) return NULL;
     return priv->main_window;
 }
@@ -335,7 +334,7 @@ GdkPixbuf *rc_ui_player_get_icon_image()
 {
     RCUiPlayerPrivate *priv = NULL;
     if(ui_player_instance==NULL) return NULL;
-    priv = RC_UI_PLAYER_GET_PRIVATE(ui_player_instance);
+    priv = RC_UI_PLAYER(ui_player_instance)->priv;
     if(priv==NULL) return NULL;
     return priv->icon_pixbuf;
 }
@@ -352,7 +351,7 @@ GtkStatusIcon *rc_ui_player_get_tray_icon()
 {
     RCUiPlayerPrivate *priv = NULL;
     if(ui_player_instance==NULL) return NULL;
-    priv = RC_UI_PLAYER_GET_PRIVATE(ui_player_instance);
+    priv = RC_UI_PLAYER(ui_player_instance)->priv;
     if(priv==NULL) return NULL;
     return priv->tray_icon;
 }

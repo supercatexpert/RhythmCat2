@@ -40,8 +40,6 @@
  * and manages sound effects. The core uses GStreamer as its backend.
  */
 
-#define RCLIB_CORE_GET_PRIVATE(obj) G_TYPE_INSTANCE_GET_PRIVATE((obj), \
-    RCLIB_TYPE_CORE, RCLibCorePrivate)
 #define RCLIB_CORE_ERROR rclib_core_error_quark()
 
 typedef enum
@@ -58,7 +56,7 @@ typedef enum
     GST_PLAY_FLAG_DEINTERLACE = (1 << 9)
 }GstPlayFlags;
 
-typedef struct RCLibCorePrivate
+struct _RCLibCorePrivate
 {
     GstElement *playbin;
     GstElement *audiosink;
@@ -96,7 +94,7 @@ typedef struct RCLibCorePrivate
     gulong audio_tag_changed_id;
     gulong source_id;
     guint tag_update_id;
-}RCLibCorePrivate;
+};
 
 enum
 {
@@ -262,7 +260,7 @@ static inline gboolean rclib_core_parse_metadata(const GstTagList *tags,
 
 static void rclib_core_finalize(GObject *object)
 {
-    RCLibCorePrivate *priv = RCLIB_CORE_GET_PRIVATE(RCLIB_CORE(object));
+    RCLibCorePrivate *priv = RCLIB_CORE(object)->priv;
     if(priv->query_pad!=NULL)
     {
         gst_object_unref(priv->query_pad);
@@ -614,7 +612,7 @@ static void rclib_core_bus_callback(GstBus *bus, GstMessage *msg,
     RCLibCorePrivate *priv = NULL;
     GObject *object = G_OBJECT(data);    
     if(object==NULL) return;
-    priv = RCLIB_CORE_GET_PRIVATE(RCLIB_CORE(object));    
+    priv = RCLIB_CORE(object)->priv;
     switch(GST_MESSAGE_TYPE(msg))
     {
         case GST_MESSAGE_EOS:
@@ -761,7 +759,7 @@ static void rclib_core_identity_buffer_cb(GstElement *identity,
     RCLibCorePrivate *priv = NULL;
     GObject *object = G_OBJECT(data);
     if(object==NULL) return;
-    priv = RCLIB_CORE_GET_PRIVATE(RCLIB_CORE(object));
+    priv = RCLIB_CORE(object)->priv;
     if(priv==NULL) return;
     pos = (gint64)GST_BUFFER_TIMESTAMP(buf);
     len = rclib_core_query_duration();
@@ -927,7 +925,9 @@ static void rclib_core_instance_init(RCLibCore *core)
     RCLibCorePrivate *priv;
     gboolean flag;
     flag = FALSE;
-    priv = RCLIB_CORE_GET_PRIVATE(core);
+    priv = G_TYPE_INSTANCE_GET_PRIVATE(core, RCLIB_TYPE_CORE,
+        RCLibCorePrivate);
+    core->priv = priv;
     GstPlayFlags flags;
     G_STMT_START
     {
@@ -1157,7 +1157,7 @@ gboolean rclib_core_init(GError **error)
         return FALSE;
     }
     core_instance = g_object_new(RCLIB_TYPE_CORE, NULL);
-    priv = RCLIB_CORE_GET_PRIVATE(RCLIB_CORE(core_instance));
+    priv = RCLIB_CORE(core_instance)->priv;
     if(priv->playbin==NULL)
     {
         if(error!=NULL) *error = priv->error;
@@ -1243,7 +1243,7 @@ static inline void rclib_core_set_uri_internal(const gchar *uri,
     gboolean cue_flag = FALSE;
     gboolean emb_cue_flag = FALSE;
     if(core_instance==NULL || uri==NULL) return;
-    priv = RCLIB_CORE_GET_PRIVATE(RCLIB_CORE(core_instance));
+    priv = RCLIB_CORE(core_instance)->priv;
     rclib_core_stop();
     g_free(priv->uri);
     priv->uri = NULL;
@@ -1381,7 +1381,7 @@ void rclib_core_update_db_reference(GSequenceIter *new_ref)
 {
     RCLibCorePrivate *priv;
     if(core_instance==NULL) return;
-    priv = RCLIB_CORE_GET_PRIVATE(RCLIB_CORE(core_instance));
+    priv = RCLIB_CORE(core_instance)->priv;
     if(priv==NULL) return;
     priv->db_reference = new_ref;
 }
@@ -1399,7 +1399,7 @@ void rclib_core_update_external_reference(const gchar *cookie,
 {
     RCLibCorePrivate *priv;
     if(core_instance==NULL) return;
-    priv = RCLIB_CORE_GET_PRIVATE(RCLIB_CORE(core_instance));
+    priv = RCLIB_CORE(core_instance)->priv;
     if(priv==NULL || priv->db_reference!=NULL) return;
     if(g_strcmp0(priv->ext_cookie, cookie)!=0) return;
     priv->ext_reference = new_ref;
@@ -1418,7 +1418,7 @@ gchar *rclib_core_get_uri()
     RCLibCorePrivate *priv;
     gchar *uri = NULL;
     if(core_instance==NULL) return NULL;
-    priv = RCLIB_CORE_GET_PRIVATE(RCLIB_CORE(core_instance));
+    priv = RCLIB_CORE(core_instance)->priv;
     if(priv==NULL) return NULL;
     g_object_get(G_OBJECT(priv->playbin), "uri", &uri, NULL);
     return uri;
@@ -1436,7 +1436,7 @@ GSequenceIter *rclib_core_get_db_reference()
 {
     RCLibCorePrivate *priv;
     if(core_instance==NULL) return FALSE;
-    priv = RCLIB_CORE_GET_PRIVATE(RCLIB_CORE(core_instance));
+    priv = RCLIB_CORE(core_instance)->priv;
     if(priv==NULL) return NULL;
     return priv->db_reference;
 }
@@ -1455,7 +1455,7 @@ gboolean rclib_core_get_external_reference(gchar **cookie, gpointer *ref)
 {
     RCLibCorePrivate *priv;
     if(core_instance==NULL) return FALSE;
-    priv = RCLIB_CORE_GET_PRIVATE(RCLIB_CORE(core_instance));
+    priv = RCLIB_CORE(core_instance)->priv;
     if(priv==NULL) return FALSE;
     if(priv->ext_cookie==NULL || priv->ext_reference==NULL)
         return FALSE;
@@ -1482,7 +1482,7 @@ RCLibCoreSourceType rclib_core_get_source_type()
 {
     RCLibCorePrivate *priv;
     if(core_instance==NULL) return RCLIB_CORE_SOURCE_NONE;
-    priv = RCLIB_CORE_GET_PRIVATE(RCLIB_CORE(core_instance));
+    priv = RCLIB_CORE(core_instance)->priv;
     if(priv==NULL) return RCLIB_CORE_SOURCE_NONE;
     return priv->type;
 }
@@ -1499,7 +1499,7 @@ const RCLibCoreMetadata *rclib_core_get_metadata()
 {
     RCLibCorePrivate *priv;
     if(core_instance==NULL) return NULL;
-    priv = RCLIB_CORE_GET_PRIVATE(RCLIB_CORE(core_instance));
+    priv = RCLIB_CORE(core_instance)->priv;
     if(priv==NULL) return NULL;
     return &(priv->metadata);
 }
@@ -1519,7 +1519,7 @@ gboolean rclib_core_set_position(gint64 pos)
 {
     RCLibCorePrivate *priv;
     if(core_instance==NULL) return FALSE;
-    priv = RCLIB_CORE_GET_PRIVATE(RCLIB_CORE(core_instance));
+    priv = RCLIB_CORE(core_instance)->priv;
     if(priv->start_time>0)
     {
         return gst_element_seek_simple(priv->playbin, GST_FORMAT_TIME, 
@@ -1547,7 +1547,7 @@ gint64 rclib_core_query_position()
     gint64 position = 0;
     GstFormat format = GST_FORMAT_TIME;
     if(core_instance==NULL) return FALSE;
-    priv = RCLIB_CORE_GET_PRIVATE(RCLIB_CORE(core_instance));
+    priv = RCLIB_CORE(core_instance)->priv;
     if(gst_element_query_position(priv->playbin, &format, &position))
     {
         if(position<0) position = 0;
@@ -1572,7 +1572,7 @@ gint64 rclib_core_query_duration()
     gint64 duration = 0;
     GstFormat format = GST_FORMAT_TIME;
     if(core_instance==NULL) return 0;
-    priv = RCLIB_CORE_GET_PRIVATE(RCLIB_CORE(core_instance));
+    priv = RCLIB_CORE(core_instance)->priv;
     if(priv->end_time>0 && priv->end_time>priv->start_time)
     {
         duration = priv->end_time - priv->start_time;
@@ -1603,7 +1603,7 @@ gboolean rclib_core_query_buffering_percent(gint *percent, gboolean *busy)
     RCLibCorePrivate *priv;
     GstQuery *query;
     if(core_instance==NULL) return FALSE;
-    priv = RCLIB_CORE_GET_PRIVATE(RCLIB_CORE(core_instance));
+    priv = RCLIB_CORE(core_instance)->priv;
     if(priv==NULL) return FALSE;
     query = gst_query_new_buffering(GST_FORMAT_TIME);
     gst_element_query(priv->playbin, query);
@@ -1632,7 +1632,7 @@ gboolean rclib_core_query_buffering_range(gint64 *start, gint64 *stop,
     GstQuery *query;
     GstFormat format = GST_FORMAT_PERCENT; 
     if(core_instance==NULL) return FALSE;
-    priv = RCLIB_CORE_GET_PRIVATE(RCLIB_CORE(core_instance));
+    priv = RCLIB_CORE(core_instance)->priv;
     if(priv==NULL) return FALSE;
     query = gst_query_new_buffering(GST_FORMAT_TIME);
     gst_element_query(priv->playbin, query);
@@ -1664,7 +1664,7 @@ GstStateChangeReturn rclib_core_get_state(GstState *state,
 {
     RCLibCorePrivate *priv;
     if(core_instance==NULL) return GST_STATE_CHANGE_FAILURE;
-    priv = RCLIB_CORE_GET_PRIVATE(RCLIB_CORE(core_instance));
+    priv = RCLIB_CORE(core_instance)->priv;
     return gst_element_get_state(priv->playbin, state, pending, timeout);
 }
 
@@ -1681,7 +1681,7 @@ gboolean rclib_core_play()
     RCLibCorePrivate *priv;
     GstState state;
     if(core_instance==NULL) return FALSE;
-    priv = RCLIB_CORE_GET_PRIVATE(RCLIB_CORE(core_instance));
+    priv = RCLIB_CORE(core_instance)->priv;
     gst_element_get_state(priv->playbin, &state, NULL, 0);
     if(state!=GST_STATE_PAUSED && state!=GST_STATE_PLAYING &&
         state!=GST_STATE_READY && state!=GST_STATE_NULL)
@@ -1706,7 +1706,7 @@ gboolean rclib_core_pause()
     gboolean flag, state_flag;
     GstFormat format = GST_FORMAT_TIME;
     if(core_instance==NULL) return FALSE;
-    priv = RCLIB_CORE_GET_PRIVATE(RCLIB_CORE(core_instance));
+    priv = RCLIB_CORE(core_instance)->priv;
     flag = gst_element_query_position(priv->playbin, &format, &pos);
     state_flag = gst_element_set_state(priv->playbin, GST_STATE_PAUSED);
     if(flag)
@@ -1732,7 +1732,7 @@ gboolean rclib_core_stop()
     GstMessage *msg;
     GstTagList *tags;
     if(core_instance==NULL) return FALSE;
-    priv = RCLIB_CORE_GET_PRIVATE(RCLIB_CORE(core_instance));
+    priv = RCLIB_CORE(core_instance)->priv;
     bus = gst_element_get_bus(priv->playbin);
     gst_element_set_state(priv->playbin, GST_STATE_READY);
     rclib_core_metadata_free(&(priv->metadata));
@@ -1773,7 +1773,7 @@ gboolean rclib_core_set_volume(gdouble volume)
 {
     RCLibCorePrivate *priv;
     if(core_instance==NULL) return FALSE;
-    priv = RCLIB_CORE_GET_PRIVATE(RCLIB_CORE(core_instance));
+    priv = RCLIB_CORE(core_instance)->priv;
     g_object_set(G_OBJECT(priv->playbin), "volume", volume, NULL);
     return TRUE;
 }
@@ -1792,7 +1792,7 @@ gboolean rclib_core_get_volume(gdouble *volume)
     RCLibCorePrivate *priv;
     gdouble vol = 0.0;
     if(core_instance==NULL) return FALSE;
-    priv = RCLIB_CORE_GET_PRIVATE(RCLIB_CORE(core_instance));
+    priv = RCLIB_CORE(core_instance)->priv;
     g_object_get(priv->playbin, "volume", &vol, NULL);
     if(volume!=NULL) *volume = vol;
     return TRUE;
@@ -1814,7 +1814,7 @@ gboolean rclib_core_set_eq(RCLibCoreEQType type, gdouble *band)
     gint i;
     gchar band_name[16];
     if(core_instance==NULL) return FALSE;
-    priv = RCLIB_CORE_GET_PRIVATE(RCLIB_CORE(core_instance));
+    priv = RCLIB_CORE(core_instance)->priv;
     if(priv->eq_plugin==NULL) return FALSE;
     if(type>=RCLIB_CORE_EQ_TYPE_NONE && type<RCLIB_CORE_EQ_TYPE_CUSTOM)
     {
@@ -1855,7 +1855,7 @@ gboolean rclib_core_get_eq(RCLibCoreEQType *type, gdouble *band)
     gchar band_name[16];
     gdouble value;
     if(core_instance==NULL) return FALSE;
-    priv = RCLIB_CORE_GET_PRIVATE(RCLIB_CORE(core_instance));
+    priv = RCLIB_CORE(core_instance)->priv;
     if(priv->eq_plugin==NULL) return FALSE;
     if(type!=NULL) *type = priv->eq_type;
     if(band==NULL) return TRUE;
@@ -1901,7 +1901,7 @@ gboolean rclib_core_set_balance(gfloat balance)
 {
     RCLibCorePrivate *priv;
     if(core_instance==NULL) return FALSE;
-    priv = RCLIB_CORE_GET_PRIVATE(RCLIB_CORE(core_instance));
+    priv = RCLIB_CORE(core_instance)->priv;
     if(priv->eq_plugin==NULL) return FALSE;
     g_object_set(G_OBJECT(priv->bal_plugin), "panorama", balance, NULL);
     g_signal_emit(core_instance, core_signals[SIGNAL_BALANCE_CHANGED], 0,
@@ -1924,7 +1924,7 @@ gboolean rclib_core_get_balance(gfloat *balance)
     RCLibCorePrivate *priv;
     gfloat bal;
     if(core_instance==NULL) return FALSE;
-    priv = RCLIB_CORE_GET_PRIVATE(RCLIB_CORE(core_instance));
+    priv = RCLIB_CORE(core_instance)->priv;
     if(priv->eq_plugin==NULL) return FALSE;
     g_object_get(G_OBJECT(priv->bal_plugin), "panorama", &bal, NULL);
     if(balance!=NULL) *balance = bal;
@@ -1946,7 +1946,7 @@ gboolean rclib_core_effect_plugin_add(GstElement *element)
 {
     gboolean flag;
     if(core_instance==NULL) return FALSE;
-    RCLibCorePrivate *priv = RCLIB_CORE_GET_PRIVATE(core_instance);
+    RCLibCorePrivate *priv = RCLIB_CORE(core_instance)->priv;
     if(priv==NULL || priv->effectbin==NULL) return FALSE;
     rclib_core_stop();
     flag = rclib_core_effect_add_element_internal(priv->effectbin, element,
@@ -1971,7 +1971,7 @@ gboolean rclib_core_effect_plugin_add(GstElement *element)
 void rclib_core_effect_plugin_remove(GstElement *element)
 {
     if(core_instance==NULL) return;
-    RCLibCorePrivate *priv = RCLIB_CORE_GET_PRIVATE(core_instance);
+    RCLibCorePrivate *priv = RCLIB_CORE(core_instance)->priv;
     if(priv==NULL || priv->effectbin==NULL) return;
     rclib_core_stop();
     rclib_core_effect_remove_element_internal(priv->effectbin, element,
@@ -1992,7 +1992,7 @@ void rclib_core_effect_plugin_remove(GstElement *element)
 GList *rclib_core_effect_plugin_get_list()
 {
     if(core_instance==NULL) return NULL;
-    RCLibCorePrivate *priv = RCLIB_CORE_GET_PRIVATE(core_instance);
+    RCLibCorePrivate *priv = RCLIB_CORE(core_instance)->priv;
     if(priv==NULL) return NULL;
     return priv->extra_plugin_list;
 }
@@ -2008,7 +2008,7 @@ GList *rclib_core_effect_plugin_get_list()
 gint rclib_core_query_sample_rate()
 {
     if(core_instance==NULL) return 0;
-    RCLibCorePrivate *priv = RCLIB_CORE_GET_PRIVATE(core_instance);
+    RCLibCorePrivate *priv = RCLIB_CORE(core_instance)->priv;
     if(priv==NULL) return 0;
     return priv->sample_rate;
 }
@@ -2024,7 +2024,7 @@ gint rclib_core_query_sample_rate()
 gint rclib_core_query_channels()
 {
     if(core_instance==NULL) return 0;
-    RCLibCorePrivate *priv = RCLIB_CORE_GET_PRIVATE(core_instance);
+    RCLibCorePrivate *priv = RCLIB_CORE(core_instance)->priv;
     if(priv==NULL) return 0;
     return priv->channels;
 }
@@ -2040,7 +2040,7 @@ gint rclib_core_query_channels()
 gint rclib_core_query_depth()
 {
     if(core_instance==NULL) return 0;
-    RCLibCorePrivate *priv = RCLIB_CORE_GET_PRIVATE(core_instance);
+    RCLibCorePrivate *priv = RCLIB_CORE(core_instance)->priv;
     if(priv==NULL) return 0;
     return priv->depth;
 }

@@ -34,18 +34,14 @@
  * An scrolledate label widget.
  */
 
-#define RC_UI_SCROLLABLE_LABEL_GET_PRIVATE(obj)  \
-    G_TYPE_INSTANCE_GET_PRIVATE((obj), RC_UI_TYPE_SCROLLABLE_LABEL, \
-    RCUiScrollableLabelPrivate)
-
-typedef struct RCUiScrollableLabelPrivate
+struct _RCUiScrollableLabelPrivate
 {
     gchar *text;
     PangoAttrList *attrs;
     gdouble percent;
     PangoLayout *layout;
     gint current_x;
-}RCUiScrollableLabelPrivate;
+};
 
 enum
 {
@@ -85,8 +81,7 @@ static void rc_ui_scrollable_label_get_property(GObject *object,
     guint prop_id, GValue *value, GParamSpec *pspec)
 {
     RCUiScrollableLabel *text = RC_UI_SCROLLABLE_LABEL(object);
-    RCUiScrollableLabelPrivate *priv =
-        RC_UI_SCROLLABLE_LABEL_GET_PRIVATE(text);
+    RCUiScrollableLabelPrivate *priv = text->priv;
     switch(prop_id)
     {
         case PROP_TEXT:
@@ -162,7 +157,7 @@ static void rc_ui_scrollable_label_get_preferred_height(GtkWidget *widget,
     gint ascent, descent;
     gint height;
     if(widget==NULL) return;
-    priv = RC_UI_SCROLLABLE_LABEL_GET_PRIVATE(widget);
+    priv = RC_UI_SCROLLABLE_LABEL(widget)->priv;
     if(priv==NULL) return;
     context = pango_layout_get_context(priv->layout);
     if(context==NULL) return;
@@ -186,7 +181,7 @@ static gboolean rc_ui_scrollable_label_draw(GtkWidget *widget, cairo_t *cr)
     g_return_val_if_fail(widget!=NULL || cr!=NULL, FALSE);
     g_return_val_if_fail(RC_UI_IS_SCROLLABLE_LABEL(widget), FALSE);
     label = RC_UI_SCROLLABLE_LABEL(widget);
-    priv = RC_UI_SCROLLABLE_LABEL_GET_PRIVATE(label);
+    priv = label->priv;
     style_context = gtk_widget_get_style_context(widget);
     pango_layout_get_pixel_size(priv->layout, &width, &height);
     gtk_widget_get_allocation(widget, &allocation);
@@ -200,18 +195,20 @@ static gboolean rc_ui_scrollable_label_draw(GtkWidget *widget, cairo_t *cr)
     return TRUE;
 }
 
-static void rc_ui_scrollable_label_init(RCUiScrollableLabel *object)
+static void rc_ui_scrollable_label_init(RCUiScrollableLabel *label)
 {
     RCUiScrollableLabelPrivate *priv;
     const PangoFontDescription *fd;
     GtkStyleContext *style_context;
-    priv = RC_UI_SCROLLABLE_LABEL_GET_PRIVATE(object);
+    priv = G_TYPE_INSTANCE_GET_PRIVATE(label, RC_UI_TYPE_SCROLLABLE_LABEL,
+        RCUiScrollableLabelPrivate);
+    label->priv = priv;
     priv->percent = 0.0;
     priv->text = NULL;
     priv->attrs = NULL;
-    priv->layout = gtk_widget_create_pango_layout(GTK_WIDGET(object), NULL);
+    priv->layout = gtk_widget_create_pango_layout(GTK_WIDGET(label), NULL);
     priv->current_x = 0;
-    style_context = gtk_widget_get_style_context(GTK_WIDGET(object));
+    style_context = gtk_widget_get_style_context(GTK_WIDGET(label));
     fd = gtk_style_context_get_font(style_context, GTK_STATE_FLAG_NORMAL);
     pango_layout_set_font_description(priv->layout, fd);
 }
@@ -220,7 +217,7 @@ static void rc_ui_scrollable_label_finalize(GObject *object)
 {
     RCUiScrollableLabel *label = RC_UI_SCROLLABLE_LABEL(object);
     RCUiScrollableLabelPrivate *priv;
-    priv = RC_UI_SCROLLABLE_LABEL_GET_PRIVATE(label);
+    priv = label->priv;
     if(priv->text!=NULL) g_free(priv->text);
     if(priv->layout!=NULL) g_object_unref(priv->layout);
     if(priv->attrs!=NULL) pango_attr_list_unref(priv->attrs);
@@ -334,7 +331,7 @@ void rc_ui_scrollable_label_set_text(RCUiScrollableLabel *widget,
 {
     RCUiScrollableLabelPrivate *priv;
     if(widget==NULL) return;
-    priv = RC_UI_SCROLLABLE_LABEL_GET_PRIVATE(widget);
+    priv = RC_UI_SCROLLABLE_LABEL(widget)->priv;
     if(priv==NULL) return;
     if(priv->text!=NULL)
     {
@@ -365,7 +362,7 @@ const gchar *rc_ui_scrollable_label_get_text(RCUiScrollableLabel *widget)
 {
     RCUiScrollableLabelPrivate *priv;
     if(widget==NULL) return NULL;
-    priv = RC_UI_SCROLLABLE_LABEL_GET_PRIVATE(widget);
+    priv = RC_UI_SCROLLABLE_LABEL(widget)->priv;
     if(priv==NULL) return NULL;
     return priv->text;
 }
@@ -384,7 +381,7 @@ void rc_ui_scrollable_label_set_attributes(RCUiScrollableLabel *widget,
 {
     RCUiScrollableLabelPrivate *priv;
     if(widget==NULL) return;
-    priv = RC_UI_SCROLLABLE_LABEL_GET_PRIVATE(widget);
+    priv = RC_UI_SCROLLABLE_LABEL(widget)->priv;
     if(priv==NULL) return;
     if(priv->attrs!=NULL)
         pango_attr_list_unref(priv->attrs);
@@ -413,7 +410,7 @@ PangoAttrList *rc_ui_scrollable_label_get_attributes(
 {
     RCUiScrollableLabelPrivate *priv;
     if(widget==NULL) return NULL;
-    priv = RC_UI_SCROLLABLE_LABEL_GET_PRIVATE(widget);
+    priv = RC_UI_SCROLLABLE_LABEL(widget)->priv;
     if(priv==NULL) return NULL;
     return priv->attrs;
 }
@@ -433,7 +430,7 @@ void rc_ui_scrollable_label_set_percent(RCUiScrollableLabel *widget,
 {
     RCUiScrollableLabelPrivate *priv;
     if(widget==NULL) return;
-    priv = RC_UI_SCROLLABLE_LABEL_GET_PRIVATE(widget);
+    priv = RC_UI_SCROLLABLE_LABEL(widget)->priv;
     if(priv==NULL) return;
     if(percent>=0.0 && percent<=1.0)
         priv->percent = percent;
@@ -457,7 +454,7 @@ gdouble rc_ui_scrollable_label_get_percent(RCUiScrollableLabel *widget)
 {
     RCUiScrollableLabelPrivate *priv;
     if(widget==NULL) return 0.0;
-    priv = RC_UI_SCROLLABLE_LABEL_GET_PRIVATE(widget);
+    priv = RC_UI_SCROLLABLE_LABEL(widget)->priv;
     if(priv==NULL) return 0.0;
     return priv->percent;
 }
@@ -476,7 +473,7 @@ gint rc_ui_scrollable_label_get_width(RCUiScrollableLabel *widget)
     RCUiScrollableLabelPrivate *priv;
     gint width = 0;
     if(widget==NULL) return 0;
-    priv = RC_UI_SCROLLABLE_LABEL_GET_PRIVATE(widget);
+    priv = RC_UI_SCROLLABLE_LABEL(widget)->priv;
     if(priv==NULL || priv->layout==NULL) return 0;
     pango_layout_get_pixel_size(priv->layout, &width, NULL);
     return width;

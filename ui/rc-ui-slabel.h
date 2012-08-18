@@ -48,6 +48,7 @@ G_BEGIN_DECLS
 
 typedef struct _RCUiScrollableLabel RCUiScrollableLabel;
 typedef struct _RCUiScrollableLabelClass RCUiScrollableLabelClass;
+typedef struct _RCUiScrollableLabelPrivate RCUiScrollableLabelPrivate;
 
 /**
  * RCUiScrollableLabel:
@@ -58,6 +59,7 @@ typedef struct _RCUiScrollableLabelClass RCUiScrollableLabelClass;
 struct _RCUiScrollableLabel {
     /*< private >*/
     GtkWidget widget;
+    RCUiScrollableLabelPrivate *priv;
 };
 
 /**

@@ -54,14 +54,10 @@
  * It also provides some utility functions.
  */
 
-#define RC_MAIN_APPLICATION_GET_PRIVATE(obj) \
-    G_TYPE_INSTANCE_GET_PRIVATE((obj), RC_TYPE_MAIN_APPLICATION, \
-    RCMainApplicationPrivate)
-
-typedef struct RCMainApplicationPrivate
+struct _RCMainApplicationPrivate
 {
     gint dummy;
-}RCMainApplicationPrivate;
+};
 
 static GObject *main_application_instance = NULL;
 static gpointer rc_main_application_parent_class = NULL;
@@ -388,7 +384,9 @@ static void rc_main_application_class_init(RCMainApplicationClass *klass)
 
 static void rc_main_application_instance_init(RCMainApplication *app)
 {
-
+    RCMainApplicationPrivate *priv = G_TYPE_INSTANCE_GET_PRIVATE(app,
+        RC_TYPE_MAIN_APPLICATION, RCMainApplicationPrivate);
+    app->priv = priv;
 }
 
 GType rc_main_application_get_type()

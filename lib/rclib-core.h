@@ -116,6 +116,7 @@ typedef enum {
 typedef struct _RCLibCoreMetadata RCLibCoreMetadata;
 typedef struct _RCLibCore RCLibCore;
 typedef struct _RCLibCoreClass RCLibCoreClass;
+typedef struct _RCLibCorePrivate RCLibCorePrivate;
 
 /**
  * RCLibCoreMetadata:
@@ -154,6 +155,7 @@ struct _RCLibCoreMetadata {
 struct _RCLibCore {
     /*< private >*/
     GObject parent;
+    RCLibCorePrivate *priv;
 };
 
 /**

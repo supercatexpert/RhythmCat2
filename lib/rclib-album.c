@@ -41,16 +41,13 @@
  * send signals so that anyone who connected to the class can get the data.
  */
 
-#define RCLIB_ALBUM_GET_PRIVATE(obj) G_TYPE_INSTANCE_GET_PRIVATE((obj), \
-    RCLIB_TYPE_ALBUM, RCLibAlbumPrivate)
-
-typedef struct RCLibAlbumPrivate
+struct _RCLibAlbumPrivate
 {
     RCLibAlbumType type;
     gpointer album_data;
     gulong tag_found_handler;
     gulong uri_changed_handler;
-}RCLibAlbumPrivate;
+};
 
 enum
 {
@@ -133,7 +130,7 @@ static void rclib_album_uri_changed_cb(RCLibCore *core, const gchar *uri,
 
 static void rclib_album_finalize(GObject *object)
 {
-    RCLibAlbumPrivate *priv = RCLIB_ALBUM_GET_PRIVATE(RCLIB_ALBUM(object));
+    RCLibAlbumPrivate *priv = RCLIB_ALBUM(object)->priv;
     if(priv->tag_found_handler>0)
         rclib_core_signal_disconnect(priv->tag_found_handler);
     if(priv->uri_changed_handler>0)
@@ -194,8 +191,9 @@ static void rclib_album_class_init(RCLibAlbumClass *klass)
 
 static void rclib_album_instance_init(RCLibAlbum *album)
 {
-    RCLibAlbumPrivate *priv = RCLIB_ALBUM_GET_PRIVATE(album);
-    memset(priv, 0, sizeof(RCLibAlbumPrivate));
+    RCLibAlbumPrivate *priv = G_TYPE_INSTANCE_GET_PRIVATE(album,
+        RCLIB_TYPE_ALBUM, RCLibAlbumPrivate);
+    album->priv = priv;
     priv->tag_found_handler = rclib_core_signal_connect("tag-found",
         G_CALLBACK(rclib_album_tag_found_cb), priv);
     priv->uri_changed_handler = rclib_core_signal_connect("uri-changed",
@@ -314,7 +312,7 @@ gboolean rclib_album_get_album_data(RCLibAlbumType *type, gpointer *data)
 {
     RCLibAlbumPrivate *priv;
     if(album_instance==NULL) return FALSE;
-    priv = RCLIB_ALBUM_GET_PRIVATE(album_instance);
+    priv = RCLIB_ALBUM(album_instance)->priv;
     if(priv==NULL) return FALSE;
     if(priv->album_data==NULL) return FALSE;
     if(type!=NULL) *type = priv->type;
@@ -339,7 +337,7 @@ gboolean rclib_album_save_file(const gchar *filename)
     GFile *file_src, *file_dst;
     gboolean flag;
     if(album_instance==NULL) return FALSE;
-    priv = RCLIB_ALBUM_GET_PRIVATE(album_instance);
+    priv = RCLIB_ALBUM(album_instance)->priv;
     if(priv==NULL) return FALSE;
     if(priv->album_data==NULL) return FALSE;
     if(priv->type==RCLIB_ALBUM_TYPE_BUFFER)

@@ -45,6 +45,7 @@ G_BEGIN_DECLS
 
 typedef struct _RCMainApplication RCMainApplication;
 typedef struct _RCMainApplicationClass RCMainApplicationClass;
+typedef struct _RCMainApplicationPrivate RCMainApplicationPrivate;
 
 /**
  * RCMainApplication:
@@ -55,6 +56,7 @@ typedef struct _RCMainApplicationClass RCMainApplicationClass;
 struct _RCMainApplication {
     /*< private >*/
     GtkApplication parent;
+    RCMainApplicationPrivate *priv;
 };
 
 /**

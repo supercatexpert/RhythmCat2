@@ -46,6 +46,7 @@ G_BEGIN_DECLS
 
 typedef struct _RCUiPlayer RCUiPlayer;
 typedef struct _RCUiPlayerClass RCUiPlayerClass;
+typedef struct _RCUiPlayerPrivate RCUiPlayerPrivate;
 
 /**
  * RCUiPlayer:
@@ -56,6 +57,7 @@ typedef struct _RCUiPlayerClass RCUiPlayerClass;
 struct _RCUiPlayer {
     /*< private >*/
     GObject parent;
+    RCUiPlayerPrivate *priv;
 };
 
 /**

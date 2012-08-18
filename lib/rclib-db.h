@@ -77,6 +77,7 @@ typedef struct _RCLibDbCatalogData RCLibDbCatalogData;
 typedef struct _RCLibDbPlaylistData RCLibDbPlaylistData;
 typedef struct _RCLibDb RCLibDb;
 typedef struct _RCLibDbClass RCLibDbClass;
+typedef struct _RCLibDbPrivate RCLibDbPrivate;
 
 /**
  * RCLibDbCatalogData:
@@ -150,6 +151,7 @@ struct _RCLibDbPlaylistData {
 struct _RCLibDb {
     /*< private >*/
     GObject parent;
+    RCLibDbPrivate *priv;
 };
 
 /**

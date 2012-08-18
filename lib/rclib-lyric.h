@@ -47,6 +47,7 @@ typedef struct _RCLibLyricData RCLibLyricData;
 typedef struct _RCLibLyricParsedData RCLibLyricParsedData;
 typedef struct _RCLibLyric RCLibLyric;
 typedef struct _RCLibLyricClass RCLibLyricClass;
+typedef struct _RCLibLyricPrivate RCLibLyricPrivate;
 
 /**
  * RCLibLyricData:
@@ -96,6 +97,7 @@ struct _RCLibLyricParsedData {
 struct _RCLibLyric {
     /*< private >*/
     GObject parent;
+    RCLibLyricPrivate *priv;
 };
 
 /**

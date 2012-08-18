@@ -90,6 +90,7 @@ typedef struct _RCLibPluginLoaderInfo RCLibPluginLoaderInfo;
 typedef struct _RCLibPluginData RCLibPluginData;
 typedef struct _RCLibPlugin RCLibPlugin;
 typedef struct _RCLibPluginClass RCLibPluginClass;
+typedef struct _RCLibPluginPrivate RCLibPluginPrivate;
 
 /**
  * RCLibPluginInfo:
@@ -199,6 +200,7 @@ struct _RCLibPluginData {
 struct _RCLibPlugin {
     /*< private >*/
     GObject parent;
+    RCLibPluginPrivate *priv;
 };
 
 /**

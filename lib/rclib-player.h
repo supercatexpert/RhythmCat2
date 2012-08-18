@@ -77,6 +77,7 @@ typedef enum {
 
 typedef struct _RCLibPlayer RCLibPlayer;
 typedef struct _RCLibPlayerClass RCLibPlayerClass;
+typedef struct _RCLibPlayerPrivate RCLibPlayerPrivate;
 
 /**
  * RCLibPlayer:
@@ -88,6 +89,7 @@ typedef struct _RCLibPlayerClass RCLibPlayerClass;
 struct _RCLibPlayer {
     /*< private >*/
     GObject parent;
+    RCLibPlayerPrivate *priv;
 };
 
 /**

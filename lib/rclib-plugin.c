@@ -36,17 +36,14 @@
  * all the plug-ins and plug-in loaders, and makes them usable in the
  * player.
  */
-
-#define RCLIB_PLUGIN_GET_PRIVATE(obj) G_TYPE_INSTANCE_GET_PRIVATE((obj), \
-    RCLIB_TYPE_PLUGIN, RCLibPluginPrivate)
     
-typedef struct RCLibPluginPrivate
+struct _RCLibPluginPrivate
 {
     GHashTable *plugin_table;
     GHashTable *loader_table;
     GKeyFile *keyfile;
     gchar *configure_path;
-}RCLibPluginPrivate;
+};
 
 enum
 {
@@ -86,7 +83,7 @@ static RCLibPluginLoaderInfo *rclib_plugin_find_loader_for_plugin(
     RCLibPluginPrivate *priv;
     g_return_val_if_fail(plugin!=NULL, NULL);
     g_return_val_if_fail(plugin_instance!=NULL, NULL);
-    priv = RCLIB_PLUGIN_GET_PRIVATE(plugin_instance);
+    priv = RCLIB_PLUGIN(plugin_instance)->priv;
     g_return_val_if_fail(priv!=NULL, NULL);
     if(priv->loader_table==NULL) return NULL;
     ext = strrchr(plugin->path, '.');
@@ -138,8 +135,7 @@ static void rclib_plugin_finalize(GObject *object)
     gchar *conf_data;
     gsize conf_size;
     GError *error = NULL;
-    RCLibPluginPrivate *priv = RCLIB_PLUGIN_GET_PRIVATE(RCLIB_PLUGIN(
-        object));
+    RCLibPluginPrivate *priv = RCLIB_PLUGIN(object)->priv;
     if(priv->keyfile!=NULL && priv->configure_path!=NULL)
     {
         conf_data = g_key_file_to_data(priv->keyfile, &conf_size, &error);
@@ -259,8 +255,9 @@ static void rclib_plugin_class_init(RCLibPluginClass *klass)
 
 static void rclib_plugin_instance_init(RCLibPlugin *plugin)
 {
-    RCLibPluginPrivate *priv = RCLIB_PLUGIN_GET_PRIVATE(plugin);
-    memset(priv, 0, sizeof(RCLibPluginPrivate));
+    RCLibPluginPrivate *priv = G_TYPE_INSTANCE_GET_PRIVATE(plugin,
+        RCLIB_TYPE_PLUGIN, RCLibPluginPrivate);
+    plugin->priv = priv;
     priv->plugin_table = g_hash_table_new_full(g_str_hash, g_str_equal,
         g_free, (GDestroyNotify)rclib_plugin_data_unref);
     priv->loader_table = g_hash_table_new_full(g_str_hash, g_str_equal,
@@ -324,7 +321,7 @@ gboolean rclib_plugin_init(const gchar *file)
     plugin_instance = g_object_new(RCLIB_TYPE_PLUGIN, NULL);
     if(file!=NULL)
     {
-        priv = RCLIB_PLUGIN_GET_PRIVATE(plugin_instance);
+        priv = RCLIB_PLUGIN(plugin_instance)->priv;
         if(g_file_test(file, G_FILE_TEST_EXISTS))
         {
             if(!g_key_file_load_from_file(priv->keyfile, file,
@@ -543,7 +540,7 @@ gboolean rclib_plugin_register(RCLibPluginData *plugin)
     const gchar * const *exts;
     g_return_val_if_fail(plugin!=NULL, FALSE);
     g_return_val_if_fail(plugin_instance!=NULL, FALSE);
-    priv = RCLIB_PLUGIN_GET_PRIVATE(plugin_instance);
+    priv = RCLIB_PLUGIN(plugin_instance)->priv;
     g_return_val_if_fail(priv!=NULL, FALSE);
     if(plugin->info==NULL) return FALSE;
     if(plugin->info->id==NULL || strlen(plugin->info->id)==0)
@@ -772,7 +769,7 @@ gboolean rclib_plugin_load(RCLibPluginData *plugin)
     plugin->loaded = TRUE;
     if(plugin_instance!=NULL)
     {
-        priv = RCLIB_PLUGIN_GET_PRIVATE(plugin_instance);
+        priv = RCLIB_PLUGIN(plugin_instance)->priv;
         if(priv!=NULL && priv->keyfile!=NULL)
         {
             g_key_file_set_boolean(priv->keyfile, plugin->info->id,
@@ -849,7 +846,7 @@ gboolean rclib_plugin_unload(RCLibPluginData *plugin)
     plugin->loaded = FALSE;
     if(plugin_instance!=NULL)
     {
-        priv = RCLIB_PLUGIN_GET_PRIVATE(plugin_instance);
+        priv = RCLIB_PLUGIN(plugin_instance)->priv;
         if(priv!=NULL && priv->keyfile!=NULL)
         {
             g_key_file_set_boolean(priv->keyfile, plugin->info->id,
@@ -909,7 +906,7 @@ void rclib_plugin_destroy(RCLibPluginData *plugin)
     gchar *id;
     if(plugin==NULL) return;
     if(plugin_instance==NULL) return;
-    priv = RCLIB_PLUGIN_GET_PRIVATE(plugin_instance);
+    priv = RCLIB_PLUGIN(plugin_instance)->priv;
     if(priv==NULL || priv->plugin_table==NULL) return;
     if(plugin->loaded) rclib_plugin_unload(plugin);
     if(!plugin->unloadable && plugin->info!=NULL &&
@@ -944,7 +941,7 @@ void rclib_plugin_foreach(GHFunc func, gpointer data)
     RCLibPluginPrivate *priv;
     if(func==NULL) return;
     if(plugin_instance==NULL) return;
-    priv = RCLIB_PLUGIN_GET_PRIVATE(plugin_instance);
+    priv = RCLIB_PLUGIN(plugin_instance)->priv;
     if(priv==NULL || priv->plugin_table==NULL) return;
     g_hash_table_foreach(priv->plugin_table, func, data);
 }
@@ -963,7 +960,7 @@ RCLibPluginData *rclib_plugin_lookup(const gchar *id)
     RCLibPluginPrivate *priv;
     if(id==NULL) return NULL;
     if(plugin_instance==NULL) return NULL;
-    priv = RCLIB_PLUGIN_GET_PRIVATE(plugin_instance);
+    priv = RCLIB_PLUGIN(plugin_instance)->priv;
     if(priv==NULL || priv->plugin_table==NULL) return NULL;
     return g_hash_table_lookup(priv->plugin_table, id);
 }
@@ -982,7 +979,7 @@ void rclib_plugin_destroy_all()
     GSList *native_list = NULL, *non_native_list = NULL;
     GSList *loader_list = NULL;
     if(plugin_instance==NULL) return;
-    priv = RCLIB_PLUGIN_GET_PRIVATE(plugin_instance);
+    priv = RCLIB_PLUGIN(plugin_instance)->priv;
     if(priv==NULL || priv->plugin_table==NULL) return;
     g_hash_table_iter_init(&iter, priv->plugin_table);
     while(g_hash_table_iter_next(&iter, NULL, (gpointer *)&plugin_data))
@@ -1021,7 +1018,7 @@ void rclib_plugin_load_from_configure()
     GHashTableIter iter;
     gboolean flag;
     if(plugin_instance==NULL) return;
-    priv = RCLIB_PLUGIN_GET_PRIVATE(plugin_instance);
+    priv = RCLIB_PLUGIN(plugin_instance)->priv;
     if(priv==NULL || priv->keyfile==NULL) return;
     g_hash_table_iter_init(&iter, priv->plugin_table);
     while(g_hash_table_iter_next(&iter, (gpointer *)&key,
@@ -1045,7 +1042,7 @@ GKeyFile *rclib_plugin_get_keyfile()
 {
     RCLibPluginPrivate *priv;
     if(plugin_instance==NULL) return NULL;
-    priv = RCLIB_PLUGIN_GET_PRIVATE(plugin_instance);
+    priv = RCLIB_PLUGIN(plugin_instance)->priv;
     if(priv==NULL) return NULL;
     return priv->keyfile;
 }
@@ -1064,7 +1061,7 @@ gboolean rclib_plugin_is_registed(const gchar *id)
     RCLibPluginPrivate *priv;
     if(id==NULL) return FALSE;
     if(plugin_instance==NULL) return FALSE;
-    priv = RCLIB_PLUGIN_GET_PRIVATE(plugin_instance);
+    priv = RCLIB_PLUGIN(plugin_instance)->priv;
     if(priv==NULL || priv->plugin_table==NULL) return FALSE;
     return (g_hash_table_lookup(priv->plugin_table, id)!=NULL);
 }

@@ -46,6 +46,7 @@ G_BEGIN_DECLS
 
 typedef struct _RCUiMainWindow RCUiMainWindow;
 typedef struct _RCUiMainWindowClass RCUiMainWindowClass;
+typedef struct _RCUiMainWindowPrivate RCUiMainWindowPrivate;
 
 /**
  * RCUiMainWindow:
@@ -56,6 +57,7 @@ typedef struct _RCUiMainWindowClass RCUiMainWindowClass;
 struct _RCUiMainWindow {
     /*< private >*/
     GtkWindow parent;
+    RCUiMainWindowPrivate *priv;
 };
 
 /**

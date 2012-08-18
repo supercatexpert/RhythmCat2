@@ -38,17 +38,13 @@
  * The rating cell renderer widget used in list view.
  */
 
-#define RC_UI_CELL_RENDERER_RATING_GET_PRIVATE(obj)  \
-    G_TYPE_INSTANCE_GET_PRIVATE((obj), RC_UI_TYPE_CELL_RENDERER_RATING, \
-    RCUiCellRendererRatingPrivate)
-
-typedef struct RCUiCellRendererRatingPrivate
+struct _RCUiCellRendererRatingPrivate
 {
     gfloat rating;
     GdkPixbuf *star_pixbuf;
     GdkPixbuf *dot_pixbuf;
     GdkPixbuf *blank_pixbuf;
-}RCUiCellRendererRatingPrivate;
+};
 
 enum
 {
@@ -210,7 +206,7 @@ static void rc_ui_cell_renderer_rating_get_property(GObject *object,
     guint param_id, GValue *value, GParamSpec *pspec)
 {
     RCUiCellRendererRatingPrivate *priv = 
-        RC_UI_CELL_RENDERER_RATING_GET_PRIVATE(object);
+        RC_UI_CELL_RENDERER_RATING(object)->priv;
     switch(param_id)
     {
         case PROP_RATING:
@@ -226,7 +222,7 @@ static void rc_ui_cell_renderer_rating_set_property(GObject *object,
     guint param_id, const GValue *value, GParamSpec *pspec)
 {
     RCUiCellRendererRatingPrivate *priv = 
-        RC_UI_CELL_RENDERER_RATING_GET_PRIVATE(object);
+        RC_UI_CELL_RENDERER_RATING(object)->priv;
     switch(param_id)
     {
         case PROP_RATING:
@@ -264,8 +260,7 @@ static void rc_ui_cell_renderer_rating_render(GtkCellRenderer *cell,
 
 {
     RCUiCellRendererRating *rating = (RCUiCellRendererRating *)cell;
-    RCUiCellRendererRatingPrivate *priv = 
-        RC_UI_CELL_RENDERER_RATING_GET_PRIVATE(rating);
+    RCUiCellRendererRatingPrivate *priv = rating->priv;
     gint xpad, ypad;
     gboolean selected;
     GdkRectangle pix_rect, draw_rect;
@@ -290,8 +285,7 @@ static gboolean rc_ui_cell_renderer_rating_activate(GtkCellRenderer *cell,
     GtkCellRendererState flags)
 {
     RCUiCellRendererRating *cell_rating = (RCUiCellRendererRating *)cell;
-    RCUiCellRendererRatingPrivate *priv = 
-        RC_UI_CELL_RENDERER_RATING_GET_PRIVATE(cell_rating);
+    RCUiCellRendererRatingPrivate *priv = cell_rating->priv;
     gint mouse_x, mouse_y;
     gfloat rating;
     g_return_val_if_fail(RC_UI_IS_CELL_RENDERER_RATING(cell_rating), FALSE);
@@ -312,7 +306,7 @@ static gboolean rc_ui_cell_renderer_rating_activate(GtkCellRenderer *cell,
 static void rc_ui_cell_renderer_rating_finalize(GObject *object)
 {
     RCUiCellRendererRatingPrivate *priv = 
-        RC_UI_CELL_RENDERER_RATING_GET_PRIVATE(object);
+        RC_UI_CELL_RENDERER_RATING(object)->priv;
     if(priv->star_pixbuf!=NULL) g_object_unref(priv->star_pixbuf);
     if(priv->dot_pixbuf!=NULL) g_object_unref(priv->dot_pixbuf);
     if(priv->blank_pixbuf!=NULL) g_object_unref(priv->blank_pixbuf);
@@ -366,8 +360,9 @@ static void rc_ui_cell_renderer_rating_class_init(
 
 static void rc_ui_cell_renderer_rating_init(RCUiCellRendererRating *cell)
 {
-    RCUiCellRendererRatingPrivate *priv = 
-        RC_UI_CELL_RENDERER_RATING_GET_PRIVATE(cell);
+    RCUiCellRendererRatingPrivate *priv = G_TYPE_INSTANCE_GET_PRIVATE(cell,
+        RC_UI_TYPE_CELL_RENDERER_RATING, RCUiCellRendererRatingPrivate);
+    cell->priv = priv;
     GtkIconTheme *theme;
     gint width;
     GdkPixbuf *pixbuf;
