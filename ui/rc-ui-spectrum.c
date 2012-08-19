@@ -988,6 +988,7 @@ static void rc_ui_spectrum_widget_init(RCUiSpectrumWidget *spectrum)
     RCUiSpectrumWidgetPrivate *priv;
     priv = G_TYPE_INSTANCE_GET_PRIVATE(spectrum, RC_UI_SPECTRUM_WIDGET_TYPE,
         RCUiSpectrumWidgetPrivate);
+    spectrum->priv = priv;
     priv->fps = 10;
     priv->style = RC_UI_SPECTRUM_STYLE_WAVE_MULTI;
     priv->spectrum_band_data = g_new(gfloat, RC_UI_SPECTRUM_BANDS);
