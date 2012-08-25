@@ -1,6 +1,6 @@
 /*
  * RhythmCat Library Music Database Module (Playlist Part.)
- * Manage the music database.
+ * Manage the catalogs & playlists in the music database.
  *
  * rclib-db-playlist.c
  * This file is part of RhythmCat Library (LibRhythmCat)
@@ -62,39 +62,7 @@ static inline void rclib_db_playlist_refresh_idle_data_free(
     g_free(data);
 }
 
-static gboolean rclib_db_import_update_idle_cb(gpointer data)
-{
-    RCLibDbPrivate *priv;
-    GObject *instance;
-    gint length;
-    length = GPOINTER_TO_INT(data);
-    instance = rclib_db_get_instance();
-    if(instance==NULL) return FALSE;
-    priv = RCLIB_DB(instance)->priv;
-    if(priv==NULL) return FALSE;
-    if(length<=0)
-        priv->import_work_flag = FALSE;
-    g_signal_emit_by_name(instance, "import-updated", length);
-    return FALSE;
-}
-
-static gboolean rclib_db_refresh_update_idle_cb(gpointer data)
-{
-    RCLibDbPrivate *priv;
-    GObject *instance;
-    gint length;
-    length = GPOINTER_TO_INT(data);
-    instance = rclib_db_get_instance();
-    if(instance==NULL) return FALSE;
-    priv = RCLIB_DB(instance)->priv;
-    if(priv==NULL) return FALSE;
-    if(length<=0)
-        priv->refresh_work_flag = FALSE;
-    g_signal_emit_by_name(instance, "refresh-updated", length);
-    return FALSE;
-}
-
-static gboolean rclib_db_playlist_import_idle_cb(gpointer data)
+gboolean _rclib_db_playlist_import_idle_cb(gpointer data)
 {
     RCLibDbPrivate *priv;
     GObject *instance;
@@ -112,15 +80,15 @@ static gboolean rclib_db_playlist_import_idle_cb(gpointer data)
     priv = RCLIB_DB(instance)->priv;
     if(priv==NULL) return FALSE;
     if(instance==NULL) return FALSE;
-    if(!rclib_db_is_iter_valid(priv->catalog, idle_data->iter))
+    if(!rclib_db_is_iter_valid(priv->catalog, idle_data->catalog_iter))
         return FALSE;
-    catalog_data = g_sequence_get(idle_data->iter);
+    catalog_data = g_sequence_get(idle_data->catalog_iter);
     if(catalog_data==NULL) return FALSE;
     playlist = catalog_data->playlist;
     if(playlist==NULL) return FALSE;
     mmd = idle_data->mmd;
     playlist_data = rclib_db_playlist_data_new();
-    playlist_data->catalog = idle_data->iter;
+    playlist_data->catalog = idle_data->catalog_iter;
     playlist_data->type = idle_data->type;
     playlist_data->uri = g_strdup(mmd->uri);
     playlist_data->title = g_strdup(mmd->title);
@@ -131,22 +99,25 @@ static gboolean rclib_db_playlist_import_idle_cb(gpointer data)
     playlist_data->tracknum = mmd->tracknum;
     playlist_data->year = mmd->year;
     playlist_data->rating = 3.0;
-    if(!rclib_db_is_iter_valid(playlist, idle_data->insert_iter))
-        idle_data->insert_iter = NULL;
-    if(idle_data->insert_iter!=NULL)
+    if(!rclib_db_is_iter_valid(playlist, idle_data->playlist_insert_iter))
+        idle_data->playlist_insert_iter = NULL;
+    if(idle_data->playlist_insert_iter!=NULL)
     {
-        playlist_iter = g_sequence_insert_before(idle_data->insert_iter,
-            playlist_data);
+        playlist_iter = g_sequence_insert_before(
+            idle_data->playlist_insert_iter, playlist_data);
     }
     else
         playlist_iter = g_sequence_append(playlist, playlist_data);
+    playlist_data->self_iter = playlist_iter;
+    g_hash_table_replace(priv->playlist_iter_table, playlist_iter,
+        playlist_iter);
     priv->dirty_flag = TRUE;
     g_signal_emit_by_name(instance, "playlist-added", playlist_iter);
     rclib_db_playlist_import_idle_data_free(idle_data);
     return FALSE;
 }
 
-static gboolean rclib_db_playlist_refresh_idle_cb(gpointer data)
+gboolean _rclib_db_playlist_refresh_idle_cb(gpointer data)
 {
     RCLibDbPrivate *priv;
     GObject *instance;
@@ -194,410 +165,31 @@ static gboolean rclib_db_playlist_refresh_idle_cb(gpointer data)
     return FALSE;
 }
 
-static void rclib_db_playlist_import_data_free(
-    RCLibDbPlaylistImportData *data)
-{
-    if(data==NULL) return;
-    g_free(data->uri);
-    g_free(data);
-}
-
-static void rclib_db_playlist_refresh_data_free(
-    RCLibDbPlaylistRefreshData *data)
-{
-    if(data==NULL) return;
-    g_free(data->uri);
-    g_free(data);
-}
-
-static RCLibTagMetadata *rclib_db_get_metadata_from_cue(
-    RCLibCueData *cue_data, guint track_num, RCLibTagMetadata *cue_mmd)
-{
-    RCLibTagMetadata *mmd = NULL;
-    RCLibCueTrack *track = NULL;
-    gboolean empty_flag = FALSE;
-    if(cue_data==NULL) return NULL;
-    if(cue_mmd==NULL)
-    {
-        if(cue_data->file==NULL) return NULL;
-        cue_mmd = rclib_tag_read_metadata(cue_data->file);
-        if(cue_mmd==NULL) return NULL;
-        empty_flag = TRUE;
-    }
-    if(track_num<0 || track_num>=cue_data->length) return NULL;
-    track = cue_data->track + track_num;
-    mmd = g_new0(RCLibTagMetadata, 1);
-    if(track->title!=NULL)
-        mmd->title = g_strdup(track->title);
-    else
-        mmd->title = g_strdup_printf("Track %d", track_num);
-    if(track->performer!=NULL)
-        mmd->artist = g_strdup(track->performer);
-    if(cue_data->title!=NULL)
-        mmd->album = g_strdup(cue_data->title);
-    mmd->tracknum = track_num + 1;
-    if(track_num+1!=cue_data->length)
-        mmd->length = track[1].time1 - track->time1;
-    else
-        mmd->length = cue_mmd->length - track->time1;
-    if(cue_data->file!=NULL)
-        mmd->uri = g_strdup_printf("%s:%d", cue_data->file, track_num+1);
-    else
-        mmd->uri = g_strdup_printf("%s:%d", cue_mmd->uri, track_num+1);
-    if(cue_mmd->ftype!=NULL)
-        mmd->ftype = g_strdup(cue_mmd->ftype);
-    if(cue_mmd->comment!=NULL)
-        mmd->comment = g_strdup(cue_mmd->comment);
-    mmd->bitrate = cue_mmd->bitrate;
-    mmd->samplerate = cue_mmd->samplerate;
-    mmd->channels = cue_mmd->channels;
-    if(cue_mmd->image!=NULL)
-    {
-        gst_buffer_ref(cue_mmd->image);
-        mmd->image = cue_mmd->image;
-    }
-    if(empty_flag) rclib_tag_free(cue_mmd);
-    mmd->audio_flag = TRUE;
-    return mmd;
-}
-
-static gpointer rclib_db_playlist_import_thread_cb(gpointer data)
-{
-    RCLibDbPlaylistImportIdleData *idle_data;
-    RCLibTagMetadata *mmd = NULL, *cue_mmd = NULL;
-    RCLibDbPlaylistImportData *import_data;
-    RCLibDbPrivate *priv;
-    RCLibCueData cue_data;
-    gchar *cue_uri;
-    gchar *scheme;
-    guint i;
-    gint track = 0;
-    gint length;
-    gboolean local_flag;
-    GObject *object = G_OBJECT(data);
-    if(object==NULL)
-    {
-        g_thread_exit(NULL);
-        return NULL;
-    }
-    priv = RCLIB_DB(object)->priv;
-    while(priv->import_queue!=NULL)
-    {
-        import_data = g_async_queue_pop(priv->import_queue);
-        if(import_data->uri==NULL)
-        {
-            g_free(import_data);
-            break;
-        }
-        scheme = g_uri_parse_scheme(import_data->uri);
-        if(g_strcmp0(scheme, "file")==0) local_flag = TRUE;
-        else local_flag = FALSE;
-        g_free(scheme);
-        G_STMT_START
-        {
-            /* Import CUE */
-            if(local_flag && g_regex_match_simple("(.CUE)$",
-                import_data->uri, G_REGEX_CASELESS, 0))
-            {
-                memset(&cue_data, 0, sizeof(RCLibCueData));
-                if(rclib_cue_read_data(import_data->uri,
-                    RCLIB_CUE_INPUT_URI, &cue_data)>0)
-                {
-                    cue_mmd = rclib_tag_read_metadata(cue_data.file);
-                    for(i=0;i<cue_data.length;i++)
-                    {
-                        mmd = rclib_db_get_metadata_from_cue(&cue_data,
-                            i, cue_mmd);
-                        if(mmd==NULL) continue;
-                        g_free(mmd->uri);
-                        mmd->uri = g_strdup_printf("%s:%d",
-                            import_data->uri, i+1);
-                        idle_data = g_new0(RCLibDbPlaylistImportIdleData, 1);
-                        idle_data->iter = import_data->iter;
-                        idle_data->insert_iter = import_data->insert_iter;
-                        idle_data->mmd = mmd;
-                        if(i==0)
-                            idle_data->play_flag = import_data->play_flag;
-                        idle_data->type = RCLIB_DB_PLAYLIST_TYPE_CUE;
-                        g_idle_add(rclib_db_playlist_import_idle_cb,
-                            idle_data);
-                    }
-                    rclib_tag_free(cue_mmd);
-                }
-                rclib_cue_free(&cue_data);
-                break;
-            }
-            if(local_flag && rclib_cue_get_track_num(import_data->uri,
-                &cue_uri, &track))
-            {
-                memset(&cue_data, 0, sizeof(RCLibCueData));
-                if(rclib_cue_read_data(cue_uri, RCLIB_CUE_INPUT_URI,
-                    &cue_data)>0)
-                {
-                    if(g_regex_match_simple("(.CUE)$", cue_uri,
-                    G_REGEX_CASELESS, 0))
-                    {
-                        mmd = rclib_db_get_metadata_from_cue(&cue_data,
-                            track-1, NULL);
-                        if(mmd!=NULL)
-                        {
-                            g_free(mmd->uri);
-                            mmd->uri = g_strdup(import_data->uri);
-                            idle_data =
-                                g_new0(RCLibDbPlaylistImportIdleData, 1);
-                            idle_data->iter = import_data->iter;
-                            idle_data->insert_iter =
-                                import_data->insert_iter;
-                            idle_data->mmd = mmd;
-                            idle_data->play_flag = import_data->play_flag;
-                            idle_data->type = RCLIB_DB_PLAYLIST_TYPE_CUE;
-                            g_idle_add(rclib_db_playlist_import_idle_cb,
-                                idle_data);
-                        }
-                    }
-                    rclib_cue_free(&cue_data);
-                    g_free(cue_uri);
-                    break;
-                }
-                else /* Maybe a embedded CUE audio file? */
-                {
-                    g_free(import_data->uri);
-                    import_data->uri = g_strdup(cue_uri);
-                    g_free(cue_uri);
-                }
-            }
-            mmd = rclib_tag_read_metadata(import_data->uri);
-            if(mmd==NULL) break;
-            if(mmd->emb_cue!=NULL) /* Embedded CUE check */
-            {
-                if(rclib_cue_read_data(mmd->emb_cue,
-                    RCLIB_CUE_INPUT_EMBEDDED, &cue_data)>0)
-                {
-                    if(track>0)
-                    {
-                        cue_mmd = rclib_db_get_metadata_from_cue(&cue_data,
-                            track-1, mmd);
-                        if(cue_mmd!=NULL)
-                        {
-                            rclib_tag_free(mmd);
-                            idle_data = g_new0(RCLibDbPlaylistImportIdleData,
-                                1);
-                            idle_data->iter = import_data->iter;
-                            idle_data->insert_iter =
-                                import_data->insert_iter;
-                            idle_data->mmd = mmd;
-                            idle_data->play_flag = import_data->play_flag;
-                            idle_data->type = RCLIB_DB_PLAYLIST_TYPE_CUE;
-                            g_idle_add(rclib_db_playlist_import_idle_cb,
-                                idle_data);
-                        }
-                    }
-                    else
-                    {
-                        for(i=0;i<cue_data.length;i++)
-                        {
-                            cue_mmd = rclib_db_get_metadata_from_cue(
-                                &cue_data, i, mmd);
-                            if(cue_mmd==NULL) continue;
-                            idle_data = g_new0(RCLibDbPlaylistImportIdleData,
-                                1);
-                            idle_data->iter = import_data->iter;
-                            idle_data->insert_iter = import_data->insert_iter;
-                            idle_data->mmd = mmd;
-                            if(i==0)
-                                idle_data->play_flag = import_data->play_flag;
-                            idle_data->type = RCLIB_DB_PLAYLIST_TYPE_CUE;
-                            g_idle_add(rclib_db_playlist_import_idle_cb,
-                                idle_data);
-                        }
-                    }
-                    break;
-                }
-            }
-            idle_data = g_new0(RCLibDbPlaylistImportIdleData, 1);
-            idle_data->iter = import_data->iter;
-            idle_data->insert_iter = import_data->insert_iter;
-            idle_data->mmd = mmd;
-            idle_data->play_flag = import_data->play_flag;
-            idle_data->type = RCLIB_DB_PLAYLIST_TYPE_MUSIC;
-            g_idle_add(rclib_db_playlist_import_idle_cb, idle_data);
-        }
-        G_STMT_END;
-        rclib_db_playlist_import_data_free(import_data);
-        length = g_async_queue_length(priv->import_queue);
-        g_idle_add(rclib_db_import_update_idle_cb, GINT_TO_POINTER(length));
-    }
-    g_thread_exit(NULL);
-    return NULL;
-}
-
-static gpointer rclib_db_playlist_refresh_thread_cb(gpointer data)
-{
-    RCLibDbPlaylistRefreshIdleData *idle_data;
-    RCLibDbPlaylistRefreshData *refresh_data;
-    RCLibTagMetadata *mmd = NULL, *cue_mmd = NULL;
-    RCLibDbPrivate *priv;
-    RCLibCueData cue_data;
-    gchar *cue_uri;
-    gchar *scheme;
-    gint track = 0;
-    gint length;
-    gboolean local_flag;
-    GObject *object = G_OBJECT(data);
-    if(object==NULL)
-    {
-        g_thread_exit(NULL);
-        return NULL;
-    }
-    priv = RCLIB_DB(object)->priv;
-    while(priv->refresh_queue!=NULL)
-    {
-        refresh_data = g_async_queue_pop(priv->refresh_queue);
-        if(refresh_data->uri==NULL)
-        {
-            g_free(refresh_data);
-            break;
-        }
-        if(refresh_data->catalog_iter==NULL ||
-            refresh_data->playlist_iter==NULL) continue;
-        scheme = g_uri_parse_scheme(refresh_data->uri);
-        if(g_strcmp0(scheme, "file")==0) local_flag = TRUE;
-        else local_flag = FALSE;
-        g_free(scheme);
-        G_STMT_START
-        {
-            if(local_flag && rclib_cue_get_track_num(refresh_data->uri,
-                &cue_uri, &track))
-            {
-                if(g_regex_match_simple("(.CUE)$", cue_uri,
-                    G_REGEX_CASELESS, 0))
-                {
-                    memset(&cue_data, 0, sizeof(RCLibCueData));
-                    if(rclib_cue_read_data(cue_uri, RCLIB_CUE_INPUT_URI,
-                        &cue_data)>0)
-                    {
-                        mmd = rclib_db_get_metadata_from_cue(&cue_data,
-                            track-1, NULL);
-                        if(mmd!=NULL)
-                        {
-                            g_free(mmd->uri);
-                            mmd->uri = g_strdup(refresh_data->uri);
-                            idle_data =
-                                g_new0(RCLibDbPlaylistRefreshIdleData, 1);
-                            idle_data->catalog_iter =
-                                refresh_data->catalog_iter;
-                            idle_data->playlist_iter =
-                                refresh_data->playlist_iter;
-                            idle_data->mmd = mmd;
-                            idle_data->type = RCLIB_DB_PLAYLIST_TYPE_CUE;
-                            g_idle_add(rclib_db_playlist_refresh_idle_cb,
-                                idle_data);
-                        }
-                        else
-                        {
-                            idle_data =
-                                g_new0(RCLibDbPlaylistRefreshIdleData, 1);
-                            idle_data->catalog_iter =
-                                refresh_data->catalog_iter;
-                            idle_data->playlist_iter =
-                                refresh_data->playlist_iter;
-                            idle_data->mmd = NULL;
-                            idle_data->type = RCLIB_DB_PLAYLIST_TYPE_MISSING;
-                            g_idle_add(rclib_db_playlist_refresh_idle_cb,
-                                idle_data);
-                        }
-                    }
-                    rclib_cue_free(&cue_data);
-                    g_free(cue_uri);
-                    break;
-                }
-                else /* Maybe a embedded CUE audio file? */
-                {
-                    g_free(refresh_data->uri);
-                    refresh_data->uri = g_strdup(cue_uri);
-                    g_free(cue_uri);
-                }
-            }
-            mmd = rclib_tag_read_metadata(refresh_data->uri);
-            if(mmd!=NULL && mmd->emb_cue!=NULL) /* Embedded CUE check */
-            {
-                if(rclib_cue_read_data(mmd->emb_cue,
-                    RCLIB_CUE_INPUT_EMBEDDED, &cue_data)>0)
-                {
-                    if(track>0)
-                    {
-                        cue_mmd = rclib_db_get_metadata_from_cue(&cue_data,
-                            track-1, mmd);
-                        if(cue_mmd!=NULL)
-                        {
-                            rclib_tag_free(mmd);
-                            idle_data =
-                                g_new0(RCLibDbPlaylistRefreshIdleData, 1);
-                            idle_data->catalog_iter =
-                                refresh_data->catalog_iter;
-                            idle_data->playlist_iter =
-                                refresh_data->playlist_iter;
-                            idle_data->mmd = mmd;
-                            idle_data->type = RCLIB_DB_PLAYLIST_TYPE_CUE;
-                            g_idle_add(rclib_db_playlist_refresh_idle_cb,
-                                idle_data);
-                        }
-                        else
-                        {
-                            idle_data =
-                                g_new0(RCLibDbPlaylistRefreshIdleData, 1);
-                            idle_data->catalog_iter =
-                                refresh_data->catalog_iter;
-                            idle_data->playlist_iter =
-                                refresh_data->playlist_iter;
-                            idle_data->mmd = NULL;
-                            idle_data->type = RCLIB_DB_PLAYLIST_TYPE_MISSING;
-                            g_idle_add(rclib_db_playlist_refresh_idle_cb,
-                                idle_data);
-                        }
-                    }
-                    break;
-                }
-            }
-            idle_data = g_new0(RCLibDbPlaylistRefreshIdleData, 1);
-            idle_data->catalog_iter = refresh_data->catalog_iter;
-            idle_data->playlist_iter = refresh_data->playlist_iter;
-            idle_data->mmd = mmd;
-            if(mmd!=NULL)
-                idle_data->type = RCLIB_DB_PLAYLIST_TYPE_MUSIC;
-            else
-                idle_data->type = RCLIB_DB_PLAYLIST_TYPE_MISSING;
-            g_idle_add(rclib_db_playlist_refresh_idle_cb, idle_data);
-        }
-        G_STMT_END;
-        rclib_db_playlist_refresh_data_free(refresh_data);
-        length = g_async_queue_length(priv->refresh_queue);
-        g_idle_add(rclib_db_refresh_update_idle_cb, GINT_TO_POINTER(length));
-    }
-    g_thread_exit(NULL);
-    return NULL;
-}
-
 gboolean _rclib_db_instance_init_playlist(RCLibDb *db, RCLibDbPrivate *priv)
 {
+    if(db==NULL || priv==NULL) return FALSE;
+    priv->catalog_iter_table = g_hash_table_new_full(g_direct_hash,
+        g_direct_equal, NULL, NULL);
+    priv->playlist_iter_table = g_hash_table_new_full(g_direct_hash,
+        g_direct_equal, NULL, NULL);
     priv->catalog = g_sequence_new((GDestroyNotify)
         rclib_db_catalog_data_unref);
-    priv->import_queue = g_async_queue_new_full((GDestroyNotify)
-        rclib_db_playlist_import_data_free);
-    priv->refresh_queue = g_async_queue_new_full((GDestroyNotify)
-        rclib_db_playlist_refresh_data_free);
-    g_mutex_init(&(priv->autosave_mutex));
-    g_cond_init(&(priv->autosave_cond));
-    priv->import_thread = g_thread_new("RC2-Import-Thread",
-        rclib_db_playlist_import_thread_cb, db);
-    priv->refresh_thread = g_thread_new("RC2-Refresh-Thread",
-        rclib_db_playlist_refresh_thread_cb, db);
     return TRUE;
 }
 
-
-
-
+void _rclib_db_instance_finalize_playlist(RCLibDbPrivate *priv)
+{
+    if(priv==NULL) return;
+    if(priv->catalog!=NULL)
+        g_sequence_free(priv->catalog);
+    if(priv->catalog_iter_table!=NULL)
+        g_hash_table_destroy(priv->catalog_iter_table);
+    if(priv->playlist_iter_table!=NULL)
+        g_hash_table_destroy(priv->playlist_iter_table);
+    priv->catalog = NULL;
+    priv->catalog_iter_table = NULL;
+    priv->playlist_iter_table = NULL;
+}
 
 /**
  * rclib_db_catalog_data_new:
@@ -734,6 +326,46 @@ void rclib_db_playlist_data_free(RCLibDbPlaylistData *data)
 }
 
 /**
+ * rclib_db_get_catalog:
+ *
+ * Get the catalog.
+ *
+ * Returns: (transfer none): (skip): The catalog, NULL if the catalog does
+ *     not exist.
+ */
+
+GSequence *rclib_db_get_catalog()
+{
+    RCLibDbPrivate *priv;
+    GObject *instance;
+    instance = rclib_db_get_instance();
+    if(instance==NULL) return NULL;
+    priv = RCLIB_DB(instance)->priv;
+    if(priv==NULL) return NULL;
+    return priv->catalog;
+}
+
+/**
+ * rclib_db_catalog_is_valid_iter:
+ * @catalog_iter: the iter to check
+ *
+ * Check whether the iter is valid in the catalog sequence.
+ *
+ * Returns: Whether the iter is valid.
+ */
+
+gboolean rclib_db_catalog_is_valid_iter(GSequenceIter *catalog_iter)
+{
+    RCLibDbPrivate *priv;
+    GObject *instance;
+    instance = rclib_db_get_instance();
+    if(instance==NULL) return FALSE;
+    priv = RCLIB_DB(instance)->priv;
+    if(priv==NULL) return FALSE;
+    return g_hash_table_contains(priv->catalog_iter_table, catalog_iter);
+}
+
+/**
  * rclib_db_catalog_add:
  * @name: the name for the new playlist
  * @iter: insert position (before this #iter)
@@ -769,6 +401,9 @@ GSequenceIter *rclib_db_catalog_add(const gchar *name,
         catalog_iter = g_sequence_insert_before(iter, catalog_data);
     else
         catalog_iter = g_sequence_append(priv->catalog, catalog_data);
+    catalog_data->self_iter = catalog_iter;
+    g_hash_table_replace(priv->catalog_iter_table, catalog_iter,
+        catalog_iter);
     priv->dirty_flag = TRUE;
     g_signal_emit_by_name(instance, "catalog-added", catalog_iter);
     return catalog_iter;
@@ -784,15 +419,26 @@ GSequenceIter *rclib_db_catalog_add(const gchar *name,
 void rclib_db_catalog_delete(GSequenceIter *iter)
 {
     RCLibDbPrivate *priv;
+    RCLibDbCatalogData *catalog_data;
     GObject *instance;
+    GSequenceIter *iter_foreach;
     if(iter==NULL) return;
     if(g_sequence_iter_is_end(iter)) return;
     instance = rclib_db_get_instance();
     if(instance==NULL) return;
     priv = RCLIB_DB(instance)->priv;
     if(priv==NULL) return;
+    catalog_data = g_sequence_get(iter);
+    catalog_data->self_iter = NULL;
     g_signal_emit_by_name(instance, "catalog-delete", iter);
+    for(iter_foreach=g_sequence_get_begin_iter(catalog_data->playlist);
+        !g_sequence_iter_is_end(iter_foreach);
+        iter_foreach=g_sequence_iter_next(iter_foreach))
+    {
+        g_hash_table_remove(priv->playlist_iter_table, iter_foreach);
+    }
     g_sequence_remove(iter);
+    g_hash_table_remove(priv->catalog_iter_table, iter);
     priv->dirty_flag = TRUE;
 }
 
@@ -905,6 +551,26 @@ void rclib_db_catalog_reorder(gint *new_order)
 }
 
 /**
+ * rclib_db_playlist_is_valid_iter:
+ * @playlist_iter: the iter to check
+ *
+ * Check whether the iter is valid in the playlist sequence.
+ *
+ * Returns: Whether the iter is valid.
+ */
+
+gboolean rclib_db_playlist_is_valid_iter(GSequenceIter *playlist_iter)
+{
+    RCLibDbPrivate *priv;
+    GObject *instance;
+    instance = rclib_db_get_instance();
+    if(instance==NULL) return FALSE;
+    priv = RCLIB_DB(instance)->priv;
+    if(priv==NULL) return FALSE;
+    return g_hash_table_contains(priv->playlist_iter_table, playlist_iter);
+}
+
+/**
  * rclib_db_playlist_add_music:
  * @iter: the catalog iter
  * @insert_iter: insert the music before this iter
@@ -916,7 +582,7 @@ void rclib_db_catalog_reorder(gint *new_order)
 void rclib_db_playlist_add_music(GSequenceIter *iter,
     GSequenceIter *insert_iter, const gchar *uri)
 {
-    RCLibDbPlaylistImportData *import_data;
+    RCLibDbImportData *import_data;
     GObject *instance;
     RCLibDbPrivate *priv;
     instance = rclib_db_get_instance();
@@ -924,9 +590,10 @@ void rclib_db_playlist_add_music(GSequenceIter *iter,
     if(g_sequence_iter_is_end(iter)) return;
     priv = RCLIB_DB(instance)->priv;
     priv->import_work_flag = TRUE;
-    import_data = g_new0(RCLibDbPlaylistImportData, 1);
-    import_data->iter = iter;
-    import_data->insert_iter = insert_iter;
+    import_data = g_new0(RCLibDbImportData, 1);
+    import_data->type = RCLIB_DB_IMPORT_TYPE_PLAYLIST;
+    import_data->catalog_iter = iter;
+    import_data->playlist_insert_iter = insert_iter;
     import_data->uri = g_strdup(uri);
     g_async_queue_push(priv->import_queue, import_data);
 }
@@ -944,7 +611,7 @@ void rclib_db_playlist_add_music(GSequenceIter *iter,
 void rclib_db_playlist_add_music_and_play(GSequenceIter *iter,
     GSequenceIter *insert_iter, const gchar *uri)
 {
-    RCLibDbPlaylistImportData *import_data;
+    RCLibDbImportData *import_data;
     GObject *instance;
     RCLibDbPrivate *priv;
     instance = rclib_db_get_instance();
@@ -952,9 +619,10 @@ void rclib_db_playlist_add_music_and_play(GSequenceIter *iter,
     if(g_sequence_iter_is_end(iter)) return;
     priv = RCLIB_DB(instance)->priv;
     priv->import_work_flag = TRUE;
-    import_data = g_new0(RCLibDbPlaylistImportData, 1);
-    import_data->iter = iter;
-    import_data->insert_iter = insert_iter;
+    import_data = g_new0(RCLibDbImportData, 1);
+    import_data->type = RCLIB_DB_IMPORT_TYPE_PLAYLIST;
+    import_data->catalog_iter = iter;
+    import_data->playlist_insert_iter = insert_iter;
     import_data->uri = g_strdup(uri);
     import_data->play_flag = TRUE;
     g_async_queue_push(priv->import_queue, import_data);
@@ -970,6 +638,7 @@ void rclib_db_playlist_add_music_and_play(GSequenceIter *iter,
 void rclib_db_playlist_delete(GSequenceIter *iter)
 {
     RCLibDbPrivate *priv;
+    RCLibDbPlaylistData *playlist_data;
     GObject *instance;
     if(iter==NULL) return;
     if(g_sequence_iter_is_end(iter)) return;
@@ -977,8 +646,11 @@ void rclib_db_playlist_delete(GSequenceIter *iter)
     if(instance==NULL) return;
     priv = RCLIB_DB(instance)->priv;
     if(priv==NULL) return;
+    playlist_data = g_sequence_get(iter);
+    playlist_data->self_iter = NULL;
     g_signal_emit_by_name(instance, "playlist-delete", iter);
     g_sequence_remove(iter);
+    g_hash_table_remove(priv->playlist_iter_table, iter);
     priv->dirty_flag = TRUE;
 }
 
@@ -1388,6 +1060,8 @@ void rclib_db_playlist_move_to_another_catalog(GSequenceIter **iters,
         new_iter = g_sequence_append(catalog_data->playlist, new_data);
         if(iters[i]==reference)
             rclib_core_update_db_reference(new_iter);
+        new_data->self_iter = new_iter;
+        g_hash_table_replace(priv->playlist_iter_table, new_iter, new_iter);
         g_signal_emit_by_name(instance, "playlist-added", new_iter);
     }
     priv->dirty_flag = TRUE;
@@ -1618,7 +1292,7 @@ void rclib_db_playlist_refresh(GSequenceIter *iter)
 {
     RCLibDbCatalogData *catalog_data;
     RCLibDbPlaylistData *playlist_data;
-    RCLibDbPlaylistRefreshData *refresh_data;
+    RCLibDbRefreshData *refresh_data;
     GSequenceIter *iter_foreach;
     RCLibDbPrivate *priv;
     GObject *instance;
@@ -1636,7 +1310,7 @@ void rclib_db_playlist_refresh(GSequenceIter *iter)
     {
         playlist_data = g_sequence_get(iter_foreach);
         if(playlist_data==NULL || playlist_data->uri==NULL) continue;
-        refresh_data = g_new0(RCLibDbPlaylistRefreshData, 1);
+        refresh_data = g_new0(RCLibDbRefreshData, 1);
         refresh_data->catalog_iter = iter;
         refresh_data->playlist_iter = iter_foreach;
         refresh_data->uri = g_strdup(playlist_data->uri);
@@ -1645,88 +1319,115 @@ void rclib_db_playlist_refresh(GSequenceIter *iter)
 }
 
 /**
- * rclib_db_playlist_import_queue_get_length:
+ * rclib_db_load_legacy:
  *
- * Get the number of remaining jobs in the import queue.
+ * Load legacy playlist file from RhythmCat 1.0.
  *
- * Returns: The number of remaining jobs.
+ * Returns: Whether the operation succeeds.
  */
 
-gint rclib_db_playlist_import_queue_get_length()
+gboolean rclib_db_load_legacy()
 {
     RCLibDbPrivate *priv;
     GObject *instance;
+    GFile *file;
+    GFileInputStream *input_stream;
+    GDataInputStream *data_stream;
+    gsize line_len;
+    RCLibDbCatalogData *catalog_data = NULL;
+    RCLibDbPlaylistData *playlist_data = NULL;
+    GSequenceIter *catalog_iter = NULL;
+    GSequenceIter *playlist_iter = NULL;
+    gchar *line = NULL;
+    gint64 timeinfo;
+    gint trackno;
+    gchar *plist_set_file_full_path = NULL;
+    const gchar *home_dir = NULL;
     instance = rclib_db_get_instance();
-    if(instance==NULL) return -1;
+    if(instance==NULL) return FALSE;
     priv = RCLIB_DB(instance)->priv;
-    if(priv==NULL || priv->import_queue==NULL) return -1;
-    return g_async_queue_length(priv->refresh_queue);
-}
-
-/**
- * rclib_db_playlist_refresh_queue_get_length:
- *
- * Get the number of remaining jobs in the refresh queue.
- *
- * Returns: The number of remaining jobs.
- */
-
-gint rclib_db_playlist_refresh_queue_get_length()
-{
-    RCLibDbPrivate *priv;
-    GObject *instance;
-    instance = rclib_db_get_instance();
-    if(instance==NULL) return -1;
-    priv = RCLIB_DB(instance)->priv;
-    if(priv==NULL || priv->refresh_queue==NULL) return -1;
-    return g_async_queue_length(priv->refresh_queue);
-}
-
-
-
-/**
- * rclib_db_playlist_import_cancel:
- *
- * Cancel all remaining import jobs in the queue.
- */
-
-void rclib_db_playlist_import_cancel()
-{
-    RCLibDbPrivate *priv;
-    GObject *instance;
-    RCLibDbPlaylistImportData *import_data;
-    instance = rclib_db_get_instance();
-    if(instance==NULL) return;
-    priv = RCLIB_DB(instance)->priv;
-    if(priv==NULL || priv->import_queue==NULL) return;
-    while(g_async_queue_length(priv->import_queue)>=0)
+    if(priv==NULL) return FALSE;
+    home_dir = g_getenv("HOME");
+    if(home_dir==NULL)
+        home_dir = g_get_home_dir();
+    plist_set_file_full_path = g_build_filename(home_dir, ".RhythmCat",
+        "playlist.dat", NULL);
+    if(plist_set_file_full_path==NULL) return FALSE;
+    file = g_file_new_for_path(plist_set_file_full_path);
+    if(file==NULL) return FALSE;
+    if(!g_file_query_exists(file, NULL))
     {
-        import_data = g_async_queue_try_pop(priv->import_queue);
-        if(import_data!=NULL)
-            rclib_db_playlist_import_data_free(import_data);
+        g_object_unref(file);
+        return FALSE;
     }
-}
-
-/**
- * rclib_db_playlist_refresh_cancel:
- *
- * Cancel all remaining refresh jobs in the queue.
- */
-
-void rclib_db_playlist_refresh_cancel()
-{
-    RCLibDbPrivate *priv;
-    GObject *instance;
-    RCLibDbPlaylistRefreshData *refresh_data;
-    instance = rclib_db_get_instance();
-    if(instance==NULL) return;
-    priv = RCLIB_DB(instance)->priv;
-    if(priv==NULL || priv->refresh_queue==NULL) return;
-    while(g_async_queue_length(priv->refresh_queue)>=0)
+    input_stream = g_file_read(file, NULL, NULL);
+    g_object_unref(file);
+    if(input_stream==NULL) return FALSE;
+    data_stream = g_data_input_stream_new(G_INPUT_STREAM(input_stream));
+    g_object_unref(input_stream);
+    if(data_stream==NULL) return FALSE;
+    g_data_input_stream_set_newline_type(data_stream,
+        G_DATA_STREAM_NEWLINE_TYPE_ANY);
+    while((line=g_data_input_stream_read_line(data_stream, &line_len,
+        NULL, NULL))!=NULL)
     {
-        refresh_data = g_async_queue_try_pop(priv->refresh_queue);
-        if(refresh_data!=NULL)
-            rclib_db_playlist_refresh_data_free(refresh_data);
+        if(catalog_data!=NULL && strncmp(line, "UR=", 3)==0)
+        {
+            if(playlist_iter!=NULL)
+            {
+                g_signal_emit_by_name(instance, "playlist-changed",
+                    playlist_iter);
+            }
+            playlist_data = rclib_db_playlist_data_new();
+            playlist_data->uri = g_strdup(line+3);
+            playlist_data->catalog = catalog_iter;
+            playlist_data->type = RCLIB_DB_PLAYLIST_TYPE_MUSIC;
+            playlist_iter = g_sequence_append(catalog_data->playlist,
+                playlist_data);
+            playlist_data->self_iter = playlist_iter;
+            g_hash_table_replace(priv->playlist_iter_table, playlist_iter,
+                playlist_iter);
+            g_signal_emit_by_name(instance, "playlist-added", playlist_iter);
+        }
+        else if(playlist_data!=NULL && strncmp(line, "TI=", 3)==0)
+            playlist_data->title = g_strdup(line+3);
+        else if(playlist_data!=NULL && strncmp(line, "AR=", 3)==0)
+            playlist_data->artist = g_strdup(line+3);
+        else if(playlist_data!=NULL && strncmp(line, "AL=", 3)==0)
+            playlist_data->album = g_strdup(line+3);
+
+        /* time length */
+        else if(playlist_data!=NULL && strncmp(line, "TL=", 3)==0) 
+        {
+            timeinfo = g_ascii_strtoll(line+3, NULL, 10) * 10;
+            timeinfo *= GST_MSECOND;
+            playlist_data->length = timeinfo;
+        }
+        else if(strncmp(line, "TN=", 3)==0)  /* track number */
+        {
+            sscanf(line+3, "%d", &trackno);
+            playlist_data->tracknum = trackno;
+        }
+        else if(strncmp(line, "LF=", 3)==0)
+            playlist_data->lyricfile = g_strdup(line+3);
+        else if(strncmp(line, "AF=", 3)==0)
+            playlist_data->albumfile = g_strdup(line+3);
+        else if(strncmp(line, "LI=", 3)==0)
+        {
+            catalog_data = rclib_db_catalog_data_new();
+            catalog_data->name = g_strdup(line+3);
+            catalog_data->type = RCLIB_DB_CATALOG_TYPE_PLAYLIST;
+            catalog_data->playlist = g_sequence_new((GDestroyNotify)
+                rclib_db_playlist_data_unref);
+            catalog_iter = g_sequence_append(priv->catalog, catalog_data);
+            catalog_data->self_iter = catalog_iter;
+            g_hash_table_replace(priv->catalog_iter_table, catalog_iter,
+                catalog_iter);
+            g_signal_emit_by_name(instance, "catalog-added", catalog_iter);
+        }
+        g_free(line);
     }
+    g_object_unref(data_stream);
+    return TRUE;
 }
 

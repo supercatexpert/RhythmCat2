@@ -46,7 +46,7 @@ developing environment, and the libraries which this program depends. On
 Debian/Ubuntu, you can run the commands below to help you install the packages
 that the compilation needed: 
 
-sudo apt-get install build-essential libgtk-3-dev libgstreamer0.10-dev \
+sudo apt-get install build-essential libtool libgtk-3-dev libgstreamer0.10-dev \
     libgstreamer-plugins-base0.10-dev libcurl4-openssl-dev
 
 If you want to compile Python3 loader and use Python3 plug-ins, install

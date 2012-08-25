@@ -61,7 +61,7 @@ static void rclib_main_update_db_metadata_cb(RCLibCore *core,
     GSequenceIter *iter;
     if(metadata==NULL || uri==NULL) return;
     iter = rclib_core_get_db_reference();
-    if(iter==NULL) return;
+    if(iter==NULL || !rclib_db_playlist_is_valid_iter(iter)) return;
     playlist_data = g_sequence_get(iter);
     type = rclib_core_get_source_type();
     ret = g_strcmp0(uri, playlist_data->uri);

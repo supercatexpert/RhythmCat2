@@ -29,35 +29,49 @@
 
 #define RCLIB_DB_ERROR rclib_db_error_quark()
 
-typedef struct RCLibDbPlaylistImportData
+typedef enum
 {
-    GSequenceIter *iter;
-    GSequenceIter *insert_iter;
+    RCLIB_DB_IMPORT_TYPE_PLAYLIST = 0,
+    RCLIB_DB_IMPORT_TYPE_LIBRARY = 1
+}RCLibDbImportType;
+
+typedef enum
+{
+    RCLIB_DB_REFRESH_TYPE_PLAYLIST = 0,
+    RCLIB_DB_REFRESH_TYPE_LIBRARY = 1
+}RCLibDbRefreshType;
+
+typedef struct RCLibDbImportData
+{
+    RCLibDbImportType type;
     gchar *uri;
+    GSequenceIter *catalog_iter;
+    GSequenceIter *playlist_insert_iter;
     gboolean play_flag;
-}RCLibDbPlaylistImportData;
+}RCLibDbImportData;
+
+typedef struct RCLibDbRefreshData
+{
+    RCLibDbRefreshType type;
+    gchar *uri;
+    GSequenceIter *catalog_iter;
+    GSequenceIter *playlist_iter;
+}RCLibDbRefreshData;
 
 typedef struct RCLibDbPlaylistImportIdleData
 {
-    GSequenceIter *iter;
-    GSequenceIter *insert_iter;
     RCLibTagMetadata *mmd;
+    GSequenceIter *catalog_iter;
+    GSequenceIter *playlist_insert_iter;
     RCLibDbPlaylistType type;
     gboolean play_flag;
 }RCLibDbPlaylistImportIdleData;
 
-typedef struct RCLibDbPlaylistRefreshData
-{
-    GSequenceIter *catalog_iter;
-    GSequenceIter *playlist_iter;
-    gchar *uri;
-}RCLibDbPlaylistRefreshData;
-
 typedef struct RCLibDbPlaylistRefreshIdleData
 {
+    RCLibTagMetadata *mmd;
     GSequenceIter *catalog_iter;
     GSequenceIter *playlist_iter;
-    RCLibTagMetadata *mmd;
     RCLibDbPlaylistType type;
 }RCLibDbPlaylistRefreshIdleData;
 
@@ -65,6 +79,10 @@ struct _RCLibDbPrivate
 {
     gchar *filename;
     GSequence *catalog;
+    GHashTable *catalog_iter_table;
+    GHashTable *playlist_iter_table;
+    GSequence *library_query;
+    GHashTable *library_table;
     GThread *import_thread;
     GThread *refresh_thread;
     GThread *autosave_thread;
@@ -82,6 +100,11 @@ struct _RCLibDbPrivate
 
 /*< private >*/
 gboolean _rclib_db_instance_init_playlist(RCLibDb *db, RCLibDbPrivate *priv);
+gboolean _rclib_db_instance_init_library(RCLibDb *db, RCLibDbPrivate *priv);
+void _rclib_db_instance_finalize_playlist(RCLibDbPrivate *priv);
+void _rclib_db_instance_finalize_library(RCLibDbPrivate *priv);
+gboolean _rclib_db_playlist_import_idle_cb(gpointer data);
+gboolean _rclib_db_playlist_refresh_idle_cb(gpointer data);
 
 #endif
 

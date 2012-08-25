@@ -173,12 +173,12 @@ static void rc_ui_menu_keep_above_clicked_cb(GtkAction *action,
 
 static void rc_ui_menu_progress_import_cancel_clicked_cb()
 {
-    rclib_db_playlist_import_cancel();
+    rclib_db_import_cancel();
 }
 
 static void rc_ui_menu_progress_refresh_cancel_clicked_cb()
 {
-    rclib_db_playlist_refresh_cancel();
+    rclib_db_refresh_cancel();
 }
 
 static GtkActionEntry ui_menu_entries[] =

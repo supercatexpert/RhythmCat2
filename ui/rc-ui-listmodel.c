@@ -245,8 +245,11 @@ static void rc_ui_catalog_store_get_value(GtkTreeModel *model,
         case RC_UI_CATALOG_COLUMN_STATE:
             g_value_init(value, G_TYPE_STRING);
             reference_iter = rclib_core_get_db_reference();
-            if(reference_iter!=NULL)
+            if(reference_iter!=NULL &&
+                rclib_db_playlist_is_valid_iter(reference_iter))
+            {
                 reference = g_sequence_get(reference_iter);
+            }
             if(reference_iter==NULL || reference==NULL ||
                 reference->catalog!=seq_iter)
             {
@@ -278,8 +281,11 @@ static void rc_ui_catalog_store_get_value(GtkTreeModel *model,
             g_value_init(value, G_TYPE_BOOLEAN);
             g_value_set_boolean(value, FALSE);
             reference_iter = rclib_core_get_db_reference();
-            if(reference_iter!=NULL)
+            if(reference_iter!=NULL &&
+                rclib_db_playlist_is_valid_iter(reference_iter))
+            {
                 reference = g_sequence_get(reference_iter);
+            }
             if(reference_iter==NULL || reference==NULL ||
                 reference->catalog!=seq_iter)
             {

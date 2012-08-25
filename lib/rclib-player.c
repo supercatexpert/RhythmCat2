@@ -675,6 +675,7 @@ gboolean rclib_player_play_prev(gboolean jump, gboolean repeat,
     GSequenceIter *iter, *catalog_iter;
     iter = rclib_core_get_db_reference();
     if(iter==NULL) return FALSE;
+    if(!rclib_db_playlist_is_valid_iter(iter)) return FALSE;
     if(g_sequence_iter_is_begin(iter))
     {
         if(!jump)
@@ -753,6 +754,7 @@ gboolean rclib_player_play_next(gboolean jump, gboolean repeat,
     GSequenceIter *iter, *catalog_iter;
     iter = rclib_core_get_db_reference();
     if(iter==NULL) return FALSE;
+    if(!rclib_db_playlist_is_valid_iter(iter)) return FALSE;
     playlist_data = g_sequence_get(iter);
     if(playlist_data==NULL) return FALSE;
     iter = g_sequence_iter_next(iter);

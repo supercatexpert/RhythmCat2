@@ -301,7 +301,7 @@ static void rc_ui_main_window_tag_found_cb(RCLibCore *core,
     RCLibDbPlaylistData *playlist_data;
     GSequenceIter *iter = rclib_core_get_db_reference();
     if(data==NULL || metadata==NULL || uri==NULL) return;
-    if(iter!=NULL)
+    if(iter!=NULL && rclib_db_playlist_is_valid_iter(iter))
     {
         playlist_data = g_sequence_get(iter);
         type = rclib_core_get_source_type();

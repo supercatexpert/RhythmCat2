@@ -700,9 +700,26 @@ static void rclib_core_bus_callback(GstBus *bus, GstMessage *msg,
             g_debug("A new clock was selected.");
             if(priv->start_time>0)
             {
-                gst_element_seek_simple(priv->playbin, GST_FORMAT_TIME,
-                    GST_SEEK_FLAG_FLUSH,
-                    priv->start_time);
+                if(priv->end_time>0 && (priv->end_time - priv->start_time>0))
+                {
+                    gst_element_seek(priv->playbin, 1.0, GST_FORMAT_TIME, 
+                        GST_SEEK_FLAG_FLUSH | GST_SEEK_FLAG_KEY_UNIT,
+                        GST_SEEK_TYPE_SET, priv->start_time,
+                        GST_SEEK_TYPE_SET, priv->end_time);
+                } 
+                else
+                {
+                    gst_element_seek_simple(priv->playbin, GST_FORMAT_TIME,
+                        GST_SEEK_FLAG_FLUSH | GST_SEEK_FLAG_KEY_UNIT,
+                        priv->start_time);
+                }
+            }
+            else if(priv->end_time>0)
+            {
+                gst_element_seek(priv->playbin, 1.0, GST_FORMAT_TIME, 
+                    GST_SEEK_FLAG_FLUSH | GST_SEEK_FLAG_KEY_UNIT,
+                    GST_SEEK_TYPE_NONE, 0,
+                    GST_SEEK_TYPE_SET, priv->end_time);
             }
             duration = rclib_core_query_duration();
             if(duration>0)
@@ -748,8 +765,6 @@ static void rclib_core_identity_buffer_cb(GstElement *identity,
     GstBuffer *buf, gpointer data)
 {
     /* WARNING: This function is not called in main thread! */
-    GstMessage *msg;
-    gint64 pos, len;
     gint rate = 0;
     gint channels = 0;
     gint width = 0;
@@ -761,6 +776,9 @@ static void rclib_core_identity_buffer_cb(GstElement *identity,
     if(object==NULL) return;
     priv = RCLIB_CORE(object)->priv;
     if(priv==NULL) return;
+    /*
+    GstMessage *msg;
+    gint64 pos, len;
     pos = (gint64)GST_BUFFER_TIMESTAMP(buf);
     len = rclib_core_query_duration();
     if(len>0) priv->duration = len;
@@ -781,7 +799,7 @@ static void rclib_core_identity_buffer_cb(GstElement *identity,
         if(!gst_element_post_message(priv->playbin, msg))
             rclib_core_stop(); 
         g_debug("Out of the duration, EOS message has been emitted.");
-    }
+    }*/
     g_signal_emit(object, core_signals[SIGNAL_BUFFER_PROBE], 0, buf);
     caps = gst_buffer_get_caps(buf);
     if(caps==NULL) return;
@@ -1523,13 +1541,13 @@ gboolean rclib_core_set_position(gint64 pos)
     if(priv->start_time>0)
     {
         return gst_element_seek_simple(priv->playbin, GST_FORMAT_TIME, 
-            GST_SEEK_FLAG_FLUSH | GST_SEEK_FLAG_ACCURATE,
+            GST_SEEK_FLAG_FLUSH | GST_SEEK_FLAG_KEY_UNIT,
             pos + priv->start_time);
     }
     else
     {
         return gst_element_seek_simple(priv->playbin, GST_FORMAT_TIME, 
-            GST_SEEK_FLAG_FLUSH | GST_SEEK_FLAG_ACCURATE, pos);
+            GST_SEEK_FLAG_FLUSH | GST_SEEK_FLAG_KEY_UNIT, pos);
     }
 }
 
@@ -1553,8 +1571,12 @@ gint64 rclib_core_query_position()
         if(position<0) position = 0;
     }
     else return 0;
-    if(priv->start_time>0 && position>priv->start_time)
-        position = position - priv->start_time;
+    if(priv->start_time>0)
+    {
+        if(position>priv->start_time)
+            position = position - priv->start_time;
+        else return 0;
+    }
     return position;
 }
 
@@ -1702,18 +1724,22 @@ gboolean rclib_core_play()
 gboolean rclib_core_pause()
 {
     RCLibCorePrivate *priv;
-    gint64 pos;
-    gboolean flag, state_flag;
-    GstFormat format = GST_FORMAT_TIME;
+    gboolean state_flag;
     if(core_instance==NULL) return FALSE;
     priv = RCLIB_CORE(core_instance)->priv;
+    /*
+    gint64 pos;
+    GstFormat format = GST_FORMAT_TIME;
+    gboolean flag;
     flag = gst_element_query_position(priv->playbin, &format, &pos);
+    */
     state_flag = gst_element_set_state(priv->playbin, GST_STATE_PAUSED);
+    /*
     if(flag)
     {
         gst_element_seek_simple(priv->playbin, GST_FORMAT_TIME, 
-            GST_SEEK_FLAG_FLUSH | GST_SEEK_FLAG_ACCURATE, pos);
-    }
+            GST_SEEK_FLAG_FLUSH | GST_SEEK_FLAG_KEY_UNIT, pos);
+    }*/
     return state_flag;
 }
 
