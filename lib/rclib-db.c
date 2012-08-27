@@ -175,6 +175,7 @@ static RCLibTagMetadata *rclib_db_get_metadata_from_cue(
 static gpointer rclib_db_playlist_import_thread_cb(gpointer data)
 {
     RCLibDbPlaylistImportIdleData *idle_data;
+    RCLibDbLibraryImportIdleData *library_idle_data;
     RCLibTagMetadata *mmd = NULL, *cue_mmd = NULL;
     RCLibDbImportData *import_data;
     RCLibDbPrivate *priv;
@@ -238,6 +239,22 @@ static gpointer rclib_db_playlist_import_thread_cb(gpointer data)
                             g_idle_add(_rclib_db_playlist_import_idle_cb,
                                 idle_data);
                         }
+                        else if(import_data->type==
+                            RCLIB_DB_IMPORT_TYPE_LIBRARY)
+                        {
+                            library_idle_data = g_new0(
+                                RCLibDbLibraryImportIdleData, 1);
+                            library_idle_data->mmd = mmd;
+                            if(i==0)
+                            {
+                                library_idle_data->play_flag =
+                                    import_data->play_flag;
+                            }
+                            library_idle_data->type =
+                                RCLIB_DB_LIBRARY_TYPE_CUE;
+                            g_idle_add(_rclib_db_library_import_idle_cb,
+                                library_idle_data);
+                        }
                         else
                         {
                             g_warning("Unknown import type!");
@@ -279,6 +296,19 @@ static gpointer rclib_db_playlist_import_thread_cb(gpointer data)
                                 idle_data->type = RCLIB_DB_PLAYLIST_TYPE_CUE;
                                 g_idle_add(_rclib_db_playlist_import_idle_cb,
                                     idle_data);
+                            }
+                            else if(import_data->type==
+                                RCLIB_DB_IMPORT_TYPE_LIBRARY)
+                            {
+                                library_idle_data = g_new0(
+                                    RCLibDbLibraryImportIdleData, 1);
+                                library_idle_data->mmd = mmd;
+                                library_idle_data->play_flag =
+                                    import_data->play_flag;
+                                library_idle_data->type =
+                                    RCLIB_DB_LIBRARY_TYPE_CUE;
+                                g_idle_add(_rclib_db_library_import_idle_cb,
+                                    library_idle_data);
                             }
                             else
                             {
@@ -327,6 +357,19 @@ static gpointer rclib_db_playlist_import_thread_cb(gpointer data)
                                 g_idle_add(_rclib_db_playlist_import_idle_cb,
                                     idle_data);
                             }
+                            else if(import_data->type==
+                                RCLIB_DB_IMPORT_TYPE_LIBRARY)
+                            {
+                                library_idle_data = g_new0(
+                                    RCLibDbLibraryImportIdleData, 1);
+                                library_idle_data->mmd = cue_mmd;
+                                library_idle_data->play_flag =
+                                    import_data->play_flag;
+                                library_idle_data->type =
+                                    RCLIB_DB_LIBRARY_TYPE_CUE;
+                                g_idle_add(_rclib_db_library_import_idle_cb,
+                                    library_idle_data);
+                            }
                             else
                             {
                                 g_warning("Unknown import type!");
@@ -359,12 +402,28 @@ static gpointer rclib_db_playlist_import_thread_cb(gpointer data)
                                 idle_data->type = RCLIB_DB_PLAYLIST_TYPE_CUE;
                                 g_idle_add(_rclib_db_playlist_import_idle_cb,
                                     idle_data);
-                             }
-                             else
-                             {
-                                 g_warning("Invalid import type!");
-                                 rclib_tag_free(cue_mmd);
-                             }
+                            }
+                            else if(import_data->type==
+                                RCLIB_DB_IMPORT_TYPE_LIBRARY)
+                            {
+                                library_idle_data = g_new0(
+                                    RCLibDbLibraryImportIdleData, 1);
+                                library_idle_data->mmd = cue_mmd;
+                                if(i==0)
+                                {
+                                    library_idle_data->play_flag =
+                                        import_data->play_flag;
+                                }
+                                library_idle_data->type =
+                                    RCLIB_DB_LIBRARY_TYPE_CUE;
+                                g_idle_add(_rclib_db_library_import_idle_cb,
+                                    library_idle_data);
+                            }
+                            else
+                            {
+                                g_warning("Invalid import type!");
+                                rclib_tag_free(cue_mmd);
+                            }
                         }
                         rclib_tag_free(mmd);
                     }
@@ -381,6 +440,15 @@ static gpointer rclib_db_playlist_import_thread_cb(gpointer data)
                 idle_data->play_flag = import_data->play_flag;
                 idle_data->type = RCLIB_DB_PLAYLIST_TYPE_MUSIC;
                 g_idle_add(_rclib_db_playlist_import_idle_cb, idle_data);
+            }
+            else if(import_data->type==RCLIB_DB_IMPORT_TYPE_LIBRARY)
+            {
+                library_idle_data = g_new0(RCLibDbLibraryImportIdleData, 1);
+                library_idle_data->mmd = mmd;
+                library_idle_data->play_flag = import_data->play_flag;
+                library_idle_data->type = RCLIB_DB_LIBRARY_TYPE_MUSIC;
+                g_idle_add(_rclib_db_library_import_idle_cb,
+                    library_idle_data);
             }
             else
             {
@@ -401,6 +469,7 @@ static gpointer rclib_db_playlist_import_thread_cb(gpointer data)
 static gpointer rclib_db_playlist_refresh_thread_cb(gpointer data)
 {
     RCLibDbPlaylistRefreshIdleData *idle_data;
+    RCLibDbLibraryRefreshIdleData *library_idle_data;
     RCLibDbRefreshData *refresh_data;
     RCLibTagMetadata *mmd = NULL, *cue_mmd = NULL;
     RCLibDbPrivate *priv;
@@ -478,6 +547,30 @@ static gpointer rclib_db_playlist_refresh_thread_cb(gpointer data)
                                     idle_data);
                             }
                         }
+                        else if(refresh_data->type==
+                            RCLIB_DB_REFRESH_TYPE_LIBRARY)
+                        {
+                            if(mmd!=NULL)
+                            {
+                                library_idle_data = g_new0(
+                                    RCLibDbLibraryRefreshIdleData, 1);
+                                library_idle_data->mmd = mmd;
+                                library_idle_data->type =
+                                    RCLIB_DB_PLAYLIST_TYPE_CUE;
+                                g_idle_add(_rclib_db_library_refresh_idle_cb,
+                                    library_idle_data);
+                            }
+                            else
+                            {
+                                library_idle_data = g_new0(
+                                    RCLibDbLibraryRefreshIdleData, 1);
+                                library_idle_data->mmd = NULL;
+                                library_idle_data->type =
+                                    RCLIB_DB_PLAYLIST_TYPE_MISSING;
+                                g_idle_add(_rclib_db_library_refresh_idle_cb,
+                                    library_idle_data);
+                            }
+                        }
                         else
                         {
                             g_warning("Unknown refresh type!");
@@ -537,6 +630,30 @@ static gpointer rclib_db_playlist_refresh_thread_cb(gpointer data)
                                     idle_data);
                             }
                         }
+                        else if(refresh_data->type==
+                                RCLIB_DB_REFRESH_TYPE_LIBRARY)
+                        {
+                            if(cue_mmd!=NULL)
+                            {
+                                library_idle_data = g_new0(
+                                    RCLibDbLibraryRefreshIdleData, 1);
+                                library_idle_data->mmd = cue_mmd;
+                                library_idle_data->type =
+                                    RCLIB_DB_PLAYLIST_TYPE_CUE;
+                                g_idle_add(_rclib_db_library_refresh_idle_cb,
+                                    library_idle_data);
+                            }
+                            else
+                            {
+                                library_idle_data = g_new0(
+                                    RCLibDbLibraryRefreshIdleData, 1);
+                                library_idle_data->mmd = NULL;
+                                library_idle_data->type =
+                                    RCLIB_DB_PLAYLIST_TYPE_MISSING;
+                                g_idle_add(_rclib_db_library_refresh_idle_cb,
+                                    library_idle_data);
+                            }
+                        }
                         else
                         {
                             g_warning("Unknown refresh type!");
@@ -557,6 +674,17 @@ static gpointer rclib_db_playlist_refresh_thread_cb(gpointer data)
                 else
                     idle_data->type = RCLIB_DB_PLAYLIST_TYPE_MISSING;
                 g_idle_add(_rclib_db_playlist_refresh_idle_cb, idle_data);
+            }
+            else if(refresh_data->type==RCLIB_DB_REFRESH_TYPE_LIBRARY)
+            {
+                library_idle_data = g_new0(RCLibDbLibraryRefreshIdleData, 1);
+                library_idle_data->mmd = mmd;
+                if(mmd!=NULL)
+                    library_idle_data->type = RCLIB_DB_PLAYLIST_TYPE_MUSIC;
+                else
+                    library_idle_data->type = RCLIB_DB_PLAYLIST_TYPE_MISSING;
+                g_idle_add(_rclib_db_library_refresh_idle_cb,
+                    library_idle_data);
             }
             else
             {
@@ -1282,7 +1410,6 @@ GType rclib_db_playlist_data_get_type(void)
     return g_define_type_id__volatile;
 }
 
-/*
 GType rclib_db_library_data_get_type(void)
 {
     static volatile gsize g_define_type_id__volatile = 0;
@@ -1297,7 +1424,6 @@ GType rclib_db_library_data_get_type(void)
     }
     return g_define_type_id__volatile;
 }
-*/
 
 /**
  * rclib_db_init:

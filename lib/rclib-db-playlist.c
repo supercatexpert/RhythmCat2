@@ -213,7 +213,7 @@ RCLibDbCatalogData *rclib_db_catalog_data_new()
  *
  * Increase the reference of #RCLibDbCatalogData by 1.
  *
- * Returns: (transfer full): The #RCLibDbCatalogData structure.
+ * Returns: (transfer none): The #RCLibDbCatalogData structure.
  */
 
 RCLibDbCatalogData *rclib_db_catalog_data_ref(RCLibDbCatalogData *data)
@@ -277,7 +277,7 @@ RCLibDbPlaylistData *rclib_db_playlist_data_new()
  *
  * Increase the reference of #RCLibDbPlaylistData by 1.
  *
- * Returns: The #RCLibDbPlaylistData structure.
+ * Returns: (transfer none): The #RCLibDbPlaylistData structure.
  */
 
 RCLibDbPlaylistData *rclib_db_playlist_data_ref(RCLibDbPlaylistData *data)

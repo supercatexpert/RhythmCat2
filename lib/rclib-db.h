@@ -46,7 +46,7 @@ G_BEGIN_DECLS
     
 #define RCLIB_TYPE_DB_CATALOG_DATA (rclib_db_catalog_data_get_type())
 #define RCLIB_TYPE_DB_PLAYLIST_DATA (rclib_db_playlist_data_get_type())
-//#define RCLIB_TYPE_DB_LIBRARY_DATA (rclib_db_library_data_get_type())
+#define RCLIB_TYPE_DB_LIBRARY_DATA (rclib_db_library_data_get_type())
 
 /**
  * RCLibDbCatalogType:
@@ -73,6 +73,21 @@ typedef enum {
     RCLIB_DB_PLAYLIST_TYPE_MUSIC = 1,
     RCLIB_DB_PLAYLIST_TYPE_CUE = 2
 }RCLibDbPlaylistType;
+
+/**
+ * RCLibDbLibraryType:
+ * @RCLIB_DB_LIBRARY_TYPE_MISSING: the library item is missing
+ * @RCLIB_DB_LIBRARY_TYPE_MUSIC: the library item is music
+ * @RCLIB_DB_LIBRARY_TYPE_CUE: the library item is from CUE sheet
+ *
+ * The enum type for library.
+ */
+
+typedef enum {
+    RCLIB_DB_LIBRARY_TYPE_MISSING = 0,
+    RCLIB_DB_LIBRARY_TYPE_MUSIC = 1,
+    RCLIB_DB_LIBRARY_TYPE_CUE = 2
+}RCLibDbLibraryType;
 
 typedef struct _RCLibDbCatalogData RCLibDbCatalogData;
 typedef struct _RCLibDbPlaylistData RCLibDbPlaylistData;
@@ -171,7 +186,7 @@ struct _RCLibDbLibraryData {
     gint ref_count;
 
     /*< public >*/
-    gint type;
+    RCLibDbLibraryType type;
     gchar *uri;
     gchar *title;
     gchar *artist;
@@ -225,7 +240,7 @@ struct _RCLibDbClass {
 GType rclib_db_get_type();
 GType rclib_db_catalog_data_get_type();
 GType rclib_db_playlist_data_get_type();
-//GType rclib_db_library_data_get_type();
+GType rclib_db_library_data_get_type();
 
 /*< public >*/
 gboolean rclib_db_init(const gchar *file);
@@ -295,6 +310,12 @@ gboolean rclib_db_playlist_export_m3u_file(GSequenceIter *iter,
 gboolean rclib_db_playlist_export_all_m3u_files(const gchar *dir);
 void rclib_db_playlist_refresh(GSequenceIter *iter);
 gboolean rclib_db_load_legacy();
+
+/* Library Interface */
+RCLibDbLibraryData *rclib_db_library_data_new();
+RCLibDbLibraryData *rclib_db_library_data_ref(RCLibDbLibraryData *data);
+void rclib_db_library_data_unref(RCLibDbLibraryData *data);
+void rclib_db_library_data_free(RCLibDbLibraryData *data);
 
 G_END_DECLS
 

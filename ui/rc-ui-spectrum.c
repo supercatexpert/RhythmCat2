@@ -1004,6 +1004,7 @@ static void rc_ui_spectrum_widget_finalize(GObject *object)
     RCUiSpectrumWidget *spectrum = RC_UI_SPECTRUM_WIDGET(object);
     RCUiSpectrumWidgetPrivate *priv;
     priv = spectrum->priv;
+    spectrum->priv = NULL;
     rc_ui_spectrum_reset_state(priv);
     if(priv->buffer_probe_id>0)
         rclib_core_signal_disconnect(priv->buffer_probe_id);

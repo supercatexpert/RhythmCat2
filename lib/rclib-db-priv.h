@@ -75,6 +75,19 @@ typedef struct RCLibDbPlaylistRefreshIdleData
     RCLibDbPlaylistType type;
 }RCLibDbPlaylistRefreshIdleData;
 
+typedef struct RCLibDbLibraryImportIdleData
+{
+    RCLibTagMetadata *mmd;
+    RCLibDbLibraryType type;
+    gboolean play_flag;
+}RCLibDbLibraryImportIdleData;
+
+typedef struct RCLibDbLibraryRefreshIdleData
+{
+    RCLibTagMetadata *mmd;
+    RCLibDbLibraryType type;
+}RCLibDbLibraryRefreshIdleData;
+
 struct _RCLibDbPrivate
 {
     gchar *filename;
@@ -105,6 +118,8 @@ void _rclib_db_instance_finalize_playlist(RCLibDbPrivate *priv);
 void _rclib_db_instance_finalize_library(RCLibDbPrivate *priv);
 gboolean _rclib_db_playlist_import_idle_cb(gpointer data);
 gboolean _rclib_db_playlist_refresh_idle_cb(gpointer data);
+gboolean _rclib_db_library_import_idle_cb(gpointer data);
+gboolean _rclib_db_library_refresh_idle_cb(gpointer data);
 
 #endif
 

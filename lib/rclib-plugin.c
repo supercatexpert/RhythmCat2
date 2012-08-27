@@ -585,7 +585,7 @@ gboolean rclib_plugin_register(RCLibPluginData *plugin)
  *
  * Increase the reference count of plug-data by 1.
  *
- * Returns: The plug-in data.
+ * Returns: (transfer none): The plug-in data.
  */
 
 RCLibPluginData *rclib_plugin_data_ref(RCLibPluginData *plugin)
