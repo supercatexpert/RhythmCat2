@@ -234,6 +234,9 @@ struct _RCLibDbClass {
         gint *new_order);
     void (*import_updated)(RCLibDb *db, gint remaining);
     void (*refresh_updated)(RCLibDb *db, gint remaining);
+    void (*library_added)(RCLibDb *db, const gchar *uri);
+    void (*library_changed)(RCLibDb *db, const gchar *uri);
+    void (*library_delete)(RCLibDb *db, const gchar *uri);
 };
 
 /*< private >*/
@@ -316,6 +319,11 @@ RCLibDbLibraryData *rclib_db_library_data_new();
 RCLibDbLibraryData *rclib_db_library_data_ref(RCLibDbLibraryData *data);
 void rclib_db_library_data_unref(RCLibDbLibraryData *data);
 void rclib_db_library_data_free(RCLibDbLibraryData *data);
+GHashTable *rclib_db_get_library_table();
+gboolean rclib_db_library_has_uri(const gchar *uri);
+void rclib_db_library_add_music(const gchar *uri);
+void rclib_db_library_add_music_and_play(const gchar *uri);
+void rclib_db_library_delete(const gchar *uri);
 
 G_END_DECLS
 

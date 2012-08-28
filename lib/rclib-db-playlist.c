@@ -576,7 +576,7 @@ gboolean rclib_db_playlist_is_valid_iter(GSequenceIter *playlist_iter)
  * @insert_iter: insert the music before this iter
  * @uri: the URI of the music
  *
- * Add music to the music library by given catalog iter.
+ * Add music to the playlist by given catalog iter.
  */
 
 void rclib_db_playlist_add_music(GSequenceIter *iter,
@@ -604,7 +604,7 @@ void rclib_db_playlist_add_music(GSequenceIter *iter,
  * @insert_iter: insert the music before this iter
  * @uri: the URI of the music
  *
- * Add music to the music library by given catalog iter, and then play it
+ * Add music to the playlist by given catalog iter, and then play it
  * if the add operation succeeds.
  */
 

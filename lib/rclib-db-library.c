@@ -62,11 +62,32 @@ gboolean _rclib_db_library_import_idle_cb(gpointer data)
     priv = RCLIB_DB(instance)->priv;
     if(priv==NULL) return FALSE;
     if(instance==NULL) return FALSE;
-
-
-
-
-
+    if(idle_data->mmd->uri==NULL)
+    {
+        rclib_db_library_import_idle_data_free(idle_data);
+        return FALSE;
+    }
+    mmd = idle_data->mmd;
+    library_data = rclib_db_library_data_new();
+    library_data = rclib_db_library_data_new();
+    library_data->type = idle_data->type;
+    library_data->uri = g_strdup(mmd->uri);
+    library_data->title = g_strdup(mmd->title);
+    library_data->artist = g_strdup(mmd->artist);
+    library_data->album = g_strdup(mmd->album);
+    library_data->ftype = g_strdup(mmd->ftype);
+    library_data->length = mmd->length;
+    library_data->tracknum = mmd->tracknum;
+    library_data->year = mmd->year;
+    library_data->rating = 3.0;
+    g_hash_table_replace(priv->library_table, g_strdup(library_data->uri),
+        library_data);
+    priv->dirty_flag = TRUE;
+    
+    /* Send a signal that the operation succeeded. */
+    g_signal_emit_by_name(instance, "library-added",
+        library_data->uri);
+        
     rclib_db_library_import_idle_data_free(idle_data);
     return FALSE;
 }
@@ -85,7 +106,38 @@ gboolean _rclib_db_library_refresh_idle_cb(gpointer data)
     priv = RCLIB_DB(instance)->priv;
     if(priv==NULL) return FALSE;
     if(instance==NULL) return FALSE;
+    if(idle_data->mmd->uri==NULL)
+    {
+        rclib_db_library_refresh_idle_data_free(idle_data);
+        return FALSE;
+    }
+    mmd = idle_data->mmd;
+    library_data = g_hash_table_lookup(priv->library_table, mmd->uri);
+    if(library_data==NULL)
+    {
+        rclib_db_library_refresh_idle_data_free(idle_data);
+        return FALSE;
+    }
+    library_data->type = idle_data->type;
+    if(mmd!=NULL)
+    {
+        g_free(library_data->title);
+        g_free(library_data->artist);
+        g_free(library_data->album);
+        g_free(library_data->ftype);
+        library_data->title = g_strdup(mmd->title);
+        library_data->artist = g_strdup(mmd->artist);
+        library_data->album = g_strdup(mmd->album);
+        library_data->ftype = g_strdup(mmd->ftype);
+        library_data->length = mmd->length;
+        library_data->tracknum = mmd->tracknum;
+        library_data->year = mmd->year;
+    }
+    priv->dirty_flag = TRUE;
     
+    /* Send a signal that the operation succeeded. */
+    g_signal_emit_by_name(instance, "library-changed",
+        library_data->uri);
     
     rclib_db_library_refresh_idle_data_free(idle_data);
     return FALSE;
@@ -182,6 +234,111 @@ void _rclib_db_instance_finalize_library(RCLibDbPrivate *priv)
     priv->library_table = NULL;
 }
 
+/**
+ * rclib_db_get_library_table:
+ *
+ * Get the library table.
+ *
+ * Returns: (transfer none): (skip): The library table, NULL if the
+ *     table does not exist.
+ */
 
+GHashTable *rclib_db_get_library_table()
+{
+    RCLibDbPrivate *priv;
+    GObject *instance;
+    instance = rclib_db_get_instance();
+    if(instance==NULL) return NULL;
+    priv = RCLIB_DB(instance)->priv;
+    if(priv==NULL) return NULL;
+    return priv->library_table;
+}
 
+/**
+ * rclib_db_library_has_uri:
+ * @uri: the URI to find
+ *
+ * Check whether the give URI exists in the library.
+ *
+ * Returns: Whether the URI exists in the library.
+ */
+
+gboolean rclib_db_library_has_uri(const gchar *uri)
+{
+    RCLibDbPrivate *priv;
+    GObject *instance;
+    instance = rclib_db_get_instance();
+    if(instance==NULL) return FALSE;
+    priv = RCLIB_DB(instance)->priv;
+    if(priv==NULL) return FALSE;
+    return g_hash_table_contains(priv->library_table, uri);
+}
+
+/**
+ * rclib_db_library_add_music:
+ * @uri: the URI of the music to add
+ *
+ * Add music to the music library.
+ */
+
+void rclib_db_library_add_music(const gchar *uri)
+{
+    RCLibDbImportData *import_data;
+    GObject *instance;
+    RCLibDbPrivate *priv;
+    instance = rclib_db_get_instance();
+    if(uri==NULL || instance==NULL) return;
+    priv = RCLIB_DB(instance)->priv;
+    priv->import_work_flag = TRUE;
+    import_data = g_new0(RCLibDbImportData, 1);
+    import_data->type = RCLIB_DB_IMPORT_TYPE_LIBRARY;
+    import_data->uri = g_strdup(uri);
+    g_async_queue_push(priv->import_queue, import_data);
+}
+
+/**
+ * rclib_db_playlist_add_music_and_play:
+ * @uri: the URI of the music to add
+ *
+ * Add music to the music library, and then play it if the add
+ *     operation succeeds.
+ */
+
+void rclib_db_library_add_music_and_play(const gchar *uri)
+{
+    RCLibDbImportData *import_data;
+    GObject *instance;
+    RCLibDbPrivate *priv;
+    instance = rclib_db_get_instance();
+    if(uri==NULL || instance==NULL) return;
+    priv = RCLIB_DB(instance)->priv;
+    priv->import_work_flag = TRUE;
+    import_data = g_new0(RCLibDbImportData, 1);
+    import_data->type = RCLIB_DB_IMPORT_TYPE_LIBRARY;
+    import_data->uri = g_strdup(uri);
+    import_data->play_flag = TRUE;
+    g_async_queue_push(priv->import_queue, import_data);
+}
+
+/**
+ * rclib_db_library_delete:
+ * @uri: the URI of the music item to delete
+ *
+ * Delete the the music item by the given URI.
+ */
+
+void rclib_db_library_delete(const gchar *uri)
+{
+    RCLibDbPrivate *priv;
+    GObject *instance;
+    if(uri==NULL) return;
+    instance = rclib_db_get_instance();
+    if(instance==NULL) return;
+    priv = RCLIB_DB(instance)->priv;
+    if(priv==NULL) return;
+    if(!g_hash_table_contains(priv->library_table, uri)) return;
+    g_signal_emit_by_name(instance, "library-delete", uri);
+    g_hash_table_remove(priv->library_table, uri);
+    priv->dirty_flag = TRUE;
+}
 
