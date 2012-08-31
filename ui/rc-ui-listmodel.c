@@ -850,11 +850,10 @@ GType rc_ui_playlist_store_get_type()
 }
 
 static void rc_ui_list_model_catalog_added_cb(RCLibDb *db,
-    GSequenceIter *iter, gpointer data)
+    RCLibDbCatalogIter *iter, gpointer data)
 {
     RCUiCatalogStorePrivate *priv;
     RCUiPlaylistStorePrivate *playlist_priv;
-    RCLibDbCatalogData *catalog_data;
     GtkTreeModel *playlist_model;
     GtkTreePath *path;
     GtkTreeIter tree_iter;
@@ -863,13 +862,19 @@ static void rc_ui_list_model_catalog_added_cb(RCLibDb *db,
     g_return_if_fail(RC_UI_IS_CATALOG_STORE(catalog_model));
     priv = RC_UI_CATALOG_STORE(catalog_model)->priv;
     g_return_if_fail(priv!=NULL);
-    catalog_data = g_sequence_get(iter);
     playlist_model = GTK_TREE_MODEL(g_object_new(
-        RC_UI_TYPE_PLAYLIST_STORE, NULL));
+        RC_UI_TYPE_PLAYLIST_STORE, NULL));    
     playlist_priv = RC_UI_PLAYLIST_STORE(playlist_model)->priv;
-    playlist_priv->playlist = (GSequence *)catalog_data->playlist;
     playlist_priv->catalog_iter = iter;
-    catalog_data->store = playlist_model;
+    rclib_db_catalog_data_iter_get(iter, RCLIB_DB_CATALOG_DATA_TYPE_PLAYLIST,
+        &(playlist_priv->playlist), RCLIB_DB_CATALOG_DATA_TYPE_NONE);
+    rclib_db_catalog_data_iter_set(iter, RCLIB_DB_CATALOG_DATA_TYPE_STORE,
+        playlist_model, RCLIB_DB_CATALOG_DATA_TYPE_NONE);
+    /*
+    
+    playlist_priv->playlist = (GSequence *)catalog_data->playlist;
+
+    catalog_data->store = playlist_model; */
     pos = g_sequence_iter_get_position(iter);
     path = gtk_tree_path_new();
     gtk_tree_path_append_index(path, pos);
@@ -902,13 +907,14 @@ static void rc_ui_list_model_catalog_changed_cb(RCLibDb *db,
 static void rc_ui_list_model_catalog_delete_cb(RCLibDb *db,
     GSequenceIter *iter, gpointer data)
 {
-    RCLibDbCatalogData *catalog_data;
+    gpointer store = NULL;
     GtkTreePath *path;
     gint pos;
     g_return_if_fail(iter!=NULL);
     g_return_if_fail(RC_UI_IS_CATALOG_STORE(catalog_model));
-    catalog_data = g_sequence_get(iter);
-    g_object_unref(G_OBJECT(catalog_data->store));
+    rclib_db_catalog_data_iter_get(iter, RCLIB_DB_CATALOG_DATA_TYPE_STORE,
+        &store, RCLIB_DB_CATALOG_DATA_TYPE_NONE);
+    if(store!=NULL) g_object_unref(G_OBJECT(store));
     pos = g_sequence_iter_get_position(iter);
     path = gtk_tree_path_new();
     gtk_tree_path_append_index(path, pos);

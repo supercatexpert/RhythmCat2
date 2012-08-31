@@ -26,6 +26,7 @@
 #define HAVE_RC_LIB_DB_H
 
 #include <stdlib.h>
+#include <stdarg.h>
 #include <glib.h>
 #include <glib/gstdio.h>
 #include <glib/gi18n.h>
@@ -89,12 +90,123 @@ typedef enum {
     RCLIB_DB_LIBRARY_TYPE_CUE = 2
 }RCLibDbLibraryType;
 
+/**
+ * RCLibDbCatalogDataType:
+ * @RCLIB_DB_CATALOG_DATA_TYPE_NONE: none type, not used by data
+ * @RCLIB_DB_CATALOG_DATA_TYPE_PLAYLIST: the playlist
+ *     (#RCLibDbPlaylistSequence)
+ * @RCLIB_DB_CATALOG_DATA_TYPE_SELF_ITER: the iter pointed to self
+ *     (#RCLibDbCatalogIter)
+ * @RCLIB_DB_CATALOG_DATA_TYPE_NAME: the catalog name (string)
+ * @RCLIB_DB_CATALOG_DATA_TYPE_TYPE: the catalog type (#RCLibDbCatalogType)
+ * @RCLIB_DB_CATALOG_DATA_TYPE_STORE: the store pointer which can be used
+ *     for UI (#gpointer)
+ *
+ * The enum type for set/get the data in the #RCLibDbCatalogData
+ */
+
+typedef enum {
+    RCLIB_DB_CATALOG_DATA_TYPE_NONE = 0,
+    RCLIB_DB_CATALOG_DATA_TYPE_PLAYLIST = 1,
+    RCLIB_DB_CATALOG_DATA_TYPE_SELF_ITER = 2,
+    RCLIB_DB_CATALOG_DATA_TYPE_NAME = 3,
+    RCLIB_DB_CATALOG_DATA_TYPE_TYPE = 4,
+    RCLIB_DB_CATALOG_DATA_TYPE_STORE = 5
+}RCLibDbCatalogDataType;
+
+/**
+ * RCLibDbPlaylistDataType:
+ * @RCLIB_DB_PLAYLIST_DATA_TYPE_NONE: none type, not used by data
+ * @RCLIB_DB_PLAYLIST_DATA_TYPE_CATALOG: the catalog (#RCLibDbCatalogSequence)
+ * @RCLIB_DB_PLAYLIST_DATA_TYPE_SELF_ITER: the iter pointed to self
+ *     (#RCLibDbPlaylistIter)
+ * @RCLIB_DB_PLAYLIST_DATA_TYPE_TYPE: the playlist type (#RCLibDbPlaylistType)
+ * @RCLIB_DB_PLAYLIST_DATA_TYPE_URI: the URI (string)
+ * @RCLIB_DB_PLAYLIST_DATA_TYPE_TITLE: the title (string)
+ * @RCLIB_DB_PLAYLIST_DATA_TYPE_ARTIST: the artist (string)
+ * @RCLIB_DB_PLAYLIST_DATA_TYPE_ALBUM: the album (string)
+ * @RCLIB_DB_PLAYLIST_DATA_TYPE_FTYPE: the file type (string)
+ * @RCLIB_DB_PLAYLIST_DATA_TYPE_LENGTH: the time length (#gint64)
+ * @RCLIB_DB_PLAYLIST_DATA_TYPE_TRACKNUM: the track number (#gint)
+ * @RCLIB_DB_PLAYLIST_DATA_TYPE_YEAR = 11,
+ * @RCLIB_DB_PLAYLIST_DATA_TYPE_RATING: the rating (#gfloat)
+ * @RCLIB_DB_PLAYLIST_DATA_TYPE_LYRICFILE: the lyric file path (string)
+ * @RCLIB_DB_PLAYLIST_DATA_TYPE_LYRICSECFILE: the second lyric file
+ *     path (string)
+ * @RCLIB_DB_PLAYLIST_DATA_TYPE_ALBUMFILE: the album image file path (string)
+ *
+ * The enum type for set/get the data in the #RCLibDbPlaylistData
+ */
+
+typedef enum {
+    RCLIB_DB_PLAYLIST_DATA_TYPE_NONE = 0,
+    RCLIB_DB_PLAYLIST_DATA_TYPE_CATALOG = 1,
+    RCLIB_DB_PLAYLIST_DATA_TYPE_SELF_ITER = 2,
+    RCLIB_DB_PLAYLIST_DATA_TYPE_TYPE = 3,
+    RCLIB_DB_PLAYLIST_DATA_TYPE_URI = 4,
+    RCLIB_DB_PLAYLIST_DATA_TYPE_TITLE = 5,
+    RCLIB_DB_PLAYLIST_DATA_TYPE_ARTIST = 6,
+    RCLIB_DB_PLAYLIST_DATA_TYPE_ALBUM = 7,
+    RCLIB_DB_PLAYLIST_DATA_TYPE_FTYPE = 8,
+    RCLIB_DB_PLAYLIST_DATA_TYPE_LENGTH = 9,
+    RCLIB_DB_PLAYLIST_DATA_TYPE_TRACKNUM = 10,
+    RCLIB_DB_PLAYLIST_DATA_TYPE_YEAR = 11,
+    RCLIB_DB_PLAYLIST_DATA_TYPE_RATING = 12,
+    RCLIB_DB_PLAYLIST_DATA_TYPE_LYRICFILE = 13,
+    RCLIB_DB_PLAYLIST_DATA_TYPE_LYRICSECFILE = 14,
+    RCLIB_DB_PLAYLIST_DATA_TYPE_ALBUMFILE = 15
+}RCLibDbPlaylistDataType;
+
+/**
+ * RCLibDbLibraryDataType:
+ * @RCLIB_DB_LIBRARY_DATA_TYPE_NONE: none type, not used by data
+ * @RCLIB_DB_LIBRARY_DATA_TYPE_TYPE: the library item type
+ *     (#RCLibDbLibraryType)
+ * @RCLIB_DB_LIBRARY_DATA_TYPE_URI: the URI (string)
+ * @RCLIB_DB_LIBRARY_DATA_TYPE_TITLE: the title (string)
+ * @RCLIB_DB_LIBRARY_DATA_TYPE_ARTIST: the artist (string)
+ * @RCLIB_DB_LIBRARY_DATA_TYPE_ALBUM: the album (string)
+ * @RCLIB_DB_LIBRARY_DATA_TYPE_FTYPE: the file type (string)
+ * @RCLIB_DB_LIBRARY_DATA_TYPE_LENGTH: the time length (#gint64)
+ * @RCLIB_DB_LIBRARY_DATA_TYPE_TRACKNUM: the track number (#gint)
+ * @RCLIB_DB_LIBRARY_DATA_TYPE_YEAR = 11,
+ * @RCLIB_DB_LIBRARY_DATA_TYPE_RATING: the rating (#gfloat)
+ * @RCLIB_DB_LIBRARY_DATA_TYPE_LYRICFILE: the lyric file path (string)
+ * @RCLIB_DB_LIBRARY_DATA_TYPE_LYRICSECFILE: the second lyric file
+ *     path (string)
+ * @RCLIB_DB_LIBRARY_DATA_TYPE_ALBUMFILE: the album image file path (string)
+ *
+ * The enum type for set/get the data in the #RCLibDbPlaylistData
+ */
+
+typedef enum {
+    RCLIB_DB_LIBRARY_DATA_TYPE_NONE = 0,
+    RCLIB_DB_LIBRARY_DATA_TYPE_TYPE = 1,
+    RCLIB_DB_LIBRARY_DATA_TYPE_URI = 2,
+    RCLIB_DB_LIBRARY_DATA_TYPE_TITLE = 3,
+    RCLIB_DB_LIBRARY_DATA_TYPE_ARTIST = 4,
+    RCLIB_DB_LIBRARY_DATA_TYPE_ALBUM = 5,
+    RCLIB_DB_LIBRARY_DATA_TYPE_FTYPE = 6,
+    RCLIB_DB_LIBRARY_DATA_TYPE_LENGTH = 7,
+    RCLIB_DB_LIBRARY_DATA_TYPE_TRACKNUM = 8,
+    RCLIB_DB_LIBRARY_DATA_TYPE_YEAR = 9,
+    RCLIB_DB_LIBRARY_DATA_TYPE_RATING = 10,
+    RCLIB_DB_LIBRARY_DATA_TYPE_LYRICFILE = 11,
+    RCLIB_DB_LIBRARY_DATA_TYPE_LYRICSECFILE = 12,
+    RCLIB_DB_LIBRARY_DATA_TYPE_ALBUMFILE = 13
+}RCLibDbLibraryDataType;
+
 typedef struct _RCLibDbCatalogData RCLibDbCatalogData;
 typedef struct _RCLibDbPlaylistData RCLibDbPlaylistData;
 typedef struct _RCLibDbLibraryData RCLibDbLibraryData;
 typedef struct _RCLibDb RCLibDb;
 typedef struct _RCLibDbClass RCLibDbClass;
 typedef struct _RCLibDbPrivate RCLibDbPrivate;
+
+typedef GSequence RCLibDbCatalogSequence;
+typedef GSequence RCLibDbPlaylistSequence;
+typedef GSequenceIter RCLibDbCatalogIter;
+typedef GSequenceIter RCLibDbPlaylistIter;
 
 /**
  * RCLibDbCatalogData:
@@ -266,6 +378,14 @@ RCLibDbCatalogData *rclib_db_catalog_data_new();
 RCLibDbCatalogData *rclib_db_catalog_data_ref(RCLibDbCatalogData *data);
 void rclib_db_catalog_data_unref(RCLibDbCatalogData *data);
 void rclib_db_catalog_data_free(RCLibDbCatalogData *data);
+void rclib_db_catalog_data_set(RCLibDbCatalogData *data,
+    RCLibDbCatalogDataType type1, ...);
+void rclib_db_catalog_data_get(const RCLibDbCatalogData *data,
+    RCLibDbCatalogDataType type1, ...);
+void rclib_db_catalog_data_iter_set(RCLibDbCatalogIter *iter,
+    RCLibDbCatalogDataType type1, ...);
+void rclib_db_catalog_data_iter_get(RCLibDbCatalogIter *iter,
+    RCLibDbCatalogDataType type1, ...);
 RCLibDbPlaylistData *rclib_db_playlist_data_new();
 RCLibDbPlaylistData *rclib_db_playlist_data_ref(RCLibDbPlaylistData *data);
 void rclib_db_playlist_data_unref(RCLibDbPlaylistData *data);
@@ -277,6 +397,8 @@ GSequenceIter *rclib_db_catalog_add(const gchar *name,
 void rclib_db_catalog_delete(GSequenceIter *iter);
 void rclib_db_catalog_set_name(GSequenceIter *iter, const gchar *name);
 void rclib_db_catalog_set_type(GSequenceIter *iter, RCLibDbCatalogType type);
+void rclib_db_catalog_set_store(GSequenceIter *iter, gpointer store);
+void rclib_db_catalog_get_store(GSequenceIter *iter, gpointer *store);
 void rclib_db_catalog_reorder(gint *new_order);
 gboolean rclib_db_playlist_is_valid_iter(GSequenceIter *playlist_iter);
 void rclib_db_playlist_add_music(GSequenceIter *iter,

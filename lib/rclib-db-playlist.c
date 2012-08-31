@@ -255,6 +255,240 @@ void rclib_db_catalog_data_free(RCLibDbCatalogData *data)
     g_slice_free(RCLibDbCatalogData, data);
 }
 
+static inline gboolean rclib_db_catalog_data_set_valist(
+    RCLibDbCatalogData *data, RCLibDbCatalogDataType type1,
+    va_list var_args)
+{
+    gboolean send_signal = FALSE;
+    RCLibDbCatalogDataType type;
+    RCLibDbCatalogSequence *sequence;
+    RCLibDbCatalogIter *iter;
+    RCLibDbCatalogType new_type;
+    gpointer ptr;
+    const gchar *str;    
+    type = type1;
+    while(type!=RCLIB_DB_CATALOG_DATA_TYPE_NONE)
+    {
+        switch(type)
+        {
+            case RCLIB_DB_CATALOG_DATA_TYPE_PLAYLIST:
+            {
+                sequence = va_arg(var_args, RCLibDbCatalogSequence *);
+                data->playlist = sequence;
+                break;
+            }
+            case RCLIB_DB_CATALOG_DATA_TYPE_SELF_ITER:
+            {
+                iter = va_arg(var_args, RCLibDbCatalogIter *);
+                data->self_iter = iter;
+                break;
+            }
+            case RCLIB_DB_CATALOG_DATA_TYPE_NAME:
+            {
+                if(data->name!=NULL) g_free(data->name);
+                str = va_arg(var_args, const gchar *);
+                data->name = g_strdup(str);
+                send_signal = TRUE;
+                break;
+            }
+            case RCLIB_DB_CATALOG_DATA_TYPE_TYPE:
+            {
+                new_type = va_arg(var_args, RCLibDbCatalogType);
+                data->type = new_type;
+                break;
+            }
+            case RCLIB_DB_CATALOG_DATA_TYPE_STORE:
+            {
+                ptr = va_arg(var_args, gpointer);
+                data->store = ptr;
+                break;
+            }
+            default:
+            {
+                g_warning("rclib_db_catalog_data_set: Wrong data type %d!",
+                    type);
+                break;
+            }
+        }
+        type = va_arg(var_args, RCLibDbCatalogDataType);
+    }    
+    return send_signal;
+}
+
+static inline void rclib_db_catalog_data_get_valist(
+    const RCLibDbCatalogData *data, RCLibDbCatalogDataType type1,
+    va_list var_args)
+{
+    RCLibDbCatalogDataType type;
+    RCLibDbCatalogSequence **sequence;
+    RCLibDbCatalogIter **iter;
+    RCLibDbCatalogType *catalog_type;
+    gpointer *ptr;
+    gchar **str;    
+    type = type1;
+    while(type!=RCLIB_DB_CATALOG_DATA_TYPE_NONE)
+    {
+        switch(type)
+        {
+            case RCLIB_DB_CATALOG_DATA_TYPE_PLAYLIST:
+            {
+                sequence = va_arg(var_args, RCLibDbCatalogSequence **);
+                *sequence = data->playlist;
+                break;
+            }
+            case RCLIB_DB_CATALOG_DATA_TYPE_SELF_ITER:
+            {
+                iter = va_arg(var_args, RCLibDbCatalogIter **);
+                *iter = data->self_iter;
+                break;
+            }
+            case RCLIB_DB_CATALOG_DATA_TYPE_NAME:
+            {
+                str = va_arg(var_args, gchar **);
+                *str = data->name;
+                break;
+            }
+            case RCLIB_DB_CATALOG_DATA_TYPE_TYPE:
+            {
+                catalog_type = va_arg(var_args, RCLibDbCatalogType *);
+                *catalog_type = data->type;
+                break;
+            }
+            case RCLIB_DB_CATALOG_DATA_TYPE_STORE:
+            {
+                ptr = va_arg(var_args, gpointer *);
+                *ptr = data->store;
+                break;
+            }
+            default:
+            {
+                g_warning("rclib_db_catalog_data_get: Wrong data type %d!",
+                    type);
+                break;
+            }
+        }
+        type = va_arg(var_args, RCLibDbCatalogDataType);
+    }
+}
+
+/**
+ * rclib_db_catalog_data_set: (skip)
+ * @data: the #RCLibDbCatalogData data
+ * @type1: the first property in catalog data to set
+ * @...: value for the first property, followed optionally by more
+ *  name/value pairs, followed by %RCLIB_DB_CATALOG_DATA_TYPE_NONE
+ *
+ * Sets properties on a #RCLibDbCatalogData.
+ */
+
+void rclib_db_catalog_data_set(RCLibDbCatalogData *data,
+    RCLibDbCatalogDataType type1, ...)
+{
+    RCLibDbPrivate *priv = NULL;
+    GObject *instance = NULL;
+    va_list var_args;
+    gboolean send_signal = FALSE;
+    if(data==NULL) return;
+    va_start(var_args, type1);
+    send_signal = rclib_db_catalog_data_set_valist(data, type1, var_args);
+    va_end(var_args);
+    if(send_signal)
+    {
+        instance = rclib_db_get_instance();
+        if(instance!=NULL)
+            priv = RCLIB_DB(instance)->priv;
+        if(priv!=NULL)
+            priv->dirty_flag = TRUE;
+        if(data->self_iter!=NULL)
+        {
+            g_signal_emit_by_name(instance, "catalog-changed",
+                data->self_iter);
+        }
+    }
+}
+
+/**
+ * rclib_db_catalog_data_get: (skip)
+ * @data: the #RCLibDbCatalogData data
+ * @type1: the first property in catalog data to get
+ * @...: return location for the first property, followed optionally by more
+ *  name/return location pairs, followed by %RCLIB_DB_CATALOG_DATA_TYPE_NONE
+ *
+ * Gets properties of a #RCLibDbCatalogData. The property contents will not
+ * be copied, just get their address instead, if the contents are stored
+ * inside a pointer.
+ */
+
+void rclib_db_catalog_data_get(const RCLibDbCatalogData *data,
+    RCLibDbCatalogDataType type1, ...)
+{
+    va_list var_args;
+    if(data==NULL) return;
+    va_start(var_args, type1);
+    rclib_db_catalog_data_get_valist(data, type1, var_args);
+    va_end(var_args);
+}
+
+/**
+ * rclib_db_catalog_data_iter_set: (skip)
+ * @iter: the #RCLibDbCatalogIter iter
+ * @type1: the first property in catalog data to set
+ * @...: value for the first property, followed optionally by more
+ *  name/value pairs, followed by %RCLIB_DB_CATALOG_DATA_TYPE_NONE
+ *
+ * Sets properties on the data in a #RCLibDbCatalogiter.
+ */
+
+void rclib_db_catalog_data_iter_set(RCLibDbCatalogIter *iter,
+    RCLibDbCatalogDataType type1, ...)
+{
+    RCLibDbPrivate *priv = NULL;
+    GObject *instance = NULL;
+    RCLibDbCatalogData *data;
+    va_list var_args;
+    gboolean send_signal = FALSE;
+    if(iter==NULL) return;
+    data = g_sequence_get(iter);
+    if(data==NULL) return;
+    va_start(var_args, type1);
+    send_signal = rclib_db_catalog_data_set_valist(data, type1, var_args);
+    va_end(var_args);
+    if(send_signal)
+    {
+        instance = rclib_db_get_instance();
+        if(instance!=NULL)
+            priv = RCLIB_DB(instance)->priv;
+        if(priv!=NULL)
+            priv->dirty_flag = TRUE;
+        g_signal_emit_by_name(instance, "catalog-changed", iter);
+    }
+}
+
+/**
+ * rclib_db_catalog_data_iter_get: (skip)
+ * @iter: the #RCLibDbCatalogIter iter
+ * @type1: the first property in catalog data to get
+ * @...: value for the first property, followed optionally by more
+ *  name/value pairs, followed by %RCLIB_DB_CATALOG_DATA_TYPE_NONE
+ *
+ * Gets properties of the data in a #RCLibDbCatalogiter. The property
+ * contents will not be copied, just get their address instead,
+ * if the contents are stored inside a pointer.
+ */
+
+void rclib_db_catalog_data_iter_get(RCLibDbCatalogIter *iter,
+    RCLibDbCatalogDataType type1, ...)
+{
+    RCLibDbCatalogData *data;
+    va_list var_args;
+    if(iter==NULL) return;
+    data = g_sequence_get(iter);
+    if(data==NULL) return;
+    va_start(var_args, type1);
+    rclib_db_catalog_data_get_valist(data, type1, var_args);
+    va_end(var_args);
+}
+
 /**
  * rclib_db_playlist_data_new:
  * 
@@ -493,6 +727,42 @@ void rclib_db_catalog_set_type(GSequenceIter *iter, RCLibDbCatalogType type)
     catalog_data->type = type;
     priv->dirty_flag = TRUE;
     g_signal_emit_by_name(instance, "catalog-changed", iter);
+}
+
+/**
+ * rclib_db_catalog_set_store:
+ * @iter: the iter to the catalog
+ * @store: the store to set
+ *
+ * Set the store of the catalog pointed to by #iter.
+ */
+
+void rclib_db_catalog_set_store(GSequenceIter *iter, gpointer store)
+{
+    RCLibDbCatalogData *catalog_data;
+    if(iter==NULL) return;
+    if(g_sequence_iter_is_end(iter)) return;
+    catalog_data = g_sequence_get(iter);
+    if(catalog_data==NULL) return;
+    catalog_data->store = store;
+}
+
+/**
+ * rclib_db_catalog_get_store:
+ * @iter: the iter to the catalog
+ * @store: the store to return
+ *
+ * Get the store of the catalog pointed to by #iter.
+ */
+
+void rclib_db_catalog_get_store(GSequenceIter *iter, gpointer *store)
+{
+    RCLibDbCatalogData *catalog_data;
+    if(iter==NULL || store==NULL) return;
+    if(g_sequence_iter_is_end(iter)) return;
+    catalog_data = g_sequence_get(iter);
+    if(catalog_data==NULL) return;
+    *store = catalog_data->store;
 }
 
 static gint rclib_db_reorder_func(GSequenceIter *a, GSequenceIter *b,

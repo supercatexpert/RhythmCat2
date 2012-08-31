@@ -54,6 +54,7 @@ typedef struct RCLibDbXMLParserData
     GSequenceIter *catalog_iter;
     GHashTable *catalog_iter_table;
     GHashTable *playlist_iter_table;
+    GHashTable *library_table;
 }RCLibDbXMLParserData;
 
 enum
@@ -711,6 +712,7 @@ static void rclib_db_xml_parser_start_element_cb(GMarkupParseContext *context,
     RCLibDbXMLParserData *parser_data = (RCLibDbXMLParserData *)data;
     RCLibDbCatalogData *catalog_data;
     RCLibDbPlaylistData *playlist_data;
+    RCLibDbLibraryData *library_data;
     GSequenceIter *catalog_iter, *playlist_iter;
     guint i;
     if(data==NULL) return;
@@ -822,6 +824,80 @@ static void rclib_db_xml_parser_start_element_cb(GMarkupParseContext *context,
         g_hash_table_replace(parser_data->catalog_iter_table, catalog_iter,
             catalog_iter);
     }
+    if(parser_data->library_table!=NULL && g_strcmp0(element_name,
+        "libitem")==0)
+    {
+        library_data = rclib_db_library_data_new();
+        for(i=0;attribute_names[i]!=NULL;i++)
+        {
+            if(library_data->uri==NULL &&
+                g_strcmp0(attribute_names[i], "uri")==0)
+            {
+                library_data->uri = g_strdup(attribute_values[i]);
+            }
+            else if(g_strcmp0(attribute_names[i], "type")==0)
+            {
+                sscanf(attribute_values[i], "%u", &(library_data->type));
+            }
+            else if(library_data->title==NULL &&
+                g_strcmp0(attribute_names[i], "title")==0)
+            {
+                library_data->title = g_strdup(attribute_values[i]);
+            }
+            else if(library_data->artist==NULL &&
+                g_strcmp0(attribute_names[i], "artist")==0)
+            {
+                library_data->artist = g_strdup(attribute_values[i]);
+            }
+            else if(library_data->album==NULL &&
+                g_strcmp0(attribute_names[i], "album")==0)
+            {
+                library_data->album = g_strdup(attribute_values[i]);
+            }
+            else if(library_data->ftype==NULL &&
+                g_strcmp0(attribute_names[i], "filetype")==0)
+            {
+                library_data->ftype = g_strdup(attribute_values[i]);
+            }
+            else if(g_strcmp0(attribute_names[i], "length")==0)
+            {
+                library_data->length = g_ascii_strtoll(attribute_values[i],
+                    NULL, 10);
+            }
+            else if(g_strcmp0(attribute_names[i], "tracknum")==0)
+            {
+                sscanf(attribute_values[i], "%d",
+                    &(library_data->tracknum));
+            }
+            else if(g_strcmp0(attribute_names[i], "year")==0)
+            {
+                sscanf(attribute_values[i], "%d",
+                    &(library_data->year));
+            }
+            else if(g_strcmp0(attribute_names[i], "rating")==0)
+            {
+                sscanf(attribute_values[i], "%f",
+                    &(library_data->rating));
+            }
+            else if(library_data->lyricfile==NULL &&
+                g_strcmp0(attribute_names[i], "lyricfile")==0)
+            {
+                library_data->lyricfile = g_strdup(attribute_values[i]);
+            }
+            else if(library_data->albumfile==NULL &&
+                g_strcmp0(attribute_names[i], "albumfile")==0)
+            {
+                library_data->albumfile = g_strdup(attribute_values[i]);
+            }
+            else if(library_data->lyricsecfile==NULL &&
+                g_strcmp0(attribute_names[i], "lyricsecondfile")==0)
+            {
+                library_data->lyricsecfile = g_strdup(attribute_values[i]);
+            }
+        }
+        g_hash_table_replace(parser_data->library_table,
+            g_strdup(library_data->uri), library_data);
+    }
 }
 
 static void rclib_db_xml_parser_end_element_cb(GMarkupParseContext *context,
@@ -838,11 +914,15 @@ static void rclib_db_xml_parser_end_element_cb(GMarkupParseContext *context,
         parser_data->playlist = NULL;
         parser_data->catalog_iter = NULL;
     }
+    else if(g_strcmp0(element_name, "library")==0)
+    {
+        parser_data->library_table = NULL;
+    }
 }
 
 static gboolean rclib_db_load_library_db(GSequence *catalog,
     GHashTable *catalog_iter_table, GHashTable *playlist_iter_table,
-    const gchar *file, gboolean *dirty_flag)
+    GHashTable *library_table, const gchar *file, gboolean *dirty_flag)
 {
     RCLibDbXMLParserData parser_data = {0};
     GMarkupParseContext *parse_context;
@@ -880,6 +960,7 @@ static gboolean rclib_db_load_library_db(GSequence *catalog,
     parser_data.catalog = catalog;
     parser_data.catalog_iter_table = catalog_iter_table;
     parser_data.playlist_iter_table = playlist_iter_table;
+    parser_data.library_table = library_table;
     parse_context = g_markup_parse_context_new(&markup_parser, 0,
         &parser_data, NULL);
     while((read_size=g_input_stream_read(decompress_istream, buffer, 4096,
@@ -896,11 +977,14 @@ static gboolean rclib_db_load_library_db(GSequence *catalog,
     return TRUE;
 }
 
-static inline GString *rclib_db_build_xml_data(GSequence *catalog)
+static inline GString *rclib_db_build_xml_data(GSequence *catalog,
+    GHashTable *library)
 {
     RCLibDbCatalogData *catalog_data;
     RCLibDbPlaylistData *playlist_data;
+    RCLibDbLibraryData *library_data;
     GSequenceIter *catalog_iter, *playlist_iter;
+    GHashTableIter library_iter;
     GString *data_str;
     gchar *tmp;
     extern guint rclib_major_version;
@@ -909,97 +993,182 @@ static inline GString *rclib_db_build_xml_data(GSequence *catalog)
     data_str = g_string_new("<?xml version=\"1.0\" standalone=\"yes\"?>\n");
     g_string_append_printf(data_str, "<rclibdb version=\"%u.%u.%u\">\n",
         rclib_major_version, rclib_minor_version, rclib_micro_version);
-    for(catalog_iter = g_sequence_get_begin_iter(catalog);
-        !g_sequence_iter_is_end(catalog_iter);
-        catalog_iter = g_sequence_iter_next(catalog_iter))
+    if(catalog!=NULL)
     {
-        catalog_data = g_sequence_get(catalog_iter);
-        tmp = g_markup_printf_escaped("  <playlist name=\"%s\" type=\"%u\">\n",
-            catalog_data->name, catalog_data->type);
-        g_string_append(data_str, tmp);
-        g_free(tmp);
-        for(playlist_iter = g_sequence_get_begin_iter(catalog_data->playlist);
-            !g_sequence_iter_is_end(playlist_iter);
-            playlist_iter = g_sequence_iter_next(playlist_iter))
+        for(catalog_iter = g_sequence_get_begin_iter(catalog);
+            !g_sequence_iter_is_end(catalog_iter);
+            catalog_iter = g_sequence_iter_next(catalog_iter))
         {
-            playlist_data = g_sequence_get(playlist_iter);
-            g_string_append_printf(data_str, "    <item type=\"%u\" ",
-                playlist_data->type);
-            if(playlist_data->uri!=NULL)
+            catalog_data = g_sequence_get(catalog_iter);
+            if(catalog_data==NULL) continue;
+            tmp = g_markup_printf_escaped("  <playlist name=\"%s\" "
+                "type=\"%u\">\n", catalog_data->name, catalog_data->type);
+            g_string_append(data_str, tmp);
+            g_free(tmp);
+            for(playlist_iter=g_sequence_get_begin_iter(
+                catalog_data->playlist);
+                !g_sequence_iter_is_end(playlist_iter);
+                playlist_iter=g_sequence_iter_next(playlist_iter))
+            {
+                playlist_data = g_sequence_get(playlist_iter);
+                if(playlist_data==NULL) continue;
+                g_string_append_printf(data_str, "    <item type=\"%u\" ",
+                    playlist_data->type);
+                if(playlist_data->uri!=NULL)
+                {
+                    tmp = g_markup_printf_escaped("uri=\"%s\" ",
+                        playlist_data->uri);
+                    g_string_append(data_str, tmp);
+                    g_free(tmp);
+                }
+                if(playlist_data->title!=NULL)
+                {
+                    tmp = g_markup_printf_escaped("title=\"%s\" ",
+                        playlist_data->title);
+                    g_string_append(data_str, tmp);
+                    g_free(tmp);
+                }
+                if(playlist_data->artist!=NULL)
+                {
+                    tmp = g_markup_printf_escaped("artist=\"%s\" ",
+                        playlist_data->artist);
+                    g_string_append(data_str, tmp);
+                    g_free(tmp);
+                }
+                if(playlist_data->album!=NULL)
+                {
+                    tmp = g_markup_printf_escaped("album=\"%s\" ",
+                        playlist_data->album);
+                    g_string_append(data_str, tmp);
+                    g_free(tmp);
+                }
+                if(playlist_data->ftype!=NULL)
+                {
+                    tmp = g_markup_printf_escaped("filetype=\"%s\" ",
+                        playlist_data->ftype);
+                    g_string_append(data_str, tmp);
+                    g_free(tmp);
+                }
+                tmp = g_markup_printf_escaped("length=\"%"G_GINT64_FORMAT"\" ",
+                    playlist_data->length);
+                g_string_append(data_str, tmp);
+                g_free(tmp);
+                tmp = g_markup_printf_escaped("tracknum=\"%d\" year=\"%d\" "
+                    "rating=\"%f\" ", playlist_data->tracknum,
+                    playlist_data->year, playlist_data->rating);
+                g_string_append(data_str, tmp);
+                g_free(tmp);
+                if(playlist_data->lyricfile!=NULL)
+                {
+                    tmp = g_markup_printf_escaped("lyricfile=\"%s\" ",    
+                        playlist_data->lyricfile);
+                    g_string_append(data_str, tmp);
+                    g_free(tmp);
+                }
+                if(playlist_data->albumfile!=NULL)
+                {
+                    tmp = g_markup_printf_escaped("albumfile=\"%s\" ",
+                        playlist_data->albumfile);
+                    g_string_append(data_str, tmp);
+                    g_free(tmp);
+                }
+                if(playlist_data->lyricsecfile!=NULL)
+                {
+                    tmp = g_markup_printf_escaped("lyricsecondfile=\"%s\" ",
+                        playlist_data->lyricsecfile);
+                    g_string_append(data_str, tmp);
+                    g_free(tmp);
+                }
+                g_string_append(data_str, "/>\n");
+            }    
+            g_string_append(data_str, "  </playlist>\n");
+        }
+    }
+    if(library!=NULL)
+    {
+        g_string_append(data_str, "  <library>\n");
+        g_hash_table_iter_init(&library_iter, library);
+        while(g_hash_table_iter_next(&library_iter, NULL, (gpointer *)
+            &library_data))
+        {
+            if(library_data==NULL) continue;
+            g_string_append_printf(data_str, "    <libitem type=\"%u\" ",
+                library_data->type);
+            if(library_data->uri!=NULL)
             {
                 tmp = g_markup_printf_escaped("uri=\"%s\" ",
-                    playlist_data->uri);
+                    library_data->uri);
                 g_string_append(data_str, tmp);
                 g_free(tmp);
             }
-            if(playlist_data->title!=NULL)
+            if(library_data->title!=NULL)
             {
                 tmp = g_markup_printf_escaped("title=\"%s\" ",
-                    playlist_data->title);
+                    library_data->title);
                 g_string_append(data_str, tmp);
                 g_free(tmp);
             }
-            if(playlist_data->artist!=NULL)
+            if(library_data->artist!=NULL)
             {
                 tmp = g_markup_printf_escaped("artist=\"%s\" ",
-                    playlist_data->artist);
+                    library_data->artist);
                 g_string_append(data_str, tmp);
                 g_free(tmp);
             }
-            if(playlist_data->album!=NULL)
+            if(library_data->album!=NULL)
             {
                 tmp = g_markup_printf_escaped("album=\"%s\" ",
-                    playlist_data->album);
+                    library_data->album);
                 g_string_append(data_str, tmp);
                 g_free(tmp);
             }
-            if(playlist_data->ftype!=NULL)
+            if(library_data->ftype!=NULL)
             {
                 tmp = g_markup_printf_escaped("filetype=\"%s\" ",
-                    playlist_data->ftype);
+                    library_data->ftype);
                 g_string_append(data_str, tmp);
                 g_free(tmp);
             }
             tmp = g_markup_printf_escaped("length=\"%"G_GINT64_FORMAT"\" ",
-                playlist_data->length);
+                library_data->length);
             g_string_append(data_str, tmp);
             g_free(tmp);
             tmp = g_markup_printf_escaped("tracknum=\"%d\" year=\"%d\" "
-                "rating=\"%f\" ", playlist_data->tracknum,
-                playlist_data->year, playlist_data->rating);
+                "rating=\"%f\" ", library_data->tracknum,
+                library_data->year, library_data->rating);
             g_string_append(data_str, tmp);
             g_free(tmp);
-            if(playlist_data->lyricfile!=NULL)
+            if(library_data->lyricfile!=NULL)
             {
-                tmp = g_markup_printf_escaped("lyricfile=\"%s\" ",
-                    playlist_data->lyricfile);
+                tmp = g_markup_printf_escaped("lyricfile=\"%s\" ",    
+                    library_data->lyricfile);
                 g_string_append(data_str, tmp);
                 g_free(tmp);
             }
-            if(playlist_data->albumfile!=NULL)
+            if(library_data->albumfile!=NULL)
             {
                 tmp = g_markup_printf_escaped("albumfile=\"%s\" ",
-                    playlist_data->albumfile);
+                    library_data->albumfile);
                 g_string_append(data_str, tmp);
                 g_free(tmp);
             }
-            if(playlist_data->lyricsecfile!=NULL)
+            if(library_data->lyricsecfile!=NULL)
             {
                 tmp = g_markup_printf_escaped("lyricsecondfile=\"%s\" ",
-                    playlist_data->lyricsecfile);
+                    library_data->lyricsecfile);
                 g_string_append(data_str, tmp);
                 g_free(tmp);
             }
             g_string_append(data_str, "/>\n");
         }
-        g_string_append(data_str, "  </playlist>\n");
+        g_string_append(data_str, "  </library>\n");
     }
     g_string_append(data_str, "</rclibdb>\n");
     return data_str;
 }
 
-static gboolean rclib_db_save_library_db(GSequence *catalog,
-    const gchar *file, gboolean *dirty_flag)
+static gboolean rclib_db_save_library_db(GSequence *catalog, 
+    GHashTable *library, const gchar *file, gboolean *dirty_flag)
 {
     GString *xml_str;
     GZlibCompressor *compressor;
@@ -1011,7 +1180,7 @@ static gboolean rclib_db_save_library_db(GSequence *catalog,
     gboolean flag = TRUE;
     output_file = g_file_new_for_path(file);
     if(output_file==NULL) return FALSE;
-    xml_str = rclib_db_build_xml_data(catalog);
+    xml_str = rclib_db_build_xml_data(catalog, library);
     if(xml_str==NULL) return FALSE;
     file_ostream = g_file_replace(output_file, NULL, FALSE,
         G_FILE_CREATE_PRIVATE, NULL, &error);
@@ -1132,7 +1301,8 @@ static gboolean rclib_db_autosave_timeout_cb(gpointer data)
     if(!priv->dirty_flag) return TRUE;
     if(priv->filename==NULL) return TRUE;
     if(priv->autosave_xml_data!=NULL) return TRUE;
-    priv->autosave_xml_data = rclib_db_build_xml_data(priv->catalog);
+    priv->autosave_xml_data = rclib_db_build_xml_data(priv->catalog,
+        priv->library_table);
     g_mutex_lock(&(priv->autosave_mutex));
     g_cond_signal(&(priv->autosave_cond));
     g_mutex_unlock(&(priv->autosave_mutex));
@@ -1161,8 +1331,8 @@ static void rclib_db_finalize(GObject *object)
     g_async_queue_push(priv->refresh_queue, refresh_data);
     g_thread_join(priv->import_thread);
     g_thread_join(priv->refresh_thread);
-    rclib_db_save_library_db(priv->catalog, priv->filename,
-        &(priv->dirty_flag));
+    rclib_db_save_library_db(priv->catalog, priv->library_table,
+        priv->filename, &(priv->dirty_flag));
     autosave_file = g_strdup_printf("%s.autosave", priv->filename);
     g_remove(autosave_file);
     g_free(autosave_file);
@@ -1496,7 +1666,8 @@ gboolean rclib_db_init(const gchar *file)
         return FALSE;
     }
     rclib_db_load_library_db(priv->catalog, priv->catalog_iter_table,
-        priv->playlist_iter_table, file, &(priv->dirty_flag));
+        priv->playlist_iter_table, priv->library_table, file,
+        &(priv->dirty_flag));
     priv->filename = g_strdup(file);
     g_message("Database loaded.");
     return TRUE;
@@ -1664,8 +1835,8 @@ gboolean rclib_db_sync()
     if(priv==NULL || priv->catalog==NULL || priv->filename==NULL)
         return FALSE;
     if(!priv->dirty_flag) return TRUE;
-    return rclib_db_save_library_db(priv->catalog, priv->filename,
-        &(priv->dirty_flag));
+    return rclib_db_save_library_db(priv->catalog, priv->library_table,
+        priv->filename, &(priv->dirty_flag));
 }
 
 /**
@@ -1691,7 +1862,8 @@ gboolean rclib_db_load_autosaved()
     }
     filename = g_strdup_printf("%s.autosave", priv->filename);
     flag = rclib_db_load_library_db(priv->catalog, priv->catalog_iter_table,
-        priv->playlist_iter_table, filename, &(priv->dirty_flag));
+        priv->playlist_iter_table, priv->library_table, filename,
+        &(priv->dirty_flag));
     g_free(filename);
     if(flag)
     {
