@@ -117,7 +117,7 @@ GObject *rclib_player_get_instance();
 gulong rclib_player_signal_connect(const gchar *name,
     GCallback callback, gpointer data);
 void rclib_player_signal_disconnect(gulong handler_id);
-void rclib_player_play_db(GSequenceIter *iter);
+void rclib_player_play_db(gpointer iter);
 void rclib_player_play_uri(const gchar *uri);
 gboolean rclib_player_play_prev(gboolean jump, gboolean repeat,
     gboolean loop);

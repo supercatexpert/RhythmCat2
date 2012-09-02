@@ -247,7 +247,7 @@ static inline void rc_ui_listview_playlist_move_to_another_catalog(
     GtkSelectionData *seldata, GtkTreeIter *target_iter)
 {
     GList *path_list = NULL;
-    GSequenceIter **iters;
+    RCLibDbPlaylistIter **iters;
     GtkTreeIter iter;
     GtkTreePath *path;
     GList *list_foreach;
@@ -265,7 +265,7 @@ static inline void rc_ui_listview_playlist_move_to_another_catalog(
     length = g_list_length(path_list);
     path_list = g_list_sort_with_data(path_list, (GCompareDataFunc)
         gtk_tree_path_compare, NULL);
-    iters = g_new0(GSequenceIter *, length);
+    iters = g_new0(RCLibDbPlaylistIter *, length);
     for(list_foreach=path_list, i=0;list_foreach!=NULL;
         list_foreach=g_list_next(list_foreach), i++)
     {
@@ -275,11 +275,11 @@ static inline void rc_ui_listview_playlist_move_to_another_catalog(
         iters[i] = iter.user_data;
     }
     rclib_db_playlist_move_to_another_catalog(iters, length,
-        target_iter->user_data);
+        (RCLibDbCatalogIter *)target_iter->user_data);
 }
 
 static inline void rc_ui_listview_playlist_add_uris_by_selection(
-    GtkSelectionData *seldata, GSequenceIter *catalog_iter,
+    GtkSelectionData *seldata, RCLibDbCatalogIter *catalog_iter,
     GtkTreeIter *iter, GtkTreeViewDropPosition pos)
 {
     GtkTreeModel *model; 
@@ -313,7 +313,7 @@ static inline void rc_ui_listview_playlist_add_uris_by_selection(
             {
                 if(iter!=NULL && iter->user_data!=NULL)
                     rclib_db_playlist_add_music(catalog_iter,
-                        (GSequenceIter *)iter->user_data, uri_array[i]);
+                        (RCLibDbPlaylistIter *)iter->user_data, uri_array[i]);
                 else
                     rclib_db_playlist_add_music(catalog_iter, NULL, uri_array[i]);
             }
@@ -324,7 +324,7 @@ static inline void rc_ui_listview_playlist_add_uris_by_selection(
                 {
                     if(iter!=NULL && iter->user_data!=NULL)
                         rclib_db_playlist_add_m3u_file(catalog_iter,
-                            (GSequenceIter *)iter->user_data, filename);
+                            (RCLibDbPlaylistIter *)iter->user_data, filename);
                     else
                         rclib_db_playlist_add_m3u_file(catalog_iter, NULL,
                             filename);
@@ -391,7 +391,7 @@ static void rc_ui_listview_playlist_dnd_data_received(GtkWidget *widget,
     GtkTreeViewDropPosition pos;
     GtkTreePath *path_drop = NULL;
     GtkTreeModel *model;
-    GSequenceIter *seq_iter;
+    RCLibDbCatalogIter *seq_iter;
     GtkTreeIter target_iter = {0};
     g_signal_stop_emission_by_name(G_OBJECT(widget), "drag-data-received");
     model = gtk_tree_view_get_model(GTK_TREE_VIEW(widget));
@@ -565,15 +565,17 @@ static void rc_ui_listview_catalog_row_selected(GtkTreeView *view,
     gpointer data)
 {
     GtkTreeIter iter;
-    GSequenceIter *catalog_iter;
-    RCLibDbCatalogData *catalog_data;
+    RCLibDbCatalogIter *catalog_iter;
+    gpointer store = NULL;
     if(!rc_ui_listview_catalog_get_cursor(&iter)) return;
     catalog_iter = iter.user_data;
     if(catalog_iter==NULL) return;
-    catalog_data = g_sequence_get(catalog_iter);
-    if(!RC_UI_IS_PLAYLIST_STORE(catalog_data->store)) return;
+    rclib_db_catalog_data_iter_get(catalog_iter,
+        RCLIB_DB_CATALOG_DATA_TYPE_STORE, &store,
+        RCLIB_DB_CATALOG_DATA_TYPE_NONE);
+    if(!RC_UI_IS_PLAYLIST_STORE(store)) return;
     gtk_tree_view_set_model(GTK_TREE_VIEW(ui_playlist_view_instance),
-        GTK_TREE_MODEL(catalog_data->store));
+        GTK_TREE_MODEL(store));
 }
 
 static void rc_ui_listview_playlist_row_activated(GtkTreeView *widget,
@@ -596,7 +598,7 @@ static void rc_ui_listview_catalog_row_edited(GtkCellRendererText *renderer,
         rc_ui_list_model_get_catalog_store(), &iter, path_str))
         return;
     if(iter.user_data==NULL) return;
-    rclib_db_catalog_set_name((GSequenceIter *)iter.user_data, new_text);
+    rclib_db_catalog_set_name((RCLibDbCatalogIter *)iter.user_data, new_text);
 }
 
 static void rc_ui_listview_catalog_name_call_data_func(
@@ -626,7 +628,7 @@ static void rc_ui_listview_playlist_text_call_data_func(
 }
 
 static void rc_ui_listview_catalog_delete_cb(RCLibDb *db,
-    GSequenceIter *iter, gpointer data)
+    RCLibDbCatalogIter *iter, gpointer data)
 {
     GtkTreeModel *model;
     model = gtk_tree_view_get_model(GTK_TREE_VIEW(ui_playlist_view_instance));
@@ -690,7 +692,8 @@ static void rc_ui_playlist_view_rated_cb(RCUiCellRendererRating *renderer,
     if(model==NULL) return;
     if(!gtk_tree_model_get_iter_from_string(model, &iter, path))
         return;
-    rclib_db_playlist_set_rating((GSequenceIter *)iter.user_data, rating);
+    rclib_db_playlist_set_rating((RCLibDbPlaylistIter *)iter.user_data,
+        rating);
 }
 
 static void rc_ui_catalog_view_finalize(GObject *object)
@@ -1244,7 +1247,7 @@ void rc_ui_listview_catalog_new_playlist()
     static guint i = 1;
     GtkTreeModel *model;
     GtkTreeIter iter, new_iter;
-    GSequenceIter *catalog_iter;
+    RCLibDbCatalogIter *catalog_iter;
     gchar *new_name;
     if(ui_catalog_view_instance==NULL) return;
     model = gtk_tree_view_get_model(GTK_TREE_VIEW(ui_catalog_view_instance));
@@ -1255,7 +1258,7 @@ void rc_ui_listview_catalog_new_playlist()
     {
         iter.user_data = NULL;
     }
-    catalog_iter = rclib_db_catalog_add(new_name, (GSequenceIter *)
+    catalog_iter = rclib_db_catalog_add(new_name, (RCLibDbCatalogIter *)
         iter.user_data, RCLIB_DB_CATALOG_TYPE_PLAYLIST);
     g_free(new_name);
     gtk_tree_model_get_iter_first(model, &iter);
@@ -1322,7 +1325,7 @@ void rc_ui_listview_catalog_delete_items()
         if(!gtk_tree_model_get_iter(model, &iter, list_foreach->data))
             continue;
         if(iter.user_data==NULL) continue;
-        rclib_db_catalog_delete((GSequenceIter *)iter.user_data);
+        rclib_db_catalog_delete((RCLibDbCatalogIter *)iter.user_data);
     }
     g_list_foreach(path_list, (GFunc)gtk_tree_path_free, NULL);
     g_list_free(path_list);
@@ -1371,7 +1374,7 @@ void rc_ui_listview_playlist_delete_items()
         if(!gtk_tree_model_get_iter(model, &iter, list_foreach->data))
             continue;
         if(iter.user_data==NULL) continue;
-        rclib_db_playlist_delete((GSequenceIter *)iter.user_data);
+        rclib_db_playlist_delete((RCLibDbPlaylistIter *)iter.user_data);
     }
     g_list_foreach(path_list, (GFunc)gtk_tree_path_free, NULL);
     g_list_free(path_list);
@@ -1391,7 +1394,7 @@ void rc_ui_listview_playlist_refresh()
     if(model==NULL) return;
     if(!rc_ui_listview_catalog_get_cursor(&iter)) return;
     if(iter.user_data==NULL) return;
-    rclib_db_playlist_refresh((GSequenceIter *)iter.user_data);
+    rclib_db_playlist_refresh((RCLibDbCatalogIter *)iter.user_data);
 }
 
 /**

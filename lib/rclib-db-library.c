@@ -297,7 +297,7 @@ void rclib_db_library_add_music(const gchar *uri)
 }
 
 /**
- * rclib_db_playlist_add_music_and_play:
+ * rclib_db_library_add_music_and_play:
  * @uri: the URI of the music to add
  *
  * Add music to the music library, and then play it if the add

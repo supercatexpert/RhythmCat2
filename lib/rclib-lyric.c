@@ -140,18 +140,18 @@ static void rclib_lyric_tag_found_cb(RCLibCore *core,
 static void rclib_lyric_uri_changed_cb(RCLibCore *core, const gchar *uri,
     gpointer data)
 {
-    GSequenceIter *iter = NULL;
+    RCLibDbPlaylistIter *iter = NULL;
     gchar *lyric_path = NULL;
     gchar *lyric_sec_path = NULL;
-    RCLibDbPlaylistData *playlist_data = NULL;
     gboolean flag1 = FALSE;
     gboolean flag2 = FALSE;
+    const gchar *ptitle = NULL;
+    const gchar *partist = NULL;
     rclib_lyric_clean(0);
     rclib_lyric_clean(1);
-    iter = rclib_core_get_db_reference();
+    iter = (RCLibDbPlaylistIter *)rclib_core_get_db_reference();
     if(iter!=NULL)
     {
-        playlist_data = g_sequence_get(iter);
         lyric_path = g_strdup(rclib_db_playlist_get_lyric_bind(iter));
         lyric_sec_path = g_strdup(
             rclib_db_playlist_get_lyric_secondary_bind(iter));
@@ -164,10 +164,12 @@ static void rclib_lyric_uri_changed_cb(RCLibCore *core, const gchar *uri,
         flag2 = rclib_lyric_load_file(lyric_sec_path, 1);
     g_free(lyric_path);
     g_free(lyric_sec_path);
-    if(!flag1 && playlist_data!=NULL)
+    rclib_db_playlist_data_iter_get(iter, RCLIB_DB_PLAYLIST_DATA_TYPE_TITLE,
+        &ptitle, RCLIB_DB_PLAYLIST_DATA_TYPE_ARTIST, &partist,
+        RCLIB_DB_PLAYLIST_DATA_TYPE_NONE);
+    if(!flag1)
     {
-        lyric_path = rclib_lyric_search_lyric(uri, playlist_data->title,
-            playlist_data->artist);
+        lyric_path = rclib_lyric_search_lyric(uri, ptitle, partist);
         if(lyric_path!=NULL)
             flag1 = rclib_lyric_load_file(lyric_path, 0);
         g_free(lyric_path);

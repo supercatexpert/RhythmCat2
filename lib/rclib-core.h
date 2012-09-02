@@ -194,14 +194,14 @@ gulong rclib_core_signal_connect(const gchar *name,
 void rclib_core_signal_disconnect(gulong handler_id);
 void rclib_core_set_uri(const gchar *uri);
 void rclib_core_set_uri_with_db_ref(const gchar *uri,
-    GSequenceIter *db_ref);
+    gpointer db_ref);
 void rclib_core_set_uri_with_ext_ref(const gchar *uri, const gchar *cookie,
-    GSequenceIter *external_ref);
-void rclib_core_update_db_reference(GSequenceIter *new_ref);
+    gpointer external_ref);
+void rclib_core_update_db_reference(gpointer new_ref);
 void rclib_core_update_external_reference(const gchar *cookie,
     gpointer new_ref);
 gchar *rclib_core_get_uri();
-GSequenceIter *rclib_core_get_db_reference();
+gpointer rclib_core_get_db_reference();
 gboolean rclib_core_get_external_reference(gchar **cookie, gpointer *ref);
 RCLibCoreSourceType rclib_core_get_source_type();
 const RCLibCoreMetadata *rclib_core_get_metadata();

@@ -95,7 +95,7 @@ static void rclib_album_tag_found_cb(RCLibCore *core,
 static void rclib_album_uri_changed_cb(RCLibCore *core, const gchar *uri,
     gpointer data)
 {
-    GSequenceIter *reference;
+    RCLibDbPlaylistIter *reference;
     gchar *filename = NULL;
     gboolean flag = TRUE;
     RCLibAlbumPrivate *priv = (RCLibAlbumPrivate *)data;
@@ -108,7 +108,7 @@ static void rclib_album_uri_changed_cb(RCLibCore *core, const gchar *uri,
             g_free(priv->album_data);
         priv->album_data = NULL;
     }
-    reference = rclib_core_get_db_reference();
+    reference = (RCLibDbPlaylistIter *)rclib_core_get_db_reference();
     if(reference!=NULL)
         filename = g_strdup(rclib_db_playlist_get_album_bind(reference));
     if(filename==NULL)

@@ -50,7 +50,7 @@ struct              <a class="link" href="RCUiPlaylistStore.html#RCUiCatalogStor
 enum                <a class="link" href="RCUiPlaylistStore.html#RCUiPlaylistColumns" title="enum RCUiPlaylistColumns">RCUiPlaylistColumns</a>;
 struct              <a class="link" href="RCUiPlaylistStore.html#RCUiPlaylistStore-struct" title="struct RCUiPlaylistStore">RCUiPlaylistStore</a>;
 struct              <a class="link" href="RCUiPlaylistStore.html#RCUiPlaylistStoreClass" title="struct RCUiPlaylistStoreClass">RCUiPlaylistStoreClass</a>;
-<a href="/usr/share/gtk-doc/html/glib/glib-Sequences.html#GSequenceIter"><span class="returnvalue">GSequenceIter</span></a> *     <a class="link" href="RCUiPlaylistStore.html#rc-ui-list-model-get-catalog-by-model" title="rc_ui_list_model_get_catalog_by_model ()">rc_ui_list_model_get_catalog_by_model</a>
+<span class="returnvalue">RCLibDbCatalogIter</span> * <a class="link" href="RCUiPlaylistStore.html#rc-ui-list-model-get-catalog-by-model" title="rc_ui_list_model_get_catalog_by_model ()">rc_ui_list_model_get_catalog_by_model</a>
                                                         (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/gtk/GtkTreeModel.html"><span class="type">GtkTreeModel</span></a> *model</code></em>);
 <a href="/usr/share/gtk-doc/html/gtk/GtkTreeModel.html"><span class="returnvalue">GtkTreeModel</span></a> *      <a class="link" href="RCUiPlaylistStore.html#rc-ui-list-model-get-catalog-store" title="rc_ui_list_model_get_catalog_store ()">rc_ui_list_model_get_catalog_store</a>  ();
 <a href="/usr/share/gtk-doc/html/gtk/GtkTreeModel.html"><span class="returnvalue">GtkTreeModel</span></a> *      <a class="link" href="RCUiPlaylistStore.html#rc-ui-list-model-get-playlist-store" title="rc_ui_list_model_get_playlist_store ()">rc_ui_list_model_get_playlist_store</a> (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/gtk/GtkTreeModel.html#GtkTreeIter"><span class="type">GtkTreeIter</span></a> *iter</code></em>);
@@ -267,7 +267,7 @@ The data structure used for <a class="link" href="RCUiPlaylistStore.html" title=
 <hr>
 <div class="refsect2">
 <a name="rc-ui-list-model-get-catalog-by-model"></a><h3>rc_ui_list_model_get_catalog_by_model ()</h3>
-<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Sequences.html#GSequenceIter"><span class="returnvalue">GSequenceIter</span></a> *     rc_ui_list_model_get_catalog_by_model
+<pre class="programlisting"><span class="returnvalue">RCLibDbCatalogIter</span> * rc_ui_list_model_get_catalog_by_model
                                                         (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/gtk/GtkTreeModel.html"><span class="type">GtkTreeModel</span></a> *model</code></em>);</pre>
 <p>
 Get the catalog iter by given playlist store model.

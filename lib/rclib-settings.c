@@ -256,7 +256,8 @@ void rclib_settings_apply()
     }
     dvalue = rclib_settings_get_double("SoundEffect", "Balance", NULL);
     rclib_core_set_balance(dvalue);
-    bvalue = rclib_settings_get_boolean("Metadata", "AutoDetectEncoding", NULL);
+    bvalue = rclib_settings_get_boolean("Metadata", "AutoDetectEncoding",
+        NULL);
     if(bvalue)
     {
         encoding = rclib_util_detect_encoding_by_locale();
@@ -314,8 +315,8 @@ void rclib_settings_update()
     gdouble eq_array[10] = {0.0};
     gfloat fvalue;
     gboolean bvalue, bvalue2;
-    GSequenceIter *db_reference;
-    RCLibDbPlaylistData *playlist_data;
+    RCLibDbPlaylistIter *db_reference;
+    RCLibDbCatalogIter *catalog_iter = NULL;
     ivalue = rclib_player_get_repeat_mode();
     rclib_settings_set_integer("Player", "RepeatMode", ivalue);
     ivalue = rclib_player_get_random_mode();
@@ -333,15 +334,17 @@ void rclib_settings_update()
     }
     if(rclib_core_get_balance(&fvalue))
         rclib_settings_set_double("SoundEffect", "Balance", fvalue);
-    db_reference = rclib_core_get_db_reference();
+    db_reference = (RCLibDbPlaylistIter *)rclib_core_get_db_reference();
     if(db_reference!=NULL)
     {
-        playlist_data = g_sequence_get(db_reference);
-        if(playlist_data!=NULL)
+        rclib_db_playlist_data_iter_get(db_reference,
+            RCLIB_DB_PLAYLIST_DATA_TYPE_CATALOG, &catalog_iter,
+            RCLIB_DB_PLAYLIST_DATA_TYPE_NONE);
+        if(catalog_iter!=NULL)
         {
-            ivalue = g_sequence_iter_get_position(db_reference);
+            ivalue = rclib_db_playlist_iter_get_position(db_reference);
             rclib_settings_set_integer("Player", "LastPlayedMusic", ivalue);
-            ivalue = g_sequence_iter_get_position(playlist_data->catalog);
+            ivalue = rclib_db_catalog_iter_get_position(catalog_iter);
             rclib_settings_set_integer("Player", "LastPlayedCatalog",
                 ivalue);
         }

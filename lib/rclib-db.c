@@ -41,17 +41,17 @@
  * The #RCLibDb is a class which manages the playlists in the player,
  * all playlists are put in a catalog list, and all music are put in
  * their playlists. The catalog item (playlist) and playlist item (music)
- * data can be accessed by #GSequenceIter. The database can import music
- * or playlist file asynchronously, or update the metadata in playlists
- * asynchronously.
+ * data can be accessed by #RCLibDbCatalogIter and #RCLibDbPlaylistIter.
+ * The database can import music or playlist file asynchronously, or update
+ * the metadata in playlists asynchronously.
  */
 
 typedef struct RCLibDbXMLParserData
 {
     gboolean db_flag;
-    GSequence *catalog;
-    GSequence *playlist;
-    GSequenceIter *catalog_iter;
+    RCLibDbCatalogSequence *catalog;
+    RCLibDbPlaylistSequence *playlist;
+    RCLibDbCatalogIter *catalog_iter;
     GHashTable *catalog_iter_table;
     GHashTable *playlist_iter_table;
     GHashTable *library_table;
@@ -713,7 +713,8 @@ static void rclib_db_xml_parser_start_element_cb(GMarkupParseContext *context,
     RCLibDbCatalogData *catalog_data;
     RCLibDbPlaylistData *playlist_data;
     RCLibDbLibraryData *library_data;
-    GSequenceIter *catalog_iter, *playlist_iter;
+    RCLibDbCatalogIter *catalog_iter;
+    RCLibDbPlaylistIter *playlist_iter;
     guint i;
     if(data==NULL) return;
     if(g_strcmp0(element_name, "rclibdb")==0)
@@ -793,8 +794,8 @@ static void rclib_db_xml_parser_start_element_cb(GMarkupParseContext *context,
                 playlist_data->lyricsecfile = g_strdup(attribute_values[i]);
             }
         }
-        playlist_iter = g_sequence_append(parser_data->playlist,
-            playlist_data);
+        playlist_iter = (RCLibDbPlaylistIter *)g_sequence_append(
+            (GSequence *)parser_data->playlist, playlist_data);
         playlist_data->self_iter = playlist_iter;
         g_hash_table_replace(parser_data->playlist_iter_table, playlist_iter,
             playlist_iter);
@@ -815,10 +816,11 @@ static void rclib_db_xml_parser_start_element_cb(GMarkupParseContext *context,
                 sscanf(attribute_values[i], "%u", &(catalog_data->type));
             }
         }
-        catalog_data->playlist = g_sequence_new((GDestroyNotify)
-            rclib_db_playlist_data_unref);
+        catalog_data->playlist = (RCLibDbPlaylistSequence *)
+            g_sequence_new((GDestroyNotify)rclib_db_playlist_data_unref);
         parser_data->playlist = catalog_data->playlist;
-        catalog_iter = g_sequence_append(parser_data->catalog, catalog_data);
+        catalog_iter = (RCLibDbCatalogIter *)g_sequence_append(
+            (GSequence *)parser_data->catalog, catalog_data);
         catalog_data->self_iter = catalog_iter;
         parser_data->catalog_iter = catalog_iter;
         g_hash_table_replace(parser_data->catalog_iter_table, catalog_iter,
@@ -920,7 +922,7 @@ static void rclib_db_xml_parser_end_element_cb(GMarkupParseContext *context,
     }
 }
 
-static gboolean rclib_db_load_library_db(GSequence *catalog,
+static gboolean rclib_db_load_library_db(RCLibDbCatalogSequence *catalog,
     GHashTable *catalog_iter_table, GHashTable *playlist_iter_table,
     GHashTable *library_table, const gchar *file, gboolean *dirty_flag)
 {
@@ -977,13 +979,14 @@ static gboolean rclib_db_load_library_db(GSequence *catalog,
     return TRUE;
 }
 
-static inline GString *rclib_db_build_xml_data(GSequence *catalog,
+static inline GString *rclib_db_build_xml_data(RCLibDbCatalogSequence *catalog,
     GHashTable *library)
 {
     RCLibDbCatalogData *catalog_data;
     RCLibDbPlaylistData *playlist_data;
     RCLibDbLibraryData *library_data;
-    GSequenceIter *catalog_iter, *playlist_iter;
+    RCLibDbCatalogIter *catalog_iter;
+    RCLibDbPlaylistIter *playlist_iter;
     GHashTableIter library_iter;
     GString *data_str;
     gchar *tmp;
@@ -995,22 +998,23 @@ static inline GString *rclib_db_build_xml_data(GSequence *catalog,
         rclib_major_version, rclib_minor_version, rclib_micro_version);
     if(catalog!=NULL)
     {
-        for(catalog_iter = g_sequence_get_begin_iter(catalog);
-            !g_sequence_iter_is_end(catalog_iter);
-            catalog_iter = g_sequence_iter_next(catalog_iter))
+        for(catalog_iter = rclib_db_catalog_sequence_get_begin_iter(catalog);
+            !rclib_db_catalog_iter_is_end(catalog_iter);
+            catalog_iter = rclib_db_catalog_iter_next(catalog_iter))
         {
-            catalog_data = g_sequence_get(catalog_iter);
+            catalog_data = rclib_db_catalog_iter_get_data(catalog_iter);
             if(catalog_data==NULL) continue;
             tmp = g_markup_printf_escaped("  <playlist name=\"%s\" "
                 "type=\"%u\">\n", catalog_data->name, catalog_data->type);
             g_string_append(data_str, tmp);
             g_free(tmp);
-            for(playlist_iter=g_sequence_get_begin_iter(
+            for(playlist_iter=rclib_db_playlist_sequence_get_begin_iter(
                 catalog_data->playlist);
-                !g_sequence_iter_is_end(playlist_iter);
-                playlist_iter=g_sequence_iter_next(playlist_iter))
+                !rclib_db_playlist_iter_is_end(playlist_iter);
+                playlist_iter=rclib_db_playlist_iter_next(playlist_iter))
             {
-                playlist_data = g_sequence_get(playlist_iter);
+                playlist_data = rclib_db_playlist_iter_get_data(
+                    playlist_iter);
                 if(playlist_data==NULL) continue;
                 g_string_append_printf(data_str, "    <item type=\"%u\" ",
                     playlist_data->type);
@@ -1167,7 +1171,7 @@ static inline GString *rclib_db_build_xml_data(GSequence *catalog,
     return data_str;
 }
 
-static gboolean rclib_db_save_library_db(GSequence *catalog, 
+static gboolean rclib_db_save_library_db(RCLibDbCatalogSequence *catalog, 
     GHashTable *library, const gchar *file, gboolean *dirty_flag)
 {
     GString *xml_str;
@@ -1848,16 +1852,16 @@ gboolean rclib_db_sync()
 gboolean rclib_db_load_autosaved()
 {
     RCLibDbPrivate *priv;
-    GSequenceIter *iter;
+    RCLibDbCatalogIter *iter;
     gchar *filename;
     gboolean flag;
     if(db_instance==NULL) return FALSE;
     priv = RCLIB_DB(db_instance)->priv;
     if(priv==NULL || priv->catalog==NULL || priv->filename==NULL)
         return FALSE;
-    while(g_sequence_get_length(priv->catalog)>0)
+    while(rclib_db_catalog_sequence_get_length(priv->catalog)>0)
     {
-        iter = g_sequence_get_begin_iter(priv->catalog);
+        iter = rclib_db_catalog_sequence_get_begin_iter(priv->catalog);
         rclib_db_catalog_delete(iter);
     }
     filename = g_strdup_printf("%s.autosave", priv->filename);
@@ -1867,9 +1871,9 @@ gboolean rclib_db_load_autosaved()
     g_free(filename);
     if(flag)
     {
-        for(iter=g_sequence_get_begin_iter(priv->catalog);
-            !g_sequence_iter_is_end(iter);
-            iter=g_sequence_iter_next(iter))
+        for(iter=rclib_db_catalog_sequence_get_begin_iter(priv->catalog);
+            !rclib_db_catalog_iter_is_end(iter);
+            iter=rclib_db_catalog_iter_next(iter))
         {
             g_signal_emit(db_instance, db_signals[SIGNAL_CATALOG_ADDED],
                 0, iter);

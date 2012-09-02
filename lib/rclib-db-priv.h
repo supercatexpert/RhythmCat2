@@ -25,6 +25,7 @@
 #ifndef HAVE_RC_LIB_DB_PRIVATE_H
 #define HAVE_RC_LIB_DB_PRIVATE_H
 
+#include "rclib-db.h"
 #include "rclib-tag.h"
 
 #define RCLIB_DB_ERROR rclib_db_error_quark()
@@ -45,8 +46,8 @@ typedef struct RCLibDbImportData
 {
     RCLibDbImportType type;
     gchar *uri;
-    GSequenceIter *catalog_iter;
-    GSequenceIter *playlist_insert_iter;
+    RCLibDbCatalogIter *catalog_iter;
+    RCLibDbPlaylistIter *playlist_insert_iter;
     gboolean play_flag;
 }RCLibDbImportData;
 
@@ -54,15 +55,15 @@ typedef struct RCLibDbRefreshData
 {
     RCLibDbRefreshType type;
     gchar *uri;
-    GSequenceIter *catalog_iter;
-    GSequenceIter *playlist_iter;
+    RCLibDbCatalogIter *catalog_iter;
+    RCLibDbPlaylistIter *playlist_iter;
 }RCLibDbRefreshData;
 
 typedef struct RCLibDbPlaylistImportIdleData
 {
     RCLibTagMetadata *mmd;
-    GSequenceIter *catalog_iter;
-    GSequenceIter *playlist_insert_iter;
+    RCLibDbCatalogIter *catalog_iter;
+    RCLibDbPlaylistIter *playlist_insert_iter;
     RCLibDbPlaylistType type;
     gboolean play_flag;
 }RCLibDbPlaylistImportIdleData;
@@ -70,8 +71,8 @@ typedef struct RCLibDbPlaylistImportIdleData
 typedef struct RCLibDbPlaylistRefreshIdleData
 {
     RCLibTagMetadata *mmd;
-    GSequenceIter *catalog_iter;
-    GSequenceIter *playlist_iter;
+    RCLibDbCatalogIter *catalog_iter;
+    RCLibDbPlaylistIter *playlist_iter;
     RCLibDbPlaylistType type;
 }RCLibDbPlaylistRefreshIdleData;
 
@@ -91,7 +92,7 @@ typedef struct RCLibDbLibraryRefreshIdleData
 struct _RCLibDbPrivate
 {
     gchar *filename;
-    GSequence *catalog;
+    RCLibDbCatalogSequence *catalog;
     GHashTable *catalog_iter_table;
     GHashTable *playlist_iter_table;
     GSequence *library_query;
@@ -109,6 +110,83 @@ struct _RCLibDbPrivate
     GMutex autosave_mutex;
     GCond autosave_cond;
     GString *autosave_xml_data;
+};
+
+struct _RCLibDbCatalogData
+{
+    /*< private >*/
+    gint ref_count;
+    
+    /*< public >*/
+    RCLibDbPlaylistSequence *playlist;
+    RCLibDbCatalogIter *self_iter;
+    gchar *name;
+    RCLibDbCatalogType type;
+    gpointer store;
+};
+
+struct _RCLibDbPlaylistData
+{
+    /*< private >*/
+    gint ref_count;
+
+    /*< public >*/
+    RCLibDbCatalogIter *catalog;
+    RCLibDbPlaylistIter *self_iter;
+    RCLibDbPlaylistType type;
+    gchar *uri;
+    gchar *title;
+    gchar *artist;
+    gchar *album;
+    gchar *ftype;
+    gint64 length;
+    gint tracknum;
+    gint year;
+    gfloat rating;
+    gchar *lyricfile;
+    gchar *lyricsecfile;
+    gchar *albumfile;
+};
+
+struct _RCLibDbLibraryData
+{
+    /*< private >*/
+    gint ref_count;
+
+    /*< public >*/
+    RCLibDbLibraryType type;
+    gchar *uri;
+    gchar *title;
+    gchar *artist;
+    gchar *album;
+    gchar *ftype;
+    gint64 length;
+    gint tracknum;
+    gint year;
+    gfloat rating;
+    gchar *lyricfile;
+    gchar *lyricsecfile;
+    gchar *albumfile;
+};
+
+struct _RCLibDbCatalogSequence
+{
+    gint dummy;
+};
+
+struct _RCLibDbPlaylistSequence
+{
+    gint dummy;
+};
+
+struct _RCLibDbCatalogIter
+{
+    gint dummy;
+};
+
+struct _RCLibDbPlaylistIter
+{
+    gint dummy;
 };
 
 /*< private >*/

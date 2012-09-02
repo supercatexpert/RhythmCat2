@@ -158,8 +158,8 @@ void rc_ui_dialog_add_music()
                 filelist_foreach=g_slist_next(filelist_foreach))
             {
                 uri = filelist_foreach->data;
-                rclib_db_playlist_add_music((GSequenceIter *)iter.user_data,
-                    NULL, uri);
+                rclib_db_playlist_add_music((RCLibDbCatalogIter *)
+                    iter.user_data, NULL, uri);
                 g_free(uri);
             }
             g_slist_free(filelist);
@@ -202,8 +202,8 @@ void rc_ui_dialog_add_directory()
         case GTK_RESPONSE_ACCEPT:
             directory_path = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(
                 file_chooser));
-            rclib_db_playlist_add_directory((GSequenceIter *)iter.user_data,
-                NULL, directory_path);
+            rclib_db_playlist_add_directory((RCLibDbCatalogIter *)
+                iter.user_data, NULL, directory_path);
             g_free(directory_path);
             break;
         case GTK_RESPONSE_CANCEL:
@@ -439,10 +439,10 @@ void rc_ui_dialog_bind_lyric()
     gtk_file_filter_set_name(file_filter, _("Lyric File (*.LRC)"));
     gtk_file_filter_add_pattern(file_filter, "*.[L,l][R,r][C,c]");
     gtk_file_chooser_add_filter(GTK_FILE_CHOOSER(filebutton[1]), file_filter);
-    lyric_file1 = rclib_db_playlist_get_lyric_bind((GSequenceIter *)
+    lyric_file1 = rclib_db_playlist_get_lyric_bind((RCLibDbPlaylistIter *)
         iter.user_data);
     lyric_file2 = rclib_db_playlist_get_lyric_secondary_bind(
-        (GSequenceIter *)iter.user_data);
+        (RCLibDbPlaylistIter *)iter.user_data);
     if(lyric_file1!=NULL)
     {
         gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(radio_buttons[0]),
@@ -488,7 +488,8 @@ void rc_ui_dialog_bind_lyric()
                         if(gtk_tree_model_get_iter(model, &iter, path))
                         {
                             rclib_db_playlist_set_lyric_bind(
-                                (GSequenceIter *)iter.user_data, new_file);
+                                (RCLibDbPlaylistIter *)iter.user_data,
+                                new_file);
                         }
                     }
                 }
@@ -506,7 +507,7 @@ void rc_ui_dialog_bind_lyric()
                     if(gtk_tree_model_get_iter(model, &iter, path))
                     {
                         rclib_db_playlist_set_lyric_bind(
-                            (GSequenceIter *)iter.user_data, NULL);
+                            (RCLibDbPlaylistIter *)iter.user_data, NULL);
                     }
                 }
             }
@@ -527,7 +528,8 @@ void rc_ui_dialog_bind_lyric()
                         if(gtk_tree_model_get_iter(model, &iter, path))
                         {
                             rclib_db_playlist_set_lyric_secondary_bind(
-                                (GSequenceIter *)iter.user_data, new_file);
+                                (RCLibDbPlaylistIter *)iter.user_data,
+                                new_file);
                         }
                     }
                 }
@@ -545,7 +547,7 @@ void rc_ui_dialog_bind_lyric()
                     if(gtk_tree_model_get_iter(model, &iter, path))
                     {
                         rclib_db_playlist_set_lyric_secondary_bind(
-                            (GSequenceIter *)iter.user_data, NULL);
+                            (RCLibDbPlaylistIter *)iter.user_data, NULL);
                     }
                 }
             }
@@ -612,7 +614,7 @@ void rc_ui_dialog_bind_album()
     gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(filebutton),
         home_dir);
     gtk_file_chooser_add_filter(GTK_FILE_CHOOSER(filebutton), file_filter);
-    album_file = rclib_db_playlist_get_album_bind((GSequenceIter *)
+    album_file = rclib_db_playlist_get_album_bind((RCLibDbPlaylistIter *)
         iter.user_data);
     if(album_file!=NULL)
     {
@@ -646,7 +648,8 @@ void rc_ui_dialog_bind_album()
                         if(gtk_tree_model_get_iter(model, &iter, path))
                         {
                             rclib_db_playlist_set_album_bind(
-                                (GSequenceIter *)iter.user_data, new_file);
+                                (RCLibDbPlaylistIter *)iter.user_data,
+                                new_file);
                         }
                     }
                 }
@@ -664,7 +667,7 @@ void rc_ui_dialog_bind_album()
                     if(gtk_tree_model_get_iter(model, &iter, path))
                     {
                         rclib_db_playlist_set_album_bind(
-                            (GSequenceIter *)iter.user_data, NULL);
+                            (RCLibDbPlaylistIter *)iter.user_data, NULL);
                     }
                 }
             }

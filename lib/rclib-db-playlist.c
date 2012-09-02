@@ -68,8 +68,8 @@ gboolean _rclib_db_playlist_import_idle_cb(gpointer data)
     GObject *instance;
     RCLibDbPlaylistData *playlist_data;
     RCLibDbCatalogData *catalog_data;
-    GSequence *playlist;
-    GSequenceIter *playlist_iter;
+    RCLibDbPlaylistSequence *playlist;
+    RCLibDbPlaylistIter *playlist_iter;
     RCLibDbPlaylistImportIdleData *idle_data;
     RCLibTagMetadata *mmd;
     if(data==NULL) return FALSE;
@@ -80,9 +80,12 @@ gboolean _rclib_db_playlist_import_idle_cb(gpointer data)
     priv = RCLIB_DB(instance)->priv;
     if(priv==NULL) return FALSE;
     if(instance==NULL) return FALSE;
-    if(!rclib_db_is_iter_valid(priv->catalog, idle_data->catalog_iter))
+    if(!rclib_db_is_iter_valid((GSequence *)priv->catalog,
+        (GSequenceIter *)idle_data->catalog_iter))
+    {
         return FALSE;
-    catalog_data = g_sequence_get(idle_data->catalog_iter);
+    }
+    catalog_data = rclib_db_catalog_iter_get_data(idle_data->catalog_iter);
     if(catalog_data==NULL) return FALSE;
     playlist = catalog_data->playlist;
     if(playlist==NULL) return FALSE;
@@ -99,15 +102,21 @@ gboolean _rclib_db_playlist_import_idle_cb(gpointer data)
     playlist_data->tracknum = mmd->tracknum;
     playlist_data->year = mmd->year;
     playlist_data->rating = 3.0;
-    if(!rclib_db_is_iter_valid(playlist, idle_data->playlist_insert_iter))
+    if(!rclib_db_is_iter_valid((GSequence *)playlist, (GSequenceIter *)
+        idle_data->playlist_insert_iter))
+    {
         idle_data->playlist_insert_iter = NULL;
+    }
     if(idle_data->playlist_insert_iter!=NULL)
     {
-        playlist_iter = g_sequence_insert_before(
-            idle_data->playlist_insert_iter, playlist_data);
+        playlist_iter = (RCLibDbPlaylistIter *)g_sequence_insert_before(
+            (GSequenceIter *)idle_data->playlist_insert_iter, playlist_data);
     }
     else
-        playlist_iter = g_sequence_append(playlist, playlist_data);
+    {
+        playlist_iter = (RCLibDbPlaylistIter *)g_sequence_append(
+            (GSequence *)playlist, playlist_data);
+    }
     playlist_data->self_iter = playlist_iter;
     g_hash_table_replace(priv->playlist_iter_table, playlist_iter,
         playlist_iter);
@@ -123,7 +132,7 @@ gboolean _rclib_db_playlist_refresh_idle_cb(gpointer data)
     GObject *instance;
     RCLibDbPlaylistData *playlist_data;
     RCLibDbCatalogData *catalog_data;
-    GSequence *playlist;
+    RCLibDbPlaylistSequence *playlist;
     RCLibDbPlaylistRefreshIdleData *idle_data;
     RCLibTagMetadata *mmd;
     if(data==NULL) return FALSE;
@@ -133,15 +142,22 @@ gboolean _rclib_db_playlist_refresh_idle_cb(gpointer data)
     priv = RCLIB_DB(instance)->priv;
     if(priv==NULL) return FALSE;
     if(instance==NULL) return FALSE;
-    if(!rclib_db_is_iter_valid(priv->catalog, idle_data->catalog_iter))
+    if(!rclib_db_is_iter_valid((GSequence *)priv->catalog, (GSequenceIter *)
+        idle_data->catalog_iter))
+    {
         return FALSE;
-    catalog_data = g_sequence_get(idle_data->catalog_iter);
+    }
+    catalog_data = rclib_db_catalog_iter_get_data(idle_data->catalog_iter);
     if(catalog_data==NULL) return FALSE;
     playlist = catalog_data->playlist;
     if(playlist==NULL) return FALSE;
-    if(!rclib_db_is_iter_valid(playlist, idle_data->playlist_iter))
+    if(!rclib_db_is_iter_valid((GSequence *)playlist, (GSequenceIter *)
+        idle_data->playlist_iter))
+    {
         return FALSE;
-    playlist_data = g_sequence_get(idle_data->playlist_iter);
+    }
+    playlist_data = rclib_db_playlist_iter_get_data(
+        idle_data->playlist_iter);
     mmd = idle_data->mmd;
     playlist_data->type = idle_data->type;
     if(mmd!=NULL)
@@ -172,7 +188,7 @@ gboolean _rclib_db_instance_init_playlist(RCLibDb *db, RCLibDbPrivate *priv)
         g_direct_equal, NULL, NULL);
     priv->playlist_iter_table = g_hash_table_new_full(g_direct_hash,
         g_direct_equal, NULL, NULL);
-    priv->catalog = g_sequence_new((GDestroyNotify)
+    priv->catalog = (RCLibDbCatalogSequence *)g_sequence_new((GDestroyNotify)
         rclib_db_catalog_data_unref);
     return TRUE;
 }
@@ -181,7 +197,9 @@ void _rclib_db_instance_finalize_playlist(RCLibDbPrivate *priv)
 {
     if(priv==NULL) return;
     if(priv->catalog!=NULL)
-        g_sequence_free(priv->catalog);
+    {
+        g_sequence_free((GSequence *)priv->catalog);
+    }
     if(priv->catalog_iter_table!=NULL)
         g_hash_table_destroy(priv->catalog_iter_table);
     if(priv->playlist_iter_table!=NULL)
@@ -251,7 +269,8 @@ void rclib_db_catalog_data_free(RCLibDbCatalogData *data)
 {
     if(data==NULL) return;
     g_free(data->name);
-    if(data->playlist!=NULL) g_sequence_free(data->playlist);
+    if(data->playlist!=NULL)
+        g_sequence_free((GSequence *)data->playlist);
     g_slice_free(RCLibDbCatalogData, data);
 }
 
@@ -261,7 +280,7 @@ static inline gboolean rclib_db_catalog_data_set_valist(
 {
     gboolean send_signal = FALSE;
     RCLibDbCatalogDataType type;
-    RCLibDbCatalogSequence *sequence;
+    RCLibDbPlaylistSequence *sequence;
     RCLibDbCatalogIter *iter;
     RCLibDbCatalogType new_type;
     gpointer ptr;
@@ -273,7 +292,7 @@ static inline gboolean rclib_db_catalog_data_set_valist(
         {
             case RCLIB_DB_CATALOG_DATA_TYPE_PLAYLIST:
             {
-                sequence = va_arg(var_args, RCLibDbCatalogSequence *);
+                sequence = va_arg(var_args, RCLibDbPlaylistSequence *);
                 data->playlist = sequence;
                 break;
             }
@@ -285,8 +304,9 @@ static inline gboolean rclib_db_catalog_data_set_valist(
             }
             case RCLIB_DB_CATALOG_DATA_TYPE_NAME:
             {
-                if(data->name!=NULL) g_free(data->name);
                 str = va_arg(var_args, const gchar *);
+                if(g_strcmp0(data->name, str)==0) break;
+                if(data->name!=NULL) g_free(data->name);
                 data->name = g_strdup(str);
                 send_signal = TRUE;
                 break;
@@ -294,7 +314,9 @@ static inline gboolean rclib_db_catalog_data_set_valist(
             case RCLIB_DB_CATALOG_DATA_TYPE_TYPE:
             {
                 new_type = va_arg(var_args, RCLibDbCatalogType);
+                if(new_type==data->type) break;
                 data->type = new_type;
+                send_signal = TRUE;
                 break;
             }
             case RCLIB_DB_CATALOG_DATA_TYPE_STORE:
@@ -320,7 +342,7 @@ static inline void rclib_db_catalog_data_get_valist(
     va_list var_args)
 {
     RCLibDbCatalogDataType type;
-    RCLibDbCatalogSequence **sequence;
+    RCLibDbPlaylistSequence **sequence;
     RCLibDbCatalogIter **iter;
     RCLibDbCatalogType *catalog_type;
     gpointer *ptr;
@@ -332,7 +354,7 @@ static inline void rclib_db_catalog_data_get_valist(
         {
             case RCLIB_DB_CATALOG_DATA_TYPE_PLAYLIST:
             {
-                sequence = va_arg(var_args, RCLibDbCatalogSequence **);
+                sequence = va_arg(var_args, RCLibDbPlaylistSequence **);
                 *sequence = data->playlist;
                 break;
             }
@@ -371,6 +393,279 @@ static inline void rclib_db_catalog_data_get_valist(
     }
 }
 
+static inline gboolean rclib_db_playlist_data_set_valist(
+    RCLibDbPlaylistData *data, RCLibDbPlaylistDataType type1,
+    va_list var_args)
+{
+    gboolean send_signal = FALSE;
+    RCLibDbPlaylistDataType type;
+    RCLibDbCatalogIter *catalog_iter;
+    RCLibDbPlaylistIter *playlist_iter;
+    RCLibDbPlaylistType new_type;
+    const gchar *str;   
+    gint64 length;
+    gint vint;
+    gdouble rating;
+    type = type1;
+    while(type!=RCLIB_DB_PLAYLIST_DATA_TYPE_NONE)
+    {
+        switch(type)
+        {
+            case RCLIB_DB_PLAYLIST_DATA_TYPE_CATALOG:
+            {
+                catalog_iter = va_arg(var_args, RCLibDbCatalogIter *);
+                data->catalog = catalog_iter;
+                break;
+            }
+            case RCLIB_DB_PLAYLIST_DATA_TYPE_SELF_ITER:
+            {
+                playlist_iter = va_arg(var_args, RCLibDbPlaylistIter *);
+                data->self_iter = playlist_iter;
+                break;
+            }
+            case RCLIB_DB_PLAYLIST_DATA_TYPE_TYPE:
+            {
+                new_type = va_arg(var_args, RCLibDbPlaylistType);
+                if(new_type==data->type) break;
+                data->type = new_type;
+                send_signal = TRUE;
+                break;
+            }
+            case RCLIB_DB_PLAYLIST_DATA_TYPE_URI:
+            {
+                str = va_arg(var_args, const gchar *);
+                if(g_strcmp0(str, data->uri)==0) break;
+                if(data->uri!=NULL) g_free(data->uri);
+                data->uri = g_strdup(str);
+                send_signal = TRUE;
+                break;
+            }
+            case RCLIB_DB_PLAYLIST_DATA_TYPE_TITLE:
+            {
+                str = va_arg(var_args, const gchar *);
+                if(g_strcmp0(str, data->title)==0) break;
+                if(data->title!=NULL) g_free(data->title);
+                data->title = g_strdup(str);
+                send_signal = TRUE;
+                break;
+            }
+            case RCLIB_DB_PLAYLIST_DATA_TYPE_ARTIST:
+            {
+                str = va_arg(var_args, const gchar *);
+                if(g_strcmp0(str, data->artist)==0) break;
+                if(data->artist!=NULL) g_free(data->artist);
+                data->artist = g_strdup(str);
+                send_signal = TRUE;
+                break;
+            }
+            case RCLIB_DB_PLAYLIST_DATA_TYPE_ALBUM:
+            {
+                str = va_arg(var_args, const gchar *);
+                if(g_strcmp0(str, data->album)==0) break;
+                if(data->album!=NULL) g_free(data->album);
+                data->album = g_strdup(str);
+                send_signal = TRUE;
+                break;
+            }
+            case RCLIB_DB_PLAYLIST_DATA_TYPE_FTYPE:
+            {
+                str = va_arg(var_args, const gchar *);
+                if(g_strcmp0(str, data->ftype)==0) break;
+                if(data->ftype!=NULL) g_free(data->ftype);
+                data->ftype = g_strdup(str);
+                send_signal = TRUE;
+                break;
+            }
+            case RCLIB_DB_PLAYLIST_DATA_TYPE_LENGTH:
+            {
+                length = va_arg(var_args, gint64);
+                if(data->length==length) break;
+                data->length = length;
+                send_signal = TRUE;
+                break;
+            }
+            case RCLIB_DB_PLAYLIST_DATA_TYPE_TRACKNUM:
+            {
+                vint = va_arg(var_args, gint);
+                if(vint==data->tracknum) break;
+                data->tracknum = vint;
+                send_signal = TRUE;
+                break;
+            }
+            case RCLIB_DB_PLAYLIST_DATA_TYPE_YEAR:
+            {
+                vint = va_arg(var_args, gint);
+                if(vint==data->year) break;
+                data->year = vint;
+                send_signal = TRUE;
+                break;
+            }
+            case RCLIB_DB_PLAYLIST_DATA_TYPE_RATING:
+            {
+                rating = va_arg(var_args, gdouble);
+                if(rating==data->rating) break;
+                data->rating = rating;
+                send_signal = TRUE;
+                break;
+            }
+            case RCLIB_DB_PLAYLIST_DATA_TYPE_LYRICFILE:
+            {
+                str = va_arg(var_args, const gchar *);
+                if(g_strcmp0(str, data->lyricfile)==0) break;
+                if(data->lyricfile!=NULL) g_free(data->lyricfile);
+                str = va_arg(var_args, const gchar *);
+                data->lyricfile = g_strdup(str);
+                send_signal = TRUE;
+                break;
+            }
+            case RCLIB_DB_PLAYLIST_DATA_TYPE_LYRICSECFILE:
+            {
+                str = va_arg(var_args, const gchar *);
+                if(g_strcmp0(str, data->lyricsecfile)==0) break;
+                if(data->lyricsecfile!=NULL) g_free(data->lyricsecfile);
+                data->lyricsecfile = g_strdup(str);
+                send_signal = TRUE;
+                break;
+            }
+            case RCLIB_DB_PLAYLIST_DATA_TYPE_ALBUMFILE:
+            {
+                str = va_arg(var_args, const gchar *);
+                if(g_strcmp0(str, data->albumfile)==0) break;
+                if(data->albumfile!=NULL) g_free(data->albumfile);
+                data->albumfile = g_strdup(str);
+                send_signal = TRUE;
+                break;
+            }            
+            default:
+            {
+                g_warning("rclib_db_playlist_data_set: Wrong data type %d!",
+                    type);
+                break;
+            }
+        }
+        type = va_arg(var_args, RCLibDbPlaylistDataType);
+    }
+    return send_signal;
+}
+
+static inline void rclib_db_playlist_data_get_valist(
+    const RCLibDbPlaylistData *data, RCLibDbPlaylistDataType type1,
+    va_list var_args)
+{
+    RCLibDbPlaylistDataType type;
+    RCLibDbCatalogIter **catalog_iter;
+    RCLibDbPlaylistIter **playlist_iter;
+    RCLibDbPlaylistType *playlist_type;
+    gchar **str;   
+    gint64 *length;
+    gint *vint;
+    gfloat *rating;
+    type = type1;
+    while(type!=RCLIB_DB_PLAYLIST_DATA_TYPE_NONE)
+    {
+        switch(type)
+        {
+            case RCLIB_DB_PLAYLIST_DATA_TYPE_CATALOG:
+            {
+                catalog_iter = va_arg(var_args, RCLibDbCatalogIter **);
+                *catalog_iter = data->catalog;
+                break;
+            }
+            case RCLIB_DB_PLAYLIST_DATA_TYPE_SELF_ITER:
+            {
+                playlist_iter = va_arg(var_args, RCLibDbPlaylistIter **);
+                *playlist_iter = data->self_iter;
+                break;
+            }
+            case RCLIB_DB_PLAYLIST_DATA_TYPE_TYPE:
+            {
+                playlist_type = va_arg(var_args, RCLibDbPlaylistType *);
+                *playlist_type = data->type;
+                break;
+            }
+            case RCLIB_DB_PLAYLIST_DATA_TYPE_URI:
+            {
+                str = va_arg(var_args, gchar **);
+                *str = data->uri;
+                break;
+            }
+            case RCLIB_DB_PLAYLIST_DATA_TYPE_TITLE:
+            {
+                str = va_arg(var_args, gchar **);
+                *str = data->title;
+                break;
+            }
+            case RCLIB_DB_PLAYLIST_DATA_TYPE_ARTIST:
+            {
+                str = va_arg(var_args, gchar **);
+                *str = data->artist;
+                break;
+            }
+            case RCLIB_DB_PLAYLIST_DATA_TYPE_ALBUM:
+            {
+                str = va_arg(var_args, gchar **);
+                *str = data->album;
+                break;
+            }
+            case RCLIB_DB_PLAYLIST_DATA_TYPE_FTYPE:
+            {
+                str = va_arg(var_args, gchar **);
+                *str = data->ftype;
+                break;
+            }
+            case RCLIB_DB_PLAYLIST_DATA_TYPE_LENGTH:
+            {
+                length = va_arg(var_args, gint64 *);
+                *length = data->length;
+                break;
+            }
+            case RCLIB_DB_PLAYLIST_DATA_TYPE_TRACKNUM:
+            {
+                vint = va_arg(var_args, gint *);
+                *vint = data->tracknum;
+                break;
+            }
+            case RCLIB_DB_PLAYLIST_DATA_TYPE_YEAR:
+            {
+                vint = va_arg(var_args, gint *);
+                *vint = data->year;
+                break;
+            }
+            case RCLIB_DB_PLAYLIST_DATA_TYPE_RATING:
+            {
+                rating = va_arg(var_args, gfloat *);
+                *rating = data->rating;
+                break;
+            }
+            case RCLIB_DB_PLAYLIST_DATA_TYPE_LYRICFILE:
+            {
+                str = va_arg(var_args, gchar **);
+                *str = data->lyricfile;
+                break;
+            }
+            case RCLIB_DB_PLAYLIST_DATA_TYPE_LYRICSECFILE:
+            {
+                str = va_arg(var_args, gchar **);
+                *str = data->lyricsecfile;
+                break;
+            }
+            case RCLIB_DB_PLAYLIST_DATA_TYPE_ALBUMFILE:
+            {
+                str = va_arg(var_args, gchar **);
+                *str = data->albumfile;
+                break;
+            }            
+            default:
+            {
+                g_warning("rclib_db_playlist_data_get: Wrong data type %d!",
+                    type);
+                break;
+            }
+        }
+        type = va_arg(var_args, RCLibDbPlaylistDataType);
+    }
+}
+
 /**
  * rclib_db_catalog_data_set: (skip)
  * @data: the #RCLibDbCatalogData data
@@ -397,10 +692,10 @@ void rclib_db_catalog_data_set(RCLibDbCatalogData *data,
         instance = rclib_db_get_instance();
         if(instance!=NULL)
             priv = RCLIB_DB(instance)->priv;
-        if(priv!=NULL)
-            priv->dirty_flag = TRUE;
         if(data->self_iter!=NULL)
         {
+            if(priv!=NULL)
+                priv->dirty_flag = TRUE;
             g_signal_emit_by_name(instance, "catalog-changed",
                 data->self_iter);
         }
@@ -436,7 +731,7 @@ void rclib_db_catalog_data_get(const RCLibDbCatalogData *data,
  * @...: value for the first property, followed optionally by more
  *  name/value pairs, followed by %RCLIB_DB_CATALOG_DATA_TYPE_NONE
  *
- * Sets properties on the data in a #RCLibDbCatalogiter.
+ * Sets properties on the data in a #RCLibDbCatalogIter.
  */
 
 void rclib_db_catalog_data_iter_set(RCLibDbCatalogIter *iter,
@@ -448,7 +743,7 @@ void rclib_db_catalog_data_iter_set(RCLibDbCatalogIter *iter,
     va_list var_args;
     gboolean send_signal = FALSE;
     if(iter==NULL) return;
-    data = g_sequence_get(iter);
+    data = rclib_db_catalog_iter_get_data(iter);
     if(data==NULL) return;
     va_start(var_args, type1);
     send_signal = rclib_db_catalog_data_set_valist(data, type1, var_args);
@@ -471,7 +766,7 @@ void rclib_db_catalog_data_iter_set(RCLibDbCatalogIter *iter,
  * @...: value for the first property, followed optionally by more
  *  name/value pairs, followed by %RCLIB_DB_CATALOG_DATA_TYPE_NONE
  *
- * Gets properties of the data in a #RCLibDbCatalogiter. The property
+ * Gets properties of the data in a #RCLibDbCatalogIter. The property
  * contents will not be copied, just get their address instead,
  * if the contents are stored inside a pointer.
  */
@@ -482,7 +777,7 @@ void rclib_db_catalog_data_iter_get(RCLibDbCatalogIter *iter,
     RCLibDbCatalogData *data;
     va_list var_args;
     if(iter==NULL) return;
-    data = g_sequence_get(iter);
+    data = rclib_db_catalog_iter_get_data(iter);
     if(data==NULL) return;
     va_start(var_args, type1);
     rclib_db_catalog_data_get_valist(data, type1, var_args);
@@ -560,6 +855,652 @@ void rclib_db_playlist_data_free(RCLibDbPlaylistData *data)
 }
 
 /**
+ * rclib_db_playlist_data_set: (skip)
+ * @data: the #RCLibDbPlaylistData data
+ * @type1: the first property in playlist data to set
+ * @...: value for the first property, followed optionally by more
+ *  name/value pairs, followed by %RCLIB_DB_CATALOG_DATA_TYPE_NONE
+ *
+ * Sets properties on a #RCLibDbPlaylistData.
+ */
+
+void rclib_db_playlist_data_set(RCLibDbPlaylistData *data,
+    RCLibDbPlaylistDataType type1, ...)
+{
+    RCLibDbPrivate *priv = NULL;
+    GObject *instance = NULL;
+    va_list var_args;
+    gboolean send_signal = FALSE;
+    if(data==NULL) return;
+    va_start(var_args, type1);
+    send_signal = rclib_db_playlist_data_set_valist(data, type1, var_args);
+    va_end(var_args);
+    if(send_signal)
+    {
+        instance = rclib_db_get_instance();
+        if(instance!=NULL)
+            priv = RCLIB_DB(instance)->priv;
+        if(data->self_iter!=NULL)
+        {
+            if(priv!=NULL)
+                priv->dirty_flag = TRUE;
+            g_signal_emit_by_name(instance, "playlist-changed",
+                data->self_iter);
+        }
+    }
+}
+
+/**
+ * rclib_db_playlist_data_get: (skip)
+ * @data: the #RCLibDbPlaylistData data
+ * @type1: the first property in playlist data to get
+ * @...: return location for the first property, followed optionally by more
+ *  name/return location pairs, followed by %RCLIB_DB_CATALOG_DATA_TYPE_NONE
+ *
+ * Gets properties of a #RCLibDbPlaylistData. The property contents will not
+ * be copied, just get their address instead, if the contents are stored
+ * inside a pointer.
+ */
+
+void rclib_db_playlist_data_get(const RCLibDbPlaylistData *data,
+    RCLibDbPlaylistDataType type1, ...)
+{
+    va_list var_args;
+    if(data==NULL) return;
+    va_start(var_args, type1);
+    rclib_db_playlist_data_get_valist(data, type1, var_args);
+    va_end(var_args);
+}
+
+/**
+ * rclib_db_playlist_data_iter_set: (skip)
+ * @iter: the #RCLibDbPlaylistIter iter
+ * @type1: the first property in playlist data to set
+ * @...: value for the first property, followed optionally by more
+ *  name/value pairs, followed by %RCLIB_DB_CATALOG_DATA_TYPE_NONE
+ *
+ * Sets properties on the data in a #RCLibDbPlaylistIter.
+ */
+
+void rclib_db_playlist_data_iter_set(RCLibDbPlaylistIter *iter,
+    RCLibDbPlaylistDataType type1, ...)
+{
+    RCLibDbPrivate *priv = NULL;
+    GObject *instance = NULL;
+    RCLibDbPlaylistData *data;
+    va_list var_args;
+    gboolean send_signal = FALSE;
+    if(iter==NULL) return;
+    data = rclib_db_playlist_iter_get_data(iter);
+    if(data==NULL) return;
+    va_start(var_args, type1);
+    send_signal = rclib_db_playlist_data_set_valist(data, type1, var_args);
+    va_end(var_args);
+    if(send_signal)
+    {
+        instance = rclib_db_get_instance();
+        if(instance!=NULL)
+            priv = RCLIB_DB(instance)->priv;
+        if(priv!=NULL)
+            priv->dirty_flag = TRUE;
+        g_signal_emit_by_name(instance, "playlist-changed", iter);
+    }
+}
+
+/**
+ * rclib_db_playlist_data_iter_get: (skip)
+ * @iter: the #RCLibDbPlaylistIter iter
+ * @type1: the first property in playlist data to get
+ * @...: value for the first property, followed optionally by more
+ *  name/value pairs, followed by %RCLIB_DB_CATALOG_DATA_TYPE_NONE
+ *
+ * Gets properties of the data in a #RCLibDbPlaylistIter. The property
+ * contents will not be copied, just get their address instead,
+ * if the contents are stored inside a pointer.
+ */
+
+void rclib_db_playlist_data_iter_get(RCLibDbPlaylistIter *iter,
+    RCLibDbPlaylistDataType type1, ...)
+{
+    RCLibDbPlaylistData *data;
+    va_list var_args;
+    if(iter==NULL) return;
+    data = rclib_db_playlist_iter_get_data(iter);
+    if(data==NULL) return;
+    va_start(var_args, type1);
+    rclib_db_playlist_data_get_valist(data, type1, var_args);
+    va_end(var_args);
+}
+
+/**
+ * rclib_db_catalog_sequence_get_length:
+ * @seq: the #RCLibDbCatalogSequence
+ *
+ * Get the element length in the given #RCLibDbCatalogSequence.
+ *
+ * Returns: The length of @req.
+ */
+
+gint rclib_db_catalog_sequence_get_length(RCLibDbCatalogSequence *seq)
+{
+    if(seq==NULL) return 0;
+    return g_sequence_get_length((GSequence *)seq);
+}
+
+/**
+ * rclib_db_catalog_sequence_get_begin_iter:
+ * @seq: the #RCLibDbCatalogSequence
+ *
+ * Get the begin iterator for @seq.
+ *
+ * Returns: (transfer none): (skip): The begin iterator of @req.
+ */
+
+RCLibDbCatalogIter *rclib_db_catalog_sequence_get_begin_iter(
+    RCLibDbCatalogSequence *seq)
+{
+    if(seq==NULL) return NULL;
+    return (RCLibDbCatalogIter *)g_sequence_get_begin_iter(
+        (GSequence *)seq);  
+}
+
+/**
+ * rclib_db_catalog_sequence_get_end_iter:
+ * @seq: the #RCLibDbCatalogSequence
+ *
+ * Get the end iterator for @seq.
+ *
+ * Returns: (transfer none): (skip): The end iterator of @req.
+ */
+
+RCLibDbCatalogIter *rclib_db_catalog_sequence_get_end_iter(
+    RCLibDbCatalogSequence *seq)
+{
+    if(seq==NULL) return NULL;
+    return (RCLibDbCatalogIter *)g_sequence_get_end_iter(
+        (GSequence *)seq);  
+}
+
+/**
+ * rclib_db_catalog_sequence_get_iter_at_pos:
+ * @seq: the #RCLibDbCatalogSequence
+ * @pos: the position in @seq, or -1 for the end.
+ *
+ * Return the iterator at position @pos. If @pos is negative or larger
+ * than the number of items in @seq, the end iterator is returned.
+ *
+ * Returns: (transfer none): (skip): The #RCLibDbCatalogIter at
+ *     position @pos.
+ */
+ 
+RCLibDbCatalogIter *rclib_db_catalog_sequence_get_iter_at_pos(
+    RCLibDbCatalogSequence *seq, gint pos)
+{
+    if(seq==NULL) return NULL;
+    return (RCLibDbCatalogIter *)g_sequence_get_iter_at_pos(
+        (GSequence *)seq, pos);
+}
+
+/**
+ * rclib_db_catalog_iter_get_data:
+ * @iter: the iter pointed to the catalog data
+ *
+ * Get the catalog item data which the iter pointed to.
+ *
+ * Returns: (transfer none): The #RCLibDbCatalogData.
+ */
+
+RCLibDbCatalogData *rclib_db_catalog_iter_get_data(
+    RCLibDbCatalogIter *iter)
+{
+    if(iter==NULL) return NULL;
+    return (RCLibDbCatalogData *)g_sequence_get((GSequenceIter *)iter);
+}
+
+/**
+ * rclib_db_catalog_iter_is_begin:
+ * @iter: a #RCLibDbCatalogIter
+ *
+ * Return whether @iter is the begin iterator
+ *
+ * Returns: whether @iter is the begin iterator
+ */
+ 
+gboolean rclib_db_catalog_iter_is_begin(RCLibDbCatalogIter *iter)
+{
+    if(iter==NULL) return FALSE;
+    return g_sequence_iter_is_begin((GSequenceIter *)iter);
+}
+
+/**
+ * rclib_db_catalog_iter_is_end:
+ * @iter: a #RCLibDbCatalogIter
+ *
+ * Return whether @iter is the end iterator
+ *
+ * Returns: whether @iter is the end iterator
+ */
+
+gboolean rclib_db_catalog_iter_is_end(RCLibDbCatalogIter *iter)
+{
+    if(iter==NULL) return FALSE;
+    return g_sequence_iter_is_end((GSequenceIter *)iter);
+}
+
+/**
+ * rclib_db_catalog_iter_next:
+ * @iter: a #RCLibDbCatalogIter
+ *
+ * Return an iterator pointing to the next position after @iter. If
+ * @iter is the end iterator, the end iterator is returned.
+ *
+ * Returns: (transfer none): (skip): a #RCLibDbCatalogIter pointing to
+ *     the next position after @iter.
+ */
+
+RCLibDbCatalogIter *rclib_db_catalog_iter_next(RCLibDbCatalogIter *iter)
+{
+    if(iter==NULL) return NULL;
+    return (RCLibDbCatalogIter *)g_sequence_iter_next(
+        (GSequenceIter *)iter);
+}
+
+/**
+ * rclib_db_catalog_iter_prev:
+ * @iter: a #RCLibDbCatalogIter
+ *
+ * Return an iterator pointing to the previous position before @iter. If
+ * @iter is the begin iterator, the begin iterator is returned.
+ *
+ * Returns: (transfer none): (skip): a #RCLibDbCatalogIter pointing to the
+ *     previous position before @iter.
+ */
+ 
+RCLibDbCatalogIter *rclib_db_catalog_iter_prev(RCLibDbCatalogIter *iter)
+{
+    if(iter==NULL) return NULL;
+    return (RCLibDbCatalogIter *)g_sequence_iter_prev(
+        (GSequenceIter *)iter);
+}
+
+/**
+ * rclib_db_catalog_iter_get_position:
+ * @iter: a #RCLibDbCatalogIter
+ *
+ * Returns the position of @iter.
+ *
+ * Returns: the position of @iter.
+ */
+
+gint rclib_db_catalog_iter_get_position(RCLibDbCatalogIter *iter)
+{
+    if(iter==NULL) return 0;
+    return g_sequence_iter_get_position((GSequenceIter *)iter);
+}
+
+/**
+ * rclib_db_catalog_iter_get_sequence:
+ * @iter: the #RCLibDbCatalogIter
+ *
+ * Returns the #RCLibDbCatalogSequence that iter points into.
+ *
+ * Returns: (transfer none): (skip): The #RCLibDbCatalogSequence that
+ *     iter points into.
+ */
+
+RCLibDbCatalogSequence *rclib_db_catalog_iter_get_sequence(
+    RCLibDbCatalogIter *iter)
+{
+    if(iter==NULL) return NULL;
+    return (RCLibDbCatalogSequence *)g_sequence_iter_get_sequence(
+        (GSequenceIter *)iter);
+}
+
+/**
+ * rclib_db_catalog_iter_range_get_midpoint:
+ * @begin: a #RCLibDbCatalogIter
+ * @end: a #RCLibDbCatalogIter
+ *
+ * Find an iterator somewhere in the range (@begin, @end). This
+ * iterator will be close to the middle of the range, but is not
+ * guaranteed to be <emphasis>exactly</emphasis> in the middle.
+ *
+ * The @begin and @end iterators must both point to the same
+ * #RCLibDbCatalogSequence and @begin must come before or be equal
+ * to @end in the sequence.
+ *
+ * Returns: (transfer none): (skip): A #RCLibDbCatalogIter pointing
+ *     somewhere in the (@begin, @end) range.
+ */
+
+RCLibDbCatalogIter *rclib_db_catalog_iter_range_get_midpoint(
+    RCLibDbCatalogIter *begin, RCLibDbCatalogIter *end)
+{
+    if(begin==NULL || end==NULL) return NULL;
+    return (RCLibDbCatalogIter *)g_sequence_range_get_midpoint(
+        (GSequenceIter *)begin, (GSequenceIter *)end);
+}
+
+/**
+ * rclib_db_catalog_iter_compare:
+ * @a: a #RCLibDbCatalogIter
+ * @b: a #RCLibDbCatalogIter
+ *
+ * Return a negative number if @a comes before @b, 0 if they are equal,
+ * and a positive number if @a comes after @b.
+ *
+ * The @a and @b iterators must point into the same #RCLibDbCatalogSequence.
+ *
+ * Returns: A negative number if @a comes before @b, 0 if they are
+ *     equal, and a positive number if @a comes after @b.
+ */
+
+gint rclib_db_catalog_iter_compare(RCLibDbCatalogIter *a,
+    RCLibDbCatalogIter *b)
+{
+    if(a==NULL || b==NULL) return 0;
+    return g_sequence_iter_compare((GSequenceIter *)a, (GSequenceIter *)b);
+}
+
+/**
+ * rclib_db_playlist_sequence_get_length:
+ * @seq: the #RCLibDbPlaylistSequence
+ *
+ * Get the element length in the given #RCLibDbPlaylistSequence.
+ *
+ * Returns: The length of @req.
+ */
+
+gint rclib_db_playlist_sequence_get_length(RCLibDbPlaylistSequence *seq)
+{
+    if(seq==NULL) return 0;
+    return g_sequence_get_length((GSequence *)seq);
+}
+
+/**
+ * rclib_db_playlist_sequence_get_begin_iter:
+ * @seq: the #RCLibDbPlaylistSequence
+ *
+ * Get the begin iterator for @seq.
+ *
+ * Returns: (transfer none): (skip): The begin iterator of @req.
+ */
+
+RCLibDbPlaylistIter *rclib_db_playlist_sequence_get_begin_iter(
+    RCLibDbPlaylistSequence *seq)
+{
+    if(seq==NULL) return NULL;
+    return (RCLibDbPlaylistIter *)g_sequence_get_begin_iter(
+        (GSequence *)seq);  
+}
+
+/**
+ * rclib_db_playlist_sequence_get_end_iter:
+ * @seq: the #RCLibDbPlaylistSequence
+ *
+ * Get the end iterator for @seq.
+ *
+ * Returns: (transfer none): (skip): The end iterator of @req.
+ */
+
+RCLibDbPlaylistIter *rclib_db_playlist_sequence_get_end_iter(
+    RCLibDbPlaylistSequence *seq)
+{
+    if(seq==NULL) return NULL;
+    return (RCLibDbPlaylistIter *)g_sequence_get_end_iter(
+        (GSequence *)seq);
+}
+
+/**
+ * rclib_db_playlist_sequence_get_iter_at_pos:
+ * @seq: the #RCLibDbPlaylistSequence
+ * @pos: the position in @seq, or -1 for the end.
+ *
+ * Return the iterator at position @pos. If @pos is negative or larger
+ * than the number of items in @seq, the end iterator is returned.
+ *
+ * Returns: (transfer none): (skip): The #RCLibDbPlaylistIter at
+ *     position @pos.
+ */
+ 
+RCLibDbPlaylistIter *rclib_db_playlist_sequence_get_iter_at_pos(
+    RCLibDbPlaylistSequence *seq, gint pos)
+{
+    if(seq==NULL) return NULL;
+    return (RCLibDbPlaylistIter *)g_sequence_get_iter_at_pos(
+        (GSequence *)seq, pos);
+}
+
+/**
+ * rclib_db_playlist_iter_get_data:
+ * @iter: the iter pointed to the playlist data
+ *
+ * Get the playlist item data which the iter pointed to.
+ *
+ * Returns: (transfer none): The #RCLibDbPlaylistData.
+ */
+
+RCLibDbPlaylistData *rclib_db_playlist_iter_get_data(
+    RCLibDbPlaylistIter *iter)
+{
+    if(iter==NULL) return NULL;
+    return (RCLibDbPlaylistData *)g_sequence_get((GSequenceIter *)iter);
+}
+
+/**
+ * rclib_db_playlist_iter_is_begin:
+ * @iter: a #RCLibDbPlaylistIter
+ *
+ * Return whether @iter is the begin iterator
+ *
+ * Returns: whether @iter is the begin iterator
+ */
+ 
+gboolean rclib_db_playlist_iter_is_begin(RCLibDbPlaylistIter *iter)
+{
+    if(iter==NULL) return FALSE;
+    return g_sequence_iter_is_begin((GSequenceIter *)iter);
+}
+
+/**
+ * rclib_db_playlist_iter_is_end:
+ * @iter: a #RCLibDbPlaylistIter
+ *
+ * Return whether @iter is the end iterator
+ *
+ * Returns: whether @iter is the end iterator
+ */
+
+gboolean rclib_db_playlist_iter_is_end(RCLibDbPlaylistIter *iter)
+{
+    if(iter==NULL) return FALSE;
+    return g_sequence_iter_is_end((GSequenceIter *)iter);
+}
+
+/**
+ * rclib_db_playlist_iter_next:
+ * @iter: a #RCLibDbPlaylistIter
+ *
+ * Return an iterator pointing to the next position after @iter. If
+ * @iter is the end iterator, the end iterator is returned.
+ *
+ * Returns: (transfer none): (skip): a #RCLibDbPlaylistIter pointing to
+ *     the next position after @iter.
+ */
+
+RCLibDbPlaylistIter *rclib_db_playlist_iter_next(RCLibDbPlaylistIter *iter)
+{
+    if(iter==NULL) return NULL;
+    return (RCLibDbPlaylistIter *)g_sequence_iter_next(
+        (GSequenceIter *)iter);
+}
+
+/**
+ * rclib_db_playlist_iter_prev:
+ * @iter: a #RCLibDbPlaylistIter
+ *
+ * Return an iterator pointing to the previous position before @iter. If
+ * @iter is the begin iterator, the begin iterator is returned.
+ *
+ * Returns: (transfer none): (skip): a #RCLibDbPlaylistIter pointing to the
+ *     previous position before @iter.
+ */
+ 
+RCLibDbPlaylistIter *rclib_db_playlist_iter_prev(RCLibDbPlaylistIter *iter)
+{
+    if(iter==NULL) return NULL;
+    return (RCLibDbPlaylistIter *)g_sequence_iter_prev(
+        (GSequenceIter *)iter);
+}
+
+/**
+ * rclib_db_playlist_iter_get_position:
+ * @iter: a #RCLibDbPlaylistIter
+ *
+ * Return the position of @iter.
+ *
+ * Returns: the position of @iter.
+ */
+
+gint rclib_db_playlist_iter_get_position(RCLibDbPlaylistIter *iter)
+{
+    if(iter==NULL) return 0;
+    return g_sequence_iter_get_position((GSequenceIter *)iter);
+}
+
+/**
+ * rclib_db_playlist_iter_get_sequence:
+ * @iter: the #RCLibDbPlaylistIter
+ *
+ * Return the #RCLibDbPlaylistSequence that iter points into.
+ *
+ * Returns: (transfer none): (skip): The #RCLibDbPlaylistSequence that
+ *     iter points into.
+ */
+
+RCLibDbPlaylistSequence *rclib_db_playlist_iter_get_sequence(
+    RCLibDbPlaylistIter *iter)
+{
+    if(iter==NULL) return NULL;
+    return (RCLibDbPlaylistSequence *)g_sequence_iter_get_sequence(
+        (GSequenceIter *)iter);
+}
+
+/**
+ * rclib_db_playlist_iter_range_get_midpoint:
+ * @begin: a #RCLibDbPlaylistIter
+ * @end: a #RCLibDbPlaylistIter
+ *
+ * Find an iterator somewhere in the range (@begin, @end). This
+ * iterator will be close to the middle of the range, but is not
+ * guaranteed to be <emphasis>exactly</emphasis> in the middle.
+ *
+ * The @begin and @end iterators must both point to the same
+ * #RCLibDbPlaylistSequence and @begin must come before or be equal
+ * to @end in the sequence.
+ *
+ * Returns: (transfer none): (skip): A #RCLibDbPlaylistIter pointing
+ *     somewhere in the (@begin, @end) range.
+ */
+
+RCLibDbPlaylistIter *rclib_db_playlist_iter_range_get_midpoint(
+    RCLibDbPlaylistIter *begin, RCLibDbPlaylistIter *end)
+{
+    if(begin==NULL || end==NULL) return NULL;
+    return (RCLibDbPlaylistIter *)g_sequence_range_get_midpoint(
+        (GSequenceIter *)begin, (GSequenceIter *)end);
+}
+
+/**
+ * rclib_db_playlist_iter_compare:
+ * @a: a #RCLibDbPlaylistIter
+ * @b: a #RCLibDbPlaylistIter
+ *
+ * Return a negative number if @a comes before @b, 0 if they are equal,
+ * and a positive number if @a comes after @b.
+ *
+ * The @a and @b iterators must point into the same #RCLibDbPlaylistSequence.
+ *
+ * Returns: A negative number if @a comes before @b, 0 if they are
+ *     equal, and a positive number if @a comes after @b.
+ */
+
+gint rclib_db_playlist_iter_compare(RCLibDbPlaylistIter *a,
+    RCLibDbPlaylistIter *b)
+{
+    if(a==NULL || b==NULL) return 0;
+    return g_sequence_iter_compare((GSequenceIter *)a, (GSequenceIter *)b);
+}
+
+/**
+ * rclib_db_catalog_sequence_foreach:
+ * @seq: a #RCLibDbCatalogSequence
+ * @func: (scope call): the function to call for each item in @seq
+ * @user_data: user data passed to @func
+ *
+ * Calls @func for each item in the #RCLibDbCatalogSequence passing
+ * @user_data to the function.
+ */
+
+void rclib_db_catalog_sequence_foreach(RCLibDbCatalogSequence *seq,
+    GFunc func, gpointer user_data)
+{
+    g_sequence_foreach((GSequence *)seq, func, user_data);
+} 
+
+/**
+ * rclib_db_catalog_iter_foreach_range:
+ * @begin: a #RCLibDbCatalogIter
+ * @end: a #RCLibDbCatalogIter
+ * @func: (scope call): a #GFunc
+ * @user_data: user data passed to @func
+ *
+ * Calls @func for each item in the range (@begin, @end) passing
+ * @user_data to the function.
+ */
+
+void rclib_db_catalog_iter_foreach_range(RCLibDbCatalogIter *begin,
+    RCLibDbCatalogIter *end, GFunc func, gpointer user_data)
+{
+    g_sequence_foreach_range((GSequenceIter *)begin, (GSequenceIter *)end,
+        func, user_data);
+}
+
+/**
+ * rclib_db_playlist_sequence_foreach:
+ * @seq: a #RCLibDbPlaylistSequence
+ * @func: (scope call): the function to call for each item in @seq
+ * @user_data: user data passed to @func
+ *
+ * Calls @func for each item in the #RCLibDbPlaylistSequence passing
+ * @user_data to the function.
+ */
+
+void rclib_db_playlist_sequence_foreach(RCLibDbPlaylistSequence *seq,
+    GFunc func, gpointer user_data)
+{
+    g_sequence_foreach((GSequence *)seq, func, user_data);
+}
+
+/**
+ * rclib_db_playlist_iter_foreach_range:
+ * @begin: a #RCLibDbPlaylistIter
+ * @end: a #RCLibDbPlaylistIter
+ * @func: (scope call): a #GFunc
+ * @user_data: user data passed to @func
+ *
+ * Calls @func for each item in the range (@begin, @end) passing
+ * @user_data to the function.
+ */
+
+void rclib_db_playlist_iter_foreach_range(RCLibDbPlaylistIter *begin,
+    RCLibDbPlaylistIter *end, GFunc func, gpointer user_data)
+{
+    g_sequence_foreach_range((GSequenceIter *)begin, (GSequenceIter *)end,
+        func, user_data);
+}
+
+/**
  * rclib_db_get_catalog:
  *
  * Get the catalog.
@@ -568,7 +1509,7 @@ void rclib_db_playlist_data_free(RCLibDbPlaylistData *data)
  *     not exist.
  */
 
-GSequence *rclib_db_get_catalog()
+RCLibDbCatalogSequence *rclib_db_get_catalog()
 {
     RCLibDbPrivate *priv;
     GObject *instance;
@@ -588,7 +1529,7 @@ GSequence *rclib_db_get_catalog()
  * Returns: Whether the iter is valid.
  */
 
-gboolean rclib_db_catalog_is_valid_iter(GSequenceIter *catalog_iter)
+gboolean rclib_db_catalog_is_valid_iter(RCLibDbCatalogIter *catalog_iter)
 {
     RCLibDbPrivate *priv;
     GObject *instance;
@@ -612,29 +1553,39 @@ gboolean rclib_db_catalog_is_valid_iter(GSequenceIter *catalog_iter)
  *     the catalog.
  */
 
-GSequenceIter *rclib_db_catalog_add(const gchar *name,
-    GSequenceIter *iter, gint type)
+RCLibDbCatalogIter *rclib_db_catalog_add(const gchar *name,
+    RCLibDbCatalogIter *iter, gint type)
 {
     RCLibDbCatalogData *catalog_data;
     GObject *instance;
     RCLibDbPrivate *priv;
-    GSequence *playlist;
-    GSequenceIter *catalog_iter;
+    RCLibDbPlaylistSequence *playlist;
+    RCLibDbCatalogIter *catalog_iter;
     instance = rclib_db_get_instance();
     if(instance==NULL || name==NULL) return NULL;
     priv = RCLIB_DB(instance)->priv;
     if(priv==NULL) return NULL;
-    if(iter!=NULL && g_sequence_iter_get_sequence(iter)!=priv->catalog)
+    if(iter!=NULL &&
+        rclib_db_catalog_iter_get_sequence(iter)!=priv->catalog)
+    {
         return NULL;
+    }
     catalog_data = rclib_db_catalog_data_new();
-    playlist = g_sequence_new((GDestroyNotify)rclib_db_playlist_data_unref);
+    playlist = (RCLibDbPlaylistSequence *)g_sequence_new(
+        (GDestroyNotify)rclib_db_playlist_data_unref);
     catalog_data->name = g_strdup(name);
     catalog_data->type = type;
     catalog_data->playlist = playlist;
     if(iter!=NULL)
-        catalog_iter = g_sequence_insert_before(iter, catalog_data);
+    {
+        catalog_iter = (RCLibDbCatalogIter *)g_sequence_insert_before(
+            (GSequenceIter *)iter, catalog_data);
+    }
     else
-        catalog_iter = g_sequence_append(priv->catalog, catalog_data);
+    {
+        catalog_iter = (RCLibDbCatalogIter *)g_sequence_append(
+            (GSequence *)priv->catalog, catalog_data);
+    }
     catalog_data->self_iter = catalog_iter;
     g_hash_table_replace(priv->catalog_iter_table, catalog_iter,
         catalog_iter);
@@ -650,28 +1601,29 @@ GSequenceIter *rclib_db_catalog_add(const gchar *name,
  * Delete the catalog pointed to by #iter.
  */
 
-void rclib_db_catalog_delete(GSequenceIter *iter)
+void rclib_db_catalog_delete(RCLibDbCatalogIter *iter)
 {
     RCLibDbPrivate *priv;
     RCLibDbCatalogData *catalog_data;
     GObject *instance;
-    GSequenceIter *iter_foreach;
+    RCLibDbPlaylistIter *iter_foreach;
     if(iter==NULL) return;
-    if(g_sequence_iter_is_end(iter)) return;
+    if(rclib_db_catalog_iter_is_end(iter)) return;
     instance = rclib_db_get_instance();
     if(instance==NULL) return;
     priv = RCLIB_DB(instance)->priv;
     if(priv==NULL) return;
-    catalog_data = g_sequence_get(iter);
+    catalog_data = rclib_db_catalog_iter_get_data(iter);
     catalog_data->self_iter = NULL;
     g_signal_emit_by_name(instance, "catalog-delete", iter);
-    for(iter_foreach=g_sequence_get_begin_iter(catalog_data->playlist);
-        !g_sequence_iter_is_end(iter_foreach);
-        iter_foreach=g_sequence_iter_next(iter_foreach))
+    for(iter_foreach=rclib_db_playlist_sequence_get_begin_iter(
+        catalog_data->playlist);
+        !rclib_db_playlist_iter_is_end(iter_foreach);
+        iter_foreach=rclib_db_playlist_iter_next(iter_foreach))
     {
         g_hash_table_remove(priv->playlist_iter_table, iter_foreach);
     }
-    g_sequence_remove(iter);
+    g_sequence_remove((GSequenceIter *)iter);
     g_hash_table_remove(priv->catalog_iter_table, iter);
     priv->dirty_flag = TRUE;
 }
@@ -684,18 +1636,18 @@ void rclib_db_catalog_delete(GSequenceIter *iter)
  * Set the name of the catalog pointed to by #iter.
  */
 
-void rclib_db_catalog_set_name(GSequenceIter *iter, const gchar *name)
+void rclib_db_catalog_set_name(RCLibDbCatalogIter *iter, const gchar *name)
 {
     RCLibDbPrivate *priv;
     GObject *instance;
     RCLibDbCatalogData *catalog_data;
     if(iter==NULL || name==NULL) return;
-    if(g_sequence_iter_is_end(iter)) return;
+    if(rclib_db_catalog_iter_is_end(iter)) return;
     instance = rclib_db_get_instance();
     if(instance==NULL) return;
     priv = RCLIB_DB(instance)->priv;
     if(priv==NULL) return;
-    catalog_data = g_sequence_get(iter);
+    catalog_data = rclib_db_catalog_iter_get_data(iter);
     if(catalog_data==NULL) return;
     g_free(catalog_data->name);
     catalog_data->name = g_strdup(name);
@@ -711,18 +1663,19 @@ void rclib_db_catalog_set_name(GSequenceIter *iter, const gchar *name)
  * Set the type of the catalog pointed to by #iter.
  */
 
-void rclib_db_catalog_set_type(GSequenceIter *iter, RCLibDbCatalogType type)
+void rclib_db_catalog_set_type(RCLibDbCatalogIter *iter,
+    RCLibDbCatalogType type)
 {
     RCLibDbPrivate *priv;
     GObject *instance;
     RCLibDbCatalogData *catalog_data;
     if(iter==NULL) return;
-    if(g_sequence_iter_is_end(iter)) return;
+    if(rclib_db_catalog_iter_is_end(iter)) return;
     instance = rclib_db_get_instance();
     if(instance==NULL) return;
     priv = RCLIB_DB(instance)->priv;
     if(priv==NULL) return;
-    catalog_data = g_sequence_get(iter);
+    catalog_data = rclib_db_catalog_iter_get_data(iter);
     if(catalog_data==NULL) return;
     catalog_data->type = type;
     priv->dirty_flag = TRUE;
@@ -737,12 +1690,12 @@ void rclib_db_catalog_set_type(GSequenceIter *iter, RCLibDbCatalogType type)
  * Set the store of the catalog pointed to by #iter.
  */
 
-void rclib_db_catalog_set_store(GSequenceIter *iter, gpointer store)
+void rclib_db_catalog_set_store(RCLibDbCatalogIter *iter, gpointer store)
 {
     RCLibDbCatalogData *catalog_data;
     if(iter==NULL) return;
-    if(g_sequence_iter_is_end(iter)) return;
-    catalog_data = g_sequence_get(iter);
+    if(rclib_db_catalog_iter_is_end(iter)) return;
+    catalog_data = rclib_db_catalog_iter_get_data(iter);
     if(catalog_data==NULL) return;
     catalog_data->store = store;
 }
@@ -755,12 +1708,12 @@ void rclib_db_catalog_set_store(GSequenceIter *iter, gpointer store)
  * Get the store of the catalog pointed to by #iter.
  */
 
-void rclib_db_catalog_get_store(GSequenceIter *iter, gpointer *store)
+void rclib_db_catalog_get_store(RCLibDbCatalogIter *iter, gpointer *store)
 {
     RCLibDbCatalogData *catalog_data;
     if(iter==NULL || store==NULL) return;
-    if(g_sequence_iter_is_end(iter)) return;
-    catalog_data = g_sequence_get(iter);
+    if(rclib_db_catalog_iter_is_end(iter)) return;
+    catalog_data = rclib_db_catalog_iter_get_data(iter);
     if(catalog_data==NULL) return;
     *store = catalog_data->store;
 }
@@ -799,11 +1752,11 @@ void rclib_db_catalog_reorder(gint *new_order)
     g_return_if_fail(new_order!=NULL);
     priv = RCLIB_DB(instance)->priv;
     g_return_if_fail(priv!=NULL);
-    length = g_sequence_get_length(priv->catalog);
+    length = rclib_db_catalog_sequence_get_length(priv->catalog);
     order = g_new(gint, length);
     for(i=0;i<length;i++) order[new_order[i]] = i;
     new_positions = g_hash_table_new(g_direct_hash, g_direct_equal);
-    ptr = g_sequence_get_begin_iter(priv->catalog);
+    ptr = g_sequence_get_begin_iter((GSequence *)priv->catalog);
     if(!g_sequence_iter_is_end(ptr))
     {
         for(i=0;!g_sequence_iter_is_end(ptr);ptr=g_sequence_iter_next(ptr))
@@ -813,7 +1766,7 @@ void rclib_db_catalog_reorder(gint *new_order)
         }
     }
     g_free(order);
-    g_sequence_sort_iter(priv->catalog, rclib_db_reorder_func,
+    g_sequence_sort_iter((GSequence *)priv->catalog, rclib_db_reorder_func,
         new_positions);
     g_hash_table_destroy(new_positions);
     priv->dirty_flag = TRUE;
@@ -829,7 +1782,7 @@ void rclib_db_catalog_reorder(gint *new_order)
  * Returns: Whether the iter is valid.
  */
 
-gboolean rclib_db_playlist_is_valid_iter(GSequenceIter *playlist_iter)
+gboolean rclib_db_playlist_is_valid_iter(RCLibDbPlaylistIter *playlist_iter)
 {
     RCLibDbPrivate *priv;
     GObject *instance;
@@ -849,15 +1802,15 @@ gboolean rclib_db_playlist_is_valid_iter(GSequenceIter *playlist_iter)
  * Add music to the playlist by given catalog iter.
  */
 
-void rclib_db_playlist_add_music(GSequenceIter *iter,
-    GSequenceIter *insert_iter, const gchar *uri)
+void rclib_db_playlist_add_music(RCLibDbCatalogIter *iter,
+    RCLibDbPlaylistIter *insert_iter, const gchar *uri)
 {
     RCLibDbImportData *import_data;
     GObject *instance;
     RCLibDbPrivate *priv;
     instance = rclib_db_get_instance();
     if(uri==NULL || iter==NULL || instance==NULL) return;
-    if(g_sequence_iter_is_end(iter)) return;
+    if(rclib_db_catalog_iter_is_end(iter)) return;
     priv = RCLIB_DB(instance)->priv;
     priv->import_work_flag = TRUE;
     import_data = g_new0(RCLibDbImportData, 1);
@@ -878,15 +1831,15 @@ void rclib_db_playlist_add_music(GSequenceIter *iter,
  * if the add operation succeeds.
  */
 
-void rclib_db_playlist_add_music_and_play(GSequenceIter *iter,
-    GSequenceIter *insert_iter, const gchar *uri)
+void rclib_db_playlist_add_music_and_play(RCLibDbCatalogIter *iter,
+    RCLibDbPlaylistIter *insert_iter, const gchar *uri)
 {
     RCLibDbImportData *import_data;
     GObject *instance;
     RCLibDbPrivate *priv;
     instance = rclib_db_get_instance();
     if(uri==NULL || iter==NULL || instance==NULL) return;
-    if(g_sequence_iter_is_end(iter)) return;
+    if(rclib_db_catalog_iter_is_end(iter)) return;
     priv = RCLIB_DB(instance)->priv;
     priv->import_work_flag = TRUE;
     import_data = g_new0(RCLibDbImportData, 1);
@@ -905,21 +1858,21 @@ void rclib_db_playlist_add_music_and_play(GSequenceIter *iter,
  * Delete the playlist data pointed to by #iter.
  */
 
-void rclib_db_playlist_delete(GSequenceIter *iter)
+void rclib_db_playlist_delete(RCLibDbPlaylistIter *iter)
 {
     RCLibDbPrivate *priv;
     RCLibDbPlaylistData *playlist_data;
     GObject *instance;
     if(iter==NULL) return;
-    if(g_sequence_iter_is_end(iter)) return;
+    if(rclib_db_playlist_iter_is_end(iter)) return;
     instance = rclib_db_get_instance();
     if(instance==NULL) return;
     priv = RCLIB_DB(instance)->priv;
     if(priv==NULL) return;
-    playlist_data = g_sequence_get(iter);
+    playlist_data = rclib_db_playlist_iter_get_data(iter);
     playlist_data->self_iter = NULL;
     g_signal_emit_by_name(instance, "playlist-delete", iter);
-    g_sequence_remove(iter);
+    g_sequence_remove((GSequenceIter *)iter);
     g_hash_table_remove(priv->playlist_iter_table, iter);
     priv->dirty_flag = TRUE;
 }
@@ -934,19 +1887,19 @@ void rclib_db_playlist_delete(GSequenceIter *iter)
  * will be updated.
  */
 
-void rclib_db_playlist_update_metadata(GSequenceIter *iter,
+void rclib_db_playlist_update_metadata(RCLibDbPlaylistIter *iter,
     const RCLibDbPlaylistData *data)
 {
     RCLibDbPlaylistData *playlist_data;
     RCLibDbPrivate *priv;
     GObject *instance;
     if(iter==NULL) return;
-    if(g_sequence_iter_is_end(iter)) return;
+    if(rclib_db_playlist_iter_is_end(iter)) return;
     instance = rclib_db_get_instance();
     if(instance==NULL) return;
     priv = RCLIB_DB(instance)->priv;
     if(priv==NULL) return;
-    playlist_data = g_sequence_get(iter);
+    playlist_data = rclib_db_playlist_iter_get_data(iter);
     if(playlist_data==NULL) return;
     if(data->title!=NULL && g_strcmp0(playlist_data->title,
         data->title)!=0)
@@ -1010,19 +1963,19 @@ void rclib_db_playlist_update_metadata(GSequenceIter *iter,
  * by #iter.
  */
 
-void rclib_db_playlist_update_length(GSequenceIter *iter,
+void rclib_db_playlist_update_length(RCLibDbPlaylistIter *iter,
     gint64 length)
 {
     RCLibDbPrivate *priv;
     GObject *instance;
     RCLibDbPlaylistData *playlist_data;
     if(iter==NULL) return;
-    if(g_sequence_iter_is_end(iter)) return;
+    if(rclib_db_playlist_iter_is_end(iter)) return;
     instance = rclib_db_get_instance();
     if(instance==NULL) return;
     priv = RCLIB_DB(instance)->priv;
     if(priv==NULL) return;
-    playlist_data = g_sequence_get(iter);
+    playlist_data = rclib_db_playlist_iter_get_data(iter);
     if(playlist_data==NULL) return;
     if(playlist_data->length!=length)
         priv->dirty_flag = TRUE;
@@ -1038,19 +1991,19 @@ void rclib_db_playlist_update_length(GSequenceIter *iter,
  * Set the type information in the playlist pointed to by #iter.
  */
 
-void rclib_db_playlist_set_type(GSequenceIter *iter,
+void rclib_db_playlist_set_type(RCLibDbPlaylistIter *iter,
     RCLibDbPlaylistType type)
 {
     RCLibDbPrivate *priv;
     GObject *instance;
     RCLibDbPlaylistData *playlist_data;
     if(iter==NULL) return;
-    if(g_sequence_iter_is_end(iter)) return;
+    if(rclib_db_playlist_iter_is_end(iter)) return;
     instance = rclib_db_get_instance();
     if(instance==NULL) return;
     priv = RCLIB_DB(instance)->priv;
     if(priv==NULL) return;
-    playlist_data = g_sequence_get(iter);
+    playlist_data = rclib_db_playlist_iter_get_data(iter);
     if(playlist_data==NULL) return;
     if(playlist_data->type!=type)
         priv->dirty_flag = TRUE;
@@ -1066,20 +2019,20 @@ void rclib_db_playlist_set_type(GSequenceIter *iter,
  * Set the rating in the playlist pointed to by #iter.
  */
 
-void rclib_db_playlist_set_rating(GSequenceIter *iter, gfloat rating)
+void rclib_db_playlist_set_rating(RCLibDbPlaylistIter *iter, gfloat rating)
 {
     RCLibDbPrivate *priv;
     GObject *instance;
     RCLibDbPlaylistData *playlist_data;
     if(iter==NULL) return;
-    if(g_sequence_iter_is_end(iter)) return;
+    if(rclib_db_playlist_iter_is_end(iter)) return;
     if(rating<0.0) rating = 0.0;
     if(rating>5.0) rating = 5.0;
     instance = rclib_db_get_instance();
     if(instance==NULL) return;
     priv = RCLIB_DB(instance)->priv;
     if(priv==NULL) return;
-    playlist_data = g_sequence_get(iter);
+    playlist_data = rclib_db_playlist_iter_get_data(iter);
     if(playlist_data==NULL) return;
     if(playlist_data->rating!=rating)
         priv->dirty_flag = TRUE;
@@ -1095,18 +2048,19 @@ void rclib_db_playlist_set_rating(GSequenceIter *iter, gfloat rating)
  * Bind the lyric file to the music in the playlist pointed to by #iter.
  */
 
-void rclib_db_playlist_set_lyric_bind(GSequenceIter *iter,
+void rclib_db_playlist_set_lyric_bind(RCLibDbPlaylistIter *iter,
     const gchar *filename)
 {
     RCLibDbPrivate *priv;
     GObject *instance;
     RCLibDbPlaylistData *playlist_data;
     if(iter==NULL) return;
+    if(rclib_db_playlist_iter_is_end(iter)) return;
     instance = rclib_db_get_instance();
     if(instance==NULL) return;
     priv = RCLIB_DB(instance)->priv;
     if(priv==NULL) return;
-    playlist_data = g_sequence_get(iter);
+    playlist_data = rclib_db_playlist_iter_get_data(iter);
     if(playlist_data==NULL) return;
     g_free(playlist_data->lyricfile);
     playlist_data->lyricfile = g_strdup(filename);
@@ -1122,19 +2076,19 @@ void rclib_db_playlist_set_lyric_bind(GSequenceIter *iter,
  * to by #iter.
  */
 
-void rclib_db_playlist_set_lyric_secondary_bind(GSequenceIter *iter,
+void rclib_db_playlist_set_lyric_secondary_bind(RCLibDbPlaylistIter *iter,
     const gchar *filename)
 {
     RCLibDbPrivate *priv;
     GObject *instance;
     RCLibDbPlaylistData *playlist_data;
     if(iter==NULL) return;
-    if(g_sequence_iter_is_end(iter)) return;
+    if(rclib_db_playlist_iter_is_end(iter)) return;
     instance = rclib_db_get_instance();
     if(instance==NULL) return;
     priv = RCLIB_DB(instance)->priv;
     if(priv==NULL) return;
-    playlist_data = g_sequence_get(iter);
+    playlist_data = rclib_db_playlist_iter_get_data(iter);
     if(playlist_data==NULL) return;
     g_free(playlist_data->lyricsecfile);
     playlist_data->lyricsecfile = g_strdup(filename);
@@ -1150,19 +2104,19 @@ void rclib_db_playlist_set_lyric_secondary_bind(GSequenceIter *iter,
  * to by #iter.
  */
 
-void rclib_db_playlist_set_album_bind(GSequenceIter *iter,
+void rclib_db_playlist_set_album_bind(RCLibDbPlaylistIter *iter,
     const gchar *filename)
 {
     RCLibDbPrivate *priv;
     GObject *instance;
     RCLibDbPlaylistData *playlist_data;
     if(iter==NULL) return;
-    if(g_sequence_iter_is_end(iter)) return;
+    if(rclib_db_playlist_iter_is_end(iter)) return;
     instance = rclib_db_get_instance();
     if(instance==NULL) return;
     priv = RCLIB_DB(instance)->priv;
     if(priv==NULL) return;
-    playlist_data = g_sequence_get(iter);
+    playlist_data = rclib_db_playlist_iter_get_data(iter);
     if(playlist_data==NULL) return;
     g_free(playlist_data->albumfile);
     playlist_data->albumfile = g_strdup(filename);
@@ -1180,11 +2134,12 @@ void rclib_db_playlist_set_album_bind(GSequenceIter *iter,
  * Returns: The lyric file path.
  */
 
-gboolean rclib_db_playlist_get_rating(GSequenceIter *iter, gfloat *rating)
+gboolean rclib_db_playlist_get_rating(RCLibDbPlaylistIter *iter,
+    gfloat *rating)
 {
     RCLibDbPlaylistData *playlist_data;
-    if(g_sequence_iter_is_end(iter)) return FALSE;
-    playlist_data = g_sequence_get(iter);
+    if(rclib_db_playlist_iter_is_end(iter)) return FALSE;
+    playlist_data = rclib_db_playlist_iter_get_data(iter);
     if(playlist_data==NULL) return FALSE;
     if(rating!=NULL) *rating = playlist_data->rating;
     return TRUE;
@@ -1200,11 +2155,11 @@ gboolean rclib_db_playlist_get_rating(GSequenceIter *iter, gfloat *rating)
  * Returns: The lyric file path.
  */
 
-const gchar *rclib_db_playlist_get_lyric_bind(GSequenceIter *iter)
+const gchar *rclib_db_playlist_get_lyric_bind(RCLibDbPlaylistIter *iter)
 {
     RCLibDbPlaylistData *playlist_data;
-    if(g_sequence_iter_is_end(iter)) return NULL;
-    playlist_data = g_sequence_get(iter);
+    if(rclib_db_playlist_iter_is_end(iter)) return NULL;
+    playlist_data = rclib_db_playlist_iter_get_data(iter);
     if(playlist_data==NULL) return NULL;
     return playlist_data->lyricfile;
 }
@@ -1219,11 +2174,12 @@ const gchar *rclib_db_playlist_get_lyric_bind(GSequenceIter *iter)
  * Returns: The lyric file path.
  */
 
-const gchar *rclib_db_playlist_get_lyric_secondary_bind(GSequenceIter *iter)
+const gchar *rclib_db_playlist_get_lyric_secondary_bind(
+    RCLibDbPlaylistIter *iter)
 {
     RCLibDbPlaylistData *playlist_data;
-    if(g_sequence_iter_is_end(iter)) return NULL;
-    playlist_data = g_sequence_get(iter);
+    if(rclib_db_playlist_iter_is_end(iter)) return NULL;
+    playlist_data = rclib_db_playlist_iter_get_data(iter);
     if(playlist_data==NULL) return NULL;
     return playlist_data->lyricsecfile;
 }
@@ -1238,11 +2194,11 @@ const gchar *rclib_db_playlist_get_lyric_secondary_bind(GSequenceIter *iter)
  * Returns: The album image file path.
  */
 
-const gchar *rclib_db_playlist_get_album_bind(GSequenceIter *iter)
+const gchar *rclib_db_playlist_get_album_bind(RCLibDbPlaylistIter *iter)
 {
     RCLibDbPlaylistData *playlist_data;
-    if(g_sequence_iter_is_end(iter)) return NULL;
-    playlist_data = g_sequence_get(iter);
+    if(rclib_db_playlist_iter_is_end(iter)) return NULL;
+    playlist_data = rclib_db_playlist_iter_get_data(iter);
     if(playlist_data==NULL) return NULL;
     return playlist_data->albumfile;
 }
@@ -1257,7 +2213,7 @@ const gchar *rclib_db_playlist_get_album_bind(GSequenceIter *iter)
  * Reorder the playlist to follow the order indicated by @new_order.
  */
 
-void rclib_db_playlist_reorder(GSequenceIter *iter, gint *new_order)
+void rclib_db_playlist_reorder(RCLibDbCatalogIter *iter, gint *new_order)
 {
     RCLibDbPrivate *priv;
     GObject *instance;
@@ -1273,21 +2229,21 @@ void rclib_db_playlist_reorder(GSequenceIter *iter, gint *new_order)
     if(instance==NULL) return;
     priv = RCLIB_DB(instance)->priv;
     if(priv==NULL) return;
-    catalog_data = g_sequence_get(iter);
+    catalog_data = rclib_db_catalog_iter_get_data(iter);
     g_return_if_fail(catalog_data!=NULL);
-    length = g_sequence_get_length(catalog_data->playlist);
+    length = g_sequence_get_length((GSequence *)catalog_data->playlist);
     order = g_new(gint, length);
     for(i=0;i<length;i++) order[new_order[i]] = i;
     new_positions = g_hash_table_new(g_direct_hash, g_direct_equal);
-    ptr = g_sequence_get_begin_iter(catalog_data->playlist);
+    ptr = g_sequence_get_begin_iter((GSequence *)catalog_data->playlist);
     for(i=0;!g_sequence_iter_is_end(ptr);ptr=g_sequence_iter_next(ptr))
     {
         g_hash_table_insert(new_positions, ptr, GINT_TO_POINTER(order[i++]));
     }
     g_free(order);
-    g_sequence_sort_iter(catalog_data->playlist, rclib_db_reorder_func,
-        new_positions);
-    g_hash_table_destroy (new_positions);
+    g_sequence_sort_iter((GSequence *)catalog_data->playlist,
+        rclib_db_reorder_func, new_positions);
+    g_hash_table_destroy(new_positions);
     g_signal_emit_by_name(instance, "playlist-reordered", iter, new_order);
     priv->dirty_flag = TRUE;
 }
@@ -1302,32 +2258,33 @@ void rclib_db_playlist_reorder(GSequenceIter *iter, gint *new_order)
  * pointed to by #catalog_iter.
  */
 
-void rclib_db_playlist_move_to_another_catalog(GSequenceIter **iters,
-    guint num, GSequenceIter *catalog_iter)
+void rclib_db_playlist_move_to_another_catalog(RCLibDbPlaylistIter **iters,
+    guint num, RCLibDbCatalogIter *catalog_iter)
 {
     gint i;
     RCLibDbPrivate *priv;
     GObject *instance;
     RCLibDbCatalogData *catalog_data;
     RCLibDbPlaylistData *old_data, *new_data;
-    GSequenceIter *new_iter;
-    GSequenceIter *reference;
+    RCLibDbPlaylistIter *new_iter;
+    RCLibDbPlaylistIter *reference;
     if(iters==NULL || catalog_iter==NULL || num<1) return;
     instance = rclib_db_get_instance();
     if(instance==NULL) return;
     priv = RCLIB_DB(instance)->priv;
     if(priv==NULL) return;
-    catalog_data = g_sequence_get(catalog_iter);
+    catalog_data = rclib_db_catalog_iter_get_data(catalog_iter);
     if(catalog_data==NULL) return;
-    reference = rclib_core_get_db_reference();
+    reference = (RCLibDbPlaylistIter *)rclib_core_get_db_reference();
     for(i=0;i<num;i++)
     {
-        old_data = g_sequence_get(iters[i]);
+        old_data = rclib_db_playlist_iter_get_data(iters[i]);
         if(old_data==NULL) continue;
         new_data = rclib_db_playlist_data_ref(old_data);
         rclib_db_playlist_delete(iters[i]);
         new_data->catalog = catalog_iter;
-        new_iter = g_sequence_append(catalog_data->playlist, new_data);
+        new_iter = (RCLibDbPlaylistIter *)g_sequence_append(
+            (GSequence *)catalog_data->playlist, new_data);
         if(iters[i]==reference)
             rclib_core_update_db_reference(new_iter);
         new_data->self_iter = new_iter;
@@ -1347,8 +2304,8 @@ void rclib_db_playlist_move_to_another_catalog(GSequenceIter **iters,
  * the catalog pointed to by #iter.
  */
 
-void rclib_db_playlist_add_m3u_file(GSequenceIter *iter,
-    GSequenceIter *insert_iter, const gchar *filename)
+void rclib_db_playlist_add_m3u_file(RCLibDbCatalogIter *iter,
+    RCLibDbPlaylistIter *insert_iter, const gchar *filename)
 {
     GFile *file;
     GFileInputStream *input_stream;
@@ -1407,8 +2364,9 @@ void rclib_db_playlist_add_m3u_file(GSequenceIter *iter,
     g_free(path);
 }
 
-static void rclib_db_playlist_add_directory_recursive(GSequenceIter *iter,
-    GSequenceIter *insert_iter, const gchar *fdir, guint depth)
+static void rclib_db_playlist_add_directory_recursive(
+    RCLibDbCatalogIter *iter, RCLibDbPlaylistIter *insert_iter,
+    const gchar *fdir, guint depth)
 {
     gchar *full_path = NULL;
     GDir *dir;
@@ -1448,8 +2406,8 @@ static void rclib_db_playlist_add_directory_recursive(GSequenceIter *iter,
  * Add all music in the directory to the catalog pointed to by #iter.
  */
 
-void rclib_db_playlist_add_directory(GSequenceIter *iter,
-    GSequenceIter *insert_iter, const gchar *dir)
+void rclib_db_playlist_add_directory(RCLibDbCatalogIter *iter,
+    RCLibDbPlaylistIter *insert_iter, const gchar *dir)
 {
     if(iter==NULL || dir==NULL) return;
     rclib_db_playlist_add_directory_recursive(iter, insert_iter, dir,
@@ -1466,17 +2424,17 @@ void rclib_db_playlist_add_directory(GSequenceIter *iter,
  * Returns: Whether the operation succeeded.
  */
 
-gboolean rclib_db_playlist_export_m3u_file(GSequenceIter *iter,
+gboolean rclib_db_playlist_export_m3u_file(RCLibDbCatalogIter *iter,
     const gchar *sfilename)
 {
     RCLibDbCatalogData *catalog_data;
     RCLibDbPlaylistData *playlist_data;
-    GSequenceIter *playlist_iter;
+    RCLibDbPlaylistIter *playlist_iter;
     gchar *title = NULL;
     gchar *filename;
     FILE *fp;
     if(iter==NULL || sfilename==NULL) return FALSE;
-    catalog_data = g_sequence_get(iter);
+    catalog_data = rclib_db_catalog_iter_get_data(iter);
     if(catalog_data==NULL) return FALSE;
     if(g_regex_match_simple("(.M3U)$", sfilename, G_REGEX_CASELESS, 0))
         filename = g_strdup(sfilename);
@@ -1486,11 +2444,12 @@ gboolean rclib_db_playlist_export_m3u_file(GSequenceIter *iter,
     g_free(filename);
     if(fp==NULL) return FALSE;
     g_fprintf(fp, "#EXTM3U\n");
-    for(playlist_iter = g_sequence_get_begin_iter(catalog_data->playlist);
-        !g_sequence_iter_is_end(playlist_iter);
-        playlist_iter = g_sequence_iter_next(playlist_iter))
+    for(playlist_iter = rclib_db_playlist_sequence_get_begin_iter(
+        catalog_data->playlist);
+        !rclib_db_playlist_iter_is_end(playlist_iter);
+        playlist_iter = rclib_db_playlist_iter_next(playlist_iter))
     {
-        playlist_data = g_sequence_get(playlist_iter);
+        playlist_data = rclib_db_playlist_iter_get_data(playlist_iter);
         if(playlist_data==NULL || playlist_data->uri==NULL) continue;
         if(playlist_data->title!=NULL)
             title = g_strdup(playlist_data->title);
@@ -1530,16 +2489,17 @@ gboolean rclib_db_playlist_export_all_m3u_files(const gchar *dir)
     RCLibDbCatalogData *catalog_data;
     RCLibDbPrivate *priv;
     GObject *instance;
-    GSequenceIter *catalog_iter;
+    RCLibDbCatalogIter *catalog_iter;
     gchar *filename;
     instance = rclib_db_get_instance();
     if(instance==NULL) return FALSE;
     priv = RCLIB_DB(instance)->priv;
-    for(catalog_iter = g_sequence_get_begin_iter(priv->catalog);
-        !g_sequence_iter_is_end(catalog_iter);
-        catalog_iter = g_sequence_iter_next(catalog_iter))
+    for(catalog_iter = rclib_db_catalog_sequence_get_begin_iter(
+        priv->catalog);
+        !rclib_db_catalog_iter_is_end(catalog_iter);
+        catalog_iter = rclib_db_catalog_iter_next(catalog_iter))
     {
-        catalog_data = g_sequence_get(catalog_iter);
+        catalog_data = rclib_db_catalog_iter_get_data(catalog_iter);
         if(catalog_data==NULL || catalog_data->name==NULL) continue;
         filename = g_strdup_printf("%s%c%s.M3U", dir,
             G_DIR_SEPARATOR, catalog_data->name);
@@ -1558,12 +2518,12 @@ gboolean rclib_db_playlist_export_all_m3u_files(const gchar *dir)
  * by the given catalog #iter.
  */
 
-void rclib_db_playlist_refresh(GSequenceIter *iter)
+void rclib_db_playlist_refresh(RCLibDbCatalogIter *iter)
 {
     RCLibDbCatalogData *catalog_data;
     RCLibDbPlaylistData *playlist_data;
     RCLibDbRefreshData *refresh_data;
-    GSequenceIter *iter_foreach;
+    RCLibDbPlaylistIter *iter_foreach;
     RCLibDbPrivate *priv;
     GObject *instance;
     instance = rclib_db_get_instance();
@@ -1571,14 +2531,15 @@ void rclib_db_playlist_refresh(GSequenceIter *iter)
     if(iter==NULL) return;
     priv = RCLIB_DB(instance)->priv;
     if(priv==NULL || priv->refresh_queue==NULL) return;
-    catalog_data = g_sequence_get(iter);
+    catalog_data = rclib_db_catalog_iter_get_data(iter);
     if(catalog_data==NULL) return;
     if(catalog_data->playlist==NULL) return;
-    for(iter_foreach = g_sequence_get_begin_iter(catalog_data->playlist);
-        !g_sequence_iter_is_end(iter_foreach);
-        iter_foreach = g_sequence_iter_next(iter_foreach))
+    for(iter_foreach = rclib_db_playlist_sequence_get_begin_iter(
+        catalog_data->playlist);
+        !rclib_db_playlist_iter_is_end(iter_foreach);
+        iter_foreach = rclib_db_playlist_iter_next(iter_foreach))
     {
-        playlist_data = g_sequence_get(iter_foreach);
+        playlist_data = rclib_db_playlist_iter_get_data(iter_foreach);
         if(playlist_data==NULL || playlist_data->uri==NULL) continue;
         refresh_data = g_new0(RCLibDbRefreshData, 1);
         refresh_data->catalog_iter = iter;
@@ -1606,8 +2567,8 @@ gboolean rclib_db_load_legacy()
     gsize line_len;
     RCLibDbCatalogData *catalog_data = NULL;
     RCLibDbPlaylistData *playlist_data = NULL;
-    GSequenceIter *catalog_iter = NULL;
-    GSequenceIter *playlist_iter = NULL;
+    RCLibDbCatalogIter *catalog_iter = NULL;
+    RCLibDbPlaylistIter *playlist_iter = NULL;
     gchar *line = NULL;
     gint64 timeinfo;
     gint trackno;
@@ -1652,8 +2613,8 @@ gboolean rclib_db_load_legacy()
             playlist_data->uri = g_strdup(line+3);
             playlist_data->catalog = catalog_iter;
             playlist_data->type = RCLIB_DB_PLAYLIST_TYPE_MUSIC;
-            playlist_iter = g_sequence_append(catalog_data->playlist,
-                playlist_data);
+            playlist_iter = (RCLibDbPlaylistIter *)g_sequence_append(
+                (GSequence *)catalog_data->playlist, playlist_data);
             playlist_data->self_iter = playlist_iter;
             g_hash_table_replace(priv->playlist_iter_table, playlist_iter,
                 playlist_iter);
@@ -1687,9 +2648,10 @@ gboolean rclib_db_load_legacy()
             catalog_data = rclib_db_catalog_data_new();
             catalog_data->name = g_strdup(line+3);
             catalog_data->type = RCLIB_DB_CATALOG_TYPE_PLAYLIST;
-            catalog_data->playlist = g_sequence_new((GDestroyNotify)
-                rclib_db_playlist_data_unref);
-            catalog_iter = g_sequence_append(priv->catalog, catalog_data);
+            catalog_data->playlist = (RCLibDbPlaylistSequence *)
+                g_sequence_new((GDestroyNotify)rclib_db_playlist_data_unref);
+            catalog_iter = (RCLibDbCatalogIter *)g_sequence_append(
+                (GSequence *)priv->catalog, catalog_data);
             catalog_data->self_iter = catalog_iter;
             g_hash_table_replace(priv->catalog_iter_table, catalog_iter,
                 catalog_iter);

@@ -55,7 +55,7 @@ enum                <a class="link" href="RCLibPlayer.html#RCLibPlayerRepeatMode
                                                          <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> *condition</code></em>);
 <a class="link" href="RCLibPlayer.html#RCLibPlayerRepeatMode" title="enum RCLibPlayerRepeatMode"><span class="returnvalue">RCLibPlayerRepeatMode</span></a> <a class="link" href="RCLibPlayer.html#rclib-player-get-repeat-mode" title="rclib_player_get_repeat_mode ()">rclib_player_get_repeat_mode</a>      ();
 <span class="returnvalue">void</span>                <a class="link" href="RCLibPlayer.html#rclib-player-init" title="rclib_player_init ()">rclib_player_init</a>                   ();
-<span class="returnvalue">void</span>                <a class="link" href="RCLibPlayer.html#rclib-player-play-db" title="rclib_player_play_db ()">rclib_player_play_db</a>                (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Sequences.html#GSequenceIter"><span class="type">GSequenceIter</span></a> *iter</code></em>);
+<span class="returnvalue">void</span>                <a class="link" href="RCLibPlayer.html#rclib-player-play-db" title="rclib_player_play_db ()">rclib_player_play_db</a>                (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> iter</code></em>);
 <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RCLibPlayer.html#rclib-player-play-next" title="rclib_player_play_next ()">rclib_player_play_next</a>              (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> jump</code></em>,
                                                          <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> repeat</code></em>,
                                                          <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> loop</code></em>);
@@ -281,7 +281,7 @@ Initialize the player scheduler.
 <hr>
 <div class="refsect2">
 <a name="rclib-player-play-db"></a><h3>rclib_player_play_db ()</h3>
-<pre class="programlisting"><span class="returnvalue">void</span>                rclib_player_play_db                (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Sequences.html#GSequenceIter"><span class="type">GSequenceIter</span></a> *iter</code></em>);</pre>
+<pre class="programlisting"><span class="returnvalue">void</span>                rclib_player_play_db                (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> iter</code></em>);</pre>
 <p>
 Play the iter to the playlist in the music database.
 </p>

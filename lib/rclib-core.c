@@ -80,8 +80,8 @@ struct _RCLibCorePrivate
     gint channels;
     gint depth;
     RCLibCoreEQType eq_type;
-    GSequenceIter *db_reference;
-    GSequenceIter *db_reference_pre;
+    gpointer db_reference;
+    gpointer db_reference_pre;
     gpointer ext_reference;
     gpointer ext_reference_pre;
     gchar *ext_cookie;
@@ -1249,8 +1249,7 @@ void rclib_core_signal_disconnect(gulong handler_id)
 }
 
 static inline void rclib_core_set_uri_internal(const gchar *uri,
-    GSequenceIter *db_ref, const gchar *cookie,
-    GSequenceIter *external_ref)
+    gpointer db_ref, const gchar *cookie, gpointer external_ref)
 {
     RCLibCorePrivate *priv;
     gchar *scheme;
@@ -1362,11 +1361,11 @@ void rclib_core_set_uri(const gchar *uri)
  * @db_ref: the database reference to set, set to NULL if not used.
  * Reference must be set to NULL if you want to use this reference
  *
- * Set the URI and the music DB list iter to play.
+ * Set the URI and the music DB playlist iter to play.
  */
 
 void rclib_core_set_uri_with_db_ref(const gchar *uri,
-    GSequenceIter *db_ref)
+    gpointer db_ref)
 {
     rclib_core_set_uri_internal(uri, db_ref, NULL, NULL);
 }
@@ -1375,14 +1374,13 @@ void rclib_core_set_uri_with_db_ref(const gchar *uri,
  * rclib_core_set_uri_with_ext_ref:
  * @uri: the URI to play
  * @cookie: the external reference cookie
- * @external_ref: the databse reference to set, set to NULL if not used.
- * Reference must be set to NULL if you want to use this reference
+ * @external_ref: the reference to set, set to NULL if not used.
  *
  * Set the URI to play, with external cookie and reference pointer.
  */
 
 void rclib_core_set_uri_with_ext_ref(const gchar *uri, const gchar *cookie,
-    GSequenceIter *external_ref)
+    gpointer external_ref)
 {
     rclib_core_set_uri_internal(uri, NULL, cookie, external_ref);
 }
@@ -1395,7 +1393,7 @@ void rclib_core_set_uri_with_ext_ref(const gchar *uri, const gchar *cookie,
  * Update the database reference.
  */
 
-void rclib_core_update_db_reference(GSequenceIter *new_ref)
+void rclib_core_update_db_reference(gpointer new_ref)
 {
     RCLibCorePrivate *priv;
     if(core_instance==NULL) return;
@@ -1450,7 +1448,7 @@ gchar *rclib_core_get_uri()
  * Returns: (transfer none): The database reference.
  */
 
-GSequenceIter *rclib_core_get_db_reference()
+gpointer rclib_core_get_db_reference()
 {
     RCLibCorePrivate *priv;
     if(core_instance==NULL) return FALSE;

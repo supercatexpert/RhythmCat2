@@ -298,14 +298,17 @@ static void rc_ui_main_window_tag_found_cb(RCLibCore *core,
     RCUiMainWindowPrivate *priv = (RCUiMainWindowPrivate *)data;
     RCLibCoreSourceType type;
     gint ret;
-    RCLibDbPlaylistData *playlist_data;
-    GSequenceIter *iter = rclib_core_get_db_reference();
+    const gchar *puri;
+    RCLibDbPlaylistIter *iter = (RCLibDbPlaylistIter *)
+        rclib_core_get_db_reference();
     if(data==NULL || metadata==NULL || uri==NULL) return;
     if(iter!=NULL && rclib_db_playlist_is_valid_iter(iter))
     {
-        playlist_data = g_sequence_get(iter);
+        rclib_db_playlist_data_iter_get(iter,
+            RCLIB_DB_PLAYLIST_DATA_TYPE_URI, &puri,
+            RCLIB_DB_PLAYLIST_DATA_TYPE_NONE);
         type = rclib_core_get_source_type();
-        ret = g_strcmp0(uri, playlist_data->uri);
+        ret = g_strcmp0(uri, puri);
         if(type==RCLIB_CORE_SOURCE_NORMAL && ret!=0) return;
     }
     rc_ui_main_window_title_label_set_value(priv, uri, metadata->title);
@@ -325,10 +328,12 @@ static void rc_ui_main_window_uri_changed_cb(RCLibCore *core, const gchar *uri,
     gpointer data)
 {
     RCUiMainWindowPrivate *priv = (RCUiMainWindowPrivate *)data;
-    GSequenceIter *reference;
-    RCLibDbPlaylistData *playlist_data = NULL;
+    RCLibDbPlaylistIter *reference;
+    const gchar *ptitle = NULL;
+    const gchar *partist = NULL;
+    const gchar *palbum = NULL;
     if(data==NULL) return;
-    reference = rclib_core_get_db_reference();
+    reference = (RCLibDbPlaylistIter *)rclib_core_get_db_reference();
     if(priv->cover_using_pixbuf!=NULL)
         g_object_unref(priv->cover_using_pixbuf);
     if(priv->cover_file_path!=NULL)
@@ -337,21 +342,20 @@ static void rc_ui_main_window_uri_changed_cb(RCLibCore *core, const gchar *uri,
     priv->cover_file_path = NULL;
     priv->cover_set_flag = FALSE;
     if(reference!=NULL)
-        playlist_data = g_sequence_get(reference);
-    if(playlist_data!=NULL)
     {
-        playlist_data = g_sequence_get(reference);
-        if(playlist_data!=NULL)
-        {
-            rc_ui_main_window_title_label_set_value(priv, uri,
-                playlist_data->title);
-            rc_ui_main_window_artist_label_set_value(priv,
-                playlist_data->artist);
-            rc_ui_main_window_album_label_set_value(priv,
-                playlist_data->album);
-        }
+        rclib_db_playlist_data_iter_get(reference,
+            RCLIB_DB_PLAYLIST_DATA_TYPE_TITLE, &ptitle,
+            RCLIB_DB_PLAYLIST_DATA_TYPE_ARTIST, &partist,
+            RCLIB_DB_PLAYLIST_DATA_TYPE_ALBUM, &palbum,
+            RCLIB_DB_PLAYLIST_DATA_TYPE_NONE);
     }
-    else
+    rc_ui_main_window_title_label_set_value(priv, uri,
+        ptitle);
+    rc_ui_main_window_artist_label_set_value(priv,
+        partist);
+    rc_ui_main_window_album_label_set_value(priv,
+        palbum);
+    if(ptitle==NULL && partist==NULL && palbum==NULL)
     {
         rc_ui_main_window_title_label_set_value(priv, uri, NULL);
         rc_ui_main_window_artist_label_set_value(priv, NULL);

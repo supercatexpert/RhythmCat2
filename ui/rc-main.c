@@ -97,10 +97,10 @@ static void rc_main_app_activate(GApplication *application)
     GFile *prefixdir_gfile;
     GFile *libdir_gfile;
     gchar *libdir_name = NULL;
-    GSequenceIter *catalog_iter = NULL;
-    GSequence *catalog = NULL;
-    RCLibDbCatalogData *catalog_data = NULL;
-    GSequenceIter *playlist_iter = NULL;
+    RCLibDbCatalogIter *catalog_iter = NULL;
+    RCLibDbPlaylistIter *playlist_iter = NULL;
+    RCLibDbCatalogSequence *catalog = NULL;
+    RCLibDbPlaylistSequence *playlist = NULL;
     GFile *file;
     gchar *uri;
     gint i;
@@ -254,22 +254,29 @@ static void rc_main_app_activate(GApplication *application)
     if(rclib_settings_get_boolean("Player", "LoadLastPosition", NULL) &&
         catalog!=NULL)
     {
-        catalog_iter = g_sequence_get_iter_at_pos(catalog,
+        catalog_iter = rclib_db_catalog_sequence_get_iter_at_pos(catalog,
             rclib_settings_get_integer("Player", "LastPlayedCatalog", NULL));
+        playlist = NULL;
         if(catalog_iter!=NULL)
-            catalog_data = g_sequence_get(catalog_iter);
-        if(catalog_data!=NULL && catalog_data->playlist!=NULL)
         {
-            playlist_iter = g_sequence_get_iter_at_pos(
-                catalog_data->playlist, rclib_settings_get_integer(
-                "Player", "LastPlayedMusic", NULL));
+            rclib_db_catalog_data_iter_get(catalog_iter,
+                RCLIB_DB_CATALOG_DATA_TYPE_PLAYLIST, &playlist,
+                RCLIB_DB_CATALOG_DATA_TYPE_NONE);
+        }
+        if(playlist!=NULL)
+        {
+            playlist_iter = rclib_db_playlist_sequence_get_iter_at_pos(
+                playlist, rclib_settings_get_integer("Player",
+                "LastPlayedMusic", NULL));
         }
         if(playlist_iter!=NULL)
         {
             rclib_player_play_db(playlist_iter);
             if(!rclib_settings_get_boolean("Player", "AutoPlayWhenStartup",
                 NULL))
+            {
                 rclib_core_pause();
+            }
         }
         
     }
@@ -277,12 +284,19 @@ static void rc_main_app_activate(GApplication *application)
         NULL) && catalog!=NULL)
     {
         if(catalog!=NULL)
-            catalog_iter = g_sequence_get_begin_iter(catalog);
+            catalog_iter = rclib_db_catalog_sequence_get_begin_iter(catalog);
+        playlist = NULL;
         if(catalog_iter!=NULL)
-            catalog_data = g_sequence_get(catalog_iter);
-        if(catalog_data!=NULL && catalog_data->playlist!=NULL)
-            playlist_iter = g_sequence_get_begin_iter(
-                catalog_data->playlist);
+        {
+            rclib_db_catalog_data_iter_get(catalog_iter,
+                RCLIB_DB_CATALOG_DATA_TYPE_PLAYLIST, &playlist,
+                RCLIB_DB_CATALOG_DATA_TYPE_NONE);
+        }
+        if(playlist!=NULL)
+        {
+            playlist_iter = rclib_db_playlist_sequence_get_begin_iter(
+                playlist);
+        }
         if(playlist_iter!=NULL)
             rclib_player_play_db(playlist_iter);
     }
@@ -290,7 +304,7 @@ static void rc_main_app_activate(GApplication *application)
     if(main_remaining_args!=NULL)
     {
         if(catalog!=NULL)
-            catalog_iter = g_sequence_get_begin_iter(catalog);
+            catalog_iter = rclib_db_catalog_sequence_get_begin_iter(catalog);
         if(catalog_iter!=NULL)
         {
             for(i=0;main_remaining_args[i]!=NULL;i++)
@@ -314,8 +328,8 @@ static void rc_main_app_open(GApplication *application, GFile **files,
     gint n_files, const gchar *hint)
 {
     GtkTreeIter tree_iter;
-    GSequenceIter *catalog_iter = NULL;
-    GSequence *catalog;
+    RCLibDbCatalogIter *catalog_iter = NULL;
+    RCLibDbCatalogSequence *catalog;
     gint i;
     gchar *uri;
     if(files==NULL) return;
@@ -325,7 +339,7 @@ static void rc_main_app_open(GApplication *application, GFile **files,
     {
         catalog = rclib_db_get_catalog();
         if(catalog!=NULL)
-            catalog_iter = g_sequence_get_begin_iter(catalog);
+            catalog_iter = rclib_db_catalog_sequence_get_begin_iter(catalog);
     }
     if(catalog_iter==NULL) return;
     for(i=0;i<n_files;i++)
@@ -443,7 +457,7 @@ gint rc_main_run(gint *argc, gchar **argv[])
     };
     GOptionContext *context;
     GtkApplication *app;
-    GSequence *catalog;
+    RCLibDbCatalogSequence *catalog;
     GError *error = NULL;
     const gchar *home_dir = NULL;
     gint status;
@@ -541,7 +555,7 @@ gint rc_main_run(gint *argc, gchar **argv[])
         rclib_major_version, rclib_minor_version, rclib_micro_version,
         rclib_build_date);
     catalog = rclib_db_get_catalog();
-    if(catalog!=NULL && g_sequence_get_length(catalog)==0)
+    if(catalog!=NULL && rclib_db_catalog_sequence_get_length(catalog)==0)
         rclib_db_catalog_add(_("Default Playlist"), NULL,
         RCLIB_DB_CATALOG_TYPE_PLAYLIST);
     g_resources_register(rc_ui_resources_get_resource());

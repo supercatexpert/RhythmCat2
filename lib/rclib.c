@@ -58,50 +58,59 @@ static void rclib_main_update_db_metadata_cb(RCLibCore *core,
     RCLibDbPlaylistData *playlist_data;
     gint ret;
     RCLibCoreSourceType type;
-    GSequenceIter *iter;
+    RCLibCoreSourceType new_type;
+    RCLibDbPlaylistIter *iter;
+    const gchar *puri = NULL;
     if(metadata==NULL || uri==NULL) return;
-    iter = rclib_core_get_db_reference();
+    iter = (RCLibDbPlaylistIter *)rclib_core_get_db_reference();
     if(iter==NULL || !rclib_db_playlist_is_valid_iter(iter)) return;
-    playlist_data = g_sequence_get(iter);
-    type = rclib_core_get_source_type();
-    ret = g_strcmp0(uri, playlist_data->uri);
+    rclib_db_playlist_data_iter_get(iter, RCLIB_DB_PLAYLIST_DATA_TYPE_URI,
+        &puri, RCLIB_DB_PLAYLIST_DATA_TYPE_TYPE, &type,
+        RCLIB_DB_PLAYLIST_DATA_TYPE_NONE);
+    ret = g_strcmp0(uri, puri);
     if(type==RCLIB_CORE_SOURCE_NORMAL && ret!=0) return;
-    playlist_data = g_new0(RCLibDbPlaylistData, 1);
-    playlist_data->title = metadata->title;
-    playlist_data->artist = metadata->artist;
-    playlist_data->album = metadata->album;
-    playlist_data->ftype = metadata->ftype;
-    playlist_data->tracknum = metadata->track;
-    playlist_data->year = metadata->year;
+    playlist_data = rclib_db_playlist_data_new();
     if(type==RCLIB_CORE_SOURCE_CUE || type==RCLIB_CORE_SOURCE_EMBEDDED_CUE)
-        playlist_data->type = RCLIB_DB_PLAYLIST_TYPE_CUE;
+        new_type = RCLIB_DB_PLAYLIST_TYPE_CUE;
     else
-        playlist_data->type = RCLIB_DB_PLAYLIST_TYPE_MUSIC;
+        new_type = RCLIB_DB_PLAYLIST_TYPE_MUSIC;
+    rclib_db_playlist_data_set(playlist_data,
+        RCLIB_DB_PLAYLIST_DATA_TYPE_TYPE, new_type,
+        RCLIB_DB_PLAYLIST_DATA_TYPE_TITLE, metadata->title,
+        RCLIB_DB_PLAYLIST_DATA_TYPE_ARTIST, metadata->artist,
+        RCLIB_DB_PLAYLIST_DATA_TYPE_ALBUM, metadata->album,
+        RCLIB_DB_PLAYLIST_DATA_TYPE_FTYPE, metadata->ftype,
+        RCLIB_DB_PLAYLIST_DATA_TYPE_TRACKNUM, metadata->track,
+        RCLIB_DB_PLAYLIST_DATA_TYPE_YEAR, metadata->year,
+        RCLIB_DB_PLAYLIST_DATA_TYPE_NONE);
     rclib_db_playlist_update_metadata(iter, playlist_data);
     if(metadata->duration>0)
         rclib_db_playlist_update_length(iter, metadata->duration);
-    g_free(playlist_data);
+    rclib_db_playlist_data_free(playlist_data);
 }
 
 static void rclib_main_update_db_duration_cb(RCLibCore *core,
     gint64 duration, gpointer data)
 {
-    GSequenceIter *iter = rclib_core_get_db_reference();
+    RCLibDbPlaylistIter *iter = (RCLibDbPlaylistIter *)
+        rclib_core_get_db_reference();
     if(iter==NULL || duration<0) return;
     rclib_db_playlist_update_length(iter, duration);
 }
 
-static void rclib_main_catalog_delete_cb(RCLibDb *db, GSequenceIter *iter,
-    gpointer data)
+static void rclib_main_catalog_delete_cb(RCLibDb *db,
+    RCLibDbCatalogIter *iter, gpointer data)
 {
-    RCLibDbPlaylistData *playlist_data;
-    GSequenceIter *reference_iter;
+    RCLibDbCatalogIter *catalog_iter = NULL;
+    RCLibDbPlaylistIter *reference_iter;
     if(iter==NULL) return;
-    reference_iter = rclib_core_get_db_reference();
+    reference_iter = (RCLibDbPlaylistIter *)rclib_core_get_db_reference();
     if(reference_iter!=NULL)
     {
-        playlist_data = g_sequence_get(reference_iter);
-        if(playlist_data->catalog==iter)
+        rclib_db_playlist_data_iter_get(reference_iter,
+            RCLIB_DB_PLAYLIST_DATA_TYPE_CATALOG, &catalog_iter,
+            RCLIB_DB_PLAYLIST_DATA_TYPE_NONE);
+        if(catalog_iter==iter)
             rclib_core_update_db_reference(NULL);
     }
 }
@@ -117,7 +126,7 @@ static void rclib_main_playlist_delete_cb(RCLibDb *db, GSequenceIter *iter,
 static void rclib_main_error_cb(RCLibCore *core, const gchar *message,
     gpointer data)
 {
-    GSequenceIter *iter;
+    RCLibDbPlaylistIter *iter;
     iter = rclib_core_get_db_reference();
     if(iter==NULL) return;
     rclib_db_playlist_set_type(iter, RCLIB_DB_PLAYLIST_TYPE_MISSING);
