@@ -169,26 +169,6 @@ struct _RCLibDbLibraryData
     gchar *albumfile;
 };
 
-struct _RCLibDbCatalogSequence
-{
-    gint dummy;
-};
-
-struct _RCLibDbPlaylistSequence
-{
-    gint dummy;
-};
-
-struct _RCLibDbCatalogIter
-{
-    gint dummy;
-};
-
-struct _RCLibDbPlaylistIter
-{
-    gint dummy;
-};
-
 /*< private >*/
 gboolean _rclib_db_instance_init_playlist(RCLibDb *db, RCLibDbPrivate *priv);
 gboolean _rclib_db_instance_init_library(RCLibDb *db, RCLibDbPrivate *priv);

@@ -31,6 +31,26 @@
 #include "rclib-core.h"
 #include "rclib-util.h"
 
+struct _RCLibDbCatalogSequence
+{
+    gint dummy;
+};
+
+struct _RCLibDbPlaylistSequence
+{
+    gint dummy;
+};
+
+struct _RCLibDbCatalogIter
+{
+    gint dummy;
+};
+
+struct _RCLibDbPlaylistIter
+{
+    gint dummy;
+};
+
 static gint db_import_depth = 5;
 
 static gboolean rclib_db_is_iter_valid(GSequence *seq, GSequenceIter *iter)

@@ -130,12 +130,13 @@ static void rc_ui_listview_dnd_data_get(GtkWidget *widget,
     if(selection==NULL) return;
     path_list = gtk_tree_selection_get_selected_rows(selection, NULL);
     if(path_list==NULL) return;
-    gtk_selection_data_set(sdata, gdk_atom_intern("Playlist index array",
-        FALSE), 8, (gpointer)&path_list, sizeof(GList *));
+    gtk_selection_data_set(sdata, gdk_atom_intern(
+        "RCUiListView-Playlist-Path-Array", FALSE), 8, (gpointer)&path_list,
+        sizeof(GList *));
 }
 
-static void rc_ui_listview_dnd_motion(GtkWidget *widget, GdkDragContext *context,
-    gint x, gint y, guint time, gpointer data)
+static void rc_ui_listview_dnd_motion(GtkWidget *widget,
+    GdkDragContext *context, gint x, gint y, guint time, gpointer data)
 {
     GtkTreeViewDropPosition pos;
     GtkTreePath *path_drop = NULL;
@@ -159,8 +160,8 @@ static void rc_ui_listview_dnd_motion(GtkWidget *widget, GdkDragContext *context
     }
 }
 
-static void rc_ui_listview_dnd_delete(GtkWidget *widget, GdkDragContext *context,
-    gpointer data)
+static void rc_ui_listview_dnd_delete(GtkWidget *widget,
+    GdkDragContext *context, gpointer data)
 {
     g_signal_stop_emission_by_name(widget, "drag-data-delete");
 }
@@ -312,10 +313,15 @@ static inline void rc_ui_listview_playlist_add_uris_by_selection(
             if(rclib_util_is_supported_media(uri_array[i]))
             {
                 if(iter!=NULL && iter->user_data!=NULL)
+                {
                     rclib_db_playlist_add_music(catalog_iter,
                         (RCLibDbPlaylistIter *)iter->user_data, uri_array[i]);
+                }
                 else
-                    rclib_db_playlist_add_music(catalog_iter, NULL, uri_array[i]);
+                {
+                    rclib_db_playlist_add_music(catalog_iter, NULL,
+                        uri_array[i]);
+                }
             }
             else if(rclib_util_is_supported_list(uri_array[i]))
             {
@@ -323,11 +329,15 @@ static inline void rc_ui_listview_playlist_add_uris_by_selection(
                 if(filename!=NULL)
                 {
                     if(iter!=NULL && iter->user_data!=NULL)
+                    {
                         rclib_db_playlist_add_m3u_file(catalog_iter,
                             (RCLibDbPlaylistIter *)iter->user_data, filename);
+                    }
                     else
+                    {
                         rclib_db_playlist_add_m3u_file(catalog_iter, NULL,
                             filename);
+                    }
                     g_free(filename);
                 }
             }
@@ -420,6 +430,11 @@ static void rc_ui_listview_playlist_dnd_data_received(GtkWidget *widget,
             g_free(reorder_array);
             break;
         case RC_UI_LISTVIEW_TARGET_INFO_FILE:
+            seq_iter = rc_ui_list_model_get_catalog_by_model(model);
+            rc_ui_listview_playlist_add_uris_by_selection(seldata,
+                seq_iter, &target_iter, pos);
+            break;
+        case RC_UI_LISTVIEW_TARGET_INFO_URILIST:
             seq_iter = rc_ui_list_model_get_catalog_by_model(model);
             rc_ui_listview_playlist_add_uris_by_selection(seldata,
                 seq_iter, &target_iter, pos);

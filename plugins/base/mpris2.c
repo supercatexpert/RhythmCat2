@@ -188,24 +188,25 @@ static void rc_plugin_mpris_player_add_property_change(
 }
 
 static GVariant *rc_plugin_mpris_get_metadata(const gchar *uri,
-    GSequenceIter *reference, const RCLibCoreMetadata *metadata)
+    RCLibDbPlaylistIter *reference, const RCLibCoreMetadata *metadata)
 {
     GVariantBuilder *builder;
     GVariant *variant;
     gint tracknum = 0;
     gchar *track_id = NULL;
-    const gchar *title, *artist, *album;
+    const gchar *title = NULL, *artist = NULL, *album = NULL;
     gint64 length;
     const gchar *strv[] = {NULL, NULL};
-    RCLibDbPlaylistData *playlist_data;
     if(reference!=NULL)
     {
-        playlist_data = g_sequence_get(reference);
-        title = playlist_data->title;
-        artist = playlist_data->artist;
-        album = playlist_data->album;
-        length = playlist_data->length / GST_USECOND;
-        tracknum = playlist_data->tracknum;
+        rclib_db_playlist_data_iter_get(reference,
+            RCLIB_DB_PLAYLIST_DATA_TYPE_TITLE, &title,
+            RCLIB_DB_PLAYLIST_DATA_TYPE_ARTIST, &artist,
+            RCLIB_DB_PLAYLIST_DATA_TYPE_ALBUM, &album,
+            RCLIB_DB_PLAYLIST_DATA_TYPE_LENGTH, &length,
+            RCLIB_DB_PLAYLIST_DATA_TYPE_TRACKNUM, &tracknum,
+            RCLIB_DB_PLAYLIST_DATA_TYPE_NONE);
+        length = length / GST_USECOND;
     }
     else if(metadata!=NULL)
     {
@@ -443,7 +444,7 @@ static GVariant *rc_plugin_mpris_get_player_property(
     GstState state;
     gint64 pos;
     gdouble volume = 1.0;
-    GSequenceIter *reference;
+    RCLibDbPlaylistIter *reference;
     gchar *uri;
     const RCLibCoreMetadata *metadata;
     GVariant *variant;
@@ -673,7 +674,7 @@ static void rc_plugin_mpris_state_changed_cb(RCLibCore *core, GstState state,
 static void rc_plugin_mpris_uri_changed_cb(RCLibCore *core,
     const gchar *uri, gpointer data)
 {
-    GSequenceIter *reference;
+    RCLibDbPlaylistIter *reference;
     GVariant *metadata_variant;
     RCPluginMPRISPrivate *priv = (RCPluginMPRISPrivate *)data;
     if(data==NULL) return;

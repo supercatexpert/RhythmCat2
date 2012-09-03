@@ -878,26 +878,25 @@ static void rc_plugin_lrccrawler_may_missing_cb(RCLibLyric *lyric,
     RCPluginLyricCrawlerPrivate *priv = (RCPluginLyricCrawlerPrivate *)data;
     gchar *uri = NULL;
     gchar *filepath = NULL;
-    GSequenceIter *iter = NULL;
+    RCLibDbPlaylistIter *iter = NULL;
     gchar *rtitle;
     gchar *title = NULL, *artist = NULL;
+    const gchar *ptitle = NULL, *partist = NULL;
     gchar *full_path;
-    RCLibDbPlaylistData *playlist_data = NULL;
     const gchar *home_dir;
     if(data==NULL) return;
     if(!priv->auto_search) return;
     if(gtk_widget_get_visible(priv->search_window)) return;
     uri = rclib_core_get_uri();
     if(uri==NULL) return;
-    iter = rclib_core_get_db_reference();
-    if(iter!=NULL)
-        playlist_data = g_sequence_get(iter);
-    if(playlist_data!=NULL && playlist_data->title!=NULL &&
-        strlen(playlist_data->title)>0)
+    iter = (RCLibDbPlaylistIter *)rclib_core_get_db_reference();
+    rclib_db_playlist_data_iter_get(iter, RCLIB_DB_PLAYLIST_DATA_TYPE_TITLE,
+        &ptitle, RCLIB_DB_PLAYLIST_DATA_TYPE_ARTIST, &partist,
+        RCLIB_DB_PLAYLIST_DATA_TYPE_NONE);    
+    if(ptitle!=NULL && strlen(ptitle)>0)
     {
-        gtk_entry_set_text(GTK_ENTRY(priv->title_entry),
-            playlist_data->title);
-        title = g_strdup(playlist_data->title);
+        gtk_entry_set_text(GTK_ENTRY(priv->title_entry), ptitle);
+        title = g_strdup(ptitle);
     }
     else
     {
@@ -908,12 +907,10 @@ static void rc_plugin_lrccrawler_may_missing_cb(RCLibLyric *lyric,
         title = g_strdup(rtitle);
         g_free(rtitle);
     }
-    if(playlist_data!=NULL && playlist_data->artist!=NULL &&
-        strlen(playlist_data->artist)>0)
+    if(partist!=NULL && strlen(partist)>0)
     {
-        gtk_entry_set_text(GTK_ENTRY(priv->artist_entry),
-            playlist_data->artist);
-        artist = g_strdup(playlist_data->artist);
+        gtk_entry_set_text(GTK_ENTRY(priv->artist_entry), partist);
+        artist = g_strdup(partist);
     }
     else
     {
