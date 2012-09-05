@@ -879,7 +879,7 @@ void rclib_db_playlist_data_free(RCLibDbPlaylistData *data)
  * @data: the #RCLibDbPlaylistData data
  * @type1: the first property in playlist data to set
  * @...: value for the first property, followed optionally by more
- *  name/value pairs, followed by %RCLIB_DB_CATALOG_DATA_TYPE_NONE
+ *  name/value pairs, followed by %RCLIB_DB_PLAYLIST_DATA_TYPE_NONE
  *
  * Sets properties on a #RCLibDbPlaylistData.
  */
@@ -915,7 +915,7 @@ void rclib_db_playlist_data_set(RCLibDbPlaylistData *data,
  * @data: the #RCLibDbPlaylistData data
  * @type1: the first property in playlist data to get
  * @...: return location for the first property, followed optionally by more
- *  name/return location pairs, followed by %RCLIB_DB_CATALOG_DATA_TYPE_NONE
+ *  name/return location pairs, followed by %RCLIB_DB_PLAYLIST_DATA_TYPE_NONE
  *
  * Gets properties of a #RCLibDbPlaylistData. The property contents will not
  * be copied, just get their address instead, if the contents are stored
@@ -937,7 +937,7 @@ void rclib_db_playlist_data_get(const RCLibDbPlaylistData *data,
  * @iter: the #RCLibDbPlaylistIter iter
  * @type1: the first property in playlist data to set
  * @...: value for the first property, followed optionally by more
- *  name/value pairs, followed by %RCLIB_DB_CATALOG_DATA_TYPE_NONE
+ *  name/value pairs, followed by %RCLIB_DB_PLAYLIST_DATA_TYPE_NONE
  *
  * Sets properties on the data in a #RCLibDbPlaylistIter.
  */
@@ -972,7 +972,7 @@ void rclib_db_playlist_data_iter_set(RCLibDbPlaylistIter *iter,
  * @iter: the #RCLibDbPlaylistIter iter
  * @type1: the first property in playlist data to get
  * @...: value for the first property, followed optionally by more
- *  name/value pairs, followed by %RCLIB_DB_CATALOG_DATA_TYPE_NONE
+ *  name/value pairs, followed by %RCLIB_DB_PLAYLIST_DATA_TYPE_NONE
  *
  * Gets properties of the data in a #RCLibDbPlaylistIter. The property
  * contents will not be copied, just get their address instead,

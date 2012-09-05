@@ -234,6 +234,308 @@ void _rclib_db_instance_finalize_library(RCLibDbPrivate *priv)
     priv->library_table = NULL;
 }
 
+static inline gboolean rclib_db_library_data_set_valist(
+    RCLibDbLibraryData *data, RCLibDbLibraryDataType type1,
+    va_list var_args)
+{
+    gboolean send_signal = FALSE;
+    RCLibDbLibraryDataType type;
+    RCLibDbLibraryType new_type;
+    const gchar *str;   
+    gint64 length;
+    gint vint;
+    gdouble rating;
+    type = type1;
+    while(type!=RCLIB_DB_LIBRARY_DATA_TYPE_NONE)
+    {
+        switch(type)
+        {
+            case RCLIB_DB_LIBRARY_DATA_TYPE_TYPE:
+            {
+                new_type = va_arg(var_args, RCLibDbLibraryType);
+                if(new_type==data->type) break;
+                data->type = new_type;
+                send_signal = TRUE;
+                break;
+            }
+            case RCLIB_DB_LIBRARY_DATA_TYPE_URI:
+            {
+                str = va_arg(var_args, const gchar *);
+                if(g_strcmp0(str, data->uri)==0) break;
+                if(data->uri!=NULL) g_free(data->uri);
+                data->uri = g_strdup(str);
+                send_signal = TRUE;
+                break;
+            }
+            case RCLIB_DB_LIBRARY_DATA_TYPE_TITLE:
+            {
+                str = va_arg(var_args, const gchar *);
+                if(g_strcmp0(str, data->title)==0) break;
+                if(data->title!=NULL) g_free(data->title);
+                data->title = g_strdup(str);
+                send_signal = TRUE;
+                break;
+            }
+            case RCLIB_DB_LIBRARY_DATA_TYPE_ARTIST:
+            {
+                str = va_arg(var_args, const gchar *);
+                if(g_strcmp0(str, data->artist)==0) break;
+                if(data->artist!=NULL) g_free(data->artist);
+                data->artist = g_strdup(str);
+                send_signal = TRUE;
+                break;
+            }
+            case RCLIB_DB_LIBRARY_DATA_TYPE_ALBUM:
+            {
+                str = va_arg(var_args, const gchar *);
+                if(g_strcmp0(str, data->album)==0) break;
+                if(data->album!=NULL) g_free(data->album);
+                data->album = g_strdup(str);
+                send_signal = TRUE;
+                break;
+            }
+            case RCLIB_DB_LIBRARY_DATA_TYPE_FTYPE:
+            {
+                str = va_arg(var_args, const gchar *);
+                if(g_strcmp0(str, data->ftype)==0) break;
+                if(data->ftype!=NULL) g_free(data->ftype);
+                data->ftype = g_strdup(str);
+                send_signal = TRUE;
+                break;
+            }
+            case RCLIB_DB_LIBRARY_DATA_TYPE_LENGTH:
+            {
+                length = va_arg(var_args, gint64);
+                if(data->length==length) break;
+                data->length = length;
+                send_signal = TRUE;
+                break;
+            }
+            case RCLIB_DB_LIBRARY_DATA_TYPE_TRACKNUM:
+            {
+                vint = va_arg(var_args, gint);
+                if(vint==data->tracknum) break;
+                data->tracknum = vint;
+                send_signal = TRUE;
+                break;
+            }
+            case RCLIB_DB_LIBRARY_DATA_TYPE_YEAR:
+            {
+                vint = va_arg(var_args, gint);
+                if(vint==data->year) break;
+                data->year = vint;
+                send_signal = TRUE;
+                break;
+            }
+            case RCLIB_DB_LIBRARY_DATA_TYPE_RATING:
+            {
+                rating = va_arg(var_args, gdouble);
+                if(rating==data->rating) break;
+                data->rating = rating;
+                send_signal = TRUE;
+                break;
+            }
+            case RCLIB_DB_LIBRARY_DATA_TYPE_LYRICFILE:
+            {
+                str = va_arg(var_args, const gchar *);
+                if(g_strcmp0(str, data->lyricfile)==0) break;
+                if(data->lyricfile!=NULL) g_free(data->lyricfile);
+                str = va_arg(var_args, const gchar *);
+                data->lyricfile = g_strdup(str);
+                send_signal = TRUE;
+                break;
+            }
+            case RCLIB_DB_LIBRARY_DATA_TYPE_LYRICSECFILE:
+            {
+                str = va_arg(var_args, const gchar *);
+                if(g_strcmp0(str, data->lyricsecfile)==0) break;
+                if(data->lyricsecfile!=NULL) g_free(data->lyricsecfile);
+                data->lyricsecfile = g_strdup(str);
+                send_signal = TRUE;
+                break;
+            }
+            case RCLIB_DB_LIBRARY_DATA_TYPE_ALBUMFILE:
+            {
+                str = va_arg(var_args, const gchar *);
+                if(g_strcmp0(str, data->albumfile)==0) break;
+                if(data->albumfile!=NULL) g_free(data->albumfile);
+                data->albumfile = g_strdup(str);
+                send_signal = TRUE;
+                break;
+            }            
+            default:
+            {
+                g_warning("rclib_db_library_data_set: Wrong data type %d!",
+                    type);
+                break;
+            }
+        }
+        type = va_arg(var_args, RCLibDbLibraryDataType);
+    }
+    return send_signal;
+}
+
+static inline void rclib_db_library_data_get_valist(
+    const RCLibDbLibraryData *data, RCLibDbLibraryDataType type1,
+    va_list var_args)
+{
+    RCLibDbLibraryDataType type;
+    RCLibDbLibraryType *library_type;
+    gchar **str;   
+    gint64 *length;
+    gint *vint;
+    gfloat *rating;
+    type = type1;
+    while(type!=RCLIB_DB_LIBRARY_DATA_TYPE_NONE)
+    {
+        switch(type)
+        {
+            case RCLIB_DB_LIBRARY_DATA_TYPE_TYPE:
+            {
+                library_type = va_arg(var_args, RCLibDbLibraryType *);
+                *library_type = data->type;
+                break;
+            }
+            case RCLIB_DB_LIBRARY_DATA_TYPE_URI:
+            {
+                str = va_arg(var_args, gchar **);
+                *str = data->uri;
+                break;
+            }
+            case RCLIB_DB_LIBRARY_DATA_TYPE_TITLE:
+            {
+                str = va_arg(var_args, gchar **);
+                *str = data->title;
+                break;
+            }
+            case RCLIB_DB_LIBRARY_DATA_TYPE_ARTIST:
+            {
+                str = va_arg(var_args, gchar **);
+                *str = data->artist;
+                break;
+            }
+            case RCLIB_DB_LIBRARY_DATA_TYPE_ALBUM:
+            {
+                str = va_arg(var_args, gchar **);
+                *str = data->album;
+                break;
+            }
+            case RCLIB_DB_LIBRARY_DATA_TYPE_FTYPE:
+            {
+                str = va_arg(var_args, gchar **);
+                *str = data->ftype;
+                break;
+            }
+            case RCLIB_DB_LIBRARY_DATA_TYPE_LENGTH:
+            {
+                length = va_arg(var_args, gint64 *);
+                *length = data->length;
+                break;
+            }
+            case RCLIB_DB_LIBRARY_DATA_TYPE_TRACKNUM:
+            {
+                vint = va_arg(var_args, gint *);
+                *vint = data->tracknum;
+                break;
+            }
+            case RCLIB_DB_LIBRARY_DATA_TYPE_YEAR:
+            {
+                vint = va_arg(var_args, gint *);
+                *vint = data->year;
+                break;
+            }
+            case RCLIB_DB_LIBRARY_DATA_TYPE_RATING:
+            {
+                rating = va_arg(var_args, gfloat *);
+                *rating = data->rating;
+                break;
+            }
+            case RCLIB_DB_LIBRARY_DATA_TYPE_LYRICFILE:
+            {
+                str = va_arg(var_args, gchar **);
+                *str = data->lyricfile;
+                break;
+            }
+            case RCLIB_DB_LIBRARY_DATA_TYPE_LYRICSECFILE:
+            {
+                str = va_arg(var_args, gchar **);
+                *str = data->lyricsecfile;
+                break;
+            }
+            case RCLIB_DB_LIBRARY_DATA_TYPE_ALBUMFILE:
+            {
+                str = va_arg(var_args, gchar **);
+                *str = data->albumfile;
+                break;
+            }            
+            default:
+            {
+                g_warning("rclib_db_library_data_get: Wrong data type %d!",
+                    type);
+                break;
+            }
+        }
+        type = va_arg(var_args, RCLibDbLibraryDataType);
+    }
+}
+
+/**
+ * rclib_db_library_data_set: (skip)
+ * @data: the #RCLibDbLibraryDataType data
+ * @type1: the first property in playlist data to set
+ * @...: value for the first property, followed optionally by more
+ *  name/value pairs, followed by %RCLIB_DB_LIBRARY_DATA_TYPE_NONE
+ *
+ * Sets properties on a #RCLibDbPlaylistData.
+ */
+
+void rclib_db_library_data_set(RCLibDbLibraryData *data,
+    RCLibDbLibraryDataType type1, ...)
+{
+    RCLibDbPrivate *priv = NULL;
+    GObject *instance = NULL;
+    va_list var_args;
+    gboolean send_signal = FALSE;
+    if(data==NULL) return;
+    va_start(var_args, type1);
+    send_signal = rclib_db_library_data_set_valist(data, type1, var_args);
+    va_end(var_args);
+    if(send_signal)
+    {
+        instance = rclib_db_get_instance();
+        if(instance!=NULL)
+            priv = RCLIB_DB(instance)->priv;
+        if(data->uri!=NULL)
+        {
+            if(priv!=NULL)
+                priv->dirty_flag = TRUE;
+            g_signal_emit_by_name(instance, "library-changed", data->uri);
+        }
+    }
+}
+
+/**
+ * rclib_db_library_data_get: (skip)
+ * @data: the #RCLibDbLibraryData data
+ * @type1: the first property in library data to get
+ * @...: return location for the first property, followed optionally by more
+ *  name/return location pairs, followed by %RCLIB_DB_LIBRARY_DATA_TYPE_NONE
+ *
+ * Gets properties of a #RCLibDbLibraryData. The property contents will not
+ * be copied, just get their address instead, if the contents are stored
+ * inside a pointer.
+ */
+
+void rclib_db_library_data_get(const RCLibDbLibraryData *data,
+    RCLibDbLibraryDataType type1, ...)
+{
+    va_list var_args;
+    if(data==NULL) return;
+    va_start(var_args, type1);
+    rclib_db_library_data_get_valist(data, type1, var_args);
+    va_end(var_args);
+}
+
 /**
  * rclib_db_get_library_table:
  *
