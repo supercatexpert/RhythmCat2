@@ -1,3 +1,4 @@
+
 rhythmcat2 (1.9.3-1) unstable; urgency=low
 
   * Use GTK+ 3.4 as its dependency. (Closes: #112234)
@@ -15,3 +16,9 @@ rhythmcat2 (1.9.4-1) unstable; urgency=low
   * Added rating limited playing mode, fixed some bugs. (Closes: #112301)
 
  -- SuperCat <supercatexpert@gmail.com>  Sun, 17 Jun 2012 04:35:32 +0800
+ 
+rhythmcat2 (1.9.5-1) unstable; urgency=low
+
+  * Changed some API design, implemented some basic music library API. (Closes: #112401)
+
+ -- SuperCat <supercatexpert@gmail.com>  Mon, 10 Sep 2012 00:35:32 +0800

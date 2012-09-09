@@ -41,7 +41,7 @@
 
 const guint rclib_major_version = 1;
 const guint rclib_minor_version = 9;
-const guint rclib_micro_version = 4;
+const guint rclib_micro_version = 5;
 const gchar *rclib_build_date = __DATE__;
 const gchar *rclib_build_time = __TIME__;
 

@@ -4,7 +4,7 @@
 AC_CONFIG_MACRO_DIR(m4)
 m4_define([rc_major_version], [1])
 m4_define([rc_minor_version], [9])
-m4_define([rc_micro_version], [4])
+m4_define([rc_micro_version], [5])
 m4_define([rc_version], [rc_major_version.rc_minor_version.rc_micro_version])
 
 AC_PREREQ([2.61])
@@ -120,6 +120,11 @@ if test "x$with_python3_plugins" = "xyes"; then
 fi
 AM_CONDITIONAL(WITH_PYTHON3_PLUGINS, test "x$with_python3_plugins" = "xyes")
 
+AC_ARG_ENABLE(debug, AS_HELP_STRING([--enable-debug], \
+    [enable debug mode by default]), enable_debug=yes, \
+    enable_debug=no)
+AM_CONDITIONAL(DEBUG_MODE, test "x$enable_debug" = "xyes")
+
 AM_CONDITIONAL(HAVE_LIBCURL, test "x$have_libcurl" = "xyes")
 
 AM_COND_IF(ENABLE_GTK_DOC, enable_gtk_doc=yes, enable_gtk_doc=no)
@@ -158,6 +163,8 @@ AC_OUTPUT
 
 echo "
 $PACKAGE $VERSION
+
+Debug Mode Enabled...........: $enable_debug
 
 Build GTK+ 3 UI............. : $with_gtk_ui
 Build Console UI............ : $with_console_ui

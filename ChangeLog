@@ -131,4 +131,11 @@
     * Use private pointer in the instance object directly instead of
       GET_PRIVATE macro now, for improving the performance.
 
+2012-09-10   SuperCat    <supercatexpert@gmail.com>
 
+    * Hid the RCLibDbCatalog & RCLibDbPlaylist struct implements, just use
+      set/get functions to access the data inside
+    * Implemented some basic library APIs.
+    * Changed to version 1.9.5.
+    
+    

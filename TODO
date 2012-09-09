@@ -1,7 +1,8 @@
 - Bug Report Interface
 - Sort the playlist
 - New information and control pad
-- Move the playlist functions from db module into a new playlist module.
+- Music Library Interface (in LibRhythmCat)
+- Player Command Interpreter build in LibRhythmCat
 
 Long-term:
 - Command Line Interface (CLI), based on ncurses
@@ -14,6 +15,7 @@ Long-term:
 - Move to GStreamer 1.0 if it is available in Debian Wheezy (or later
   release version)
 - New icon and default cover image.
+- Make a GTK+ 2 port for legacy systems (Will be RhythmCat 1.4.x).
 
 Other ideas:
 - Better karaoke mode plug-in?
