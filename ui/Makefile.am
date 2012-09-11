@@ -77,6 +77,10 @@ if HAVE_INTROSPECTION
     AM_CFLAGS += -DENABLE_INTROSPECTION @GINTROSPECTION_CFLAGS@
 endif
 
+if DEBUG_MODE
+    AM_CFLAGS += -DDEBUG_MODE=1 -g
+endif
+
 RhythmCat2_LDADD = @LIBOBJS@ @GLIB2_LIBS@ @GTK_LIBS@ @GSTREAMER_LIBS@ \
     $(top_builddir)/lib/librhythmcat-2.0.la librhythmcat-ui-2.0.la
     

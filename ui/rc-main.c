@@ -54,6 +54,12 @@
  * It also provides some utility functions.
  */
 
+#ifdef DEBUG_FLAG
+    static gboolean main_make_debug_flag = TRUE;
+#else
+    static gboolean main_make_debug_flag = FALSE;
+#endif
+
 struct _RCMainApplicationPrivate
 {
     gint dummy;
@@ -499,8 +505,8 @@ gint rc_main_run(gint *argc, gchar **argv[])
     g_random_set_seed(time(0));
     if(main_malloc_flag)
         g_slice_set_config(G_SLICE_CONFIG_ALWAYS_MALLOC, TRUE);
-    if(main_debug_flag)
-        ;
+    if(main_debug_flag || main_make_debug_flag)
+        g_setenv("G_MESSAGES_DEBUG", "all", TRUE);
     g_set_application_name("RhythmCat2");
     g_set_prgname("RhythmCat2");
     app = g_object_new(RC_TYPE_MAIN_APPLICATION, "application-id",

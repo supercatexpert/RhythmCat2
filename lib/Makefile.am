@@ -30,6 +30,10 @@ librhythmcat_2_0_la_SOURCES = \
 
 AM_CFLAGS = @GLIB2_CFLAGS@ @GSTREAMER_CFLAGS@ \
     -DLOCALEDIR=\"$(localedir)\"
+    
+if DEBUG_MODE
+    AM_CFLAGS += -DDEBUG_MODE=1 -g
+endif
 
 librhythmcat_2_0_la_LIBADD = @GLIB2_LIBS@ @GSTREAMER_LIBS@
 
