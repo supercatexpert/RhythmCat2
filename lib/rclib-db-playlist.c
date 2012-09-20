@@ -118,6 +118,7 @@ gboolean _rclib_db_playlist_import_idle_cb(gpointer data)
     playlist_data->artist = g_strdup(mmd->artist);
     playlist_data->album = g_strdup(mmd->album);
     playlist_data->ftype = g_strdup(mmd->ftype);
+    playlist_data->genre = g_strdup(mmd->genre);
     playlist_data->length = mmd->length;
     playlist_data->tracknum = mmd->tracknum;
     playlist_data->year = mmd->year;
@@ -190,6 +191,7 @@ gboolean _rclib_db_playlist_refresh_idle_cb(gpointer data)
         playlist_data->artist = g_strdup(mmd->artist);
         playlist_data->album = g_strdup(mmd->album);
         playlist_data->ftype = g_strdup(mmd->ftype);
+        playlist_data->genre = g_strdup(mmd->genre);
         playlist_data->length = mmd->length;
         playlist_data->tracknum = mmd->tracknum;
         playlist_data->year = mmd->year;
@@ -204,12 +206,20 @@ gboolean _rclib_db_playlist_refresh_idle_cb(gpointer data)
 gboolean _rclib_db_instance_init_playlist(RCLibDb *db, RCLibDbPrivate *priv)
 {
     if(db==NULL || priv==NULL) return FALSE;
+    
+    /* GHashTable<RCLibDbCatalogIter *, RCLibDbCatalogIter *> */
     priv->catalog_iter_table = g_hash_table_new_full(g_direct_hash,
         g_direct_equal, NULL, NULL);
+        
+    /* GHashTable<RCLibDbPlaylistIter *, RCLibDbPlaylistIter *> */
     priv->playlist_iter_table = g_hash_table_new_full(g_direct_hash,
         g_direct_equal, NULL, NULL);
+        
+    /* RCLibDbCatalogSequence<RCLibDbCatalogData *> */
     priv->catalog = (RCLibDbCatalogSequence *)g_sequence_new((GDestroyNotify)
         rclib_db_catalog_data_unref);
+        
+    /* RCLibDbPlaylistSequence<RCLibDbPlaylistData *> */
     return TRUE;
 }
 
@@ -555,7 +565,16 @@ static inline gboolean rclib_db_playlist_data_set_valist(
                 data->albumfile = g_strdup(str);
                 send_signal = TRUE;
                 break;
-            }            
+            }
+            case RCLIB_DB_PLAYLIST_DATA_TYPE_GENRE:
+            {
+                str = va_arg(var_args, const gchar *);
+                if(g_strcmp0(str, data->genre)==0) break;
+                if(data->genre!=NULL) g_free(data->genre);
+                data->genre = g_strdup(str);
+                send_signal = TRUE;
+                break;
+            }
             default:
             {
                 g_warning("rclib_db_playlist_data_set: Wrong data type %d!",
@@ -673,6 +692,12 @@ static inline void rclib_db_playlist_data_get_valist(
             {
                 str = va_arg(var_args, gchar **);
                 *str = data->albumfile;
+                break;
+            }
+            case RCLIB_DB_PLAYLIST_DATA_TYPE_GENRE:
+            {
+                str = va_arg(var_args, gchar **);
+                *str = data->genre;
                 break;
             }            
             default:
@@ -871,6 +896,7 @@ void rclib_db_playlist_data_free(RCLibDbPlaylistData *data)
     g_free(data->lyricfile);
     g_free(data->lyricsecfile);
     g_free(data->albumfile);
+    g_free(data->genre);
     g_slice_free(RCLibDbPlaylistData, data);
 }
 
@@ -1960,14 +1986,23 @@ void rclib_db_playlist_update_metadata(RCLibDbPlaylistIter *iter,
         g_debug("Playlist data updated, type: %d -> %d",
             playlist_data->type, data->type);
     }
+    if(data->genre!=NULL && g_strcmp0(playlist_data->genre,
+        data->genre)!=0)
+    {
+        priv->dirty_flag = TRUE;
+        g_debug("Playlist data updated, genre: %s -> %s",
+            playlist_data->genre, data->genre);
+    }
     g_free(playlist_data->title);
     g_free(playlist_data->artist);
     g_free(playlist_data->album);
     g_free(playlist_data->ftype);
+    g_free(playlist_data->genre);
     playlist_data->title = g_strdup(data->title);
     playlist_data->artist = g_strdup(data->artist);
     playlist_data->album = g_strdup(data->album);
     playlist_data->ftype = g_strdup(data->ftype);
+    playlist_data->genre = g_strdup(data->genre);
     playlist_data->tracknum = data->tracknum;
     playlist_data->year = data->year;
     playlist_data->type = data->type;

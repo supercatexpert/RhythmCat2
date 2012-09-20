@@ -99,6 +99,12 @@ static void rclib_tag_get_tag_cb(const GstTagList *tags, RCLibTagMetadata *mmd)
             mmd->comment = string;
         else g_free(string);
     }
+    if(gst_tag_list_get_string(tags, GST_TAG_GENRE, &string))
+    {
+        if(mmd->genre==NULL)
+            mmd->genre = string;
+        else g_free(string);
+    }
     if(gst_tag_list_get_buffer(tags, GST_TAG_IMAGE, &image))
     {
         if(mmd->image==NULL)
@@ -171,6 +177,7 @@ RCLibTagMetadata *rclib_tag_read_metadata(const gchar *uri)
         error = NULL;
         return NULL;
     }
+    g_debug("Reading tags from: %s", uri);
     info = gst_discoverer_discover_uri(discoverer, uri, &error);
     g_object_unref(discoverer);
     if(info==NULL)
@@ -237,6 +244,7 @@ RCLibTagMetadata *rclib_tag_copy_data(const RCLibTagMetadata *mmd)
     new_mmd->album = g_strdup(mmd->album);
     new_mmd->comment = g_strdup(mmd->comment);
     new_mmd->ftype = g_strdup(mmd->ftype);
+    new_mmd->genre = g_strdup(mmd->genre);
     new_mmd->emb_cue = g_strdup(mmd->emb_cue);
     new_mmd->image = gst_buffer_copy(mmd->image);
     return new_mmd;
@@ -260,6 +268,7 @@ void rclib_tag_free(RCLibTagMetadata *mmd)
     g_free(mmd->comment);
     g_free(mmd->ftype);
     g_free(mmd->emb_cue);
+    g_free(mmd->genre);
     g_free(mmd);
 }
 

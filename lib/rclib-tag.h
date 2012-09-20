@@ -72,6 +72,7 @@ struct _RCLibTagMetadata {
     gchar *album;
     gchar *comment;
     gchar *ftype;
+    gchar *genre;
     gchar *emb_cue;
     GstBuffer *image;
     gboolean eos;

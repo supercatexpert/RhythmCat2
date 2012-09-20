@@ -194,13 +194,18 @@ static void rc_main_app_activate(GApplication *application)
             "PlaylistColumnRatingEnabled", NULL);
         if(column_flag)
             column_flags |= RC_UI_LISTVIEW_PLAYLIST_COLUMN_RATING;
+        column_flag = rclib_settings_get_boolean("MainUI",
+            "PlaylistColumnGenreEnabled", NULL);
+        if(column_flag)
+            column_flags |= RC_UI_LISTVIEW_PLAYLIST_COLUMN_GENRE;
         rc_ui_listview_playlist_set_enabled_columns(
             RC_UI_LISTVIEW_PLAYLIST_COLUMN_ARTIST |
             RC_UI_LISTVIEW_PLAYLIST_COLUMN_ALBUM |
             RC_UI_LISTVIEW_PLAYLIST_COLUMN_TRACK |
             RC_UI_LISTVIEW_PLAYLIST_COLUMN_YEAR |
             RC_UI_LISTVIEW_PLAYLIST_COLUMN_FTYPE |
-            RC_UI_LISTVIEW_PLAYLIST_COLUMN_RATING,
+            RC_UI_LISTVIEW_PLAYLIST_COLUMN_RATING |
+            RC_UI_LISTVIEW_PLAYLIST_COLUMN_GENRE,
             column_flags);
     }
     else

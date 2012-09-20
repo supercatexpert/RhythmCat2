@@ -150,6 +150,8 @@ static RCLibTagMetadata *rclib_db_get_metadata_from_cue(
         mmd->artist = g_strdup(track->performer);
     if(cue_data->title!=NULL)
         mmd->album = g_strdup(cue_data->title);
+    if(cue_data->genre!=NULL)
+        mmd->genre = g_strdup(cue_data->genre);
     mmd->tracknum = track_num + 1;
     if(track_num+1!=cue_data->length)
         mmd->length = track[1].time1 - track->time1;
@@ -793,6 +795,11 @@ static void rclib_db_xml_parser_start_element_cb(GMarkupParseContext *context,
             {
                 playlist_data->lyricsecfile = g_strdup(attribute_values[i]);
             }
+            else if(playlist_data->genre==NULL &&
+                g_strcmp0(attribute_names[i], "genre")==0)
+            {
+                playlist_data->genre = g_strdup(attribute_values[i]);
+            }
         }
         playlist_iter = (RCLibDbPlaylistIter *)g_sequence_append(
             (GSequence *)parser_data->playlist, playlist_data);
@@ -895,6 +902,11 @@ static void rclib_db_xml_parser_start_element_cb(GMarkupParseContext *context,
                 g_strcmp0(attribute_names[i], "lyricsecondfile")==0)
             {
                 library_data->lyricsecfile = g_strdup(attribute_values[i]);
+            }
+            else if(library_data->genre==NULL &&
+                g_strcmp0(attribute_names[i], "genre")==0)
+            {
+                library_data->genre = g_strdup(attribute_values[i]);
             }
         }
         g_hash_table_replace(parser_data->library_table,
@@ -1083,6 +1095,13 @@ static inline GString *rclib_db_build_xml_data(RCLibDbCatalogSequence *catalog,
                     g_string_append(data_str, tmp);
                     g_free(tmp);
                 }
+                if(playlist_data->genre!=NULL)
+                {
+                    tmp = g_markup_printf_escaped("genre=\"%s\" ",
+                        playlist_data->genre);
+                    g_string_append(data_str, tmp);
+                    g_free(tmp);
+                }
                 g_string_append(data_str, "/>\n");
             }    
             g_string_append(data_str, "  </playlist>\n");
@@ -1160,6 +1179,13 @@ static inline GString *rclib_db_build_xml_data(RCLibDbCatalogSequence *catalog,
             {
                 tmp = g_markup_printf_escaped("lyricsecondfile=\"%s\" ",
                     library_data->lyricsecfile);
+                g_string_append(data_str, tmp);
+                g_free(tmp);
+            }
+            if(library_data->genre!=NULL)
+            {
+                tmp = g_markup_printf_escaped("genre=\"%s\" ",
+                    library_data->genre);
                 g_string_append(data_str, tmp);
                 g_free(tmp);
             }

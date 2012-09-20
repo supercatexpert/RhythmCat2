@@ -67,8 +67,9 @@ struct _RCUiPlaylistViewPrivate
     GtkCellRenderer *tracknum_renderer;
     GtkCellRenderer *year_renderer;
     GtkCellRenderer *ftype_renderer;
+    GtkCellRenderer *genre_renderer;
     GtkCellRenderer *length_renderer;
-    GtkCellRenderer *rating_renderer; /* Not available now */
+    GtkCellRenderer *rating_renderer;
     GtkTreeViewColumn *state_column;
     GtkTreeViewColumn *title_column;
     GtkTreeViewColumn *artist_column;
@@ -76,8 +77,9 @@ struct _RCUiPlaylistViewPrivate
     GtkTreeViewColumn *tracknum_column;
     GtkTreeViewColumn *year_column;
     GtkTreeViewColumn *ftype_column;
+    GtkTreeViewColumn *genre_column;
     GtkTreeViewColumn *length_column;
-    GtkTreeViewColumn *rating_column; /* Not available now */
+    GtkTreeViewColumn *rating_column;
     gboolean display_mode;
 };
 
@@ -839,6 +841,7 @@ static void rc_ui_playlist_view_instance_init(RCUiPlaylistView *view)
     priv->tracknum_renderer = gtk_cell_renderer_text_new();
     priv->year_renderer = gtk_cell_renderer_text_new();
     priv->ftype_renderer = gtk_cell_renderer_text_new();
+    priv->genre_renderer = gtk_cell_renderer_text_new();
     priv->length_renderer = gtk_cell_renderer_text_new();
     priv->rating_renderer = rc_ui_cell_renderer_rating_new();
     gtk_cell_renderer_set_fixed_size(priv->state_renderer, 16, -1);
@@ -849,6 +852,7 @@ static void rc_ui_playlist_view_instance_init(RCUiPlaylistView *view)
         50, -1);
     gtk_cell_renderer_set_fixed_size(priv->year_renderer, 50, -1);
     gtk_cell_renderer_set_fixed_size(priv->ftype_renderer, 60, -1);
+    gtk_cell_renderer_set_fixed_size(priv->genre_renderer, 60, -1);
     gtk_cell_renderer_set_fixed_size(priv->length_renderer, 55, -1);
     g_object_set(priv->title_renderer, "ellipsize", 
         PANGO_ELLIPSIZE_END, "ellipsize-set", TRUE, "weight",
@@ -866,6 +870,9 @@ static void rc_ui_playlist_view_instance_init(RCUiPlaylistView *view)
         PANGO_ELLIPSIZE_END, "ellipsize-set", TRUE, "weight",
         PANGO_WEIGHT_NORMAL, "weight-set", TRUE, NULL);
     g_object_set(priv->ftype_renderer, "ellipsize", 
+        PANGO_ELLIPSIZE_END, "ellipsize-set", TRUE, "weight",
+        PANGO_WEIGHT_NORMAL, "weight-set", TRUE, NULL);
+    g_object_set(priv->genre_renderer, "ellipsize", 
         PANGO_ELLIPSIZE_END, "ellipsize-set", TRUE, "weight",
         PANGO_WEIGHT_NORMAL, "weight-set", TRUE, NULL);
     g_object_set(priv->length_renderer, "xalign", 1.0,
@@ -891,6 +898,9 @@ static void rc_ui_playlist_view_instance_init(RCUiPlaylistView *view)
     priv->ftype_column = gtk_tree_view_column_new_with_attributes(
         _("Format"), priv->ftype_renderer, "text",
         RC_UI_PLAYLIST_COLUMN_FTYPE, NULL);
+    priv->genre_column = gtk_tree_view_column_new_with_attributes(
+        _("Genre"), priv->genre_renderer, "text",
+        RC_UI_PLAYLIST_COLUMN_GENRE, NULL);
     priv->length_column = gtk_tree_view_column_new_with_attributes(
         _("Length"), priv->length_renderer, "text",
         RC_UI_PLAYLIST_COLUMN_LENGTH, NULL);
@@ -915,6 +925,9 @@ static void rc_ui_playlist_view_instance_init(RCUiPlaylistView *view)
     gtk_tree_view_column_set_cell_data_func(priv->ftype_column,
         priv->ftype_renderer, rc_ui_listview_playlist_text_call_data_func,
         NULL, NULL);
+    gtk_tree_view_column_set_cell_data_func(priv->genre_column,
+        priv->genre_renderer, rc_ui_listview_playlist_text_call_data_func,
+        NULL, NULL);
     gtk_tree_view_column_set_cell_data_func(priv->length_column,
         priv->length_renderer, rc_ui_listview_playlist_text_call_data_func,
         NULL, NULL);
@@ -932,6 +945,8 @@ static void rc_ui_playlist_view_instance_init(RCUiPlaylistView *view)
         FALSE, "resizable", TRUE, NULL);
     g_object_set(priv->ftype_column, "expand", TRUE, "visible",
         FALSE, "resizable", TRUE, NULL);
+    g_object_set(priv->genre_column, "expand", TRUE, "visible",
+        FALSE, "resizable", TRUE, NULL);
     g_object_set(priv->length_column, "sizing",
         GTK_TREE_VIEW_COLUMN_FIXED, "fixed-width", 55, "alignment",
         1.0, NULL);
@@ -945,6 +960,7 @@ static void rc_ui_playlist_view_instance_init(RCUiPlaylistView *view)
     gtk_tree_view_append_column(GTK_TREE_VIEW(view), priv->tracknum_column);
     gtk_tree_view_append_column(GTK_TREE_VIEW(view), priv->year_column);
     gtk_tree_view_append_column(GTK_TREE_VIEW(view), priv->ftype_column);
+    gtk_tree_view_append_column(GTK_TREE_VIEW(view), priv->genre_column);
     gtk_tree_view_append_column(GTK_TREE_VIEW(view), priv->length_column);
     gtk_tree_view_append_column(GTK_TREE_VIEW(view), priv->rating_column);
     selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(view));
@@ -1125,6 +1141,7 @@ void rc_ui_listview_playlist_set_pango_attributes(const PangoAttrList *list)
     g_object_set(priv->year_renderer, "attributes", list, NULL);
     g_object_set(priv->ftype_renderer, "attributes", list, NULL);
     g_object_set(priv->length_renderer, "attributes", list, NULL);
+    g_object_set(priv->genre_renderer, "attributes", list, NULL);
 }
 
 /**
@@ -1443,6 +1460,7 @@ void rc_ui_listview_playlist_set_column_display_mode(gboolean mode)
         g_object_set(priv->tracknum_column, "visible", FALSE, NULL);
         g_object_set(priv->year_column, "visible", FALSE, NULL);
         g_object_set(priv->ftype_column, "visible", FALSE, NULL);
+        g_object_set(priv->genre_column, "visible", FALSE, NULL);
         g_object_set(priv->rating_column, "visible", FALSE, NULL);
     }
     rc_ui_main_window_playlist_scrolled_window_set_horizontal_policy(mode);
@@ -1534,6 +1552,12 @@ void rc_ui_listview_playlist_set_enabled_columns(guint column_flags,
             enable_flags & RC_UI_LISTVIEW_PLAYLIST_COLUMN_FTYPE ?
             TRUE: FALSE, NULL);
     }
+    if(column_flags & RC_UI_LISTVIEW_PLAYLIST_COLUMN_GENRE)
+    {
+        g_object_set(priv->genre_column, "visible",
+            enable_flags & RC_UI_LISTVIEW_PLAYLIST_COLUMN_GENRE ?
+            TRUE: FALSE, NULL);
+    }
     if(column_flags & RC_UI_LISTVIEW_PLAYLIST_COLUMN_RATING)
     {
         g_object_set(priv->rating_column, "visible",
@@ -1576,6 +1600,9 @@ guint rc_ui_listview_playlist_get_enabled_columns()
     g_object_get(priv->rating_column, "visible", &state, NULL);
     if(state)
         flags |= RC_UI_LISTVIEW_PLAYLIST_COLUMN_RATING;
+    g_object_get(priv->genre_column, "visible", &state, NULL);
+    if(state)
+        flags |= RC_UI_LISTVIEW_PLAYLIST_COLUMN_GENRE;
     return flags;
 }
 

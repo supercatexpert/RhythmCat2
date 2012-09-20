@@ -240,6 +240,22 @@ guint rclib_cue_read_data(const gchar *input, RCLibCueInputType type,
             }
             g_match_info_free(match_info);
         }
+        else if(g_regex_match_simple("(REM GENRE \").*[\"]", line,
+            G_REGEX_CASELESS, 0))
+        {
+            g_regex_match(data_regex, line, 0, &match_info);
+            if(g_match_info_matches(match_info))
+            {
+                buf = g_match_info_fetch(match_info, 0);
+                if(buf!=NULL && strlen(buf)>1)
+                {
+                    g_free(data->genre);
+                    data->genre = g_strdup(buf+1);
+                }
+                g_free(buf);
+            }
+            g_match_info_free(match_info);
+        }
     }
     g_strfreev(line_data_array);
     g_free(cue_new_data);
@@ -274,6 +290,7 @@ void rclib_cue_free(RCLibCueData *data)
     g_free(data->file);
     g_free(data->title);
     g_free(data->performer);
+    g_free(data->genre);
     if(data->track!=NULL)
     {
         for(i=0;i<data->length;i++)

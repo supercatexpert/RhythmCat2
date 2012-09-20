@@ -80,6 +80,7 @@ static void rclib_main_update_db_metadata_cb(RCLibCore *core,
         RCLIB_DB_PLAYLIST_DATA_TYPE_ARTIST, metadata->artist,
         RCLIB_DB_PLAYLIST_DATA_TYPE_ALBUM, metadata->album,
         RCLIB_DB_PLAYLIST_DATA_TYPE_FTYPE, metadata->ftype,
+        RCLIB_DB_PLAYLIST_DATA_TYPE_GENRE, metadata->genre,
         RCLIB_DB_PLAYLIST_DATA_TYPE_TRACKNUM, metadata->track,
         RCLIB_DB_PLAYLIST_DATA_TYPE_YEAR, metadata->year,
         RCLIB_DB_PLAYLIST_DATA_TYPE_NONE);

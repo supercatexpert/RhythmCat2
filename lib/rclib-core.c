@@ -157,6 +157,7 @@ static void rclib_core_metadata_free(RCLibCoreMetadata *metadata)
     g_free(metadata->artist);
     g_free(metadata->album);
     g_free(metadata->ftype);
+    g_free(metadata->genre);
     memset(metadata, 0, sizeof(RCLibCoreMetadata));
 }
 
@@ -206,6 +207,16 @@ static inline gboolean rclib_core_parse_metadata(const GstTagList *tags,
         {
             g_free(metadata->ftype);
             metadata->ftype = g_strdup(string);
+            update = TRUE;
+        }
+        g_free(string);
+    }
+    if(gst_tag_list_get_string(tags, GST_TAG_GENRE, &string))
+    {
+        if(g_strcmp0(string, metadata->genre)!=0)
+        {
+            g_free(metadata->genre);
+            metadata->genre = g_strdup(string);
             update = TRUE;
         }
         g_free(string);

@@ -87,6 +87,7 @@ typedef enum {
  * @RC_UI_PLAYLIST_COLUMN_ARTIST: the artist column
  * @RC_UI_PLAYLIST_COLUMN_ALBUM: the album column
  * @RC_UI_PLAYLIST_COLUMN_FTYPE: the file type (format) column
+ * @RC_UI_PLAYLIST_COLUMN_GENRE: the genre column
  * @RC_UI_PLAYLIST_COLUMN_LENGTH: the time length column
  * @RC_UI_PLAYLIST_COLUMN_TRACK: the track number column
  * @RC_UI_PLAYLIST_COLUMN_RATING: the rating column
@@ -105,6 +106,7 @@ typedef enum {
     RC_UI_PLAYLIST_COLUMN_ARTIST,
     RC_UI_PLAYLIST_COLUMN_ALBUM,
     RC_UI_PLAYLIST_COLUMN_FTYPE,
+    RC_UI_PLAYLIST_COLUMN_GENRE,
     RC_UI_PLAYLIST_COLUMN_LENGTH,
     RC_UI_PLAYLIST_COLUMN_TRACK,
     RC_UI_PLAYLIST_COLUMN_RATING,

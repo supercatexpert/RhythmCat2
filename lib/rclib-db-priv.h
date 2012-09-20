@@ -97,6 +97,7 @@ struct _RCLibDbPrivate
     GHashTable *playlist_iter_table;
     GSequence *library_query;
     GHashTable *library_table;
+    GHashTable *library_keyword_table;
     GThread *import_thread;
     GThread *refresh_thread;
     GThread *autosave_thread;
@@ -139,6 +140,7 @@ struct _RCLibDbPlaylistData
     gchar *artist;
     gchar *album;
     gchar *ftype;
+    gchar *genre;
     gint64 length;
     gint tracknum;
     gint year;
@@ -160,6 +162,7 @@ struct _RCLibDbLibraryData
     gchar *artist;
     gchar *album;
     gchar *ftype;
+    gchar *genre;
     gint64 length;
     gint tracknum;
     gint year;

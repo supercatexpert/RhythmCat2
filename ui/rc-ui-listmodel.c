@@ -126,6 +126,7 @@ static GType rc_ui_playlist_store_get_column_type(GtkTreeModel *model,
         case RC_UI_PLAYLIST_COLUMN_ARTIST:
         case RC_UI_PLAYLIST_COLUMN_ALBUM:
         case RC_UI_PLAYLIST_COLUMN_FTYPE:
+        case RC_UI_PLAYLIST_COLUMN_GENRE:
         case RC_UI_PLAYLIST_COLUMN_LENGTH:
             type = G_TYPE_STRING;
             break;
@@ -491,6 +492,15 @@ static void rc_ui_playlist_store_get_value(GtkTreeModel *model,
         {
             rclib_db_playlist_data_iter_get(seq_iter,
                 RCLIB_DB_PLAYLIST_DATA_TYPE_FTYPE, &dstr,
+                RCLIB_DB_PLAYLIST_DATA_TYPE_NONE);
+            g_value_init(value, G_TYPE_STRING);
+            g_value_set_string(value, dstr);
+            break;
+        }
+        case RC_UI_PLAYLIST_COLUMN_GENRE:
+        {
+            rclib_db_playlist_data_iter_get(seq_iter,
+                RCLIB_DB_PLAYLIST_DATA_TYPE_GENRE, &dstr,
                 RCLIB_DB_PLAYLIST_DATA_TYPE_NONE);
             g_value_init(value, G_TYPE_STRING);
             g_value_set_string(value, dstr);

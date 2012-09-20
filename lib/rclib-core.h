@@ -124,6 +124,7 @@ typedef struct _RCLibCorePrivate RCLibCorePrivate;
  * @artist: the artist
  * @album: the album name
  * @ftype: the format information
+ * @genre: the genre
  * @bitrate: the bitrate (unit: bit/s)
  * @duration: the duration of the music (unit: nanosecond)
  * @track: the track number
@@ -138,6 +139,7 @@ struct _RCLibCoreMetadata {
     gchar *artist;
     gchar *album;
     gchar *ftype;
+    gchar *genre;
     guint bitrate;
     gint64 duration;
     gint track;

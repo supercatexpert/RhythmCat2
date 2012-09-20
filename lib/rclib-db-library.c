@@ -31,6 +31,69 @@
 #include "rclib-core.h"
 #include "rclib-util.h"
 
+static inline gboolean rclib_db_library_keyword_table_add_entry(
+    GHashTable *library_keyword_table, RCLibDbLibraryData *library_data,
+    const gchar *keyword)
+{
+    gboolean present = TRUE;
+    GHashTable *keyword_table;
+    keyword_table = g_hash_table_lookup(library_keyword_table, keyword);
+    if(keyword_table!=NULL)
+    {
+        present = (g_hash_table_lookup(keyword_table, library_data)!=NULL);
+        g_hash_table_insert(keyword_table, library_data, GINT_TO_POINTER(1));
+    }
+    else
+    {
+        present = FALSE;
+        keyword_table = g_hash_table_new(g_direct_hash, g_direct_equal);
+        g_hash_table_insert(keyword_table, library_data, GINT_TO_POINTER(1));
+        g_hash_table_insert(library_keyword_table, g_strdup(keyword),
+            keyword_table);
+    }
+    return present;
+}
+
+static inline gboolean rclib_db_library_keyword_table_remove_entry(
+    GHashTable *library_keyword_table, RCLibDbLibraryData *library_data,
+    const gchar *keyword)
+{
+    GHashTable *keyword_table;
+    gboolean ret;
+    keyword_table = g_hash_table_lookup(library_keyword_table, keyword);
+    if(keyword_table!=NULL)
+    {
+        ret = g_hash_table_remove(keyword_table, library_data);
+        if(g_hash_table_size(keyword_table)==0)
+        {
+            g_hash_table_remove(library_keyword_table, keyword);
+        }
+    }
+    else
+    {
+        ret = FALSE;
+    }
+    return ret;
+}
+
+static inline gboolean rclib_db_library_keyword_table_contains_entry(
+    GHashTable *library_keyword_table, RCLibDbLibraryData *library_data,
+    const gchar *keyword)
+{
+    GHashTable *keyword_table;
+    gboolean ret;
+    keyword_table = g_hash_table_lookup(library_keyword_table, keyword);
+    if(keyword_table!=NULL)
+    {
+        ret = (g_hash_table_lookup(keyword_table, library_data)!=NULL);
+    }
+    else
+    {
+        ret = FALSE;
+    }
+    return ret;
+}
+
 static inline void rclib_db_library_import_idle_data_free(
     RCLibDbLibraryImportIdleData *data)
 {
@@ -76,6 +139,7 @@ gboolean _rclib_db_library_import_idle_cb(gpointer data)
     library_data->artist = g_strdup(mmd->artist);
     library_data->album = g_strdup(mmd->album);
     library_data->ftype = g_strdup(mmd->ftype);
+    library_data->genre = g_strdup(mmd->genre);
     library_data->length = mmd->length;
     library_data->tracknum = mmd->tracknum;
     library_data->year = mmd->year;
@@ -129,6 +193,7 @@ gboolean _rclib_db_library_refresh_idle_cb(gpointer data)
         library_data->artist = g_strdup(mmd->artist);
         library_data->album = g_strdup(mmd->album);
         library_data->ftype = g_strdup(mmd->ftype);
+        library_data->genre = g_strdup(mmd->genre);
         library_data->length = mmd->length;
         library_data->tracknum = mmd->tracknum;
         library_data->year = mmd->year;
@@ -210,16 +275,25 @@ void rclib_db_library_data_free(RCLibDbLibraryData *data)
     g_free(data->lyricfile);
     g_free(data->lyricsecfile);
     g_free(data->albumfile);
+    g_free(data->genre);
     g_slice_free(RCLibDbLibraryData, data);
 }
 
 gboolean _rclib_db_instance_init_library(RCLibDb *db, RCLibDbPrivate *priv)
 {
     if(db==NULL || priv==NULL) return FALSE;
+    
+    /* GSequence<RCLibDbLibraryData *> */
     priv->library_query = g_sequence_new((GDestroyNotify)
         rclib_db_library_data_unref);
+        
+    /* GHashTable<gchar *, RCLibDbLibraryData *> */
     priv->library_table = g_hash_table_new_full(g_str_hash,
         g_str_equal, g_free, (GDestroyNotify)rclib_db_library_data_unref);
+        
+    /* GHashTable<gchar *, GHashTable<RCLibDbLibraryData *, 1>> */
+    priv->library_keyword_table = g_hash_table_new_full(g_str_hash,
+        g_str_equal, g_free, (GDestroyNotify)g_hash_table_destroy);
     return TRUE;
 }
 
@@ -228,6 +302,8 @@ void _rclib_db_instance_finalize_library(RCLibDbPrivate *priv)
     if(priv==NULL) return;
     if(priv->library_query!=NULL)
         g_sequence_free(priv->library_query);
+    if(priv->library_keyword_table!=NULL)
+        g_hash_table_destroy(priv->library_keyword_table);
     if(priv->library_table!=NULL)
         g_hash_table_destroy(priv->library_table);
     priv->library_query = NULL;
@@ -362,7 +438,16 @@ static inline gboolean rclib_db_library_data_set_valist(
                 data->albumfile = g_strdup(str);
                 send_signal = TRUE;
                 break;
-            }            
+            }
+            case RCLIB_DB_LIBRARY_DATA_TYPE_GENRE:
+            {
+                str = va_arg(var_args, const gchar *);
+                if(g_strcmp0(str, data->genre)==0) break;
+                if(data->genre!=NULL) g_free(data->genre);
+                data->genre = g_strdup(str);
+                send_signal = TRUE;
+                break;
+            }           
             default:
             {
                 g_warning("rclib_db_library_data_set: Wrong data type %d!",
@@ -467,7 +552,13 @@ static inline void rclib_db_library_data_get_valist(
                 str = va_arg(var_args, gchar **);
                 *str = data->albumfile;
                 break;
-            }            
+            }
+            case RCLIB_DB_LIBRARY_DATA_TYPE_GENRE:
+            {
+                str = va_arg(var_args, gchar **);
+                *str = data->genre;
+                break;
+            }
             default:
             {
                 g_warning("rclib_db_library_data_get: Wrong data type %d!",

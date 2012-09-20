@@ -134,6 +134,7 @@ typedef enum {
  * @RCLIB_DB_PLAYLIST_DATA_TYPE_LYRICSECFILE: the second lyric file
  *     path (string)
  * @RCLIB_DB_PLAYLIST_DATA_TYPE_ALBUMFILE: the album image file path (string)
+ * @RCLIB_DB_PLAYLIST_DATA_TYPE_GENRE: the genre (string)
  *
  * The enum type for set/get the data in the #RCLibDbPlaylistData
  */
@@ -154,7 +155,8 @@ typedef enum {
     RCLIB_DB_PLAYLIST_DATA_TYPE_RATING = 12,
     RCLIB_DB_PLAYLIST_DATA_TYPE_LYRICFILE = 13,
     RCLIB_DB_PLAYLIST_DATA_TYPE_LYRICSECFILE = 14,
-    RCLIB_DB_PLAYLIST_DATA_TYPE_ALBUMFILE = 15
+    RCLIB_DB_PLAYLIST_DATA_TYPE_ALBUMFILE = 15,
+    RCLIB_DB_PLAYLIST_DATA_TYPE_GENRE = 16
 }RCLibDbPlaylistDataType;
 
 /**
@@ -175,7 +177,7 @@ typedef enum {
  * @RCLIB_DB_LIBRARY_DATA_TYPE_LYRICSECFILE: the second lyric file
  *     path (string)
  * @RCLIB_DB_LIBRARY_DATA_TYPE_ALBUMFILE: the album image file path (string)
- *
+ * @RCLIB_DB_LIBRARY_DATA_TYPE_GENRE: the genre (string)
  * The enum type for set/get the data in the #RCLibDbPlaylistData
  */
 
@@ -193,7 +195,8 @@ typedef enum {
     RCLIB_DB_LIBRARY_DATA_TYPE_RATING = 10,
     RCLIB_DB_LIBRARY_DATA_TYPE_LYRICFILE = 11,
     RCLIB_DB_LIBRARY_DATA_TYPE_LYRICSECFILE = 12,
-    RCLIB_DB_LIBRARY_DATA_TYPE_ALBUMFILE = 13
+    RCLIB_DB_LIBRARY_DATA_TYPE_ALBUMFILE = 13,
+    RCLIB_DB_LIBRARY_DATA_TYPE_GENRE = 14
 }RCLibDbLibraryDataType;
 
 typedef struct _RCLibDbCatalogData RCLibDbCatalogData;

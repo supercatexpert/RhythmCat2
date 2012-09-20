@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: RhythmCat2 1.9.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-07-01 21:47+0800\n"
+"POT-Creation-Date: 2012-09-21 01:51+0800\n"
 "PO-Revision-Date: 2012-04-26 16:20+0800\n"
 "Last-Translator: SuperCat <supercatexpert@gmail.com>\n"
 "Language-Team: Japanese\n"
@@ -56,35 +56,30 @@ msgstr "ブルース"
 msgid "Vocal"
 msgstr "ボーカル"
 
-#: ../lib/rclib-core.c:937 ../lib/rclib-core.c:946 ../lib/rclib-core.c:956
-#: ../lib/rclib-core.c:966 ../lib/rclib-core.c:976
+#: ../lib/rclib-core.c:969 ../lib/rclib-core.c:978 ../lib/rclib-core.c:988
+#: ../lib/rclib-core.c:998 ../lib/rclib-core.c:1008 ../lib/rclib-core.c:1018
 #, c-format
 msgid "Cannot load necessary plugin: %s"
 msgstr "必要なプラグイン: %s をロード出来ない"
 
-#: ../lib/rclib-core.c:985 ../lib/rclib-core.c:1009
+#: ../lib/rclib-core.c:1027 ../lib/rclib-core.c:1051
 #, c-format
 msgid "Cannot create bin: %s"
 msgstr "ビン: %s を生成出来ない"
 
-#: ../lib/rclib-core.c:994 ../lib/rclib-core.c:1018
+#: ../lib/rclib-core.c:1036 ../lib/rclib-core.c:1061
 #, c-format
 msgid "Cannot link elements!"
 msgstr "エレメントをリンクできない"
 
-#: ../lib/rclib-core.c:1141
+#: ../lib/rclib-core.c:1185
 #, c-format
 msgid "The core is already initialized!"
 msgstr "コアはもう初期化された!"
 
-#: ../lib/rclib-core.c:1873
+#: ../lib/rclib-core.c:1923
 msgid "Custom"
 msgstr "カスタム"
-
-#: ../lib/rclib-db.c:2423 ../ui/rc-ui-listmodel.c:373 ../ui/rc-ui-window.c:139
-#: ../ui/rc-ui-window.c:1315
-msgid "Unknown Title"
-msgstr "不明なタイトル"
 
 #: ../ui/rc-ui-effect.c:130 ../ui/rc-ui-effect.c:180
 msgid "EQ Setting File (*.EQF)"
@@ -118,439 +113,480 @@ msgstr "右"
 msgid "Audio Effects"
 msgstr "オーディオエフェクト"
 
-#: ../ui/rc-ui-listmodel.c:377 ../ui/rc-ui-window.c:150
-#: ../ui/rc-ui-window.c:1316
+#: ../ui/rc-ui-listmodel.c:420 ../ui/rc-ui-window.c:137
+#: ../ui/rc-ui-window.c:1333
+msgid "Unknown Title"
+msgstr "不明なタイトル"
+
+#: ../ui/rc-ui-listmodel.c:424 ../ui/rc-ui-window.c:148
+#: ../ui/rc-ui-window.c:1334
 msgid "Unknown Artist"
 msgstr "不明なアーティスト"
 
-#: ../ui/rc-ui-listmodel.c:381 ../ui/rc-ui-window.c:160
-#: ../ui/rc-ui-window.c:1317
+#: ../ui/rc-ui-listmodel.c:428 ../ui/rc-ui-window.c:158
+#: ../ui/rc-ui-window.c:1335
 msgid "Unknown Album"
 msgstr "不明なアルバム"
 
-#: ../ui/rc-ui-listview.c:774
+#: ../ui/rc-ui-listview.c:791
 msgid "Name"
 msgstr "ネーム"
 
-#: ../ui/rc-ui-listview.c:860
+#: ../ui/rc-ui-listview.c:884
 msgid "Title"
 msgstr "タイトル"
 
-#: ../ui/rc-ui-listview.c:863 ../ui/rc-ui-settings.c:668
+#: ../ui/rc-ui-listview.c:887 ../ui/rc-ui-settings.c:689
 msgid "Artist"
 msgstr "アーティスト"
 
-#: ../ui/rc-ui-listview.c:866 ../ui/rc-ui-settings.c:670
+#: ../ui/rc-ui-listview.c:890 ../ui/rc-ui-settings.c:691
 msgid "Album"
 msgstr "アルバム"
 
-#: ../ui/rc-ui-listview.c:869 ../ui/rc-ui-settings.c:672
+#: ../ui/rc-ui-listview.c:893 ../ui/rc-ui-settings.c:693
 msgid "Track"
 msgstr "トラック"
 
-#: ../ui/rc-ui-listview.c:872 ../ui/rc-ui-settings.c:674
+#: ../ui/rc-ui-listview.c:896 ../ui/rc-ui-settings.c:695
 msgid "Year"
 msgstr "年分"
 
-#: ../ui/rc-ui-listview.c:875 ../ui/rc-ui-settings.c:676
-#: ../ui/rc-ui-dialog.c:846
+#: ../ui/rc-ui-listview.c:899 ../ui/rc-ui-settings.c:697
+#: ../ui/rc-ui-dialog.c:849
 msgid "Format"
 msgstr "フォーマット"
 
-#: ../ui/rc-ui-listview.c:878
+#: ../ui/rc-ui-listview.c:902 ../ui/rc-ui-settings.c:701
+msgid "Genre"
+msgstr "ジャンル"
+
+#: ../ui/rc-ui-listview.c:905
 msgid "Length"
 msgstr "長さ"
 
-#: ../ui/rc-ui-listview.c:881 ../ui/rc-ui-settings.c:678
+#: ../ui/rc-ui-listview.c:908 ../ui/rc-ui-settings.c:699
 msgid "Rating"
 msgstr "評価"
 
-#: ../ui/rc-ui-listview.c:1253
+#: ../ui/rc-ui-listview.c:1287
 #, c-format
 msgid "Playlist %u"
 msgstr "プレイリスト %u"
 
-#: ../ui/rc-ui-menu.c:175
+#: ../ui/rc-ui-menu.c:187
 msgid "_Playlist"
 msgstr "プレイリスト(_P)"
 
-#: ../ui/rc-ui-menu.c:176
+#: ../ui/rc-ui-menu.c:188
 msgid "_View"
 msgstr "表示(_V)"
 
-#: ../ui/rc-ui-menu.c:177
+#: ../ui/rc-ui-menu.c:189
 msgid "_Control"
 msgstr "コントロール(_C)"
 
-#: ../ui/rc-ui-menu.c:178
+#: ../ui/rc-ui-menu.c:190
 msgid "_Help"
 msgstr "ヘルプ(_H)"
 
-#: ../ui/rc-ui-menu.c:179
+#: ../ui/rc-ui-menu.c:191
 msgid "_Repeat"
 msgstr "リピート(_R)"
 
-#: ../ui/rc-ui-menu.c:180
+#: ../ui/rc-ui-menu.c:192
 msgid "Ran_dom"
 msgstr "ランダム(_D)"
 
-#: ../ui/rc-ui-menu.c:182
+#: ../ui/rc-ui-menu.c:194
 msgid "Open _Music"
 msgstr "音楽を開く(_M)"
 
-#: ../ui/rc-ui-menu.c:183
+#: ../ui/rc-ui-menu.c:195
 msgid "Open and play the music file"
 msgstr "音楽ファイルを開いて再生する"
 
-#: ../ui/rc-ui-menu.c:186
+#: ../ui/rc-ui-menu.c:198
 msgid "Open _Location"
 msgstr "場所を開く(_L)"
 
-#: ../ui/rc-ui-menu.c:187
+#: ../ui/rc-ui-menu.c:199
 msgid "Open a location and play"
 msgstr "場所を開いて再生する"
 
-#: ../ui/rc-ui-menu.c:190
+#: ../ui/rc-ui-menu.c:202
 msgid "_Preferences"
 msgstr "設定(_P)"
 
-#: ../ui/rc-ui-menu.c:191
+#: ../ui/rc-ui-menu.c:203
 msgid "Configure the player"
 msgstr "プレイヤーを設定する"
 
-#: ../ui/rc-ui-menu.c:194
+#: ../ui/rc-ui-menu.c:206
 msgid "Plu_gins"
 msgstr "プラグイン(_G)"
 
-#: ../ui/rc-ui-menu.c:195
+#: ../ui/rc-ui-menu.c:207
 msgid "Configure plugins"
 msgstr "プラグインの設定"
 
-#: ../ui/rc-ui-menu.c:198 ../ui/rc-ui-menu.c:394
+#: ../ui/rc-ui-menu.c:210 ../ui/rc-ui-menu.c:406
 msgid "_Quit"
 msgstr "終了(_Q)"
 
-#: ../ui/rc-ui-menu.c:199 ../ui/rc-ui-menu.c:395
+#: ../ui/rc-ui-menu.c:211 ../ui/rc-ui-menu.c:407
 msgid "Quit this player"
 msgstr "このプレーヤを終了する"
 
-#: ../ui/rc-ui-menu.c:202 ../ui/rc-ui-menu.c:306
+#: ../ui/rc-ui-menu.c:214 ../ui/rc-ui-menu.c:318
 msgid "_New Playlist"
 msgstr "新しいプレイリスト(_N)"
 
-#: ../ui/rc-ui-menu.c:203 ../ui/rc-ui-menu.c:307
+#: ../ui/rc-ui-menu.c:215 ../ui/rc-ui-menu.c:319
 msgid "Create a new playlist"
 msgstr "新しいプレイリストを生成する"
 
-#: ../ui/rc-ui-menu.c:206 ../ui/rc-ui-menu.c:310
+#: ../ui/rc-ui-menu.c:218 ../ui/rc-ui-menu.c:322
 msgid "Re_name Playlist"
 msgstr "プレイリストの名前の変更(_N)"
 
-#: ../ui/rc-ui-menu.c:207 ../ui/rc-ui-menu.c:311
+#: ../ui/rc-ui-menu.c:219 ../ui/rc-ui-menu.c:323
 msgid "Rename the playlist"
 msgstr "プレイリストの名前を変更する"
 
-#: ../ui/rc-ui-menu.c:210 ../ui/rc-ui-menu.c:314
+#: ../ui/rc-ui-menu.c:222 ../ui/rc-ui-menu.c:326
 msgid "R_emove Playlist"
 msgstr "プレイリストの削除(_E)"
 
-#: ../ui/rc-ui-menu.c:211 ../ui/rc-ui-menu.c:315
+#: ../ui/rc-ui-menu.c:223 ../ui/rc-ui-menu.c:327
 msgid "Remove the playlist"
 msgstr "プレイリストを削除する"
 
-#: ../ui/rc-ui-menu.c:214
+#: ../ui/rc-ui-menu.c:226
 msgid "_Export Playlist"
 msgstr "プレイリストのエクスポート(_E)"
 
-#: ../ui/rc-ui-menu.c:215 ../ui/rc-ui-menu.c:319
+#: ../ui/rc-ui-menu.c:227 ../ui/rc-ui-menu.c:331
 msgid "Export music to a playlist"
 msgstr "プレイリストをファイルへセーフする"
 
-#: ../ui/rc-ui-menu.c:218
+#: ../ui/rc-ui-menu.c:230
 msgid "Export _All Playlists"
 msgstr "全てのプレイリストのエクスポート(_A)"
 
-#: ../ui/rc-ui-menu.c:219
+#: ../ui/rc-ui-menu.c:231
 msgid "Export all playlists to a folder"
 msgstr "全てのプレイリストをフォルダの中にファイルへセーフする"
 
-#: ../ui/rc-ui-menu.c:222 ../ui/rc-ui-menu.c:322
+#: ../ui/rc-ui-menu.c:234 ../ui/rc-ui-menu.c:334
 msgid "Import _Music"
 msgstr "ファイルのインポート(_M)"
 
-#: ../ui/rc-ui-menu.c:223 ../ui/rc-ui-menu.c:323
+#: ../ui/rc-ui-menu.c:235 ../ui/rc-ui-menu.c:335
 msgid "Import music file"
 msgstr "音楽ファイルをインポートする"
 
-#: ../ui/rc-ui-menu.c:226 ../ui/rc-ui-menu.c:326
+#: ../ui/rc-ui-menu.c:238 ../ui/rc-ui-menu.c:338
 msgid "Import From _Playlist"
 msgstr "プレイリストのインポート(_P)"
 
-#: ../ui/rc-ui-menu.c:227 ../ui/rc-ui-menu.c:327
+#: ../ui/rc-ui-menu.c:239 ../ui/rc-ui-menu.c:339
 msgid "Import music from playlist"
 msgstr "プレイリストファイルから音楽をインポートする"
 
-#: ../ui/rc-ui-menu.c:230
+#: ../ui/rc-ui-menu.c:242
 msgid "Import From _Folder"
 msgstr "プレイリストのインポート(_P)"
 
-#: ../ui/rc-ui-menu.c:231
+#: ../ui/rc-ui-menu.c:243
 msgid "Import all music from folder"
 msgstr "フォルダから全ての音楽ファイルをインポートする"
 
-#: ../ui/rc-ui-menu.c:234
+#: ../ui/rc-ui-menu.c:246
 msgid "_Remove Music"
 msgstr "プレイリストから音楽を削除する(_R)"
 
-#: ../ui/rc-ui-menu.c:235 ../ui/rc-ui-menu.c:343
+#: ../ui/rc-ui-menu.c:247 ../ui/rc-ui-menu.c:355
 msgid "Remove music from playlist"
 msgstr "プレイリストから音楽を削除する"
 
-#: ../ui/rc-ui-menu.c:238 ../ui/rc-ui-menu.c:330
+#: ../ui/rc-ui-menu.c:250 ../ui/rc-ui-menu.c:342
 msgid "Select _All"
 msgstr "すべて選択(_A)"
 
-#: ../ui/rc-ui-menu.c:239 ../ui/rc-ui-menu.c:331
+#: ../ui/rc-ui-menu.c:251 ../ui/rc-ui-menu.c:343
 msgid "Select all music in the playlist"
 msgstr "すべての音楽を選択する"
 
-#: ../ui/rc-ui-menu.c:242 ../ui/rc-ui-menu.c:346
+#: ../ui/rc-ui-menu.c:254 ../ui/rc-ui-menu.c:358
 msgid "Re_fresh Playlist"
 msgstr "プレイリストのリフレッシュ(_F)"
 
-#: ../ui/rc-ui-menu.c:243 ../ui/rc-ui-menu.c:347
+#: ../ui/rc-ui-menu.c:255 ../ui/rc-ui-menu.c:359
 msgid "Refresh music information in the playlist"
 msgstr "プレイリストの中の音楽の情報を更新する"
 
-#: ../ui/rc-ui-menu.c:246 ../ui/rc-ui-menu.c:334
+#: ../ui/rc-ui-menu.c:258 ../ui/rc-ui-menu.c:346
 msgid "Bind _Lyric File"
 msgstr "歌詞ファイルと関連付けする(_L)"
 
-#: ../ui/rc-ui-menu.c:247 ../ui/rc-ui-menu.c:335
+#: ../ui/rc-ui-menu.c:259 ../ui/rc-ui-menu.c:347
 msgid "Bind lyric file to the selected music"
 msgstr "選択した音楽に歌詞ファイルと関連付けする"
 
-#: ../ui/rc-ui-menu.c:250 ../ui/rc-ui-menu.c:338
+#: ../ui/rc-ui-menu.c:262 ../ui/rc-ui-menu.c:350
 msgid "Bind Al_bum File"
 msgstr "アルバムファイルと関連付けする(_B)"
 
-#: ../ui/rc-ui-menu.c:251 ../ui/rc-ui-menu.c:339
+#: ../ui/rc-ui-menu.c:263 ../ui/rc-ui-menu.c:351
 msgid "Bind album file to the selected music"
 msgstr "選択した音楽にアルバムファイルと関連付けする"
 
-#: ../ui/rc-ui-menu.c:254
+#: ../ui/rc-ui-menu.c:266
 msgid "_Audio Effects"
 msgstr "音声効果(_A)"
 
-#: ../ui/rc-ui-menu.c:255
+#: ../ui/rc-ui-menu.c:267
 msgid "Adjust the audio effects"
 msgstr "音声効果を設定する"
 
-#: ../ui/rc-ui-menu.c:258 ../ui/rc-ui-menu.c:370
+#: ../ui/rc-ui-menu.c:270 ../ui/rc-ui-menu.c:382
 msgid "_Play/Pause"
 msgstr "再生/ポース(_P)"
 
-#: ../ui/rc-ui-menu.c:259 ../ui/rc-ui-menu.c:371
+#: ../ui/rc-ui-menu.c:271 ../ui/rc-ui-menu.c:383
 msgid "Play or pause the music"
 msgstr "音楽を再生する、またはポースする"
 
-#: ../ui/rc-ui-menu.c:262 ../ui/rc-ui-menu.c:374
+#: ../ui/rc-ui-menu.c:274 ../ui/rc-ui-menu.c:386
 msgid "_Stop"
 msgstr "停止(_S)"
 
-#: ../ui/rc-ui-menu.c:263 ../ui/rc-ui-menu.c:375
+#: ../ui/rc-ui-menu.c:275 ../ui/rc-ui-menu.c:387
 msgid "Stop the music"
 msgstr "音楽の再生を停止する"
 
-#: ../ui/rc-ui-menu.c:266 ../ui/rc-ui-menu.c:378
+#: ../ui/rc-ui-menu.c:278 ../ui/rc-ui-menu.c:390
 msgid "Pre_vious"
 msgstr "前へ(_V)"
 
-#: ../ui/rc-ui-menu.c:267 ../ui/rc-ui-menu.c:379
+#: ../ui/rc-ui-menu.c:279 ../ui/rc-ui-menu.c:391
 msgid "Play previous music"
 msgstr "前の音楽を再生する"
 
-#: ../ui/rc-ui-menu.c:270 ../ui/rc-ui-menu.c:382
+#: ../ui/rc-ui-menu.c:282 ../ui/rc-ui-menu.c:394
 msgid "_Next"
 msgstr "次へ(_N)"
 
-#: ../ui/rc-ui-menu.c:271 ../ui/rc-ui-menu.c:383
+#: ../ui/rc-ui-menu.c:283 ../ui/rc-ui-menu.c:395
 msgid "Play next music"
 msgstr "次の音楽を再生する"
 
-#: ../ui/rc-ui-menu.c:274
+#: ../ui/rc-ui-menu.c:286
 msgid "_Backward"
 msgstr "巻き戻し(_B)"
 
-#: ../ui/rc-ui-menu.c:275
+#: ../ui/rc-ui-menu.c:287
 msgid "Backward 5 seconds"
 msgstr "5秒巻き戻し"
 
-#: ../ui/rc-ui-menu.c:278
+#: ../ui/rc-ui-menu.c:290
 msgid "_Forward"
 msgstr "早送り(_F)"
 
-#: ../ui/rc-ui-menu.c:279
+#: ../ui/rc-ui-menu.c:291
 msgid "Forward 5 seconds"
 msgstr "5秒早送り"
 
-#: ../ui/rc-ui-menu.c:282
+#: ../ui/rc-ui-menu.c:294
 msgid "_Increase Volume"
 msgstr "音量を上げる(_I)"
 
-#: ../ui/rc-ui-menu.c:283
+#: ../ui/rc-ui-menu.c:295
 msgid "Increase the volume"
 msgstr "音量を上げる"
 
-#: ../ui/rc-ui-menu.c:286
+#: ../ui/rc-ui-menu.c:298
 msgid "_Decrease Volume"
 msgstr "音量を下げる(_D)"
 
-#: ../ui/rc-ui-menu.c:287
+#: ../ui/rc-ui-menu.c:299
 msgid "Decrease the volume"
 msgstr "音量を下げる"
 
-#: ../ui/rc-ui-menu.c:290
+#: ../ui/rc-ui-menu.c:302
 msgid "_Configure Rating Limited Mode"
 msgstr "評価制限再生モードの設定(_C)"
 
-#: ../ui/rc-ui-menu.c:291
+#: ../ui/rc-ui-menu.c:303
 msgid "Configure Rating Limited Playing Mode"
 msgstr "評価制限再生モードの設定"
 
-#: ../ui/rc-ui-menu.c:294 ../ui/rc-ui-menu.c:390
+#: ../ui/rc-ui-menu.c:306 ../ui/rc-ui-menu.c:402
 msgid "_About"
 msgstr "情報(_A)"
 
-#: ../ui/rc-ui-menu.c:295 ../ui/rc-ui-menu.c:391
+#: ../ui/rc-ui-menu.c:307 ../ui/rc-ui-menu.c:403
 msgid "About this player"
 msgstr "このプレーヤーの情報"
 
-#: ../ui/rc-ui-menu.c:298
+#: ../ui/rc-ui-menu.c:310
 msgid "_Bug Report"
 msgstr "バッグリポート(_B)"
 
-#: ../ui/rc-ui-menu.c:299
+#: ../ui/rc-ui-menu.c:311
 msgid "Report bugs"
 msgstr "バッグをリポートする"
 
-#: ../ui/rc-ui-menu.c:302
+#: ../ui/rc-ui-menu.c:314
 msgid "_Supported Format"
 msgstr "サポートされたフォーマット(_S)"
 
-#: ../ui/rc-ui-menu.c:303
+#: ../ui/rc-ui-menu.c:315
 msgid "Check the supported music format of this player"
 msgstr "サポートされたオーディオフォーマットをチェックする"
 
-#: ../ui/rc-ui-menu.c:318
+#: ../ui/rc-ui-menu.c:330
 msgid "E_xport Playlist"
 msgstr "プレイリストのエクスポート(_X)"
 
-#: ../ui/rc-ui-menu.c:342
+#: ../ui/rc-ui-menu.c:354
 msgid "R_emove Music"
 msgstr "プレイリストから音楽を削除する(_E)"
 
-#: ../ui/rc-ui-menu.c:350
+#: ../ui/rc-ui-menu.c:362
 msgid "_Save Album Image As"
 msgstr "アルバム画像を保存する(_S)"
 
-#: ../ui/rc-ui-menu.c:351
+#: ../ui/rc-ui-menu.c:363
 msgid "Save the album image"
 msgstr "アルバム画像を保存する"
 
-#: ../ui/rc-ui-menu.c:354 ../ui/rc-ui-window.c:720
+#: ../ui/rc-ui-menu.c:366 ../ui/rc-ui-window.c:722
 msgid "Importing: 0 remaining"
 msgstr "インポート中: 0件残り"
 
-#: ../ui/rc-ui-menu.c:358 ../ui/rc-ui-window.c:760
+#: ../ui/rc-ui-menu.c:370 ../ui/rc-ui-window.c:762
 msgid "Refreshing: 0 remaining"
 msgstr "リフレシュ中: 0件残り"
 
-#: ../ui/rc-ui-menu.c:362
+#: ../ui/rc-ui-menu.c:374
 msgid "Stop _importing"
 msgstr "インポートの終止(_I)"
 
-#: ../ui/rc-ui-menu.c:363
+#: ../ui/rc-ui-menu.c:375
 msgid "Terminate the remaining importing jobs."
 msgstr "残りインポート任務を終止する"
 
-#: ../ui/rc-ui-menu.c:366
+#: ../ui/rc-ui-menu.c:378
 msgid "Stop _refreshing"
 msgstr "リフレシュの終止(_R)"
 
-#: ../ui/rc-ui-menu.c:367
+#: ../ui/rc-ui-menu.c:379
 msgid "Terminate the remaining refreshing jobs."
 msgstr "残りリフレシュ任務を終止する"
 
-#: ../ui/rc-ui-menu.c:386
+#: ../ui/rc-ui-menu.c:398
 msgid "S_how Player"
 msgstr "プレイヤーを表現する"
 
-#: ../ui/rc-ui-menu.c:387
+#: ../ui/rc-ui-menu.c:399
 msgid "Show the window of player"
 msgstr "プレイヤーのウィンドウを表現する"
 
-#: ../ui/rc-ui-menu.c:404
+#: ../ui/rc-ui-menu.c:416
 msgid "_No Repeat"
 msgstr "リピートしない(_N)"
 
-#: ../ui/rc-ui-menu.c:405
+#: ../ui/rc-ui-menu.c:417
 msgid "No repeat"
 msgstr "リピートしない"
 
-#: ../ui/rc-ui-menu.c:407
+#: ../ui/rc-ui-menu.c:419
 msgid "Single _Music Repeat"
 msgstr "一つの曲をリピートする(_M)"
 
-#: ../ui/rc-ui-menu.c:408
+#: ../ui/rc-ui-menu.c:420
 msgid "Repeat playing single music"
 msgstr "一つの曲をリピート再生する"
 
-#: ../ui/rc-ui-menu.c:410
+#: ../ui/rc-ui-menu.c:422
 msgid "Single _Playlist Repeat"
 msgstr "一つのプレイリストをリピートする(_M)"
 
-#: ../ui/rc-ui-menu.c:411
+#: ../ui/rc-ui-menu.c:423
 msgid "Repeat playing single playlist"
 msgstr "一つのプレイリストをリピート再生する"
 
-#: ../ui/rc-ui-menu.c:413
+#: ../ui/rc-ui-menu.c:425
 msgid "_All Playlists Repeat"
 msgstr "全体をリピートする(_A)"
 
-#: ../ui/rc-ui-menu.c:414
+#: ../ui/rc-ui-menu.c:426
 msgid "Repeat playing all playlists"
 msgstr "全てのプレイリストをリピート再生する"
 
-#: ../ui/rc-ui-menu.c:422
+#: ../ui/rc-ui-menu.c:434
 msgid "_No Random"
 msgstr "ランダムしない(_N)"
 
-#: ../ui/rc-ui-menu.c:423
+#: ../ui/rc-ui-menu.c:435
 msgid "No random playing"
 msgstr "ランダムしない"
 
-#: ../ui/rc-ui-menu.c:425
+#: ../ui/rc-ui-menu.c:437
 msgid "_Single Playlist Random"
 msgstr "プレイリスト内の曲をランダム再生する(_S)"
 
-#: ../ui/rc-ui-menu.c:426
+#: ../ui/rc-ui-menu.c:438
 msgid "Random playing a music in the playlist"
 msgstr "プレイリスト内の曲をランダム再生する"
 
-#: ../ui/rc-ui-menu.c:429
+#: ../ui/rc-ui-menu.c:441
 msgid "_All Playlists Random"
 msgstr "全体プレイリスト内の曲をランダム再生する(_A)"
 
-#: ../ui/rc-ui-menu.c:430
+#: ../ui/rc-ui-menu.c:442
 msgid "Random playing a music in all playlists"
 msgstr "全てのプレイリスト内の曲をランダム再生する"
 
-#: ../ui/rc-ui-menu.c:439 ../ui/rc-ui-menu.c:443
+#: ../ui/rc-ui-menu.c:451
+msgid "_No Visualize"
+msgstr ""
+
+#: ../ui/rc-ui-menu.c:452
+msgid "Disable visualize style"
+msgstr ""
+
+#: ../ui/rc-ui-menu.c:454
+msgid "_Mono Wavescope"
+msgstr ""
+
+#: ../ui/rc-ui-menu.c:455
+msgid "Wavescope with one channel"
+msgstr ""
+
+#: ../ui/rc-ui-menu.c:457
+msgid "Multi-_channel Wavescope"
+msgstr ""
+
+#: ../ui/rc-ui-menu.c:458
+msgid "Wavescope with multi-channel"
+msgstr ""
+
+#: ../ui/rc-ui-menu.c:460
+msgid "_Spectrum"
+msgstr ""
+
+#: ../ui/rc-ui-menu.c:461
+msgid "Spectrum"
+msgstr ""
+
+#: ../ui/rc-ui-menu.c:470 ../ui/rc-ui-menu.c:474
 msgid "Always On _Top"
 msgstr "常に最上に表示する(_T)"
 
-#: ../ui/rc-ui-menu.c:440 ../ui/rc-ui-menu.c:444
+#: ../ui/rc-ui-menu.c:471 ../ui/rc-ui-menu.c:475
 msgid "Always on top"
 msgstr "常に最上に表示する"
 
@@ -558,88 +594,88 @@ msgstr "常に最上に表示する"
 msgid "Plug-in Configuration"
 msgstr "プラグイン設定"
 
-#: ../ui/rc-ui-settings.c:125
+#: ../ui/rc-ui-settings.c:126
 msgid "_Auto play on startup"
 msgstr "起動時に自動再生する(_A)"
 
-#: ../ui/rc-ui-settings.c:127
+#: ../ui/rc-ui-settings.c:128
 msgid "_Load the last playing position"
 msgstr "前回停止した位置から再生する(_L)"
 
-#: ../ui/rc-ui-settings.c:129
+#: ../ui/rc-ui-settings.c:130
 msgid "Minimize to _tray"
 msgstr "トレーに最小化する(_T)"
 
-#: ../ui/rc-ui-settings.c:131
+#: ../ui/rc-ui-settings.c:132
 msgid "Minimize the window if the _close button is clicked"
 msgstr "ウィンドウを閉じられた場合、ウィンドウを最小化する(_C)"
 
-#: ../ui/rc-ui-settings.c:134
+#: ../ui/rc-ui-settings.c:135
 msgid "<b>General</b>"
 msgstr "<b>通常</b>"
 
-#: ../ui/rc-ui-settings.c:232
+#: ../ui/rc-ui-settings.c:233
 msgid "_Auto encoding detect (use system language settings)"
 msgstr "エンコードを自動的に検出する (システムの言語設定を使う) (_A)"
 
-#: ../ui/rc-ui-settings.c:236
+#: ../ui/rc-ui-settings.c:237
 msgid "Load playlist from _legacy version"
 msgstr "古いバルションからプレイリスト情報をロードする(_L)"
 
-#: ../ui/rc-ui-settings.c:238
+#: ../ui/rc-ui-settings.c:239
 msgid "ID3 Tag fallback character encodings"
 msgstr "ID3タグの予備エンコード"
 
-#: ../ui/rc-ui-settings.c:240
+#: ../ui/rc-ui-settings.c:241
 msgid "Lyric text fallback character encodings"
 msgstr "歌詞の予備エンコード"
 
-#: ../ui/rc-ui-settings.c:243
+#: ../ui/rc-ui-settings.c:244
 msgid "<b>Metadata</b>"
 msgstr "<b>メタデータ</b>"
 
-#: ../ui/rc-ui-settings.c:255
+#: ../ui/rc-ui-settings.c:256
 msgid "<b>Legacy Support</b>"
 msgstr "<b>古いバルションのサポート</b>"
 
-#: ../ui/rc-ui-settings.c:376
+#: ../ui/rc-ui-settings.c:377
 msgid "Disable theme (need to restart the player)"
 msgstr "テーマを無効する (プレイヤーを再起動が必要です)"
 
-#: ../ui/rc-ui-settings.c:383
+#: ../ui/rc-ui-settings.c:384
 msgid "<b>Theme</b>"
 msgstr "<b>テーマ</b>"
 
-#: ../ui/rc-ui-settings.c:400
+#: ../ui/rc-ui-settings.c:401
 #, c-format
 msgid "%s (Embedded)"
 msgstr "%s (内蔵)"
 
-#: ../ui/rc-ui-settings.c:659
+#: ../ui/rc-ui-settings.c:680
 msgid "Hide cover _image"
 msgstr "アルバム画像を隠す(_I)"
 
-#: ../ui/rc-ui-settings.c:661
+#: ../ui/rc-ui-settings.c:682
 msgid "Hide _lyric labels"
 msgstr "歌詞を隠す(_L)"
 
-#: ../ui/rc-ui-settings.c:663
+#: ../ui/rc-ui-settings.c:684
 msgid "Hide _spectrum show"
 msgstr "スペクトラムを隠す"
 
-#: ../ui/rc-ui-settings.c:665
+#: ../ui/rc-ui-settings.c:686
 msgid "Show _metadata in multi-columns"
 msgstr "メタデータを複数列で表示する"
 
-#: ../ui/rc-ui-settings.c:683
+#: ../ui/rc-ui-settings.c:706
 msgid "<b>Visible Columns</b>"
 msgstr "<b>一覧に表示する項目</b>"
 
-#: ../ui/rc-ui-settings.c:686
+#: ../ui/rc-ui-settings.c:709
 msgid "Title column format: "
 msgstr "タイトル文字フォーマット: "
 
-#: ../ui/rc-ui-settings.c:688
+#: ../ui/rc-ui-settings.c:711
 msgid ""
 "<b>Hint</b>: Use <i>%TITLE</i> as title string, <i>%ARTIST</i> as artist "
 "string, <i>%ALBUM</i> as album string, somehow <i>%TITLE</i> must be "
@@ -649,31 +685,31 @@ msgstr ""
 "トとして使う、<i>%ALBUM</i>をアルバムとして使う。ただしフォーマットの文字列の"
 "中に、<i>%TITLE</i> は必要なものだ。"
 
-#: ../ui/rc-ui-settings.c:726
+#: ../ui/rc-ui-settings.c:751
 msgid "<b>Main Window</b>"
 msgstr "<b>メインウインドウ</b>"
 
-#: ../ui/rc-ui-settings.c:732
+#: ../ui/rc-ui-settings.c:757
 msgid "<b>List Views</b>"
 msgstr "<b>リストビュー</b>"
 
-#: ../ui/rc-ui-settings.c:843
+#: ../ui/rc-ui-settings.c:873
 msgid "General"
 msgstr "通常"
 
-#: ../ui/rc-ui-settings.c:844
+#: ../ui/rc-ui-settings.c:874
 msgid "Playlist"
 msgstr "プレーリスト"
 
-#: ../ui/rc-ui-settings.c:845
+#: ../ui/rc-ui-settings.c:875
 msgid "Appearance"
 msgstr "外観"
 
-#: ../ui/rc-ui-settings.c:846
+#: ../ui/rc-ui-settings.c:876
 msgid "Interface"
 msgstr "インタフェイス"
 
-#: ../ui/rc-ui-settings.c:848
+#: ../ui/rc-ui-settings.c:878
 msgid "Player Preferences"
 msgstr "プレイヤー設定"
 
@@ -681,11 +717,11 @@ msgstr "プレイヤー設定"
 msgid "A music player based on GTK+ 3.0 & GStreamer 0.10"
 msgstr "GTK+ 3.0 と GStreamer 0.10 に基づく音楽プレイヤーです"
 
-#: ../ui/rc-ui-dialog.c:137 ../ui/rc-ui-dialog.c:735
+#: ../ui/rc-ui-dialog.c:137 ../ui/rc-ui-dialog.c:738
 msgid "All supported music files(*.FLAC;*.OGG;*.MP3;*.WAV;*.WMA...)"
 msgstr "サポートされた音楽ファイル (*.FLAC;*.OGG;*.MP3;*.WAV;*.WMA...)"
 
-#: ../ui/rc-ui-dialog.c:140 ../ui/rc-ui-dialog.c:738
+#: ../ui/rc-ui-dialog.c:140 ../ui/rc-ui-dialog.c:741
 msgid "Select the music you want to add..."
 msgstr "音楽ファイルを選択してプレイリストに追加する…"
 
@@ -701,7 +737,7 @@ msgstr "M3U プレーリスト (*.M3U)"
 msgid "Load the playlist..."
 msgstr "プレーリストをロードする…"
 
-#: ../ui/rc-ui-dialog.c:291 ../ui/rc-ui-dialog.c:690
+#: ../ui/rc-ui-dialog.c:291 ../ui/rc-ui-dialog.c:693
 msgid "Save the playlist..."
 msgstr "プレーリストを保存する…"
 
@@ -741,7 +777,7 @@ msgstr "第一歌詞ファイルと関連付け"
 msgid "The second lyric file binding"
 msgstr "第二歌詞ファイルと関連付け"
 
-#: ../ui/rc-ui-dialog.c:432 ../ui/rc-ui-dialog.c:438 ../ui/rc-ui-dialog.c:604
+#: ../ui/rc-ui-dialog.c:432 ../ui/rc-ui-dialog.c:438 ../ui/rc-ui-dialog.c:606
 msgid "Image File (*.JPG, *.BMP, *.PNG)..."
 msgstr "画像ファイル (*.JPG, *.BMP, *.PNG)..."
 
@@ -749,110 +785,110 @@ msgstr "画像ファイル (*.JPG, *.BMP, *.PNG)..."
 msgid "Lyric File (*.LRC)"
 msgstr "歌詞ファイル (*.LRC)"
 
-#: ../ui/rc-ui-dialog.c:588
+#: ../ui/rc-ui-dialog.c:590
 msgid "Set album file binding"
 msgstr "アルバム画像ファイルと関連付けの設定"
 
-#: ../ui/rc-ui-dialog.c:593
+#: ../ui/rc-ui-dialog.c:595
 msgid "_Bind album image file to the music"
 msgstr "アルバム画像ファイルと関連付けする(_B)"
 
-#: ../ui/rc-ui-dialog.c:595
+#: ../ui/rc-ui-dialog.c:597
 msgid "_Do not bind album file"
 msgstr "アルバム画像ファイルと関連付けしない(_D)"
 
-#: ../ui/rc-ui-dialog.c:596
+#: ../ui/rc-ui-dialog.c:598
 msgid "Select a album image file"
 msgstr "アルバム画像ファイルを選択する"
 
-#: ../ui/rc-ui-dialog.c:783
+#: ../ui/rc-ui-dialog.c:786
 msgid "Open Location"
 msgstr "場所を開く"
 
-#: ../ui/rc-ui-dialog.c:789
+#: ../ui/rc-ui-dialog.c:792
 msgid "Enter the URL of the file you would like to open:"
 msgstr "オープンするファイルのアドレスを入力してください:"
 
-#: ../ui/rc-ui-dialog.c:848
+#: ../ui/rc-ui-dialog.c:851
 msgid "Supported"
 msgstr "サポートされた"
 
-#: ../ui/rc-ui-dialog.c:858
+#: ../ui/rc-ui-dialog.c:861
 msgid "Supported Audio Format"
 msgstr "サポートされたオーディオフォーマット"
 
-#: ../ui/rc-ui-dialog.c:1002
+#: ../ui/rc-ui-dialog.c:1005
 msgid ""
 "The player does not exit normally, do you want to use the auto-saved "
 "playlist data?"
 msgstr "前回異常終了発生した、自動保存したプレイリストデータを使いたいのか？"
 
-#: ../ui/rc-ui-dialog.c:1021
+#: ../ui/rc-ui-dialog.c:1024
 msgid "Do you want to load playlist data from legacy version of RhythmCat?"
 msgstr "古いRhythmCatからプレイリスト情報をロードしたいのか？"
 
-#: ../ui/rc-ui-dialog.c:1061
+#: ../ui/rc-ui-dialog.c:1064
 msgid "Rating Limited Playing Mode"
 msgstr "評価制限再生モード"
 
-#: ../ui/rc-ui-dialog.c:1065
+#: ../ui/rc-ui-dialog.c:1068
 msgid "_Enable rating limited playing mode"
 msgstr "評価制限再生モードを有効する(_E)"
 
-#: ../ui/rc-ui-dialog.c:1068
+#: ../ui/rc-ui-dialog.c:1071
 msgid ""
 "Play the music whose rating is _greater than or equal\n"
 "to the rating limit value"
 msgstr "設定した評価より以上の音楽を再生する(_G)"
 
-#: ../ui/rc-ui-dialog.c:1071
+#: ../ui/rc-ui-dialog.c:1074
 msgid ""
 "Play the music whose rating is _lesser than or equal to\n"
 "the rating limit value"
 msgstr "設定した評価より以下の音楽を再生する(_L)"
 
-#: ../ui/rc-ui-dialog.c:1073
+#: ../ui/rc-ui-dialog.c:1076
 msgid "Rating limit value"
 msgstr "評価制限値"
 
-#: ../ui/rc-ui-window.c:192 ../ui/rc-ui-window.c:362 ../ui/rc-ui-window.c:1318
+#: ../ui/rc-ui-window.c:190 ../ui/rc-ui-window.c:364 ../ui/rc-ui-window.c:1336
 msgid "Unknown Format"
 msgstr "不明なフォーマット"
 
-#: ../ui/rc-ui-window.c:194
+#: ../ui/rc-ui-window.c:192
 #, c-format
 msgid "%d kbps "
 msgstr "%d kbps　"
 
-#: ../ui/rc-ui-window.c:197
+#: ../ui/rc-ui-window.c:195
 #, c-format
 msgid "%d Hz "
 msgstr "%d Hz "
 
-#: ../ui/rc-ui-window.c:201
+#: ../ui/rc-ui-window.c:199
 msgid "Mono"
 msgstr "モノ"
 
-#: ../ui/rc-ui-window.c:204
+#: ../ui/rc-ui-window.c:202
 msgid "Stereo"
 msgstr "ステレオ"
 
-#: ../ui/rc-ui-window.c:209
+#: ../ui/rc-ui-window.c:207
 #, c-format
 msgid "%d channels"
 msgstr "%d チャネル"
 
-#: ../ui/rc-ui-window.c:705
+#: ../ui/rc-ui-window.c:707
 #, c-format
 msgid "Importing: %d remaining"
 msgstr "インポートしている: %d 項残り"
 
-#: ../ui/rc-ui-window.c:745
+#: ../ui/rc-ui-window.c:747
 #, c-format
 msgid "Refreshing: %d remaining"
 msgstr "リフレシュしている: %d 項残り"
 
-#: ../ui/rc-main.c:327
+#: ../ui/rc-main.c:369
 #, c-format
 msgid ""
 "RhythmCat2, library version %d.%d.%d\n"
@@ -863,19 +899,19 @@ msgstr ""
 "著作権 (C) 2012 SuperCat <supercatexpert@gmail.com>\n"
 "GTK+ 3.0 と GStreamer 0.10 に基づく音楽プレイヤーです\n"
 
-#: ../ui/rc-main.c:415
+#: ../ui/rc-main.c:459
 msgid "Enable debug mode"
 msgstr "ディバッグモードを有効する"
 
-#: ../ui/rc-main.c:417
+#: ../ui/rc-main.c:461
 msgid "Use malloc function in stardard C library"
 msgstr "C言語の標準ライブラリのmallocを使う"
 
-#: ../ui/rc-main.c:422
+#: ../ui/rc-main.c:466
 msgid "Output version information and exit"
 msgstr "バルション情報を出力して終了する"
 
-#: ../ui/rc-main.c:459
+#: ../ui/rc-main.c:503
 #, c-format
 msgid ""
 "%s\n"
@@ -884,7 +920,7 @@ msgstr ""
 "%s\n"
 "'%s --help'を使って、ヘルプのオプションを全て表示する。\n"
 
-#: ../ui/rc-main.c:526
+#: ../ui/rc-main.c:570
 msgid "Default Playlist"
 msgstr "デフォルトプレーリスト"
 

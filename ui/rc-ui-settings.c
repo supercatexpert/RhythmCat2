@@ -68,6 +68,7 @@ typedef struct RCUiSettingsPrivate
     GtkWidget *if_showyecolumn_check_button;
     GtkWidget *if_showftcolumn_check_button;
     GtkWidget *if_showrtcolumn_check_button;
+    GtkWidget *if_showgecolumn_check_button;
 }RCUiSettingsPrivate;
 
 static RCUiSettingsPrivate settings_priv = {0};
@@ -520,17 +521,26 @@ static void rc_ui_settings_if_multicolumn_toggled(GtkToggleButton *button,
              column_flag, NULL);
         if(column_flag)
             column_flags |= RC_UI_LISTVIEW_PLAYLIST_COLUMN_FTYPE;
+        column_flag = rclib_settings_get_boolean("MainUI",
+            "PlaylistColumnRatingEnabled", NULL);
         g_object_set(priv->if_showrtcolumn_check_button, "active",
              column_flag, NULL);
         if(column_flag)
             column_flags |= RC_UI_LISTVIEW_PLAYLIST_COLUMN_RATING;
+        column_flag = rclib_settings_get_boolean("MainUI",
+            "PlaylistColumnGenreEnabled", NULL);
+        g_object_set(priv->if_showgecolumn_check_button, "active",
+             column_flag, NULL);
+        if(column_flag)
+            column_flags |= RC_UI_LISTVIEW_PLAYLIST_COLUMN_GENRE;    
         rc_ui_listview_playlist_set_enabled_columns(
             RC_UI_LISTVIEW_PLAYLIST_COLUMN_ARTIST |
             RC_UI_LISTVIEW_PLAYLIST_COLUMN_ALBUM |
             RC_UI_LISTVIEW_PLAYLIST_COLUMN_TRACK |
             RC_UI_LISTVIEW_PLAYLIST_COLUMN_YEAR |
             RC_UI_LISTVIEW_PLAYLIST_COLUMN_FTYPE |
-            RC_UI_LISTVIEW_PLAYLIST_COLUMN_RATING,
+            RC_UI_LISTVIEW_PLAYLIST_COLUMN_RATING |
+            RC_UI_LISTVIEW_PLAYLIST_COLUMN_GENRE,
             column_flags);
         g_object_set(priv->if_multicolumn_check_button, "active", TRUE,
             NULL);
@@ -639,6 +649,17 @@ static void rc_ui_settings_if_showcolumn_toggled(GtkToggleButton *button,
         rclib_settings_set_boolean("MainUI",
            "PlaylistColumnRatingEnabled", flag);
     }
+    else if(button==(GtkToggleButton *)priv->if_showgecolumn_check_button)
+    {
+        if(flag)
+            column_flags = RC_UI_LISTVIEW_PLAYLIST_COLUMN_GENRE;
+        else
+            column_flags = 0;
+        rc_ui_listview_playlist_set_enabled_columns(
+            RC_UI_LISTVIEW_PLAYLIST_COLUMN_GENRE, column_flags);
+        rclib_settings_set_boolean("MainUI",
+           "PlaylistColumnGenreEnabled", flag);
+    }
 }
 
 static inline GtkWidget *rc_ui_settings_interface_build(
@@ -676,6 +697,8 @@ static inline GtkWidget *rc_ui_settings_interface_build(
         _("Format"));
     priv->if_showrtcolumn_check_button = gtk_check_button_new_with_mnemonic(
         _("Rating"));
+    priv->if_showgecolumn_check_button = gtk_check_button_new_with_mnemonic(
+        _("Genre"));
     priv->if_titleformat_grid = gtk_grid_new();
     showcolumn_frame_grid = gtk_grid_new();
     priv->if_showcolumn_frame = gtk_frame_new(NULL);
@@ -709,6 +732,8 @@ static inline GtkWidget *rc_ui_settings_interface_build(
         priv->if_showalcolumn_check_button, 1, 0, 1, 1);
     gtk_grid_attach(GTK_GRID(showcolumn_frame_grid),
         priv->if_showtrcolumn_check_button, 2, 0, 1, 1);
+    gtk_grid_attach(GTK_GRID(showcolumn_frame_grid),
+        priv->if_showgecolumn_check_button, 3, 0, 1, 1);
     gtk_grid_attach(GTK_GRID(showcolumn_frame_grid),
         priv->if_showyecolumn_check_button, 0, 1, 1, 1);
     gtk_grid_attach(GTK_GRID(showcolumn_frame_grid),
@@ -763,6 +788,9 @@ static inline GtkWidget *rc_ui_settings_interface_build(
     g_object_set(priv->if_showrtcolumn_check_button, "active",
         column_flags & RC_UI_LISTVIEW_PLAYLIST_COLUMN_RATING ? TRUE: FALSE,
         NULL);
+    g_object_set(priv->if_showgecolumn_check_button, "active",
+        column_flags & RC_UI_LISTVIEW_PLAYLIST_COLUMN_GENRE ? TRUE: FALSE,
+        NULL);
     if(rc_ui_listview_playlist_get_column_display_mode())
     {
         g_object_set(priv->if_multicolumn_check_button, "active", TRUE,
@@ -812,6 +840,8 @@ static inline GtkWidget *rc_ui_settings_interface_build(
     g_signal_connect(priv->if_showftcolumn_check_button, "toggled",
         G_CALLBACK(rc_ui_settings_if_showcolumn_toggled), priv);
     g_signal_connect(priv->if_showrtcolumn_check_button, "toggled",
+        G_CALLBACK(rc_ui_settings_if_showcolumn_toggled), priv);
+    g_signal_connect(priv->if_showgecolumn_check_button, "toggled",
         G_CALLBACK(rc_ui_settings_if_showcolumn_toggled), priv);
     return interface_grid;
 }

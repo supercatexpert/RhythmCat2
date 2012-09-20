@@ -86,6 +86,8 @@ struct _RCLibCueData {
     gchar *file;
     gchar *performer;
     gchar *title;
+    gchar *genre;
+    guint year;
     guint length;
     RCLibCueTrack *track;
 };
