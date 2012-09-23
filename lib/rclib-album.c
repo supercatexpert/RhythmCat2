@@ -98,6 +98,7 @@ static void rclib_album_uri_changed_cb(RCLibCore *core, const gchar *uri,
     RCLibDbPlaylistIter *reference;
     gchar *filename = NULL;
     gboolean flag = TRUE;
+    const gchar *tmp = NULL;
     RCLibAlbumPrivate *priv = (RCLibAlbumPrivate *)data;
     if(data==NULL) return;
     if(priv->album_data!=NULL)
@@ -110,7 +111,12 @@ static void rclib_album_uri_changed_cb(RCLibCore *core, const gchar *uri,
     }
     reference = (RCLibDbPlaylistIter *)rclib_core_get_db_reference();
     if(reference!=NULL)
-        filename = g_strdup(rclib_db_playlist_get_album_bind(reference));
+    {
+        rclib_db_playlist_data_iter_get(reference,
+            RCLIB_DB_PLAYLIST_DATA_TYPE_ALBUMFILE, &tmp,
+            RCLIB_DB_PLAYLIST_DATA_TYPE_NONE);
+        filename = g_strdup(tmp);
+    }
     if(filename==NULL)
         filename = rclib_util_search_cover(uri, NULL, NULL, NULL);
     if(filename!=NULL && g_file_test(filename, G_FILE_TEST_EXISTS))

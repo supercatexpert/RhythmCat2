@@ -615,7 +615,9 @@ static void rc_ui_listview_catalog_row_edited(GtkCellRendererText *renderer,
         rc_ui_list_model_get_catalog_store(), &iter, path_str))
         return;
     if(iter.user_data==NULL) return;
-    rclib_db_catalog_set_name((RCLibDbCatalogIter *)iter.user_data, new_text);
+    rclib_db_catalog_data_iter_set((RCLibDbCatalogIter *)iter.user_data,
+        RCLIB_DB_CATALOG_DATA_TYPE_NAME, new_text,
+        RCLIB_DB_CATALOG_DATA_TYPE_NONE);
 }
 
 static void rc_ui_listview_catalog_name_call_data_func(
@@ -709,8 +711,9 @@ static void rc_ui_playlist_view_rated_cb(RCUiCellRendererRating *renderer,
     if(model==NULL) return;
     if(!gtk_tree_model_get_iter_from_string(model, &iter, path))
         return;
-    rclib_db_playlist_set_rating((RCLibDbPlaylistIter *)iter.user_data,
-        rating);
+    rclib_db_playlist_data_iter_set((RCLibDbPlaylistIter *)iter.user_data,
+        RCLIB_DB_PLAYLIST_DATA_TYPE_RATING, rating,
+        RCLIB_DB_PLAYLIST_DATA_TYPE_NONE);
 }
 
 static void rc_ui_catalog_view_finalize(GObject *object)

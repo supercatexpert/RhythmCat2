@@ -86,7 +86,11 @@ static void rclib_main_update_db_metadata_cb(RCLibCore *core,
         RCLIB_DB_PLAYLIST_DATA_TYPE_NONE);
     rclib_db_playlist_update_metadata(iter, playlist_data);
     if(metadata->duration>0)
-        rclib_db_playlist_update_length(iter, metadata->duration);
+    {
+        rclib_db_playlist_data_iter_set(iter,
+            RCLIB_DB_PLAYLIST_DATA_TYPE_LENGTH, metadata->duration,
+            RCLIB_DB_PLAYLIST_DATA_TYPE_NONE);
+    }
     rclib_db_playlist_data_free(playlist_data);
 }
 
@@ -96,7 +100,9 @@ static void rclib_main_update_db_duration_cb(RCLibCore *core,
     RCLibDbPlaylistIter *iter = (RCLibDbPlaylistIter *)
         rclib_core_get_db_reference();
     if(iter==NULL || duration<0) return;
-    rclib_db_playlist_update_length(iter, duration);
+    rclib_db_playlist_data_iter_set(iter,
+        RCLIB_DB_PLAYLIST_DATA_TYPE_LENGTH, duration,
+        RCLIB_DB_PLAYLIST_DATA_TYPE_NONE);
 }
 
 static void rclib_main_catalog_delete_cb(RCLibDb *db,
@@ -130,7 +136,8 @@ static void rclib_main_error_cb(RCLibCore *core, const gchar *message,
     RCLibDbPlaylistIter *iter;
     iter = rclib_core_get_db_reference();
     if(iter==NULL) return;
-    rclib_db_playlist_set_type(iter, RCLIB_DB_PLAYLIST_TYPE_MISSING);
+    rclib_db_playlist_data_iter_set(iter, RCLIB_DB_PLAYLIST_DATA_TYPE_TYPE,
+        RCLIB_DB_PLAYLIST_TYPE_MISSING, RCLIB_DB_PLAYLIST_DATA_TYPE_NONE);
 }
 
 /**

@@ -147,14 +147,22 @@ static void rclib_lyric_uri_changed_cb(RCLibCore *core, const gchar *uri,
     gboolean flag2 = FALSE;
     const gchar *ptitle = NULL;
     const gchar *partist = NULL;
+    const gchar *tmp;
     rclib_lyric_clean(0);
     rclib_lyric_clean(1);
     iter = (RCLibDbPlaylistIter *)rclib_core_get_db_reference();
     if(iter!=NULL)
     {
-        lyric_path = g_strdup(rclib_db_playlist_get_lyric_bind(iter));
-        lyric_sec_path = g_strdup(
-            rclib_db_playlist_get_lyric_secondary_bind(iter));
+        tmp = NULL;
+        rclib_db_playlist_data_iter_get(iter,
+            RCLIB_DB_PLAYLIST_DATA_TYPE_LYRICFILE, &tmp,
+            RCLIB_DB_PLAYLIST_DATA_TYPE_NONE);
+        lyric_path = g_strdup(tmp);
+        tmp = NULL;
+        rclib_db_playlist_data_iter_get(iter,
+            RCLIB_DB_PLAYLIST_DATA_TYPE_LYRICSECFILE, &tmp,
+            RCLIB_DB_PLAYLIST_DATA_TYPE_NONE);
+        lyric_sec_path = g_strdup(tmp);
     }
     if(lyric_path==NULL)
         lyric_path = rclib_lyric_search_lyric(uri, NULL, NULL);

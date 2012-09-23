@@ -178,6 +178,7 @@ typedef enum {
  *     path (string)
  * @RCLIB_DB_LIBRARY_DATA_TYPE_ALBUMFILE: the album image file path (string)
  * @RCLIB_DB_LIBRARY_DATA_TYPE_GENRE: the genre (string)
+ * 
  * The enum type for set/get the data in the #RCLibDbPlaylistData
  */
 
@@ -199,6 +200,47 @@ typedef enum {
     RCLIB_DB_LIBRARY_DATA_TYPE_GENRE = 14
 }RCLibDbLibraryDataType;
 
+/**
+ * RCLibDbQueryType:
+ * @RCLIB_DB_QUERY_TYPE_NONE: none query type
+ * @RCLIB_DB_QUERY_TYPE_SUBQUERY: the sub-query type
+ * @RCLIB_DB_QUERY_TYPE_PROP_EQUALS: the property equals to the query
+ *     condition
+ * @RCLIB_DB_QUERY_TYPE_PROP_LIKE: the property contains the sub-string which
+ *     equals to the query condition
+ * @RCLIB_DB_QUERY_TYPE_PROP_NOT_LIKE: the property does not contain the
+ *     sub-string which equals to the query condition
+ * @RCLIB_DB_QUERY_TYPE_PROP_PREFIX: the prefix of the property equals to the
+ *     query condition
+ * @RCLIB_DB_QUERY_TYPE_PROP_SUFFIX: the suffix of the property equals to the
+ *     query condition
+ * @RCLIB_DB_QUERY_TYPE_PROP_GREATER: the query condition is greater than the
+ *     property
+ * @RCLIB_DB_QUERY_TYPE_PROP_LESS: the query condition is lesser than the
+ *     property
+ * @RCLIB_DB_QUERY_TYPE_PROP_GREATER_OR_EQUAL: the query condition is
+ *     greater than or equal to the property
+ * @RCLIB_DB_QUERY_TYPE_PROP_LESS_OR_EQUAL: the query condition is
+ *     lesser than or equal to the property
+ * 
+ * The enum type for query the properties of the items in the
+ * playlist/library.
+ */
+
+typedef enum {
+    RCLIB_DB_QUERY_TYPE_NONE = 0,
+    RCLIB_DB_QUERY_TYPE_SUBQUERY = 1,
+    RCLIB_DB_QUERY_TYPE_PROP_EQUALS = 2,
+    RCLIB_DB_QUERY_TYPE_PROP_LIKE = 3,
+    RCLIB_DB_QUERY_TYPE_PROP_NOT_LIKE = 4,
+    RCLIB_DB_QUERY_TYPE_PROP_PREFIX = 5,
+    RCLIB_DB_QUERY_TYPE_PROP_SUFFIX = 6,
+    RCLIB_DB_QUERY_TYPE_PROP_GREATER = 7,
+    RCLIB_DB_QUERY_TYPE_PROP_LESS = 8,
+    RCLIB_DB_QUERY_TYPE_PROP_GREATER_OR_EQUAL = 9,
+    RCLIB_DB_QUERY_TYPE_PROP_LESS_OR_EQUAL = 10
+}RCLibDbQueryType;
+
 typedef struct _RCLibDbCatalogData RCLibDbCatalogData;
 typedef struct _RCLibDbPlaylistData RCLibDbPlaylistData;
 typedef struct _RCLibDbLibraryData RCLibDbLibraryData;
@@ -210,6 +252,8 @@ typedef struct _RCLibDbCatalogSequence RCLibDbCatalogSequence;
 typedef struct _RCLibDbPlaylistSequence RCLibDbPlaylistSequence;
 typedef struct _RCLibDbCatalogIter RCLibDbCatalogIter;
 typedef struct _RCLibDbPlaylistIter RCLibDbPlaylistIter;
+
+typedef GPtrArray RCLibDbQuery;
 
 /**
  * RCLibDb:
@@ -349,11 +393,6 @@ gboolean rclib_db_catalog_is_valid_iter(RCLibDbCatalogIter *catalog_iter);
 RCLibDbCatalogIter *rclib_db_catalog_add(const gchar *name,
     RCLibDbCatalogIter *iter, gint type);
 void rclib_db_catalog_delete(RCLibDbCatalogIter *iter);
-void rclib_db_catalog_set_name(RCLibDbCatalogIter *iter, const gchar *name);
-void rclib_db_catalog_set_type(RCLibDbCatalogIter *iter,
-    RCLibDbCatalogType type);
-void rclib_db_catalog_set_store(RCLibDbCatalogIter *iter, gpointer store);
-void rclib_db_catalog_get_store(RCLibDbCatalogIter *iter, gpointer *store);
 void rclib_db_catalog_reorder(gint *new_order);
 gboolean rclib_db_playlist_is_valid_iter(RCLibDbPlaylistIter *playlist_iter);
 void rclib_db_playlist_add_music(RCLibDbCatalogIter *iter,
@@ -363,24 +402,6 @@ void rclib_db_playlist_add_music_and_play(RCLibDbCatalogIter *iter,
 void rclib_db_playlist_delete(RCLibDbPlaylistIter *iter);
 void rclib_db_playlist_update_metadata(RCLibDbPlaylistIter *iter,
     const RCLibDbPlaylistData *data);
-void rclib_db_playlist_update_length(RCLibDbPlaylistIter *iter,
-    gint64 length);
-void rclib_db_playlist_set_type(RCLibDbPlaylistIter *iter,
-    RCLibDbPlaylistType type);
-void rclib_db_playlist_set_rating(RCLibDbPlaylistIter *iter, gfloat rating);
-void rclib_db_playlist_set_lyric_bind(RCLibDbPlaylistIter *iter,
-    const gchar *filename);
-void rclib_db_playlist_set_lyric_secondary_bind(RCLibDbPlaylistIter *iter,
-    const gchar *filename);
-void rclib_db_playlist_set_album_bind(RCLibDbPlaylistIter *iter,
-    const gchar *filename);
-gboolean rclib_db_playlist_get_rating(RCLibDbPlaylistIter *iter,
-    gfloat *rating);
-const gchar *rclib_db_playlist_get_lyric_bind(RCLibDbPlaylistIter *iter);
-const gchar *rclib_db_playlist_get_lyric_secondary_bind(
-    RCLibDbPlaylistIter *iter);
-const gchar *rclib_db_playlist_get_album_bind(
-    RCLibDbPlaylistIter *iter);
 void rclib_db_playlist_reorder(RCLibDbCatalogIter *iter, gint *new_order);
 void rclib_db_playlist_move_to_another_catalog(RCLibDbPlaylistIter **iters,
     guint num, RCLibDbCatalogIter *catalog_iter);
@@ -408,6 +429,9 @@ gboolean rclib_db_library_has_uri(const gchar *uri);
 void rclib_db_library_add_music(const gchar *uri);
 void rclib_db_library_add_music_and_play(const gchar *uri);
 void rclib_db_library_delete(const gchar *uri);
+
+/* Query Interface */
+
 
 G_END_DECLS
 

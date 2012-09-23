@@ -80,7 +80,11 @@ static inline void rclib_player_random_single(RCLibPlayerPrivate *priv)
             !rclib_db_playlist_iter_is_end(foreach_iter);
             foreach_iter=rclib_db_playlist_iter_next(foreach_iter))
         {
-            if(rclib_db_playlist_get_rating(foreach_iter, &rating))
+            rating = -1.0;
+            rclib_db_playlist_data_iter_get(foreach_iter,
+                RCLIB_DB_PLAYLIST_DATA_TYPE_RATING, &rating,
+                RCLIB_DB_PLAYLIST_DATA_TYPE_NONE);
+            if(rating>=-0.1)
             {
                 if(priv->limit_condition)
                 {
@@ -148,8 +152,11 @@ static inline void rclib_player_random_all_play(RCLibPlayerPrivate *priv)
                 !rclib_db_playlist_iter_is_end(playlist_iter);
                 playlist_iter = rclib_db_playlist_iter_next(playlist_iter))
             {
-                if(!rclib_db_playlist_get_rating(playlist_iter, &rating))
-                    continue;
+                rating = -1.0;
+                rclib_db_playlist_data_iter_get(playlist_iter,
+                    RCLIB_DB_PLAYLIST_DATA_TYPE_RATING, &rating,
+                    RCLIB_DB_PLAYLIST_DATA_TYPE_NONE);
+                if(rating<-0.1) continue;
                 if(priv->limit_condition)
                 {
                     if(rating<=priv->limit_rating)
@@ -184,8 +191,11 @@ static inline void rclib_player_random_all_play(RCLibPlayerPrivate *priv)
             for(;!rclib_db_playlist_iter_is_end(playlist_iter);
                 playlist_iter = rclib_db_playlist_iter_next(playlist_iter))
             {
-                if(!rclib_db_playlist_get_rating(playlist_iter, &rating))
-                    continue;
+                rating = -1.0;
+                rclib_db_playlist_data_iter_get(playlist_iter,
+                    RCLIB_DB_PLAYLIST_DATA_TYPE_RATING, &rating,
+                    RCLIB_DB_PLAYLIST_DATA_TYPE_NONE);
+                if(rating<-0.1) continue;
                 if(priv->limit_condition)
                 {
                     if(rating<=priv->limit_rating)
@@ -238,7 +248,11 @@ static inline void rclib_player_repeat_list(RCLibPlayerPrivate *priv)
         for(foreach_iter=iter;!rclib_db_playlist_iter_is_end(foreach_iter);
             foreach_iter=rclib_db_playlist_iter_next(foreach_iter))
         {
-            if(rclib_db_playlist_get_rating(foreach_iter, &rating))
+            rating = -1.0;
+            rclib_db_playlist_data_iter_get(foreach_iter,
+                RCLIB_DB_PLAYLIST_DATA_TYPE_RATING, &rating,
+                RCLIB_DB_PLAYLIST_DATA_TYPE_NONE);
+            if(rating>-0.1)
             {
                 if(priv->limit_condition)
                 {
@@ -262,7 +276,11 @@ static inline void rclib_player_repeat_list(RCLibPlayerPrivate *priv)
             foreach_iter!=iter;foreach_iter=rclib_db_playlist_iter_next(
             foreach_iter))
         {
-            if(rclib_db_playlist_get_rating(foreach_iter, &rating))
+            rating = -1.0;
+            rclib_db_playlist_data_iter_get(foreach_iter,
+                RCLIB_DB_PLAYLIST_DATA_TYPE_RATING, &rating,
+                RCLIB_DB_PLAYLIST_DATA_TYPE_NONE);
+            if(rating>-0.1)
             {
                 if(priv->limit_condition)
                 {
@@ -312,8 +330,11 @@ static inline void rclib_player_play_next_internal(RCLibPlayerPrivate *priv,
         for(pforeach_iter=iter;!rclib_db_playlist_iter_is_end(pforeach_iter);
             pforeach_iter=rclib_db_playlist_iter_next(pforeach_iter))
         {
-            if(!rclib_db_playlist_get_rating(pforeach_iter, &rating))
-                continue;
+            rating = -1.0;
+            rclib_db_playlist_data_iter_get(pforeach_iter,
+                RCLIB_DB_PLAYLIST_DATA_TYPE_RATING, &rating,
+                RCLIB_DB_PLAYLIST_DATA_TYPE_NONE);
+            if(rating<-0.1) continue;
             if(priv->limit_condition)
             {
                 if(rating<=priv->limit_rating)
@@ -350,8 +371,11 @@ static inline void rclib_player_play_next_internal(RCLibPlayerPrivate *priv,
             for(;!rclib_db_playlist_iter_is_end(iter);
                 iter=rclib_db_playlist_iter_next(iter))
             {
-                if(!rclib_db_playlist_get_rating(iter, &rating))
-                    continue;
+                rating = -1.0;
+                rclib_db_playlist_data_iter_get(iter,
+                    RCLIB_DB_PLAYLIST_DATA_TYPE_RATING, &rating,
+                    RCLIB_DB_PLAYLIST_DATA_TYPE_NONE);
+                if(rating<-0.1) continue;
                 if(priv->limit_condition)
                 {
                     if(rating<=priv->limit_rating)
@@ -384,8 +408,11 @@ static inline void rclib_player_play_next_internal(RCLibPlayerPrivate *priv,
             for(;!rclib_db_playlist_iter_is_end(iter);
                 iter=rclib_db_playlist_iter_next(iter))
             {
-                if(!rclib_db_playlist_get_rating(iter, &rating))
-                    continue;
+                rating = -1.0;
+                rclib_db_playlist_data_iter_get(iter,
+                    RCLIB_DB_PLAYLIST_DATA_TYPE_RATING, &rating,
+                    RCLIB_DB_PLAYLIST_DATA_TYPE_NONE);
+                if(rating<-0.1) continue;
                 if(priv->limit_condition)
                 {
                     if(rating<=priv->limit_rating)
