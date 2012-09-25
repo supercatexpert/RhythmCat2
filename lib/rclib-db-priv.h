@@ -172,6 +172,14 @@ struct _RCLibDbLibraryData
     gchar *albumfile;
 };
 
+typedef struct _RCLibDbQueryData {
+    /*< private >*/
+	guint type;
+	guint propid;
+	GValue *val;
+	RCLibDbQuery *subquery;
+}RCLibDbQueryData;
+
 /*< private >*/
 gboolean _rclib_db_instance_init_playlist(RCLibDb *db, RCLibDbPrivate *priv);
 gboolean _rclib_db_instance_init_library(RCLibDb *db, RCLibDbPrivate *priv);

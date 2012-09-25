@@ -201,45 +201,76 @@ typedef enum {
 }RCLibDbLibraryDataType;
 
 /**
- * RCLibDbQueryType:
- * @RCLIB_DB_QUERY_TYPE_NONE: none query type
- * @RCLIB_DB_QUERY_TYPE_SUBQUERY: the sub-query type
- * @RCLIB_DB_QUERY_TYPE_PROP_EQUALS: the property equals to the query
- *     condition
- * @RCLIB_DB_QUERY_TYPE_PROP_LIKE: the property contains the sub-string which
- *     equals to the query condition
- * @RCLIB_DB_QUERY_TYPE_PROP_NOT_LIKE: the property does not contain the
- *     sub-string which equals to the query condition
- * @RCLIB_DB_QUERY_TYPE_PROP_PREFIX: the prefix of the property equals to the
- *     query condition
- * @RCLIB_DB_QUERY_TYPE_PROP_SUFFIX: the suffix of the property equals to the
- *     query condition
- * @RCLIB_DB_QUERY_TYPE_PROP_GREATER: the query condition is greater than the
- *     property
- * @RCLIB_DB_QUERY_TYPE_PROP_LESS: the query condition is lesser than the
- *     property
- * @RCLIB_DB_QUERY_TYPE_PROP_GREATER_OR_EQUAL: the query condition is
- *     greater than or equal to the property
- * @RCLIB_DB_QUERY_TYPE_PROP_LESS_OR_EQUAL: the query condition is
- *     lesser than or equal to the property
+ * RCLibDbQueryDataType:
+ * @RCLIB_DB_QUERY_DATA_TYPE_NONE: none type, not used by data
+ * @RCLIB_DB_QUERY_DATA_TYPE_URI: the URI (string)
+ * @RCLIB_DB_QUERY_DATA_TYPE_TITLE: the title (string)
+ * @RCLIB_DB_QUERY_DATA_TYPE_ARTIST: the artist (string)
+ * @RCLIB_DB_QUERY_DATA_TYPE_ALBUM: the album (string)
+ * @RCLIB_DB_QUERY_DATA_TYPE_FTYPE: the file type (string)
+ * @RCLIB_DB_QUERY_DATA_TYPE_LENGTH: the time length (#gint64)
+ * @RCLIB_DB_QUERY_DATA_TYPE_TRACKNUM: the track number (#gint)
+ * @RCLIB_DB_QUERY_DATA_TYPE_YEAR: the year (#gint),
+ * @RCLIB_DB_QUERY_DATA_TYPE_RATING: the rating (#gfloat)
+ * @RCLIB_DB_QUERY_DATA_TYPE_GENRE: the genre (string)
  * 
- * The enum type for query the properties of the items in the
- * playlist/library.
+ * The enum type for query the given data type in the database.
  */
 
 typedef enum {
-    RCLIB_DB_QUERY_TYPE_NONE = 0,
-    RCLIB_DB_QUERY_TYPE_SUBQUERY = 1,
-    RCLIB_DB_QUERY_TYPE_PROP_EQUALS = 2,
-    RCLIB_DB_QUERY_TYPE_PROP_LIKE = 3,
-    RCLIB_DB_QUERY_TYPE_PROP_NOT_LIKE = 4,
-    RCLIB_DB_QUERY_TYPE_PROP_PREFIX = 5,
-    RCLIB_DB_QUERY_TYPE_PROP_SUFFIX = 6,
-    RCLIB_DB_QUERY_TYPE_PROP_GREATER = 7,
-    RCLIB_DB_QUERY_TYPE_PROP_LESS = 8,
-    RCLIB_DB_QUERY_TYPE_PROP_GREATER_OR_EQUAL = 9,
-    RCLIB_DB_QUERY_TYPE_PROP_LESS_OR_EQUAL = 10
-}RCLibDbQueryType;
+    RCLIB_DB_QUERY_DATA_TYPE_NONE = 0,
+    RCLIB_DB_QUERY_DATA_TYPE_URI = 1,
+    RCLIB_DB_QUERY_DATA_TYPE_TITLE = 2,
+    RCLIB_DB_QUERY_DATA_TYPE_ARTIST = 3,
+    RCLIB_DB_QUERY_DATA_TYPE_ALBUM = 4,
+    RCLIB_DB_QUERY_DATA_TYPE_FTYPE = 5,
+    RCLIB_DB_QUERY_DATA_TYPE_LENGTH = 6,
+    RCLIB_DB_QUERY_DATA_TYPE_TRACKNUM = 7,
+    RCLIB_DB_QUERY_DATA_TYPE_YEAR = 8,
+    RCLIB_DB_QUERY_DATA_TYPE_RATING = 9,
+    RCLIB_DB_QUERY_DATA_TYPE_GENRE = 10
+}RCLibDbQueryDataType;
+
+/**
+ * RCLibDbQueryConditionType:
+ * @RCLIB_DB_QUERY_CONDITION_TYPE_NONE: none query type
+ * @RCLIB_DB_QUERY_CONDITION_TYPE_SUBQUERY: the sub-query type
+ * @RCLIB_DB_QUERY_CONDITION_TYPE_PROP_EQUALS: the property equals to the
+ *     query condition
+ * @RCLIB_DB_QUERY_CONDITION_TYPE_PROP_LIKE: the property contains the
+ *     sub-string which equals to the query condition
+ * @RCLIB_DB_QUERY_CONDITION_TYPE_PROP_NOT_LIKE: the property does not
+ *     contain the sub-string which equals to the query condition
+ * @RCLIB_DB_QUERY_CONDITION_TYPE_PROP_PREFIX: the prefix of the property
+ *     equals to the query condition
+ * @RCLIB_DB_QUERY_CONDITION_TYPE_PROP_SUFFIX: the suffix of the property
+ *     equals to the query condition
+ * @RCLIB_DB_QUERY_CONDITION_TYPE_PROP_GREATER: the query condition is greater
+ *     than the property
+ * @RCLIB_DB_QUERY_CONDITION_TYPE_PROP_LESS: the query condition is lesser
+ *     than the property
+ * @RCLIB_DB_QUERY_CONDITION_TYPE_PROP_GREATER_OR_EQUAL: the query condition
+ *     is greater than or equal to the property
+ * @RCLIB_DB_QUERY_CONDITION_TYPE_PROP_LESS_OR_EQUAL: the query condition is
+ *     lesser than or equal to the property
+ * 
+ * The enum type for query the properties of the items in the library
+ * by the given condition type.
+ */
+
+typedef enum {
+    RCLIB_DB_QUERY_CONDITION_TYPE_NONE = 0,
+    RCLIB_DB_QUERY_CONDITION_TYPE_SUBQUERY = 1,
+    RCLIB_DB_QUERY_CONDITION_TYPE_PROP_EQUALS = 2,
+    RCLIB_DB_QUERY_CONDITION_TYPE_PROP_LIKE = 3,
+    RCLIB_DB_QUERY_CONDITION_TYPE_PROP_NOT_LIKE = 4,
+    RCLIB_DB_QUERY_CONDITION_TYPE_PROP_PREFIX = 5,
+    RCLIB_DB_QUERY_CONDITION_TYPE_PROP_SUFFIX = 6,
+    RCLIB_DB_QUERY_CONDITION_TYPE_PROP_GREATER = 7,
+    RCLIB_DB_QUERY_CONDITION_TYPE_PROP_LESS = 8,
+    RCLIB_DB_QUERY_CONDITION_TYPE_PROP_GREATER_OR_EQUAL = 9,
+    RCLIB_DB_QUERY_CONDITION_TYPE_PROP_LESS_OR_EQUAL = 10
+}RCLibDbQueryConditionType;
 
 typedef struct _RCLibDbCatalogData RCLibDbCatalogData;
 typedef struct _RCLibDbPlaylistData RCLibDbPlaylistData;
@@ -431,7 +462,9 @@ void rclib_db_library_add_music_and_play(const gchar *uri);
 void rclib_db_library_delete(const gchar *uri);
 
 /* Query Interface */
-
+RCLibDbQuery *rclib_db_query_parse(RCLibDbQueryConditionType condition1, ...);
+RCLibDbQuery *rclib_db_query_copy(const RCLibDbQuery *query);
+void rclib_db_query_free(RCLibDbQuery *query);
 
 G_END_DECLS
 

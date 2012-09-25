@@ -1950,3 +1950,47 @@ void rclib_db_autosaved_remove()
     g_free(filename);
 }
 
+/**
+ * rclib_db_query_parse:
+ * @condition1: the first query condition
+ *
+ * Create a query from a list of criteria.
+ * 
+ * Returns: (transfer full): A new created query. Must be freed after usage.
+ */
+
+RCLibDbQuery *rclib_db_query_parse(RCLibDbQueryConditionType condition1, ...)
+{
+    RCLibDbQuery *query = NULL;
+    
+    
+    return query;
+}
+
+/**
+ * rclib_db_query_copy:
+ * @query: the query to copy
+ *
+ * Create a new query copied from the given query.
+ * 
+ * Returns: (transfer full): A new copied query. Must be freed after usage.
+ */
+
+RCLibDbQuery *rclib_db_query_copy(const RCLibDbQuery *query)
+{
+    RCLibDbQuery *new_query = NULL;
+    
+    return new_query;
+}
+
+/**
+ * rclib_db_query_free:
+ * @query: the query to free
+ * 
+ * Free the query.
+ */
+
+void rclib_db_query_free(RCLibDbQuery *query)
+{
+    
+}
