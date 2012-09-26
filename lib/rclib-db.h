@@ -48,6 +48,7 @@ G_BEGIN_DECLS
 #define RCLIB_TYPE_DB_CATALOG_DATA (rclib_db_catalog_data_get_type())
 #define RCLIB_TYPE_DB_PLAYLIST_DATA (rclib_db_playlist_data_get_type())
 #define RCLIB_TYPE_DB_LIBRARY_DATA (rclib_db_library_data_get_type())
+#define RCLIB_TYPE_DB_QUERY (rclib_db_query_get_type())
 
 /**
  * RCLibDbCatalogType:
@@ -329,6 +330,7 @@ GType rclib_db_get_type();
 GType rclib_db_catalog_data_get_type();
 GType rclib_db_playlist_data_get_type();
 GType rclib_db_library_data_get_type();
+GType rclib_db_query_get_type();
 
 /*< public >*/
 gboolean rclib_db_init(const gchar *file);
@@ -463,6 +465,10 @@ void rclib_db_library_delete(const gchar *uri);
 
 /* Query Interface */
 RCLibDbQuery *rclib_db_query_parse(RCLibDbQueryConditionType condition1, ...);
+RCLibDbQuery *rclib_db_query_parse_valist(
+    RCLibDbQueryConditionType condition1, va_list args);
+gboolean rclib_db_query_concatenate(RCLibDbQuery *target,
+    const RCLibDbQuery *src);
 RCLibDbQuery *rclib_db_query_copy(const RCLibDbQuery *query);
 void rclib_db_query_free(RCLibDbQuery *query);
 

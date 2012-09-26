@@ -23,6 +23,7 @@
  * Boston, MA  02110-1301  USA
  */
 
+#include <gobject/gvaluecollector.h>
 #include "rclib-db.h"
 #include "rclib-db-priv.h"
 #include "rclib-common.h"
@@ -1667,6 +1668,21 @@ GType rclib_db_library_data_get_type(void)
     return g_define_type_id__volatile;
 }
 
+GType rclib_db_query_get_type(void)
+{
+    static volatile gsize g_define_type_id__volatile = 0;
+    GType g_define_type_id;
+    if(g_once_init_enter(&g_define_type_id__volatile))
+    {
+        g_define_type_id = g_boxed_type_register_static(
+            g_intern_static_string("RCLibDbQuery"),
+            (GBoxedCopyFunc)rclib_db_query_copy,
+            (GBoxedFreeFunc)rclib_db_query_free);
+        g_once_init_leave (&g_define_type_id__volatile, g_define_type_id);
+    }
+    return g_define_type_id__volatile;
+}
+
 /**
  * rclib_db_init:
  * @file: the file of the music library database to load
@@ -1962,9 +1978,138 @@ void rclib_db_autosaved_remove()
 RCLibDbQuery *rclib_db_query_parse(RCLibDbQueryConditionType condition1, ...)
 {
     RCLibDbQuery *query = NULL;
-    
-    
+    va_list args;
+    va_start(args, condition1);
+    rclib_db_query_parse_valist(condition1, args);
+    va_end(args);
     return query;
+}
+
+/**
+ * rclib_db_query_parse_valist:
+ * @condition1: the first query condition
+ * @args: a list of parameters which contain the query conditions
+ *
+ * Create a query from a list of criteria in the variable list.
+ * 
+ * Returns: (transfer full): A new created query. Must be freed after usage.
+ */
+
+RCLibDbQuery *rclib_db_query_parse_valist(
+    RCLibDbQueryConditionType condition1, va_list args)
+{
+    RCLibDbQuery *query = NULL;
+    RCLibDbQueryData *query_data;
+    RCLibDbQueryConditionType condition_type;
+    GType query_data_type;
+    gchar *error_str = NULL;
+    query = g_ptr_array_new();
+    condition_type = condition1;
+    while(condition_type!=RCLIB_DB_QUERY_CONDITION_TYPE_NONE)
+    {
+        query_data = g_new0(RCLibDbQueryData, 1);
+        switch(condition_type)
+        {
+            case RCLIB_DB_QUERY_CONDITION_TYPE_SUBQUERY:
+            {
+                query_data->subquery = rclib_db_query_copy(va_arg(args,
+                    RCLibDbQuery *));
+                break;
+            }
+            case RCLIB_DB_QUERY_CONDITION_TYPE_PROP_EQUALS:
+            case RCLIB_DB_QUERY_CONDITION_TYPE_PROP_GREATER:
+            case RCLIB_DB_QUERY_CONDITION_TYPE_PROP_GREATER_OR_EQUAL:
+            case RCLIB_DB_QUERY_CONDITION_TYPE_PROP_LESS:
+            case RCLIB_DB_QUERY_CONDITION_TYPE_PROP_LESS_OR_EQUAL:
+            case RCLIB_DB_QUERY_CONDITION_TYPE_PROP_LIKE:
+            case RCLIB_DB_QUERY_CONDITION_TYPE_PROP_NOT_LIKE:
+            case RCLIB_DB_QUERY_CONDITION_TYPE_PROP_PREFIX:
+            case RCLIB_DB_QUERY_CONDITION_TYPE_PROP_SUFFIX:
+            {
+                query_data->propid = va_arg(args, guint);
+                query_data->val = g_new0(GValue, 1);
+                switch(query_data->propid)
+                {
+                    case RCLIB_DB_QUERY_DATA_TYPE_URI:
+                    case RCLIB_DB_QUERY_DATA_TYPE_TITLE:
+                    case RCLIB_DB_QUERY_DATA_TYPE_ARTIST:
+                    case RCLIB_DB_QUERY_DATA_TYPE_ALBUM:
+                    case RCLIB_DB_QUERY_DATA_TYPE_FTYPE:
+                    case RCLIB_DB_QUERY_DATA_TYPE_GENRE:
+                    {
+                        query_data_type = G_TYPE_STRING;
+                        break;
+                    }
+                    case RCLIB_DB_QUERY_DATA_TYPE_LENGTH:
+                    {
+                        query_data_type = G_TYPE_INT64;
+                        break;
+                    }
+                    case RCLIB_DB_QUERY_DATA_TYPE_YEAR:
+                    {
+                        query_data_type = G_TYPE_INT;
+                        break;
+                    }
+                    case RCLIB_DB_QUERY_DATA_TYPE_RATING:
+                    {
+                        query_data_type = G_TYPE_DOUBLE;
+                        break;
+                    }
+                    default:
+                        query_data_type = G_TYPE_NONE;
+                        break;
+                }
+                g_value_init(query_data->val, query_data_type);
+                error_str = NULL;
+                G_VALUE_COLLECT(query_data->val, args, 0, &error_str);
+                if(error_str!=NULL) g_free(error_str);
+                break;
+            }
+            case RCLIB_DB_QUERY_CONDITION_TYPE_NONE:
+                break;
+            default:
+                break;
+        }
+        g_ptr_array_add(query, query_data);
+        condition_type = va_arg(args, RCLibDbQueryConditionType);
+    }
+    return query;
+}
+
+/**
+ * rclib_db_query_concatenate:
+ * @target: query to append to
+ * @src: query to append
+ *
+ * Appends @src to @target.
+ * 
+ * Returns: Whether the concatenate succeeded.
+ */
+
+gboolean rclib_db_query_concatenate(RCLibDbQuery *target,
+    const RCLibDbQuery *src)
+{
+    guint i;
+    RCLibDbQueryData *data;
+    RCLibDbQueryData *new_data;
+    if(target==NULL || src==NULL) return FALSE;
+    for(i=0;i<src->len;i++)
+    {
+        data = g_ptr_array_index(src, i);
+        new_data = g_new0(RCLibDbQueryData, 1);
+        new_data->type = data->type;
+        new_data->propid = data->propid;
+        if(data->val!=NULL)
+        {
+            new_data->val = g_new0(GValue, 1);
+            g_value_init(new_data->val, G_VALUE_TYPE(data->val));
+            g_value_copy(data->val, new_data->val);
+        }
+        if(data->subquery!=NULL)
+            new_data->subquery = rclib_db_query_copy(data->subquery);
+        g_ptr_array_add(target, new_data);
+    }
+    return TRUE;
 }
 
 /**
@@ -1979,7 +2124,9 @@ RCLibDbQuery *rclib_db_query_parse(RCLibDbQueryConditionType condition1, ...)
 RCLibDbQuery *rclib_db_query_copy(const RCLibDbQuery *query)
 {
     RCLibDbQuery *new_query = NULL;
-    
+    if(query==NULL) return NULL;
+    new_query = g_ptr_array_new();
+    rclib_db_query_concatenate(new_query, query);
     return new_query;
 }
 
@@ -1992,5 +2139,39 @@ RCLibDbQuery *rclib_db_query_copy(const RCLibDbQuery *query)
 
 void rclib_db_query_free(RCLibDbQuery *query)
 {
-    
+    RCLibDbQueryData *query_data;
+    guint i;
+    if(query==NULL) return;
+    for(i=0;i<query->len;i++)
+    {
+        query_data = g_ptr_array_index(query, i);
+        switch(query_data->type)
+        {
+            case RCLIB_DB_QUERY_CONDITION_TYPE_SUBQUERY:
+            {
+                rclib_db_query_free(query_data->subquery);
+                break;
+            }
+            case RCLIB_DB_QUERY_CONDITION_TYPE_PROP_EQUALS:
+            case RCLIB_DB_QUERY_CONDITION_TYPE_PROP_GREATER:
+            case RCLIB_DB_QUERY_CONDITION_TYPE_PROP_GREATER_OR_EQUAL:
+            case RCLIB_DB_QUERY_CONDITION_TYPE_PROP_LESS:
+            case RCLIB_DB_QUERY_CONDITION_TYPE_PROP_LESS_OR_EQUAL:
+            case RCLIB_DB_QUERY_CONDITION_TYPE_PROP_LIKE:
+            case RCLIB_DB_QUERY_CONDITION_TYPE_PROP_NOT_LIKE:
+            case RCLIB_DB_QUERY_CONDITION_TYPE_PROP_PREFIX:
+            case RCLIB_DB_QUERY_CONDITION_TYPE_PROP_SUFFIX:
+            {
+                g_value_unset(query_data->val);
+                g_free(query_data->val);
+                break;
+            }
+            case RCLIB_DB_QUERY_CONDITION_TYPE_NONE:
+                break;
+            default:
+                break;
+        }
+        g_free(query_data);
+    }
+    g_ptr_array_free(query, TRUE);
 }
