@@ -2406,3 +2406,1023 @@ gboolean rclib_db_load_legacy()
     return TRUE;
 }
 
+/**
+ * rclib_db_playlist_data_query:
+ * @playlist_data: the playlist data to check
+ * @query: the query condition
+ *
+ * Check whether the playlist data satisfied the query condition.
+ * 
+ * Returns: Whether the playlist data satisfied the query condition.
+ */
+
+gboolean rclib_db_playlist_data_query(const RCLibDbPlaylistData *playlist_data,
+    RCLibDbQuery *query)
+{
+    RCLibDbQueryData *query_data;
+    gboolean result = FALSE;
+    guint i;
+    if(playlist_data==NULL || query==NULL)
+        return FALSE;
+    for(i=0;i<query->len;i++)
+    {
+        query_data = g_ptr_array_index(query, i);
+        if(query_data==NULL) continue;
+        switch(query_data->type)
+        {
+            case RCLIB_DB_QUERY_CONDITION_TYPE_SUBQUERY:
+            {
+                if(query_data->subquery==NULL)
+                {
+                    result = FALSE;
+                    break;
+                }
+                result = rclib_db_playlist_data_query(playlist_data,
+                    query_data->subquery);
+                break;
+            }
+            case RCLIB_DB_QUERY_CONDITION_TYPE_PROP_EQUALS:
+            {
+                if(query_data->val==NULL)
+                {
+                    result = FALSE;
+                    break;
+                }
+                switch(query_data->propid)
+                {
+                    case RCLIB_DB_QUERY_DATA_TYPE_URI:
+                    {
+                        if(!G_VALUE_HOLDS_STRING(query_data->val))
+                        {
+                            result = FALSE;
+                            break;
+                        }
+                        result = (g_strcmp0(g_value_get_string(
+                            query_data->val), playlist_data->uri)==0);
+                        break;
+                    }
+                    case RCLIB_DB_QUERY_DATA_TYPE_TITLE:
+                    {
+                        if(!G_VALUE_HOLDS_STRING(query_data->val))
+                        {
+                            result = FALSE;
+                            break;
+                        }
+                        result = (g_strcmp0(g_value_get_string(
+                            query_data->val), playlist_data->title)==0);
+                        break;
+                    }
+                    case RCLIB_DB_QUERY_DATA_TYPE_ARTIST:
+                    {
+                        if(!G_VALUE_HOLDS_STRING(query_data->val))
+                        {
+                            result = FALSE;
+                            break;
+                        }
+                        result = (g_strcmp0(g_value_get_string(
+                            query_data->val), playlist_data->artist)==0);
+                        break;
+                    }
+                    case RCLIB_DB_QUERY_DATA_TYPE_ALBUM:
+                    {
+                        if(!G_VALUE_HOLDS_STRING(query_data->val))
+                        {
+                            result = FALSE;
+                            break;
+                        }
+                        result = (g_strcmp0(g_value_get_string(
+                            query_data->val), playlist_data->album)==0);
+                        break;
+                    }
+                    case RCLIB_DB_QUERY_DATA_TYPE_FTYPE:
+                    {
+                        if(!G_VALUE_HOLDS_STRING(query_data->val))
+                        {
+                            result = FALSE;
+                            break;
+                        }
+                        result = (g_strcmp0(g_value_get_string(
+                            query_data->val), playlist_data->ftype)==0);
+                        break;
+                    }
+                    case RCLIB_DB_QUERY_DATA_TYPE_GENRE:
+                    {
+                        if(!G_VALUE_HOLDS_STRING(query_data->val))
+                        {
+                            result = FALSE;
+                            break;
+                        }
+                        result = (g_strcmp0(g_value_get_string(
+                            query_data->val), playlist_data->genre)==0);
+                        break;
+                    }
+                    case RCLIB_DB_QUERY_DATA_TYPE_LENGTH:
+                    {
+                        if(!G_VALUE_HOLDS_INT64(query_data->val))
+                        {
+                            result = FALSE;
+                            break;
+                        }
+                        result = (g_value_get_int64(query_data->val)==
+                            playlist_data->length);
+                        break;
+                    }
+                    case RCLIB_DB_QUERY_DATA_TYPE_YEAR:
+                    {
+                        if(!G_VALUE_HOLDS_INT(query_data->val))
+                        {
+                            result = FALSE;
+                            break;
+                        }
+                        result = (g_value_get_int(query_data->val)==
+                            playlist_data->year);
+                        break;
+                    }
+                    case RCLIB_DB_QUERY_DATA_TYPE_RATING:
+                    {
+                        if(!G_VALUE_HOLDS_DOUBLE(query_data->val))
+                        {
+                            result = FALSE;
+                            break;
+                        }
+                        result = (g_value_get_double(query_data->val)==
+                            playlist_data->rating);
+                        break;
+                    }
+                    default:
+                    {
+                        result = FALSE;
+                        break;
+                    }
+                }
+                break;
+            }
+            case RCLIB_DB_QUERY_CONDITION_TYPE_PROP_NOT_EQUAL:
+            {
+                if(query_data->val==NULL)
+                {
+                    result = FALSE;
+                    break;
+                }
+                switch(query_data->propid)
+                {
+                    case RCLIB_DB_QUERY_DATA_TYPE_URI:
+                    {
+                        if(!G_VALUE_HOLDS_STRING(query_data->val))
+                        {
+                            result = FALSE;
+                            break;
+                        }
+                        result = (g_strcmp0(g_value_get_string(
+                            query_data->val), playlist_data->uri)!=0);
+                        break;
+                    }
+                    case RCLIB_DB_QUERY_DATA_TYPE_TITLE:
+                    {
+                        if(!G_VALUE_HOLDS_STRING(query_data->val))
+                        {
+                            result = FALSE;
+                            break;
+                        }
+                        result = (g_strcmp0(g_value_get_string(
+                            query_data->val), playlist_data->title)!=0);
+                        break;
+                    }
+                    case RCLIB_DB_QUERY_DATA_TYPE_ARTIST:
+                    {
+                        if(!G_VALUE_HOLDS_STRING(query_data->val))
+                        {
+                            result = FALSE;
+                            break;
+                        }
+                        result = (g_strcmp0(g_value_get_string(
+                            query_data->val), playlist_data->artist)!=0);
+                        break;
+                    }
+                    case RCLIB_DB_QUERY_DATA_TYPE_ALBUM:
+                    {
+                        if(!G_VALUE_HOLDS_STRING(query_data->val))
+                        {
+                            result = FALSE;
+                            break;
+                        }
+                        result = (g_strcmp0(g_value_get_string(
+                            query_data->val), playlist_data->album)!=0);
+                        break;
+                    }
+                    case RCLIB_DB_QUERY_DATA_TYPE_FTYPE:
+                    {
+                        if(!G_VALUE_HOLDS_STRING(query_data->val))
+                        {
+                            result = FALSE;
+                            break;
+                        }
+                        result = (g_strcmp0(g_value_get_string(
+                            query_data->val), playlist_data->ftype)!=0);
+                        break;
+                    }
+                    case RCLIB_DB_QUERY_DATA_TYPE_GENRE:
+                    {
+                        if(!G_VALUE_HOLDS_STRING(query_data->val))
+                        {
+                            result = FALSE;
+                            break;
+                        }
+                        result = (g_strcmp0(g_value_get_string(
+                            query_data->val), playlist_data->genre)!=0);
+                        break;
+                    }
+                    case RCLIB_DB_QUERY_DATA_TYPE_LENGTH:
+                    {
+                        if(!G_VALUE_HOLDS_INT64(query_data->val))
+                        {
+                            result = FALSE;
+                            break;
+                        }
+                        result = (g_value_get_int64(query_data->val)!=
+                            playlist_data->length);
+                        break;
+                    }
+                    case RCLIB_DB_QUERY_DATA_TYPE_YEAR:
+                    {
+                        if(!G_VALUE_HOLDS_INT(query_data->val))
+                        {
+                            result = FALSE;
+                            break;
+                        }
+                        result = (g_value_get_int(query_data->val)!=
+                            playlist_data->year);
+                        break;
+                    }
+                    case RCLIB_DB_QUERY_DATA_TYPE_RATING:
+                    {
+                        if(!G_VALUE_HOLDS_DOUBLE(query_data->val))
+                        {
+                            result = FALSE;
+                            break;
+                        }
+                        result = (g_value_get_double(query_data->val)!=
+                            playlist_data->rating);
+                        break;
+                    }
+                    default:
+                    {
+                        result = FALSE;
+                        break;
+                    }
+                }
+                break; 
+            }
+            case RCLIB_DB_QUERY_CONDITION_TYPE_PROP_GREATER:
+            {
+                if(query_data->val==NULL)
+                {
+                    result = FALSE;
+                    break;
+                }
+                switch(query_data->propid)
+                {
+                    case RCLIB_DB_QUERY_DATA_TYPE_URI:
+                    {
+                        if(!G_VALUE_HOLDS_STRING(query_data->val))
+                        {
+                            result = FALSE;
+                            break;
+                        }
+                        result = (g_strcmp0(g_value_get_string(
+                            query_data->val), playlist_data->uri)>0);
+                        break;
+                    }
+                    case RCLIB_DB_QUERY_DATA_TYPE_TITLE:
+                    {
+                        if(!G_VALUE_HOLDS_STRING(query_data->val))
+                        {
+                            result = FALSE;
+                            break;
+                        }
+                        result = (g_strcmp0(g_value_get_string(
+                            query_data->val), playlist_data->title)>0);
+                        break;
+                    }
+                    case RCLIB_DB_QUERY_DATA_TYPE_ARTIST:
+                    {
+                        if(!G_VALUE_HOLDS_STRING(query_data->val))
+                        {
+                            result = FALSE;
+                            break;
+                        }
+                        result = (g_strcmp0(g_value_get_string(
+                            query_data->val), playlist_data->artist)>0);
+                        break;
+                    }
+                    case RCLIB_DB_QUERY_DATA_TYPE_ALBUM:
+                    {
+                        if(!G_VALUE_HOLDS_STRING(query_data->val))
+                        {
+                            result = FALSE;
+                            break;
+                        }
+                        result = (g_strcmp0(g_value_get_string(
+                            query_data->val), playlist_data->album)>0);
+                        break;
+                    }
+                    case RCLIB_DB_QUERY_DATA_TYPE_FTYPE:
+                    {
+                        if(!G_VALUE_HOLDS_STRING(query_data->val))
+                        {
+                            result = FALSE;
+                            break;
+                        }
+                        result = (g_strcmp0(g_value_get_string(
+                            query_data->val), playlist_data->ftype)>0);
+                        break;
+                    }
+                    case RCLIB_DB_QUERY_DATA_TYPE_GENRE:
+                    {
+                        if(!G_VALUE_HOLDS_STRING(query_data->val))
+                        {
+                            result = FALSE;
+                            break;
+                        }
+                        result = (g_strcmp0(g_value_get_string(
+                            query_data->val), playlist_data->genre)>0);
+                        break;
+                    }
+                    case RCLIB_DB_QUERY_DATA_TYPE_LENGTH:
+                    {
+                        if(!G_VALUE_HOLDS_INT64(query_data->val))
+                        {
+                            result = FALSE;
+                            break;
+                        }
+                        result = (g_value_get_int64(query_data->val)>
+                            playlist_data->length);
+                        break;
+                    }
+                    case RCLIB_DB_QUERY_DATA_TYPE_YEAR:
+                    {
+                        if(!G_VALUE_HOLDS_INT(query_data->val))
+                        {
+                            result = FALSE;
+                            break;
+                        }
+                        result = (g_value_get_int(query_data->val)>
+                            playlist_data->year);
+                        break;
+                    }
+                    case RCLIB_DB_QUERY_DATA_TYPE_RATING:
+                    {
+                        if(!G_VALUE_HOLDS_DOUBLE(query_data->val))
+                        {
+                            result = FALSE;
+                            break;
+                        }
+                        result = (g_value_get_double(query_data->val)>
+                            playlist_data->rating);
+                        break;
+                    }
+                    default:
+                    {
+                        result = FALSE;
+                        break;
+                    }
+                }
+                break;
+            }
+            case RCLIB_DB_QUERY_CONDITION_TYPE_PROP_GREATER_OR_EQUAL:
+            {
+                if(query_data->val==NULL)
+                {
+                    result = FALSE;
+                    break;
+                }
+                switch(query_data->propid)
+                {
+                    case RCLIB_DB_QUERY_DATA_TYPE_URI:
+                    {
+                        if(!G_VALUE_HOLDS_STRING(query_data->val))
+                        {
+                            result = FALSE;
+                            break;
+                        }
+                        result = (g_strcmp0(g_value_get_string(
+                            query_data->val), playlist_data->uri)>=0);
+                        break;
+                    }
+                    case RCLIB_DB_QUERY_DATA_TYPE_TITLE:
+                    {
+                        if(!G_VALUE_HOLDS_STRING(query_data->val))
+                        {
+                            result = FALSE;
+                            break;
+                        }
+                        result = (g_strcmp0(g_value_get_string(
+                            query_data->val), playlist_data->title)>=0);
+                        break;
+                    }
+                    case RCLIB_DB_QUERY_DATA_TYPE_ARTIST:
+                    {
+                        if(!G_VALUE_HOLDS_STRING(query_data->val))
+                        {
+                            result = FALSE;
+                            break;
+                        }
+                        result = (g_strcmp0(g_value_get_string(
+                            query_data->val), playlist_data->artist)>=0);
+                        break;
+                    }
+                    case RCLIB_DB_QUERY_DATA_TYPE_ALBUM:
+                    {
+                        if(!G_VALUE_HOLDS_STRING(query_data->val))
+                        {
+                            result = FALSE;
+                            break;
+                        }
+                        result = (g_strcmp0(g_value_get_string(
+                            query_data->val), playlist_data->album)>=0);
+                        break;
+                    }
+                    case RCLIB_DB_QUERY_DATA_TYPE_FTYPE:
+                    {
+                        if(!G_VALUE_HOLDS_STRING(query_data->val))
+                        {
+                            result = FALSE;
+                            break;
+                        }
+                        result = (g_strcmp0(g_value_get_string(
+                            query_data->val), playlist_data->ftype)>=0);
+                        break;
+                    }
+                    case RCLIB_DB_QUERY_DATA_TYPE_GENRE:
+                    {
+                        if(!G_VALUE_HOLDS_STRING(query_data->val))
+                        {
+                            result = FALSE;
+                            break;
+                        }
+                        result = (g_strcmp0(g_value_get_string(
+                            query_data->val), playlist_data->genre)>=0);
+                        break;
+                    }
+                    case RCLIB_DB_QUERY_DATA_TYPE_LENGTH:
+                    {
+                        if(!G_VALUE_HOLDS_INT64(query_data->val))
+                        {
+                            result = FALSE;
+                            break;
+                        }
+                        result = (g_value_get_int64(query_data->val)>=
+                            playlist_data->length);
+                        break;
+                    }
+                    case RCLIB_DB_QUERY_DATA_TYPE_YEAR:
+                    {
+                        if(!G_VALUE_HOLDS_INT(query_data->val))
+                        {
+                            result = FALSE;
+                            break;
+                        }
+                        result = (g_value_get_int(query_data->val)>=
+                            playlist_data->year);
+                        break;
+                    }
+                    case RCLIB_DB_QUERY_DATA_TYPE_RATING:
+                    {
+                        if(!G_VALUE_HOLDS_DOUBLE(query_data->val))
+                        {
+                            result = FALSE;
+                            break;
+                        }
+                        result = (g_value_get_double(query_data->val)>=
+                            playlist_data->rating);
+                        break;
+                    }
+                    default:
+                    {
+                        result = FALSE;
+                        break;
+                    }
+                }
+                break;
+            }
+            case RCLIB_DB_QUERY_CONDITION_TYPE_PROP_LESS:
+            {
+                if(query_data->val==NULL)
+                {
+                    result = FALSE;
+                    break;
+                }
+                switch(query_data->propid)
+                {
+                    case RCLIB_DB_QUERY_DATA_TYPE_URI:
+                    {
+                        if(!G_VALUE_HOLDS_STRING(query_data->val))
+                        {
+                            result = FALSE;
+                            break;
+                        }
+                        result = (g_strcmp0(g_value_get_string(
+                            query_data->val), playlist_data->uri)<0);
+                        break;
+                    }
+                    case RCLIB_DB_QUERY_DATA_TYPE_TITLE:
+                    {
+                        if(!G_VALUE_HOLDS_STRING(query_data->val))
+                        {
+                            result = FALSE;
+                            break;
+                        }
+                        result = (g_strcmp0(g_value_get_string(
+                            query_data->val), playlist_data->title)<0);
+                        break;
+                    }
+                    case RCLIB_DB_QUERY_DATA_TYPE_ARTIST:
+                    {
+                        if(!G_VALUE_HOLDS_STRING(query_data->val))
+                        {
+                            result = FALSE;
+                            break;
+                        }
+                        result = (g_strcmp0(g_value_get_string(
+                            query_data->val), playlist_data->artist)<0);
+                        break;
+                    }
+                    case RCLIB_DB_QUERY_DATA_TYPE_ALBUM:
+                    {
+                        if(!G_VALUE_HOLDS_STRING(query_data->val))
+                        {
+                            result = FALSE;
+                            break;
+                        }
+                        result = (g_strcmp0(g_value_get_string(
+                            query_data->val), playlist_data->album)<0);
+                        break;
+                    }
+                    case RCLIB_DB_QUERY_DATA_TYPE_FTYPE:
+                    {
+                        if(!G_VALUE_HOLDS_STRING(query_data->val))
+                        {
+                            result = FALSE;
+                            break;
+                        }
+                        result = (g_strcmp0(g_value_get_string(
+                            query_data->val), playlist_data->ftype)<0);
+                        break;
+                    }
+                    case RCLIB_DB_QUERY_DATA_TYPE_GENRE:
+                    {
+                        if(!G_VALUE_HOLDS_STRING(query_data->val))
+                        {
+                            result = FALSE;
+                            break;
+                        }
+                        result = (g_strcmp0(g_value_get_string(
+                            query_data->val), playlist_data->genre)<0);
+                        break;
+                    }
+                    case RCLIB_DB_QUERY_DATA_TYPE_LENGTH:
+                    {
+                        if(!G_VALUE_HOLDS_INT64(query_data->val))
+                        {
+                            result = FALSE;
+                            break;
+                        }
+                        result = (g_value_get_int64(query_data->val)<
+                            playlist_data->length);
+                        break;
+                    }
+                    case RCLIB_DB_QUERY_DATA_TYPE_YEAR:
+                    {
+                        if(!G_VALUE_HOLDS_INT(query_data->val))
+                        {
+                            result = FALSE;
+                            break;
+                        }
+                        result = (g_value_get_int(query_data->val)<
+                            playlist_data->year);
+                        break;
+                    }
+                    case RCLIB_DB_QUERY_DATA_TYPE_RATING:
+                    {
+                        if(!G_VALUE_HOLDS_DOUBLE(query_data->val))
+                        {
+                            result = FALSE;
+                            break;
+                        }
+                        result = (g_value_get_double(query_data->val)<
+                            playlist_data->rating);
+                        break;
+                    }
+                    default:
+                    {
+                        result = FALSE;
+                        break;
+                    }
+                }
+                break;
+            }
+            case RCLIB_DB_QUERY_CONDITION_TYPE_PROP_LESS_OR_EQUAL:
+            {
+                if(query_data->val==NULL)
+                {
+                    result = FALSE;
+                    break;
+                }
+                switch(query_data->propid)
+                {
+                    case RCLIB_DB_QUERY_DATA_TYPE_URI:
+                    {
+                        if(!G_VALUE_HOLDS_STRING(query_data->val))
+                        {
+                            result = FALSE;
+                            break;
+                        }
+                        result = (g_strcmp0(g_value_get_string(
+                            query_data->val), playlist_data->uri)<=0);
+                        break;
+                    }
+                    case RCLIB_DB_QUERY_DATA_TYPE_TITLE:
+                    {
+                        if(!G_VALUE_HOLDS_STRING(query_data->val))
+                        {
+                            result = FALSE;
+                            break;
+                        }
+                        result = (g_strcmp0(g_value_get_string(
+                            query_data->val), playlist_data->title)<=0);
+                        break;
+                    }
+                    case RCLIB_DB_QUERY_DATA_TYPE_ARTIST:
+                    {
+                        if(!G_VALUE_HOLDS_STRING(query_data->val))
+                        {
+                            result = FALSE;
+                            break;
+                        }
+                        result = (g_strcmp0(g_value_get_string(
+                            query_data->val), playlist_data->artist)<=0);
+                        break;
+                    }
+                    case RCLIB_DB_QUERY_DATA_TYPE_ALBUM:
+                    {
+                        if(!G_VALUE_HOLDS_STRING(query_data->val))
+                        {
+                            result = FALSE;
+                            break;
+                        }
+                        result = (g_strcmp0(g_value_get_string(
+                            query_data->val), playlist_data->album)<=0);
+                        break;
+                    }
+                    case RCLIB_DB_QUERY_DATA_TYPE_FTYPE:
+                    {
+                        if(!G_VALUE_HOLDS_STRING(query_data->val))
+                        {
+                            result = FALSE;
+                            break;
+                        }
+                        result = (g_strcmp0(g_value_get_string(
+                            query_data->val), playlist_data->ftype)<=0);
+                        break;
+                    }
+                    case RCLIB_DB_QUERY_DATA_TYPE_GENRE:
+                    {
+                        if(!G_VALUE_HOLDS_STRING(query_data->val))
+                        {
+                            result = FALSE;
+                            break;
+                        }
+                        result = (g_strcmp0(g_value_get_string(
+                            query_data->val), playlist_data->genre)<=0);
+                        break;
+                    }
+                    case RCLIB_DB_QUERY_DATA_TYPE_LENGTH:
+                    {
+                        if(!G_VALUE_HOLDS_INT64(query_data->val))
+                        {
+                            result = FALSE;
+                            break;
+                        }
+                        result = (g_value_get_int64(query_data->val)<=
+                            playlist_data->length);
+                        break;
+                    }
+                    case RCLIB_DB_QUERY_DATA_TYPE_YEAR:
+                    {
+                        if(!G_VALUE_HOLDS_INT(query_data->val))
+                        {
+                            result = FALSE;
+                            break;
+                        }
+                        result = (g_value_get_int(query_data->val)<=
+                            playlist_data->year);
+                        break;
+                    }
+                    case RCLIB_DB_QUERY_DATA_TYPE_RATING:
+                    {
+                        if(!G_VALUE_HOLDS_DOUBLE(query_data->val))
+                        {
+                            result = FALSE;
+                            break;
+                        }
+                        result = (g_value_get_double(query_data->val)<=
+                            playlist_data->rating);
+                        break;
+                    }
+                    default:
+                    {
+                        result = FALSE;
+                        break;
+                    }
+                }
+                break;
+            }
+            case RCLIB_DB_QUERY_CONDITION_TYPE_PROP_LIKE:
+            {
+                if(query_data->val==NULL)
+                {
+                    result = FALSE;
+                    break;
+                }
+                if(!G_VALUE_HOLDS_STRING(query_data->val))
+                {
+                    result = FALSE;
+                    break;
+                }
+                switch(query_data->propid)
+                {
+                    case RCLIB_DB_QUERY_DATA_TYPE_URI:
+                    {
+                        result = (g_strstr_len(playlist_data->uri, -1,
+                            g_value_get_string(query_data->val))!=NULL);
+                        break;
+                    }
+                    case RCLIB_DB_QUERY_DATA_TYPE_TITLE:
+                    {
+                        result = (g_strstr_len(playlist_data->title, -1,
+                            g_value_get_string(query_data->val))!=NULL);
+                        break;
+                    }
+                    case RCLIB_DB_QUERY_DATA_TYPE_ARTIST:
+                    {
+                        result = (g_strstr_len(playlist_data->artist, -1,
+                            g_value_get_string(query_data->val))!=NULL);
+                        break;
+                    }
+                    case RCLIB_DB_QUERY_DATA_TYPE_ALBUM:
+                    {
+                        result = (g_strstr_len(playlist_data->album, -1,
+                            g_value_get_string(query_data->val))!=NULL);
+                        break;
+                    }
+                    case RCLIB_DB_QUERY_DATA_TYPE_FTYPE:
+                    {
+                        result = (g_strstr_len(playlist_data->ftype, -1,
+                            g_value_get_string(query_data->val))!=NULL);
+                        break;
+                    }
+                    case RCLIB_DB_QUERY_DATA_TYPE_GENRE:
+                    {
+                        result = (g_strstr_len(playlist_data->genre, -1,
+                            g_value_get_string(query_data->val))!=NULL);
+                        break;
+                    }
+                    default:
+                    {
+                        result = FALSE;
+                        break;
+                    }
+                }
+                break;
+            }
+            case RCLIB_DB_QUERY_CONDITION_TYPE_PROP_NOT_LIKE:
+            {
+                if(query_data->val==NULL)
+                {
+                    result = FALSE;
+                    break;
+                }
+                if(!G_VALUE_HOLDS_STRING(query_data->val))
+                {
+                    result = FALSE;
+                    break;
+                }
+                switch(query_data->propid)
+                {
+                    case RCLIB_DB_QUERY_DATA_TYPE_URI:
+                    {
+                        result = (g_strstr_len(playlist_data->uri, -1,
+                            g_value_get_string(query_data->val))==NULL);
+                        break;
+                    }
+                    case RCLIB_DB_QUERY_DATA_TYPE_TITLE:
+                    {
+                        result = (g_strstr_len(playlist_data->title, -1,
+                            g_value_get_string(query_data->val))==NULL);
+                        break;
+                    }
+                    case RCLIB_DB_QUERY_DATA_TYPE_ARTIST:
+                    {
+                        result = (g_strstr_len(playlist_data->artist, -1,
+                            g_value_get_string(query_data->val))==NULL);
+                        break;
+                    }
+                    case RCLIB_DB_QUERY_DATA_TYPE_ALBUM:
+                    {
+                        result = (g_strstr_len(playlist_data->album, -1,
+                            g_value_get_string(query_data->val))==NULL);
+                        break;
+                    }
+                    case RCLIB_DB_QUERY_DATA_TYPE_FTYPE:
+                    {
+                        result = (g_strstr_len(playlist_data->ftype, -1,
+                            g_value_get_string(query_data->val))==NULL);
+                        break;
+                    }
+                    case RCLIB_DB_QUERY_DATA_TYPE_GENRE:
+                    {
+                        result = (g_strstr_len(playlist_data->genre, -1,
+                            g_value_get_string(query_data->val))==NULL);
+                        break;
+                    }
+                    default:
+                    {
+                        result = FALSE;
+                        break;
+                    }
+                }
+                break;
+            }
+            case RCLIB_DB_QUERY_CONDITION_TYPE_PROP_PREFIX:
+            {
+                if(query_data->val==NULL)
+                {
+                    result = FALSE;
+                    break;
+                }
+                if(!G_VALUE_HOLDS_STRING(query_data->val))
+                {
+                    result = FALSE;
+                    break;
+                }
+                switch(query_data->propid)
+                {
+                    case RCLIB_DB_QUERY_DATA_TYPE_URI:
+                    {
+                        result = g_str_has_prefix(playlist_data->uri,
+                            g_value_get_string(query_data->val));
+                        break;
+                    }
+                    case RCLIB_DB_QUERY_DATA_TYPE_TITLE:
+                    {
+                        result = g_str_has_prefix(playlist_data->title,
+                            g_value_get_string(query_data->val));
+                        break;
+                    }
+                    case RCLIB_DB_QUERY_DATA_TYPE_ARTIST:
+                    {
+                        result = g_str_has_prefix(playlist_data->artist,
+                            g_value_get_string(query_data->val));
+                        break;
+                    }
+                    case RCLIB_DB_QUERY_DATA_TYPE_ALBUM:
+                    {
+                        result = g_str_has_prefix(playlist_data->album,
+                            g_value_get_string(query_data->val));
+                        break;
+                    }
+                    case RCLIB_DB_QUERY_DATA_TYPE_FTYPE:
+                    {
+                        result = g_str_has_prefix(playlist_data->ftype,
+                            g_value_get_string(query_data->val));
+                        break;
+                    }
+                    case RCLIB_DB_QUERY_DATA_TYPE_GENRE:
+                    {
+                        result = g_str_has_prefix(playlist_data->genre,
+                            g_value_get_string(query_data->val));
+                        break;
+                    }
+                    default:
+                    {
+                        result = FALSE;
+                        break;
+                    }
+                }
+                break;
+            }
+            case RCLIB_DB_QUERY_CONDITION_TYPE_PROP_SUFFIX:
+            {
+                if(query_data->val==NULL)
+                {
+                    result = FALSE;
+                    break;
+                }
+                if(!G_VALUE_HOLDS_STRING(query_data->val))
+                {
+                    result = FALSE;
+                    break;
+                }
+                switch(query_data->propid)
+                {
+                    case RCLIB_DB_QUERY_DATA_TYPE_URI:
+                    {
+                        result = g_str_has_suffix(playlist_data->uri,
+                            g_value_get_string(query_data->val));
+                        break;
+                    }
+                    case RCLIB_DB_QUERY_DATA_TYPE_TITLE:
+                    {
+                        result = g_str_has_suffix(playlist_data->title,
+                            g_value_get_string(query_data->val));
+                        break;
+                    }
+                    case RCLIB_DB_QUERY_DATA_TYPE_ARTIST:
+                    {
+                        result = g_str_has_suffix(playlist_data->artist,
+                            g_value_get_string(query_data->val));
+                        break;
+                    }
+                    case RCLIB_DB_QUERY_DATA_TYPE_ALBUM:
+                    {
+                        result = g_str_has_suffix(playlist_data->album,
+                            g_value_get_string(query_data->val));
+                        break;
+                    }
+                    case RCLIB_DB_QUERY_DATA_TYPE_FTYPE:
+                    {
+                        result = g_str_has_suffix(playlist_data->ftype,
+                            g_value_get_string(query_data->val));
+                        break;
+                    }
+                    case RCLIB_DB_QUERY_DATA_TYPE_GENRE:
+                    {
+                        result = g_str_has_suffix(playlist_data->genre,
+                            g_value_get_string(query_data->val));
+                        break;
+                    }
+                    default:
+                    {
+                        result = FALSE;
+                        break;
+                    }
+                }
+                break;
+            }
+            default:
+                break;
+        }
+        if(!result) break;
+    }
+    return result;
+}
+
+/**
+ * rclib_db_playlist_iter_query:
+ * @playlist_iter: the playlist iter to check
+ * @query: the query condition
+ *
+ * Check whether the playlist data stored in the iter satisfied the
+ * query condition.
+ * 
+ * Returns: Whether the playlist data stored in the iter satisfied the
+ *     query condition.
+ */
+
+gboolean rclib_db_playlist_iter_query(RCLibDbPlaylistIter *playlist_iter,
+    RCLibDbQuery *query)
+{
+    const RCLibDbPlaylistData *data;
+    if(playlist_iter==NULL || query==NULL)
+        return FALSE;
+    data = rclib_db_playlist_iter_get_data(playlist_iter);
+    return rclib_db_playlist_data_query(data, query);
+}
+
+/**
+ * rclib_db_playlist_query: 
+ * @catalog_iter: the catalog to query, set to #NULL to query in all catalogs
+ * @query: the query condition
+ *
+ * Query data from the playlist library.
+ * 
+ * Returns: (transfer full): The playlist data array which satisfied
+ *     the query condition.
+ */
+
+GPtrArray *rclib_db_playlist_query(RCLibDbCatalogIter *catalog_iter,
+    RCLibDbQuery *query)
+{
+    GPtrArray *query_result = NULL;
+    query_result = g_ptr_array_new_with_free_func((GDestroyNotify)
+        rclib_db_playlist_data_unref);
+    if(catalog_iter!=NULL)
+    {
+        ;
+    }
+    else
+    {
+        ;
+    }
+    return query_result;
+}

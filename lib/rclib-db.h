@@ -238,6 +238,8 @@ typedef enum {
  * @RCLIB_DB_QUERY_CONDITION_TYPE_SUBQUERY: the sub-query type
  * @RCLIB_DB_QUERY_CONDITION_TYPE_PROP_EQUALS: the property equals to the
  *     query condition
+ * @RCLIB_DB_QUERY_CONDITION_TYPE_PROP_NOT_EQUAL: the property does not equal
+ *     to the query condition
  * @RCLIB_DB_QUERY_CONDITION_TYPE_PROP_LIKE: the property contains the
  *     sub-string which equals to the query condition
  * @RCLIB_DB_QUERY_CONDITION_TYPE_PROP_NOT_LIKE: the property does not
@@ -254,23 +256,26 @@ typedef enum {
  *     is greater than or equal to the property
  * @RCLIB_DB_QUERY_CONDITION_TYPE_PROP_LESS_OR_EQUAL: the query condition is
  *     lesser than or equal to the property
+ * @RCLIB_DB_QUERY_CONDITION_TYPE_LAST: not used, just a last enum type 
  * 
  * The enum type for query the properties of the items in the library
  * by the given condition type.
  */
 
 typedef enum {
-    RCLIB_DB_QUERY_CONDITION_TYPE_NONE = 0,
-    RCLIB_DB_QUERY_CONDITION_TYPE_SUBQUERY = 1,
-    RCLIB_DB_QUERY_CONDITION_TYPE_PROP_EQUALS = 2,
-    RCLIB_DB_QUERY_CONDITION_TYPE_PROP_LIKE = 3,
-    RCLIB_DB_QUERY_CONDITION_TYPE_PROP_NOT_LIKE = 4,
-    RCLIB_DB_QUERY_CONDITION_TYPE_PROP_PREFIX = 5,
-    RCLIB_DB_QUERY_CONDITION_TYPE_PROP_SUFFIX = 6,
-    RCLIB_DB_QUERY_CONDITION_TYPE_PROP_GREATER = 7,
-    RCLIB_DB_QUERY_CONDITION_TYPE_PROP_LESS = 8,
-    RCLIB_DB_QUERY_CONDITION_TYPE_PROP_GREATER_OR_EQUAL = 9,
-    RCLIB_DB_QUERY_CONDITION_TYPE_PROP_LESS_OR_EQUAL = 10
+    RCLIB_DB_QUERY_CONDITION_TYPE_NONE,
+    RCLIB_DB_QUERY_CONDITION_TYPE_SUBQUERY,
+    RCLIB_DB_QUERY_CONDITION_TYPE_PROP_EQUALS,
+    RCLIB_DB_QUERY_CONDITION_TYPE_PROP_NOT_EQUAL,
+    RCLIB_DB_QUERY_CONDITION_TYPE_PROP_LIKE,
+    RCLIB_DB_QUERY_CONDITION_TYPE_PROP_NOT_LIKE,
+    RCLIB_DB_QUERY_CONDITION_TYPE_PROP_PREFIX,
+    RCLIB_DB_QUERY_CONDITION_TYPE_PROP_SUFFIX,
+    RCLIB_DB_QUERY_CONDITION_TYPE_PROP_GREATER,
+    RCLIB_DB_QUERY_CONDITION_TYPE_PROP_LESS,
+    RCLIB_DB_QUERY_CONDITION_TYPE_PROP_GREATER_OR_EQUAL,
+    RCLIB_DB_QUERY_CONDITION_TYPE_PROP_LESS_OR_EQUAL,
+    RCLIB_DB_QUERY_CONDITION_TYPE_LAST
 }RCLibDbQueryConditionType;
 
 typedef struct _RCLibDbCatalogData RCLibDbCatalogData;
@@ -447,6 +452,12 @@ gboolean rclib_db_playlist_export_m3u_file(RCLibDbCatalogIter *iter,
 gboolean rclib_db_playlist_export_all_m3u_files(const gchar *dir);
 void rclib_db_playlist_refresh(RCLibDbCatalogIter *iter);
 gboolean rclib_db_load_legacy();
+gboolean rclib_db_playlist_data_query(const RCLibDbPlaylistData *playlist_data,
+    RCLibDbQuery *query);
+gboolean rclib_db_playlist_iter_query(RCLibDbPlaylistIter *playlist_iter,
+    RCLibDbQuery *query);
+GPtrArray *rclib_db_playlist_query(RCLibDbCatalogIter *catalog_iter,
+    RCLibDbQuery *query);
 
 /* Library Interface */
 RCLibDbLibraryData *rclib_db_library_data_new();
