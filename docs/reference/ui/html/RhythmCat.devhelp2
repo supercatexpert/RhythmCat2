@@ -170,6 +170,7 @@
     <keyword type="constant" name="RC_UI_PLAYLIST_COLUMN_ARTIST" link="RCUiPlaylistStore.html#RC-UI-PLAYLIST-COLUMN-ARTIST:CAPS"/>
     <keyword type="constant" name="RC_UI_PLAYLIST_COLUMN_ALBUM" link="RCUiPlaylistStore.html#RC-UI-PLAYLIST-COLUMN-ALBUM:CAPS"/>
     <keyword type="constant" name="RC_UI_PLAYLIST_COLUMN_FTYPE" link="RCUiPlaylistStore.html#RC-UI-PLAYLIST-COLUMN-FTYPE:CAPS"/>
+    <keyword type="constant" name="RC_UI_PLAYLIST_COLUMN_GENRE" link="RCUiPlaylistStore.html#RC-UI-PLAYLIST-COLUMN-GENRE:CAPS"/>
     <keyword type="constant" name="RC_UI_PLAYLIST_COLUMN_LENGTH" link="RCUiPlaylistStore.html#RC-UI-PLAYLIST-COLUMN-LENGTH:CAPS"/>
     <keyword type="constant" name="RC_UI_PLAYLIST_COLUMN_TRACK" link="RCUiPlaylistStore.html#RC-UI-PLAYLIST-COLUMN-TRACK:CAPS"/>
     <keyword type="constant" name="RC_UI_PLAYLIST_COLUMN_RATING" link="RCUiPlaylistStore.html#RC-UI-PLAYLIST-COLUMN-RATING:CAPS"/>
@@ -182,6 +183,7 @@
     <keyword type="constant" name="RC_UI_LISTVIEW_PLAYLIST_COLUMN_YEAR" link="RCUiPlaylistView.html#RC-UI-LISTVIEW-PLAYLIST-COLUMN-YEAR:CAPS"/>
     <keyword type="constant" name="RC_UI_LISTVIEW_PLAYLIST_COLUMN_FTYPE" link="RCUiPlaylistView.html#RC-UI-LISTVIEW-PLAYLIST-COLUMN-FTYPE:CAPS"/>
     <keyword type="constant" name="RC_UI_LISTVIEW_PLAYLIST_COLUMN_RATING" link="RCUiPlaylistView.html#RC-UI-LISTVIEW-PLAYLIST-COLUMN-RATING:CAPS"/>
+    <keyword type="constant" name="RC_UI_LISTVIEW_PLAYLIST_COLUMN_GENRE" link="RCUiPlaylistView.html#RC-UI-LISTVIEW-PLAYLIST-COLUMN-GENRE:CAPS"/>
     <keyword type="constant" name="RC_UI_SPECTRUM_STYLE_NONE" link="RCUiSpectrumWidget.html#RC-UI-SPECTRUM-STYLE-NONE:CAPS"/>
     <keyword type="constant" name="RC_UI_SPECTRUM_STYLE_WAVE_MONO" link="RCUiSpectrumWidget.html#RC-UI-SPECTRUM-STYLE-WAVE-MONO:CAPS"/>
     <keyword type="constant" name="RC_UI_SPECTRUM_STYLE_WAVE_MULTI" link="RCUiSpectrumWidget.html#RC-UI-SPECTRUM-STYLE-WAVE-MULTI:CAPS"/>

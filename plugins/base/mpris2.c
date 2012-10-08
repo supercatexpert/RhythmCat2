@@ -194,7 +194,7 @@ static GVariant *rc_plugin_mpris_get_metadata(const gchar *uri,
     GVariant *variant;
     gint tracknum = 0;
     gchar *track_id = NULL;
-    const gchar *title = NULL, *artist = NULL, *album = NULL;
+    gchar *title = NULL, *artist = NULL, *album = NULL;
     gint64 length;
     const gchar *strv[] = {NULL, NULL};
     if(reference!=NULL)
@@ -210,9 +210,9 @@ static GVariant *rc_plugin_mpris_get_metadata(const gchar *uri,
     }
     else if(metadata!=NULL)
     {
-        title = metadata->title;
-        artist = metadata->artist;
-        album = metadata->album;
+        title = g_strdup(metadata->title);
+        artist = g_strdup(metadata->artist);
+        album = g_strdup(metadata->album);
         length = metadata->duration / GST_USECOND;
         tracknum = metadata->track;
     }
@@ -247,6 +247,9 @@ static GVariant *rc_plugin_mpris_get_metadata(const gchar *uri,
         g_variant_new_int32(tracknum));
     variant = g_variant_builder_end(builder);
     g_variant_builder_unref(builder);
+    g_free(title);
+    g_free(artist);
+    g_free(album);
     return variant;
 }
 

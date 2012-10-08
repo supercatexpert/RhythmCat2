@@ -40,13 +40,13 @@
 <pre class="synopsis">
 #include &lt;rc-ui-menu.h&gt;
 
-<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="returnvalue">guint</span></a>               <a class="link" href="RhythmCat-Menus.html#rc-ui-menu-add-menu-action" title="rc_ui_menu_add_menu_action ()">rc_ui_menu_add_menu_action</a>          (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/gtk/GtkAction.html"><span class="type">GtkAction</span></a> *action</code></em>,
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="returnvalue">guint</span></a>               <a class="link" href="RhythmCat-Menus.html#rc-ui-menu-add-menu-action" title="rc_ui_menu_add_menu_action ()">rc_ui_menu_add_menu_action</a>          (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/gtk3/GtkAction.html"><span class="type">GtkAction</span></a> *action</code></em>,
                                                          <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *path</code></em>,
                                                          <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *name</code></em>,
                                                          <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *action_name</code></em>,
                                                          <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> top</code></em>);
-<a href="/usr/share/gtk-doc/html/gtk/GtkUIManager.html"><span class="returnvalue">GtkUIManager</span></a> *      <a class="link" href="RhythmCat-Menus.html#rc-ui-menu-get-ui-manager" title="rc_ui_menu_get_ui_manager ()">rc_ui_menu_get_ui_manager</a>           ();
-<span class="returnvalue">void</span>                <a class="link" href="RhythmCat-Menus.html#rc-ui-menu-remove-menu-action" title="rc_ui_menu_remove_menu_action ()">rc_ui_menu_remove_menu_action</a>       (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/gtk/GtkAction.html"><span class="type">GtkAction</span></a> *action</code></em>,
+<a href="/usr/share/gtk-doc/html/gtk3/GtkUIManager.html"><span class="returnvalue">GtkUIManager</span></a> *      <a class="link" href="RhythmCat-Menus.html#rc-ui-menu-get-ui-manager" title="rc_ui_menu_get_ui_manager ()">rc_ui_menu_get_ui_manager</a>           ();
+<span class="returnvalue">void</span>                <a class="link" href="RhythmCat-Menus.html#rc-ui-menu-remove-menu-action" title="rc_ui_menu_remove_menu_action ()">rc_ui_menu_remove_menu_action</a>       (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/gtk3/GtkAction.html"><span class="type">GtkAction</span></a> *action</code></em>,
                                                          <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> id</code></em>);
 </pre>
 </div>
@@ -62,7 +62,7 @@ their own menu items into the player.
 <a name="RhythmCat-Menus.details"></a><h2>Details</h2>
 <div class="refsect2">
 <a name="rc-ui-menu-add-menu-action"></a><h3>rc_ui_menu_add_menu_action ()</h3>
-<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="returnvalue">guint</span></a>               rc_ui_menu_add_menu_action          (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/gtk/GtkAction.html"><span class="type">GtkAction</span></a> *action</code></em>,
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="returnvalue">guint</span></a>               rc_ui_menu_add_menu_action          (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/gtk3/GtkAction.html"><span class="type">GtkAction</span></a> *action</code></em>,
                                                          <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *path</code></em>,
                                                          <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *name</code></em>,
                                                          <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *action_name</code></em>,
@@ -75,7 +75,7 @@ Add a menu item to the main menu of the player.
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>action</code></em> :</span></p></td>
-<td>the <a href="/usr/share/gtk-doc/html/gtk/GtkAction.html"><span class="type">GtkAction</span></a> for the menu item</td>
+<td>the <a href="/usr/share/gtk-doc/html/gtk3/GtkAction.html"><span class="type">GtkAction</span></a> for the menu item</td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>path</code></em> :</span></p></td>
@@ -105,7 +105,7 @@ the menu when you do not need it.)</td>
 <hr>
 <div class="refsect2">
 <a name="rc-ui-menu-get-ui-manager"></a><h3>rc_ui_menu_get_ui_manager ()</h3>
-<pre class="programlisting"><a href="/usr/share/gtk-doc/html/gtk/GtkUIManager.html"><span class="returnvalue">GtkUIManager</span></a> *      rc_ui_menu_get_ui_manager           ();</pre>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/gtk3/GtkUIManager.html"><span class="returnvalue">GtkUIManager</span></a> *      rc_ui_menu_get_ui_manager           ();</pre>
 <p>
 Get the UI Manager of the menus. If it is not initialized
 yet, it will be initialized.
@@ -122,17 +122,17 @@ yet, it will be initialized.
 <hr>
 <div class="refsect2">
 <a name="rc-ui-menu-remove-menu-action"></a><h3>rc_ui_menu_remove_menu_action ()</h3>
-<pre class="programlisting"><span class="returnvalue">void</span>                rc_ui_menu_remove_menu_action       (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/gtk/GtkAction.html"><span class="type">GtkAction</span></a> *action</code></em>,
+<pre class="programlisting"><span class="returnvalue">void</span>                rc_ui_menu_remove_menu_action       (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/gtk3/GtkAction.html"><span class="type">GtkAction</span></a> *action</code></em>,
                                                          <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> id</code></em>);</pre>
 <p>
-Remove the menu item by the given <a href="/usr/share/gtk-doc/html/gtk/GtkAction.html"><span class="type">GtkAction</span></a> and merge ID.
+Remove the menu item by the given <a href="/usr/share/gtk-doc/html/gtk3/GtkAction.html"><span class="type">GtkAction</span></a> and merge ID.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>action</code></em> :</span></p></td>
-<td>the <a href="/usr/share/gtk-doc/html/gtk/GtkAction.html"><span class="type">GtkAction</span></a> for the menu item</td>
+<td>the <a href="/usr/share/gtk-doc/html/gtk3/GtkAction.html"><span class="type">GtkAction</span></a> for the menu item</td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>id</code></em> :</span></p></td>

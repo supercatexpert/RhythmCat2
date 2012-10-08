@@ -51,9 +51,9 @@ enum                <a class="link" href="RCUiPlaylistStore.html#RCUiPlaylistCol
 struct              <a class="link" href="RCUiPlaylistStore.html#RCUiPlaylistStore-struct" title="struct RCUiPlaylistStore">RCUiPlaylistStore</a>;
 struct              <a class="link" href="RCUiPlaylistStore.html#RCUiPlaylistStoreClass" title="struct RCUiPlaylistStoreClass">RCUiPlaylistStoreClass</a>;
 <span class="returnvalue">RCLibDbCatalogIter</span> * <a class="link" href="RCUiPlaylistStore.html#rc-ui-list-model-get-catalog-by-model" title="rc_ui_list_model_get_catalog_by_model ()">rc_ui_list_model_get_catalog_by_model</a>
-                                                        (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/gtk/GtkTreeModel.html"><span class="type">GtkTreeModel</span></a> *model</code></em>);
-<a href="/usr/share/gtk-doc/html/gtk/GtkTreeModel.html"><span class="returnvalue">GtkTreeModel</span></a> *      <a class="link" href="RCUiPlaylistStore.html#rc-ui-list-model-get-catalog-store" title="rc_ui_list_model_get_catalog_store ()">rc_ui_list_model_get_catalog_store</a>  ();
-<a href="/usr/share/gtk-doc/html/gtk/GtkTreeModel.html"><span class="returnvalue">GtkTreeModel</span></a> *      <a class="link" href="RCUiPlaylistStore.html#rc-ui-list-model-get-playlist-store" title="rc_ui_list_model_get_playlist_store ()">rc_ui_list_model_get_playlist_store</a> (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/gtk/GtkTreeModel.html#GtkTreeIter"><span class="type">GtkTreeIter</span></a> *iter</code></em>);
+                                                        (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/gtk3/GtkTreeModel.html"><span class="type">GtkTreeModel</span></a> *model</code></em>);
+<a href="/usr/share/gtk-doc/html/gtk3/GtkTreeModel.html"><span class="returnvalue">GtkTreeModel</span></a> *      <a class="link" href="RCUiPlaylistStore.html#rc-ui-list-model-get-catalog-store" title="rc_ui_list_model_get_catalog_store ()">rc_ui_list_model_get_catalog_store</a>  ();
+<a href="/usr/share/gtk-doc/html/gtk3/GtkTreeModel.html"><span class="returnvalue">GtkTreeModel</span></a> *      <a class="link" href="RCUiPlaylistStore.html#rc-ui-list-model-get-playlist-store" title="rc_ui_list_model_get_playlist_store ()">rc_ui_list_model_get_playlist_store</a> (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/gtk3/GtkTreeModel.html#GtkTreeIter"><span class="type">GtkTreeIter</span></a> *iter</code></em>);
 const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *       <a class="link" href="RCUiPlaylistStore.html#rc-ui-list-model-get-playlist-title-format" title="rc_ui_list_model_get_playlist_title_format ()">rc_ui_list_model_get_playlist_title_format</a>
                                                         ();
 <span class="returnvalue">void</span>                <a class="link" href="RCUiPlaylistStore.html#rc-ui-list-model-set-playlist-title-format" title="rc_ui_list_model_set_playlist_title_format ()">rc_ui_list_model_set_playlist_title_format</a>
@@ -75,16 +75,16 @@ const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span c
 <a name="RCUiPlaylistStore.implemented-interfaces"></a><h2>Implemented Interfaces</h2>
 <p>
 RCUiCatalogStore implements
- <a href="/usr/share/gtk-doc/html/gtk/GtkTreeModel.html">GtkTreeModel</a>.</p>
+ <a href="/usr/share/gtk-doc/html/gtk3/GtkTreeModel.html">GtkTreeModel</a>.</p>
 <p>
 RCUiPlaylistStore implements
- <a href="/usr/share/gtk-doc/html/gtk/GtkTreeModel.html">GtkTreeModel</a>.</p>
+ <a href="/usr/share/gtk-doc/html/gtk3/GtkTreeModel.html">GtkTreeModel</a>.</p>
 </div>
 <div class="refsect1">
 <a name="RCUiPlaylistStore.description"></a><h2>Description</h2>
 <p>
 This module provides 2 classes: <a class="link" href="RCUiPlaylistStore.html#RCUiCatalogStore"><span class="type">RCUiCatalogStore</span></a> and <a class="link" href="RCUiPlaylistStore.html" title="Playlist View Models"><span class="type">RCUiPlaylistStore</span></a>,
-which implements interface <a href="/usr/share/gtk-doc/html/gtk/GtkTreeModel.html"><span class="type">GtkTreeModel</span></a>. They can be used by <a href="/usr/share/gtk-doc/html/gtk/GtkTreeView.html"><span class="type">GtkTreeView</span></a>
+which implements interface <a href="/usr/share/gtk-doc/html/gtk3/GtkTreeModel.html"><span class="type">GtkTreeModel</span></a>. They can be used by <a href="/usr/share/gtk-doc/html/gtk3/GtkTreeView.html"><span class="type">GtkTreeView</span></a>
 for showing and operating the data inside. <a class="link" href="RCUiPlaylistStore.html#RCUiCatalogStore"><span class="type">RCUiCatalogStore</span></a> contains the
 catalog list, and <a class="link" href="RCUiPlaylistStore.html" title="Playlist View Models"><span class="type">RCUiPlaylistStore</span></a> contains the playlist.
 </p>
@@ -164,6 +164,7 @@ The data structure used for <a class="link" href="RCUiPlaylistStore.html#RCUiCat
     RC_UI_PLAYLIST_COLUMN_ARTIST,
     RC_UI_PLAYLIST_COLUMN_ALBUM,
     RC_UI_PLAYLIST_COLUMN_FTYPE,
+    RC_UI_PLAYLIST_COLUMN_GENRE,
     RC_UI_PLAYLIST_COLUMN_LENGTH,
     RC_UI_PLAYLIST_COLUMN_TRACK,
     RC_UI_PLAYLIST_COLUMN_RATING,
@@ -211,6 +212,11 @@ The enum type for the columns in the playlist store.
 <tr>
 <td><p><a name="RC-UI-PLAYLIST-COLUMN-FTYPE:CAPS"></a><span class="term"><code class="literal">RC_UI_PLAYLIST_COLUMN_FTYPE</code></span></p></td>
 <td>the file type (format) column
+</td>
+</tr>
+<tr>
+<td><p><a name="RC-UI-PLAYLIST-COLUMN-GENRE:CAPS"></a><span class="term"><code class="literal">RC_UI_PLAYLIST_COLUMN_GENRE</code></span></p></td>
+<td>the genre column
 </td>
 </tr>
 <tr>
@@ -268,7 +274,7 @@ The data structure used for <a class="link" href="RCUiPlaylistStore.html" title=
 <div class="refsect2">
 <a name="rc-ui-list-model-get-catalog-by-model"></a><h3>rc_ui_list_model_get_catalog_by_model ()</h3>
 <pre class="programlisting"><span class="returnvalue">RCLibDbCatalogIter</span> * rc_ui_list_model_get_catalog_by_model
-                                                        (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/gtk/GtkTreeModel.html"><span class="type">GtkTreeModel</span></a> *model</code></em>);</pre>
+                                                        (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/gtk3/GtkTreeModel.html"><span class="type">GtkTreeModel</span></a> *model</code></em>);</pre>
 <p>
 Get the catalog iter by given playlist store model.
 </p>
@@ -290,7 +296,7 @@ Get the catalog iter by given playlist store model.
 <hr>
 <div class="refsect2">
 <a name="rc-ui-list-model-get-catalog-store"></a><h3>rc_ui_list_model_get_catalog_store ()</h3>
-<pre class="programlisting"><a href="/usr/share/gtk-doc/html/gtk/GtkTreeModel.html"><span class="returnvalue">GtkTreeModel</span></a> *      rc_ui_list_model_get_catalog_store  ();</pre>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/gtk3/GtkTreeModel.html"><span class="returnvalue">GtkTreeModel</span></a> *      rc_ui_list_model_get_catalog_store  ();</pre>
 <p>
 Get the catalog store. If the catalog store is not initialize,
 it will be intialized first.
@@ -307,7 +313,7 @@ it will be intialized first.
 <hr>
 <div class="refsect2">
 <a name="rc-ui-list-model-get-playlist-store"></a><h3>rc_ui_list_model_get_playlist_store ()</h3>
-<pre class="programlisting"><a href="/usr/share/gtk-doc/html/gtk/GtkTreeModel.html"><span class="returnvalue">GtkTreeModel</span></a> *      rc_ui_list_model_get_playlist_store (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/gtk/GtkTreeModel.html#GtkTreeIter"><span class="type">GtkTreeIter</span></a> *iter</code></em>);</pre>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/gtk3/GtkTreeModel.html"><span class="returnvalue">GtkTreeModel</span></a> *      rc_ui_list_model_get_playlist_store (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/gtk3/GtkTreeModel.html#GtkTreeIter"><span class="type">GtkTreeIter</span></a> *iter</code></em>);</pre>
 <p>
 Get the playlist store by the iter in the catalog. If the store is
 not initialized, it will be initialzed first.

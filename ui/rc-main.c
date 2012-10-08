@@ -105,8 +105,6 @@ static void rc_main_app_activate(GApplication *application)
     gchar *libdir_name = NULL;
     RCLibDbCatalogIter *catalog_iter = NULL;
     RCLibDbPlaylistIter *playlist_iter = NULL;
-    RCLibDbCatalogSequence *catalog = NULL;
-    RCLibDbPlaylistSequence *playlist = NULL;
     GFile *file;
     gchar *uri;
     gint i;
@@ -261,23 +259,14 @@ static void rc_main_app_activate(GApplication *application)
         g_free(plugin_dir);
     }
     rclib_plugin_load_from_configure();
-    catalog = rclib_db_get_catalog();
-    if(rclib_settings_get_boolean("Player", "LoadLastPosition", NULL) &&
-        catalog!=NULL)
+    if(rclib_settings_get_boolean("Player", "LoadLastPosition", NULL))
     {
-        catalog_iter = rclib_db_catalog_sequence_get_iter_at_pos(catalog,
+        catalog_iter = rclib_db_catalog_get_iter_at_pos(
             rclib_settings_get_integer("Player", "LastPlayedCatalog", NULL));
-        playlist = NULL;
         if(catalog_iter!=NULL)
         {
-            rclib_db_catalog_data_iter_get(catalog_iter,
-                RCLIB_DB_CATALOG_DATA_TYPE_PLAYLIST, &playlist,
-                RCLIB_DB_CATALOG_DATA_TYPE_NONE);
-        }
-        if(playlist!=NULL)
-        {
-            playlist_iter = rclib_db_playlist_sequence_get_iter_at_pos(
-                playlist, rclib_settings_get_integer("Player",
+            playlist_iter = rclib_db_playlist_get_iter_at_pos(
+                catalog_iter, rclib_settings_get_integer("Player",
                 "LastPlayedMusic", NULL));
         }
         if(playlist_iter!=NULL)
@@ -292,21 +281,12 @@ static void rc_main_app_activate(GApplication *application)
         
     }
     else if(rclib_settings_get_boolean("Player", "AutoPlayWhenStartup",
-        NULL) && catalog!=NULL)
+        NULL))
     {
-        if(catalog!=NULL)
-            catalog_iter = rclib_db_catalog_sequence_get_begin_iter(catalog);
-        playlist = NULL;
+        catalog_iter = rclib_db_catalog_get_begin_iter();
         if(catalog_iter!=NULL)
         {
-            rclib_db_catalog_data_iter_get(catalog_iter,
-                RCLIB_DB_CATALOG_DATA_TYPE_PLAYLIST, &playlist,
-                RCLIB_DB_CATALOG_DATA_TYPE_NONE);
-        }
-        if(playlist!=NULL)
-        {
-            playlist_iter = rclib_db_playlist_sequence_get_begin_iter(
-                playlist);
+            playlist_iter = rclib_db_playlist_get_begin_iter(catalog_iter);
         }
         if(playlist_iter!=NULL)
             rclib_player_play_db(playlist_iter);
@@ -314,8 +294,7 @@ static void rc_main_app_activate(GApplication *application)
     rc_ui_main_window_show();
     if(main_remaining_args!=NULL)
     {
-        if(catalog!=NULL)
-            catalog_iter = rclib_db_catalog_sequence_get_begin_iter(catalog);
+        catalog_iter = rclib_db_catalog_get_begin_iter();
         if(catalog_iter!=NULL)
         {
             for(i=0;main_remaining_args[i]!=NULL;i++)
@@ -340,7 +319,6 @@ static void rc_main_app_open(GApplication *application, GFile **files,
 {
     GtkTreeIter tree_iter;
     RCLibDbCatalogIter *catalog_iter = NULL;
-    RCLibDbCatalogSequence *catalog;
     gint i;
     gchar *uri;
     if(files==NULL) return;
@@ -348,9 +326,7 @@ static void rc_main_app_open(GApplication *application, GFile **files,
         catalog_iter = tree_iter.user_data;
     else
     {
-        catalog = rclib_db_get_catalog();
-        if(catalog!=NULL)
-            catalog_iter = rclib_db_catalog_sequence_get_begin_iter(catalog);
+        catalog_iter = rclib_db_catalog_get_begin_iter();
     }
     if(catalog_iter==NULL) return;
     for(i=0;i<n_files;i++)
@@ -566,9 +542,11 @@ gint rc_main_run(gint *argc, gchar **argv[])
         rclib_major_version, rclib_minor_version, rclib_micro_version,
         rclib_build_date);
     catalog = rclib_db_get_catalog();
-    if(catalog!=NULL && rclib_db_catalog_sequence_get_length(catalog)==0)
+    if(catalog!=NULL && rclib_db_catalog_get_length()==0)
+    {
         rclib_db_catalog_add(_("Default Playlist"), NULL,
-        RCLIB_DB_CATALOG_TYPE_PLAYLIST);
+            RCLIB_DB_CATALOG_TYPE_PLAYLIST);
+    }
     g_resources_register(rc_ui_resources_get_resource());
     if(app!=NULL)
         status = g_application_run(G_APPLICATION(app), *argc, *argv);

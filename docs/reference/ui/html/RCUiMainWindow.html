@@ -54,7 +54,7 @@ struct              <a class="link" href="RCUiMainWindow.html#RCUiMainWindowClas
                                                         (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> visible</code></em>);
 <a href="/usr/share/gtk-doc/html/gdk-pixbuf/gdk-pixbuf-The-GdkPixbuf-Structure.html#GdkPixbuf"><span class="returnvalue">GdkPixbuf</span></a> *         <a class="link" href="RCUiMainWindow.html#rc-ui-main-window-get-default-cover-image" title="rc_ui_main_window_get_default_cover_image ()">rc_ui_main_window_get_default_cover_image</a>
                                                         ();
-<a href="/usr/share/gtk-doc/html/gtk/GtkWidget.html"><span class="returnvalue">GtkWidget</span></a> *         <a class="link" href="RCUiMainWindow.html#rc-ui-main-window-get-widget" title="rc_ui_main_window_get_widget ()">rc_ui_main_window_get_widget</a>        ();
+<a href="/usr/share/gtk-doc/html/gtk3/GtkWidget.html"><span class="returnvalue">GtkWidget</span></a> *         <a class="link" href="RCUiMainWindow.html#rc-ui-main-window-get-widget" title="rc_ui_main_window_get_widget ()">rc_ui_main_window_get_widget</a>        ();
 <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RCUiMainWindow.html#rc-ui-main-window-lyric-labels-get-visible" title="rc_ui_main_window_lyric_labels_get_visible ()">rc_ui_main_window_lyric_labels_get_visible</a>
                                                         ();
 <span class="returnvalue">void</span>                <a class="link" href="RCUiMainWindow.html#rc-ui-main-window-lyric-labels-set-visible" title="rc_ui_main_window_lyric_labels_set_visible ()">rc_ui_main_window_lyric_labels_set_visible</a>
@@ -79,10 +79,10 @@ struct              <a class="link" href="RCUiMainWindow.html#RCUiMainWindowClas
 <pre class="synopsis">
   <a href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GObject">GObject</a>
    +----<a href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GInitiallyUnowned">GInitiallyUnowned</a>
-         +----<a href="/usr/share/gtk-doc/html/gtk/GtkWidget.html">GtkWidget</a>
-               +----<a href="/usr/share/gtk-doc/html/gtk/GtkContainer.html">GtkContainer</a>
-                     +----<a href="/usr/share/gtk-doc/html/gtk/GtkBin.html">GtkBin</a>
-                           +----<a href="/usr/share/gtk-doc/html/gtk/GtkWindow.html">GtkWindow</a>
+         +----<a href="/usr/share/gtk-doc/html/gtk3/GtkWidget.html">GtkWidget</a>
+               +----<a href="/usr/share/gtk-doc/html/gtk3/GtkContainer.html">GtkContainer</a>
+                     +----<a href="/usr/share/gtk-doc/html/gtk3/GtkBin.html">GtkBin</a>
+                           +----<a href="/usr/share/gtk-doc/html/gtk3/GtkWindow.html">GtkWindow</a>
                                  +----RCUiMainWindow
 </pre>
 </div>
@@ -90,7 +90,7 @@ struct              <a class="link" href="RCUiMainWindow.html#RCUiMainWindowClas
 <a name="RCUiMainWindow.implemented-interfaces"></a><h2>Implemented Interfaces</h2>
 <p>
 RCUiMainWindow implements
- AtkImplementorIface and  <a href="/usr/share/gtk-doc/html/gtk/GtkBuildable.html">GtkBuildable</a>.</p>
+ AtkImplementorIface and  <a href="/usr/share/gtk-doc/html/gtk3/GtkBuildable.html">GtkBuildable</a>.</p>
 </div>
 <div class="refsect1">
 <a name="RCUiMainWindow.signals"></a><h2>Signals</h2>
@@ -176,7 +176,7 @@ Get the default cover image of the player.
 <hr>
 <div class="refsect2">
 <a name="rc-ui-main-window-get-widget"></a><h3>rc_ui_main_window_get_widget ()</h3>
-<pre class="programlisting"><a href="/usr/share/gtk-doc/html/gtk/GtkWidget.html"><span class="returnvalue">GtkWidget</span></a> *         rc_ui_main_window_get_widget        ();</pre>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/gtk3/GtkWidget.html"><span class="returnvalue">GtkWidget</span></a> *         rc_ui_main_window_get_widget        ();</pre>
 <p>
 Get the main window widget. If the widget is not initialized
 yet, it will be initialized.

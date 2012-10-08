@@ -145,24 +145,19 @@ static void rclib_lyric_uri_changed_cb(RCLibCore *core, const gchar *uri,
     gchar *lyric_sec_path = NULL;
     gboolean flag1 = FALSE;
     gboolean flag2 = FALSE;
-    const gchar *ptitle = NULL;
-    const gchar *partist = NULL;
-    const gchar *tmp;
+    gchar *ptitle = NULL;
+    gchar *partist = NULL;
     rclib_lyric_clean(0);
     rclib_lyric_clean(1);
     iter = (RCLibDbPlaylistIter *)rclib_core_get_db_reference();
     if(iter!=NULL)
     {
-        tmp = NULL;
         rclib_db_playlist_data_iter_get(iter,
-            RCLIB_DB_PLAYLIST_DATA_TYPE_LYRICFILE, &tmp,
+            RCLIB_DB_PLAYLIST_DATA_TYPE_LYRICFILE, &lyric_path,
             RCLIB_DB_PLAYLIST_DATA_TYPE_NONE);
-        lyric_path = g_strdup(tmp);
-        tmp = NULL;
         rclib_db_playlist_data_iter_get(iter,
-            RCLIB_DB_PLAYLIST_DATA_TYPE_LYRICSECFILE, &tmp,
+            RCLIB_DB_PLAYLIST_DATA_TYPE_LYRICSECFILE, &lyric_sec_path,
             RCLIB_DB_PLAYLIST_DATA_TYPE_NONE);
-        lyric_sec_path = g_strdup(tmp);
     }
     if(lyric_path==NULL)
         lyric_path = rclib_lyric_search_lyric(uri, NULL, NULL);
@@ -182,6 +177,8 @@ static void rclib_lyric_uri_changed_cb(RCLibCore *core, const gchar *uri,
             flag1 = rclib_lyric_load_file(lyric_path, 0);
         g_free(lyric_path);
     }
+    g_free(ptitle);
+    g_free(partist);
     if(!flag1 && !flag2)
     {
         g_signal_emit(lyric_instance,

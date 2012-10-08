@@ -717,7 +717,6 @@ static void rclib_db_xml_parser_start_element_cb(GMarkupParseContext *context,
     RCLibDbPlaylistData *playlist_data;
     RCLibDbLibraryData *library_data;
     RCLibDbCatalogIter *catalog_iter;
-    RCLibDbPlaylistIter *playlist_iter;
     guint i;
     if(data==NULL) return;
     if(g_strcmp0(element_name, "rclibdb")==0)
@@ -726,7 +725,7 @@ static void rclib_db_xml_parser_start_element_cb(GMarkupParseContext *context,
         return;
     }
     if(!parser_data->db_flag) return;
-    if(parser_data->playlist!=NULL && g_strcmp0(element_name, "item")==0)
+    if(parser_data->catalog_iter!=NULL && g_strcmp0(element_name, "item")==0)
     {
         playlist_data = rclib_db_playlist_data_new();
         playlist_data->catalog = parser_data->catalog_iter;
@@ -735,78 +734,104 @@ static void rclib_db_xml_parser_start_element_cb(GMarkupParseContext *context,
             if(playlist_data->uri==NULL &&
                 g_strcmp0(attribute_names[i], "uri")==0)
             {
-                playlist_data->uri = g_strdup(attribute_values[i]);
+                rclib_db_playlist_data_set(playlist_data,
+                    RCLIB_DB_PLAYLIST_DATA_TYPE_URI, attribute_values[i],
+                    RCLIB_DB_PLAYLIST_DATA_TYPE_NONE);
             }
             else if(g_strcmp0(attribute_names[i], "type")==0)
             {
-                sscanf(attribute_values[i], "%u", &(playlist_data->type));
+                rclib_db_playlist_data_set(playlist_data,
+                    RCLIB_DB_PLAYLIST_DATA_TYPE_TYPE,
+                    atoi(attribute_values[i]),
+                    RCLIB_DB_PLAYLIST_DATA_TYPE_NONE);
             }
             else if(playlist_data->title==NULL &&
                 g_strcmp0(attribute_names[i], "title")==0)
             {
-                playlist_data->title = g_strdup(attribute_values[i]);
+                rclib_db_playlist_data_set(playlist_data,
+                    RCLIB_DB_PLAYLIST_DATA_TYPE_TITLE, attribute_values[i],
+                    RCLIB_DB_PLAYLIST_DATA_TYPE_NONE);
             }
             else if(playlist_data->artist==NULL &&
                 g_strcmp0(attribute_names[i], "artist")==0)
             {
-                playlist_data->artist = g_strdup(attribute_values[i]);
+                rclib_db_playlist_data_set(playlist_data,
+                    RCLIB_DB_PLAYLIST_DATA_TYPE_ARTIST, attribute_values[i],
+                    RCLIB_DB_PLAYLIST_DATA_TYPE_NONE);
             }
             else if(playlist_data->album==NULL &&
                 g_strcmp0(attribute_names[i], "album")==0)
             {
-                playlist_data->album = g_strdup(attribute_values[i]);
+                rclib_db_playlist_data_set(playlist_data,
+                    RCLIB_DB_PLAYLIST_DATA_TYPE_ALBUM, attribute_values[i],
+                    RCLIB_DB_PLAYLIST_DATA_TYPE_NONE);
             }
             else if(playlist_data->ftype==NULL &&
                 g_strcmp0(attribute_names[i], "filetype")==0)
             {
-                playlist_data->ftype = g_strdup(attribute_values[i]);
+                rclib_db_playlist_data_set(playlist_data,
+                    RCLIB_DB_PLAYLIST_DATA_TYPE_FTYPE, attribute_values[i],
+                    RCLIB_DB_PLAYLIST_DATA_TYPE_NONE);
             }
             else if(g_strcmp0(attribute_names[i], "length")==0)
             {
-                playlist_data->length = g_ascii_strtoll(attribute_values[i],
-                    NULL, 10);
+                rclib_db_playlist_data_set(playlist_data,
+                    RCLIB_DB_PLAYLIST_DATA_TYPE_LENGTH,
+                    g_ascii_strtoll(attribute_values[i], NULL, 10),
+                    RCLIB_DB_PLAYLIST_DATA_TYPE_NONE);
             }
             else if(g_strcmp0(attribute_names[i], "tracknum")==0)
             {
-                sscanf(attribute_values[i], "%d",
-                    &(playlist_data->tracknum));
+                rclib_db_playlist_data_set(playlist_data,
+                    RCLIB_DB_PLAYLIST_DATA_TYPE_TRACKNUM,
+                    atoi(attribute_values[i]),
+                    RCLIB_DB_PLAYLIST_DATA_TYPE_NONE);
             }
             else if(g_strcmp0(attribute_names[i], "year")==0)
             {
-                sscanf(attribute_values[i], "%d",
-                    &(playlist_data->year));
+                rclib_db_playlist_data_set(playlist_data,
+                    RCLIB_DB_PLAYLIST_DATA_TYPE_YEAR,
+                    atoi(attribute_values[i]),
+                    RCLIB_DB_PLAYLIST_DATA_TYPE_NONE);
             }
             else if(g_strcmp0(attribute_names[i], "rating")==0)
             {
-                sscanf(attribute_values[i], "%f",
-                    &(playlist_data->rating));
+                rclib_db_playlist_data_set(playlist_data,
+                    RCLIB_DB_PLAYLIST_DATA_TYPE_RATING,
+                    atof(attribute_values[i]),
+                    RCLIB_DB_PLAYLIST_DATA_TYPE_NONE);
             }
             else if(playlist_data->lyricfile==NULL &&
                 g_strcmp0(attribute_names[i], "lyricfile")==0)
             {
-                playlist_data->lyricfile = g_strdup(attribute_values[i]);
+                rclib_db_playlist_data_set(playlist_data,
+                    RCLIB_DB_PLAYLIST_DATA_TYPE_LYRICFILE,
+                    attribute_values[i], RCLIB_DB_PLAYLIST_DATA_TYPE_NONE);
             }
             else if(playlist_data->albumfile==NULL &&
                 g_strcmp0(attribute_names[i], "albumfile")==0)
             {
-                playlist_data->albumfile = g_strdup(attribute_values[i]);
+                rclib_db_playlist_data_set(playlist_data,
+                    RCLIB_DB_PLAYLIST_DATA_TYPE_ALBUMFILE,
+                    attribute_values[i], RCLIB_DB_PLAYLIST_DATA_TYPE_NONE);
             }
             else if(playlist_data->lyricsecfile==NULL &&
                 g_strcmp0(attribute_names[i], "lyricsecondfile")==0)
             {
-                playlist_data->lyricsecfile = g_strdup(attribute_values[i]);
+                rclib_db_playlist_data_set(playlist_data,
+                    RCLIB_DB_PLAYLIST_DATA_TYPE_LYRICSECFILE,
+                    attribute_values[i], RCLIB_DB_PLAYLIST_DATA_TYPE_NONE);
             }
             else if(playlist_data->genre==NULL &&
                 g_strcmp0(attribute_names[i], "genre")==0)
             {
-                playlist_data->genre = g_strdup(attribute_values[i]);
+                rclib_db_playlist_data_set(playlist_data,
+                    RCLIB_DB_PLAYLIST_DATA_TYPE_GENRE, attribute_values[i],
+                    RCLIB_DB_PLAYLIST_DATA_TYPE_NONE);
             }
         }
-        playlist_iter = (RCLibDbPlaylistIter *)g_sequence_append(
-            (GSequence *)parser_data->playlist, playlist_data);
-        playlist_data->self_iter = playlist_iter;
-        g_hash_table_replace(parser_data->playlist_iter_table, playlist_iter,
-            playlist_iter);
+        _rclib_db_playlist_append_data_internal(parser_data->catalog_iter,
+            NULL, playlist_data);
     }
     else if(parser_data->catalog!=NULL &&
         g_strcmp0(element_name, "playlist")==0)
@@ -824,15 +849,9 @@ static void rclib_db_xml_parser_start_element_cb(GMarkupParseContext *context,
                 sscanf(attribute_values[i], "%u", &(catalog_data->type));
             }
         }
-        catalog_data->playlist = (RCLibDbPlaylistSequence *)
-            g_sequence_new((GDestroyNotify)rclib_db_playlist_data_unref);
-        parser_data->playlist = catalog_data->playlist;
-        catalog_iter = (RCLibDbCatalogIter *)g_sequence_append(
-            (GSequence *)parser_data->catalog, catalog_data);
-        catalog_data->self_iter = catalog_iter;
+        catalog_iter = _rclib_db_catalog_append_data_internal(NULL,
+            catalog_data);
         parser_data->catalog_iter = catalog_iter;
-        g_hash_table_replace(parser_data->catalog_iter_table, catalog_iter,
-            catalog_iter);
     }
     if(parser_data->library_table!=NULL && g_strcmp0(element_name,
         "libitem")==0)
@@ -995,7 +1014,6 @@ static gboolean rclib_db_load_library_db(RCLibDbCatalogSequence *catalog,
 static inline GString *rclib_db_build_xml_data(RCLibDbCatalogSequence *catalog,
     GHashTable *library)
 {
-    RCLibDbCatalogData *catalog_data;
     RCLibDbPlaylistData *playlist_data;
     RCLibDbLibraryData *library_data;
     RCLibDbCatalogIter *catalog_iter;
@@ -1003,6 +1021,8 @@ static inline GString *rclib_db_build_xml_data(RCLibDbCatalogSequence *catalog,
     GHashTableIter library_iter;
     GString *data_str;
     gchar *tmp;
+    gchar *catalog_name;
+    guint catalog_type;
     extern guint rclib_major_version;
     extern guint rclib_minor_version;
     extern guint rclib_micro_version;
@@ -1011,18 +1031,22 @@ static inline GString *rclib_db_build_xml_data(RCLibDbCatalogSequence *catalog,
         rclib_major_version, rclib_minor_version, rclib_micro_version);
     if(catalog!=NULL)
     {
-        for(catalog_iter = rclib_db_catalog_sequence_get_begin_iter(catalog);
+        for(catalog_iter = rclib_db_catalog_get_begin_iter();
             !rclib_db_catalog_iter_is_end(catalog_iter);
             catalog_iter = rclib_db_catalog_iter_next(catalog_iter))
         {
-            catalog_data = rclib_db_catalog_iter_get_data(catalog_iter);
-            if(catalog_data==NULL) continue;
+            catalog_name = NULL;
+            catalog_type = 0;
+            rclib_db_catalog_data_iter_get(catalog_iter,
+                RCLIB_DB_CATALOG_DATA_TYPE_NAME, &catalog_name,
+                RCLIB_DB_CATALOG_DATA_TYPE_TYPE, &catalog_type,
+                RCLIB_DB_CATALOG_DATA_TYPE_NONE);
             tmp = g_markup_printf_escaped("  <playlist name=\"%s\" "
-                "type=\"%u\">\n", catalog_data->name, catalog_data->type);
+                "type=\"%u\">\n", catalog_name, catalog_type);
+            g_free(catalog_name);
             g_string_append(data_str, tmp);
             g_free(tmp);
-            for(playlist_iter=rclib_db_playlist_sequence_get_begin_iter(
-                catalog_data->playlist);
+            for(playlist_iter=rclib_db_playlist_get_begin_iter(catalog_iter);
                 !rclib_db_playlist_iter_is_end(playlist_iter);
                 playlist_iter=rclib_db_playlist_iter_next(playlist_iter))
             {
@@ -1362,8 +1386,6 @@ static void rclib_db_finalize(GObject *object)
     g_async_queue_push(priv->refresh_queue, refresh_data);
     g_thread_join(priv->import_thread);
     g_thread_join(priv->refresh_thread);
-    rclib_db_save_library_db(priv->catalog, priv->library_table,
-        priv->filename, &(priv->dirty_flag));
     autosave_file = g_strdup_printf("%s.autosave", priv->filename);
     g_remove(autosave_file);
     g_free(autosave_file);
@@ -1727,7 +1749,17 @@ gboolean rclib_db_init(const gchar *file)
 
 void rclib_db_exit()
 {
-    if(db_instance!=NULL) g_object_unref(db_instance);
+    RCLibDbPrivate *priv;
+    if(db_instance!=NULL)
+    {
+        priv = RCLIB_DB(db_instance)->priv;
+        if(priv!=NULL)
+        {
+            rclib_db_save_library_db(priv->catalog, priv->library_table,
+                priv->filename, &(priv->dirty_flag));
+        }
+        g_object_unref(db_instance);
+    }
     db_instance = NULL;
     g_message("Database exited.");
 }
@@ -1901,9 +1933,9 @@ gboolean rclib_db_load_autosaved()
     priv = RCLIB_DB(db_instance)->priv;
     if(priv==NULL || priv->catalog==NULL || priv->filename==NULL)
         return FALSE;
-    while(rclib_db_catalog_sequence_get_length(priv->catalog)>0)
+    while(rclib_db_catalog_get_length()>0)
     {
-        iter = rclib_db_catalog_sequence_get_begin_iter(priv->catalog);
+        iter = rclib_db_catalog_get_begin_iter();
         rclib_db_catalog_delete(iter);
     }
     filename = g_strdup_printf("%s.autosave", priv->filename);
@@ -1913,7 +1945,7 @@ gboolean rclib_db_load_autosaved()
     g_free(filename);
     if(flag)
     {
-        for(iter=rclib_db_catalog_sequence_get_begin_iter(priv->catalog);
+        for(iter=rclib_db_catalog_get_begin_iter();
             !rclib_db_catalog_iter_is_end(iter);
             iter=rclib_db_catalog_iter_next(iter))
         {
@@ -2174,4 +2206,42 @@ void rclib_db_query_free(RCLibDbQuery *query)
         g_free(query_data);
     }
     g_ptr_array_free(query, TRUE);
+}
+
+/**
+ * rclib_db_query_get_query_data_type:
+ * @query_type: the #RCLibDbQueryDataType
+ * 
+ * Get the query data type.
+ * 
+ * Returns: The #GType of the given query data type
+ */
+
+GType rclib_db_query_get_query_data_type(RCLibDbQueryDataType query_type)
+{
+    switch(query_type)
+    {
+        case RCLIB_DB_QUERY_DATA_TYPE_URI:
+        case RCLIB_DB_QUERY_DATA_TYPE_TITLE:
+        case RCLIB_DB_QUERY_DATA_TYPE_ARTIST:
+        case RCLIB_DB_QUERY_DATA_TYPE_ALBUM:
+        case RCLIB_DB_QUERY_DATA_TYPE_FTYPE:
+        case RCLIB_DB_QUERY_DATA_TYPE_GENRE:
+            return G_TYPE_STRING;
+            break;
+        case RCLIB_DB_QUERY_DATA_TYPE_LENGTH:
+            return G_TYPE_INT64;
+            break;
+        case RCLIB_DB_QUERY_DATA_TYPE_TRACKNUM:
+        case RCLIB_DB_QUERY_DATA_TYPE_YEAR:
+            return G_TYPE_INT;
+            break;
+        case RCLIB_DB_QUERY_DATA_TYPE_RATING:
+            return G_TYPE_FLOAT;
+            break;
+        default:
+            return G_TYPE_NONE;
+            break;
+    }
+    return G_TYPE_NONE;
 }

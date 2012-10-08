@@ -60,7 +60,7 @@ static void rclib_main_update_db_metadata_cb(RCLibCore *core,
     RCLibCoreSourceType type;
     RCLibCoreSourceType new_type;
     RCLibDbPlaylistIter *iter;
-    const gchar *puri = NULL;
+    gchar *puri = NULL;
     if(metadata==NULL || uri==NULL) return;
     iter = (RCLibDbPlaylistIter *)rclib_core_get_db_reference();
     if(iter==NULL || !rclib_db_playlist_is_valid_iter(iter)) return;
@@ -68,6 +68,7 @@ static void rclib_main_update_db_metadata_cb(RCLibCore *core,
         &puri, RCLIB_DB_PLAYLIST_DATA_TYPE_TYPE, &type,
         RCLIB_DB_PLAYLIST_DATA_TYPE_NONE);
     ret = g_strcmp0(uri, puri);
+    g_free(puri);
     if(type==RCLIB_CORE_SOURCE_NORMAL && ret!=0) return;
     playlist_data = rclib_db_playlist_data_new();
     if(type==RCLIB_CORE_SOURCE_CUE || type==RCLIB_CORE_SOURCE_EMBEDDED_CUE)

@@ -84,6 +84,7 @@
 <ANCHOR id="RC-UI-PLAYLIST-COLUMN-ARTIST:CAPS" href="RhythmCat/RCUiPlaylistStore.html#RC-UI-PLAYLIST-COLUMN-ARTIST:CAPS">
 <ANCHOR id="RC-UI-PLAYLIST-COLUMN-ALBUM:CAPS" href="RhythmCat/RCUiPlaylistStore.html#RC-UI-PLAYLIST-COLUMN-ALBUM:CAPS">
 <ANCHOR id="RC-UI-PLAYLIST-COLUMN-FTYPE:CAPS" href="RhythmCat/RCUiPlaylistStore.html#RC-UI-PLAYLIST-COLUMN-FTYPE:CAPS">
+<ANCHOR id="RC-UI-PLAYLIST-COLUMN-GENRE:CAPS" href="RhythmCat/RCUiPlaylistStore.html#RC-UI-PLAYLIST-COLUMN-GENRE:CAPS">
 <ANCHOR id="RC-UI-PLAYLIST-COLUMN-LENGTH:CAPS" href="RhythmCat/RCUiPlaylistStore.html#RC-UI-PLAYLIST-COLUMN-LENGTH:CAPS">
 <ANCHOR id="RC-UI-PLAYLIST-COLUMN-TRACK:CAPS" href="RhythmCat/RCUiPlaylistStore.html#RC-UI-PLAYLIST-COLUMN-TRACK:CAPS">
 <ANCHOR id="RC-UI-PLAYLIST-COLUMN-RATING:CAPS" href="RhythmCat/RCUiPlaylistStore.html#RC-UI-PLAYLIST-COLUMN-RATING:CAPS">
@@ -113,6 +114,7 @@
 <ANCHOR id="RC-UI-LISTVIEW-PLAYLIST-COLUMN-YEAR:CAPS" href="RhythmCat/RCUiPlaylistView.html#RC-UI-LISTVIEW-PLAYLIST-COLUMN-YEAR:CAPS">
 <ANCHOR id="RC-UI-LISTVIEW-PLAYLIST-COLUMN-FTYPE:CAPS" href="RhythmCat/RCUiPlaylistView.html#RC-UI-LISTVIEW-PLAYLIST-COLUMN-FTYPE:CAPS">
 <ANCHOR id="RC-UI-LISTVIEW-PLAYLIST-COLUMN-RATING:CAPS" href="RhythmCat/RCUiPlaylistView.html#RC-UI-LISTVIEW-PLAYLIST-COLUMN-RATING:CAPS">
+<ANCHOR id="RC-UI-LISTVIEW-PLAYLIST-COLUMN-GENRE:CAPS" href="RhythmCat/RCUiPlaylistView.html#RC-UI-LISTVIEW-PLAYLIST-COLUMN-GENRE:CAPS">
 <ANCHOR id="RCUiPlaylistView-struct" href="RhythmCat/RCUiPlaylistView.html#RCUiPlaylistView-struct">
 <ANCHOR id="RCUiPlaylistViewClass" href="RhythmCat/RCUiPlaylistView.html#RCUiPlaylistViewClass">
 <ANCHOR id="rc-ui-listview-catalog-delete-items" href="RhythmCat/RCUiPlaylistView.html#rc-ui-listview-catalog-delete-items">

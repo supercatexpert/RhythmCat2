@@ -374,8 +374,8 @@ void rc_ui_dialog_bind_lyric()
     gint ret;
     gint i;
     const gchar *home_dir;
-    const gchar *lyric_file1 = NULL;
-    const gchar *lyric_file2 = NULL;
+    gchar *lyric_file1 = NULL;
+    gchar *lyric_file2 = NULL;
     gchar *new_file;
     GtkFileFilter *file_filter;
     GtkTreePath *path;
@@ -451,6 +451,7 @@ void rc_ui_dialog_bind_lyric()
              TRUE);
         gtk_file_chooser_set_filename(GTK_FILE_CHOOSER(filebutton[0]),
             lyric_file1);
+        g_free(lyric_file1);
     }
     if(lyric_file2!=NULL)
     {
@@ -458,6 +459,7 @@ void rc_ui_dialog_bind_lyric()
              TRUE);
         gtk_file_chooser_set_filename(GTK_FILE_CHOOSER(filebutton[1]),
             lyric_file2);
+        g_free(lyric_file2);
     }
     gtk_grid_attach(GTK_GRID(grid1), radio_buttons[0], 0, 0, 1, 1);
     gtk_grid_attach(GTK_GRID(grid1), filebutton[0], 0, 1, 1, 1);
@@ -582,7 +584,7 @@ void rc_ui_dialog_bind_album()
     GtkTreeIter iter;
     gint ret;
     const gchar *home_dir;
-    const gchar *album_file = NULL;
+    gchar *album_file = NULL;
     gchar *new_file;
     GtkFileFilter *file_filter;
     GtkTreePath *path;
@@ -631,6 +633,7 @@ void rc_ui_dialog_bind_album()
              TRUE);
         gtk_file_chooser_set_filename(GTK_FILE_CHOOSER(filebutton),
             album_file);
+        g_free(album_file);
     }
     gtk_widget_set_hexpand(radio_buttons[0], TRUE);
     gtk_grid_attach(GTK_GRID(grid), radio_buttons[0], 0, 0, 1, 1);

@@ -298,7 +298,7 @@ static void rc_ui_main_window_tag_found_cb(RCLibCore *core,
     RCUiMainWindowPrivate *priv = (RCUiMainWindowPrivate *)data;
     RCLibCoreSourceType type;
     gint ret;
-    const gchar *puri;
+    gchar *puri = NULL;
     RCLibDbPlaylistIter *iter = (RCLibDbPlaylistIter *)
         rclib_core_get_db_reference();
     if(data==NULL || metadata==NULL || uri==NULL) return;
@@ -309,6 +309,7 @@ static void rc_ui_main_window_tag_found_cb(RCLibCore *core,
             RCLIB_DB_PLAYLIST_DATA_TYPE_NONE);
         type = rclib_core_get_source_type();
         ret = g_strcmp0(uri, puri);
+        g_free(puri);
         if(type==RCLIB_CORE_SOURCE_NORMAL && ret!=0) return;
     }
     rc_ui_main_window_title_label_set_value(priv, uri, metadata->title);
@@ -329,9 +330,9 @@ static void rc_ui_main_window_uri_changed_cb(RCLibCore *core, const gchar *uri,
 {
     RCUiMainWindowPrivate *priv = (RCUiMainWindowPrivate *)data;
     RCLibDbPlaylistIter *reference;
-    const gchar *ptitle = NULL;
-    const gchar *partist = NULL;
-    const gchar *palbum = NULL;
+    gchar *ptitle = NULL;
+    gchar *partist = NULL;
+    gchar *palbum = NULL;
     if(data==NULL) return;
     reference = (RCLibDbPlaylistIter *)rclib_core_get_db_reference();
     if(priv->cover_using_pixbuf!=NULL)
@@ -363,6 +364,9 @@ static void rc_ui_main_window_uri_changed_cb(RCLibCore *core, const gchar *uri,
         gtk_label_set_text(GTK_LABEL(priv->info_label),
             _("Unknown Format"));
     }
+    g_free(ptitle);
+    g_free(partist);
+    g_free(palbum);
 }
 
 static gboolean rc_ui_main_window_album_found_cb(RCLibAlbum *album, guint type,

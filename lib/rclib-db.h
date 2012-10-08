@@ -263,19 +263,19 @@ typedef enum {
  */
 
 typedef enum {
-    RCLIB_DB_QUERY_CONDITION_TYPE_NONE,
-    RCLIB_DB_QUERY_CONDITION_TYPE_SUBQUERY,
-    RCLIB_DB_QUERY_CONDITION_TYPE_PROP_EQUALS,
-    RCLIB_DB_QUERY_CONDITION_TYPE_PROP_NOT_EQUAL,
-    RCLIB_DB_QUERY_CONDITION_TYPE_PROP_LIKE,
-    RCLIB_DB_QUERY_CONDITION_TYPE_PROP_NOT_LIKE,
-    RCLIB_DB_QUERY_CONDITION_TYPE_PROP_PREFIX,
-    RCLIB_DB_QUERY_CONDITION_TYPE_PROP_SUFFIX,
-    RCLIB_DB_QUERY_CONDITION_TYPE_PROP_GREATER,
-    RCLIB_DB_QUERY_CONDITION_TYPE_PROP_LESS,
-    RCLIB_DB_QUERY_CONDITION_TYPE_PROP_GREATER_OR_EQUAL,
-    RCLIB_DB_QUERY_CONDITION_TYPE_PROP_LESS_OR_EQUAL,
-    RCLIB_DB_QUERY_CONDITION_TYPE_LAST
+    RCLIB_DB_QUERY_CONDITION_TYPE_NONE = 0,
+    RCLIB_DB_QUERY_CONDITION_TYPE_SUBQUERY = 1,
+    RCLIB_DB_QUERY_CONDITION_TYPE_PROP_EQUALS = 2,
+    RCLIB_DB_QUERY_CONDITION_TYPE_PROP_NOT_EQUAL = 3,
+    RCLIB_DB_QUERY_CONDITION_TYPE_PROP_LIKE = 4,
+    RCLIB_DB_QUERY_CONDITION_TYPE_PROP_NOT_LIKE = 5,
+    RCLIB_DB_QUERY_CONDITION_TYPE_PROP_PREFIX = 6,
+    RCLIB_DB_QUERY_CONDITION_TYPE_PROP_SUFFIX = 7,
+    RCLIB_DB_QUERY_CONDITION_TYPE_PROP_GREATER = 8,
+    RCLIB_DB_QUERY_CONDITION_TYPE_PROP_LESS = 9,
+    RCLIB_DB_QUERY_CONDITION_TYPE_PROP_GREATER_OR_EQUAL = 10,
+    RCLIB_DB_QUERY_CONDITION_TYPE_PROP_LESS_OR_EQUAL = 11,
+    RCLIB_DB_QUERY_CONDITION_TYPE_LAST = 12
 }RCLibDbQueryConditionType;
 
 typedef struct _RCLibDbCatalogData RCLibDbCatalogData;
@@ -360,7 +360,7 @@ void rclib_db_catalog_data_unref(RCLibDbCatalogData *data);
 void rclib_db_catalog_data_free(RCLibDbCatalogData *data);
 void rclib_db_catalog_data_set(RCLibDbCatalogData *data,
     RCLibDbCatalogDataType type1, ...);
-void rclib_db_catalog_data_get(const RCLibDbCatalogData *data,
+void rclib_db_catalog_data_get(RCLibDbCatalogData *data,
     RCLibDbCatalogDataType type1, ...);
 void rclib_db_catalog_data_iter_set(RCLibDbCatalogIter *iter,
     RCLibDbCatalogDataType type1, ...);
@@ -372,19 +372,16 @@ void rclib_db_playlist_data_unref(RCLibDbPlaylistData *data);
 void rclib_db_playlist_data_free(RCLibDbPlaylistData *data);
 void rclib_db_playlist_data_set(RCLibDbPlaylistData *data,
     RCLibDbPlaylistDataType type1, ...);
-void rclib_db_playlist_data_get(const RCLibDbPlaylistData *data,
+void rclib_db_playlist_data_get(RCLibDbPlaylistData *data,
     RCLibDbPlaylistDataType type1, ...);
 void rclib_db_playlist_data_iter_set(RCLibDbPlaylistIter *iter,
     RCLibDbPlaylistDataType type1, ...);
 void rclib_db_playlist_data_iter_get(RCLibDbPlaylistIter *iter,
     RCLibDbPlaylistDataType type1, ...);
-gint rclib_db_catalog_sequence_get_length(RCLibDbCatalogSequence *seq);
-RCLibDbCatalogIter *rclib_db_catalog_sequence_get_begin_iter(
-    RCLibDbCatalogSequence *seq);
-RCLibDbCatalogIter *rclib_db_catalog_sequence_get_end_iter(
-    RCLibDbCatalogSequence *seq);
-RCLibDbCatalogIter *rclib_db_catalog_sequence_get_iter_at_pos(
-    RCLibDbCatalogSequence *seq, gint pos);
+gint rclib_db_catalog_get_length();
+RCLibDbCatalogIter *rclib_db_catalog_get_begin_iter();
+RCLibDbCatalogIter *rclib_db_catalog_get_end_iter();
+RCLibDbCatalogIter *rclib_db_catalog_get_iter_at_pos(gint pos);
 RCLibDbCatalogData *rclib_db_catalog_iter_get_data(
     RCLibDbCatalogIter *iter);
 gboolean rclib_db_catalog_iter_is_begin(RCLibDbCatalogIter *iter);
@@ -398,13 +395,20 @@ RCLibDbCatalogIter *rclib_db_catalog_iter_range_get_midpoint(
     RCLibDbCatalogIter *begin, RCLibDbCatalogIter *end);
 gint rclib_db_catalog_iter_compare(RCLibDbCatalogIter *a,
     RCLibDbCatalogIter *b);
-gint rclib_db_playlist_sequence_get_length(RCLibDbPlaylistSequence *seq);
-RCLibDbPlaylistIter *rclib_db_playlist_sequence_get_begin_iter(
-    RCLibDbPlaylistSequence *seq);
-RCLibDbPlaylistIter *rclib_db_playlist_sequence_get_end_iter(
-    RCLibDbPlaylistSequence *seq);
-RCLibDbPlaylistIter *rclib_db_playlist_sequence_get_iter_at_pos(
-    RCLibDbPlaylistSequence *seq, gint pos);
+gint rclib_db_playlist_get_length(RCLibDbCatalogIter *catalog_iter);
+gint rclib_db_playlist_iter_get_length(RCLibDbPlaylistIter *playlist_iter);
+RCLibDbPlaylistIter *rclib_db_playlist_get_begin_iter(
+    RCLibDbCatalogIter *catalog_iter);
+RCLibDbPlaylistIter *rclib_db_playlist_get_end_iter(
+    RCLibDbCatalogIter *catalog_iter);
+RCLibDbPlaylistIter *rclib_db_playlist_iter_get_begin_iter(
+    RCLibDbPlaylistIter *playlist_iter);
+RCLibDbPlaylistIter *rclib_db_playlist_iter_get_end_iter(
+    RCLibDbPlaylistIter *playlist_iter);
+RCLibDbPlaylistIter *rclib_db_playlist_get_iter_at_pos(
+    RCLibDbCatalogIter *catalog_iter, gint pos);
+RCLibDbPlaylistIter *rclib_db_playlist_iter_get_iter_at_pos(
+    RCLibDbPlaylistIter *playlist_iter, gint pos);
 RCLibDbPlaylistData *rclib_db_playlist_iter_get_data(
     RCLibDbPlaylistIter *iter);
 gboolean rclib_db_playlist_iter_is_begin(RCLibDbPlaylistIter *iter);
@@ -412,17 +416,14 @@ gboolean rclib_db_playlist_iter_is_end(RCLibDbPlaylistIter *iter);
 RCLibDbPlaylistIter *rclib_db_playlist_iter_next(RCLibDbPlaylistIter *iter);
 RCLibDbPlaylistIter *rclib_db_playlist_iter_prev(RCLibDbPlaylistIter *iter);
 gint rclib_db_playlist_iter_get_position(RCLibDbPlaylistIter *iter);
-RCLibDbPlaylistSequence *rclib_db_playlist_iter_get_sequence(
-    RCLibDbPlaylistIter *iter);
 RCLibDbPlaylistIter *rclib_db_playlist_iter_range_get_midpoint(
     RCLibDbPlaylistIter *begin, RCLibDbPlaylistIter *end);
 gint rclib_db_playlist_iter_compare(RCLibDbPlaylistIter *a,
     RCLibDbPlaylistIter *b);
-void rclib_db_catalog_sequence_foreach(RCLibDbCatalogSequence *seq,
-    GFunc func, gpointer user_data);
+void rclib_db_catalog_foreach(GFunc func, gpointer user_data);
 void rclib_db_catalog_iter_foreach_range(RCLibDbCatalogIter *begin,
     RCLibDbCatalogIter *end, GFunc func, gpointer user_data);
-void rclib_db_playlist_sequence_foreach(RCLibDbPlaylistSequence *seq,
+void rclib_db_playlist_foreach(RCLibDbCatalogIter *catalog_iter,
     GFunc func, gpointer user_data);
 void rclib_db_playlist_iter_foreach_range(RCLibDbPlaylistIter *begin,
     RCLibDbPlaylistIter *end, GFunc func, gpointer user_data);
@@ -482,6 +483,7 @@ gboolean rclib_db_query_concatenate(RCLibDbQuery *target,
     const RCLibDbQuery *src);
 RCLibDbQuery *rclib_db_query_copy(const RCLibDbQuery *query);
 void rclib_db_query_free(RCLibDbQuery *query);
+GType rclib_db_query_get_query_data_type(RCLibDbQueryDataType query_type);
 
 G_END_DECLS
 

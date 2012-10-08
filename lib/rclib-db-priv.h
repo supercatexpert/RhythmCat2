@@ -95,6 +95,9 @@ struct _RCLibDbPrivate
     RCLibDbCatalogSequence *catalog;
     GHashTable *catalog_iter_table;
     GHashTable *playlist_iter_table;
+    GHashTable *playlist_sequence_table;
+    GRWLock catalog_rw_lock;
+    GRWLock playlist_rw_lock;
     GSequence *library_query;
     GHashTable *library_table;
     GHashTable *library_keyword_table;
@@ -117,6 +120,7 @@ struct _RCLibDbCatalogData
 {
     /*< private >*/
     gint ref_count;
+    GRWLock lock;
     
     /*< public >*/
     RCLibDbPlaylistSequence *playlist;
@@ -130,6 +134,7 @@ struct _RCLibDbPlaylistData
 {
     /*< private >*/
     gint ref_count;
+    GRWLock lock;
 
     /*< public >*/
     RCLibDbCatalogIter *catalog;
@@ -187,6 +192,11 @@ void _rclib_db_instance_finalize_playlist(RCLibDbPrivate *priv);
 void _rclib_db_instance_finalize_library(RCLibDbPrivate *priv);
 gboolean _rclib_db_playlist_import_idle_cb(gpointer data);
 gboolean _rclib_db_playlist_refresh_idle_cb(gpointer data);
+RCLibDbCatalogIter *_rclib_db_catalog_append_data_internal(
+    RCLibDbCatalogIter *insert_iter, RCLibDbCatalogData *catalog_data);
+RCLibDbPlaylistIter *_rclib_db_playlist_append_data_internal(
+    RCLibDbCatalogIter *catalog_iter, RCLibDbPlaylistIter *insert_iter,
+    RCLibDbPlaylistData *playlist_data);
 gboolean _rclib_db_library_import_idle_cb(gpointer data);
 gboolean _rclib_db_library_refresh_idle_cb(gpointer data);
 

@@ -129,7 +129,6 @@
     <keyword type="function" name="rclib_db_catalog_data_set ()" link="RCLibDb.html#rclib-db-catalog-data-set"/>
     <keyword type="function" name="rclib_db_catalog_data_unref ()" link="RCLibDb.html#rclib-db-catalog-data-unref"/>
     <keyword type="function" name="rclib_db_catalog_delete ()" link="RCLibDb.html#rclib-db-catalog-delete"/>
-    <keyword type="function" name="rclib_db_catalog_get_store ()" link="RCLibDb.html#rclib-db-catalog-get-store"/>
     <keyword type="function" name="rclib_db_catalog_is_valid_iter ()" link="RCLibDb.html#rclib-db-catalog-is-valid-iter"/>
     <keyword type="function" name="rclib_db_catalog_iter_compare ()" link="RCLibDb.html#rclib-db-catalog-iter-compare"/>
     <keyword type="function" name="rclib_db_catalog_iter_foreach_range ()" link="RCLibDb.html#rclib-db-catalog-iter-foreach-range"/>
@@ -142,14 +141,6 @@
     <keyword type="function" name="rclib_db_catalog_iter_prev ()" link="RCLibDb.html#rclib-db-catalog-iter-prev"/>
     <keyword type="function" name="rclib_db_catalog_iter_range_get_midpoint ()" link="RCLibDb.html#rclib-db-catalog-iter-range-get-midpoint"/>
     <keyword type="function" name="rclib_db_catalog_reorder ()" link="RCLibDb.html#rclib-db-catalog-reorder"/>
-    <keyword type="function" name="rclib_db_catalog_sequence_foreach ()" link="RCLibDb.html#rclib-db-catalog-sequence-foreach"/>
-    <keyword type="function" name="rclib_db_catalog_sequence_get_begin_iter ()" link="RCLibDb.html#rclib-db-catalog-sequence-get-begin-iter"/>
-    <keyword type="function" name="rclib_db_catalog_sequence_get_end_iter ()" link="RCLibDb.html#rclib-db-catalog-sequence-get-end-iter"/>
-    <keyword type="function" name="rclib_db_catalog_sequence_get_iter_at_pos ()" link="RCLibDb.html#rclib-db-catalog-sequence-get-iter-at-pos"/>
-    <keyword type="function" name="rclib_db_catalog_sequence_get_length ()" link="RCLibDb.html#rclib-db-catalog-sequence-get-length"/>
-    <keyword type="function" name="rclib_db_catalog_set_name ()" link="RCLibDb.html#rclib-db-catalog-set-name"/>
-    <keyword type="function" name="rclib_db_catalog_set_store ()" link="RCLibDb.html#rclib-db-catalog-set-store"/>
-    <keyword type="function" name="rclib_db_catalog_set_type ()" link="RCLibDb.html#rclib-db-catalog-set-type"/>
     <keyword type="function" name="rclib_db_exit ()" link="RCLibDb.html#rclib-db-exit"/>
     <keyword type="function" name="rclib_db_get_catalog ()" link="RCLibDb.html#rclib-db-get-catalog"/>
     <keyword type="function" name="rclib_db_get_instance ()" link="RCLibDb.html#rclib-db-get-instance"/>
@@ -182,16 +173,11 @@
     <keyword type="function" name="rclib_db_playlist_delete ()" link="RCLibDb.html#rclib-db-playlist-delete"/>
     <keyword type="function" name="rclib_db_playlist_export_all_m3u_files ()" link="RCLibDb.html#rclib-db-playlist-export-all-m3u-files"/>
     <keyword type="function" name="rclib_db_playlist_export_m3u_file ()" link="RCLibDb.html#rclib-db-playlist-export-m3u-file"/>
-    <keyword type="function" name="rclib_db_playlist_get_album_bind ()" link="RCLibDb.html#rclib-db-playlist-get-album-bind"/>
-    <keyword type="function" name="rclib_db_playlist_get_lyric_bind ()" link="RCLibDb.html#rclib-db-playlist-get-lyric-bind"/>
-    <keyword type="function" name="rclib_db_playlist_get_lyric_secondary_bind ()" link="RCLibDb.html#rclib-db-playlist-get-lyric-secondary-bind"/>
-    <keyword type="function" name="rclib_db_playlist_get_rating ()" link="RCLibDb.html#rclib-db-playlist-get-rating"/>
     <keyword type="function" name="rclib_db_playlist_is_valid_iter ()" link="RCLibDb.html#rclib-db-playlist-is-valid-iter"/>
     <keyword type="function" name="rclib_db_playlist_iter_compare ()" link="RCLibDb.html#rclib-db-playlist-iter-compare"/>
     <keyword type="function" name="rclib_db_playlist_iter_foreach_range ()" link="RCLibDb.html#rclib-db-playlist-iter-foreach-range"/>
     <keyword type="function" name="rclib_db_playlist_iter_get_data ()" link="RCLibDb.html#rclib-db-playlist-iter-get-data"/>
     <keyword type="function" name="rclib_db_playlist_iter_get_position ()" link="RCLibDb.html#rclib-db-playlist-iter-get-position"/>
-    <keyword type="function" name="rclib_db_playlist_iter_get_sequence ()" link="RCLibDb.html#rclib-db-playlist-iter-get-sequence"/>
     <keyword type="function" name="rclib_db_playlist_iter_is_begin ()" link="RCLibDb.html#rclib-db-playlist-iter-is-begin"/>
     <keyword type="function" name="rclib_db_playlist_iter_is_end ()" link="RCLibDb.html#rclib-db-playlist-iter-is-end"/>
     <keyword type="function" name="rclib_db_playlist_iter_next ()" link="RCLibDb.html#rclib-db-playlist-iter-next"/>
@@ -200,17 +186,6 @@
     <keyword type="function" name="rclib_db_playlist_move_to_another_catalog ()" link="RCLibDb.html#rclib-db-playlist-move-to-another-catalog"/>
     <keyword type="function" name="rclib_db_playlist_refresh ()" link="RCLibDb.html#rclib-db-playlist-refresh"/>
     <keyword type="function" name="rclib_db_playlist_reorder ()" link="RCLibDb.html#rclib-db-playlist-reorder"/>
-    <keyword type="function" name="rclib_db_playlist_sequence_foreach ()" link="RCLibDb.html#rclib-db-playlist-sequence-foreach"/>
-    <keyword type="function" name="rclib_db_playlist_sequence_get_begin_iter ()" link="RCLibDb.html#rclib-db-playlist-sequence-get-begin-iter"/>
-    <keyword type="function" name="rclib_db_playlist_sequence_get_end_iter ()" link="RCLibDb.html#rclib-db-playlist-sequence-get-end-iter"/>
-    <keyword type="function" name="rclib_db_playlist_sequence_get_iter_at_pos ()" link="RCLibDb.html#rclib-db-playlist-sequence-get-iter-at-pos"/>
-    <keyword type="function" name="rclib_db_playlist_sequence_get_length ()" link="RCLibDb.html#rclib-db-playlist-sequence-get-length"/>
-    <keyword type="function" name="rclib_db_playlist_set_album_bind ()" link="RCLibDb.html#rclib-db-playlist-set-album-bind"/>
-    <keyword type="function" name="rclib_db_playlist_set_lyric_bind ()" link="RCLibDb.html#rclib-db-playlist-set-lyric-bind"/>
-    <keyword type="function" name="rclib_db_playlist_set_lyric_secondary_bind ()" link="RCLibDb.html#rclib-db-playlist-set-lyric-secondary-bind"/>
-    <keyword type="function" name="rclib_db_playlist_set_rating ()" link="RCLibDb.html#rclib-db-playlist-set-rating"/>
-    <keyword type="function" name="rclib_db_playlist_set_type ()" link="RCLibDb.html#rclib-db-playlist-set-type"/>
-    <keyword type="function" name="rclib_db_playlist_update_length ()" link="RCLibDb.html#rclib-db-playlist-update-length"/>
     <keyword type="function" name="rclib_db_playlist_update_metadata ()" link="RCLibDb.html#rclib-db-playlist-update-metadata"/>
     <keyword type="function" name="rclib_db_refresh_cancel ()" link="RCLibDb.html#rclib-db-refresh-cancel"/>
     <keyword type="function" name="rclib_db_refresh_queue_get_length ()" link="RCLibDb.html#rclib-db-refresh-queue-get-length"/>
@@ -396,6 +371,7 @@
     <keyword type="constant" name="RCLIB_DB_LIBRARY_DATA_TYPE_LYRICFILE" link="RCLibDb.html#RCLIB-DB-LIBRARY-DATA-TYPE-LYRICFILE:CAPS"/>
     <keyword type="constant" name="RCLIB_DB_LIBRARY_DATA_TYPE_LYRICSECFILE" link="RCLibDb.html#RCLIB-DB-LIBRARY-DATA-TYPE-LYRICSECFILE:CAPS"/>
     <keyword type="constant" name="RCLIB_DB_LIBRARY_DATA_TYPE_ALBUMFILE" link="RCLibDb.html#RCLIB-DB-LIBRARY-DATA-TYPE-ALBUMFILE:CAPS"/>
+    <keyword type="constant" name="RCLIB_DB_LIBRARY_DATA_TYPE_GENRE" link="RCLibDb.html#RCLIB-DB-LIBRARY-DATA-TYPE-GENRE:CAPS"/>
     <keyword type="constant" name="RCLIB_DB_LIBRARY_TYPE_MISSING" link="RCLibDb.html#RCLIB-DB-LIBRARY-TYPE-MISSING:CAPS"/>
     <keyword type="constant" name="RCLIB_DB_LIBRARY_TYPE_MUSIC" link="RCLibDb.html#RCLIB-DB-LIBRARY-TYPE-MUSIC:CAPS"/>
     <keyword type="constant" name="RCLIB_DB_LIBRARY_TYPE_CUE" link="RCLibDb.html#RCLIB-DB-LIBRARY-TYPE-CUE:CAPS"/>
@@ -415,6 +391,7 @@
     <keyword type="constant" name="RCLIB_DB_PLAYLIST_DATA_TYPE_LYRICFILE" link="RCLibDb.html#RCLIB-DB-PLAYLIST-DATA-TYPE-LYRICFILE:CAPS"/>
     <keyword type="constant" name="RCLIB_DB_PLAYLIST_DATA_TYPE_LYRICSECFILE" link="RCLibDb.html#RCLIB-DB-PLAYLIST-DATA-TYPE-LYRICSECFILE:CAPS"/>
     <keyword type="constant" name="RCLIB_DB_PLAYLIST_DATA_TYPE_ALBUMFILE" link="RCLibDb.html#RCLIB-DB-PLAYLIST-DATA-TYPE-ALBUMFILE:CAPS"/>
+    <keyword type="constant" name="RCLIB_DB_PLAYLIST_DATA_TYPE_GENRE" link="RCLibDb.html#RCLIB-DB-PLAYLIST-DATA-TYPE-GENRE:CAPS"/>
     <keyword type="constant" name="RCLIB_DB_PLAYLIST_TYPE_MISSING" link="RCLibDb.html#RCLIB-DB-PLAYLIST-TYPE-MISSING:CAPS"/>
     <keyword type="constant" name="RCLIB_DB_PLAYLIST_TYPE_MUSIC" link="RCLibDb.html#RCLIB-DB-PLAYLIST-TYPE-MUSIC:CAPS"/>
     <keyword type="constant" name="RCLIB_DB_PLAYLIST_TYPE_CUE" link="RCLibDb.html#RCLIB-DB-PLAYLIST-TYPE-CUE:CAPS"/>

@@ -154,11 +154,10 @@ static gboolean rc_ui_catalog_store_get_iter(GtkTreeModel *model,
     store = RC_UI_CATALOG_STORE(model);
     priv = store->priv;
     i = gtk_tree_path_get_indices(path)[0];
-    if(i>=rclib_db_catalog_sequence_get_length(priv->catalog))
+    if(i>=rclib_db_catalog_get_length())
         return FALSE;
     iter->stamp = priv->stamp;
-    iter->user_data = rclib_db_catalog_sequence_get_iter_at_pos(
-        priv->catalog, i);
+    iter->user_data = rclib_db_catalog_get_iter_at_pos(i);
     iter->user_data2 = NULL;
     iter->user_data3 = NULL;
     return TRUE;
@@ -175,11 +174,11 @@ static gboolean rc_ui_playlist_store_get_iter(GtkTreeModel *model,
     store = RC_UI_PLAYLIST_STORE(model);
     priv = RC_UI_PLAYLIST_STORE(store)->priv;
     i = gtk_tree_path_get_indices(path)[0];
-    if(i>=rclib_db_playlist_sequence_get_length(priv->playlist))
+    if(i>=rclib_db_playlist_get_length(priv->catalog_iter))
         return FALSE;
     iter->stamp = priv->stamp;
-    iter->user_data = rclib_db_playlist_sequence_get_iter_at_pos(
-        priv->playlist, i);
+    iter->user_data = rclib_db_playlist_get_iter_at_pos(priv->catalog_iter,
+        i);
     iter->user_data2 = NULL;
     iter->user_data3 = NULL;
     return TRUE;
@@ -260,7 +259,7 @@ static void rc_ui_catalog_store_get_value(GtkTreeModel *model,
             if(reference_iter==NULL ||
                 !rclib_db_playlist_is_valid_iter(reference_iter))
             {
-                g_value_set_string(value, NULL);
+                g_value_set_static_string(value, NULL);
                 break;
             }
             rclib_db_playlist_data_iter_get(reference_iter,
@@ -268,35 +267,35 @@ static void rc_ui_catalog_store_get_value(GtkTreeModel *model,
                 RCLIB_DB_PLAYLIST_DATA_TYPE_NONE);
             if(ref_catalog_iter==NULL || ref_catalog_iter!=seq_iter)
             {
-                g_value_set_string(value, NULL);
+                g_value_set_static_string(value, NULL);
                 break;
             }
             if(!rclib_core_get_state(&state, NULL, 0))
             {
-                g_value_set_string(value, NULL);
+                g_value_set_static_string(value, NULL);
                 break;
             }
             switch(state)
             {
                 case GST_STATE_PLAYING:
-                    g_value_set_string(value, GTK_STOCK_MEDIA_PLAY);
+                    g_value_set_static_string(value, GTK_STOCK_MEDIA_PLAY);
                     break;
                 case GST_STATE_PAUSED:
-                    g_value_set_string(value, GTK_STOCK_MEDIA_PAUSE);
+                    g_value_set_static_string(value, GTK_STOCK_MEDIA_PAUSE);
                     break;
                 default:
-                    g_value_set_string(value, NULL);
+                    g_value_set_static_string(value, NULL);
             }
             break;
         }
         case RC_UI_CATALOG_COLUMN_NAME:
         {
-            const gchar *str;
+            gchar *str = NULL;
             rclib_db_catalog_data_iter_get(seq_iter,
                 RCLIB_DB_CATALOG_DATA_TYPE_NAME, &str,
                 RCLIB_DB_CATALOG_DATA_TYPE_NONE);
             g_value_init(value, G_TYPE_STRING);
-            g_value_set_string(value, str);
+            g_value_take_string(value, str);
             break;
         }
         case RC_UI_CATALOG_COLUMN_PLAYING_FLAG:
@@ -336,7 +335,7 @@ static void rc_ui_playlist_store_get_value(GtkTreeModel *model,
     RCUiPlaylistStore *store;
     RCUiPlaylistStorePrivate *priv;
     RCLibDbPlaylistIter *seq_iter, *reference;
-    const gchar *dstr;
+    gchar *dstr;
     GstState state;
     gint vint;
     g_return_if_fail(RC_UI_IS_PLAYLIST_STORE(model));
@@ -367,39 +366,39 @@ static void rc_ui_playlist_store_get_value(GtkTreeModel *model,
             g_value_init(value, G_TYPE_STRING);
             if(type==RCLIB_DB_PLAYLIST_TYPE_MISSING)
             {
-                g_value_set_string(value, GTK_STOCK_CANCEL);
+                g_value_set_static_string(value, GTK_STOCK_CANCEL);
                 break;
             }
             reference = (RCLibDbPlaylistIter *)rclib_core_get_db_reference();
             if(reference!=seq_iter)
             {
-                g_value_set_string(value, NULL);
+                g_value_set_static_string(value, NULL);
                 break;
             }
             if(!rclib_core_get_state(&state, NULL, 0))
             {
-                g_value_set_string(value, NULL);
+                g_value_set_static_string(value, NULL);
                 break;
             }
             switch(state)
             {
                 case GST_STATE_PLAYING:
-                    g_value_set_string(value, GTK_STOCK_MEDIA_PLAY);
+                    g_value_set_static_string(value, GTK_STOCK_MEDIA_PLAY);
                     break;
                 case GST_STATE_PAUSED:
-                    g_value_set_string(value, GTK_STOCK_MEDIA_PAUSE);
+                    g_value_set_static_string(value, GTK_STOCK_MEDIA_PAUSE);
                     break;
                 default:
-                    g_value_set_string(value, NULL);
+                    g_value_set_static_string(value, NULL);
             }
             break;
         }
         case RC_UI_PLAYLIST_COLUMN_FTITLE:
         {
-            const gchar *duri = NULL;
-            const gchar *dtitle = NULL;
-            const gchar *dalbum = NULL;
-            const gchar *dartist = NULL;
+            gchar *duri = NULL;
+            gchar *dtitle = NULL;
+            gchar *dalbum = NULL;
+            gchar *dartist = NULL;
             gchar *rtitle = NULL;
             gchar *rartist, *ralbum;
             GString *ftitle;
@@ -417,15 +416,19 @@ static void rc_ui_playlist_store_get_value(GtkTreeModel *model,
                 if(duri!=NULL)
                     rtitle = rclib_tag_get_name_from_uri(duri);
             }
+            g_free(duri);
+            g_free(dtitle);
             if(rtitle==NULL) rtitle = g_strdup(_("Unknown Title"));
             if(dartist!=NULL && strlen(dartist)>0)
                 rartist = g_strdup(dartist);
             else
                 rartist = g_strdup(_("Unknown Artist"));
+            g_free(dartist);
             if(dalbum!=NULL && strlen(dalbum)>0)
                 ralbum = g_strdup(dalbum);
             else
                 ralbum = g_strdup(_("Unknown Album"));
+            g_free(dalbum);
             len = strlen(format_string);
             ftitle = g_string_new(NULL);
             for(i=0;i<len;i++)
@@ -457,53 +460,57 @@ static void rc_ui_playlist_store_get_value(GtkTreeModel *model,
             g_free(rartist);
             g_free(ralbum);
             g_value_init(value, G_TYPE_STRING);
-            g_value_set_string(value, ftitle->str);
-            g_string_free(ftitle, TRUE);
+            g_value_take_string(value, g_string_free(ftitle, FALSE));
             break;
         }
         case RC_UI_PLAYLIST_COLUMN_TITLE:
         {
+            dstr = NULL;
             rclib_db_playlist_data_iter_get(seq_iter,
                 RCLIB_DB_PLAYLIST_DATA_TYPE_TITLE, &dstr,
                 RCLIB_DB_PLAYLIST_DATA_TYPE_NONE);
             g_value_init(value, G_TYPE_STRING);
-            g_value_set_string(value, dstr);
+            g_value_take_string(value, dstr);
             break;
         }
         case RC_UI_PLAYLIST_COLUMN_ARTIST:
         {
+            dstr = NULL;
             rclib_db_playlist_data_iter_get(seq_iter,
                 RCLIB_DB_PLAYLIST_DATA_TYPE_ARTIST, &dstr,
                 RCLIB_DB_PLAYLIST_DATA_TYPE_NONE);
             g_value_init(value, G_TYPE_STRING);
-            g_value_set_string(value, dstr);
+            g_value_take_string(value, dstr);
             break;
         }
         case RC_UI_PLAYLIST_COLUMN_ALBUM:
         {
+            dstr = NULL;
             rclib_db_playlist_data_iter_get(seq_iter,
                 RCLIB_DB_PLAYLIST_DATA_TYPE_ALBUM, &dstr,
                 RCLIB_DB_PLAYLIST_DATA_TYPE_NONE);
             g_value_init(value, G_TYPE_STRING);
-            g_value_set_string(value, dstr);
+            g_value_take_string(value, dstr);
             break;
         }
         case RC_UI_PLAYLIST_COLUMN_FTYPE:
         {
+            dstr = NULL;
             rclib_db_playlist_data_iter_get(seq_iter,
                 RCLIB_DB_PLAYLIST_DATA_TYPE_FTYPE, &dstr,
                 RCLIB_DB_PLAYLIST_DATA_TYPE_NONE);
             g_value_init(value, G_TYPE_STRING);
-            g_value_set_string(value, dstr);
+            g_value_take_string(value, dstr);
             break;
         }
         case RC_UI_PLAYLIST_COLUMN_GENRE:
         {
+            dstr = NULL;
             rclib_db_playlist_data_iter_get(seq_iter,
                 RCLIB_DB_PLAYLIST_DATA_TYPE_GENRE, &dstr,
                 RCLIB_DB_PLAYLIST_DATA_TYPE_NONE);
             g_value_init(value, G_TYPE_STRING);
-            g_value_set_string(value, dstr);
+            g_value_take_string(value, dstr);
             break;
         }
         case RC_UI_PLAYLIST_COLUMN_LENGTH:
@@ -519,8 +526,7 @@ static void rc_ui_playlist_store_get_value(GtkTreeModel *model,
             sec = sec % 60;
             string = g_strdup_printf("%02d:%02d", min, sec);
             g_value_init(value, G_TYPE_STRING);
-            g_value_set_string(value, string);
-            g_free(string);
+            g_value_take_string(value, string);
             break;
         }
         case RC_UI_PLAYLIST_COLUMN_TRACK:
@@ -680,11 +686,10 @@ static gboolean rc_ui_catalog_store_iter_children(GtkTreeModel *model,
         iter->stamp = 0;
         return FALSE;
     }
-    if(rclib_db_catalog_sequence_get_length(priv->catalog)>0)
+    if(rclib_db_catalog_get_length()>0)
     {
         iter->stamp = priv->stamp;
-        iter->user_data = rclib_db_catalog_sequence_get_begin_iter(
-            priv->catalog);
+        iter->user_data = rclib_db_catalog_get_begin_iter();
         return TRUE;
     }
     else
@@ -708,11 +713,11 @@ static gboolean rc_ui_playlist_store_iter_children(GtkTreeModel *model,
         iter->stamp = 0;
         return FALSE;
     }
-    if(rclib_db_playlist_sequence_get_length(priv->playlist)>0)
+    if(rclib_db_playlist_get_length(priv->catalog_iter)>0)
     {
         iter->stamp = priv->stamp;
-        iter->user_data = rclib_db_playlist_sequence_get_begin_iter(
-            priv->playlist);
+        iter->user_data = rclib_db_playlist_get_begin_iter(
+            priv->catalog_iter);
         return TRUE;
     }
     else
@@ -742,7 +747,7 @@ static gint rc_ui_catalog_store_iter_n_children(GtkTreeModel *model,
     priv = RC_UI_CATALOG_STORE(model)->priv;
     g_return_val_if_fail(priv!=NULL, -1);
     if(iter==NULL)
-        return rclib_db_catalog_sequence_get_length(priv->catalog);
+        return rclib_db_catalog_get_length();
     g_return_val_if_fail(priv->stamp==iter->stamp, -1);
     return 0;
 }
@@ -755,7 +760,7 @@ static gint rc_ui_playlist_store_iter_n_children(GtkTreeModel *model,
     priv = RC_UI_PLAYLIST_STORE(model)->priv;
     g_return_val_if_fail(priv!=NULL, -1);
     if(iter==NULL)
-        return rclib_db_playlist_sequence_get_length(priv->playlist);
+        return rclib_db_playlist_get_length(priv->catalog_iter);
     g_return_val_if_fail(priv->stamp==iter->stamp, -1);
     return 0;
 }
@@ -771,7 +776,7 @@ static gboolean rc_ui_catalog_store_iter_nth_child (GtkTreeModel *model,
     priv = store->priv;
     g_return_val_if_fail(priv!=NULL, FALSE);
     if(parent!=NULL) return FALSE;
-    child = rclib_db_catalog_sequence_get_iter_at_pos(priv->catalog, n);
+    child = rclib_db_catalog_get_iter_at_pos(n);
     if(rclib_db_catalog_iter_is_end(child)) return FALSE;
     iter->stamp = priv->stamp;
     iter->user_data = child;
@@ -789,7 +794,7 @@ static gboolean rc_ui_playlist_store_iter_nth_child (GtkTreeModel *model,
     priv = RC_UI_PLAYLIST_STORE(store)->priv;
     g_return_val_if_fail(priv!=NULL, FALSE);
     if(parent!=NULL) return FALSE;
-    child = rclib_db_playlist_sequence_get_iter_at_pos(priv->playlist, n);
+    child = rclib_db_playlist_get_iter_at_pos(priv->catalog_iter, n);
     if(rclib_db_playlist_iter_is_end(child)) return FALSE;
     iter->stamp = priv->stamp;
     iter->user_data = child;
@@ -896,6 +901,7 @@ static void rc_ui_playlist_store_init(RCUiPlaylistStore *store)
     g_return_if_fail(priv!=NULL);
 	priv->stamp = g_random_int();
     priv->playlist = NULL;
+    priv->catalog_iter = NULL;
     priv->n_columns = RC_UI_PLAYLIST_COLUMN_LAST;
 }
 
@@ -1159,7 +1165,7 @@ static gboolean rc_ui_list_model_init()
         RC_UI_TYPE_CATALOG_STORE, NULL));
     catalog_priv = RC_UI_CATALOG_STORE(catalog_model)->priv;
     catalog_priv->catalog = catalog_seq;
-    for(catalog_iter = rclib_db_catalog_sequence_get_begin_iter(catalog_seq);
+    for(catalog_iter = rclib_db_catalog_get_begin_iter();
         !rclib_db_catalog_iter_is_end(catalog_iter);
         catalog_iter = rclib_db_catalog_iter_next(catalog_iter))
     {
