@@ -781,7 +781,7 @@ gboolean rclib_player_play_next(gboolean jump, gboolean repeat,
     if(reference==NULL) return FALSE;
     if(!rclib_db_playlist_is_valid_iter(reference)) return FALSE;
     iter = rclib_db_playlist_iter_next(reference);
-    if(iter!=NULL)
+    if(iter==NULL)
     {
         if(!jump)
         {
@@ -823,12 +823,7 @@ gboolean rclib_player_play_next(gboolean jump, gboolean repeat,
         rclib_player_play_db(iter);
         return TRUE;
     }
-    else if(repeat)
-        iter = reference;
-    else
-        iter = NULL;
-    if(iter!=NULL)
-        rclib_player_play_db(iter);
+    rclib_player_play_db(iter);
     return TRUE;
 }
 
