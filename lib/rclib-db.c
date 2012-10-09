@@ -1047,7 +1047,7 @@ static inline GString *rclib_db_build_xml_data(RCLibDbCatalogSequence *catalog,
             g_string_append(data_str, tmp);
             g_free(tmp);
             for(playlist_iter=rclib_db_playlist_get_begin_iter(catalog_iter);
-                !rclib_db_playlist_iter_is_end(playlist_iter);
+                playlist_iter!=NULL;
                 playlist_iter=rclib_db_playlist_iter_next(playlist_iter))
             {
                 playlist_data = rclib_db_playlist_iter_get_data(

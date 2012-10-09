@@ -134,7 +134,6 @@
     <keyword type="function" name="rclib_db_catalog_iter_foreach_range ()" link="RCLibDb.html#rclib-db-catalog-iter-foreach-range"/>
     <keyword type="function" name="rclib_db_catalog_iter_get_data ()" link="RCLibDb.html#rclib-db-catalog-iter-get-data"/>
     <keyword type="function" name="rclib_db_catalog_iter_get_position ()" link="RCLibDb.html#rclib-db-catalog-iter-get-position"/>
-    <keyword type="function" name="rclib_db_catalog_iter_get_sequence ()" link="RCLibDb.html#rclib-db-catalog-iter-get-sequence"/>
     <keyword type="function" name="rclib_db_catalog_iter_is_begin ()" link="RCLibDb.html#rclib-db-catalog-iter-is-begin"/>
     <keyword type="function" name="rclib_db_catalog_iter_is_end ()" link="RCLibDb.html#rclib-db-catalog-iter-is-end"/>
     <keyword type="function" name="rclib_db_catalog_iter_next ()" link="RCLibDb.html#rclib-db-catalog-iter-next"/>

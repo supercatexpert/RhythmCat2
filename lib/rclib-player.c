@@ -79,7 +79,7 @@ static inline void rclib_player_random_single(RCLibPlayerPrivate *priv)
     {
         iter_array = g_ptr_array_new();
         for(foreach_iter=rclib_db_playlist_get_begin_iter(catalog_iter);
-            !rclib_db_playlist_iter_is_end(foreach_iter);
+            foreach_iter!=NULL;
             foreach_iter=rclib_db_playlist_iter_next(foreach_iter))
         {
             rating = -1.0;
@@ -138,13 +138,13 @@ static inline void rclib_player_random_all_play(RCLibPlayerPrivate *priv)
     catalog = rclib_db_get_catalog();
     if(catalog==NULL) return;
     for(catalog_iter = rclib_db_catalog_get_begin_iter();
-        !rclib_db_catalog_iter_is_end(catalog_iter);
+        catalog_iter!=NULL;
         catalog_iter = rclib_db_catalog_iter_next(catalog_iter))
     {
         if(priv->limit_state)
         {
             for(playlist_iter = rclib_db_playlist_get_begin_iter(catalog_iter);
-                !rclib_db_playlist_iter_is_end(playlist_iter);
+                playlist_iter!=NULL;
                 playlist_iter = rclib_db_playlist_iter_next(playlist_iter))
             {
                 rating = -1.0;
@@ -171,13 +171,13 @@ static inline void rclib_player_random_all_play(RCLibPlayerPrivate *priv)
     pos = g_random_int_range(0, total_length);
     if(priv->limit_state) pos++;
     for(catalog_iter = rclib_db_catalog_get_begin_iter();
-        !rclib_db_catalog_iter_is_end(catalog_iter);
+        catalog_iter!=NULL;
         catalog_iter = rclib_db_catalog_iter_next(catalog_iter))
     {
         if(priv->limit_state)
         {
             playlist_iter = rclib_db_playlist_get_begin_iter(catalog_iter);
-            for(;!rclib_db_playlist_iter_is_end(playlist_iter);
+            for(;playlist_iter!=NULL;
                 playlist_iter = rclib_db_playlist_iter_next(playlist_iter))
             {
                 rating = -1.0;
@@ -228,10 +228,9 @@ static inline void rclib_player_repeat_list(RCLibPlayerPrivate *priv)
     if(!rclib_db_playlist_is_valid_iter(reference)) return;
     iter = reference;
     iter = rclib_db_playlist_iter_next(iter);
-    if(iter==NULL) return;
     if(priv->limit_state)
     {
-        for(foreach_iter=iter;!rclib_db_playlist_iter_is_end(foreach_iter);
+        for(foreach_iter=iter;foreach_iter!=NULL;
             foreach_iter=rclib_db_playlist_iter_next(foreach_iter))
         {
             rating = -1.0;
@@ -291,7 +290,7 @@ static inline void rclib_player_repeat_list(RCLibPlayerPrivate *priv)
     }
     else
     {
-        if(rclib_db_playlist_iter_is_end(iter))
+        if(iter==NULL)
             iter = rclib_db_playlist_iter_get_begin_iter(reference);
         rclib_player_play_db(iter);
     }
@@ -307,12 +306,11 @@ static inline void rclib_player_play_next_internal(RCLibPlayerPrivate *priv,
     gfloat rating;
     reference = rclib_core_get_db_reference();
     if(reference==NULL) return;
-    if(rclib_db_playlist_iter_is_end(reference)) return;
     iter = reference;
     if(priv->limit_state)
     {
         iter = rclib_db_playlist_iter_next(iter);
-        for(pforeach_iter=iter;!rclib_db_playlist_iter_is_end(pforeach_iter);
+        for(pforeach_iter=iter;pforeach_iter!=NULL;
             pforeach_iter=rclib_db_playlist_iter_next(pforeach_iter))
         {
             rating = -1.0;
@@ -343,13 +341,11 @@ static inline void rclib_player_play_next_internal(RCLibPlayerPrivate *priv,
             RCLIB_DB_PLAYLIST_DATA_TYPE_NONE);
         if(catalog_iter!=NULL)
             catalog_iter = rclib_db_catalog_iter_next(catalog_iter);
-        for(cforeach_iter=catalog_iter;
-            !rclib_db_catalog_iter_is_end(cforeach_iter);
+        for(cforeach_iter=catalog_iter;cforeach_iter!=NULL;
             cforeach_iter=rclib_db_catalog_iter_next(cforeach_iter))
         {
             for(iter = rclib_db_playlist_get_begin_iter(cforeach_iter);
-                !rclib_db_playlist_iter_is_end(iter);
-                iter=rclib_db_playlist_iter_next(iter))
+                iter!=NULL;iter=rclib_db_playlist_iter_next(iter))
             {
                 rating = -1.0;
                 rclib_db_playlist_data_iter_get(iter,
@@ -379,8 +375,7 @@ static inline void rclib_player_play_next_internal(RCLibPlayerPrivate *priv,
             cforeach_iter=rclib_db_catalog_iter_next(cforeach_iter))
         {
             for(iter = rclib_db_playlist_get_begin_iter(cforeach_iter);
-                !rclib_db_playlist_iter_is_end(iter);
-                iter=rclib_db_playlist_iter_next(iter))
+                iter!=NULL;iter=rclib_db_playlist_iter_next(iter))
             {
                 rating = -1.0;
                 rclib_db_playlist_data_iter_get(iter,
@@ -409,7 +404,7 @@ static inline void rclib_player_play_next_internal(RCLibPlayerPrivate *priv,
     else
     {
         iter = rclib_db_playlist_iter_next(iter);
-        if(rclib_db_playlist_iter_is_end(iter))
+        if(iter==NULL)
         {
             catalog_iter = NULL;
             rclib_db_playlist_data_iter_get(reference,
@@ -420,20 +415,20 @@ static inline void rclib_player_play_next_internal(RCLibPlayerPrivate *priv,
                 do
                 {
                     catalog_iter = rclib_db_catalog_iter_next(catalog_iter);
-                    if(rclib_db_catalog_iter_is_end(catalog_iter)) break;
+                    if(catalog_iter==NULL) break;
                 }
                 while(rclib_db_playlist_get_length(catalog_iter)==0);
             }
-            if(rclib_db_catalog_iter_is_end(catalog_iter))
+            if(catalog_iter==NULL)
             {
                 if(!loop) return;
                 catalog_iter = rclib_db_catalog_get_begin_iter();
-                while(!rclib_db_catalog_iter_is_end(catalog_iter) &&
+                while(catalog_iter!=NULL &&
                     rclib_db_playlist_get_length(catalog_iter)==0)
                 {
                     catalog_iter = rclib_db_catalog_iter_next(catalog_iter);
                 }
-                if(rclib_db_catalog_iter_is_end(catalog_iter))
+                if(catalog_iter==NULL)
                 {
                     catalog_iter = rclib_db_catalog_get_begin_iter();
                 }
@@ -447,7 +442,8 @@ static inline void rclib_player_play_next_internal(RCLibPlayerPrivate *priv,
             rclib_player_play_db(iter);
             return;
         }
-        rclib_player_play_db(iter);
+        if(iter!=NULL)
+            rclib_player_play_db(iter);
     }
 }
 
@@ -701,26 +697,27 @@ gboolean rclib_player_play_prev(gboolean jump, gboolean repeat,
     gboolean loop)
 {
     RCLibDbPlaylistIter *iter, *reference;
-    RCLibDbCatalogIter *catalog_iter;
+    RCLibDbCatalogIter *catalog_iter, *catalog_prev_iter;
     gint playlist_length;
     reference = (RCLibDbPlaylistIter *)rclib_core_get_db_reference();
     if(reference==NULL) return FALSE;
     if(!rclib_db_playlist_is_valid_iter(reference)) return FALSE;
-    iter = reference;
-    if(rclib_db_playlist_iter_is_begin(iter))
+    iter = rclib_db_playlist_iter_prev(reference);
+    if(iter==NULL)
     {
         if(!jump)
         {
             if(repeat)
-                rclib_player_play_db(iter);
+                rclib_player_play_db(reference);
             return TRUE;
         }
         catalog_iter = NULL;
-        rclib_db_playlist_data_iter_get(iter,
+        rclib_db_playlist_data_iter_get(reference,
             RCLIB_DB_PLAYLIST_DATA_TYPE_CATALOG, &catalog_iter,
             RCLIB_DB_PLAYLIST_DATA_TYPE_NONE);
         if(catalog_iter==NULL) return FALSE;
-        if(rclib_db_catalog_iter_is_begin(catalog_iter))
+        catalog_prev_iter = rclib_db_catalog_iter_prev(catalog_iter);
+        if(catalog_prev_iter==NULL)
         {
             if(!loop)
             {
@@ -728,36 +725,36 @@ gboolean rclib_player_play_prev(gboolean jump, gboolean repeat,
                     rclib_player_play_db(iter);
                 return TRUE;
             }
-            catalog_iter = rclib_db_catalog_get_end_iter();
-            do
+            catalog_iter = rclib_db_catalog_get_last_iter();
+            playlist_length = rclib_db_playlist_get_length(catalog_iter);
+            while(playlist_length==0)
             {
-                catalog_iter = rclib_db_catalog_iter_prev(catalog_iter);
+                catalog_prev_iter = rclib_db_catalog_iter_prev(catalog_iter);
+                if(catalog_prev_iter==NULL) break;
+                catalog_iter = catalog_prev_iter;
                 playlist_length = rclib_db_playlist_get_length(catalog_iter);
             }
-            while(!rclib_db_catalog_iter_is_begin(catalog_iter) &&
-                playlist_length==0);
             if(playlist_length<0) return FALSE;
-            iter = rclib_db_playlist_iter_prev(
-                rclib_db_playlist_get_end_iter(catalog_iter));
+            iter = rclib_db_playlist_get_last_iter(catalog_iter);
             if(iter!=NULL)
                 rclib_player_play_db(iter);
             return TRUE;
         }
         do
         {
-            if(rclib_db_catalog_iter_is_begin(catalog_iter))
-                catalog_iter = rclib_db_catalog_get_end_iter();
             catalog_iter = rclib_db_catalog_iter_prev(catalog_iter);
+            if(catalog_iter==NULL)
+                catalog_iter = rclib_db_catalog_get_last_iter();
         }
-        while(rclib_db_playlist_get_length(catalog_iter)==0);
-        iter = rclib_db_playlist_iter_prev(
-            rclib_db_playlist_get_end_iter(catalog_iter));
+        while(catalog_iter!=NULL &&
+            rclib_db_playlist_get_length(catalog_iter)==0);
+        iter = rclib_db_playlist_get_last_iter(catalog_iter);
         if(iter==NULL) return FALSE;
         rclib_player_play_db(iter);
         return TRUE;
     }
-    iter = rclib_db_playlist_iter_prev(iter);
-    rclib_player_play_db(iter);
+    else
+        rclib_player_play_db(iter);
     return TRUE;
 }
 
@@ -783,9 +780,8 @@ gboolean rclib_player_play_next(gboolean jump, gboolean repeat,
     reference = (RCLibDbPlaylistIter *)rclib_core_get_db_reference();
     if(reference==NULL) return FALSE;
     if(!rclib_db_playlist_is_valid_iter(reference)) return FALSE;
-    iter = reference;
-    iter = rclib_db_playlist_iter_next(iter);
-    if(rclib_db_playlist_iter_is_end(iter))
+    iter = rclib_db_playlist_iter_next(reference);
+    if(iter!=NULL)
     {
         if(!jump)
         {
@@ -799,7 +795,7 @@ gboolean rclib_player_play_next(gboolean jump, gboolean repeat,
             RCLIB_DB_PLAYLIST_DATA_TYPE_NONE);
         if(catalog_iter==NULL) return FALSE;
         catalog_iter = rclib_db_catalog_iter_next(catalog_iter);
-        if(rclib_db_catalog_iter_is_end(catalog_iter))
+        if(catalog_iter==NULL)
         {
             if(!loop)
             {
@@ -808,12 +804,12 @@ gboolean rclib_player_play_next(gboolean jump, gboolean repeat,
                 return TRUE;
             }
             catalog_iter = rclib_db_catalog_get_begin_iter();               
-            while(!rclib_db_catalog_iter_is_end(catalog_iter) &&
+            while(catalog_iter!=NULL &&
                 rclib_db_playlist_get_length(catalog_iter)==0)
             {
                 catalog_iter = rclib_db_catalog_iter_next(catalog_iter);
             }
-            if(rclib_db_catalog_iter_is_end(catalog_iter))
+            if(catalog_iter==NULL)
             {
                 catalog_iter = rclib_db_catalog_get_begin_iter();
             }
@@ -827,7 +823,12 @@ gboolean rclib_player_play_next(gboolean jump, gboolean repeat,
         rclib_player_play_db(iter);
         return TRUE;
     }
-    rclib_player_play_db(iter);
+    else if(repeat)
+        iter = reference;
+    else
+        iter = NULL;
+    if(iter!=NULL)
+        rclib_player_play_db(iter);
     return TRUE;
 }
 

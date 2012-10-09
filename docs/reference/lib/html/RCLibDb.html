@@ -90,8 +90,6 @@ enum                <a class="link" href="RCLibDb.html#RCLibDbPlaylistType" titl
                                                          <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> user_data</code></em>);
 <a class="link" href="RCLibDb.html#RCLibDbCatalogData"><span class="returnvalue">RCLibDbCatalogData</span></a> * <a class="link" href="RCLibDb.html#rclib-db-catalog-iter-get-data" title="rclib_db_catalog_iter_get_data ()">rclib_db_catalog_iter_get_data</a>     (<em class="parameter"><code><a class="link" href="RCLibDb.html#RCLibDbCatalogIter" title="RCLibDbCatalogIter"><span class="type">RCLibDbCatalogIter</span></a> *iter</code></em>);
 <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="returnvalue">gint</span></a>                <a class="link" href="RCLibDb.html#rclib-db-catalog-iter-get-position" title="rclib_db_catalog_iter_get_position ()">rclib_db_catalog_iter_get_position</a>  (<em class="parameter"><code><a class="link" href="RCLibDb.html#RCLibDbCatalogIter" title="RCLibDbCatalogIter"><span class="type">RCLibDbCatalogIter</span></a> *iter</code></em>);
-<a class="link" href="RCLibDb.html#RCLibDbCatalogSequence" title="RCLibDbCatalogSequence"><span class="returnvalue">RCLibDbCatalogSequence</span></a> * <a class="link" href="RCLibDb.html#rclib-db-catalog-iter-get-sequence" title="rclib_db_catalog_iter_get_sequence ()">rclib_db_catalog_iter_get_sequence</a>
-                                                        (<em class="parameter"><code><a class="link" href="RCLibDb.html#RCLibDbCatalogIter" title="RCLibDbCatalogIter"><span class="type">RCLibDbCatalogIter</span></a> *iter</code></em>);
 <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RCLibDb.html#rclib-db-catalog-iter-is-begin" title="rclib_db_catalog_iter_is_begin ()">rclib_db_catalog_iter_is_begin</a>      (<em class="parameter"><code><a class="link" href="RCLibDb.html#RCLibDbCatalogIter" title="RCLibDbCatalogIter"><span class="type">RCLibDbCatalogIter</span></a> *iter</code></em>);
 <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RCLibDb.html#rclib-db-catalog-iter-is-end" title="rclib_db_catalog_iter_is_end ()">rclib_db_catalog_iter_is_end</a>        (<em class="parameter"><code><a class="link" href="RCLibDb.html#RCLibDbCatalogIter" title="RCLibDbCatalogIter"><span class="type">RCLibDbCatalogIter</span></a> *iter</code></em>);
 <a class="link" href="RCLibDb.html#RCLibDbCatalogIter" title="RCLibDbCatalogIter"><span class="returnvalue">RCLibDbCatalogIter</span></a> * <a class="link" href="RCLibDb.html#rclib-db-catalog-iter-next" title="rclib_db_catalog_iter_next ()">rclib_db_catalog_iter_next</a>         (<em class="parameter"><code><a class="link" href="RCLibDb.html#RCLibDbCatalogIter" title="RCLibDbCatalogIter"><span class="type">RCLibDbCatalogIter</span></a> *iter</code></em>);
@@ -1049,32 +1047,7 @@ Returns the position of <em class="parameter"><code>iter</code></em>.
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>the position of <em class="parameter"><code>iter</code></em>.</td>
-</tr>
-</tbody>
-</table></div>
-</div>
-<hr>
-<div class="refsect2">
-<a name="rclib-db-catalog-iter-get-sequence"></a><h3>rclib_db_catalog_iter_get_sequence ()</h3>
-<pre class="programlisting"><a class="link" href="RCLibDb.html#RCLibDbCatalogSequence" title="RCLibDbCatalogSequence"><span class="returnvalue">RCLibDbCatalogSequence</span></a> * rclib_db_catalog_iter_get_sequence
-                                                        (<em class="parameter"><code><a class="link" href="RCLibDb.html#RCLibDbCatalogIter" title="RCLibDbCatalogIter"><span class="type">RCLibDbCatalogIter</span></a> *iter</code></em>);</pre>
-<p>
-Returns the <a class="link" href="RCLibDb.html#RCLibDbCatalogSequence" title="RCLibDbCatalogSequence"><span class="type">RCLibDbCatalogSequence</span></a> that iter points into.
-</p>
-<div class="variablelist"><table border="0">
-<col align="left" valign="top">
-<tbody>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>iter</code></em> :</span></p></td>
-<td>the <a class="link" href="RCLibDb.html#RCLibDbCatalogIter" title="RCLibDbCatalogIter"><span class="type">RCLibDbCatalogIter</span></a>
-</td>
-</tr>
-<tr>
-<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>(skip): The <a class="link" href="RCLibDb.html#RCLibDbCatalogSequence" title="RCLibDbCatalogSequence"><span class="type">RCLibDbCatalogSequence</span></a> that
-iter points into. <span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span>
-</td>
+<td>the position of <em class="parameter"><code>iter</code></em>, -1 if the <em class="parameter"><code>iter</code></em> is not valid.</td>
 </tr>
 </tbody>
 </table></div>
@@ -1084,7 +1057,8 @@ iter points into. <span class="annotation">[<acronym title="Don't free data afte
 <a name="rclib-db-catalog-iter-is-begin"></a><h3>rclib_db_catalog_iter_is_begin ()</h3>
 <pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rclib_db_catalog_iter_is_begin      (<em class="parameter"><code><a class="link" href="RCLibDb.html#RCLibDbCatalogIter" title="RCLibDbCatalogIter"><span class="type">RCLibDbCatalogIter</span></a> *iter</code></em>);</pre>
 <p>
-Return whether <em class="parameter"><code>iter</code></em> is the begin iterator
+Return whether <em class="parameter"><code>iter</code></em> is the begin iterator.
+Notice that this function will NOT check whether the iter is valid.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -1106,7 +1080,8 @@ Return whether <em class="parameter"><code>iter</code></em> is the begin iterato
 <a name="rclib-db-catalog-iter-is-end"></a><h3>rclib_db_catalog_iter_is_end ()</h3>
 <pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rclib_db_catalog_iter_is_end        (<em class="parameter"><code><a class="link" href="RCLibDb.html#RCLibDbCatalogIter" title="RCLibDbCatalogIter"><span class="type">RCLibDbCatalogIter</span></a> *iter</code></em>);</pre>
 <p>
-Return whether <em class="parameter"><code>iter</code></em> is the end iterator
+Return whether <em class="parameter"><code>iter</code></em> is the end iterator.
+Notice that this function will NOT check whether the iter is valid.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -1129,7 +1104,8 @@ Return whether <em class="parameter"><code>iter</code></em> is the end iterator
 <pre class="programlisting"><a class="link" href="RCLibDb.html#RCLibDbCatalogIter" title="RCLibDbCatalogIter"><span class="returnvalue">RCLibDbCatalogIter</span></a> * rclib_db_catalog_iter_next         (<em class="parameter"><code><a class="link" href="RCLibDb.html#RCLibDbCatalogIter" title="RCLibDbCatalogIter"><span class="type">RCLibDbCatalogIter</span></a> *iter</code></em>);</pre>
 <p>
 Return an iterator pointing to the next position after <em class="parameter"><code>iter</code></em>. If
-<em class="parameter"><code>iter</code></em> is the end iterator, the end iterator is returned.
+<em class="parameter"><code>iter</code></em> is not valid, or <em class="parameter"><code>iter</code></em> is the last iterator in the catalog,
+<a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><span class="type">NULL</span></a> is returned.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -1154,7 +1130,8 @@ the next position after <em class="parameter"><code>iter</code></em>. <span clas
 <pre class="programlisting"><a class="link" href="RCLibDb.html#RCLibDbCatalogIter" title="RCLibDbCatalogIter"><span class="returnvalue">RCLibDbCatalogIter</span></a> * rclib_db_catalog_iter_prev         (<em class="parameter"><code><a class="link" href="RCLibDb.html#RCLibDbCatalogIter" title="RCLibDbCatalogIter"><span class="type">RCLibDbCatalogIter</span></a> *iter</code></em>);</pre>
 <p>
 Return an iterator pointing to the previous position before <em class="parameter"><code>iter</code></em>. If
-<em class="parameter"><code>iter</code></em> is the begin iterator, the begin iterator is returned.
+<em class="parameter"><code>iter</code></em> is not valid, or <em class="parameter"><code>iter</code></em> is the first iterator in the catalog,
+<a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><span class="type">NULL</span></a> is returned.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -1994,7 +1971,7 @@ Return the position of <em class="parameter"><code>iter</code></em>.
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>the position of <em class="parameter"><code>iter</code></em>.</td>
+<td>the position of <em class="parameter"><code>iter</code></em>, -1 if the <em class="parameter"><code>iter</code></em> is not valid.</td>
 </tr>
 </tbody>
 </table></div>
@@ -2004,7 +1981,8 @@ Return the position of <em class="parameter"><code>iter</code></em>.
 <a name="rclib-db-playlist-iter-is-begin"></a><h3>rclib_db_playlist_iter_is_begin ()</h3>
 <pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rclib_db_playlist_iter_is_begin     (<em class="parameter"><code><a class="link" href="RCLibDb.html#RCLibDbPlaylistIter" title="RCLibDbPlaylistIter"><span class="type">RCLibDbPlaylistIter</span></a> *iter</code></em>);</pre>
 <p>
-Return whether <em class="parameter"><code>iter</code></em> is the begin iterator
+Return whether <em class="parameter"><code>iter</code></em> is the begin iterator.
+Notice that this function will NOT check whether the iter is valid.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -2016,7 +1994,7 @@ Return whether <em class="parameter"><code>iter</code></em> is the begin iterato
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>whether <em class="parameter"><code>iter</code></em> is the begin iterator</td>
+<td>whether <em class="parameter"><code>iter</code></em> is the begin iterator.</td>
 </tr>
 </tbody>
 </table></div>
@@ -2026,7 +2004,8 @@ Return whether <em class="parameter"><code>iter</code></em> is the begin iterato
 <a name="rclib-db-playlist-iter-is-end"></a><h3>rclib_db_playlist_iter_is_end ()</h3>
 <pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rclib_db_playlist_iter_is_end       (<em class="parameter"><code><a class="link" href="RCLibDb.html#RCLibDbPlaylistIter" title="RCLibDbPlaylistIter"><span class="type">RCLibDbPlaylistIter</span></a> *iter</code></em>);</pre>
 <p>
-Return whether <em class="parameter"><code>iter</code></em> is the end iterator
+Return whether <em class="parameter"><code>iter</code></em> is the end iterator.
+Notice that this function will NOT check whether the iter is valid.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -2038,7 +2017,7 @@ Return whether <em class="parameter"><code>iter</code></em> is the end iterator
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>whether <em class="parameter"><code>iter</code></em> is the end iterator</td>
+<td>whether <em class="parameter"><code>iter</code></em> is the end iterator.</td>
 </tr>
 </tbody>
 </table></div>
@@ -2049,7 +2028,7 @@ Return whether <em class="parameter"><code>iter</code></em> is the end iterator
 <pre class="programlisting"><a class="link" href="RCLibDb.html#RCLibDbPlaylistIter" title="RCLibDbPlaylistIter"><span class="returnvalue">RCLibDbPlaylistIter</span></a> * rclib_db_playlist_iter_next       (<em class="parameter"><code><a class="link" href="RCLibDb.html#RCLibDbPlaylistIter" title="RCLibDbPlaylistIter"><span class="type">RCLibDbPlaylistIter</span></a> *iter</code></em>);</pre>
 <p>
 Return an iterator pointing to the next position after <em class="parameter"><code>iter</code></em>. If
-<em class="parameter"><code>iter</code></em> is the end iterator, the end iterator is returned.
+<em class="parameter"><code>iter</code></em> is not valid , or <em class="parameter"><code>iter</code></em> the end iterator, <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><span class="type">NULL</span></a> is returned.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -2074,7 +2053,7 @@ the next position after <em class="parameter"><code>iter</code></em>. <span clas
 <pre class="programlisting"><a class="link" href="RCLibDb.html#RCLibDbPlaylistIter" title="RCLibDbPlaylistIter"><span class="returnvalue">RCLibDbPlaylistIter</span></a> * rclib_db_playlist_iter_prev       (<em class="parameter"><code><a class="link" href="RCLibDb.html#RCLibDbPlaylistIter" title="RCLibDbPlaylistIter"><span class="type">RCLibDbPlaylistIter</span></a> *iter</code></em>);</pre>
 <p>
 Return an iterator pointing to the previous position before <em class="parameter"><code>iter</code></em>. If
-<em class="parameter"><code>iter</code></em> is the begin iterator, the begin iterator is returned.
+<em class="parameter"><code>iter</code></em> is not valid , or <em class="parameter"><code>iter</code></em> the begin iterator, <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><span class="type">NULL</span></a> is returned.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">

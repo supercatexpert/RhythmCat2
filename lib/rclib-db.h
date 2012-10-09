@@ -380,6 +380,7 @@ void rclib_db_playlist_data_iter_get(RCLibDbPlaylistIter *iter,
     RCLibDbPlaylistDataType type1, ...);
 gint rclib_db_catalog_get_length();
 RCLibDbCatalogIter *rclib_db_catalog_get_begin_iter();
+RCLibDbCatalogIter *rclib_db_catalog_get_last_iter();
 RCLibDbCatalogIter *rclib_db_catalog_get_end_iter();
 RCLibDbCatalogIter *rclib_db_catalog_get_iter_at_pos(gint pos);
 RCLibDbCatalogData *rclib_db_catalog_iter_get_data(
@@ -389,8 +390,6 @@ gboolean rclib_db_catalog_iter_is_end(RCLibDbCatalogIter *iter);
 RCLibDbCatalogIter *rclib_db_catalog_iter_next(RCLibDbCatalogIter *iter);
 RCLibDbCatalogIter *rclib_db_catalog_iter_prev(RCLibDbCatalogIter *iter);
 gint rclib_db_catalog_iter_get_position(RCLibDbCatalogIter *iter);
-RCLibDbCatalogSequence *rclib_db_catalog_iter_get_sequence(
-    RCLibDbCatalogIter *iter);
 RCLibDbCatalogIter *rclib_db_catalog_iter_range_get_midpoint(
     RCLibDbCatalogIter *begin, RCLibDbCatalogIter *end);
 gint rclib_db_catalog_iter_compare(RCLibDbCatalogIter *a,
@@ -399,9 +398,13 @@ gint rclib_db_playlist_get_length(RCLibDbCatalogIter *catalog_iter);
 gint rclib_db_playlist_iter_get_length(RCLibDbPlaylistIter *playlist_iter);
 RCLibDbPlaylistIter *rclib_db_playlist_get_begin_iter(
     RCLibDbCatalogIter *catalog_iter);
+RCLibDbPlaylistIter *rclib_db_playlist_get_last_iter(
+    RCLibDbCatalogIter *catalog_iter);
 RCLibDbPlaylistIter *rclib_db_playlist_get_end_iter(
     RCLibDbCatalogIter *catalog_iter);
 RCLibDbPlaylistIter *rclib_db_playlist_iter_get_begin_iter(
+    RCLibDbPlaylistIter *playlist_iter);
+RCLibDbPlaylistIter *rclib_db_playlist_iter_get_last_iter(
     RCLibDbPlaylistIter *playlist_iter);
 RCLibDbPlaylistIter *rclib_db_playlist_iter_get_end_iter(
     RCLibDbPlaylistIter *playlist_iter);
@@ -453,7 +456,7 @@ gboolean rclib_db_playlist_export_m3u_file(RCLibDbCatalogIter *iter,
 gboolean rclib_db_playlist_export_all_m3u_files(const gchar *dir);
 void rclib_db_playlist_refresh(RCLibDbCatalogIter *iter);
 gboolean rclib_db_load_legacy();
-gboolean rclib_db_playlist_data_query(const RCLibDbPlaylistData *playlist_data,
+gboolean rclib_db_playlist_data_query(RCLibDbPlaylistData *playlist_data,
     RCLibDbQuery *query);
 gboolean rclib_db_playlist_iter_query(RCLibDbPlaylistIter *playlist_iter,
     RCLibDbQuery *query);

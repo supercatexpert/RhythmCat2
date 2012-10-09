@@ -594,7 +594,7 @@ static gboolean rc_ui_catalog_store_iter_next(GtkTreeModel *model,
         iter->user_data);
     iter->user_data2 = NULL;
     iter->user_data3 = NULL;
-    if(rclib_db_catalog_iter_is_end((RCLibDbCatalogIter *)iter->user_data))
+    if(iter->user_data==NULL)
     {
         iter->stamp = 0;
         return FALSE;
@@ -617,7 +617,7 @@ static gboolean rc_ui_playlist_store_iter_next(GtkTreeModel *model,
         iter->user_data);
     iter->user_data2 = NULL;
     iter->user_data3 = NULL;
-    if(rclib_db_playlist_iter_is_end((RCLibDbPlaylistIter *)iter->user_data))
+    if(iter->user_data==NULL)
     {
         iter->stamp = 0;
         return FALSE;
@@ -636,13 +636,13 @@ static gboolean rc_ui_catalog_store_iter_prev(GtkTreeModel *model,
     priv = store->priv;
     g_return_val_if_fail(priv!=NULL, FALSE);
     g_return_val_if_fail(priv->stamp==iter->stamp, FALSE);
-    if(rclib_db_catalog_iter_is_begin((RCLibDbCatalogIter *)iter->user_data))
+    iter->user_data = rclib_db_catalog_iter_prev((RCLibDbCatalogIter *)
+        iter->user_data);
+    if(iter->user_data==NULL)
     {
         iter->stamp = 0;
         return FALSE;
     }
-    iter->user_data = rclib_db_catalog_iter_prev((RCLibDbCatalogIter *)
-        iter->user_data);
     iter->user_data2 = NULL;
     iter->user_data3 = NULL;
     return TRUE;
@@ -659,14 +659,13 @@ static gboolean rc_ui_playlist_store_iter_prev(GtkTreeModel *model,
     priv = RC_UI_PLAYLIST_STORE(store)->priv;
     g_return_val_if_fail(priv!=NULL, FALSE);
     g_return_val_if_fail(priv->stamp==iter->stamp, FALSE);
-    if(rclib_db_playlist_iter_is_begin((RCLibDbPlaylistIter *)
-        iter->user_data))
+    iter->user_data = rclib_db_playlist_iter_prev((RCLibDbPlaylistIter *)
+        iter->user_data);
+    if(iter->user_data==NULL)
     {
         iter->stamp = 0;
         return FALSE;
     }
-    iter->user_data = rclib_db_playlist_iter_prev((RCLibDbPlaylistIter *)
-        iter->user_data);
     iter->user_data2 = NULL;
     iter->user_data3 = NULL;
     return TRUE;
@@ -1165,16 +1164,12 @@ static gboolean rc_ui_list_model_init()
         RC_UI_TYPE_CATALOG_STORE, NULL));
     catalog_priv = RC_UI_CATALOG_STORE(catalog_model)->priv;
     catalog_priv->catalog = catalog_seq;
-    for(catalog_iter = rclib_db_catalog_get_begin_iter();
-        !rclib_db_catalog_iter_is_end(catalog_iter);
+    for(catalog_iter = rclib_db_catalog_get_begin_iter();catalog_iter!=NULL;
         catalog_iter = rclib_db_catalog_iter_next(catalog_iter))
     {
         playlist_model = GTK_TREE_MODEL(g_object_new(
             RC_UI_TYPE_PLAYLIST_STORE, NULL));
         playlist_priv = RC_UI_PLAYLIST_STORE(playlist_model)->priv;
-        rclib_db_catalog_data_iter_get(catalog_iter,
-            RCLIB_DB_CATALOG_DATA_TYPE_PLAYLIST, &(playlist_priv->playlist),
-            RCLIB_DB_CATALOG_DATA_TYPE_NONE); 
         rclib_db_catalog_data_iter_set(catalog_iter,
             RCLIB_DB_CATALOG_DATA_TYPE_STORE, playlist_model,
             RCLIB_DB_CATALOG_DATA_TYPE_NONE);         
