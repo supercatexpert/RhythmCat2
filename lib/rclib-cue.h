@@ -75,6 +75,8 @@ struct _RCLibCueTrack {
  * @file: the audio file URI
  * @performer: the performer
  * @title: the title (it is usually the album name)
+ * @genre: the genre
+ * @year: the year number
  * @length: the track length (number)
  * @track: the track data
  *

@@ -138,4 +138,10 @@
     * Implemented some basic library APIs.
     * Changed to version 1.9.5.
     
+2012-10-10   SuperCat    <supercatexpert@gmail.com>
+
+    * Catalog & Playlist can be read in multi-threads now.
+    * Added query interface for Catalog & Playlist.
+    * Catalog & Playlist API changed.
+    
     

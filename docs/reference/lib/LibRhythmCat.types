@@ -4,6 +4,7 @@ rclib_db_catalog_data_get_type
 rclib_db_get_type
 rclib_db_library_data_get_type
 rclib_db_playlist_data_get_type
+rclib_db_query_get_type
 rclib_lyric_get_type
 rclib_player_get_type
 rclib_plugin_data_get_type

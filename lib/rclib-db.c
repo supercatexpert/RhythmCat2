@@ -2001,6 +2001,8 @@ void rclib_db_autosaved_remove()
 /**
  * rclib_db_query_parse:
  * @condition1: the first query condition
+ * @...: the query condition arguments, finished with
+ *     #RCLIB_DB_QUERY_CONDITION_TYPE_NONE
  *
  * Create a query from a list of criteria.
  * 
