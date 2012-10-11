@@ -2014,7 +2014,7 @@ RCLibDbQuery *rclib_db_query_parse(RCLibDbQueryConditionType condition1, ...)
     RCLibDbQuery *query = NULL;
     va_list args;
     va_start(args, condition1);
-    rclib_db_query_parse_valist(condition1, args);
+    query = rclib_db_query_parse_valist(condition1, args);
     va_end(args);
     return query;
 }
@@ -2042,6 +2042,7 @@ RCLibDbQuery *rclib_db_query_parse_valist(
     while(condition_type!=RCLIB_DB_QUERY_CONDITION_TYPE_NONE)
     {
         query_data = g_new0(RCLibDbQueryData, 1);
+        query_data->type = condition_type;
         switch(condition_type)
         {
             case RCLIB_DB_QUERY_CONDITION_TYPE_SUBQUERY:
