@@ -198,7 +198,7 @@ void _rclib_db_instance_finalize_playlist(RCLibDbPrivate *priv)
  * rclib_db_catalog_data_new:
  * 
  * Create a new empty #RCLibDbCatalogData structure,
- * and set the reference count to 1.
+ * and set the reference count to 1. MT safe.
  *
  * Returns: The new empty allocated #RCLibDbCatalogData structure.
  */
@@ -215,7 +215,7 @@ RCLibDbCatalogData *rclib_db_catalog_data_new()
  * rclib_db_catalog_data_ref:
  * @data: the #RCLibDbCatalogData structure
  *
- * Increase the reference of #RCLibDbCatalogData by 1.
+ * Increase the reference of #RCLibDbCatalogData by 1. MT safe.
  *
  * Returns: (transfer none): The #RCLibDbCatalogData structure.
  */
@@ -232,7 +232,7 @@ RCLibDbCatalogData *rclib_db_catalog_data_ref(RCLibDbCatalogData *data)
  * @data: the #RCLibDbCatalogData structure
  *
  * Decrease the reference of #RCLibDbCatalogData by 1.
- * If the reference down to zero, the structure will be freed.
+ * If the reference down to zero, the structure will be freed. MT safe.
  *
  * Returns: The #RCLibDbCatalogData structure.
  */
@@ -249,6 +249,7 @@ void rclib_db_catalog_data_unref(RCLibDbCatalogData *data)
  * @data: the data to free
  *
  * Free the #RCLibDbCatalogData structure.
+ * Please use #rclib_db_catalog_data_unref() in case of multi-threading.
  */
 
 void rclib_db_catalog_data_free(RCLibDbCatalogData *data)
@@ -685,7 +686,7 @@ static inline void rclib_db_playlist_data_get_valist(
  * @...: value for the first property, followed optionally by more
  *  name/value pairs, followed by %RCLIB_DB_CATALOG_DATA_TYPE_NONE
  *
- * Sets properties on a #RCLibDbCatalogData.
+ * Sets properties on a #RCLibDbCatalogData. Must be called in main thread.
  */
 
 void rclib_db_catalog_data_set(RCLibDbCatalogData *data,
@@ -722,7 +723,7 @@ void rclib_db_catalog_data_set(RCLibDbCatalogData *data,
  *  name/return location pairs, followed by %RCLIB_DB_CATALOG_DATA_TYPE_NONE
  *
  * Gets properties of a #RCLibDbCatalogData. The property contents will
- * be copied (except the playlist and the store pointer).
+ * be copied (except the playlist and the store pointer). MT safe.
  */
 
 void rclib_db_catalog_data_get(RCLibDbCatalogData *data,
@@ -742,7 +743,8 @@ void rclib_db_catalog_data_get(RCLibDbCatalogData *data,
  * @...: value for the first property, followed optionally by more
  *  name/value pairs, followed by %RCLIB_DB_CATALOG_DATA_TYPE_NONE
  *
- * Sets properties on the data in a #RCLibDbCatalogIter.
+ * Sets properties on the data in a #RCLibDbCatalogIter. Must be called
+ * in main thread.
  */
 
 void rclib_db_catalog_data_iter_set(RCLibDbCatalogIter *iter,
@@ -784,6 +786,7 @@ void rclib_db_catalog_data_iter_set(RCLibDbCatalogIter *iter,
  *
  * Gets properties of the data in a #RCLibDbCatalogIter. The property
  * contents will be copied, except the playlist and store pointer.
+ * MT safe.
  */
 
 void rclib_db_catalog_data_iter_get(RCLibDbCatalogIter *iter,
@@ -806,7 +809,7 @@ void rclib_db_catalog_data_iter_get(RCLibDbCatalogIter *iter,
  * rclib_db_playlist_data_new:
  * 
  * Create a new empty #RCLibDbPlaylistData structure,
- * and set the reference count to 1.
+ * and set the reference count to 1. MT safe.
  *
  * Returns: The new empty allocated #RCLibDbPlaylistData structure.
  */
@@ -823,9 +826,9 @@ RCLibDbPlaylistData *rclib_db_playlist_data_new()
  * rclib_db_playlist_data_ref:
  * @data: the #RCLibDbPlaylistData structure
  *
- * Increase the reference of #RCLibDbPlaylistData by 1.
+ * Increase the reference of #RCLibDbPlaylistData by 1. MT safe.
  *
- * Returns: (transfer none): The #RCLibDbPlaylistData structure.
+ * Returns: (transfer none): The #RCLibDbPlaylistData structure. 
  */
 
 RCLibDbPlaylistData *rclib_db_playlist_data_ref(RCLibDbPlaylistData *data)
@@ -840,7 +843,7 @@ RCLibDbPlaylistData *rclib_db_playlist_data_ref(RCLibDbPlaylistData *data)
  * @data: the #RCLibDbPlaylistData structure
  *
  * Decrease the reference of #RCLibDbPlaylistData by 1.
- * If the reference down to zero, the structure will be freed.
+ * If the reference down to zero, the structure will be freed. MT safe.
  *
  * Returns: The #RCLibDbPlaylistData structure.
  */
@@ -857,6 +860,7 @@ void rclib_db_playlist_data_unref(RCLibDbPlaylistData *data)
  * @data: the data to free
  *
  * Free the #RCLibDbPlaylistData structure.
+ * Please use #rclib_db_playlist_data_unref() in case of multi-threading.
  */
 
 void rclib_db_playlist_data_free(RCLibDbPlaylistData *data)
@@ -893,7 +897,7 @@ void rclib_db_playlist_data_free(RCLibDbPlaylistData *data)
  * @...: value for the first property, followed optionally by more
  *  name/value pairs, followed by %RCLIB_DB_PLAYLIST_DATA_TYPE_NONE
  *
- * Sets properties on a #RCLibDbPlaylistData.
+ * Sets properties on a #RCLibDbPlaylistData. Must be called in main thread.
  */
 
 void rclib_db_playlist_data_set(RCLibDbPlaylistData *data,
@@ -930,7 +934,7 @@ void rclib_db_playlist_data_set(RCLibDbPlaylistData *data,
  *  name/return location pairs, followed by %RCLIB_DB_PLAYLIST_DATA_TYPE_NONE
  *
  * Gets properties of a #RCLibDbPlaylistData. The property contents will
- * be copied, except the catalog and iters.
+ * be copied, except the catalog and iters. MT safe.
  */
 
 void rclib_db_playlist_data_get(RCLibDbPlaylistData *data,
@@ -950,7 +954,8 @@ void rclib_db_playlist_data_get(RCLibDbPlaylistData *data,
  * @...: value for the first property, followed optionally by more
  *  name/value pairs, followed by %RCLIB_DB_PLAYLIST_DATA_TYPE_NONE
  *
- * Sets properties on the data in a #RCLibDbPlaylistIter.
+ * Sets properties on the data in a #RCLibDbPlaylistIter. Must be called
+ * in main thread.
  */
 
 void rclib_db_playlist_data_iter_set(RCLibDbPlaylistIter *iter,
@@ -987,7 +992,7 @@ void rclib_db_playlist_data_iter_set(RCLibDbPlaylistIter *iter,
  *  name/value pairs, followed by %RCLIB_DB_PLAYLIST_DATA_TYPE_NONE
  *
  * Gets properties of the data in a #RCLibDbPlaylistIter. The property
- * contents will be copied, except the catalog and iters.
+ * contents will be copied, except the catalog and iters. MT safe.
  */
 
 void rclib_db_playlist_data_iter_get(RCLibDbPlaylistIter *iter,
@@ -1007,7 +1012,7 @@ void rclib_db_playlist_data_iter_get(RCLibDbPlaylistIter *iter,
 /**
  * rclib_db_catalog_get_length:
  *
- * Get the element length of the playlist catalog.
+ * Get the element length of the playlist catalog. MT safe.
  *
  * Returns: The length of catalog, -1 if any error occurs.
  */
@@ -1034,7 +1039,7 @@ gint rclib_db_catalog_get_length()
 /**
  * rclib_db_catalog_get_begin_iter:
  *
- * Get the begin iterator for the playlist catalog.
+ * Get the begin iterator for the playlist catalog. MT safe.
  *
  * Returns: (transfer none): (skip): The begin iterator.
  */
@@ -1064,7 +1069,7 @@ RCLibDbCatalogIter *rclib_db_catalog_get_begin_iter()
 /**
  * rclib_db_catalog_get_last_iter:
  *
- * Get the last iterator for the playlist catalog.
+ * Get the last iterator for the playlist catalog. MT safe.
  *
  * Returns: (transfer none): (skip): The last iterator, #NULL if does
  *     not exist.
@@ -1097,7 +1102,7 @@ RCLibDbCatalogIter *rclib_db_catalog_get_last_iter()
 /**
  * rclib_db_catalog_get_end_iter:
  *
- * Get the end iterator for the playlist catalog.
+ * Get the end iterator for the playlist catalog. MT safe.
  *
  * Returns: (transfer none): (skip): The end iterator.
  */
@@ -1128,7 +1133,7 @@ RCLibDbCatalogIter *rclib_db_catalog_get_end_iter()
  *
  * Return the iterator at position @pos. If @pos is negative or larger
  * than the number of items in the playlist catalog, the end iterator
- * is returned.
+ * is returned. MT safe.
  *
  * Returns: (transfer none): (skip): The #RCLibDbCatalogIter at
  *     position @pos.
@@ -1158,7 +1163,7 @@ RCLibDbCatalogIter *rclib_db_catalog_get_iter_at_pos(gint pos)
  * rclib_db_catalog_iter_get_data:
  * @iter: the iter pointed to the catalog data
  *
- * Get the catalog item data which the iter pointed to.
+ * Get the catalog item data which the iter pointed to. MT safe.
  *
  * Returns: (transfer full): The #RCLibDbCatalogData.
  */
@@ -1192,7 +1197,7 @@ RCLibDbCatalogData *rclib_db_catalog_iter_get_data(
  * rclib_db_catalog_iter_is_begin:
  * @iter: a #RCLibDbCatalogIter
  *
- * Return whether @iter is the begin iterator.
+ * Return whether @iter is the begin iterator. MT safe.
  * Notice that this function will NOT check whether the iter is valid.
  *
  * Returns: whether @iter is the begin iterator
@@ -1222,7 +1227,7 @@ gboolean rclib_db_catalog_iter_is_begin(RCLibDbCatalogIter *iter)
  * rclib_db_catalog_iter_is_end:
  * @iter: a #RCLibDbCatalogIter
  *
- * Return whether @iter is the end iterator.
+ * Return whether @iter is the end iterator. MT safe.
  * Notice that this function will NOT check whether the iter is valid.
  *
  * Returns: whether @iter is the end iterator
@@ -1254,7 +1259,7 @@ gboolean rclib_db_catalog_iter_is_end(RCLibDbCatalogIter *iter)
  *
  * Return an iterator pointing to the next position after @iter. If
  * @iter is not valid, or @iter is the last iterator in the catalog,
- * #NULL is returned.
+ * #NULL is returned. MT safe.
  *
  * Returns: (transfer none): (skip): a #RCLibDbCatalogIter pointing to
  *     the next position after @iter.
@@ -1291,7 +1296,7 @@ RCLibDbCatalogIter *rclib_db_catalog_iter_next(RCLibDbCatalogIter *iter)
  *
  * Return an iterator pointing to the previous position before @iter. If
  * @iter is not valid, or @iter is the first iterator in the catalog,
- * #NULL is returned.
+ * #NULL is returned. MT safe.
  *
  * Returns: (transfer none): (skip): a #RCLibDbCatalogIter pointing to the
  *     previous position before @iter.
@@ -1326,7 +1331,7 @@ RCLibDbCatalogIter *rclib_db_catalog_iter_prev(RCLibDbCatalogIter *iter)
  * rclib_db_catalog_iter_get_position:
  * @iter: a #RCLibDbCatalogIter
  *
- * Returns the position of @iter.
+ * Returns the position of @iter. MT safe.
  *
  * Returns: the position of @iter, -1 if the @iter is not valid.
  */
@@ -1367,7 +1372,7 @@ gint rclib_db_catalog_iter_get_position(RCLibDbCatalogIter *iter)
  *
  * The @begin and @end iterators must both point to the same
  * #RCLibDbCatalogSequence and @begin must come before or be equal
- * to @end in the sequence.
+ * to @end in the sequence. MT safe.
  *
  * Returns: (transfer none): (skip): A #RCLibDbCatalogIter pointing
  *     somewhere in the (@begin, @end) range.
@@ -1405,7 +1410,7 @@ RCLibDbCatalogIter *rclib_db_catalog_iter_range_get_midpoint(
  * @b: a #RCLibDbCatalogIter
  *
  * Return a negative number if @a comes before @b, 0 if they are equal,
- * and a positive number if @a comes after @b.
+ * and a positive number if @a comes after @b. MT safe.
  *
  * The @a and @b iterators must point into the same #RCLibDbCatalogSequence.
  *
@@ -1443,7 +1448,7 @@ gint rclib_db_catalog_iter_compare(RCLibDbCatalogIter *a,
  * rclib_db_playlist_get_length:
  * @catalog_iter: the #RCLibDbCatalogIter which stores the playlist
  *
- * Get the playlist length stored in the #RCLibDbCatalogIter.
+ * Get the playlist length stored in the #RCLibDbCatalogIter. MT safe.
  *
  * Returns: The playlist length, -1 if the playlist does not exist.
  */
@@ -1485,7 +1490,7 @@ gint rclib_db_playlist_get_length(RCLibDbCatalogIter *catalog_iter)
  * rclib_db_playlist_iter_get_length:
  * @playlist_iter: the #RCLibDbPlaylistIter which the playlist belongs to
  *
- * Get the playlist length that the #RCLibDbPlaylistIter belongs to.
+ * Get the playlist length that the #RCLibDbPlaylistIter belongs to. MT safe.
  *
  * Returns: The playlist length, -1 if the playlist iter is not valid.
  */
@@ -1523,6 +1528,7 @@ gint rclib_db_playlist_iter_get_length(RCLibDbPlaylistIter *playlist_iter)
  * @catalog_iter: the #RCLibDbCatalogIter which stores the playlist
  *
  * Get the begin iterator for the playlist stored in #RCLibDbCatalogIter.
+ * MT safe.
  *
  * Returns: (transfer none): (skip): The begin iterator.
  */
@@ -1566,6 +1572,7 @@ RCLibDbPlaylistIter *rclib_db_playlist_get_begin_iter(
  * @catalog_iter: the #RCLibDbCatalogIter which stores the playlist
  *
  * Get the last iterator for the playlist stored in #RCLibDbCatalogIter.
+ * MT safe.
  *
  * Returns: (transfer none): (skip): The last iterator.
  */
@@ -1611,6 +1618,7 @@ RCLibDbPlaylistIter *rclib_db_playlist_get_last_iter(
  * @catalog_iter: the #RCLibDbCatalogIter which stores the playlist
  *
  * Get the end iterator for the playlist stored in #RCLibDbCatalogIter.
+ * MT safe.
  *
  * Returns: (transfer none): (skip): The end iterator.
  */
@@ -1652,7 +1660,7 @@ RCLibDbPlaylistIter *rclib_db_playlist_get_end_iter(
  * @playlist_iter: the #RCLibDbPlaylistIter which the playlist belongs to
  *
  * Get the begin iterator of the playlist that the #RCLibDbPlaylistIter
- * belongs to.
+ * belongs to. MT safe.
  *
  * Returns: (transfer none): (skip): The begin iterator.
  */
@@ -1689,7 +1697,7 @@ RCLibDbPlaylistIter *rclib_db_playlist_iter_get_begin_iter(
  * @playlist_iter: the #RCLibDbPlaylistIter which the playlist belongs to
  *
  * Get the last iterator of the playlist that the #RCLibDbPlaylistIter
- * belongs to.
+ * belongs to. MT safe.
  *
  * Returns: (transfer none): (skip): The last iterator.
  */
@@ -1730,7 +1738,7 @@ RCLibDbPlaylistIter *rclib_db_playlist_iter_get_last_iter(
  * @playlist_iter: the #RCLibDbPlaylistIter which the playlist belongs to
  *
  * Get the end iterator of the playlist that the #RCLibDbPlaylistIter
- * belongs to.
+ * belongs to. MT safe.
  *
  * Returns: (transfer none): (skip): The end iterator.
  */
@@ -1769,6 +1777,7 @@ RCLibDbPlaylistIter *rclib_db_playlist_iter_get_end_iter(
  *
  * Return the iterator at position @pos. If @pos is negative or larger
  * than the number of items in the playlist, the end iterator is returned.
+ * MT safe.
  *
  * Returns: (transfer none): (skip): The #RCLibDbPlaylistIter at
  *     position @pos.
@@ -1813,6 +1822,7 @@ RCLibDbPlaylistIter *rclib_db_playlist_get_iter_at_pos(
  *
  * Return the iterator at position @pos. If @pos is negative or larger
  * than the number of items in the playlist, the end iterator is returned.
+ * MT safe.
  *
  * Returns: (transfer none): (skip): The #RCLibDbPlaylistIter at
  *     position @pos.
@@ -1849,7 +1859,7 @@ RCLibDbPlaylistIter *rclib_db_playlist_iter_get_iter_at_pos(
  * rclib_db_playlist_iter_get_data:
  * @iter: the iter pointed to the playlist data
  *
- * Get the playlist item data which the iter pointed to.
+ * Get the playlist item data which the iter pointed to. MT safe.
  *
  * Returns: (transfer full): The #RCLibDbPlaylistData.
  */
@@ -1883,7 +1893,7 @@ RCLibDbPlaylistData *rclib_db_playlist_iter_get_data(
  * rclib_db_playlist_iter_is_begin:
  * @iter: a #RCLibDbPlaylistIter
  *
- * Return whether @iter is the begin iterator.
+ * Return whether @iter is the begin iterator. MT safe.
  * Notice that this function will NOT check whether the iter is valid.
  *
  * Returns: whether @iter is the begin iterator.
@@ -1899,7 +1909,7 @@ gboolean rclib_db_playlist_iter_is_begin(RCLibDbPlaylistIter *iter)
  * rclib_db_playlist_iter_is_end:
  * @iter: a #RCLibDbPlaylistIter
  *
- * Return whether @iter is the end iterator.
+ * Return whether @iter is the end iterator. MT safe.
  * Notice that this function will NOT check whether the iter is valid.
  *
  * Returns: whether @iter is the end iterator.
@@ -1917,6 +1927,7 @@ gboolean rclib_db_playlist_iter_is_end(RCLibDbPlaylistIter *iter)
  *
  * Return an iterator pointing to the next position after @iter. If
  * @iter is not valid , or @iter the end iterator, #NULL is returned.
+ * MT safe.
  *
  * Returns: (transfer none): (skip): a #RCLibDbPlaylistIter pointing to
  *     the next position after @iter.
@@ -1953,6 +1964,7 @@ RCLibDbPlaylistIter *rclib_db_playlist_iter_next(RCLibDbPlaylistIter *iter)
  *
  * Return an iterator pointing to the previous position before @iter. If
  * @iter is not valid , or @iter the begin iterator, #NULL is returned.
+ * MT safe.
  *
  * Returns: (transfer none): (skip): a #RCLibDbPlaylistIter pointing to the
  *     previous position before @iter.
@@ -1987,7 +1999,7 @@ RCLibDbPlaylistIter *rclib_db_playlist_iter_prev(RCLibDbPlaylistIter *iter)
  * rclib_db_playlist_iter_get_position:
  * @iter: a #RCLibDbPlaylistIter
  *
- * Return the position of @iter.
+ * Return the position of @iter. MT safe.
  *
  * Returns: the position of @iter, -1 if the @iter is not valid.
  */
@@ -2024,7 +2036,7 @@ gint rclib_db_playlist_iter_get_position(RCLibDbPlaylistIter *iter)
  *
  * Find an iterator somewhere in the range (@begin, @end). This
  * iterator will be close to the middle of the range, but is not
- * guaranteed to be <emphasis>exactly</emphasis> in the middle.
+ * guaranteed to be <emphasis>exactly</emphasis> in the middle. MT safe.
  *
  * The @begin and @end iterators must both point to the same
  * #RCLibDbPlaylistSequence and @begin must come before or be equal
@@ -2066,7 +2078,7 @@ RCLibDbPlaylistIter *rclib_db_playlist_iter_range_get_midpoint(
  * @b: a #RCLibDbPlaylistIter
  *
  * Return a negative number if @a comes before @b, 0 if they are equal,
- * and a positive number if @a comes after @b.
+ * and a positive number if @a comes after @b. MT safe.
  *
  * The @a and @b iterators must point into the same #RCLibDbPlaylistSequence.
  *
@@ -2106,7 +2118,7 @@ gint rclib_db_playlist_iter_compare(RCLibDbPlaylistIter *a,
  * @user_data: user data passed to @func
  *
  * Calls @func for each item in the playlist catalog passing
- * @user_data to the function.
+ * @user_data to the function. MT safe.
  */
 
 void rclib_db_catalog_foreach(GFunc func, gpointer user_data)
@@ -2132,7 +2144,7 @@ void rclib_db_catalog_foreach(GFunc func, gpointer user_data)
  * @user_data: user data passed to @func
  *
  * Calls @func for each item in the range (@begin, @end) passing
- * @user_data to the function.
+ * @user_data to the function. MT safe.
  */
 
 void rclib_db_catalog_iter_foreach_range(RCLibDbCatalogIter *begin,
@@ -2164,7 +2176,7 @@ void rclib_db_catalog_iter_foreach_range(RCLibDbCatalogIter *begin,
  * @user_data: user data passed to @func
  *
  * Calls @func for each item in the playlist passing
- * @user_data to the function.
+ * @user_data to the function. MT safe.
  */
 
 void rclib_db_playlist_foreach(RCLibDbCatalogIter *catalog_iter,
@@ -2204,7 +2216,7 @@ void rclib_db_playlist_foreach(RCLibDbCatalogIter *catalog_iter,
  * @user_data: user data passed to @func
  *
  * Calls @func for each item in the range (@begin, @end) passing
- * @user_data to the function.
+ * @user_data to the function. MT safe.
  */
 
 void rclib_db_playlist_iter_foreach_range(RCLibDbPlaylistIter *begin,
@@ -2293,7 +2305,7 @@ RCLibDbCatalogSequence *rclib_db_get_catalog()
  * rclib_db_catalog_is_valid_iter:
  * @catalog_iter: the iter to check
  *
- * Check whether the iter is valid in the catalog sequence.
+ * Check whether the iter is valid in the catalog sequence. MT safe.
  *
  * Returns: Whether the iter is valid.
  */
@@ -2322,7 +2334,7 @@ gboolean rclib_db_catalog_is_valid_iter(RCLibDbCatalogIter *catalog_iter)
  * @type: the type of the new playlist
  *
  * Add a new playlist to the catalog before the #iter, if the #iter
- * is #NULL, it will be added to the end.
+ * is #NULL, it will be added to the end. Must be called in main thread.
  *
  * Returns: (transfer none): (skip): The iter to the new playlist in
  *     the catalog.
@@ -2351,7 +2363,7 @@ RCLibDbCatalogIter *rclib_db_catalog_add(const gchar *name,
  * rclib_db_catalog_delete:
  * @iter: the iter to the catalog
  *
- * Delete the catalog pointed to by #iter.
+ * Delete the catalog pointed to by #iter. Must be called in main thread.
  */
 
 void rclib_db_catalog_delete(RCLibDbCatalogIter *iter)
@@ -2407,6 +2419,7 @@ static gint rclib_db_reorder_func(GSequenceIter *a, GSequenceIter *b,
  *   i.e. @new_order<literal>[newpos] = oldpos</literal>.
  *
  * Reorder the catalog to follow the order indicated by @new_order.
+ * Must be called in main thread.
  */
 
 void rclib_db_catalog_reorder(gint *new_order)
@@ -2504,7 +2517,7 @@ RCLibDbPlaylistIter *_rclib_db_playlist_append_data_internal(
  * rclib_db_playlist_is_valid_iter:
  * @playlist_iter: the iter to check
  *
- * Check whether the iter is valid in the playlist sequence.
+ * Check whether the iter is valid in the playlist sequence. MT safe.
  *
  * Returns: Whether the iter is valid.
  */
@@ -2532,7 +2545,7 @@ gboolean rclib_db_playlist_is_valid_iter(RCLibDbPlaylistIter *playlist_iter)
  * @insert_iter: insert the music before this iter
  * @uri: the URI of the music
  *
- * Add music to the playlist by given catalog iter.
+ * Add music to the playlist by given catalog iter. MT safe.
  */
 
 void rclib_db_playlist_add_music(RCLibDbCatalogIter *iter,
@@ -2561,7 +2574,7 @@ void rclib_db_playlist_add_music(RCLibDbCatalogIter *iter,
  * @uri: the URI of the music
  *
  * Add music to the playlist by given catalog iter, and then play it
- * if the add operation succeeds.
+ * if the add operation succeeds. MT safe.
  */
 
 void rclib_db_playlist_add_music_and_play(RCLibDbCatalogIter *iter,
@@ -2589,6 +2602,7 @@ void rclib_db_playlist_add_music_and_play(RCLibDbCatalogIter *iter,
  * @iter: the iter to the playlist data
  *
  * Delete the playlist data pointed to by #iter.
+ * Must be called in main thread.
  */
 
 void rclib_db_playlist_delete(RCLibDbPlaylistIter *iter)
@@ -2624,7 +2638,7 @@ void rclib_db_playlist_delete(RCLibDbPlaylistIter *iter)
  *
  * Update the metadata in the playlist pointed to by #iter.
  * Title, artist, album, file type, track number, year information
- * will be updated.
+ * will be updated. Must be called in main thread.
  */
 
 void rclib_db_playlist_update_metadata(RCLibDbPlaylistIter *iter,
@@ -2715,6 +2729,7 @@ void rclib_db_playlist_update_metadata(RCLibDbPlaylistIter *iter,
  *   i.e. @new_order<literal>[newpos] = oldpos</literal>.
  *
  * Reorder the playlist to follow the order indicated by @new_order.
+ * Must be called in main thread.
  */
 
 void rclib_db_playlist_reorder(RCLibDbCatalogIter *iter, gint *new_order)
@@ -2773,7 +2788,7 @@ void rclib_db_playlist_reorder(RCLibDbCatalogIter *iter, gint *new_order)
  * @catalog_iter: the iter for the catalog
  *
  * Move the playlist data pointed to by #iters to another catalog
- * pointed to by #catalog_iter.
+ * pointed to by #catalog_iter. Must be called in main thread.
  */
 
 void rclib_db_playlist_move_to_another_catalog(RCLibDbPlaylistIter **iters,
@@ -2828,7 +2843,7 @@ void rclib_db_playlist_move_to_another_catalog(RCLibDbPlaylistIter **iters,
  * @filename: the path of the playlist file
  * 
  * Load a m3u playlist file, and add all music inside to
- * the catalog pointed to by #iter.
+ * the catalog pointed to by #iter. MT safe.
  */
 
 void rclib_db_playlist_add_m3u_file(RCLibDbCatalogIter *iter,
@@ -2931,6 +2946,7 @@ static void rclib_db_playlist_add_directory_recursive(
  * @dir: the directory path
  *
  * Add all music in the directory to the catalog pointed to by #iter.
+ * MT safe.
  */
 
 void rclib_db_playlist_add_directory(RCLibDbCatalogIter *iter,
@@ -2947,6 +2963,7 @@ void rclib_db_playlist_add_directory(RCLibDbCatalogIter *iter,
  * @sfilename: the new playlist file path
  *
  * Export the catalog pointed to by #iter to a new playlist file.
+ * MT safe.
  *
  * Returns: Whether the operation succeeded.
  */
@@ -3015,7 +3032,7 @@ gboolean rclib_db_playlist_export_m3u_file(RCLibDbCatalogIter *iter,
  * rclib_db_playlist_export_all_m3u_files:
  * @dir: the directory to save playlist files
  *
- * Export all playlists in the catalog to playlist files.
+ * Export all playlists in the catalog to playlist files. MTsafe.
  *
  * Returns: Whether the operation succeeded.
  */
@@ -3047,7 +3064,7 @@ gboolean rclib_db_playlist_export_all_m3u_files(const gchar *dir)
  * @iter: the catalog iter
  *
  * Refresh the metadata of the music in the playlist pointed to
- * by the given catalog #iter.
+ * by the given catalog #iter. MT safe.
  */
 
 void rclib_db_playlist_refresh(RCLibDbCatalogIter *iter)
@@ -3259,6 +3276,7 @@ static inline RCLibDbPlaylistDataType rclib_db_playlist_property_convert(
  * @query: the query condition
  *
  * Check whether the playlist data satisfied the query condition.
+ * MT safe.
  * 
  * Returns: Whether the playlist data satisfied the query condition.
  */
@@ -4070,7 +4088,7 @@ gboolean rclib_db_playlist_data_query(RCLibDbPlaylistData *playlist_data,
  * @query: the query condition
  *
  * Check whether the playlist data stored in the iter satisfied the
- * query condition.
+ * query condition. MT safe.
  * 
  * Returns: Whether the playlist data stored in the iter satisfied the
  *     query condition.
@@ -4095,7 +4113,7 @@ gboolean rclib_db_playlist_iter_query(RCLibDbPlaylistIter *playlist_iter,
  * @catalog_iter: the catalog to query, set to #NULL to query in all catalogs
  * @query: the query condition
  *
- * Query data from the playlist library.
+ * Query data from the playlist library. MT safe.
  * 
  * Returns: (transfer full): The playlist data array which satisfied
  *     the query condition. Free with #g_ptr_array_free() or

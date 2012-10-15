@@ -212,7 +212,7 @@ gboolean _rclib_db_library_refresh_idle_cb(gpointer data)
  * rclib_db_library_data_new:
  * 
  * Create a new empty #RCLibDbLibraryData structure,
- * and set the reference count to 1.
+ * and set the reference count to 1. MT safe.
  *
  * Returns: The new empty allocated #RCLibDbLibraryData structure.
  */
@@ -220,6 +220,7 @@ gboolean _rclib_db_library_refresh_idle_cb(gpointer data)
 RCLibDbLibraryData *rclib_db_library_data_new()
 {
     RCLibDbLibraryData *data = g_slice_new0(RCLibDbLibraryData);
+    g_rw_lock_init(&(data->lock));
     data->ref_count = 1;
     return data;
 }
@@ -228,7 +229,7 @@ RCLibDbLibraryData *rclib_db_library_data_new()
  * rclib_db_library_data_ref:
  * @data: the #RCLibDbLibraryData structure
  *
- * Increase the reference of #RCLibDbLibraryData by 1.
+ * Increase the reference of #RCLibDbLibraryData by 1. MT safe.
  *
  * Returns: (transfer none): The #RCLibDbLibraryData structure.
  */
@@ -246,6 +247,7 @@ RCLibDbLibraryData *rclib_db_library_data_ref(RCLibDbLibraryData *data)
  *
  * Decrease the reference of #RCLibDbLibraryData by 1.
  * If the reference down to zero, the structure will be freed.
+ * MT safe.
  *
  * Returns: The #RCLibDbLibraryData structure.
  */
@@ -262,11 +264,13 @@ void rclib_db_library_data_unref(RCLibDbLibraryData *data)
  * @data: the data to free
  *
  * Free the #RCLibDbLibraryData structure.
+ * Please use #rclib_db_library_data_unref() in case of multi-threading.
  */
 
 void rclib_db_library_data_free(RCLibDbLibraryData *data)
 {
     if(data==NULL) return;
+    g_rw_lock_writer_lock(&(data->lock));
     g_free(data->uri);
     g_free(data->title);
     g_free(data->artist);
@@ -276,6 +280,8 @@ void rclib_db_library_data_free(RCLibDbLibraryData *data)
     g_free(data->lyricsecfile);
     g_free(data->albumfile);
     g_free(data->genre);
+    g_rw_lock_writer_unlock(&(data->lock));
+    g_rw_lock_clear(&(data->lock));
     g_slice_free(RCLibDbLibraryData, data);
 }
 
@@ -294,12 +300,15 @@ gboolean _rclib_db_instance_init_library(RCLibDb *db, RCLibDbPrivate *priv)
     /* GHashTable<gchar *, GHashTable<RCLibDbLibraryData *, 1>> */
     priv->library_keyword_table = g_hash_table_new_full(g_str_hash,
         g_str_equal, g_free, (GDestroyNotify)g_hash_table_destroy);
+    
+    g_rw_lock_init(&(priv->library_rw_lock));
     return TRUE;
 }
 
 void _rclib_db_instance_finalize_library(RCLibDbPrivate *priv)
 {
     if(priv==NULL) return;
+    g_rw_lock_writer_lock(&(priv->library_rw_lock));
     if(priv->library_query!=NULL)
         g_sequence_free(priv->library_query);
     if(priv->library_keyword_table!=NULL)
@@ -308,6 +317,8 @@ void _rclib_db_instance_finalize_library(RCLibDbPrivate *priv)
         g_hash_table_destroy(priv->library_table);
     priv->library_query = NULL;
     priv->library_table = NULL;
+    g_rw_lock_writer_unlock(&(priv->library_rw_lock));
+    g_rw_lock_clear(&(priv->library_rw_lock));
 }
 
 static inline gboolean rclib_db_library_data_set_valist(
@@ -322,6 +333,7 @@ static inline gboolean rclib_db_library_data_set_valist(
     gint vint;
     gdouble rating;
     type = type1;
+    g_rw_lock_writer_lock(&(data->lock));
     while(type!=RCLIB_DB_LIBRARY_DATA_TYPE_NONE)
     {
         switch(type)
@@ -457,11 +469,12 @@ static inline gboolean rclib_db_library_data_set_valist(
         }
         type = va_arg(var_args, RCLibDbLibraryDataType);
     }
+    g_rw_lock_writer_unlock(&(data->lock));
     return send_signal;
 }
 
 static inline void rclib_db_library_data_get_valist(
-    const RCLibDbLibraryData *data, RCLibDbLibraryDataType type1,
+    RCLibDbLibraryData *data, RCLibDbLibraryDataType type1,
     va_list var_args)
 {
     RCLibDbLibraryDataType type;
@@ -471,6 +484,7 @@ static inline void rclib_db_library_data_get_valist(
     gint *vint;
     gfloat *rating;
     type = type1;
+    g_rw_lock_reader_lock(&(data->lock));
     while(type!=RCLIB_DB_LIBRARY_DATA_TYPE_NONE)
     {
         switch(type)
@@ -484,31 +498,31 @@ static inline void rclib_db_library_data_get_valist(
             case RCLIB_DB_LIBRARY_DATA_TYPE_URI:
             {
                 str = va_arg(var_args, gchar **);
-                *str = data->uri;
+                *str = g_strdup(data->uri);
                 break;
             }
             case RCLIB_DB_LIBRARY_DATA_TYPE_TITLE:
             {
                 str = va_arg(var_args, gchar **);
-                *str = data->title;
+                *str = g_strdup(data->title);
                 break;
             }
             case RCLIB_DB_LIBRARY_DATA_TYPE_ARTIST:
             {
                 str = va_arg(var_args, gchar **);
-                *str = data->artist;
+                *str = g_strdup(data->artist);
                 break;
             }
             case RCLIB_DB_LIBRARY_DATA_TYPE_ALBUM:
             {
                 str = va_arg(var_args, gchar **);
-                *str = data->album;
+                *str = g_strdup(data->album);
                 break;
             }
             case RCLIB_DB_LIBRARY_DATA_TYPE_FTYPE:
             {
                 str = va_arg(var_args, gchar **);
-                *str = data->ftype;
+                *str = g_strdup(data->ftype);
                 break;
             }
             case RCLIB_DB_LIBRARY_DATA_TYPE_LENGTH:
@@ -538,19 +552,19 @@ static inline void rclib_db_library_data_get_valist(
             case RCLIB_DB_LIBRARY_DATA_TYPE_LYRICFILE:
             {
                 str = va_arg(var_args, gchar **);
-                *str = data->lyricfile;
+                *str = g_strdup(data->lyricfile);
                 break;
             }
             case RCLIB_DB_LIBRARY_DATA_TYPE_LYRICSECFILE:
             {
                 str = va_arg(var_args, gchar **);
-                *str = data->lyricsecfile;
+                *str = g_strdup(data->lyricsecfile);
                 break;
             }
             case RCLIB_DB_LIBRARY_DATA_TYPE_ALBUMFILE:
             {
                 str = va_arg(var_args, gchar **);
-                *str = data->albumfile;
+                *str = g_strdup(data->albumfile);
                 break;
             }
             case RCLIB_DB_LIBRARY_DATA_TYPE_GENRE:
@@ -568,6 +582,7 @@ static inline void rclib_db_library_data_get_valist(
         }
         type = va_arg(var_args, RCLibDbLibraryDataType);
     }
+    g_rw_lock_reader_unlock(&(data->lock));
 }
 
 /**
@@ -577,7 +592,7 @@ static inline void rclib_db_library_data_get_valist(
  * @...: value for the first property, followed optionally by more
  *  name/value pairs, followed by %RCLIB_DB_LIBRARY_DATA_TYPE_NONE
  *
- * Sets properties on a #RCLibDbPlaylistData.
+ * Sets properties on a #RCLibDbPlaylistData. MT safe.
  */
 
 void rclib_db_library_data_set(RCLibDbLibraryData *data,
@@ -614,10 +629,10 @@ void rclib_db_library_data_set(RCLibDbLibraryData *data,
  *
  * Gets properties of a #RCLibDbLibraryData. The property contents will not
  * be copied, just get their address instead, if the contents are stored
- * inside a pointer.
+ * inside a pointer. MT safe.
  */
 
-void rclib_db_library_data_get(const RCLibDbLibraryData *data,
+void rclib_db_library_data_get(RCLibDbLibraryData *data,
     RCLibDbLibraryDataType type1, ...)
 {
     va_list var_args;
@@ -651,7 +666,7 @@ GHashTable *rclib_db_get_library_table()
  * rclib_db_library_has_uri:
  * @uri: the URI to find
  *
- * Check whether the give URI exists in the library.
+ * Check whether the give URI exists in the library. MT safe.
  *
  * Returns: Whether the URI exists in the library.
  */
@@ -660,18 +675,22 @@ gboolean rclib_db_library_has_uri(const gchar *uri)
 {
     RCLibDbPrivate *priv;
     GObject *instance;
+    gboolean result = FALSE;
     instance = rclib_db_get_instance();
     if(instance==NULL) return FALSE;
     priv = RCLIB_DB(instance)->priv;
     if(priv==NULL) return FALSE;
-    return g_hash_table_contains(priv->library_table, uri);
+    g_rw_lock_reader_lock(&(priv->library_rw_lock));
+    result = g_hash_table_contains(priv->library_table, uri);
+    g_rw_lock_writer_lock(&(priv->library_rw_lock));
+    return result;
 }
 
 /**
  * rclib_db_library_add_music:
  * @uri: the URI of the music to add
  *
- * Add music to the music library.
+ * Add music to the music library. MT safe.
  */
 
 void rclib_db_library_add_music(const gchar *uri)
@@ -694,7 +713,7 @@ void rclib_db_library_add_music(const gchar *uri)
  * @uri: the URI of the music to add
  *
  * Add music to the music library, and then play it if the add
- *     operation succeeds.
+ * operation succeeds. MT safe.
  */
 
 void rclib_db_library_add_music_and_play(const gchar *uri)

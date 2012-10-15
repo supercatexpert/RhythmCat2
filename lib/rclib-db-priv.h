@@ -100,6 +100,7 @@ struct _RCLibDbPrivate
     GRWLock playlist_rw_lock;
     GSequence *library_query;
     GHashTable *library_table;
+    GRWLock library_rw_lock;
     GHashTable *library_keyword_table;
     GThread *import_thread;
     GThread *refresh_thread;
@@ -159,6 +160,7 @@ struct _RCLibDbLibraryData
 {
     /*< private >*/
     gint ref_count;
+    GRWLock lock;
 
     /*< public >*/
     RCLibDbLibraryType type;

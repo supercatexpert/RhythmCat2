@@ -470,7 +470,7 @@ void rclib_db_library_data_unref(RCLibDbLibraryData *data);
 void rclib_db_library_data_free(RCLibDbLibraryData *data);
 void rclib_db_library_data_set(RCLibDbLibraryData *data,
     RCLibDbLibraryDataType type1, ...);
-void rclib_db_library_data_get(const RCLibDbLibraryData *data,
+void rclib_db_library_data_get(RCLibDbLibraryData *data,
     RCLibDbLibraryDataType type1, ...);
 GHashTable *rclib_db_get_library_table();
 gboolean rclib_db_library_has_uri(const gchar *uri);
