@@ -72,7 +72,7 @@ enum
     SIGNAL_REFRESH_UPDATED,
     SIGNAL_LIBRARY_ADDED,
     SIGNAL_LIBRARY_CHANGED,
-    SIGNAL_LIBRARY_DELETE,
+    SIGNAL_LIBRARY_DELETED,
     SIGNAL_LAST
 };
 
@@ -1581,16 +1581,16 @@ static void rclib_db_class_init(RCLibDbClass *klass)
         G_TYPE_NONE, 1, G_TYPE_STRING, NULL);
         
     /**
-     * RCLibDb::library-delete:
+     * RCLibDb::library-deleted:
      * @db: the #RCLibDb that received the signal
      * @uri: the URI of the music item which is about to be deleted
      * 
-     * The ::library-added signal is emitted when the data of the music item
-     * in the music library is changed.
+     * The ::library-deleted signal is emitted when the data of the music item
+     * in the music library is removed.
      */
-    db_signals[SIGNAL_LIBRARY_DELETE] = g_signal_new("library-delete",
+    db_signals[SIGNAL_LIBRARY_DELETED] = g_signal_new("library-deleted",
         RCLIB_TYPE_DB, G_SIGNAL_RUN_FIRST, G_STRUCT_OFFSET(RCLibDbClass,
-        library_delete), NULL, NULL, g_cclosure_marshal_VOID__STRING,
+        library_deleted), NULL, NULL, g_cclosure_marshal_VOID__STRING,
         G_TYPE_NONE, 1, G_TYPE_STRING, NULL);
 }
 

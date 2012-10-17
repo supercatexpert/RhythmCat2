@@ -31,6 +31,42 @@
 #include "rclib-core.h"
 #include "rclib-util.h"
 
+static gboolean rclib_db_library_changed_entry_idle_cb(gpointer data)
+{
+    GObject *instance;
+    RCLibDbPrivate *priv;
+    gchar *uri = (gchar *)data;
+    if(data==NULL) return FALSE;
+    instance = rclib_db_get_instance();
+    if(instance==NULL) return FALSE;
+    priv = RCLIB_DB(instance)->priv;
+    if(priv==NULL) return FALSE;
+    g_rw_lock_reader_lock(&(priv->library_rw_lock));
+    if(!g_hash_table_contains(priv->library_table, uri)) return FALSE;
+    g_signal_emit_by_name(instance, "library-changed", uri);
+    g_free(uri);
+    g_rw_lock_reader_unlock(&(priv->library_rw_lock));
+    return FALSE;
+}
+
+static gboolean rclib_db_library_delete_entry_idle_cb(gpointer data)
+{
+    GObject *instance;
+    RCLibDbPrivate *priv;
+    gchar *uri = (gchar *)data;
+    if(data==NULL) return FALSE;
+    instance = rclib_db_get_instance();
+    if(instance==NULL) return FALSE;
+    priv = RCLIB_DB(instance)->priv;
+    if(priv==NULL) return FALSE;
+    g_rw_lock_reader_lock(&(priv->library_rw_lock));
+    if(!g_hash_table_contains(priv->library_table, uri)) return FALSE;
+    g_signal_emit_by_name(instance, "library-delete", uri);
+    g_free(uri);
+    g_rw_lock_reader_unlock(&(priv->library_rw_lock));
+    return FALSE;
+}
+
 static inline gboolean rclib_db_library_keyword_table_add_entry(
     GHashTable *library_keyword_table, RCLibDbLibraryData *library_data,
     const gchar *keyword)
@@ -615,7 +651,8 @@ void rclib_db_library_data_set(RCLibDbLibraryData *data,
         {
             if(priv!=NULL)
                 priv->dirty_flag = TRUE;
-            g_signal_emit_by_name(instance, "library-changed", data->uri);
+            g_idle_add(rclib_db_library_changed_entry_idle_cb,
+                g_strdup(data->uri));
         }
     }
 }
@@ -627,9 +664,8 @@ void rclib_db_library_data_set(RCLibDbLibraryData *data,
  * @...: return location for the first property, followed optionally by more
  *  name/return location pairs, followed by %RCLIB_DB_LIBRARY_DATA_TYPE_NONE
  *
- * Gets properties of a #RCLibDbLibraryData. The property contents will not
- * be copied, just get their address instead, if the contents are stored
- * inside a pointer. MT safe.
+ * Gets properties of a #RCLibDbLibraryData. The property contents will
+ * be copied. MT safe.
  */
 
 void rclib_db_library_data_get(RCLibDbLibraryData *data,
@@ -682,7 +718,7 @@ gboolean rclib_db_library_has_uri(const gchar *uri)
     if(priv==NULL) return FALSE;
     g_rw_lock_reader_lock(&(priv->library_rw_lock));
     result = g_hash_table_contains(priv->library_table, uri);
-    g_rw_lock_writer_lock(&(priv->library_rw_lock));
+    g_rw_lock_reader_unlock(&(priv->library_rw_lock));
     return result;
 }
 
@@ -736,7 +772,7 @@ void rclib_db_library_add_music_and_play(const gchar *uri)
  * rclib_db_library_delete:
  * @uri: the URI of the music item to delete
  *
- * Delete the the music item by the given URI.
+ * Delete the the music item by the given URI. MT safe.
  */
 
 void rclib_db_library_delete(const gchar *uri)
@@ -748,9 +784,1006 @@ void rclib_db_library_delete(const gchar *uri)
     if(instance==NULL) return;
     priv = RCLIB_DB(instance)->priv;
     if(priv==NULL) return;
+    g_rw_lock_writer_lock(&(priv->library_rw_lock));
     if(!g_hash_table_contains(priv->library_table, uri)) return;
-    g_signal_emit_by_name(instance, "library-delete", uri);
     g_hash_table_remove(priv->library_table, uri);
+    g_rw_lock_writer_unlock(&(priv->library_rw_lock));
+    g_idle_add(rclib_db_library_delete_entry_idle_cb, g_strdup(uri));
     priv->dirty_flag = TRUE;
+}
+
+/**
+ * rclib_db_library_get_data:
+ * @uri: the URI of the #RCLibDbPlaylistData entry 
+ * 
+ * Get the library entry data which @uri points to. MT safe.
+ * 
+ * Returns: (transfer full): The library entry data, #NULL if not found.
+ *     Free the data with #rclib_db_library_data_unref() after usage.
+ */
+ 
+RCLibDbLibraryData *rclib_db_library_get_data(const gchar *uri)
+{
+    RCLibDbLibraryData *library_data = NULL;
+    RCLibDbPrivate *priv;
+    GObject *instance;
+    instance = rclib_db_get_instance();
+    if(instance==NULL) return NULL;
+    priv = RCLIB_DB(instance)->priv;
+    if(priv==NULL) return NULL;
+    g_rw_lock_reader_lock(&(priv->library_rw_lock));
+    library_data = g_hash_table_lookup(priv->library_table, uri);
+    if(library_data!=NULL)
+        library_data = rclib_db_library_data_ref(library_data);
+    g_rw_lock_reader_unlock(&(priv->library_rw_lock));
+    return library_data;
+}
+
+/**
+ * rclib_db_library_data_uri_set: (skip)
+ * @uri: the URI of the #RCLibDbPlaylistData entry 
+ * @type1: the first property in playlist data to set
+ * @...: value for the first property, followed optionally by more
+ *  name/value pairs, followed by %RCLIB_DB_LIBRARY_DATA_TYPE_NONE
+ *
+ * Sets properties on the #RCLibDbPlaylistData which @uri points to.
+ * MT safe.
+ */
+
+void rclib_db_library_data_uri_set(const gchar *uri,
+    RCLibDbLibraryDataType type1, ...)
+{
+    RCLibDbPrivate *priv;
+    RCLibDbLibraryData *library_data;
+    va_list var_args;
+    GObject *instance;
+    gboolean send_signal = FALSE;
+    instance = rclib_db_get_instance();
+    if(instance==NULL) return;
+    priv = RCLIB_DB(instance)->priv;
+    if(priv==NULL) return;
+    g_rw_lock_writer_lock(&(priv->library_rw_lock));
+    library_data = g_hash_table_lookup(priv->library_table, uri);
+    if(library_data!=NULL)
+    {
+        va_start(var_args, type1);
+        send_signal = rclib_db_library_data_set_valist(library_data, type1,
+            var_args);
+        va_end(var_args);
+        if(send_signal)
+        {
+            priv->dirty_flag = TRUE;
+            g_idle_add(rclib_db_library_changed_entry_idle_cb, g_strdup(uri));
+        }
+    }
+    g_rw_lock_writer_unlock(&(priv->library_rw_lock));
+}
+
+/**
+ * rclib_db_library_data_uri_get: (skip)
+ * @uri: the URI of the #RCLibDbPlaylistData entry 
+ * @type1: the first property in library data to get
+ * @...: return location for the first property, followed optionally by more
+ *  name/return location pairs, followed by %RCLIB_DB_LIBRARY_DATA_TYPE_NONE
+ *
+ * Gets properties of the #RCLibDbLibraryData which @uri points to.
+ * The property contents will be copied. MT safe.
+ */
+
+void rclib_db_library_data_uri_get(const gchar *uri,
+    RCLibDbLibraryDataType type1, ...)
+{
+    RCLibDbPrivate *priv;
+    RCLibDbLibraryData *library_data;
+    va_list var_args;
+    GObject *instance;
+    instance = rclib_db_get_instance();
+    if(instance==NULL) return;
+    priv = RCLIB_DB(instance)->priv;
+    if(priv==NULL) return;
+    g_rw_lock_reader_lock(&(priv->library_rw_lock));
+    library_data = g_hash_table_lookup(priv->library_table, uri);
+    if(library_data!=NULL)
+    {
+        va_start(var_args, type1);
+        rclib_db_library_data_get_valist(library_data, type1,
+            var_args);
+        va_end(var_args);
+    }
+    g_rw_lock_reader_unlock(&(priv->library_rw_lock));
+}
+
+static inline RCLibDbLibraryDataType rclib_db_playlist_property_convert(
+    RCLibDbQueryDataType query_type)
+{
+    switch(query_type)
+    {
+        case RCLIB_DB_QUERY_DATA_TYPE_URI:
+            return RCLIB_DB_LIBRARY_DATA_TYPE_URI;
+            break;
+        case RCLIB_DB_QUERY_DATA_TYPE_TITLE:
+            return RCLIB_DB_LIBRARY_DATA_TYPE_TITLE;
+            break;
+        case RCLIB_DB_QUERY_DATA_TYPE_ARTIST:
+            return RCLIB_DB_LIBRARY_DATA_TYPE_ARTIST;
+            break;
+        case RCLIB_DB_QUERY_DATA_TYPE_ALBUM:
+            return RCLIB_DB_LIBRARY_DATA_TYPE_ALBUM;
+        case RCLIB_DB_QUERY_DATA_TYPE_FTYPE:
+            return RCLIB_DB_LIBRARY_DATA_TYPE_FTYPE;
+            break;
+        case RCLIB_DB_QUERY_DATA_TYPE_LENGTH:
+            return RCLIB_DB_LIBRARY_DATA_TYPE_LENGTH;
+            break;
+        case RCLIB_DB_QUERY_DATA_TYPE_TRACKNUM:
+            return RCLIB_DB_LIBRARY_DATA_TYPE_TRACKNUM;
+            break;
+        case RCLIB_DB_QUERY_DATA_TYPE_RATING:
+            return RCLIB_DB_LIBRARY_DATA_TYPE_RATING;
+            break;
+        case RCLIB_DB_QUERY_DATA_TYPE_YEAR:
+            return RCLIB_DB_LIBRARY_DATA_TYPE_YEAR;
+            break;
+        case RCLIB_DB_QUERY_DATA_TYPE_GENRE:
+            return RCLIB_DB_LIBRARY_DATA_TYPE_GENRE;
+            break;
+        default:
+            return RCLIB_DB_LIBRARY_DATA_TYPE_NONE;
+            break;
+    }
+    return RCLIB_DB_LIBRARY_DATA_TYPE_NONE;
+}
+
+static inline RCLibDbPlaylistDataType rclib_db_library_property_convert(
+    RCLibDbQueryDataType query_type)
+{
+    switch(query_type)
+    {
+        case RCLIB_DB_QUERY_DATA_TYPE_URI:
+            return RCLIB_DB_LIBRARY_DATA_TYPE_URI;
+            break;
+        case RCLIB_DB_QUERY_DATA_TYPE_TITLE:
+            return RCLIB_DB_LIBRARY_DATA_TYPE_TITLE;
+            break;
+        case RCLIB_DB_QUERY_DATA_TYPE_ARTIST:
+            return RCLIB_DB_LIBRARY_DATA_TYPE_ARTIST;
+            break;
+        case RCLIB_DB_QUERY_DATA_TYPE_ALBUM:
+            return RCLIB_DB_LIBRARY_DATA_TYPE_ALBUM;
+        case RCLIB_DB_QUERY_DATA_TYPE_FTYPE:
+            return RCLIB_DB_LIBRARY_DATA_TYPE_FTYPE;
+            break;
+        case RCLIB_DB_QUERY_DATA_TYPE_LENGTH:
+            return RCLIB_DB_LIBRARY_DATA_TYPE_LENGTH;
+            break;
+        case RCLIB_DB_QUERY_DATA_TYPE_TRACKNUM:
+            return RCLIB_DB_LIBRARY_DATA_TYPE_TRACKNUM;
+            break;
+        case RCLIB_DB_QUERY_DATA_TYPE_RATING:
+            return RCLIB_DB_LIBRARY_DATA_TYPE_RATING;
+            break;
+        case RCLIB_DB_QUERY_DATA_TYPE_YEAR:
+            return RCLIB_DB_LIBRARY_DATA_TYPE_YEAR;
+            break;
+        case RCLIB_DB_QUERY_DATA_TYPE_GENRE:
+            return RCLIB_DB_LIBRARY_DATA_TYPE_GENRE;
+            break;
+        default:
+            return RCLIB_DB_LIBRARY_DATA_TYPE_NONE;
+            break;
+    }
+    return RCLIB_DB_LIBRARY_DATA_TYPE_NONE;
+}
+
+/**
+ * rclib_db_library_data_query:
+ * @library_data: the library data to check
+ * @query: the query condition
+ *
+ * Check whether the library data satisfied the query condition.
+ * MT safe.
+ * 
+ * Returns: Whether the library data satisfied the query condition.
+ */
+
+gboolean rclib_db_library_data_query(RCLibDbLibraryData *library_data,
+    RCLibDbQuery *query)
+{
+    RCLibDbQueryData *query_data;
+    gboolean result = FALSE;
+    guint i;
+    RCLibDbLibraryDataType ltype;
+    GType dtype;
+    gchar *lstring;
+    gint lint;
+    gint64 lint64;
+    gdouble ldouble;
+    gchar *uri;
+    if(library_data==NULL || query==NULL)
+        return FALSE;
+    for(i=0;i<query->len;i++)
+    {
+        query_data = g_ptr_array_index(query, i);
+        if(query_data==NULL) continue;
+        switch(query_data->type)
+        {
+            case RCLIB_DB_QUERY_CONDITION_TYPE_SUBQUERY:
+            {
+                if(query_data->subquery==NULL)
+                {
+                    result = FALSE;
+                    break;
+                }
+                result = rclib_db_library_data_query(library_data,
+                    query_data->subquery);
+                break;
+            }
+            case RCLIB_DB_QUERY_CONDITION_TYPE_PROP_EQUALS:
+            {
+                if(query_data->val==NULL)
+                {
+                    result = FALSE;
+                    break;
+                }
+                ltype = rclib_db_library_property_convert(
+                    query_data->propid);
+                dtype = rclib_db_query_get_query_data_type(
+                    query_data->propid);
+                switch(dtype)
+                {
+                    case G_TYPE_STRING:
+                    {
+                        if(!G_VALUE_HOLDS_STRING(query_data->val))
+                        {
+                            result = FALSE;
+                            break;
+                        }
+                        lstring = NULL;
+                        rclib_db_library_data_get(library_data, ltype,
+                            &lstring, RCLIB_DB_LIBRARY_DATA_TYPE_NONE);
+                        if(ltype==RCLIB_DB_LIBRARY_DATA_TYPE_TITLE &&
+                            (lstring==NULL || strlen(lstring)==0))
+                        {
+                            uri = NULL;
+                            if(lstring!=NULL) g_free(lstring);
+                            lstring = NULL;
+                            rclib_db_library_data_get(library_data,
+                                RCLIB_DB_LIBRARY_DATA_TYPE_URI, &uri,
+                                RCLIB_DB_LIBRARY_DATA_TYPE_NONE);
+                            if(uri!=NULL)
+                            {
+                                lstring = rclib_tag_get_name_from_uri(uri);
+                            }
+                            g_free(uri);
+                        }
+                        result = (g_strcmp0(g_value_get_string(
+                            query_data->val), lstring)==0);
+                        g_free(lstring);
+                        break;
+                    }
+                    case G_TYPE_INT:
+                    {
+                        if(!G_VALUE_HOLDS_INT(query_data->val))
+                        {
+                            result = FALSE;
+                            break;
+                        }
+                        lint = 0;
+                        rclib_db_library_data_get(library_data, ltype,
+                            &lint, RCLIB_DB_LIBRARY_DATA_TYPE_NONE);
+                        result = (g_value_get_int(query_data->val)==lint);
+                        break;
+                    }
+                    case G_TYPE_INT64:
+                    {
+                        if(!G_VALUE_HOLDS_INT64(query_data->val))
+                        {
+                            result = FALSE;
+                            break;
+                        }
+                        lint64 = 0;
+                        rclib_db_library_data_get(library_data, ltype,
+                            &lint64, RCLIB_DB_LIBRARY_DATA_TYPE_NONE);
+                        result = (g_value_get_int64(query_data->val)==lint64);
+                        break;
+                    }
+                    case G_TYPE_DOUBLE:
+                    {
+                        if(!G_VALUE_HOLDS_DOUBLE(query_data->val))
+                        {
+                            result = FALSE;
+                            break;
+                        }
+                        ldouble = 0;
+                        rclib_db_library_data_get(library_data, ltype,
+                            &ldouble, RCLIB_DB_LIBRARY_DATA_TYPE_NONE);
+                        result = (ABS(g_value_get_double(query_data->val) -
+                            ldouble)<=10e-5);
+                        break;
+                    }
+                    default:
+                    {
+                        result = FALSE;
+                        break;
+                    }
+                }
+                break;
+            }
+            case RCLIB_DB_QUERY_CONDITION_TYPE_PROP_NOT_EQUAL:
+            {
+               if(query_data->val==NULL)
+                {
+                    result = FALSE;
+                    break;
+                }
+                ltype = rclib_db_library_property_convert(
+                    query_data->propid);
+                dtype = rclib_db_query_get_query_data_type(
+                    query_data->propid);
+                switch(dtype)
+                {
+                    case G_TYPE_STRING:
+                    {
+                        if(!G_VALUE_HOLDS_STRING(query_data->val))
+                        {
+                            result = FALSE;
+                            break;
+                        }
+                        lstring = NULL;
+                        rclib_db_library_data_get(library_data, ltype,
+                            &lstring, RCLIB_DB_LIBRARY_DATA_TYPE_NONE);
+                        if(ltype==RCLIB_DB_LIBRARY_DATA_TYPE_TITLE &&
+                            (lstring==NULL || strlen(lstring)==0))
+                        {
+                            uri = NULL;
+                            if(lstring!=NULL) g_free(lstring);
+                            lstring = NULL;
+                            rclib_db_library_data_get(library_data,
+                                RCLIB_DB_LIBRARY_DATA_TYPE_URI, &uri,
+                                RCLIB_DB_LIBRARY_DATA_TYPE_NONE);
+                            if(uri!=NULL)
+                            {
+                                lstring = rclib_tag_get_name_from_uri(uri);
+                            }
+                            g_free(uri);
+                        }
+                        result = (g_strcmp0(g_value_get_string(
+                            query_data->val), lstring)!=0);
+                        g_free(lstring);
+                        break;
+                    }
+                    case G_TYPE_INT:
+                    {
+                        if(!G_VALUE_HOLDS_INT(query_data->val))
+                        {
+                            result = FALSE;
+                            break;
+                        }
+                        lint = 0;
+                        rclib_db_library_data_get(library_data, ltype,
+                            &lint, RCLIB_DB_LIBRARY_DATA_TYPE_NONE);
+                        result = (g_value_get_int(query_data->val)!=lint);
+                        break;
+                    }
+                    case G_TYPE_INT64:
+                    {
+                        if(!G_VALUE_HOLDS_INT64(query_data->val))
+                        {
+                            result = FALSE;
+                            break;
+                        }
+                        lint64 = 0;
+                        rclib_db_library_data_get(library_data, ltype,
+                            &lint64, RCLIB_DB_LIBRARY_DATA_TYPE_NONE);
+                        result = (g_value_get_int64(query_data->val)!=lint64);
+                        break;
+                    }
+                    case G_TYPE_DOUBLE:
+                    {
+                        if(!G_VALUE_HOLDS_DOUBLE(query_data->val))
+                        {
+                            result = FALSE;
+                            break;
+                        }
+                        ldouble = 0;
+                        rclib_db_library_data_get(library_data, ltype,
+                            &ldouble, RCLIB_DB_LIBRARY_DATA_TYPE_NONE);
+                        result = (ABS(g_value_get_double(query_data->val) -
+                            ldouble)>10e-5);
+                        break;
+                    }
+                    default:
+                    {
+                        result = FALSE;
+                        break;
+                    }
+                }
+                break;
+            }
+            case RCLIB_DB_QUERY_CONDITION_TYPE_PROP_GREATER:
+            {
+               if(query_data->val==NULL)
+                {
+                    result = FALSE;
+                    break;
+                }
+                ltype = rclib_db_library_property_convert(
+                    query_data->propid);
+                dtype = rclib_db_query_get_query_data_type(
+                    query_data->propid);
+                switch(dtype)
+                {
+                    case G_TYPE_STRING:
+                    {
+                        if(!G_VALUE_HOLDS_STRING(query_data->val))
+                        {
+                            result = FALSE;
+                            break;
+                        }
+                        lstring = NULL;
+                        rclib_db_library_data_get(library_data, ltype,
+                            &lstring, RCLIB_DB_LIBRARY_DATA_TYPE_NONE);
+                        if(ltype==RCLIB_DB_LIBRARY_DATA_TYPE_TITLE &&
+                            (lstring==NULL || strlen(lstring)==0))
+                        {
+                            uri = NULL;
+                            if(lstring!=NULL) g_free(lstring);
+                            lstring = NULL;
+                            rclib_db_library_data_get(library_data,
+                                RCLIB_DB_LIBRARY_DATA_TYPE_URI, &uri,
+                                RCLIB_DB_LIBRARY_DATA_TYPE_NONE);
+                            if(uri!=NULL)
+                            {
+                                lstring = rclib_tag_get_name_from_uri(uri);
+                            }
+                            g_free(uri);
+                        }
+                        result = (g_strcmp0(g_value_get_string(
+                            query_data->val), lstring)>0);
+                        g_free(lstring);
+                        break;
+                    }
+                    case G_TYPE_INT:
+                    {
+                        if(!G_VALUE_HOLDS_INT(query_data->val))
+                        {
+                            result = FALSE;
+                            break;
+                        }
+                        lint = 0;
+                        rclib_db_library_data_get(library_data, ltype,
+                            &lint, RCLIB_DB_LIBRARY_DATA_TYPE_NONE);
+                        result = (g_value_get_int(query_data->val)>lint);
+                        break;
+                    }
+                    case G_TYPE_INT64:
+                    {
+                        if(!G_VALUE_HOLDS_INT64(query_data->val))
+                        {
+                            result = FALSE;
+                            break;
+                        }
+                        lint64 = 0;
+                        rclib_db_library_data_get(library_data, ltype,
+                            &lint64, RCLIB_DB_LIBRARY_DATA_TYPE_NONE);
+                        result = (g_value_get_int64(query_data->val)>lint64);
+                        break;
+                    }
+                    case G_TYPE_DOUBLE:
+                    {
+                        if(!G_VALUE_HOLDS_DOUBLE(query_data->val))
+                        {
+                            result = FALSE;
+                            break;
+                        }
+                        ldouble = 0;
+                        rclib_db_library_data_get(library_data, ltype,
+                            &ldouble, RCLIB_DB_LIBRARY_DATA_TYPE_NONE);
+                        result = (g_value_get_double(query_data->val) -
+                            ldouble>10e-5);
+                        break;
+                    }
+                    default:
+                    {
+                        result = FALSE;
+                        break;
+                    }
+                }
+                break;
+            }
+            case RCLIB_DB_QUERY_CONDITION_TYPE_PROP_GREATER_OR_EQUAL:
+            {
+               if(query_data->val==NULL)
+                {
+                    result = FALSE;
+                    break;
+                }
+                ltype = rclib_db_library_property_convert(
+                    query_data->propid);
+                dtype = rclib_db_query_get_query_data_type(
+                    query_data->propid);
+                switch(dtype)
+                {
+                    case G_TYPE_STRING:
+                    {
+                        if(!G_VALUE_HOLDS_STRING(query_data->val))
+                        {
+                            result = FALSE;
+                            break;
+                        }
+                        lstring = NULL;
+                        rclib_db_library_data_get(library_data, ltype,
+                            &lstring, RCLIB_DB_LIBRARY_DATA_TYPE_NONE);
+                        if(ltype==RCLIB_DB_LIBRARY_DATA_TYPE_TITLE &&
+                            (lstring==NULL || strlen(lstring)==0))
+                        {
+                            uri = NULL;
+                            if(lstring!=NULL) g_free(lstring);
+                            lstring = NULL;
+                            rclib_db_library_data_get(library_data,
+                                RCLIB_DB_LIBRARY_DATA_TYPE_URI, &uri,
+                                RCLIB_DB_LIBRARY_DATA_TYPE_NONE);
+                            if(uri!=NULL)
+                            {
+                                lstring = rclib_tag_get_name_from_uri(uri);
+                            }
+                            g_free(uri);
+                        }
+                        result = (g_strcmp0(g_value_get_string(
+                            query_data->val), lstring)>=0);
+                        g_free(lstring);
+                        break;
+                    }
+                    case G_TYPE_INT:
+                    {
+                        if(!G_VALUE_HOLDS_INT(query_data->val))
+                        {
+                            result = FALSE;
+                            break;
+                        }
+                        lint = 0;
+                        rclib_db_library_data_get(library_data, ltype,
+                            &lint, RCLIB_DB_LIBRARY_DATA_TYPE_NONE);
+                        result = (g_value_get_int(query_data->val)>=lint);
+                        break;
+                    }
+                    case G_TYPE_INT64:
+                    {
+                        if(!G_VALUE_HOLDS_INT64(query_data->val))
+                        {
+                            result = FALSE;
+                            break;
+                        }
+                        lint64 = 0;
+                        rclib_db_library_data_get(library_data, ltype,
+                            &lint64, RCLIB_DB_LIBRARY_DATA_TYPE_NONE);
+                        result = (g_value_get_int64(query_data->val)>=lint64);
+                        break;
+                    }
+                    case G_TYPE_DOUBLE:
+                    {
+                        if(!G_VALUE_HOLDS_DOUBLE(query_data->val))
+                        {
+                            result = FALSE;
+                            break;
+                        }
+                        ldouble = 0;
+                        rclib_db_library_data_get(library_data, ltype,
+                            &ldouble, RCLIB_DB_LIBRARY_DATA_TYPE_NONE);
+                        result = (g_value_get_double(query_data->val) -
+                            ldouble>=0);
+                        break;
+                    }
+                    default:
+                    {
+                        result = FALSE;
+                        break;
+                    }
+                }
+                break;
+            }
+            case RCLIB_DB_QUERY_CONDITION_TYPE_PROP_LESS:
+            {
+               if(query_data->val==NULL)
+                {
+                    result = FALSE;
+                    break;
+                }
+                ltype = rclib_db_library_property_convert(
+                    query_data->propid);
+                dtype = rclib_db_query_get_query_data_type(
+                    query_data->propid);
+                switch(dtype)
+                {
+                    case G_TYPE_STRING:
+                    {
+                        if(!G_VALUE_HOLDS_STRING(query_data->val))
+                        {
+                            result = FALSE;
+                            break;
+                        }
+                        lstring = NULL;
+                        rclib_db_library_data_get(library_data, ltype,
+                            &lstring, RCLIB_DB_LIBRARY_DATA_TYPE_NONE);
+                        if(ltype==RCLIB_DB_LIBRARY_DATA_TYPE_TITLE &&
+                            (lstring==NULL || strlen(lstring)==0))
+                        {
+                            uri = NULL;
+                            if(lstring!=NULL) g_free(lstring);
+                            lstring = NULL;
+                            rclib_db_library_data_get(library_data,
+                                RCLIB_DB_LIBRARY_DATA_TYPE_URI, &uri,
+                                RCLIB_DB_LIBRARY_DATA_TYPE_NONE);
+                            if(uri!=NULL)
+                            {
+                                lstring = rclib_tag_get_name_from_uri(uri);
+                            }
+                            g_free(uri);
+                        }
+                        result = (g_strcmp0(g_value_get_string(
+                            query_data->val), lstring)<0);
+                        g_free(lstring);
+                        break;
+                    }
+                    case G_TYPE_INT:
+                    {
+                        if(!G_VALUE_HOLDS_INT(query_data->val))
+                        {
+                            result = FALSE;
+                            break;
+                        }
+                        lint = 0;
+                        rclib_db_library_data_get(library_data, ltype,
+                            &lint, RCLIB_DB_LIBRARY_DATA_TYPE_NONE);
+                        result = (g_value_get_int(query_data->val)<lint);
+                        break;
+                    }
+                    case G_TYPE_INT64:
+                    {
+                        if(!G_VALUE_HOLDS_INT64(query_data->val))
+                        {
+                            result = FALSE;
+                            break;
+                        }
+                        lint64 = 0;
+                        rclib_db_library_data_get(library_data, ltype,
+                            &lint64, RCLIB_DB_LIBRARY_DATA_TYPE_NONE);
+                        result = (g_value_get_int64(query_data->val)<lint64);
+                        break;
+                    }
+                    case G_TYPE_DOUBLE:
+                    {
+                        if(!G_VALUE_HOLDS_DOUBLE(query_data->val))
+                        {
+                            result = FALSE;
+                            break;
+                        }
+                        ldouble = 0;
+                        rclib_db_library_data_get(library_data, ltype,
+                            &ldouble, RCLIB_DB_LIBRARY_DATA_TYPE_NONE);
+                        result = (g_value_get_double(query_data->val) -
+                            ldouble<-10e-5);
+                        break;
+                    }
+                    default:
+                    {
+                        result = FALSE;
+                        break;
+                    }
+                }
+                break;
+            }
+            case RCLIB_DB_QUERY_CONDITION_TYPE_PROP_LESS_OR_EQUAL:
+            {
+               if(query_data->val==NULL)
+                {
+                    result = FALSE;
+                    break;
+                }
+                ltype = rclib_db_library_property_convert(
+                    query_data->propid);
+                dtype = rclib_db_query_get_query_data_type(
+                    query_data->propid);
+                switch(dtype)
+                {
+                    case G_TYPE_STRING:
+                    {
+                        if(!G_VALUE_HOLDS_STRING(query_data->val))
+                        {
+                            result = FALSE;
+                            break;
+                        }
+                        lstring = NULL;
+                        rclib_db_library_data_get(library_data, ltype,
+                            &lstring, RCLIB_DB_LIBRARY_DATA_TYPE_NONE);
+                        if(ltype==RCLIB_DB_LIBRARY_DATA_TYPE_TITLE &&
+                            (lstring==NULL || strlen(lstring)==0))
+                        {
+                            uri = NULL;
+                            if(lstring!=NULL) g_free(lstring);
+                            lstring = NULL;
+                            rclib_db_library_data_get(library_data,
+                                RCLIB_DB_LIBRARY_DATA_TYPE_URI, &uri,
+                                RCLIB_DB_LIBRARY_DATA_TYPE_NONE);
+                            if(uri!=NULL)
+                            {
+                                lstring = rclib_tag_get_name_from_uri(uri);
+                            }
+                            g_free(uri);
+                        }
+                        result = (g_strcmp0(g_value_get_string(
+                            query_data->val), lstring)<=0);
+                        g_free(lstring);
+                        break;
+                    }
+                    case G_TYPE_INT:
+                    {
+                        if(!G_VALUE_HOLDS_INT(query_data->val))
+                        {
+                            result = FALSE;
+                            break;
+                        }
+                        lint = 0;
+                        rclib_db_library_data_get(library_data, ltype,
+                            &lint, RCLIB_DB_LIBRARY_DATA_TYPE_NONE);
+                        result = (g_value_get_int(query_data->val)<=lint);
+                        break;
+                    }
+                    case G_TYPE_INT64:
+                    {
+                        if(!G_VALUE_HOLDS_INT64(query_data->val))
+                        {
+                            result = FALSE;
+                            break;
+                        }
+                        lint64 = 0;
+                        rclib_db_library_data_get(library_data, ltype,
+                            &lint64, RCLIB_DB_LIBRARY_DATA_TYPE_NONE);
+                        result = (g_value_get_int64(query_data->val)<=lint64);
+                        break;
+                    }
+                    case G_TYPE_DOUBLE:
+                    {
+                        if(!G_VALUE_HOLDS_DOUBLE(query_data->val))
+                        {
+                            result = FALSE;
+                            break;
+                        }
+                        ldouble = 0;
+                        rclib_db_library_data_get(library_data, ltype,
+                            &ldouble, RCLIB_DB_LIBRARY_DATA_TYPE_NONE);
+                        result = (g_value_get_double(query_data->val) -
+                            ldouble<=0);
+                        break;
+                    }
+                    default:
+                    {
+                        result = FALSE;
+                        break;
+                    }
+                }
+                break;
+            }
+            case RCLIB_DB_QUERY_CONDITION_TYPE_PROP_LIKE:
+            {
+                if(query_data->val==NULL)
+                {
+                    result = FALSE;
+                    break;
+                }
+
+                ltype = rclib_db_library_property_convert(
+                    query_data->propid);
+                dtype = rclib_db_query_get_query_data_type(
+                    query_data->propid);
+                switch(dtype)
+                {
+                    case G_TYPE_STRING:
+                    {
+                        if(!G_VALUE_HOLDS_STRING(query_data->val))
+                        {
+                            result = FALSE;
+                            break;
+                        }
+                        lstring = NULL;
+                        rclib_db_library_data_get(library_data, ltype,
+                            &lstring, RCLIB_DB_LIBRARY_DATA_TYPE_NONE);
+                        if(ltype==RCLIB_DB_LIBRARY_DATA_TYPE_TITLE &&
+                            (lstring==NULL || strlen(lstring)==0))
+                        {
+                            uri = NULL;
+                            if(lstring!=NULL) g_free(lstring);
+                            lstring = NULL;
+                            rclib_db_library_data_get(library_data,
+                                RCLIB_DB_LIBRARY_DATA_TYPE_URI, &uri,
+                                RCLIB_DB_LIBRARY_DATA_TYPE_NONE);
+                            if(uri!=NULL)
+                            {
+                                lstring = rclib_tag_get_name_from_uri(uri);
+                            }
+                            g_free(uri);
+                        }
+                        if(lstring==NULL)
+                        {
+                            result = FALSE;
+                            break;
+                        }
+                        result = (g_strstr_len(lstring, -1,
+                            g_value_get_string(query_data->val))!=NULL);
+                        g_free(lstring);
+                        break;
+                    }
+                    default:
+                    {
+                        result = FALSE;
+                        break;
+                    }
+                }
+                break;
+            }
+            case RCLIB_DB_QUERY_CONDITION_TYPE_PROP_NOT_LIKE:
+            {
+                if(query_data->val==NULL)
+                {
+                    result = FALSE;
+                    break;
+                }
+                ltype = rclib_db_library_property_convert(
+                    query_data->propid);
+                dtype = rclib_db_query_get_query_data_type(
+                    query_data->propid);
+                switch(dtype)
+                {
+                    case G_TYPE_STRING:
+                    {
+                        if(!G_VALUE_HOLDS_STRING(query_data->val))
+                        {
+                            result = FALSE;
+                            break;
+                        }
+                        lstring = NULL;
+                        rclib_db_library_data_get(library_data, ltype,
+                            &lstring, RCLIB_DB_LIBRARY_DATA_TYPE_NONE);
+                        if(ltype==RCLIB_DB_LIBRARY_DATA_TYPE_TITLE &&
+                            (lstring==NULL || strlen(lstring)==0))
+                        {
+                            uri = NULL;
+                            if(lstring!=NULL) g_free(lstring);
+                            lstring = NULL;
+                            rclib_db_library_data_get(library_data,
+                                RCLIB_DB_LIBRARY_DATA_TYPE_URI, &uri,
+                                RCLIB_DB_LIBRARY_DATA_TYPE_NONE);
+                            if(uri!=NULL)
+                            {
+                                lstring = rclib_tag_get_name_from_uri(uri);
+                            }
+                            g_free(uri);
+                        }
+                        if(lstring==NULL)
+                        {
+                            result = FALSE;
+                            break;
+                        }
+                        result = (g_strstr_len(lstring, -1,
+                            g_value_get_string(query_data->val))==NULL);
+                        g_free(lstring);
+                        break;
+                    }
+                    default:
+                    {
+                        result = FALSE;
+                        break;
+                    }
+                }
+                break;
+            }
+            case RCLIB_DB_QUERY_CONDITION_TYPE_PROP_PREFIX:
+            {
+                if(query_data->val==NULL)
+                {
+                    result = FALSE;
+                    break;
+                }
+                ltype = rclib_db_library_property_convert(
+                    query_data->propid);
+                dtype = rclib_db_query_get_query_data_type(
+                    query_data->propid);
+                switch(dtype)
+                {
+                    case G_TYPE_STRING:
+                    {
+                        if(!G_VALUE_HOLDS_STRING(query_data->val))
+                        {
+                            result = FALSE;
+                            break;
+                        }
+                        lstring = NULL;
+                        rclib_db_library_data_get(library_data, ltype,
+                            &lstring, RCLIB_DB_LIBRARY_DATA_TYPE_NONE);
+                        if(ltype==RCLIB_DB_LIBRARY_DATA_TYPE_TITLE &&
+                            (lstring==NULL || strlen(lstring)==0))
+                        {
+                            uri = NULL;
+                            if(lstring!=NULL) g_free(lstring);
+                            lstring = NULL;
+                            rclib_db_library_data_get(library_data,
+                                RCLIB_DB_LIBRARY_DATA_TYPE_URI, &uri,
+                                RCLIB_DB_LIBRARY_DATA_TYPE_NONE);
+                            if(uri!=NULL)
+                            {
+                                lstring = rclib_tag_get_name_from_uri(uri);
+                            }
+                            g_free(uri);
+                        }
+                        result = g_str_has_prefix(lstring,
+                            g_value_get_string(query_data->val));
+                        g_free(lstring);
+                        break;
+                    }
+                    default:
+                    {
+                        result = FALSE;
+                        break;
+                    }
+                }
+                break;
+            }
+            case RCLIB_DB_QUERY_CONDITION_TYPE_PROP_SUFFIX:
+            {
+                if(query_data->val==NULL)
+                {
+                    result = FALSE;
+                    break;
+                }
+                ltype = rclib_db_library_property_convert(
+                    query_data->propid);
+                dtype = rclib_db_query_get_query_data_type(
+                    query_data->propid);
+                switch(dtype)
+                {
+                    case G_TYPE_STRING:
+                    {
+                        if(!G_VALUE_HOLDS_STRING(query_data->val))
+                        {
+                            result = FALSE;
+                            break;
+                        }
+                        lstring = NULL;
+                        rclib_db_library_data_get(library_data, ltype,
+                            &lstring, RCLIB_DB_LIBRARY_DATA_TYPE_NONE);
+                        if(ltype==RCLIB_DB_LIBRARY_DATA_TYPE_TITLE &&
+                            (lstring==NULL || strlen(lstring)==0))
+                        {
+                            uri = NULL;
+                            if(lstring!=NULL) g_free(lstring);
+                            lstring = NULL;
+                            rclib_db_library_data_get(library_data,
+                                RCLIB_DB_LIBRARY_DATA_TYPE_URI, &uri,
+                                RCLIB_DB_LIBRARY_DATA_TYPE_NONE);
+                            if(uri!=NULL)
+                            {
+                                lstring = rclib_tag_get_name_from_uri(uri);
+                            }
+                            g_free(uri);
+                        }
+                        result = g_str_has_suffix(lstring,
+                            g_value_get_string(query_data->val));
+                        g_free(lstring);
+                        break;
+                    }
+                    default:
+                    {
+                        result = FALSE;
+                        break;
+                    }
+                }
+                break;
+            }
+            default:
+                break;
+        }
+        if(!result) break;
+    }
+    return result;
 }
 

@@ -327,7 +327,7 @@ struct _RCLibDbClass {
     void (*refresh_updated)(RCLibDb *db, gint remaining);
     void (*library_added)(RCLibDb *db, const gchar *uri);
     void (*library_changed)(RCLibDb *db, const gchar *uri);
-    void (*library_delete)(RCLibDb *db, const gchar *uri);
+    void (*library_deleted)(RCLibDb *db, const gchar *uri);
 };
 
 /*< private >*/
@@ -462,6 +462,11 @@ gboolean rclib_db_playlist_iter_query(RCLibDbPlaylistIter *playlist_iter,
     RCLibDbQuery *query);
 GPtrArray *rclib_db_playlist_query(RCLibDbCatalogIter *catalog_iter,
     RCLibDbQuery *query);
+GPtrArray *rclib_db_playlist_query_get_iters(RCLibDbCatalogIter *catalog_iter,
+    RCLibDbQuery *query);
+RCLibDbPlaylistIter *rclib_db_playlist_get_random_iter(
+    RCLibDbCatalogIter *catalog_iter, gboolean rating_limit,
+    gboolean condition, gfloat rating);
 
 /* Library Interface */
 RCLibDbLibraryData *rclib_db_library_data_new();
@@ -477,6 +482,13 @@ gboolean rclib_db_library_has_uri(const gchar *uri);
 void rclib_db_library_add_music(const gchar *uri);
 void rclib_db_library_add_music_and_play(const gchar *uri);
 void rclib_db_library_delete(const gchar *uri);
+RCLibDbLibraryData *rclib_db_library_get_data(const gchar *uri);
+void rclib_db_library_data_uri_set(const gchar *uri,
+    RCLibDbLibraryDataType type1, ...);
+void rclib_db_library_data_uri_get(const gchar *uri,
+    RCLibDbLibraryDataType type1, ...);
+gboolean rclib_db_library_data_query(RCLibDbLibraryData *library_data,
+    RCLibDbQuery *query);
 
 /* Query Interface */
 RCLibDbQuery *rclib_db_query_parse(RCLibDbQueryConditionType condition1, ...);
