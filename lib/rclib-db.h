@@ -467,6 +467,9 @@ GPtrArray *rclib_db_playlist_query_get_iters(RCLibDbCatalogIter *catalog_iter,
 RCLibDbPlaylistIter *rclib_db_playlist_get_random_iter(
     RCLibDbCatalogIter *catalog_iter, gboolean rating_limit,
     gboolean condition, gfloat rating);
+RCLibDbPlaylistIter *rclib_db_playlist_iter_get_random_iter(
+    RCLibDbPlaylistIter *piter, gboolean rating_limit,
+    gboolean condition, gfloat rating);
 
 /* Library Interface */
 RCLibDbLibraryData *rclib_db_library_data_new();

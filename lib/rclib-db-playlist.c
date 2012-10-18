@@ -2370,6 +2370,7 @@ void rclib_db_catalog_delete(RCLibDbCatalogIter *iter)
 {
     RCLibDbPrivate *priv;
     GObject *instance;
+    RCLibDbPlaylistSequence *playlist = NULL;
     RCLibDbPlaylistIter *iter_foreach;
     if(iter==NULL) return;
     instance = rclib_db_get_instance();
@@ -2377,24 +2378,42 @@ void rclib_db_catalog_delete(RCLibDbCatalogIter *iter)
     priv = RCLIB_DB(instance)->priv;
     if(priv==NULL || priv->catalog_iter_table==NULL) return;
     g_signal_emit_by_name(instance, "catalog-delete", iter);
+    g_rw_lock_reader_lock(&(priv->catalog_rw_lock));
+    G_STMT_START
+    {
+        if(!g_hash_table_contains(priv->catalog_iter_table, iter))
+            break;
+        g_rw_lock_writer_lock(&(priv->playlist_rw_lock));
+        rclib_db_catalog_data_iter_get(iter,
+            RCLIB_DB_CATALOG_DATA_TYPE_PLAYLIST, &playlist,
+            RCLIB_DB_CATALOG_DATA_TYPE_NONE);
+        if(playlist==NULL)
+        {
+            g_rw_lock_writer_unlock(&(priv->playlist_rw_lock));
+            break;
+        }
+        iter_foreach = (RCLibDbPlaylistIter *)g_sequence_get_begin_iter(
+            (GSequence *)playlist);
+        for(;!g_sequence_iter_is_end((GSequenceIter *)iter_foreach);
+            iter_foreach=(RCLibDbPlaylistIter *)g_sequence_iter_next(
+            (GSequenceIter *)iter_foreach))
+        {
+            g_hash_table_remove(priv->playlist_iter_table, iter_foreach);
+        }
+        g_rw_lock_writer_unlock(&(priv->playlist_rw_lock));
+        rclib_db_catalog_data_iter_set(iter,
+            RCLIB_DB_CATALOG_DATA_TYPE_SELF_ITER, NULL,
+            RCLIB_DB_CATALOG_DATA_TYPE_NONE);
+    }
+    G_STMT_END;
+    g_rw_lock_reader_unlock(&(priv->catalog_rw_lock));
     g_rw_lock_writer_lock(&(priv->catalog_rw_lock));
     G_STMT_START
     {
         if(!g_hash_table_contains(priv->catalog_iter_table, iter))
             break;
-        rclib_db_catalog_data_iter_set(iter,
-            RCLIB_DB_CATALOG_DATA_TYPE_SELF_ITER, NULL,
-            RCLIB_DB_CATALOG_DATA_TYPE_NONE);
-        for(iter_foreach=rclib_db_playlist_get_begin_iter(iter);
-            iter_foreach!=NULL;
-            iter_foreach=rclib_db_playlist_iter_next(iter_foreach))
-        {
-            g_rw_lock_writer_lock(&(priv->playlist_rw_lock));
-            g_hash_table_remove(priv->playlist_iter_table, iter_foreach);
-            g_rw_lock_writer_unlock(&(priv->playlist_rw_lock));
-        }
-        g_sequence_remove((GSequenceIter *)iter);
         g_hash_table_remove(priv->catalog_iter_table, iter);
+        g_sequence_remove((GSequenceIter *)iter);
     }
     G_STMT_END;
     g_rw_lock_writer_unlock(&(priv->catalog_rw_lock));
@@ -4249,13 +4268,14 @@ RCLibDbPlaylistIter *rclib_db_playlist_get_random_iter(
     RCLibDbCatalogIter *catalog_iter, gboolean rating_limit,
     gboolean condition, gfloat rating)
 {
-    GPtrArray *query_result = NULL;
     GObject *instance;
+    gfloat prating;
     gint playlist_length, pos;
-    RCLibDbPlaylistData *playlist_data;
+    GHashTableIter iter;
     RCLibDbPlaylistIter *playlist_iter;
     RCLibDbPrivate *priv;
     RCLibDbPlaylistIter *result_iter = NULL;
+    GPtrArray *playlist_array;
     instance = rclib_db_get_instance();
     if(instance==NULL) return NULL;
     priv = RCLIB_DB(instance)->priv;
@@ -4276,7 +4296,6 @@ RCLibDbPlaylistIter *rclib_db_playlist_get_random_iter(
         }
         else
         {
-            GHashTableIter iter;
             g_rw_lock_reader_lock(&(priv->playlist_rw_lock));
             g_hash_table_iter_init(&iter, priv->playlist_iter_table);
             playlist_length = g_hash_table_size(priv->playlist_iter_table);
@@ -4293,7 +4312,165 @@ RCLibDbPlaylistIter *rclib_db_playlist_get_random_iter(
         }
         return result_iter;
     }
-    
-    
+    playlist_array = g_ptr_array_new();
+    g_rw_lock_reader_lock(&(priv->playlist_rw_lock));
+    if(catalog_iter!=NULL)
+    {        
+        for(playlist_iter=rclib_db_playlist_get_begin_iter(
+            catalog_iter);playlist_iter!=NULL;playlist_iter=
+            rclib_db_playlist_iter_next(playlist_iter))
+        {
+            prating = -1.0;
+            rclib_db_playlist_data_iter_get(playlist_iter,
+                RCLIB_DB_PLAYLIST_DATA_TYPE_RATING, &prating,
+                RCLIB_DB_PLAYLIST_DATA_TYPE_NONE);
+            if(prating<0.0) continue;
+            if((prating<=rating && condition) || (prating>=rating &&
+                !condition))
+            {
+                g_ptr_array_add(playlist_array, playlist_iter);
+            }
+        }
+    }
+    else
+    {
+        g_hash_table_iter_init(&iter, priv->playlist_iter_table);
+        while(g_hash_table_iter_next(&iter, (gpointer *)&playlist_iter, NULL))
+        {
+            if(playlist_iter==NULL) continue;
+            prating = -1.0;
+            rclib_db_playlist_data_iter_get(playlist_iter,
+                RCLIB_DB_PLAYLIST_DATA_TYPE_RATING, &prating,
+                RCLIB_DB_PLAYLIST_DATA_TYPE_NONE);
+            if(prating<0.0) continue;
+            if((prating<=rating && condition) || (prating>=rating &&
+                !condition))
+            {
+                g_ptr_array_add(playlist_array, playlist_iter);
+            }
+        }
+    }
+    playlist_length = playlist_array->len;
+    if(playlist_length>0)
+    {
+        pos = g_random_int_range(0, playlist_length);
+        result_iter = g_ptr_array_index(playlist_array, pos);
+    }
+    g_rw_lock_reader_unlock(&(priv->playlist_rw_lock));
+    g_ptr_array_free(playlist_array, TRUE);
     return result_iter;
+}
+
+/**
+ * rclib_db_playlist_iter_get_random_iter:
+ * @piter: the playlist iter which belongs to the catalog, #NULL to use all
+ *     catalogs
+ * @rating_limit: whether to use rating limit
+ * @condition: the condition, #TRUE to get a random iter which pointed to
+ *     the #RCLibDbPlaylistData whose rating is less or equal to the @rating,
+ *     #FLASE to get the a random iter which pointed to the
+ *     #RCLibDbPlaylistData whose rating is greater or equal to the @rating
+ * @rating: the rating limit value
+ * 
+ * Get a random playlist iter from in the given catalog (which the @piter
+ * belongs to) or all catalogs. MT safe.
+ * 
+ * Returns: (transfer none): (skip): A random playlist iter.
+ */
+
+RCLibDbPlaylistIter *rclib_db_playlist_iter_get_random_iter(
+    RCLibDbPlaylistIter *piter, gboolean rating_limit,
+    gboolean condition, gfloat rating)
+{
+    GObject *instance;
+    gfloat prating;
+    gint playlist_length, pos;
+    GHashTableIter iter;
+    RCLibDbPlaylistIter *playlist_iter;
+    RCLibDbPrivate *priv;
+    RCLibDbPlaylistIter *result_iter = NULL;
+    GPtrArray *playlist_array;
+    instance = rclib_db_get_instance();
+    if(instance==NULL) return NULL;
+    priv = RCLIB_DB(instance)->priv;
+    if(priv==NULL) return NULL;
+    if(!rating_limit)
+    {
+        if(piter!=NULL)
+        {
+            g_rw_lock_reader_lock(&(priv->playlist_rw_lock));
+            playlist_length = rclib_db_playlist_iter_get_length(piter);
+            if(playlist_length>0)
+            {
+                pos = g_random_int_range(0, playlist_length);
+                result_iter = rclib_db_playlist_iter_get_iter_at_pos(piter,
+                    pos);
+            }
+            g_rw_lock_reader_unlock(&(priv->playlist_rw_lock));
+        }
+        else
+        {
+            g_rw_lock_reader_lock(&(priv->playlist_rw_lock));
+            g_hash_table_iter_init(&iter, priv->playlist_iter_table);
+            playlist_length = g_hash_table_size(priv->playlist_iter_table);
+            pos = g_random_int_range(0, playlist_length);
+            playlist_iter = NULL;
+            while(g_hash_table_iter_next(&iter, (gpointer *)&playlist_iter,
+                NULL) && pos>0)
+            {
+                pos--;
+            }
+            result_iter = playlist_iter;
+            g_rw_lock_reader_unlock(&(priv->playlist_rw_lock));
+            
+        }
+        return result_iter;
+    }
+    playlist_array = g_ptr_array_new();
+    g_rw_lock_reader_lock(&(priv->playlist_rw_lock));
+    if(piter!=NULL)
+    {        
+        for(playlist_iter=rclib_db_playlist_iter_get_begin_iter(piter);
+            playlist_iter!=NULL;playlist_iter=
+            rclib_db_playlist_iter_next(playlist_iter))
+        {
+            prating = -1.0;
+            rclib_db_playlist_data_iter_get(playlist_iter,
+                RCLIB_DB_PLAYLIST_DATA_TYPE_RATING, &prating,
+                RCLIB_DB_PLAYLIST_DATA_TYPE_NONE);
+            if(prating<0.0) continue;
+            if((prating<=rating && condition) || (prating>=rating &&
+                !condition))
+            {
+                g_ptr_array_add(playlist_array, playlist_iter);
+            }
+        }
+    }
+    else
+    {
+        g_hash_table_iter_init(&iter, priv->playlist_iter_table);
+        while(g_hash_table_iter_next(&iter, (gpointer *)&playlist_iter, NULL))
+        {
+            if(playlist_iter==NULL) continue;
+            prating = -1.0;
+            rclib_db_playlist_data_iter_get(playlist_iter,
+                RCLIB_DB_PLAYLIST_DATA_TYPE_RATING, &prating,
+                RCLIB_DB_PLAYLIST_DATA_TYPE_NONE);
+            if(prating<0.0) continue;
+            if((prating<=rating && condition) || (prating>=rating &&
+                !condition))
+            {
+                g_ptr_array_add(playlist_array, playlist_iter);
+            }
+        }
+    }
+    playlist_length = playlist_array->len;
+    if(playlist_length>0)
+    {
+        pos = g_random_int_range(0, playlist_length);
+        result_iter = g_ptr_array_index(playlist_array, pos);
+    }
+    g_rw_lock_reader_unlock(&(priv->playlist_rw_lock));
+    g_ptr_array_free(playlist_array, TRUE);
+    return result_iter;  
 }
