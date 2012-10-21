@@ -229,7 +229,7 @@
     <keyword type="signal" name="The &quot;import-updated&quot; signal" link="RCLibDb.html#RCLibDb-import-updated"/>
     <keyword type="signal" name="The &quot;library-added&quot; signal" link="RCLibDb.html#RCLibDb-library-added"/>
     <keyword type="signal" name="The &quot;library-changed&quot; signal" link="RCLibDb.html#RCLibDb-library-changed"/>
-    <keyword type="signal" name="The &quot;library-delete&quot; signal" link="RCLibDb.html#RCLibDb-library-delete"/>
+    <keyword type="signal" name="The &quot;library-deleted&quot; signal" link="RCLibDb.html#RCLibDb-library-deleted"/>
     <keyword type="signal" name="The &quot;playlist-added&quot; signal" link="RCLibDb.html#RCLibDb-playlist-added"/>
     <keyword type="signal" name="The &quot;playlist-changed&quot; signal" link="RCLibDb.html#RCLibDb-playlist-changed"/>
     <keyword type="signal" name="The &quot;playlist-delete&quot; signal" link="RCLibDb.html#RCLibDb-playlist-delete"/>

@@ -4094,7 +4094,10 @@ gboolean rclib_db_playlist_data_query(RCLibDbPlaylistData *playlist_data,
                 break;
             }
             default:
+            {
+                result = TRUE;
                 break;
+            }
         }
         if(!result) break;
     }

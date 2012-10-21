@@ -118,7 +118,7 @@ enum                <a class="link" href="RCLibDb.html#RCLibDbQueryDataType" tit
 <span class="returnvalue">void</span>                <a class="link" href="RCLibDb.html#rclib-db-library-add-music" title="rclib_db_library_add_music ()">rclib_db_library_add_music</a>          (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *uri</code></em>);
 <span class="returnvalue">void</span>                <a class="link" href="RCLibDb.html#rclib-db-library-add-music-and-play" title="rclib_db_library_add_music_and_play ()">rclib_db_library_add_music_and_play</a> (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *uri</code></em>);
 <span class="returnvalue">void</span>                <a class="link" href="RCLibDb.html#rclib-db-library-data-free" title="rclib_db_library_data_free ()">rclib_db_library_data_free</a>          (<em class="parameter"><code><a class="link" href="RCLibDb.html#RCLibDbLibraryData"><span class="type">RCLibDbLibraryData</span></a> *data</code></em>);
-<span class="returnvalue">void</span>                <a class="link" href="RCLibDb.html#rclib-db-library-data-get" title="rclib_db_library_data_get ()">rclib_db_library_data_get</a>           (<em class="parameter"><code>const <a class="link" href="RCLibDb.html#RCLibDbLibraryData"><span class="type">RCLibDbLibraryData</span></a> *data</code></em>,
+<span class="returnvalue">void</span>                <a class="link" href="RCLibDb.html#rclib-db-library-data-get" title="rclib_db_library_data_get ()">rclib_db_library_data_get</a>           (<em class="parameter"><code><a class="link" href="RCLibDb.html#RCLibDbLibraryData"><span class="type">RCLibDbLibraryData</span></a> *data</code></em>,
                                                          <em class="parameter"><code><a class="link" href="RCLibDb.html#RCLibDbLibraryDataType" title="enum RCLibDbLibraryDataType"><span class="type">RCLibDbLibraryDataType</span></a> type1</code></em>,
                                                          <em class="parameter"><code>...</code></em>);
 <a class="link" href="RCLibDb.html#RCLibDbLibraryData"><span class="returnvalue">RCLibDbLibraryData</span></a> * <a class="link" href="RCLibDb.html#rclib-db-library-data-new" title="rclib_db_library_data_new ()">rclib_db_library_data_new</a>          ();
@@ -267,7 +267,7 @@ enum                <a class="link" href="RCLibDb.html#RCLibDbQueryDataType" tit
   "<a class="link" href="RCLibDb.html#RCLibDb-import-updated" title='The "import-updated" signal'>import-updated</a>"                                 : <a href="/usr/share/gtk-doc/html/gobject/gobject-Signals.html#G-SIGNAL-RUN-FIRST:CAPS"><code class="literal">Run First</code></a>
   "<a class="link" href="RCLibDb.html#RCLibDb-library-added" title='The "library-added" signal'>library-added</a>"                                  : <a href="/usr/share/gtk-doc/html/gobject/gobject-Signals.html#G-SIGNAL-RUN-FIRST:CAPS"><code class="literal">Run First</code></a>
   "<a class="link" href="RCLibDb.html#RCLibDb-library-changed" title='The "library-changed" signal'>library-changed</a>"                                : <a href="/usr/share/gtk-doc/html/gobject/gobject-Signals.html#G-SIGNAL-RUN-FIRST:CAPS"><code class="literal">Run First</code></a>
-  "<a class="link" href="RCLibDb.html#RCLibDb-library-delete" title='The "library-delete" signal'>library-delete</a>"                                 : <a href="/usr/share/gtk-doc/html/gobject/gobject-Signals.html#G-SIGNAL-RUN-FIRST:CAPS"><code class="literal">Run First</code></a>
+  "<a class="link" href="RCLibDb.html#RCLibDb-library-deleted" title='The "library-deleted" signal'>library-deleted</a>"                                : <a href="/usr/share/gtk-doc/html/gobject/gobject-Signals.html#G-SIGNAL-RUN-FIRST:CAPS"><code class="literal">Run First</code></a>
   "<a class="link" href="RCLibDb.html#RCLibDb-playlist-added" title='The "playlist-added" signal'>playlist-added</a>"                                 : <a href="/usr/share/gtk-doc/html/gobject/gobject-Signals.html#G-SIGNAL-RUN-FIRST:CAPS"><code class="literal">Run First</code></a>
   "<a class="link" href="RCLibDb.html#RCLibDb-playlist-changed" title='The "playlist-changed" signal'>playlist-changed</a>"                               : <a href="/usr/share/gtk-doc/html/gobject/gobject-Signals.html#G-SIGNAL-RUN-FIRST:CAPS"><code class="literal">Run First</code></a>
   "<a class="link" href="RCLibDb.html#RCLibDb-playlist-delete" title='The "playlist-delete" signal'>playlist-delete</a>"                                : <a href="/usr/share/gtk-doc/html/gobject/gobject-Signals.html#G-SIGNAL-RUN-FIRST:CAPS"><code class="literal">Run First</code></a>
@@ -928,7 +928,7 @@ Remove the auto-saved playlist file.
                                                          <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> type</code></em>);</pre>
 <p>
 Add a new playlist to the catalog before the <span class="type">iter</span>, if the <span class="type">iter</span>
-is <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><span class="type">NULL</span></a>, it will be added to the end.
+is <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><span class="type">NULL</span></a>, it will be added to the end. Must be called in main thread.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -960,6 +960,7 @@ the catalog. <span class="annotation">[<acronym title="Don't free data after the
 <pre class="programlisting"><span class="returnvalue">void</span>                rclib_db_catalog_data_free          (<em class="parameter"><code><a class="link" href="RCLibDb.html#RCLibDbCatalogData"><span class="type">RCLibDbCatalogData</span></a> *data</code></em>);</pre>
 <p>
 Free the <a class="link" href="RCLibDb.html#RCLibDbCatalogData"><span class="type">RCLibDbCatalogData</span></a> structure.
+Please use #<a class="link" href="RCLibDb.html#rclib-db-catalog-data-unref" title="rclib_db_catalog_data_unref ()"><code class="function">rclib_db_catalog_data_unref()</code></a> in case of multi-threading.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -977,7 +978,7 @@ Free the <a class="link" href="RCLibDb.html#RCLibDbCatalogData"><span class="typ
                                                          <em class="parameter"><code>...</code></em>);</pre>
 <p>
 Gets properties of a <a class="link" href="RCLibDb.html#RCLibDbCatalogData"><span class="type">RCLibDbCatalogData</span></a>. The property contents will
-be copied (except the playlist and the store pointer).
+be copied (except the playlist and the store pointer). MT safe.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -1008,6 +1009,7 @@ name/return location pairs, followed by <a class="link" href="RCLibDb.html#RCLIB
 <p>
 Gets properties of the data in a <a class="link" href="RCLibDb.html#RCLibDbCatalogIter" title="RCLibDbCatalogIter"><span class="type">RCLibDbCatalogIter</span></a>. The property
 contents will be copied, except the playlist and store pointer.
+MT safe.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -1036,7 +1038,8 @@ name/value pairs, followed by <a class="link" href="RCLibDb.html#RCLIB-DB-CATALO
                                                          <em class="parameter"><code><a class="link" href="RCLibDb.html#RCLibDbCatalogDataType" title="enum RCLibDbCatalogDataType"><span class="type">RCLibDbCatalogDataType</span></a> type1</code></em>,
                                                          <em class="parameter"><code>...</code></em>);</pre>
 <p>
-Sets properties on the data in a <a class="link" href="RCLibDb.html#RCLibDbCatalogIter" title="RCLibDbCatalogIter"><span class="type">RCLibDbCatalogIter</span></a>.
+Sets properties on the data in a <a class="link" href="RCLibDb.html#RCLibDbCatalogIter" title="RCLibDbCatalogIter"><span class="type">RCLibDbCatalogIter</span></a>. Must be called
+in main thread.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -1064,7 +1067,7 @@ name/value pairs, followed by <a class="link" href="RCLibDb.html#RCLIB-DB-CATALO
 <pre class="programlisting"><a class="link" href="RCLibDb.html#RCLibDbCatalogData"><span class="returnvalue">RCLibDbCatalogData</span></a> * rclib_db_catalog_data_new          ();</pre>
 <p>
 Create a new empty <a class="link" href="RCLibDb.html#RCLibDbCatalogData"><span class="type">RCLibDbCatalogData</span></a> structure,
-and set the reference count to 1.
+and set the reference count to 1. MT safe.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -1079,7 +1082,7 @@ and set the reference count to 1.
 <a name="rclib-db-catalog-data-ref"></a><h3>rclib_db_catalog_data_ref ()</h3>
 <pre class="programlisting"><a class="link" href="RCLibDb.html#RCLibDbCatalogData"><span class="returnvalue">RCLibDbCatalogData</span></a> * rclib_db_catalog_data_ref          (<em class="parameter"><code><a class="link" href="RCLibDb.html#RCLibDbCatalogData"><span class="type">RCLibDbCatalogData</span></a> *data</code></em>);</pre>
 <p>
-Increase the reference of <a class="link" href="RCLibDb.html#RCLibDbCatalogData"><span class="type">RCLibDbCatalogData</span></a> by 1.
+Increase the reference of <a class="link" href="RCLibDb.html#RCLibDbCatalogData"><span class="type">RCLibDbCatalogData</span></a> by 1. MT safe.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -1103,7 +1106,7 @@ Increase the reference of <a class="link" href="RCLibDb.html#RCLibDbCatalogData"
                                                          <em class="parameter"><code><a class="link" href="RCLibDb.html#RCLibDbCatalogDataType" title="enum RCLibDbCatalogDataType"><span class="type">RCLibDbCatalogDataType</span></a> type1</code></em>,
                                                          <em class="parameter"><code>...</code></em>);</pre>
 <p>
-Sets properties on a <a class="link" href="RCLibDb.html#RCLibDbCatalogData"><span class="type">RCLibDbCatalogData</span></a>.
+Sets properties on a <a class="link" href="RCLibDb.html#RCLibDbCatalogData"><span class="type">RCLibDbCatalogData</span></a>. Must be called in main thread.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -1131,7 +1134,7 @@ name/value pairs, followed by <a class="link" href="RCLibDb.html#RCLIB-DB-CATALO
 <pre class="programlisting"><span class="returnvalue">void</span>                rclib_db_catalog_data_unref         (<em class="parameter"><code><a class="link" href="RCLibDb.html#RCLibDbCatalogData"><span class="type">RCLibDbCatalogData</span></a> *data</code></em>);</pre>
 <p>
 Decrease the reference of <a class="link" href="RCLibDb.html#RCLibDbCatalogData"><span class="type">RCLibDbCatalogData</span></a> by 1.
-If the reference down to zero, the structure will be freed.
+If the reference down to zero, the structure will be freed. MT safe.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -1152,7 +1155,7 @@ If the reference down to zero, the structure will be freed.
 <a name="rclib-db-catalog-delete"></a><h3>rclib_db_catalog_delete ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>                rclib_db_catalog_delete             (<em class="parameter"><code><a class="link" href="RCLibDb.html#RCLibDbCatalogIter" title="RCLibDbCatalogIter"><span class="type">RCLibDbCatalogIter</span></a> *iter</code></em>);</pre>
 <p>
-Delete the catalog pointed to by <span class="type">iter</span>.
+Delete the catalog pointed to by <span class="type">iter</span>. Must be called in main thread.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -1169,7 +1172,7 @@ Delete the catalog pointed to by <span class="type">iter</span>.
                                                          <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> user_data</code></em>);</pre>
 <p>
 Calls <em class="parameter"><code>func</code></em> for each item in the playlist catalog passing
-<em class="parameter"><code>user_data</code></em> to the function.
+<em class="parameter"><code>user_data</code></em> to the function. MT safe.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -1192,7 +1195,7 @@ Calls <em class="parameter"><code>func</code></em> for each item in the playlist
 <a name="rclib-db-catalog-get-begin-iter"></a><h3>rclib_db_catalog_get_begin_iter ()</h3>
 <pre class="programlisting"><a class="link" href="RCLibDb.html#RCLibDbCatalogIter" title="RCLibDbCatalogIter"><span class="returnvalue">RCLibDbCatalogIter</span></a> * rclib_db_catalog_get_begin_iter    ();</pre>
 <p>
-Get the begin iterator for the playlist catalog.
+Get the begin iterator for the playlist catalog. MT safe.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -1208,7 +1211,7 @@ Get the begin iterator for the playlist catalog.
 <a name="rclib-db-catalog-get-end-iter"></a><h3>rclib_db_catalog_get_end_iter ()</h3>
 <pre class="programlisting"><a class="link" href="RCLibDb.html#RCLibDbCatalogIter" title="RCLibDbCatalogIter"><span class="returnvalue">RCLibDbCatalogIter</span></a> * rclib_db_catalog_get_end_iter      ();</pre>
 <p>
-Get the end iterator for the playlist catalog.
+Get the end iterator for the playlist catalog. MT safe.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -1226,7 +1229,7 @@ Get the end iterator for the playlist catalog.
 <p>
 Return the iterator at position <em class="parameter"><code>pos</code></em>. If <em class="parameter"><code>pos</code></em> is negative or larger
 than the number of items in the playlist catalog, the end iterator
-is returned.
+is returned. MT safe.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -1249,7 +1252,7 @@ position <em class="parameter"><code>pos</code></em>. <span class="annotation">[
 <a name="rclib-db-catalog-get-last-iter"></a><h3>rclib_db_catalog_get_last_iter ()</h3>
 <pre class="programlisting"><a class="link" href="RCLibDb.html#RCLibDbCatalogIter" title="RCLibDbCatalogIter"><span class="returnvalue">RCLibDbCatalogIter</span></a> * rclib_db_catalog_get_last_iter     ();</pre>
 <p>
-Get the last iterator for the playlist catalog.
+Get the last iterator for the playlist catalog. MT safe.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -1266,7 +1269,7 @@ not exist. <span class="annotation">[<acronym title="Don't free data after the c
 <a name="rclib-db-catalog-get-length"></a><h3>rclib_db_catalog_get_length ()</h3>
 <pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="returnvalue">gint</span></a>                rclib_db_catalog_get_length         ();</pre>
 <p>
-Get the element length of the playlist catalog.
+Get the element length of the playlist catalog. MT safe.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -1281,7 +1284,7 @@ Get the element length of the playlist catalog.
 <a name="rclib-db-catalog-is-valid-iter"></a><h3>rclib_db_catalog_is_valid_iter ()</h3>
 <pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rclib_db_catalog_is_valid_iter      (<em class="parameter"><code><a class="link" href="RCLibDb.html#RCLibDbCatalogIter" title="RCLibDbCatalogIter"><span class="type">RCLibDbCatalogIter</span></a> *catalog_iter</code></em>);</pre>
 <p>
-Check whether the iter is valid in the catalog sequence.
+Check whether the iter is valid in the catalog sequence. MT safe.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -1304,7 +1307,7 @@ Check whether the iter is valid in the catalog sequence.
                                                          <em class="parameter"><code><a class="link" href="RCLibDb.html#RCLibDbCatalogIter" title="RCLibDbCatalogIter"><span class="type">RCLibDbCatalogIter</span></a> *b</code></em>);</pre>
 <p>
 Return a negative number if <em class="parameter"><code>a</code></em> comes before <em class="parameter"><code>b</code></em>, 0 if they are equal,
-and a positive number if <em class="parameter"><code>a</code></em> comes after <em class="parameter"><code>b</code></em>.
+and a positive number if <em class="parameter"><code>a</code></em> comes after <em class="parameter"><code>b</code></em>. MT safe.
 </p>
 <p>
 The <em class="parameter"><code>a</code></em> and <em class="parameter"><code>b</code></em> iterators must point into the same <a class="link" href="RCLibDb.html#RCLibDbCatalogSequence" title="RCLibDbCatalogSequence"><span class="type">RCLibDbCatalogSequence</span></a>.
@@ -1339,7 +1342,7 @@ equal, and a positive number if <em class="parameter"><code>a</code></em> comes 
                                                          <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> user_data</code></em>);</pre>
 <p>
 Calls <em class="parameter"><code>func</code></em> for each item in the range (<em class="parameter"><code>begin</code></em>, <em class="parameter"><code>end</code></em>) passing
-<em class="parameter"><code>user_data</code></em> to the function.
+<em class="parameter"><code>user_data</code></em> to the function. MT safe.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -1372,7 +1375,7 @@ Calls <em class="parameter"><code>func</code></em> for each item in the range (<
 <a name="rclib-db-catalog-iter-get-data"></a><h3>rclib_db_catalog_iter_get_data ()</h3>
 <pre class="programlisting"><a class="link" href="RCLibDb.html#RCLibDbCatalogData"><span class="returnvalue">RCLibDbCatalogData</span></a> * rclib_db_catalog_iter_get_data     (<em class="parameter"><code><a class="link" href="RCLibDb.html#RCLibDbCatalogIter" title="RCLibDbCatalogIter"><span class="type">RCLibDbCatalogIter</span></a> *iter</code></em>);</pre>
 <p>
-Get the catalog item data which the iter pointed to.
+Get the catalog item data which the iter pointed to. MT safe.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -1394,7 +1397,7 @@ Get the catalog item data which the iter pointed to.
 <a name="rclib-db-catalog-iter-get-position"></a><h3>rclib_db_catalog_iter_get_position ()</h3>
 <pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="returnvalue">gint</span></a>                rclib_db_catalog_iter_get_position  (<em class="parameter"><code><a class="link" href="RCLibDb.html#RCLibDbCatalogIter" title="RCLibDbCatalogIter"><span class="type">RCLibDbCatalogIter</span></a> *iter</code></em>);</pre>
 <p>
-Returns the position of <em class="parameter"><code>iter</code></em>.
+Returns the position of <em class="parameter"><code>iter</code></em>. MT safe.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -1416,7 +1419,7 @@ Returns the position of <em class="parameter"><code>iter</code></em>.
 <a name="rclib-db-catalog-iter-is-begin"></a><h3>rclib_db_catalog_iter_is_begin ()</h3>
 <pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rclib_db_catalog_iter_is_begin      (<em class="parameter"><code><a class="link" href="RCLibDb.html#RCLibDbCatalogIter" title="RCLibDbCatalogIter"><span class="type">RCLibDbCatalogIter</span></a> *iter</code></em>);</pre>
 <p>
-Return whether <em class="parameter"><code>iter</code></em> is the begin iterator.
+Return whether <em class="parameter"><code>iter</code></em> is the begin iterator. MT safe.
 Notice that this function will NOT check whether the iter is valid.
 </p>
 <div class="variablelist"><table border="0">
@@ -1439,7 +1442,7 @@ Notice that this function will NOT check whether the iter is valid.
 <a name="rclib-db-catalog-iter-is-end"></a><h3>rclib_db_catalog_iter_is_end ()</h3>
 <pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rclib_db_catalog_iter_is_end        (<em class="parameter"><code><a class="link" href="RCLibDb.html#RCLibDbCatalogIter" title="RCLibDbCatalogIter"><span class="type">RCLibDbCatalogIter</span></a> *iter</code></em>);</pre>
 <p>
-Return whether <em class="parameter"><code>iter</code></em> is the end iterator.
+Return whether <em class="parameter"><code>iter</code></em> is the end iterator. MT safe.
 Notice that this function will NOT check whether the iter is valid.
 </p>
 <div class="variablelist"><table border="0">
@@ -1464,7 +1467,7 @@ Notice that this function will NOT check whether the iter is valid.
 <p>
 Return an iterator pointing to the next position after <em class="parameter"><code>iter</code></em>. If
 <em class="parameter"><code>iter</code></em> is not valid, or <em class="parameter"><code>iter</code></em> is the last iterator in the catalog,
-<a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><span class="type">NULL</span></a> is returned.
+<a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><span class="type">NULL</span></a> is returned. MT safe.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -1490,7 +1493,7 @@ the next position after <em class="parameter"><code>iter</code></em>. <span clas
 <p>
 Return an iterator pointing to the previous position before <em class="parameter"><code>iter</code></em>. If
 <em class="parameter"><code>iter</code></em> is not valid, or <em class="parameter"><code>iter</code></em> is the first iterator in the catalog,
-<a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><span class="type">NULL</span></a> is returned.
+<a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><span class="type">NULL</span></a> is returned. MT safe.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -1523,7 +1526,7 @@ guaranteed to be <span class="emphasis"><em>exactly</em></span> in the middle.
 <p>
 The <em class="parameter"><code>begin</code></em> and <em class="parameter"><code>end</code></em> iterators must both point to the same
 <a class="link" href="RCLibDb.html#RCLibDbCatalogSequence" title="RCLibDbCatalogSequence"><span class="type">RCLibDbCatalogSequence</span></a> and <em class="parameter"><code>begin</code></em> must come before or be equal
-to <em class="parameter"><code>end</code></em> in the sequence.
+to <em class="parameter"><code>end</code></em> in the sequence. MT safe.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -1553,6 +1556,7 @@ somewhere in the (<em class="parameter"><code>begin</code></em>, <em class="para
 <pre class="programlisting"><span class="returnvalue">void</span>                rclib_db_catalog_reorder            (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> *new_order</code></em>);</pre>
 <p>
 Reorder the catalog to follow the order indicated by <em class="parameter"><code>new_order</code></em>.
+Must be called in main thread.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -1672,7 +1676,7 @@ Initialize the music library database.
 <a name="rclib-db-library-add-music"></a><h3>rclib_db_library_add_music ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>                rclib_db_library_add_music          (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *uri</code></em>);</pre>
 <p>
-Add music to the music library.
+Add music to the music library. MT safe.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -1688,7 +1692,7 @@ Add music to the music library.
 <pre class="programlisting"><span class="returnvalue">void</span>                rclib_db_library_add_music_and_play (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *uri</code></em>);</pre>
 <p>
 Add music to the music library, and then play it if the add
-    operation succeeds.
+operation succeeds. MT safe.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -1704,6 +1708,7 @@ Add music to the music library, and then play it if the add
 <pre class="programlisting"><span class="returnvalue">void</span>                rclib_db_library_data_free          (<em class="parameter"><code><a class="link" href="RCLibDb.html#RCLibDbLibraryData"><span class="type">RCLibDbLibraryData</span></a> *data</code></em>);</pre>
 <p>
 Free the <a class="link" href="RCLibDb.html#RCLibDbLibraryData"><span class="type">RCLibDbLibraryData</span></a> structure.
+Please use #<a class="link" href="RCLibDb.html#rclib-db-library-data-unref" title="rclib_db_library_data_unref ()"><code class="function">rclib_db_library_data_unref()</code></a> in case of multi-threading.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -1716,13 +1721,12 @@ Free the <a class="link" href="RCLibDb.html#RCLibDbLibraryData"><span class="typ
 <hr>
 <div class="refsect2">
 <a name="rclib-db-library-data-get"></a><h3>rclib_db_library_data_get ()</h3>
-<pre class="programlisting"><span class="returnvalue">void</span>                rclib_db_library_data_get           (<em class="parameter"><code>const <a class="link" href="RCLibDb.html#RCLibDbLibraryData"><span class="type">RCLibDbLibraryData</span></a> *data</code></em>,
+<pre class="programlisting"><span class="returnvalue">void</span>                rclib_db_library_data_get           (<em class="parameter"><code><a class="link" href="RCLibDb.html#RCLibDbLibraryData"><span class="type">RCLibDbLibraryData</span></a> *data</code></em>,
                                                          <em class="parameter"><code><a class="link" href="RCLibDb.html#RCLibDbLibraryDataType" title="enum RCLibDbLibraryDataType"><span class="type">RCLibDbLibraryDataType</span></a> type1</code></em>,
                                                          <em class="parameter"><code>...</code></em>);</pre>
 <p>
-Gets properties of a <a class="link" href="RCLibDb.html#RCLibDbLibraryData"><span class="type">RCLibDbLibraryData</span></a>. The property contents will not
-be copied, just get their address instead, if the contents are stored
-inside a pointer.
+Gets properties of a <a class="link" href="RCLibDb.html#RCLibDbLibraryData"><span class="type">RCLibDbLibraryData</span></a>. The property contents will
+be copied. MT safe.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -1750,7 +1754,7 @@ name/return location pairs, followed by <a class="link" href="RCLibDb.html#RCLIB
 <pre class="programlisting"><a class="link" href="RCLibDb.html#RCLibDbLibraryData"><span class="returnvalue">RCLibDbLibraryData</span></a> * rclib_db_library_data_new          ();</pre>
 <p>
 Create a new empty <a class="link" href="RCLibDb.html#RCLibDbLibraryData"><span class="type">RCLibDbLibraryData</span></a> structure,
-and set the reference count to 1.
+and set the reference count to 1. MT safe.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -1765,7 +1769,7 @@ and set the reference count to 1.
 <a name="rclib-db-library-data-ref"></a><h3>rclib_db_library_data_ref ()</h3>
 <pre class="programlisting"><a class="link" href="RCLibDb.html#RCLibDbLibraryData"><span class="returnvalue">RCLibDbLibraryData</span></a> * rclib_db_library_data_ref          (<em class="parameter"><code><a class="link" href="RCLibDb.html#RCLibDbLibraryData"><span class="type">RCLibDbLibraryData</span></a> *data</code></em>);</pre>
 <p>
-Increase the reference of <a class="link" href="RCLibDb.html#RCLibDbLibraryData"><span class="type">RCLibDbLibraryData</span></a> by 1.
+Increase the reference of <a class="link" href="RCLibDb.html#RCLibDbLibraryData"><span class="type">RCLibDbLibraryData</span></a> by 1. MT safe.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -1789,7 +1793,7 @@ Increase the reference of <a class="link" href="RCLibDb.html#RCLibDbLibraryData"
                                                          <em class="parameter"><code><a class="link" href="RCLibDb.html#RCLibDbLibraryDataType" title="enum RCLibDbLibraryDataType"><span class="type">RCLibDbLibraryDataType</span></a> type1</code></em>,
                                                          <em class="parameter"><code>...</code></em>);</pre>
 <p>
-Sets properties on a <a class="link" href="RCLibDb.html#RCLibDbPlaylistData"><span class="type">RCLibDbPlaylistData</span></a>.
+Sets properties on a <a class="link" href="RCLibDb.html#RCLibDbPlaylistData"><span class="type">RCLibDbPlaylistData</span></a>. MT safe.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -1818,6 +1822,7 @@ name/value pairs, followed by <a class="link" href="RCLibDb.html#RCLIB-DB-LIBRAR
 <p>
 Decrease the reference of <a class="link" href="RCLibDb.html#RCLibDbLibraryData"><span class="type">RCLibDbLibraryData</span></a> by 1.
 If the reference down to zero, the structure will be freed.
+MT safe.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -1838,7 +1843,7 @@ If the reference down to zero, the structure will be freed.
 <a name="rclib-db-library-delete"></a><h3>rclib_db_library_delete ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>                rclib_db_library_delete             (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *uri</code></em>);</pre>
 <p>
-Delete the the music item by the given URI.
+Delete the the music item by the given URI. MT safe.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -1853,7 +1858,7 @@ Delete the the music item by the given URI.
 <a name="rclib-db-library-has-uri"></a><h3>rclib_db_library_has_uri ()</h3>
 <pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rclib_db_library_has_uri            (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *uri</code></em>);</pre>
 <p>
-Check whether the give URI exists in the library.
+Check whether the give URI exists in the library. MT safe.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -1900,6 +1905,7 @@ Load legacy playlist file from RhythmCat 1.0.
                                                          <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *dir</code></em>);</pre>
 <p>
 Add all music in the directory to the catalog pointed to by <span class="type">iter</span>.
+MT safe.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -1927,7 +1933,7 @@ Add all music in the directory to the catalog pointed to by <span class="type">i
                                                          <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *filename</code></em>);</pre>
 <p>
 Load a m3u playlist file, and add all music inside to
-the catalog pointed to by <span class="type">iter</span>.
+the catalog pointed to by <span class="type">iter</span>. MT safe.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -1954,7 +1960,7 @@ the catalog pointed to by <span class="type">iter</span>.
                                                          <em class="parameter"><code><a class="link" href="RCLibDb.html#RCLibDbPlaylistIter" title="RCLibDbPlaylistIter"><span class="type">RCLibDbPlaylistIter</span></a> *insert_iter</code></em>,
                                                          <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *uri</code></em>);</pre>
 <p>
-Add music to the playlist by given catalog iter.
+Add music to the playlist by given catalog iter. MT safe.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -1983,7 +1989,7 @@ Add music to the playlist by given catalog iter.
                                                          <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *uri</code></em>);</pre>
 <p>
 Add music to the playlist by given catalog iter, and then play it
-if the add operation succeeds.
+if the add operation succeeds. MT safe.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -2009,6 +2015,7 @@ if the add operation succeeds.
 <pre class="programlisting"><span class="returnvalue">void</span>                rclib_db_playlist_data_free         (<em class="parameter"><code><a class="link" href="RCLibDb.html#RCLibDbPlaylistData"><span class="type">RCLibDbPlaylistData</span></a> *data</code></em>);</pre>
 <p>
 Free the <a class="link" href="RCLibDb.html#RCLibDbPlaylistData"><span class="type">RCLibDbPlaylistData</span></a> structure.
+Please use #<a class="link" href="RCLibDb.html#rclib-db-playlist-data-unref" title="rclib_db_playlist_data_unref ()"><code class="function">rclib_db_playlist_data_unref()</code></a> in case of multi-threading.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -2026,7 +2033,7 @@ Free the <a class="link" href="RCLibDb.html#RCLibDbPlaylistData"><span class="ty
                                                          <em class="parameter"><code>...</code></em>);</pre>
 <p>
 Gets properties of a <a class="link" href="RCLibDb.html#RCLibDbPlaylistData"><span class="type">RCLibDbPlaylistData</span></a>. The property contents will
-be copied, except the catalog and iters.
+be copied, except the catalog and iters. MT safe.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -2056,7 +2063,7 @@ name/return location pairs, followed by <a class="link" href="RCLibDb.html#RCLIB
                                                          <em class="parameter"><code>...</code></em>);</pre>
 <p>
 Gets properties of the data in a <a class="link" href="RCLibDb.html#RCLibDbPlaylistIter" title="RCLibDbPlaylistIter"><span class="type">RCLibDbPlaylistIter</span></a>. The property
-contents will be copied, except the catalog and iters.
+contents will be copied, except the catalog and iters. MT safe.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -2085,7 +2092,8 @@ name/value pairs, followed by <a class="link" href="RCLibDb.html#RCLIB-DB-PLAYLI
                                                          <em class="parameter"><code><a class="link" href="RCLibDb.html#RCLibDbPlaylistDataType" title="enum RCLibDbPlaylistDataType"><span class="type">RCLibDbPlaylistDataType</span></a> type1</code></em>,
                                                          <em class="parameter"><code>...</code></em>);</pre>
 <p>
-Sets properties on the data in a <a class="link" href="RCLibDb.html#RCLibDbPlaylistIter" title="RCLibDbPlaylistIter"><span class="type">RCLibDbPlaylistIter</span></a>.
+Sets properties on the data in a <a class="link" href="RCLibDb.html#RCLibDbPlaylistIter" title="RCLibDbPlaylistIter"><span class="type">RCLibDbPlaylistIter</span></a>. Must be called
+in main thread.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -2113,7 +2121,7 @@ name/value pairs, followed by <a class="link" href="RCLibDb.html#RCLIB-DB-PLAYLI
 <pre class="programlisting"><a class="link" href="RCLibDb.html#RCLibDbPlaylistData"><span class="returnvalue">RCLibDbPlaylistData</span></a> * rclib_db_playlist_data_new        ();</pre>
 <p>
 Create a new empty <a class="link" href="RCLibDb.html#RCLibDbPlaylistData"><span class="type">RCLibDbPlaylistData</span></a> structure,
-and set the reference count to 1.
+and set the reference count to 1. MT safe.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -2130,6 +2138,7 @@ and set the reference count to 1.
                                                          <em class="parameter"><code><a class="link" href="RCLibDb.html#RCLibDbQuery"><span class="type">RCLibDbQuery</span></a> *query</code></em>);</pre>
 <p>
 Check whether the playlist data satisfied the query condition.
+MT safe.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -2154,7 +2163,7 @@ Check whether the playlist data satisfied the query condition.
 <a name="rclib-db-playlist-data-ref"></a><h3>rclib_db_playlist_data_ref ()</h3>
 <pre class="programlisting"><a class="link" href="RCLibDb.html#RCLibDbPlaylistData"><span class="returnvalue">RCLibDbPlaylistData</span></a> * rclib_db_playlist_data_ref        (<em class="parameter"><code><a class="link" href="RCLibDb.html#RCLibDbPlaylistData"><span class="type">RCLibDbPlaylistData</span></a> *data</code></em>);</pre>
 <p>
-Increase the reference of <a class="link" href="RCLibDb.html#RCLibDbPlaylistData"><span class="type">RCLibDbPlaylistData</span></a> by 1.
+Increase the reference of <a class="link" href="RCLibDb.html#RCLibDbPlaylistData"><span class="type">RCLibDbPlaylistData</span></a> by 1. MT safe.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -2178,7 +2187,7 @@ Increase the reference of <a class="link" href="RCLibDb.html#RCLibDbPlaylistData
                                                          <em class="parameter"><code><a class="link" href="RCLibDb.html#RCLibDbPlaylistDataType" title="enum RCLibDbPlaylistDataType"><span class="type">RCLibDbPlaylistDataType</span></a> type1</code></em>,
                                                          <em class="parameter"><code>...</code></em>);</pre>
 <p>
-Sets properties on a <a class="link" href="RCLibDb.html#RCLibDbPlaylistData"><span class="type">RCLibDbPlaylistData</span></a>.
+Sets properties on a <a class="link" href="RCLibDb.html#RCLibDbPlaylistData"><span class="type">RCLibDbPlaylistData</span></a>. Must be called in main thread.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -2206,7 +2215,7 @@ name/value pairs, followed by <a class="link" href="RCLibDb.html#RCLIB-DB-PLAYLI
 <pre class="programlisting"><span class="returnvalue">void</span>                rclib_db_playlist_data_unref        (<em class="parameter"><code><a class="link" href="RCLibDb.html#RCLibDbPlaylistData"><span class="type">RCLibDbPlaylistData</span></a> *data</code></em>);</pre>
 <p>
 Decrease the reference of <a class="link" href="RCLibDb.html#RCLibDbPlaylistData"><span class="type">RCLibDbPlaylistData</span></a> by 1.
-If the reference down to zero, the structure will be freed.
+If the reference down to zero, the structure will be freed. MT safe.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -2228,6 +2237,7 @@ If the reference down to zero, the structure will be freed.
 <pre class="programlisting"><span class="returnvalue">void</span>                rclib_db_playlist_delete            (<em class="parameter"><code><a class="link" href="RCLibDb.html#RCLibDbPlaylistIter" title="RCLibDbPlaylistIter"><span class="type">RCLibDbPlaylistIter</span></a> *iter</code></em>);</pre>
 <p>
 Delete the playlist data pointed to by <span class="type">iter</span>.
+Must be called in main thread.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -2243,7 +2253,7 @@ Delete the playlist data pointed to by <span class="type">iter</span>.
 <pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rclib_db_playlist_export_all_m3u_files
                                                         (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *dir</code></em>);</pre>
 <p>
-Export all playlists in the catalog to playlist files.
+Export all playlists in the catalog to playlist files. MTsafe.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -2266,6 +2276,7 @@ Export all playlists in the catalog to playlist files.
                                                          <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *sfilename</code></em>);</pre>
 <p>
 Export the catalog pointed to by <span class="type">iter</span> to a new playlist file.
+MT safe.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -2293,7 +2304,7 @@ Export the catalog pointed to by <span class="type">iter</span> to a new playlis
                                                          <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> user_data</code></em>);</pre>
 <p>
 Calls <em class="parameter"><code>func</code></em> for each item in the playlist passing
-<em class="parameter"><code>user_data</code></em> to the function.
+<em class="parameter"><code>user_data</code></em> to the function. MT safe.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -2321,6 +2332,7 @@ Calls <em class="parameter"><code>func</code></em> for each item in the playlist
 <pre class="programlisting"><a class="link" href="RCLibDb.html#RCLibDbPlaylistIter" title="RCLibDbPlaylistIter"><span class="returnvalue">RCLibDbPlaylistIter</span></a> * rclib_db_playlist_get_begin_iter  (<em class="parameter"><code><a class="link" href="RCLibDb.html#RCLibDbCatalogIter" title="RCLibDbCatalogIter"><span class="type">RCLibDbCatalogIter</span></a> *catalog_iter</code></em>);</pre>
 <p>
 Get the begin iterator for the playlist stored in <a class="link" href="RCLibDb.html#RCLibDbCatalogIter" title="RCLibDbCatalogIter"><span class="type">RCLibDbCatalogIter</span></a>.
+MT safe.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -2343,6 +2355,7 @@ Get the begin iterator for the playlist stored in <a class="link" href="RCLibDb.
 <pre class="programlisting"><a class="link" href="RCLibDb.html#RCLibDbPlaylistIter" title="RCLibDbPlaylistIter"><span class="returnvalue">RCLibDbPlaylistIter</span></a> * rclib_db_playlist_get_end_iter    (<em class="parameter"><code><a class="link" href="RCLibDb.html#RCLibDbCatalogIter" title="RCLibDbCatalogIter"><span class="type">RCLibDbCatalogIter</span></a> *catalog_iter</code></em>);</pre>
 <p>
 Get the end iterator for the playlist stored in <a class="link" href="RCLibDb.html#RCLibDbCatalogIter" title="RCLibDbCatalogIter"><span class="type">RCLibDbCatalogIter</span></a>.
+MT safe.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -2367,6 +2380,7 @@ Get the end iterator for the playlist stored in <a class="link" href="RCLibDb.ht
 <p>
 Return the iterator at position <em class="parameter"><code>pos</code></em>. If <em class="parameter"><code>pos</code></em> is negative or larger
 than the number of items in the playlist, the end iterator is returned.
+MT safe.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -2394,6 +2408,7 @@ position <em class="parameter"><code>pos</code></em>. <span class="annotation">[
 <pre class="programlisting"><a class="link" href="RCLibDb.html#RCLibDbPlaylistIter" title="RCLibDbPlaylistIter"><span class="returnvalue">RCLibDbPlaylistIter</span></a> * rclib_db_playlist_get_last_iter   (<em class="parameter"><code><a class="link" href="RCLibDb.html#RCLibDbCatalogIter" title="RCLibDbCatalogIter"><span class="type">RCLibDbCatalogIter</span></a> *catalog_iter</code></em>);</pre>
 <p>
 Get the last iterator for the playlist stored in <a class="link" href="RCLibDb.html#RCLibDbCatalogIter" title="RCLibDbCatalogIter"><span class="type">RCLibDbCatalogIter</span></a>.
+MT safe.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -2415,7 +2430,7 @@ Get the last iterator for the playlist stored in <a class="link" href="RCLibDb.h
 <a name="rclib-db-playlist-get-length"></a><h3>rclib_db_playlist_get_length ()</h3>
 <pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="returnvalue">gint</span></a>                rclib_db_playlist_get_length        (<em class="parameter"><code><a class="link" href="RCLibDb.html#RCLibDbCatalogIter" title="RCLibDbCatalogIter"><span class="type">RCLibDbCatalogIter</span></a> *catalog_iter</code></em>);</pre>
 <p>
-Get the playlist length stored in the <a class="link" href="RCLibDb.html#RCLibDbCatalogIter" title="RCLibDbCatalogIter"><span class="type">RCLibDbCatalogIter</span></a>.
+Get the playlist length stored in the <a class="link" href="RCLibDb.html#RCLibDbCatalogIter" title="RCLibDbCatalogIter"><span class="type">RCLibDbCatalogIter</span></a>. MT safe.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -2436,7 +2451,7 @@ Get the playlist length stored in the <a class="link" href="RCLibDb.html#RCLibDb
 <a name="rclib-db-playlist-is-valid-iter"></a><h3>rclib_db_playlist_is_valid_iter ()</h3>
 <pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rclib_db_playlist_is_valid_iter     (<em class="parameter"><code><a class="link" href="RCLibDb.html#RCLibDbPlaylistIter" title="RCLibDbPlaylistIter"><span class="type">RCLibDbPlaylistIter</span></a> *playlist_iter</code></em>);</pre>
 <p>
-Check whether the iter is valid in the playlist sequence.
+Check whether the iter is valid in the playlist sequence. MT safe.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -2459,7 +2474,7 @@ Check whether the iter is valid in the playlist sequence.
                                                          <em class="parameter"><code><a class="link" href="RCLibDb.html#RCLibDbPlaylistIter" title="RCLibDbPlaylistIter"><span class="type">RCLibDbPlaylistIter</span></a> *b</code></em>);</pre>
 <p>
 Return a negative number if <em class="parameter"><code>a</code></em> comes before <em class="parameter"><code>b</code></em>, 0 if they are equal,
-and a positive number if <em class="parameter"><code>a</code></em> comes after <em class="parameter"><code>b</code></em>.
+and a positive number if <em class="parameter"><code>a</code></em> comes after <em class="parameter"><code>b</code></em>. MT safe.
 </p>
 <p>
 The <em class="parameter"><code>a</code></em> and <em class="parameter"><code>b</code></em> iterators must point into the same <a class="link" href="RCLibDb.html#RCLibDbPlaylistSequence" title="RCLibDbPlaylistSequence"><span class="type">RCLibDbPlaylistSequence</span></a>.
@@ -2495,7 +2510,7 @@ equal, and a positive number if <em class="parameter"><code>a</code></em> comes 
                                                          <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> user_data</code></em>);</pre>
 <p>
 Calls <em class="parameter"><code>func</code></em> for each item in the range (<em class="parameter"><code>begin</code></em>, <em class="parameter"><code>end</code></em>) passing
-<em class="parameter"><code>user_data</code></em> to the function.
+<em class="parameter"><code>user_data</code></em> to the function. MT safe.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -2530,7 +2545,7 @@ Calls <em class="parameter"><code>func</code></em> for each item in the range (<
                                                         (<em class="parameter"><code><a class="link" href="RCLibDb.html#RCLibDbPlaylistIter" title="RCLibDbPlaylistIter"><span class="type">RCLibDbPlaylistIter</span></a> *playlist_iter</code></em>);</pre>
 <p>
 Get the begin iterator of the playlist that the <a class="link" href="RCLibDb.html#RCLibDbPlaylistIter" title="RCLibDbPlaylistIter"><span class="type">RCLibDbPlaylistIter</span></a>
-belongs to.
+belongs to. MT safe.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -2552,7 +2567,7 @@ belongs to.
 <a name="rclib-db-playlist-iter-get-data"></a><h3>rclib_db_playlist_iter_get_data ()</h3>
 <pre class="programlisting"><a class="link" href="RCLibDb.html#RCLibDbPlaylistData"><span class="returnvalue">RCLibDbPlaylistData</span></a> * rclib_db_playlist_iter_get_data   (<em class="parameter"><code><a class="link" href="RCLibDb.html#RCLibDbPlaylistIter" title="RCLibDbPlaylistIter"><span class="type">RCLibDbPlaylistIter</span></a> *iter</code></em>);</pre>
 <p>
-Get the playlist item data which the iter pointed to.
+Get the playlist item data which the iter pointed to. MT safe.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -2576,7 +2591,7 @@ Get the playlist item data which the iter pointed to.
                                                         (<em class="parameter"><code><a class="link" href="RCLibDb.html#RCLibDbPlaylistIter" title="RCLibDbPlaylistIter"><span class="type">RCLibDbPlaylistIter</span></a> *playlist_iter</code></em>);</pre>
 <p>
 Get the end iterator of the playlist that the <a class="link" href="RCLibDb.html#RCLibDbPlaylistIter" title="RCLibDbPlaylistIter"><span class="type">RCLibDbPlaylistIter</span></a>
-belongs to.
+belongs to. MT safe.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -2602,6 +2617,7 @@ belongs to.
 <p>
 Return the iterator at position <em class="parameter"><code>pos</code></em>. If <em class="parameter"><code>pos</code></em> is negative or larger
 than the number of items in the playlist, the end iterator is returned.
+MT safe.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -2630,7 +2646,7 @@ position <em class="parameter"><code>pos</code></em>. <span class="annotation">[
                                                         (<em class="parameter"><code><a class="link" href="RCLibDb.html#RCLibDbPlaylistIter" title="RCLibDbPlaylistIter"><span class="type">RCLibDbPlaylistIter</span></a> *playlist_iter</code></em>);</pre>
 <p>
 Get the last iterator of the playlist that the <a class="link" href="RCLibDb.html#RCLibDbPlaylistIter" title="RCLibDbPlaylistIter"><span class="type">RCLibDbPlaylistIter</span></a>
-belongs to.
+belongs to. MT safe.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -2652,7 +2668,7 @@ belongs to.
 <a name="rclib-db-playlist-iter-get-length"></a><h3>rclib_db_playlist_iter_get_length ()</h3>
 <pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="returnvalue">gint</span></a>                rclib_db_playlist_iter_get_length   (<em class="parameter"><code><a class="link" href="RCLibDb.html#RCLibDbPlaylistIter" title="RCLibDbPlaylistIter"><span class="type">RCLibDbPlaylistIter</span></a> *playlist_iter</code></em>);</pre>
 <p>
-Get the playlist length that the <a class="link" href="RCLibDb.html#RCLibDbPlaylistIter" title="RCLibDbPlaylistIter"><span class="type">RCLibDbPlaylistIter</span></a> belongs to.
+Get the playlist length that the <a class="link" href="RCLibDb.html#RCLibDbPlaylistIter" title="RCLibDbPlaylistIter"><span class="type">RCLibDbPlaylistIter</span></a> belongs to. MT safe.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -2673,7 +2689,7 @@ Get the playlist length that the <a class="link" href="RCLibDb.html#RCLibDbPlayl
 <a name="rclib-db-playlist-iter-get-position"></a><h3>rclib_db_playlist_iter_get_position ()</h3>
 <pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="returnvalue">gint</span></a>                rclib_db_playlist_iter_get_position (<em class="parameter"><code><a class="link" href="RCLibDb.html#RCLibDbPlaylistIter" title="RCLibDbPlaylistIter"><span class="type">RCLibDbPlaylistIter</span></a> *iter</code></em>);</pre>
 <p>
-Return the position of <em class="parameter"><code>iter</code></em>.
+Return the position of <em class="parameter"><code>iter</code></em>. MT safe.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -2695,7 +2711,7 @@ Return the position of <em class="parameter"><code>iter</code></em>.
 <a name="rclib-db-playlist-iter-is-begin"></a><h3>rclib_db_playlist_iter_is_begin ()</h3>
 <pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rclib_db_playlist_iter_is_begin     (<em class="parameter"><code><a class="link" href="RCLibDb.html#RCLibDbPlaylistIter" title="RCLibDbPlaylistIter"><span class="type">RCLibDbPlaylistIter</span></a> *iter</code></em>);</pre>
 <p>
-Return whether <em class="parameter"><code>iter</code></em> is the begin iterator.
+Return whether <em class="parameter"><code>iter</code></em> is the begin iterator. MT safe.
 Notice that this function will NOT check whether the iter is valid.
 </p>
 <div class="variablelist"><table border="0">
@@ -2718,7 +2734,7 @@ Notice that this function will NOT check whether the iter is valid.
 <a name="rclib-db-playlist-iter-is-end"></a><h3>rclib_db_playlist_iter_is_end ()</h3>
 <pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rclib_db_playlist_iter_is_end       (<em class="parameter"><code><a class="link" href="RCLibDb.html#RCLibDbPlaylistIter" title="RCLibDbPlaylistIter"><span class="type">RCLibDbPlaylistIter</span></a> *iter</code></em>);</pre>
 <p>
-Return whether <em class="parameter"><code>iter</code></em> is the end iterator.
+Return whether <em class="parameter"><code>iter</code></em> is the end iterator. MT safe.
 Notice that this function will NOT check whether the iter is valid.
 </p>
 <div class="variablelist"><table border="0">
@@ -2743,6 +2759,7 @@ Notice that this function will NOT check whether the iter is valid.
 <p>
 Return an iterator pointing to the next position after <em class="parameter"><code>iter</code></em>. If
 <em class="parameter"><code>iter</code></em> is not valid , or <em class="parameter"><code>iter</code></em> the end iterator, <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><span class="type">NULL</span></a> is returned.
+MT safe.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -2768,6 +2785,7 @@ the next position after <em class="parameter"><code>iter</code></em>. <span clas
 <p>
 Return an iterator pointing to the previous position before <em class="parameter"><code>iter</code></em>. If
 <em class="parameter"><code>iter</code></em> is not valid , or <em class="parameter"><code>iter</code></em> the begin iterator, <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><span class="type">NULL</span></a> is returned.
+MT safe.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -2793,7 +2811,7 @@ previous position before <em class="parameter"><code>iter</code></em>. <span cla
                                                          <em class="parameter"><code><a class="link" href="RCLibDb.html#RCLibDbQuery"><span class="type">RCLibDbQuery</span></a> *query</code></em>);</pre>
 <p>
 Check whether the playlist data stored in the iter satisfied the
-query condition.
+query condition. MT safe.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -2823,7 +2841,7 @@ query condition.</td>
 <p>
 Find an iterator somewhere in the range (<em class="parameter"><code>begin</code></em>, <em class="parameter"><code>end</code></em>). This
 iterator will be close to the middle of the range, but is not
-guaranteed to be <span class="emphasis"><em>exactly</em></span> in the middle.
+guaranteed to be <span class="emphasis"><em>exactly</em></span> in the middle. MT safe.
 </p>
 <p>
 The <em class="parameter"><code>begin</code></em> and <em class="parameter"><code>end</code></em> iterators must both point to the same
@@ -2861,7 +2879,7 @@ somewhere in the (<em class="parameter"><code>begin</code></em>, <em class="para
                                                          <em class="parameter"><code><a class="link" href="RCLibDb.html#RCLibDbCatalogIter" title="RCLibDbCatalogIter"><span class="type">RCLibDbCatalogIter</span></a> *catalog_iter</code></em>);</pre>
 <p>
 Move the playlist data pointed to by <span class="type">iters</span> to another catalog
-pointed to by <span class="type">catalog_iter</span>.
+pointed to by <span class="type">catalog_iter</span>. Must be called in main thread.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -2887,7 +2905,7 @@ pointed to by <span class="type">catalog_iter</span>.
 <pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Pointer-Arrays.html#GPtrArray"><span class="returnvalue">GPtrArray</span></a> *         rclib_db_playlist_query             (<em class="parameter"><code><a class="link" href="RCLibDb.html#RCLibDbCatalogIter" title="RCLibDbCatalogIter"><span class="type">RCLibDbCatalogIter</span></a> *catalog_iter</code></em>,
                                                          <em class="parameter"><code><a class="link" href="RCLibDb.html#RCLibDbQuery"><span class="type">RCLibDbQuery</span></a> *query</code></em>);</pre>
 <p>
-Query data from the playlist library.
+Query data from the playlist library. MT safe.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -2916,7 +2934,7 @@ the query condition. Free with #<a href="/usr/share/gtk-doc/html/glib/glib-Point
 <pre class="programlisting"><span class="returnvalue">void</span>                rclib_db_playlist_refresh           (<em class="parameter"><code><a class="link" href="RCLibDb.html#RCLibDbCatalogIter" title="RCLibDbCatalogIter"><span class="type">RCLibDbCatalogIter</span></a> *iter</code></em>);</pre>
 <p>
 Refresh the metadata of the music in the playlist pointed to
-by the given catalog <span class="type">iter</span>.
+by the given catalog <span class="type">iter</span>. MT safe.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -2933,6 +2951,7 @@ by the given catalog <span class="type">iter</span>.
                                                          <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> *new_order</code></em>);</pre>
 <p>
 Reorder the playlist to follow the order indicated by <em class="parameter"><code>new_order</code></em>.
+Must be called in main thread.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -2959,7 +2978,7 @@ i.e. <em class="parameter"><code>new_order</code></em><code class="literal">[new
 <p>
 Update the metadata in the playlist pointed to by <span class="type">iter</span>.
 Title, artist, album, file type, track number, year information
-will be updated.
+will be updated. Must be called in main thread.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -3408,13 +3427,13 @@ in the music library is changed.
 </div>
 <hr>
 <div class="refsect2">
-<a name="RCLibDb-library-delete"></a><h3>The <code class="literal">"library-delete"</code> signal</h3>
+<a name="RCLibDb-library-deleted"></a><h3>The <code class="literal">"library-deleted"</code> signal</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>                user_function                      (<a class="link" href="RCLibDb.html" title="RCLibDb"><span class="type">RCLibDb</span></a> *db,
                                                         <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a>   *uri,
                                                         <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> user_data)      : <a href="/usr/share/gtk-doc/html/gobject/gobject-Signals.html#G-SIGNAL-RUN-FIRST:CAPS"><code class="literal">Run First</code></a></pre>
 <p>
-The ::library-added signal is emitted when the data of the music item
-in the music library is changed.
+The ::library-deleted signal is emitted when the data of the music item
+in the music library is removed.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">

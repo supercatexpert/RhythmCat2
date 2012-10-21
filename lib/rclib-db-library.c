@@ -1780,7 +1780,10 @@ gboolean rclib_db_library_data_query(RCLibDbLibraryData *library_data,
                 break;
             }
             default:
+            {
+                result = TRUE;
                 break;
+            }
         }
         if(!result) break;
     }
