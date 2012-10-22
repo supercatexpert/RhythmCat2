@@ -113,6 +113,27 @@ typedef enum {
     RCLIB_CORE_EQ_TYPE_CUSTOM = 10
 }RCLibCoreEQType;
 
+/**
+ * RCLibCoreAudioOutputType:
+ * @RCLIB_CORE_AUDIO_OUTPUT_AUTO: automatic audio output plug-in
+ * @RCLIB_CORE_AUDIO_OUTPUT_PULSEAUDIO: PulseAudio output plug-in
+ * @RCLIB_CORE_AUDIO_OUTPUT_ALSA: ALSA output plug-in
+ * @RCLIB_CORE_AUDIO_OUTPUT_OSS: OSS audio output plug-in
+ * @RCLIB_CORE_AUDIO_OUTPUT_JACK: jack audio output plug-in
+ * @RCLIB_CORE_AUDIO_OUTPUT_WAVEFORM: waveform audio output plug-in
+ *
+ * The enum type for audio output plug-in selection.
+ */
+ 
+typedef enum {
+    RCLIB_CORE_AUDIO_OUTPUT_AUTO = 0,
+    RCLIB_CORE_AUDIO_OUTPUT_PULSEAUDIO = 1,
+    RCLIB_CORE_AUDIO_OUTPUT_ALSA = 2,
+    RCLIB_CORE_AUDIO_OUTPUT_OSS = 3,
+    RCLIB_CORE_AUDIO_OUTPUT_JACK = 4,
+    RCLIB_CORE_AUDIO_OUTPUT_WAVEFORM = 5
+}RCLibCoreAudioOutputType;
+
 typedef struct _RCLibCoreMetadata RCLibCoreMetadata;
 typedef struct _RCLibCore RCLibCore;
 typedef struct _RCLibCoreClass RCLibCoreClass;
@@ -231,6 +252,8 @@ GList *rclib_core_effect_plugin_get_list();
 gint rclib_core_query_sample_rate();
 gint rclib_core_query_channels();
 gint rclib_core_query_depth();
+gboolean rclib_core_audio_output_set(RCLibCoreAudioOutputType output_type);
+gboolean rclib_core_audio_output_get(RCLibCoreAudioOutputType *output_type);
 
 G_END_DECLS
 

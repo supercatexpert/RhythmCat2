@@ -59,12 +59,14 @@ typedef enum
 struct _RCLibCorePrivate
 {
     GstElement *playbin;
+    GstElement *audiobin;
     GstElement *audiosink;
     GstElement *videosink;
     GstElement *identity;
     GstElement *effectbin;
     GstElement *bal_plugin; /* balance: audiopanorama */
     GstElement *eq_plugin; /* equalizer: equalizer-10bands */
+    RCLibCoreAudioOutputType output_sink_type;
     GstBus *bus;
     GstPad *query_pad;
     GList *extra_plugin_list;
@@ -1100,9 +1102,11 @@ static void rclib_core_instance_init(RCLibCore *core)
     g_object_set(playbin, "flags", flags, NULL);
     memset(&(priv->metadata), 0, sizeof(RCLibCoreMetadata));
     priv->playbin = playbin;
+    priv->audiobin = audiobin;
     priv->effectbin = effectbin;
     priv->audiosink = audiosink;
     priv->videosink = videosink;
+    priv->output_sink_type = RCLIB_CORE_AUDIO_OUTPUT_AUTO;
     priv->eq_plugin = gst_element_factory_make("equalizer-10bands",
         "effect-equalizer");
     priv->bal_plugin = gst_element_factory_make("audiopanorama",
@@ -2078,5 +2082,130 @@ gint rclib_core_query_depth()
     RCLibCorePrivate *priv = RCLIB_CORE(core_instance)->priv;
     if(priv==NULL) return 0;
     return priv->depth;
+}
+
+/**
+ * rclib_core_audio_output_set:
+ * @output_type: the audio output plug-in type
+ * 
+ * Set the audio output plug-in for the player.
+ * 
+ * Returns: Whether the operation succeeded.
+ */
+
+gboolean rclib_core_audio_output_set(RCLibCoreAudioOutputType output_type)
+{
+    RCLibCorePrivate *priv;
+    GstState state = GST_STATE_NULL;
+    GstElement *new_audio_sink;
+    GstPad *src_pad, *sink_pad;
+    if(core_instance==NULL)
+        return FALSE;
+    priv = RCLIB_CORE(core_instance)->priv;
+    if(priv==NULL) return FALSE;
+    if(output_type==priv->output_sink_type)
+        return TRUE;
+    switch(output_type)
+    {
+        case RCLIB_CORE_AUDIO_OUTPUT_AUTO:
+        {
+            new_audio_sink = gst_element_factory_make("autoaudiosink",
+                "rclib-audiosink");
+            break;
+        }
+        case RCLIB_CORE_AUDIO_OUTPUT_PULSEAUDIO:
+        {
+            new_audio_sink = gst_element_factory_make("pulsesink",
+                "rclib-audiosink");
+            break;
+        }
+        case RCLIB_CORE_AUDIO_OUTPUT_ALSA:
+        {
+            new_audio_sink = gst_element_factory_make("alsasink",
+                "rclib-audiosink");
+            break;
+        }
+        case RCLIB_CORE_AUDIO_OUTPUT_OSS:
+        {
+            new_audio_sink = gst_element_factory_make("osssink",
+                "rclib-audiosink");
+            break;
+        }
+        case RCLIB_CORE_AUDIO_OUTPUT_JACK:
+        {
+            new_audio_sink = gst_element_factory_make("jackaudiosink",
+                "rclib-audiosink");
+            break;
+        }
+        case RCLIB_CORE_AUDIO_OUTPUT_WAVEFORM:
+        {
+            new_audio_sink = gst_element_factory_make("waveformsink",
+                "rclib-audiosink");
+            break;
+        }
+        default:
+            g_warning("Error audio output type: %u", output_type);
+            return FALSE;
+            break;
+    }
+    if(new_audio_sink==NULL)
+    {
+        g_warning("Cannot create audio output sink for type: %u!",
+            output_type);
+        return FALSE;
+    }
+    src_pad = gst_element_get_static_pad(priv->effectbin, "src");
+    sink_pad = gst_element_get_static_pad(priv->audiosink, "sink");
+    if(gst_element_get_state(priv->playbin, &state, NULL, 5 * GST_SECOND)==
+        GST_STATE_CHANGE_FAILURE)
+    {
+        g_warning("Get state failed!");
+    }
+    if(state==GST_STATE_PLAYING)
+    {
+        gst_element_set_state(priv->playbin, GST_STATE_PAUSED);
+        gst_pad_set_blocked(src_pad, TRUE);
+    }
+    gst_pad_unlink(src_pad, sink_pad);
+    gst_object_unref(sink_pad);
+    gst_bin_remove(GST_BIN(priv->audiobin), priv->audiosink);
+    sink_pad = gst_element_get_static_pad(new_audio_sink, "sink");
+    gst_bin_add(GST_BIN(priv->audiobin), new_audio_sink);
+    gst_element_set_state(new_audio_sink, GST_STATE_READY);
+    if(state==GST_STATE_PLAYING)
+    {
+        gst_element_set_state(new_audio_sink, GST_STATE_PAUSED);
+    }
+    gst_pad_link(src_pad, sink_pad);
+    if(state==GST_STATE_PLAYING)
+    {
+        gst_pad_set_blocked(src_pad, FALSE);
+        gst_element_set_state(priv->playbin, GST_STATE_PLAYING);
+    }
+    priv->audiosink = new_audio_sink;
+    priv->output_sink_type = output_type;
+    g_debug("Set audio output sink to type %u", output_type);
+    return TRUE;
+}
+
+/**
+ * rclib_core_audio_output_get:
+ * @output_type: (out): the audio output plug-in type
+ * 
+ * Get the audio output plug-in used in the player.
+ * 
+ * Returns: Whether the operation succeeded.
+ */
+
+gboolean rclib_core_audio_output_get(RCLibCoreAudioOutputType *output_type)
+{
+    RCLibCorePrivate *priv;
+    if(core_instance==NULL)
+        return FALSE;
+    priv = RCLIB_CORE(core_instance)->priv;
+    if(priv==NULL) return FALSE;
+    if(output_type!=NULL)
+        *output_type = priv->output_sink_type;
+    return TRUE;
 }
 

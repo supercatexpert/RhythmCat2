@@ -312,9 +312,10 @@ static void rc_main_app_activate(GApplication *application)
     }
     if(rclib_db_autosaved_exist())
         g_idle_add(rc_main_autosave_idle, NULL);
-        
+    
     /*
     //Just a query test!
+    rclib_core_audio_output_set(RCLIB_CORE_AUDIO_OUTPUT_AUTO);
     RCLibDbQuery *query = rclib_db_query_parse(
         RCLIB_DB_QUERY_CONDITION_TYPE_PROP_LIKE,
         RCLIB_DB_QUERY_DATA_TYPE_TITLE, "The",
