@@ -144,4 +144,7 @@
     * Added query interface for Catalog & Playlist.
     * Catalog & Playlist API changed.
     
-    
+2012-10-24   SuperCat    <supercatexpert@gmail.com>
+
+    * Switchable audio output sink.
+     

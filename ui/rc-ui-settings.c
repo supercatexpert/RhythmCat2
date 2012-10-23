@@ -45,6 +45,8 @@ typedef struct RCUiSettingsPrivate
 {
     GtkWidget *settings_window;
     GtkWidget *settings_notebook;
+    GtkWidget *gen_audioout_combo_box;
+    GtkWidget *gen_audioout_label;
     GtkWidget *gen_autoplay_check_button;
     GtkWidget *gen_loadlast_check_button;
     GtkWidget *gen_mintray_check_button;
@@ -114,6 +116,31 @@ static void rc_ui_settings_gen_minclose_toggled(GtkToggleButton *button,
     rclib_settings_set_boolean("MainUI", "MinimizeWhenClose", flag);
 }
 
+static void rc_ui_settings_gen_audioout_changed(GtkComboBox *widget,
+    gpointer data)
+{
+    GtkTreeModel *model;
+    GtkTreeIter iter;
+    gint output_type;
+    RCUiSettingsPrivate *priv = &settings_priv;
+    model = gtk_combo_box_get_model(widget);
+    if(model==NULL) return;
+    if(!gtk_combo_box_get_active_iter(widget, &iter)) return;
+    gtk_tree_model_get(model, &iter, 1, &output_type, -1);
+    if(rclib_core_audio_output_set((RCLibCoreAudioOutputType)output_type))
+    {
+        gtk_label_set_markup(GTK_LABEL(priv->gen_audioout_label),
+            _("Audio Output Plug-in changed successfully."));
+        rclib_settings_set_integer("Player", "AudioOutputPluginType",
+            output_type);
+    }
+    else
+    {
+        gtk_label_set_markup(GTK_LABEL(priv->gen_audioout_label),
+            _("Failed to change Audio Output Plug-in!"));
+    }
+}
+
 static inline GtkWidget *rc_ui_settings_general_build(
     RCUiSettingsPrivate *priv)
 {
@@ -121,6 +148,12 @@ static inline GtkWidget *rc_ui_settings_general_build(
     GtkWidget *frame_label;
     GtkWidget *general_frame;
     GtkWidget *general_frame_grid;
+    GtkWidget *audioout_frame;
+    GtkWidget *audioout_frame_grid;
+    GtkListStore *store;
+    GtkCellRenderer *renderer;
+    GtkTreeIter iter;
+    gint audioout_type;
     general_grid = gtk_grid_new();
     priv->gen_autoplay_check_button = gtk_check_button_new_with_mnemonic(
         _("_Auto play on startup"));
@@ -130,12 +163,37 @@ static inline GtkWidget *rc_ui_settings_general_build(
         _("Minimize to _tray"));
     priv->gen_minclose_check_button = gtk_check_button_new_with_mnemonic(
         _("Minimize the window if the _close button is clicked"));
+    priv->gen_audioout_label = gtk_label_new(NULL);
+    store = gtk_list_store_new(2, G_TYPE_STRING, G_TYPE_INT);
+    renderer = gtk_cell_renderer_text_new();
+    priv->gen_audioout_combo_box = gtk_combo_box_new_with_model(
+        GTK_TREE_MODEL(store));
+    g_object_unref(store);
+    gtk_cell_layout_pack_start(GTK_CELL_LAYOUT(priv->gen_audioout_combo_box),
+        renderer, TRUE);
+    gtk_cell_layout_set_attributes(GTK_CELL_LAYOUT(
+        priv->gen_audioout_combo_box), renderer, "text", 0, NULL);   
+    gtk_label_set_markup(GTK_LABEL(priv->gen_audioout_label),
+        _("<b>Hint</b>: Change the audio output plug-in will "
+        "<b>stop</b> playing."));
+    g_object_set(priv->gen_audioout_label, "wrap", TRUE, "wrap-mode",
+        PANGO_WRAP_WORD_CHAR, "hexpand-set", TRUE, "hexpand", TRUE, NULL);
     general_frame = gtk_frame_new(NULL);
     frame_label = gtk_label_new(NULL);
     gtk_label_set_markup(GTK_LABEL(frame_label), _("<b>General</b>"));
     g_object_set(general_frame, "label-widget", frame_label, "shadow-type",
         GTK_SHADOW_NONE, "hexpand-set", TRUE, "hexpand", TRUE, NULL);
     general_frame_grid = gtk_grid_new();
+    audioout_frame = gtk_frame_new(NULL);
+    frame_label = gtk_label_new(NULL);
+    gtk_label_set_markup(GTK_LABEL(frame_label),
+        _("<b>Audio Output Plug-in</b>"));
+    g_object_set(audioout_frame, "label-widget", frame_label, "shadow-type",
+        GTK_SHADOW_NONE, "hexpand-set", TRUE, "hexpand", TRUE, NULL);
+    audioout_frame_grid = gtk_grid_new();
+    g_object_set(priv->gen_audioout_combo_box, "margin-left", 2,
+        "margin-right", 2, "margin-top", 2, "margin-bottom", 2, "hexpand-set",
+        TRUE, "hexpand", TRUE, NULL);
     g_object_set(priv->gen_autoplay_check_button, "active",
         rclib_settings_get_boolean("Player", "AutoPlayWhenStartup", NULL),
         NULL);
@@ -148,6 +206,52 @@ static inline GtkWidget *rc_ui_settings_general_build(
     g_object_set(priv->gen_minclose_check_button, "active",
         rclib_settings_get_boolean("MainUI", "MinimizeWhenClose", NULL),
         NULL);
+    audioout_type = rclib_settings_get_integer("Player",
+        "AudioOutputPluginType", NULL);
+    gtk_list_store_append(store, &iter);
+    gtk_list_store_set(store, &iter, 0, _("Automatic"), 1,
+        RCLIB_CORE_AUDIO_OUTPUT_AUTO, -1);
+    if(audioout_type<RCLIB_CORE_AUDIO_OUTPUT_PULSEAUDIO ||
+        audioout_type>RCLIB_CORE_AUDIO_OUTPUT_WAVEFORM)
+    {
+        gtk_combo_box_set_active_iter(GTK_COMBO_BOX(
+            priv->gen_audioout_combo_box), &iter);
+    }
+    gtk_list_store_append(store, &iter);
+    gtk_list_store_set(store, &iter, 0, _("PulseAudio"), 1,
+        RCLIB_CORE_AUDIO_OUTPUT_PULSEAUDIO, -1);
+    gtk_list_store_append(store, &iter);
+    gtk_list_store_set(store, &iter, 0, _("ALSA"), 1,
+        RCLIB_CORE_AUDIO_OUTPUT_ALSA, -1);
+    if(audioout_type==RCLIB_CORE_AUDIO_OUTPUT_ALSA)
+    {
+        gtk_combo_box_set_active_iter(GTK_COMBO_BOX(
+            priv->gen_audioout_combo_box), &iter);
+    }
+    gtk_list_store_append(store, &iter);
+    gtk_list_store_set(store, &iter, 0, _("OSS"), 1,
+        RCLIB_CORE_AUDIO_OUTPUT_OSS, -1);
+    if(audioout_type==RCLIB_CORE_AUDIO_OUTPUT_OSS)
+    {
+        gtk_combo_box_set_active_iter(GTK_COMBO_BOX(
+            priv->gen_audioout_combo_box), &iter);
+    }
+    gtk_list_store_append(store, &iter);
+    gtk_list_store_set(store, &iter, 0, _("Jack"), 1,
+        RCLIB_CORE_AUDIO_OUTPUT_JACK, -1);
+    if(audioout_type==RCLIB_CORE_AUDIO_OUTPUT_JACK)
+    {
+        gtk_combo_box_set_active_iter(GTK_COMBO_BOX(
+            priv->gen_audioout_combo_box), &iter);
+    }
+    gtk_list_store_append(store, &iter);
+    gtk_list_store_set(store, &iter, 0, _("Waveform"), 1,
+        RCLIB_CORE_AUDIO_OUTPUT_WAVEFORM, -1);
+    if(audioout_type==RCLIB_CORE_AUDIO_OUTPUT_WAVEFORM)
+    {
+        gtk_combo_box_set_active_iter(GTK_COMBO_BOX(
+            priv->gen_audioout_combo_box), &iter);
+    }
     gtk_grid_attach(GTK_GRID(general_frame_grid),
         priv->gen_autoplay_check_button, 0, 0, 1, 1);
     gtk_grid_attach(GTK_GRID(general_frame_grid),
@@ -157,7 +261,14 @@ static inline GtkWidget *rc_ui_settings_general_build(
     gtk_grid_attach(GTK_GRID(general_frame_grid),
         priv->gen_minclose_check_button, 0, 3, 1, 1);
     gtk_container_add(GTK_CONTAINER(general_frame), general_frame_grid);
-    gtk_grid_attach(GTK_GRID(general_grid), general_frame, 0, 0,
+    gtk_grid_attach(GTK_GRID(audioout_frame_grid),
+        priv->gen_audioout_combo_box, 0, 0, 1, 1);
+    gtk_grid_attach(GTK_GRID(audioout_frame_grid),
+        priv->gen_audioout_label, 0, 1, 1, 1);
+    gtk_container_add(GTK_CONTAINER(audioout_frame), audioout_frame_grid);
+    gtk_grid_attach(GTK_GRID(general_grid), audioout_frame, 0, 0,
+        1, 1);
+    gtk_grid_attach(GTK_GRID(general_grid), general_frame, 0, 1,
         1, 1);
     g_signal_connect(priv->gen_autoplay_check_button, "toggled",
         G_CALLBACK(rc_ui_settings_gen_autoplay_toggled), NULL);
@@ -167,6 +278,8 @@ static inline GtkWidget *rc_ui_settings_general_build(
         G_CALLBACK(rc_ui_settings_gen_mintray_toggled), NULL);
     g_signal_connect(priv->gen_minclose_check_button, "toggled",
         G_CALLBACK(rc_ui_settings_gen_minclose_toggled), NULL);
+    g_signal_connect(priv->gen_audioout_combo_box, "changed",
+        G_CALLBACK(rc_ui_settings_gen_audioout_changed), NULL);
     return general_grid;
 }
 
@@ -371,11 +484,13 @@ static inline GtkWidget *rc_ui_settings_appearance_build(
     appearance_grid = gtk_grid_new();
     theme_frame = gtk_frame_new(NULL);
     frame_label = gtk_label_new(NULL);
-    store = gtk_list_store_new(3, G_TYPE_STRING, G_TYPE_BOOLEAN, G_TYPE_STRING);
-        renderer = gtk_cell_renderer_text_new();
+    store = gtk_list_store_new(3, G_TYPE_STRING, G_TYPE_BOOLEAN,
+        G_TYPE_STRING);
+    renderer = gtk_cell_renderer_text_new();
     priv->apr_disthm_check_button = gtk_check_button_new_with_mnemonic(
         _("Disable theme (need to restart the player)"));
-    priv->apr_theme_combo_box = gtk_combo_box_new_with_model(GTK_TREE_MODEL(store));
+    priv->apr_theme_combo_box = gtk_combo_box_new_with_model(
+        GTK_TREE_MODEL(store));
     g_object_unref(store);
     gtk_cell_layout_pack_start(GTK_CELL_LAYOUT(priv->apr_theme_combo_box),
         renderer, TRUE);

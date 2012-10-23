@@ -192,6 +192,17 @@ void rclib_settings_apply()
     gsize size;
     gchar *encoding, *id3_encoding;
     gboolean bvalue2;
+    ivalue = rclib_settings_get_integer("Player", "AudioOutputPluginType",
+        &error);
+    if(error==NULL)
+    {
+        rclib_core_audio_output_set((RCLibCoreAudioOutputType)ivalue);
+    }
+    else
+    {
+        g_error_free(error);
+        error = NULL; 
+    }
     ivalue = rclib_settings_get_integer("Player", "RepeatMode", &error);
     if(error==NULL)
     {
@@ -315,8 +326,14 @@ void rclib_settings_update()
     gdouble eq_array[10] = {0.0};
     gfloat fvalue;
     gboolean bvalue, bvalue2;
+    RCLibCoreAudioOutputType output_type;
     RCLibDbPlaylistIter *db_reference;
     RCLibDbCatalogIter *catalog_iter = NULL;
+    if(rclib_core_audio_output_get(&output_type))
+    {
+        rclib_settings_set_integer("Player", "AudioOutputPluginType",
+            output_type);
+    }
     ivalue = rclib_player_get_repeat_mode();
     rclib_settings_set_integer("Player", "RepeatMode", ivalue);
     ivalue = rclib_player_get_random_mode();

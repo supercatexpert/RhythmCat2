@@ -2096,7 +2096,6 @@ gint rclib_core_query_depth()
 gboolean rclib_core_audio_output_set(RCLibCoreAudioOutputType output_type)
 {
     RCLibCorePrivate *priv;
-    GstState state = GST_STATE_NULL;
     GstElement *new_audio_sink;
     GstPad *src_pad, *sink_pad;
     if(core_instance==NULL)
@@ -2156,32 +2155,14 @@ gboolean rclib_core_audio_output_set(RCLibCoreAudioOutputType output_type)
     }
     src_pad = gst_element_get_static_pad(priv->effectbin, "src");
     sink_pad = gst_element_get_static_pad(priv->audiosink, "sink");
-    if(gst_element_get_state(priv->playbin, &state, NULL, 5 * GST_SECOND)==
-        GST_STATE_CHANGE_FAILURE)
-    {
-        g_warning("Get state failed!");
-    }
-    if(state==GST_STATE_PLAYING)
-    {
-        gst_element_set_state(priv->playbin, GST_STATE_PAUSED);
-        gst_pad_set_blocked(src_pad, TRUE);
-    }
+    rclib_core_stop();
     gst_pad_unlink(src_pad, sink_pad);
     gst_object_unref(sink_pad);
     gst_bin_remove(GST_BIN(priv->audiobin), priv->audiosink);
     sink_pad = gst_element_get_static_pad(new_audio_sink, "sink");
     gst_bin_add(GST_BIN(priv->audiobin), new_audio_sink);
-    gst_element_set_state(new_audio_sink, GST_STATE_READY);
-    if(state==GST_STATE_PLAYING)
-    {
-        gst_element_set_state(new_audio_sink, GST_STATE_PAUSED);
-    }
+    gst_element_set_state(new_audio_sink, GST_STATE_NULL);
     gst_pad_link(src_pad, sink_pad);
-    if(state==GST_STATE_PLAYING)
-    {
-        gst_pad_set_blocked(src_pad, FALSE);
-        gst_element_set_state(priv->playbin, GST_STATE_PLAYING);
-    }
     priv->audiosink = new_audio_sink;
     priv->output_sink_type = output_type;
     g_debug("Set audio output sink to type %u", output_type);
