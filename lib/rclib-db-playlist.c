@@ -2426,9 +2426,7 @@ static gint rclib_db_reorder_func(GSequenceIter *a, GSequenceIter *b,
     GHashTable *new_positions = user_data;
     gint apos = GPOINTER_TO_INT(g_hash_table_lookup(new_positions, a));
     gint bpos = GPOINTER_TO_INT(g_hash_table_lookup(new_positions, b));
-    if(apos < bpos) return -1;
-    if(apos > bpos) return 1;
-    return 0;
+    return apos - bpos;
 }
 
 /**
@@ -2455,8 +2453,8 @@ void rclib_db_catalog_reorder(gint *new_order)
     g_return_if_fail(new_order!=NULL);
     priv = RCLIB_DB(instance)->priv;
     g_return_if_fail(priv!=NULL);
-    length = rclib_db_catalog_get_length();
     g_rw_lock_reader_lock(&(priv->catalog_rw_lock));
+    length = rclib_db_catalog_get_length();
     order = g_new(gint, length);
     for(i=0;i<length;i++) order[new_order[i]] = i;
     new_positions = g_hash_table_new(g_direct_hash, g_direct_equal);
@@ -4476,4 +4474,92 @@ RCLibDbPlaylistIter *rclib_db_playlist_iter_get_random_iter(
     g_rw_lock_reader_unlock(&(priv->playlist_rw_lock));
     g_ptr_array_free(playlist_array, TRUE);
     return result_iter;  
+}
+
+static gint rclib_db_string_sort_asc_func(GSequenceIter *a, GSequenceIter *b,
+    gpointer user_data)
+{
+    GHashTable *new_positions = user_data;
+    const gchar *str1, *str2;
+    str1 = g_hash_table_lookup(new_positions, a);
+    str2 = g_hash_table_lookup(new_positions, b);
+    return g_strcmp0(str1, str2);
+}
+
+static gint rclib_db_string_sort_dsc_func(GSequenceIter *a, GSequenceIter *b,
+    gpointer user_data)
+{
+    GHashTable *new_positions = user_data;
+    const gchar *str1, *str2;
+    str1 = g_hash_table_lookup(new_positions, a);
+    str2 = g_hash_table_lookup(new_positions, b);
+    return g_strcmp0(str2, str1);
+}
+
+/**
+ * rclib_db_catalog_name_sort:
+ * @direction: the sort direction, #FALSE to use ascending, #TRUE to use
+ *     descending
+ * 
+ * Sort the catalogs by alphabets (ascending or descending). This function
+ * can only be called in main thread.
+ */
+
+void rclib_db_catalog_name_sort(gboolean direction)
+{
+    RCLibDbPrivate *priv;
+    GObject *instance;
+    gint i;
+    gchar *vstr;
+    gint *order = NULL;
+    GHashTable *new_positions, *sort_table;
+    RCLibDbCatalogIter *ptr;
+    gint length;
+    instance = rclib_db_get_instance();
+    if(instance==NULL) return;
+    priv = RCLIB_DB(instance)->priv;
+    if(priv==NULL) return;
+    sort_table = g_hash_table_new_full(g_direct_hash, g_direct_equal, NULL,
+        g_free);
+    new_positions = g_hash_table_new(g_direct_hash, g_direct_equal);
+    g_rw_lock_reader_lock(&(priv->catalog_rw_lock));
+    ptr = rclib_db_catalog_get_begin_iter();
+    for(i=0;ptr!=NULL;ptr=rclib_db_catalog_iter_next(ptr))
+    {
+        vstr = NULL;
+        rclib_db_catalog_data_iter_get(ptr, RCLIB_DB_CATALOG_DATA_TYPE_NAME,
+            &vstr, RCLIB_DB_CATALOG_DATA_TYPE_NONE);
+        g_hash_table_insert(new_positions, ptr, GINT_TO_POINTER(i));
+        g_hash_table_insert(sort_table, ptr, vstr);
+        i++;
+    }
+    g_rw_lock_reader_unlock(&(priv->catalog_rw_lock));
+    g_rw_lock_writer_lock(&(priv->catalog_rw_lock));
+    if(direction)
+    {
+        g_sequence_sort_iter((GSequence *)priv->catalog,
+            rclib_db_string_sort_dsc_func, sort_table);
+    }
+    else
+    {
+        g_sequence_sort_iter((GSequence *)priv->catalog,
+            rclib_db_string_sort_asc_func, sort_table);
+    }
+    g_rw_lock_writer_unlock(&(priv->catalog_rw_lock));
+    g_hash_table_destroy(sort_table);
+    g_rw_lock_reader_lock(&(priv->catalog_rw_lock));
+    length = rclib_db_catalog_get_length();
+    order = g_new(gint, length);
+    ptr = rclib_db_catalog_get_begin_iter();
+    for(i=0;ptr!=NULL;ptr=rclib_db_catalog_iter_next(ptr))
+    {
+        order[i] = GPOINTER_TO_INT(g_hash_table_lookup(new_positions,
+            ptr));
+        i++;
+    }
+    g_rw_lock_reader_unlock(&(priv->catalog_rw_lock));
+    g_hash_table_destroy(new_positions);
+    priv->dirty_flag = TRUE;
+    g_signal_emit_by_name(instance, "catalog-reordered", order);
+    g_free(order);
 }

@@ -181,6 +181,16 @@ static void rc_ui_menu_progress_refresh_cancel_clicked_cb()
     rclib_db_refresh_cancel();
 }
 
+static void rc_ui_menu_catalog_sort_ascending_clicked_cb()
+{
+    rclib_db_catalog_name_sort(FALSE);
+}
+
+static void rc_ui_menu_catalog_sort_descending_clicked_cb()
+{
+    rclib_db_catalog_name_sort(TRUE);
+}
+
 static GtkActionEntry ui_menu_entries[] =
 {
     { "RhythmCatMenu", NULL, "_RhythmCat" },
@@ -190,6 +200,8 @@ static GtkActionEntry ui_menu_entries[] =
     { "HelpMenu", NULL, N_("_Help") },
     { "RepeatMenu", NULL, N_("_Repeat") },
     { "RandomMenu", NULL, N_("Ran_dom") },
+    { "CatalogSortMenu", NULL, N_("Sort Playlists") },
+    { "CatalogPopupSortMenu", NULL, N_("Sort") },
     { "RhythmCatOpenMusic", GTK_STOCK_OPEN,
       N_("Open _Music"), "<control>O",
       N_("Open and play the music file"),    
@@ -405,7 +417,23 @@ static GtkActionEntry ui_menu_entries[] =
     { "TrayQuit", GTK_STOCK_QUIT,
       N_("_Quit"), NULL,
       N_("Quit this player"),
-      G_CALLBACK(rc_ui_player_exit) }
+      G_CALLBACK(rc_ui_player_exit) },
+    { "CatalogSortNameAsc", GTK_STOCK_SORT_ASCENDING,
+      N_("Name (Ascending)"), NULL,
+      N_("Sort name in ascending order"),
+      G_CALLBACK(rc_ui_menu_catalog_sort_ascending_clicked_cb) },
+    { "CatalogSortNameDesc", GTK_STOCK_SORT_DESCENDING,
+      N_("Name (Descending)"), NULL,
+      N_("Sort name in descending order"),
+      G_CALLBACK(rc_ui_menu_catalog_sort_descending_clicked_cb) },
+    { "CatalogPopupSortNameAsc", GTK_STOCK_SORT_ASCENDING,
+      N_("Name (Ascending)"), NULL,
+      N_("Sort name in ascending order"),
+      G_CALLBACK(rc_ui_menu_catalog_sort_ascending_clicked_cb) },
+    { "CatalogPopupSortNameDesc", GTK_STOCK_SORT_DESCENDING,
+      N_("Name (Descending)"), NULL,
+      N_("Sort name in descending order"),
+      G_CALLBACK(rc_ui_menu_catalog_sort_descending_clicked_cb) }
 };
 
 static guint ui_menu_n_entries = G_N_ELEMENTS(ui_menu_entries);
@@ -496,6 +524,10 @@ static const gchar *ui_menu_info =
     "      <menuitem action='PlaylistRemoveList'/>"
     "      <menuitem action='PlaylistExportList'/>"
     "      <menuitem action='PlaylistExportAll'/>"
+    "      <menu action='CatalogSortMenu'>"
+    "        <menuitem action='CatalogSortNameAsc'/>"
+    "        <menuitem action='CatalogSortNameDesc'/>"
+    "      </menu>"
     "      <separator name='PlaylistSep1'/>"
     "      <menuitem action='PlaylistImportMusic'/>"
     "      <menuitem action='PlaylistImportList'/>"
@@ -551,6 +583,10 @@ static const gchar *ui_menu_info =
     "    <menuitem action='CatalogRenameList'/>"
     "    <menuitem action='CatalogRemoveList'/>"
     "    <menuitem action='CatalogExportList'/>"
+    "    <menu action='CatalogPopupSortMenu'>"
+    "      <menuitem action='CatalogPopupSortNameAsc'/>"
+    "      <menuitem action='CatalogPopupSortNameDesc'/>"
+    "    </menu>"
     "  </popup>"
     "  <popup action='PlaylistPopupMenu'>"
     "    <menuitem action='PlaylistPImportMusic'/>"
