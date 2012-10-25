@@ -191,6 +191,168 @@ static void rc_ui_menu_catalog_sort_descending_clicked_cb()
     rclib_db_catalog_name_sort(TRUE);
 }
 
+static void rc_ui_menu_playlist_title_sort_ascending_clicked_cb()
+{
+    GtkTreeIter iter;
+    if(!rc_ui_listview_catalog_get_cursor(&iter))
+        return;
+    rclib_db_playlist_item_sort((RCLibDbCatalogIter *)iter.user_data,
+        RCLIB_DB_PLAYLIST_DATA_TYPE_TITLE, FALSE);
+}
+
+static void rc_ui_menu_playlist_title_sort_descending_clicked_cb()
+{
+    GtkTreeIter iter;
+    if(!rc_ui_listview_catalog_get_cursor(&iter))
+        return;
+    rclib_db_playlist_item_sort((RCLibDbCatalogIter *)iter.user_data,
+        RCLIB_DB_PLAYLIST_DATA_TYPE_TITLE, TRUE);
+}
+
+static void rc_ui_menu_playlist_artist_sort_ascending_clicked_cb()
+{
+    GtkTreeIter iter;
+    if(!rc_ui_listview_catalog_get_cursor(&iter))
+        return;
+    rclib_db_playlist_item_sort((RCLibDbCatalogIter *)iter.user_data,
+        RCLIB_DB_PLAYLIST_DATA_TYPE_ARTIST, FALSE);
+}
+
+static void rc_ui_menu_playlist_artist_sort_descending_clicked_cb()
+{
+    GtkTreeIter iter;
+    if(!rc_ui_listview_catalog_get_cursor(&iter))
+        return;
+    rclib_db_playlist_item_sort((RCLibDbCatalogIter *)iter.user_data,
+        RCLIB_DB_PLAYLIST_DATA_TYPE_ARTIST, TRUE);
+}
+
+static void rc_ui_menu_playlist_album_sort_ascending_clicked_cb()
+{
+    GtkTreeIter iter;
+    if(!rc_ui_listview_catalog_get_cursor(&iter))
+        return;
+    rclib_db_playlist_item_sort((RCLibDbCatalogIter *)iter.user_data,
+        RCLIB_DB_PLAYLIST_DATA_TYPE_ALBUM, FALSE);
+}
+
+static void rc_ui_menu_playlist_album_sort_descending_clicked_cb()
+{
+    GtkTreeIter iter;
+    if(!rc_ui_listview_catalog_get_cursor(&iter))
+        return;
+    rclib_db_playlist_item_sort((RCLibDbCatalogIter *)iter.user_data,
+        RCLIB_DB_PLAYLIST_DATA_TYPE_ALBUM, TRUE);
+}
+
+static void rc_ui_menu_playlist_ftype_sort_ascending_clicked_cb()
+{
+    GtkTreeIter iter;
+    if(!rc_ui_listview_catalog_get_cursor(&iter))
+        return;
+    rclib_db_playlist_item_sort((RCLibDbCatalogIter *)iter.user_data,
+        RCLIB_DB_PLAYLIST_DATA_TYPE_FTYPE, FALSE);
+}
+
+static void rc_ui_menu_playlist_ftype_sort_descending_clicked_cb()
+{
+    GtkTreeIter iter;
+    if(!rc_ui_listview_catalog_get_cursor(&iter))
+        return;
+    rclib_db_playlist_item_sort((RCLibDbCatalogIter *)iter.user_data,
+        RCLIB_DB_PLAYLIST_DATA_TYPE_FTYPE, TRUE);
+}
+
+static void rc_ui_menu_playlist_genre_sort_ascending_clicked_cb()
+{
+    GtkTreeIter iter;
+    if(!rc_ui_listview_catalog_get_cursor(&iter))
+        return;
+    rclib_db_playlist_item_sort((RCLibDbCatalogIter *)iter.user_data,
+        RCLIB_DB_PLAYLIST_DATA_TYPE_GENRE, FALSE);
+}
+
+static void rc_ui_menu_playlist_genre_sort_descending_clicked_cb()
+{
+    GtkTreeIter iter;
+    if(!rc_ui_listview_catalog_get_cursor(&iter))
+        return;
+    rclib_db_playlist_item_sort((RCLibDbCatalogIter *)iter.user_data,
+        RCLIB_DB_PLAYLIST_DATA_TYPE_GENRE, TRUE);
+}
+
+static void rc_ui_menu_playlist_length_sort_ascending_clicked_cb()
+{
+    GtkTreeIter iter;
+    if(!rc_ui_listview_catalog_get_cursor(&iter))
+        return;
+    rclib_db_playlist_item_sort((RCLibDbCatalogIter *)iter.user_data,
+        RCLIB_DB_PLAYLIST_DATA_TYPE_LENGTH, FALSE);
+}
+
+static void rc_ui_menu_playlist_length_sort_descending_clicked_cb()
+{
+    GtkTreeIter iter;
+    if(!rc_ui_listview_catalog_get_cursor(&iter))
+        return;
+    rclib_db_playlist_item_sort((RCLibDbCatalogIter *)iter.user_data,
+        RCLIB_DB_PLAYLIST_DATA_TYPE_LENGTH, TRUE);
+}
+
+static void rc_ui_menu_playlist_tracknum_sort_ascending_clicked_cb()
+{
+    GtkTreeIter iter;
+    if(!rc_ui_listview_catalog_get_cursor(&iter))
+        return;
+    rclib_db_playlist_item_sort((RCLibDbCatalogIter *)iter.user_data,
+        RCLIB_DB_PLAYLIST_DATA_TYPE_TRACKNUM, FALSE);
+}
+
+static void rc_ui_menu_playlist_tracknum_sort_descending_clicked_cb()
+{
+    GtkTreeIter iter;
+    if(!rc_ui_listview_catalog_get_cursor(&iter))
+        return;
+    rclib_db_playlist_item_sort((RCLibDbCatalogIter *)iter.user_data,
+        RCLIB_DB_PLAYLIST_DATA_TYPE_TRACKNUM, TRUE);
+}
+
+static void rc_ui_menu_playlist_year_sort_ascending_clicked_cb()
+{
+    GtkTreeIter iter;
+    if(!rc_ui_listview_catalog_get_cursor(&iter))
+        return;
+    rclib_db_playlist_item_sort((RCLibDbCatalogIter *)iter.user_data,
+        RCLIB_DB_PLAYLIST_DATA_TYPE_YEAR, FALSE);
+}
+
+static void rc_ui_menu_playlist_year_sort_descending_clicked_cb()
+{
+    GtkTreeIter iter;
+    if(!rc_ui_listview_catalog_get_cursor(&iter))
+        return;
+    rclib_db_playlist_item_sort((RCLibDbCatalogIter *)iter.user_data,
+        RCLIB_DB_PLAYLIST_DATA_TYPE_YEAR, TRUE);
+}
+
+static void rc_ui_menu_playlist_rating_sort_ascending_clicked_cb()
+{
+    GtkTreeIter iter;
+    if(!rc_ui_listview_catalog_get_cursor(&iter))
+        return;
+    rclib_db_playlist_item_sort((RCLibDbCatalogIter *)iter.user_data,
+        RCLIB_DB_PLAYLIST_DATA_TYPE_RATING, FALSE);
+}
+
+static void rc_ui_menu_playlist_rating_sort_descending_clicked_cb()
+{
+    GtkTreeIter iter;
+    if(!rc_ui_listview_catalog_get_cursor(&iter))
+        return;
+    rclib_db_playlist_item_sort((RCLibDbCatalogIter *)iter.user_data,
+        RCLIB_DB_PLAYLIST_DATA_TYPE_RATING, TRUE);
+}
+
 static GtkActionEntry ui_menu_entries[] =
 {
     { "RhythmCatMenu", NULL, "_RhythmCat" },
@@ -201,7 +363,7 @@ static GtkActionEntry ui_menu_entries[] =
     { "RepeatMenu", NULL, N_("_Repeat") },
     { "RandomMenu", NULL, N_("Ran_dom") },
     { "CatalogSortMenu", NULL, N_("Sort Playlists") },
-    { "CatalogPopupSortMenu", NULL, N_("Sort") },
+    { "PlaylistSortMenu", NULL, N_("Sort Music") },
     { "RhythmCatOpenMusic", GTK_STOCK_OPEN,
       N_("Open _Music"), "<control>O",
       N_("Open and play the music file"),    
@@ -426,14 +588,78 @@ static GtkActionEntry ui_menu_entries[] =
       N_("Name (Descending)"), NULL,
       N_("Sort name in descending order"),
       G_CALLBACK(rc_ui_menu_catalog_sort_descending_clicked_cb) },
-    { "CatalogPopupSortNameAsc", GTK_STOCK_SORT_ASCENDING,
-      N_("Name (Ascending)"), NULL,
-      N_("Sort name in ascending order"),
-      G_CALLBACK(rc_ui_menu_catalog_sort_ascending_clicked_cb) },
-    { "CatalogPopupSortNameDesc", GTK_STOCK_SORT_DESCENDING,
-      N_("Name (Descending)"), NULL,
-      N_("Sort name in descending order"),
-      G_CALLBACK(rc_ui_menu_catalog_sort_descending_clicked_cb) }
+    { "PlaylistSortTitleAsc", GTK_STOCK_SORT_ASCENDING,
+      N_("Title (Ascending)"), NULL,
+      N_("Sort the title of the music in ascending order"),
+      G_CALLBACK(rc_ui_menu_playlist_title_sort_ascending_clicked_cb) },
+    { "PlaylistSortTitleDesc", GTK_STOCK_SORT_DESCENDING,
+      N_("Title (Descending)"), NULL,
+      N_("Sort the title of the music in descending order"),
+      G_CALLBACK(rc_ui_menu_playlist_title_sort_descending_clicked_cb) },
+    { "PlaylistSortArtistAsc", GTK_STOCK_SORT_ASCENDING,
+      N_("Artist (Ascending)"), NULL,
+      N_("Sort the artist of the music in ascending order"),
+      G_CALLBACK(rc_ui_menu_playlist_artist_sort_ascending_clicked_cb) },
+    { "PlaylistSortArtistDesc", GTK_STOCK_SORT_DESCENDING,
+      N_("Artist (Descending)"), NULL,
+      N_("Sort the artist of the music in descending order"),
+      G_CALLBACK(rc_ui_menu_playlist_artist_sort_descending_clicked_cb) },
+    { "PlaylistSortAlbumAsc", GTK_STOCK_SORT_ASCENDING,
+      N_("Album (Ascending)"), NULL,
+      N_("Sort the album of the music in ascending order"),
+      G_CALLBACK(rc_ui_menu_playlist_album_sort_ascending_clicked_cb) },
+    { "PlaylistSortAlbumDesc", GTK_STOCK_SORT_DESCENDING,
+      N_("Album (Descending)"), NULL,
+      N_("Sort the album of the music in descending order"),
+      G_CALLBACK(rc_ui_menu_playlist_album_sort_descending_clicked_cb) },
+    { "PlaylistSortLengthAsc", GTK_STOCK_SORT_ASCENDING,
+      N_("Length (Ascending)"), NULL,
+      N_("Sort the length of the music in ascending order"),
+      G_CALLBACK(rc_ui_menu_playlist_length_sort_ascending_clicked_cb) },
+    { "PlaylistSortLengthDesc", GTK_STOCK_SORT_DESCENDING,
+      N_("Length (Descending)"), NULL,
+      N_("Sort the length of the music in descending order"),
+      G_CALLBACK(rc_ui_menu_playlist_length_sort_descending_clicked_cb) },
+    { "PlaylistSortGenreAsc", GTK_STOCK_SORT_ASCENDING,
+      N_("Genre (Ascending)"), NULL,
+      N_("Sort the genre of the music in ascending order"),
+      G_CALLBACK(rc_ui_menu_playlist_genre_sort_ascending_clicked_cb) },
+    { "PlaylistSortGenreDesc", GTK_STOCK_SORT_DESCENDING,
+      N_("Genre (Descending)"), NULL,
+      N_("Sort the genre of the music in descending order"),
+      G_CALLBACK(rc_ui_menu_playlist_genre_sort_descending_clicked_cb) },
+    { "PlaylistSortTracknumAsc", GTK_STOCK_SORT_ASCENDING,
+      N_("Track Number (Ascending)"), NULL,
+      N_("Sort the track number of the music in ascending order"),
+      G_CALLBACK(rc_ui_menu_playlist_tracknum_sort_ascending_clicked_cb) },
+    { "PlaylistSortTracknumDesc", GTK_STOCK_SORT_DESCENDING,
+      N_("Track Number (Descending)"), NULL,
+      N_("Sort the track number of the music in descending order"),
+      G_CALLBACK(rc_ui_menu_playlist_tracknum_sort_descending_clicked_cb) },
+    { "PlaylistSortYearAsc", GTK_STOCK_SORT_ASCENDING,
+      N_("Year (Ascending)"), NULL,
+      N_("Sort the year of the music in ascending order"),
+      G_CALLBACK(rc_ui_menu_playlist_year_sort_ascending_clicked_cb) },
+    { "PlaylistSortYearDesc", GTK_STOCK_SORT_DESCENDING,
+      N_("Year (Descending)"), NULL,
+      N_("Sort the year of the music in descending order"),
+      G_CALLBACK(rc_ui_menu_playlist_year_sort_descending_clicked_cb) },
+    { "PlaylistSortFileTypeAsc", GTK_STOCK_SORT_ASCENDING,
+      N_("File Type (Ascending)"), NULL,
+      N_("Sort the file type of the music in ascending order"),
+      G_CALLBACK(rc_ui_menu_playlist_ftype_sort_ascending_clicked_cb) },
+    { "PlaylistSortFileTypeDesc", GTK_STOCK_SORT_DESCENDING,
+      N_("File Type (Descending)"), NULL,
+      N_("Sort the file type of the music in descending order"),
+      G_CALLBACK(rc_ui_menu_playlist_ftype_sort_descending_clicked_cb) },
+    { "PlaylistSortRatingAsc", GTK_STOCK_SORT_ASCENDING,
+      N_("Rating (Ascending)"), NULL,
+      N_("Sort the rating of the music in ascending order"),
+      G_CALLBACK(rc_ui_menu_playlist_rating_sort_ascending_clicked_cb) },
+    { "PlaylistSortRatingDesc", GTK_STOCK_SORT_DESCENDING,
+      N_("Rating (Descending)"), NULL,
+      N_("Sort the rating of the music in descending order"),
+      G_CALLBACK(rc_ui_menu_playlist_rating_sort_descending_clicked_cb) }
 };
 
 static guint ui_menu_n_entries = G_N_ELEMENTS(ui_menu_entries);
@@ -535,6 +761,26 @@ static const gchar *ui_menu_info =
     "      <menuitem action='PlaylistRemoveMusic'/>"
     "      <menuitem action='PlaylistSelectAll'/>"
     "      <menuitem action='PlaylistRefreshList'/>"
+    "      <menu action='PlaylistSortMenu'>"
+    "        <menuitem action='PlaylistSortTitleAsc'/>"
+    "        <menuitem action='PlaylistSortTitleDesc'/>"
+    "        <menuitem action='PlaylistSortArtistAsc'/>"
+    "        <menuitem action='PlaylistSortArtistDesc'/>"
+    "        <menuitem action='PlaylistSortAlbumAsc'/>"
+    "        <menuitem action='PlaylistSortAlbumDesc'/>"
+    "        <menuitem action='PlaylistSortLengthAsc'/>"
+    "        <menuitem action='PlaylistSortLengthDesc'/>"
+    "        <menuitem action='PlaylistSortGenreAsc'/>"
+    "        <menuitem action='PlaylistSortGenreDesc'/>"
+    "        <menuitem action='PlaylistSortTracknumAsc'/>"
+    "        <menuitem action='PlaylistSortTracknumDesc'/>"
+    "        <menuitem action='PlaylistSortYearAsc'/>"
+    "        <menuitem action='PlaylistSortYearDesc'/>"
+    "        <menuitem action='PlaylistSortFileTypeAsc'/>"
+    "        <menuitem action='PlaylistSortFileTypeDesc'/>"
+    "        <menuitem action='PlaylistSortRatingAsc'/>"
+    "        <menuitem action='PlaylistSortRatingDesc'/>"
+    "      </menu>"
     "      <separator name='PlaylistSep2'/>" 
     "      <menuitem action='PlaylistBindLyric'/>"
     "      <menuitem action='PlaylistBindAlbum'/>"
@@ -583,10 +829,6 @@ static const gchar *ui_menu_info =
     "    <menuitem action='CatalogRenameList'/>"
     "    <menuitem action='CatalogRemoveList'/>"
     "    <menuitem action='CatalogExportList'/>"
-    "    <menu action='CatalogPopupSortMenu'>"
-    "      <menuitem action='CatalogPopupSortNameAsc'/>"
-    "      <menuitem action='CatalogPopupSortNameDesc'/>"
-    "    </menu>"
     "  </popup>"
     "  <popup action='PlaylistPopupMenu'>"
     "    <menuitem action='PlaylistPImportMusic'/>"

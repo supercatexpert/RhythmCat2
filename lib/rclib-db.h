@@ -471,8 +471,8 @@ RCLibDbPlaylistIter *rclib_db_playlist_iter_get_random_iter(
     RCLibDbPlaylistIter *piter, gboolean rating_limit,
     gboolean condition, gfloat rating);
 void rclib_db_catalog_name_sort(gboolean direction);
-//rclib_db_playlist_item_sort(RCLibDbCatalogIter *catalog_iter,
-//    RCLibDbPlaylistDataType column, gboolean direction);
+void rclib_db_playlist_item_sort(RCLibDbCatalogIter *catalog_iter,
+    RCLibDbPlaylistDataType column, gboolean direction);
 //rclib_db_playlist_iter_item_sort(RCLibDbPlaylistIter *piter,
 //    RCLibDbPlaylistDataType column, gboolean direction);
 

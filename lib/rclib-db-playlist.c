@@ -4563,3 +4563,193 @@ void rclib_db_catalog_name_sort(gboolean direction)
     g_signal_emit_by_name(instance, "catalog-reordered", order);
     g_free(order);
 }
+
+static gint rclib_db_variant_sort_asc_func(GSequenceIter *a, GSequenceIter *b,
+    gpointer user_data)
+{
+    GHashTable *new_positions = user_data;
+    GVariant *variant1, *variant2;
+    variant1 = g_hash_table_lookup(new_positions, a);
+    variant2 = g_hash_table_lookup(new_positions, b);
+    return g_variant_compare(variant1, variant2);
+}
+
+static gint rclib_db_variant_sort_dsc_func(GSequenceIter *a, GSequenceIter *b,
+    gpointer user_data)
+{
+    GHashTable *new_positions = user_data;
+    GVariant *variant1, *variant2;
+    variant1 = g_hash_table_lookup(new_positions, a);
+    variant2 = g_hash_table_lookup(new_positions, b);
+    return g_variant_compare(variant2, variant1);
+}
+
+/**
+ * rclib_db_playlist_item_sort:
+ * @catalog_iter: the iter pointed to catalog
+ * @column: the column to sort
+ * @direction: the sort direction, #FALSE to use ascending, #TRUE to use
+ *     descending
+ * 
+ * Sort the playlist items by the alphabets order (ascending or descending)
+ * of the given @column. This function can only be called in main thread.
+ */
+
+void rclib_db_playlist_item_sort(RCLibDbCatalogIter *catalog_iter,
+    RCLibDbPlaylistDataType column, gboolean direction)
+{
+    RCLibDbPrivate *priv;
+    GObject *instance;
+    gint i;
+    gint *order = NULL;
+    RCLibDbPlaylistSequence *playlist = NULL;
+    GHashTable *new_positions, *sort_table;
+    RCLibDbPlaylistIter *ptr;
+    gint length;
+    GType column_type = G_TYPE_NONE;
+    if(catalog_iter==NULL) return;
+    instance = rclib_db_get_instance();
+    if(instance==NULL) return;
+    priv = RCLIB_DB(instance)->priv;
+    GVariant *variant;
+    if(priv==NULL) return;
+    switch(column)
+    {
+        case RCLIB_DB_PLAYLIST_DATA_TYPE_TITLE:
+        case RCLIB_DB_PLAYLIST_DATA_TYPE_ARTIST:
+        case RCLIB_DB_PLAYLIST_DATA_TYPE_ALBUM:
+        case RCLIB_DB_PLAYLIST_DATA_TYPE_FTYPE:
+        case RCLIB_DB_PLAYLIST_DATA_TYPE_GENRE:
+        {
+            column_type = G_TYPE_STRING;
+            break;
+        }
+        case RCLIB_DB_PLAYLIST_DATA_TYPE_LENGTH:
+        {
+            column_type = G_TYPE_INT64;
+            break;
+        }
+        case RCLIB_DB_PLAYLIST_DATA_TYPE_TRACKNUM:
+        case RCLIB_DB_PLAYLIST_DATA_TYPE_YEAR:
+        {
+            column_type = G_TYPE_INT;
+            break;
+        }
+        case RCLIB_DB_PLAYLIST_DATA_TYPE_RATING:
+        {
+            column_type = G_TYPE_FLOAT;
+            break;
+        }
+        default:
+        {
+            g_warning("Error column type: %u", column);
+            return;
+            break;
+        }
+    }
+    sort_table = g_hash_table_new_full(g_direct_hash, g_direct_equal, NULL,
+        (GDestroyNotify)g_variant_unref);
+    new_positions = g_hash_table_new(g_direct_hash, g_direct_equal);
+    g_rw_lock_reader_lock(&(priv->playlist_rw_lock));
+    ptr = rclib_db_playlist_get_begin_iter(catalog_iter);
+    for(i=0;ptr!=NULL;ptr=rclib_db_playlist_iter_next(ptr))
+    {
+        variant = NULL;
+        switch(column_type)
+        {
+            case G_TYPE_STRING:
+            {
+                gchar *vstr = NULL;
+                gchar *uri = NULL;
+                rclib_db_playlist_data_iter_get(ptr, column, &vstr,
+                    RCLIB_DB_PLAYLIST_DATA_TYPE_NONE);
+                if(column==RCLIB_DB_PLAYLIST_DATA_TYPE_TITLE &&
+                    (vstr==NULL || strlen(vstr)==0))
+                {
+                    rclib_db_playlist_data_iter_get(ptr,
+                        RCLIB_DB_PLAYLIST_DATA_TYPE_URI, &uri,
+                        RCLIB_DB_PLAYLIST_DATA_TYPE_NONE);
+                    if(uri!=NULL)
+                        vstr = rclib_tag_get_name_from_uri(uri);
+                    g_free(uri);
+                }                
+                if(vstr==NULL) vstr = g_strdup("");
+                variant = g_variant_new_string(vstr);
+                g_free(vstr);
+                break;
+            }
+            case G_TYPE_INT:
+            {
+                gint vint = 0;
+                rclib_db_playlist_data_iter_get(ptr, column, &vint,
+                    RCLIB_DB_PLAYLIST_DATA_TYPE_NONE);
+                variant = g_variant_new_int32(vint);
+                break;
+            }
+            case G_TYPE_INT64:
+            {
+                gint64 vint64 = 0;
+                rclib_db_playlist_data_iter_get(ptr, column, &vint64,
+                    RCLIB_DB_PLAYLIST_DATA_TYPE_NONE);
+                variant = g_variant_new_int64(vint64);
+                break;
+            }
+            case G_TYPE_FLOAT:
+            {
+                gfloat vfloat = 0;
+                rclib_db_playlist_data_iter_get(ptr, column, &vfloat,
+                    RCLIB_DB_PLAYLIST_DATA_TYPE_NONE);
+                variant = g_variant_new_double(vfloat);
+                break;
+            }
+            default:
+            {
+                variant = g_variant_new_boolean(FALSE);
+                g_warning("Wrong column data type, this should not happen!");
+                break;
+            }
+        }
+        g_hash_table_insert(new_positions, ptr, GINT_TO_POINTER(i));
+        g_hash_table_insert(sort_table, ptr, g_variant_take_ref(variant));
+        i++;
+    }
+    g_rw_lock_reader_unlock(&(priv->playlist_rw_lock));
+    g_rw_lock_writer_lock(&(priv->playlist_rw_lock));
+    g_rw_lock_reader_lock(&(priv->catalog_rw_lock));
+    rclib_db_catalog_data_iter_get(catalog_iter,
+        RCLIB_DB_CATALOG_DATA_TYPE_PLAYLIST, &playlist,
+        RCLIB_DB_CATALOG_DATA_TYPE_NONE);
+    if(playlist!=NULL)
+    {    
+        if(direction)
+        {
+            g_sequence_sort_iter((GSequence *)playlist,
+                rclib_db_variant_sort_dsc_func, sort_table);
+        }
+        else
+        {
+            g_sequence_sort_iter((GSequence *)playlist,
+                rclib_db_variant_sort_asc_func, sort_table);
+        }
+    }
+    g_rw_lock_reader_unlock(&(priv->catalog_rw_lock));
+    g_rw_lock_writer_unlock(&(priv->playlist_rw_lock));
+    g_hash_table_destroy(sort_table);
+    g_rw_lock_reader_lock(&(priv->playlist_rw_lock));
+    length = rclib_db_playlist_get_length(catalog_iter);
+    order = g_new(gint, length);
+    ptr = rclib_db_playlist_get_begin_iter(catalog_iter);
+    for(i=0;ptr!=NULL;ptr=rclib_db_playlist_iter_next(ptr))
+    {
+        order[i] = GPOINTER_TO_INT(g_hash_table_lookup(new_positions,
+            ptr));
+        i++;
+    }
+    g_rw_lock_reader_unlock(&(priv->playlist_rw_lock));
+    g_hash_table_destroy(new_positions);
+    priv->dirty_flag = TRUE;
+    g_signal_emit_by_name(instance, "playlist-reordered", catalog_iter,
+        order);
+    g_free(order);
+}
+

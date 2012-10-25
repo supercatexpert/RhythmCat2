@@ -151,4 +151,9 @@
 2012-10-25   SuperCat    <supercatexpert@gmail.com>
 
     * It is possible to sort in the catalogs (by the playlist names) now.
-     
+ 
+2012-10-26   SuperCat    <supercatexpert@gmail.com>
+
+    * It is possible to sort in the playlist (by some metadata types of the
+      music) now.
+       
