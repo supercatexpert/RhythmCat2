@@ -4156,7 +4156,7 @@ GPtrArray *rclib_db_playlist_query(RCLibDbCatalogIter *catalog_iter,
         rclib_db_playlist_data_unref);
     if(catalog_iter!=NULL)
     {
-        
+        g_rw_lock_reader_lock(&(priv->playlist_rw_lock));
         for(playlist_iter=rclib_db_playlist_get_begin_iter(catalog_iter);
             playlist_iter!=NULL;
             playlist_iter=rclib_db_playlist_iter_next(playlist_iter))
@@ -4168,6 +4168,7 @@ GPtrArray *rclib_db_playlist_query(RCLibDbCatalogIter *catalog_iter,
             else
                 rclib_db_playlist_data_unref(playlist_data);
         }
+        g_rw_lock_reader_unlock(&(priv->playlist_rw_lock));
     }
     else
     {
@@ -4217,7 +4218,7 @@ GPtrArray *rclib_db_playlist_query_get_iters(RCLibDbCatalogIter *catalog_iter,
     query_result = g_ptr_array_new();
     if(catalog_iter!=NULL)
     {
-        
+        g_rw_lock_reader_lock(&(priv->playlist_rw_lock));
         for(playlist_iter=rclib_db_playlist_get_begin_iter(catalog_iter);
             playlist_iter!=NULL;
             playlist_iter=rclib_db_playlist_iter_next(playlist_iter))
@@ -4228,6 +4229,7 @@ GPtrArray *rclib_db_playlist_query_get_iters(RCLibDbCatalogIter *catalog_iter,
                 g_ptr_array_add(query_result, playlist_iter); 
             rclib_db_playlist_data_unref(playlist_data);
         }
+        g_rw_lock_reader_unlock(&(priv->playlist_rw_lock));
     }
     else
     {

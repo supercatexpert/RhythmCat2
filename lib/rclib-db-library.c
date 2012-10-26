@@ -1790,3 +1790,83 @@ gboolean rclib_db_library_data_query(RCLibDbLibraryData *library_data,
     return result;
 }
 
+/**
+ * rclib_db_library_query:
+ * @query: he query condition
+ *
+ * Query data from the music library. MT safe.
+ * 
+ * Returns: (transfer full): The library data array which satisfied
+ *     the query condition. Free with #g_ptr_array_free() or
+ *     #g_ptr_array_unref() after usage.
+ */
+
+GPtrArray *rclib_db_library_query(RCLibDbQuery *query)
+{
+    GPtrArray *query_result = NULL;
+    GObject *instance;
+    RCLibDbPrivate *priv;
+    GHashTableIter iter;
+    RCLibDbLibraryData *library_data = NULL;
+    gchar *uri = NULL;
+    instance = rclib_db_get_instance();
+    if(instance==NULL) return NULL;
+    priv = RCLIB_DB(instance)->priv;
+    if(priv==NULL) return NULL;
+    query_result = g_ptr_array_new_with_free_func((GDestroyNotify)
+        rclib_db_library_data_unref);
+    g_rw_lock_reader_lock(&(priv->library_rw_lock));
+    g_hash_table_iter_init(&iter, priv->library_table);
+    while(g_hash_table_iter_next(&iter, (gpointer *)&uri,
+        (gpointer *)&library_data))
+    {
+        if(library_data==NULL) continue;
+        if(rclib_db_library_data_query(library_data, query))
+        {
+            g_ptr_array_add(query_result, rclib_db_library_data_ref(
+                library_data));
+        }
+    }
+    g_rw_lock_reader_unlock(&(priv->library_rw_lock));    
+    return query_result;
+}
+
+/**
+ * rclib_db_library_query_get_uris:
+ * @query: he query condition
+ *
+ * Query data from the music library, and get an array of the URIs which
+ * points to the music that satisfied the query condition. MT safe.
+ * 
+ * Returns: (transfer full): The URI array which points to the music that
+ *     satisfied the query condition. Free with #g_ptr_array_free() or
+ *     #g_ptr_array_unref() after usage.
+ */
+
+GPtrArray *rclib_db_library_query_get_uris(RCLibDbQuery *query)
+{
+    GPtrArray *query_result = NULL;
+    GObject *instance;
+    RCLibDbPrivate *priv;
+    GHashTableIter iter;
+    RCLibDbLibraryData *library_data = NULL;
+    gchar *uri = NULL;
+    instance = rclib_db_get_instance();
+    if(instance==NULL) return NULL;
+    priv = RCLIB_DB(instance)->priv;
+    if(priv==NULL) return NULL;
+    query_result = g_ptr_array_new_with_free_func(g_free);
+    g_rw_lock_reader_lock(&(priv->library_rw_lock));
+    g_hash_table_iter_init(&iter, priv->library_table);
+    while(g_hash_table_iter_next(&iter, (gpointer *)&uri,
+        (gpointer *)&library_data))
+    {
+        if(uri==NULL || library_data==NULL) continue;
+        if(rclib_db_library_data_query(library_data, query))
+        {
+            g_ptr_array_add(query_result, g_strdup(uri));
+        }
+    }
+    g_rw_lock_reader_unlock(&(priv->library_rw_lock));    
+    return query_result;
+}

@@ -473,8 +473,6 @@ RCLibDbPlaylistIter *rclib_db_playlist_iter_get_random_iter(
 void rclib_db_catalog_name_sort(gboolean direction);
 void rclib_db_playlist_item_sort(RCLibDbCatalogIter *catalog_iter,
     RCLibDbPlaylistDataType column, gboolean direction);
-//rclib_db_playlist_iter_item_sort(RCLibDbPlaylistIter *piter,
-//    RCLibDbPlaylistDataType column, gboolean direction);
 
 /* Library Interface */
 RCLibDbLibraryData *rclib_db_library_data_new();
@@ -497,8 +495,8 @@ void rclib_db_library_data_uri_get(const gchar *uri,
     RCLibDbLibraryDataType type1, ...);
 gboolean rclib_db_library_data_query(RCLibDbLibraryData *library_data,
     RCLibDbQuery *query);
-//GPtrArray *rclib_db_library_query(RCLibDbQuery *query);
-//GPtrArray *rclib_db_library_query_get_uris(RCLibDbQuery *query);
+GPtrArray *rclib_db_library_query(RCLibDbQuery *query);
+GPtrArray *rclib_db_library_query_get_uris(RCLibDbQuery *query);
 
 
 /* Query Interface */
