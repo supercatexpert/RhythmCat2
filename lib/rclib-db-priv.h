@@ -117,6 +117,11 @@ struct _RCLibDbPrivate
     GString *autosave_xml_data;
 };
 
+struct _RCLibDbLibraryQueryResultPrivate
+{
+    RCLibDbQuery *query;
+};
+
 struct _RCLibDbCatalogData
 {
     /*< private >*/

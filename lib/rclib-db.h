@@ -45,6 +45,20 @@ G_BEGIN_DECLS
 #define RCLIB_DB_GET_CLASS(o) (G_TYPE_INSTANCE_GET_CLASS((o), \
     RCLIB_TYPE_DB, RCLibDbClass))
     
+#define RCLIB_TYPE_DB_LIBRARY_QUERY_RESULT \
+    (rclib_db_library_query_result_get_type())
+#define RCLIB_DB_LIBRARY_QUERY_RESULT(obj) (G_TYPE_CHECK_INSTANCE_CAST((obj), \
+    RCLIB_TYPE_DB_LIBRARY_QUERY_RESULT, RCLibDbLibraryQueryResult))
+#define RCLIB_DB_LIBRARY_QUERY_RESULT_class(k) (G_TYPE_CHECK_CLASS_CAST((k), \
+    RCLIB_TYPE_DB_LIBRARY_QUERY_RESULT, RCLibDbLibraryQueryResultClass))
+#define RCLIB_IS_DB_LIBRARY_QUERY_RESULT(o) (G_TYPE_CHECK_INSTANCE_TYPE((o), \
+    RCLIB_TYPE_DB_LIBRARY_QUERY_RESULT))
+#define RCLIB_IS_DB_LIBRARY_QUERY_RESULT_CLASS(k) \
+    (G_TYPE_CHECK_CLASS_TYPE((k), RCLIB_TYPE_DB_LIBRARY_QUERY_RESULT))
+#define RCLIB_DB_LIBRARY_QUERY_RESULT_GET_CLASS(o) \
+    (G_TYPE_INSTANCE_GET_CLASS((o), RCLIB_TYPE_DB_LIBRARY_QUERY_RESULT, \
+    RCLibDbLibraryQueryResultClass))
+    
 #define RCLIB_TYPE_DB_CATALOG_DATA (rclib_db_catalog_data_get_type())
 #define RCLIB_TYPE_DB_PLAYLIST_DATA (rclib_db_playlist_data_get_type())
 #define RCLIB_TYPE_DB_LIBRARY_DATA (rclib_db_library_data_get_type())
@@ -284,6 +298,10 @@ typedef struct _RCLibDbLibraryData RCLibDbLibraryData;
 typedef struct _RCLibDb RCLibDb;
 typedef struct _RCLibDbClass RCLibDbClass;
 typedef struct _RCLibDbPrivate RCLibDbPrivate;
+typedef struct _RCLibDbLibraryQueryResult RCLibDbLibraryQueryResult;
+typedef struct _RCLibDbLibraryQueryResultClass RCLibDbLibraryQueryResultClass;
+typedef struct _RCLibDbLibraryQueryResultPrivate
+    RCLibDbLibraryQueryResultPrivate;
 
 typedef struct _RCLibDbCatalogSequence RCLibDbCatalogSequence;
 typedef struct _RCLibDbPlaylistSequence RCLibDbPlaylistSequence;
@@ -330,8 +348,34 @@ struct _RCLibDbClass {
     void (*library_deleted)(RCLibDb *db, const gchar *uri);
 };
 
+/**
+ * RCLibDbLibraryQueryResult:
+ *
+ * The query result from the library. The contents of the
+ * #RCLibDbLibraryQueryResult structure are private and should only be
+ * accessed via the provided API.
+ */
+
+struct _RCLibDbLibraryQueryResult {
+    /*< private >*/
+    GObject parent;
+    RCLibDbLibraryQueryResultPrivate *priv;
+};
+
+/**
+ * RCLibDbLibraryQueryResultClass:
+ *
+ * #RCLibDbLibraryQueryResult class.
+ */
+
+struct _RCLibDbLibraryQueryResultClass {
+    /*< private >*/
+    GObjectClass parent_class;
+};
+
 /*< private >*/
 GType rclib_db_get_type();
+GType rclib_db_library_query_result_get_type();
 GType rclib_db_catalog_data_get_type();
 GType rclib_db_playlist_data_get_type();
 GType rclib_db_library_data_get_type();
@@ -497,6 +541,7 @@ gboolean rclib_db_library_data_query(RCLibDbLibraryData *library_data,
     RCLibDbQuery *query);
 GPtrArray *rclib_db_library_query(RCLibDbQuery *query);
 GPtrArray *rclib_db_library_query_get_uris(RCLibDbQuery *query);
+GObject *rclib_db_library_query_result_new();
 
 
 /* Query Interface */

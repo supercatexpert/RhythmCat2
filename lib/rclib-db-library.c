@@ -31,6 +31,16 @@
 #include "rclib-core.h"
 #include "rclib-util.h"
 
+enum
+{
+    SIGNAL_LIBRARY_QUERY_RESULT_DUMMY,
+    SIGNAL_LIBRARY_QUERY_RESULT_LAST
+};
+
+static gint db_library_query_result_signals[SIGNAL_LIBRARY_QUERY_RESULT_LAST] =
+    {0};
+static gpointer rclib_db_library_query_result_parent_class = NULL;
+
 static gboolean rclib_db_library_changed_entry_idle_cb(gpointer data)
 {
     GObject *instance;
@@ -319,6 +329,68 @@ void rclib_db_library_data_free(RCLibDbLibraryData *data)
     g_rw_lock_writer_unlock(&(data->lock));
     g_rw_lock_clear(&(data->lock));
     g_slice_free(RCLibDbLibraryData, data);
+}
+
+static void rclib_db_library_query_result_finalize(GObject *object)
+{
+    RCLibDbLibraryQueryResultPrivate *priv =
+        RCLIB_DB_LIBRARY_QUERY_RESULT(object)->priv;
+    if(priv->query!=NULL)
+    {
+        rclib_db_query_free(priv->query);
+        priv->query = NULL;
+    }
+
+    G_OBJECT_CLASS(rclib_db_library_query_result_parent_class)->
+        finalize(object);
+}
+
+
+static void rclib_db_library_query_result_class_init(
+    RCLibDbLibraryQueryResultClass *klass)
+{
+    GObjectClass *object_class = (GObjectClass *)klass;
+    rclib_db_library_query_result_parent_class =
+        g_type_class_peek_parent(klass);
+    object_class->finalize = rclib_db_library_query_result_finalize;
+    g_type_class_add_private(klass, sizeof(RCLibDbLibraryQueryResultPrivate));
+    
+}
+
+static void rclib_db_library_query_result_instance_init(
+    RCLibDbLibraryQueryResult *object)
+{
+    RCLibDbLibraryQueryResultPrivate *priv = G_TYPE_INSTANCE_GET_PRIVATE(
+        object, RCLIB_TYPE_DB_LIBRARY_QUERY_RESULT,
+        RCLibDbLibraryQueryResultPrivate);
+    object->priv = priv;
+    
+}
+
+GType rclib_db_library_query_result_get_type()
+{
+    static volatile gsize g_define_type_id__volatile = 0;
+    GType g_define_type_id;
+    static const GTypeInfo class_info = {
+        .class_size = sizeof(RCLibDbLibraryQueryResultClass),
+        .base_init = NULL,
+        .base_finalize = NULL,
+        .class_init = (GClassInitFunc)rclib_db_library_query_result_class_init,
+        .class_finalize = NULL,
+        .class_data = NULL,
+        .instance_size = sizeof(RCLibDb),
+        .n_preallocs = 0,
+        .instance_init = (GInstanceInitFunc)
+            rclib_db_library_query_result_instance_init
+    };
+    if(g_once_init_enter(&g_define_type_id__volatile))
+    {
+        g_define_type_id = g_type_register_static(G_TYPE_OBJECT,
+            g_intern_static_string("RCLibDbLibraryQueryResult"), &class_info,
+            0);
+        g_once_init_leave(&g_define_type_id__volatile, g_define_type_id);
+    }
+    return g_define_type_id__volatile;
 }
 
 gboolean _rclib_db_instance_init_library(RCLibDb *db, RCLibDbPrivate *priv)
@@ -1869,4 +1941,22 @@ GPtrArray *rclib_db_library_query_get_uris(RCLibDbQuery *query)
     }
     g_rw_lock_reader_unlock(&(priv->library_rw_lock));    
     return query_result;
+}
+
+/**
+ * rclib_db_library_query_result_new:
+ * 
+ * Create a new library query result object instance.
+ * 
+ * Returns: The #RCLibDbLibraryQueryResult instance, #NULL the operation
+ *     failed.
+ */
+
+GObject *rclib_db_library_query_result_new()
+{
+    GObject *query_result_instance;
+    query_result_instance = g_object_new(RCLIB_TYPE_DB_LIBRARY_QUERY_RESULT,
+        NULL);
+    
+    return query_result_instance;
 }
