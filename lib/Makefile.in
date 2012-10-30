@@ -374,7 +374,7 @@ librhythmcat_2_0_la_LDFLAGS = -export-dynamic -O2 $(am__append_3)
 @HAVE_INTROSPECTION_TRUE@RhythmCatLib_2_0_gir_SCANNERFLAGS = --identifier-prefix=RCLib --symbol-prefix=rclib
 @HAVE_INTROSPECTION_TRUE@RhythmCatLib_2_0_gir_NAMESPACE = RhythmCatLib
 @HAVE_INTROSPECTION_TRUE@RhythmCatLib_2_0_gir_VERSION = 2.0
-@HAVE_INTROSPECTION_TRUE@RhythmCatLib_2_0_gir_INCLUDES = GObject-2.0 Gst-0.10 GstPbutils-0.10 GstBase-0.10 GstFft-0.10
+@HAVE_INTROSPECTION_TRUE@RhythmCatLib_2_0_gir_INCLUDES = GObject-2.0 Gio-2.0 Gst-0.10 GstPbutils-0.10 GstBase-0.10 GstFft-0.10
 @HAVE_INTROSPECTION_TRUE@RhythmCatLib_2_0_gir_CFLAGS = $(AM_CFLAGS)
 @HAVE_INTROSPECTION_TRUE@RhythmCatLib_2_0_gir_LIBS = librhythmcat-2.0.la
 @HAVE_INTROSPECTION_TRUE@RhythmCatLib_2_0_gir_FILES = $(introspection_sources)

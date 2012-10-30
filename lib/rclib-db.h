@@ -28,6 +28,7 @@
 #include <stdlib.h>
 #include <stdarg.h>
 #include <glib.h>
+#include <gio/gio.h>
 #include <glib/gstdio.h>
 #include <glib/gi18n.h>
 #include <glib-object.h>
@@ -501,13 +502,13 @@ gboolean rclib_db_playlist_export_all_m3u_files(const gchar *dir);
 void rclib_db_playlist_refresh(RCLibDbCatalogIter *iter);
 gboolean rclib_db_load_legacy();
 gboolean rclib_db_playlist_data_query(RCLibDbPlaylistData *playlist_data,
-    RCLibDbQuery *query);
+    RCLibDbQuery *query, GCancellable *cancellable);
 gboolean rclib_db_playlist_iter_query(RCLibDbPlaylistIter *playlist_iter,
-    RCLibDbQuery *query);
+    RCLibDbQuery *query, GCancellable *cancellable);
 GPtrArray *rclib_db_playlist_query(RCLibDbCatalogIter *catalog_iter,
-    RCLibDbQuery *query);
+    RCLibDbQuery *query, GCancellable *cancellable);
 GPtrArray *rclib_db_playlist_query_get_iters(RCLibDbCatalogIter *catalog_iter,
-    RCLibDbQuery *query);
+    RCLibDbQuery *query, GCancellable *cancellable);
 RCLibDbPlaylistIter *rclib_db_playlist_get_random_iter(
     RCLibDbCatalogIter *catalog_iter, gboolean rating_limit,
     gboolean condition, gfloat rating);
@@ -538,9 +539,11 @@ void rclib_db_library_data_uri_set(const gchar *uri,
 void rclib_db_library_data_uri_get(const gchar *uri,
     RCLibDbLibraryDataType type1, ...);
 gboolean rclib_db_library_data_query(RCLibDbLibraryData *library_data,
-    RCLibDbQuery *query);
-GPtrArray *rclib_db_library_query(RCLibDbQuery *query);
-GPtrArray *rclib_db_library_query_get_uris(RCLibDbQuery *query);
+    RCLibDbQuery *query, GCancellable *cancellable);
+GPtrArray *rclib_db_library_query(RCLibDbQuery *query,
+    GCancellable *cancellable);
+GPtrArray *rclib_db_library_query_get_uris(RCLibDbQuery *query,
+    GCancellable *cancellable);
 GObject *rclib_db_library_query_result_new();
 
 

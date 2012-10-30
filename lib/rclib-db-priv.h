@@ -120,6 +120,7 @@ struct _RCLibDbPrivate
 struct _RCLibDbLibraryQueryResultPrivate
 {
     RCLibDbQuery *query;
+    GThread *query_thread;
 };
 
 struct _RCLibDbCatalogData

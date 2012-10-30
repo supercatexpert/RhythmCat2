@@ -3291,6 +3291,7 @@ static inline RCLibDbPlaylistDataType rclib_db_playlist_property_convert(
  * rclib_db_playlist_data_query:
  * @playlist_data: the playlist data to check
  * @query: the query condition
+ * @cancellable: (allow-none): optional #GCancellable object, NULL to ignore
  *
  * Check whether the playlist data satisfied the query condition.
  * MT safe.
@@ -3299,7 +3300,7 @@ static inline RCLibDbPlaylistDataType rclib_db_playlist_property_convert(
  */
 
 gboolean rclib_db_playlist_data_query(RCLibDbPlaylistData *playlist_data,
-    RCLibDbQuery *query)
+    RCLibDbQuery *query, GCancellable *cancellable)
 {
     RCLibDbQueryData *query_data;
     gboolean result = FALSE;
@@ -3315,6 +3316,11 @@ gboolean rclib_db_playlist_data_query(RCLibDbPlaylistData *playlist_data,
         return FALSE;
     for(i=0;i<query->len;i++)
     {
+        if(cancellable!=NULL)
+        {
+            if(g_cancellable_is_cancelled(cancellable))
+                return FALSE;
+        }
         query_data = g_ptr_array_index(query, i);
         if(query_data==NULL) continue;
         switch(query_data->type)
@@ -3327,7 +3333,7 @@ gboolean rclib_db_playlist_data_query(RCLibDbPlaylistData *playlist_data,
                     break;
                 }
                 result = rclib_db_playlist_data_query(playlist_data,
-                    query_data->subquery);
+                    query_data->subquery, cancellable);
                 break;
             }
             case RCLIB_DB_QUERY_CONDITION_TYPE_PROP_EQUALS:
@@ -4106,6 +4112,7 @@ gboolean rclib_db_playlist_data_query(RCLibDbPlaylistData *playlist_data,
  * rclib_db_playlist_iter_query:
  * @playlist_iter: the playlist iter to check
  * @query: the query condition
+ * @cancellable: (allow-none): optional #GCancellable object, NULL to ignore
  *
  * Check whether the playlist data stored in the iter satisfied the
  * query condition. MT safe.
@@ -4115,7 +4122,7 @@ gboolean rclib_db_playlist_data_query(RCLibDbPlaylistData *playlist_data,
  */
 
 gboolean rclib_db_playlist_iter_query(RCLibDbPlaylistIter *playlist_iter,
-    RCLibDbQuery *query)
+    RCLibDbQuery *query, GCancellable *cancellable)
 {
     RCLibDbPlaylistData *data;
     gboolean result;
@@ -4123,7 +4130,7 @@ gboolean rclib_db_playlist_iter_query(RCLibDbPlaylistIter *playlist_iter,
         return FALSE;
     data = rclib_db_playlist_iter_get_data(playlist_iter);
     if(data==NULL) return FALSE;
-    result = rclib_db_playlist_data_query(data, query);
+    result = rclib_db_playlist_data_query(data, query, cancellable);
     rclib_db_playlist_data_unref(data);
     return result;
 }
@@ -4132,6 +4139,7 @@ gboolean rclib_db_playlist_iter_query(RCLibDbPlaylistIter *playlist_iter,
  * rclib_db_playlist_query: 
  * @catalog_iter: the catalog to query, set to #NULL to query in all catalogs
  * @query: the query condition
+ * @cancellable: (allow-none): optional #GCancellable object, NULL to ignore
  *
  * Query data from the playlist library. MT safe.
  * 
@@ -4141,7 +4149,7 @@ gboolean rclib_db_playlist_iter_query(RCLibDbPlaylistIter *playlist_iter,
  */
 
 GPtrArray *rclib_db_playlist_query(RCLibDbCatalogIter *catalog_iter,
-    RCLibDbQuery *query)
+    RCLibDbQuery *query, GCancellable *cancellable)
 {
     GPtrArray *query_result = NULL;
     GObject *instance;
@@ -4161,9 +4169,14 @@ GPtrArray *rclib_db_playlist_query(RCLibDbCatalogIter *catalog_iter,
             playlist_iter!=NULL;
             playlist_iter=rclib_db_playlist_iter_next(playlist_iter))
         {
+            if(cancellable!=NULL)
+            {
+                if(g_cancellable_is_cancelled(cancellable))
+                    break;
+            }
             playlist_data = rclib_db_playlist_iter_get_data(playlist_iter);
             if(playlist_data==NULL) continue;
-            if(rclib_db_playlist_data_query(playlist_data, query))
+            if(rclib_db_playlist_data_query(playlist_data, query, cancellable))
                 g_ptr_array_add(query_result, playlist_data); 
             else
                 rclib_db_playlist_data_unref(playlist_data);
@@ -4177,10 +4190,15 @@ GPtrArray *rclib_db_playlist_query(RCLibDbCatalogIter *catalog_iter,
         g_hash_table_iter_init(&iter, priv->playlist_iter_table);
         while(g_hash_table_iter_next(&iter, (gpointer *)&playlist_iter, NULL))
         {
+            if(cancellable!=NULL)
+            {
+                if(g_cancellable_is_cancelled(cancellable))
+                    break;
+            }
             if(playlist_iter==NULL) continue;
             playlist_data = rclib_db_playlist_iter_get_data(playlist_iter);
             if(playlist_data==NULL) continue;
-            if(rclib_db_playlist_data_query(playlist_data, query))
+            if(rclib_db_playlist_data_query(playlist_data, query, cancellable))
                 g_ptr_array_add(query_result, playlist_data);
             else
                 rclib_db_playlist_data_unref(playlist_data);
@@ -4194,6 +4212,7 @@ GPtrArray *rclib_db_playlist_query(RCLibDbCatalogIter *catalog_iter,
  * rclib_db_playlist_query_get_iters: 
  * @catalog_iter: the catalog to query, set to #NULL to query in all catalogs
  * @query: the query condition
+ * @cancellable: (allow-none): optional #GCancellable object, NULL to ignore
  *
  * Query data from the playlist library, and get an array of iters which
  * satisfied the query condition. MT safe.
@@ -4204,7 +4223,7 @@ GPtrArray *rclib_db_playlist_query(RCLibDbCatalogIter *catalog_iter,
  */
 
 GPtrArray *rclib_db_playlist_query_get_iters(RCLibDbCatalogIter *catalog_iter,
-    RCLibDbQuery *query)
+    RCLibDbQuery *query, GCancellable *cancellable)
 {
     GPtrArray *query_result = NULL;
     GObject *instance;
@@ -4223,9 +4242,14 @@ GPtrArray *rclib_db_playlist_query_get_iters(RCLibDbCatalogIter *catalog_iter,
             playlist_iter!=NULL;
             playlist_iter=rclib_db_playlist_iter_next(playlist_iter))
         {
+            if(cancellable!=NULL)
+            {
+                if(g_cancellable_is_cancelled(cancellable))
+                    break;
+            }
             playlist_data = rclib_db_playlist_iter_get_data(playlist_iter);
             if(playlist_data==NULL) continue;
-            if(rclib_db_playlist_data_query(playlist_data, query))
+            if(rclib_db_playlist_data_query(playlist_data, query, cancellable))
                 g_ptr_array_add(query_result, playlist_iter); 
             rclib_db_playlist_data_unref(playlist_data);
         }
@@ -4238,10 +4262,15 @@ GPtrArray *rclib_db_playlist_query_get_iters(RCLibDbCatalogIter *catalog_iter,
         g_hash_table_iter_init(&iter, priv->playlist_iter_table);
         while(g_hash_table_iter_next(&iter, (gpointer *)&playlist_iter, NULL))
         {
+            if(cancellable!=NULL)
+            {
+                if(g_cancellable_is_cancelled(cancellable))
+                    break;
+            }
             if(playlist_iter==NULL) continue;
             playlist_data = rclib_db_playlist_iter_get_data(playlist_iter);
             if(playlist_data==NULL) continue;
-            if(rclib_db_playlist_data_query(playlist_data, query))
+            if(rclib_db_playlist_data_query(playlist_data, query, cancellable))
                 g_ptr_array_add(query_result, playlist_iter);
             rclib_db_playlist_data_unref(playlist_data);
         }

@@ -320,7 +320,7 @@ static void rc_main_app_activate(GApplication *application)
         RCLIB_DB_QUERY_CONDITION_TYPE_PROP_LIKE,
         RCLIB_DB_QUERY_DATA_TYPE_TITLE, "The",
         RCLIB_DB_QUERY_CONDITION_TYPE_NONE);
-    GPtrArray *query_result = rclib_db_playlist_query(NULL, query);
+    GPtrArray *query_result = rclib_db_playlist_query(NULL, query, NULL);
     rclib_db_query_free(query);
     g_printf("Query matched length: %d\n", query_result->len);
     for(i=0;i<query_result->len;i++)

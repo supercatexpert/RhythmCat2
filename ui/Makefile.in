@@ -489,7 +489,7 @@ top_srcdir = @top_srcdir@
 @HAVE_INTROSPECTION_TRUE@@WITH_GTK_UI_TRUE@RhythmCat_2_0_gir_SCANNERFLAGS = --identifier-prefix=RC --symbol-prefix=rc
 @HAVE_INTROSPECTION_TRUE@@WITH_GTK_UI_TRUE@RhythmCat_2_0_gir_NAMESPACE = RhythmCat
 @HAVE_INTROSPECTION_TRUE@@WITH_GTK_UI_TRUE@RhythmCat_2_0_gir_VERSION = 2.0
-@HAVE_INTROSPECTION_TRUE@@WITH_GTK_UI_TRUE@RhythmCat_2_0_gir_INCLUDES = GObject-2.0 Gtk-3.0 Gst-0.10 GstPbutils-0.10 GstBase-0.10 GstFft-0.10
+@HAVE_INTROSPECTION_TRUE@@WITH_GTK_UI_TRUE@RhythmCat_2_0_gir_INCLUDES = GObject-2.0 Gio-2.0 Gtk-3.0 Gst-0.10 GstPbutils-0.10 GstBase-0.10 GstFft-0.10
 @HAVE_INTROSPECTION_TRUE@@WITH_GTK_UI_TRUE@RhythmCat_2_0_gir_CFLAGS = $(AM_CFLAGS)
 @HAVE_INTROSPECTION_TRUE@@WITH_GTK_UI_TRUE@RhythmCat_2_0_gir_PROGRAM = $(builddir)/RhythmCat2
 @HAVE_INTROSPECTION_TRUE@@WITH_GTK_UI_TRUE@RhythmCat_2_0_gir_FILES = $(introspection_sources)

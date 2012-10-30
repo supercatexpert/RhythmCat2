@@ -1051,6 +1051,7 @@ static inline RCLibDbPlaylistDataType rclib_db_library_property_convert(
  * rclib_db_library_data_query:
  * @library_data: the library data to check
  * @query: the query condition
+ * @cancellable: (allow-none): optional #GCancellable object, NULL to ignore
  *
  * Check whether the library data satisfied the query condition.
  * MT safe.
@@ -1059,7 +1060,7 @@ static inline RCLibDbPlaylistDataType rclib_db_library_property_convert(
  */
 
 gboolean rclib_db_library_data_query(RCLibDbLibraryData *library_data,
-    RCLibDbQuery *query)
+    RCLibDbQuery *query, GCancellable *cancellable)
 {
     RCLibDbQueryData *query_data;
     gboolean result = FALSE;
@@ -1075,6 +1076,11 @@ gboolean rclib_db_library_data_query(RCLibDbLibraryData *library_data,
         return FALSE;
     for(i=0;i<query->len;i++)
     {
+        if(cancellable!=NULL)
+        {
+            if(g_cancellable_is_cancelled(cancellable))
+                return FALSE;
+        }
         query_data = g_ptr_array_index(query, i);
         if(query_data==NULL) continue;
         switch(query_data->type)
@@ -1087,7 +1093,7 @@ gboolean rclib_db_library_data_query(RCLibDbLibraryData *library_data,
                     break;
                 }
                 result = rclib_db_library_data_query(library_data,
-                    query_data->subquery);
+                    query_data->subquery, cancellable);
                 break;
             }
             case RCLIB_DB_QUERY_CONDITION_TYPE_PROP_EQUALS:
@@ -1865,6 +1871,7 @@ gboolean rclib_db_library_data_query(RCLibDbLibraryData *library_data,
 /**
  * rclib_db_library_query:
  * @query: he query condition
+ * @cancellable: (allow-none): optional #GCancellable object, NULL to ignore
  *
  * Query data from the music library. MT safe.
  * 
@@ -1873,7 +1880,8 @@ gboolean rclib_db_library_data_query(RCLibDbLibraryData *library_data,
  *     #g_ptr_array_unref() after usage.
  */
 
-GPtrArray *rclib_db_library_query(RCLibDbQuery *query)
+GPtrArray *rclib_db_library_query(RCLibDbQuery *query,
+    GCancellable *cancellable)
 {
     GPtrArray *query_result = NULL;
     GObject *instance;
@@ -1892,8 +1900,13 @@ GPtrArray *rclib_db_library_query(RCLibDbQuery *query)
     while(g_hash_table_iter_next(&iter, (gpointer *)&uri,
         (gpointer *)&library_data))
     {
+        if(cancellable!=NULL)
+        {
+            if(g_cancellable_is_cancelled(cancellable))
+                break;
+        }
         if(library_data==NULL) continue;
-        if(rclib_db_library_data_query(library_data, query))
+        if(rclib_db_library_data_query(library_data, query, cancellable))
         {
             g_ptr_array_add(query_result, rclib_db_library_data_ref(
                 library_data));
@@ -1906,6 +1919,7 @@ GPtrArray *rclib_db_library_query(RCLibDbQuery *query)
 /**
  * rclib_db_library_query_get_uris:
  * @query: he query condition
+ * @cancellable: (allow-none): optional #GCancellable object, NULL to ignore
  *
  * Query data from the music library, and get an array of the URIs which
  * points to the music that satisfied the query condition. MT safe.
@@ -1915,7 +1929,8 @@ GPtrArray *rclib_db_library_query(RCLibDbQuery *query)
  *     #g_ptr_array_unref() after usage.
  */
 
-GPtrArray *rclib_db_library_query_get_uris(RCLibDbQuery *query)
+GPtrArray *rclib_db_library_query_get_uris(RCLibDbQuery *query,
+    GCancellable *cancellable)
 {
     GPtrArray *query_result = NULL;
     GObject *instance;
@@ -1933,8 +1948,13 @@ GPtrArray *rclib_db_library_query_get_uris(RCLibDbQuery *query)
     while(g_hash_table_iter_next(&iter, (gpointer *)&uri,
         (gpointer *)&library_data))
     {
+        if(cancellable!=NULL)
+        {
+            if(g_cancellable_is_cancelled(cancellable))
+                break;
+        }
         if(uri==NULL || library_data==NULL) continue;
-        if(rclib_db_library_data_query(library_data, query))
+        if(rclib_db_library_data_query(library_data, query, cancellable))
         {
             g_ptr_array_add(query_result, g_strdup(uri));
         }
