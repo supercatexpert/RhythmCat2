@@ -335,12 +335,27 @@ static void rclib_db_library_query_result_finalize(GObject *object)
 {
     RCLibDbLibraryQueryResultPrivate *priv =
         RCLIB_DB_LIBRARY_QUERY_RESULT(object)->priv;
+    if(priv->cancellable!=NULL)
+    {
+        g_cancellable_cancel(priv->cancellable);
+        g_object_unref(priv->cancellable);
+        priv->cancellable = NULL;
+    }
+    if(priv->query_thread!=NULL)
+    {
+        g_thread_join(priv->query_thread);
+        priv->query_thread = NULL;
+    }
     if(priv->query!=NULL)
     {
         rclib_db_query_free(priv->query);
         priv->query = NULL;
     }
-
+    if(priv->query_result!=NULL)
+    {
+        g_ptr_array_free(priv->query_result, TRUE);
+        priv->query_result = NULL;
+    }
     G_OBJECT_CLASS(rclib_db_library_query_result_parent_class)->
         finalize(object);
 }
@@ -1074,12 +1089,16 @@ gboolean rclib_db_library_data_query(RCLibDbLibraryData *library_data,
     gchar *uri;
     if(library_data==NULL || query==NULL)
         return FALSE;
+    cancellable = g_object_ref(cancellable);
     for(i=0;i<query->len;i++)
     {
         if(cancellable!=NULL)
         {
             if(g_cancellable_is_cancelled(cancellable))
+            {
+                g_object_unref(cancellable);
                 return FALSE;
+            }
         }
         query_data = g_ptr_array_index(query, i);
         if(query_data==NULL) continue;
@@ -1865,6 +1884,7 @@ gboolean rclib_db_library_data_query(RCLibDbLibraryData *library_data,
         }
         if(!result) break;
     }
+    g_object_unref(cancellable);
     return result;
 }
 
@@ -1893,6 +1913,7 @@ GPtrArray *rclib_db_library_query(RCLibDbQuery *query,
     if(instance==NULL) return NULL;
     priv = RCLIB_DB(instance)->priv;
     if(priv==NULL) return NULL;
+    cancellable = g_object_ref(cancellable);
     query_result = g_ptr_array_new_with_free_func((GDestroyNotify)
         rclib_db_library_data_unref);
     g_rw_lock_reader_lock(&(priv->library_rw_lock));
@@ -1912,7 +1933,8 @@ GPtrArray *rclib_db_library_query(RCLibDbQuery *query,
                 library_data));
         }
     }
-    g_rw_lock_reader_unlock(&(priv->library_rw_lock));    
+    g_rw_lock_reader_unlock(&(priv->library_rw_lock)); 
+    g_object_unref(cancellable);   
     return query_result;
 }
 
@@ -1942,6 +1964,7 @@ GPtrArray *rclib_db_library_query_get_uris(RCLibDbQuery *query,
     if(instance==NULL) return NULL;
     priv = RCLIB_DB(instance)->priv;
     if(priv==NULL) return NULL;
+    cancellable = g_object_ref(cancellable);
     query_result = g_ptr_array_new_with_free_func(g_free);
     g_rw_lock_reader_lock(&(priv->library_rw_lock));
     g_hash_table_iter_init(&iter, priv->library_table);
@@ -1959,7 +1982,8 @@ GPtrArray *rclib_db_library_query_get_uris(RCLibDbQuery *query,
             g_ptr_array_add(query_result, g_strdup(uri));
         }
     }
-    g_rw_lock_reader_unlock(&(priv->library_rw_lock));    
+    g_rw_lock_reader_unlock(&(priv->library_rw_lock));
+    g_object_unref(cancellable);    
     return query_result;
 }
 
@@ -1977,6 +2001,5 @@ GObject *rclib_db_library_query_result_new()
     GObject *query_result_instance;
     query_result_instance = g_object_new(RCLIB_TYPE_DB_LIBRARY_QUERY_RESULT,
         NULL);
-    
     return query_result_instance;
 }

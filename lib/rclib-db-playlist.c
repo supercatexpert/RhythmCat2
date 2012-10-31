@@ -3314,12 +3314,16 @@ gboolean rclib_db_playlist_data_query(RCLibDbPlaylistData *playlist_data,
     gchar *uri;
     if(playlist_data==NULL || query==NULL)
         return FALSE;
+    cancellable = g_object_ref(cancellable);
     for(i=0;i<query->len;i++)
     {
         if(cancellable!=NULL)
         {
             if(g_cancellable_is_cancelled(cancellable))
+            {
+                g_object_unref(cancellable);
                 return FALSE;
+            }
         }
         query_data = g_ptr_array_index(query, i);
         if(query_data==NULL) continue;
@@ -4105,6 +4109,7 @@ gboolean rclib_db_playlist_data_query(RCLibDbPlaylistData *playlist_data,
         }
         if(!result) break;
     }
+    g_object_unref(cancellable);
     return result;
 }
 
@@ -4160,6 +4165,7 @@ GPtrArray *rclib_db_playlist_query(RCLibDbCatalogIter *catalog_iter,
     if(instance==NULL) return NULL;
     priv = RCLIB_DB(instance)->priv;
     if(priv==NULL) return NULL;
+    cancellable = g_object_ref(cancellable);
     query_result = g_ptr_array_new_with_free_func((GDestroyNotify)
         rclib_db_playlist_data_unref);
     if(catalog_iter!=NULL)
@@ -4205,6 +4211,7 @@ GPtrArray *rclib_db_playlist_query(RCLibDbCatalogIter *catalog_iter,
         }
         g_rw_lock_reader_unlock(&(priv->playlist_rw_lock));
     }
+    g_object_unref(cancellable);
     return query_result;
 }
 
@@ -4234,6 +4241,7 @@ GPtrArray *rclib_db_playlist_query_get_iters(RCLibDbCatalogIter *catalog_iter,
     if(instance==NULL) return NULL;
     priv = RCLIB_DB(instance)->priv;
     if(priv==NULL) return NULL;
+    cancellable = g_object_ref(cancellable);
     query_result = g_ptr_array_new();
     if(catalog_iter!=NULL)
     {
@@ -4276,6 +4284,7 @@ GPtrArray *rclib_db_playlist_query_get_iters(RCLibDbCatalogIter *catalog_iter,
         }
         g_rw_lock_reader_unlock(&(priv->playlist_rw_lock));
     }
+    g_object_unref(cancellable);
     return query_result;
 }
 

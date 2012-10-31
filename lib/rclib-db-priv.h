@@ -120,7 +120,9 @@ struct _RCLibDbPrivate
 struct _RCLibDbLibraryQueryResultPrivate
 {
     RCLibDbQuery *query;
+    GPtrArray *query_result;
     GThread *query_thread;
+    GCancellable *cancellable;
 };
 
 struct _RCLibDbCatalogData
