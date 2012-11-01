@@ -101,11 +101,20 @@ am__installdirs = "$(DESTDIR)$(libdir)" "$(DESTDIR)$(girdir)" \
 LTLIBRARIES = $(lib_LTLIBRARIES)
 am__DEPENDENCIES_1 =
 librhythmcat_2_0_la_DEPENDENCIES = $(am__DEPENDENCIES_1)
-am__objects_1 = rclib-core.lo rclib-cue.lo rclib-tag.lo rclib-db.lo \
-	rclib-db-playlist.lo rclib-db-library.lo rclib-player.lo \
-	rclib-util.lo rclib-lyric.lo rclib-settings.lo rclib-album.lo \
-	rclib-plugin.lo rclib.lo
-am__objects_2 = rclib-marshal.lo
+am__objects_1 = librhythmcat_2_0_la-rclib-core.lo \
+	librhythmcat_2_0_la-rclib-cue.lo \
+	librhythmcat_2_0_la-rclib-tag.lo \
+	librhythmcat_2_0_la-rclib-db.lo \
+	librhythmcat_2_0_la-rclib-db-playlist.lo \
+	librhythmcat_2_0_la-rclib-db-library.lo \
+	librhythmcat_2_0_la-rclib-player.lo \
+	librhythmcat_2_0_la-rclib-util.lo \
+	librhythmcat_2_0_la-rclib-lyric.lo \
+	librhythmcat_2_0_la-rclib-settings.lo \
+	librhythmcat_2_0_la-rclib-album.lo \
+	librhythmcat_2_0_la-rclib-plugin.lo \
+	librhythmcat_2_0_la-rclib.lo
+am__objects_2 = librhythmcat_2_0_la-rclib-marshal.lo
 am_librhythmcat_2_0_la_OBJECTS = $(am__objects_1) $(am__objects_2)
 librhythmcat_2_0_la_OBJECTS = $(am_librhythmcat_2_0_la_OBJECTS)
 AM_V_lt = $(am__v_lt_@AM_V@)
@@ -113,8 +122,8 @@ am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
 am__v_lt_0 = --silent
 librhythmcat_2_0_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC \
 	$(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link $(CCLD) \
-	$(AM_CFLAGS) $(CFLAGS) $(librhythmcat_2_0_la_LDFLAGS) \
-	$(LDFLAGS) -o $@
+	$(librhythmcat_2_0_la_CFLAGS) $(CFLAGS) \
+	$(librhythmcat_2_0_la_LDFLAGS) $(LDFLAGS) -o $@
 DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__depfiles_maybe = depfiles
@@ -358,9 +367,11 @@ librhythmcat_2_0_builtheaders = rclib-marshal.h
 librhythmcat_2_0_la_SOURCES = $(librhythmcat_2_0_sources) \
 	$(librhythmcat_2_0_builtsources) $(BUILT_SOURCES)
 AM_CFLAGS = @GLIB2_CFLAGS@ @GSTREAMER_CFLAGS@ \
-	-DLOCALEDIR=\"$(localedir)\" $(am__append_1)
+    -DLOCALEDIR=\"$(localedir)\"
+
 librhythmcat_2_0_la_LIBADD = @GLIB2_LIBS@ @GSTREAMER_LIBS@ \
 	$(am__append_2)
+librhythmcat_2_0_la_CFLAGS = $(AM_CFLAGS) $(am__append_1)
 CLEANFILES = $(BUILT_SOURCES) $(am__append_4)
 librhythmcat_2_0includedir = $(includedir)/librhythmcat2
 librhythmcat_2_0include_HEADERS = $(librhythmcat_2_0_priv_headers) \
@@ -462,20 +473,20 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rclib-album.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rclib-core.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rclib-cue.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rclib-db-library.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rclib-db-playlist.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rclib-db.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rclib-lyric.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rclib-marshal.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rclib-player.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rclib-plugin.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rclib-settings.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rclib-tag.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rclib-util.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rclib.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/librhythmcat_2_0_la-rclib-album.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/librhythmcat_2_0_la-rclib-core.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/librhythmcat_2_0_la-rclib-cue.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/librhythmcat_2_0_la-rclib-db-library.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/librhythmcat_2_0_la-rclib-db-playlist.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/librhythmcat_2_0_la-rclib-db.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/librhythmcat_2_0_la-rclib-lyric.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/librhythmcat_2_0_la-rclib-marshal.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/librhythmcat_2_0_la-rclib-player.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/librhythmcat_2_0_la-rclib-plugin.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/librhythmcat_2_0_la-rclib-settings.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/librhythmcat_2_0_la-rclib-tag.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/librhythmcat_2_0_la-rclib-util.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/librhythmcat_2_0_la-rclib.Plo@am__quote@
 
 .c.o:
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(COMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
@@ -497,6 +508,104 @@ distclean-compile:
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='$<' object='$@' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LTCOMPILE) -c -o $@ $<
+
+librhythmcat_2_0_la-rclib-core.lo: rclib-core.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(librhythmcat_2_0_la_CFLAGS) $(CFLAGS) -MT librhythmcat_2_0_la-rclib-core.lo -MD -MP -MF $(DEPDIR)/librhythmcat_2_0_la-rclib-core.Tpo -c -o librhythmcat_2_0_la-rclib-core.lo `test -f 'rclib-core.c' || echo '$(srcdir)/'`rclib-core.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/librhythmcat_2_0_la-rclib-core.Tpo $(DEPDIR)/librhythmcat_2_0_la-rclib-core.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='rclib-core.c' object='librhythmcat_2_0_la-rclib-core.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(librhythmcat_2_0_la_CFLAGS) $(CFLAGS) -c -o librhythmcat_2_0_la-rclib-core.lo `test -f 'rclib-core.c' || echo '$(srcdir)/'`rclib-core.c
+
+librhythmcat_2_0_la-rclib-cue.lo: rclib-cue.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(librhythmcat_2_0_la_CFLAGS) $(CFLAGS) -MT librhythmcat_2_0_la-rclib-cue.lo -MD -MP -MF $(DEPDIR)/librhythmcat_2_0_la-rclib-cue.Tpo -c -o librhythmcat_2_0_la-rclib-cue.lo `test -f 'rclib-cue.c' || echo '$(srcdir)/'`rclib-cue.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/librhythmcat_2_0_la-rclib-cue.Tpo $(DEPDIR)/librhythmcat_2_0_la-rclib-cue.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='rclib-cue.c' object='librhythmcat_2_0_la-rclib-cue.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(librhythmcat_2_0_la_CFLAGS) $(CFLAGS) -c -o librhythmcat_2_0_la-rclib-cue.lo `test -f 'rclib-cue.c' || echo '$(srcdir)/'`rclib-cue.c
+
+librhythmcat_2_0_la-rclib-tag.lo: rclib-tag.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(librhythmcat_2_0_la_CFLAGS) $(CFLAGS) -MT librhythmcat_2_0_la-rclib-tag.lo -MD -MP -MF $(DEPDIR)/librhythmcat_2_0_la-rclib-tag.Tpo -c -o librhythmcat_2_0_la-rclib-tag.lo `test -f 'rclib-tag.c' || echo '$(srcdir)/'`rclib-tag.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/librhythmcat_2_0_la-rclib-tag.Tpo $(DEPDIR)/librhythmcat_2_0_la-rclib-tag.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='rclib-tag.c' object='librhythmcat_2_0_la-rclib-tag.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(librhythmcat_2_0_la_CFLAGS) $(CFLAGS) -c -o librhythmcat_2_0_la-rclib-tag.lo `test -f 'rclib-tag.c' || echo '$(srcdir)/'`rclib-tag.c
+
+librhythmcat_2_0_la-rclib-db.lo: rclib-db.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(librhythmcat_2_0_la_CFLAGS) $(CFLAGS) -MT librhythmcat_2_0_la-rclib-db.lo -MD -MP -MF $(DEPDIR)/librhythmcat_2_0_la-rclib-db.Tpo -c -o librhythmcat_2_0_la-rclib-db.lo `test -f 'rclib-db.c' || echo '$(srcdir)/'`rclib-db.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/librhythmcat_2_0_la-rclib-db.Tpo $(DEPDIR)/librhythmcat_2_0_la-rclib-db.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='rclib-db.c' object='librhythmcat_2_0_la-rclib-db.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(librhythmcat_2_0_la_CFLAGS) $(CFLAGS) -c -o librhythmcat_2_0_la-rclib-db.lo `test -f 'rclib-db.c' || echo '$(srcdir)/'`rclib-db.c
+
+librhythmcat_2_0_la-rclib-db-playlist.lo: rclib-db-playlist.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(librhythmcat_2_0_la_CFLAGS) $(CFLAGS) -MT librhythmcat_2_0_la-rclib-db-playlist.lo -MD -MP -MF $(DEPDIR)/librhythmcat_2_0_la-rclib-db-playlist.Tpo -c -o librhythmcat_2_0_la-rclib-db-playlist.lo `test -f 'rclib-db-playlist.c' || echo '$(srcdir)/'`rclib-db-playlist.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/librhythmcat_2_0_la-rclib-db-playlist.Tpo $(DEPDIR)/librhythmcat_2_0_la-rclib-db-playlist.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='rclib-db-playlist.c' object='librhythmcat_2_0_la-rclib-db-playlist.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(librhythmcat_2_0_la_CFLAGS) $(CFLAGS) -c -o librhythmcat_2_0_la-rclib-db-playlist.lo `test -f 'rclib-db-playlist.c' || echo '$(srcdir)/'`rclib-db-playlist.c
+
+librhythmcat_2_0_la-rclib-db-library.lo: rclib-db-library.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(librhythmcat_2_0_la_CFLAGS) $(CFLAGS) -MT librhythmcat_2_0_la-rclib-db-library.lo -MD -MP -MF $(DEPDIR)/librhythmcat_2_0_la-rclib-db-library.Tpo -c -o librhythmcat_2_0_la-rclib-db-library.lo `test -f 'rclib-db-library.c' || echo '$(srcdir)/'`rclib-db-library.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/librhythmcat_2_0_la-rclib-db-library.Tpo $(DEPDIR)/librhythmcat_2_0_la-rclib-db-library.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='rclib-db-library.c' object='librhythmcat_2_0_la-rclib-db-library.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(librhythmcat_2_0_la_CFLAGS) $(CFLAGS) -c -o librhythmcat_2_0_la-rclib-db-library.lo `test -f 'rclib-db-library.c' || echo '$(srcdir)/'`rclib-db-library.c
+
+librhythmcat_2_0_la-rclib-player.lo: rclib-player.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(librhythmcat_2_0_la_CFLAGS) $(CFLAGS) -MT librhythmcat_2_0_la-rclib-player.lo -MD -MP -MF $(DEPDIR)/librhythmcat_2_0_la-rclib-player.Tpo -c -o librhythmcat_2_0_la-rclib-player.lo `test -f 'rclib-player.c' || echo '$(srcdir)/'`rclib-player.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/librhythmcat_2_0_la-rclib-player.Tpo $(DEPDIR)/librhythmcat_2_0_la-rclib-player.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='rclib-player.c' object='librhythmcat_2_0_la-rclib-player.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(librhythmcat_2_0_la_CFLAGS) $(CFLAGS) -c -o librhythmcat_2_0_la-rclib-player.lo `test -f 'rclib-player.c' || echo '$(srcdir)/'`rclib-player.c
+
+librhythmcat_2_0_la-rclib-util.lo: rclib-util.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(librhythmcat_2_0_la_CFLAGS) $(CFLAGS) -MT librhythmcat_2_0_la-rclib-util.lo -MD -MP -MF $(DEPDIR)/librhythmcat_2_0_la-rclib-util.Tpo -c -o librhythmcat_2_0_la-rclib-util.lo `test -f 'rclib-util.c' || echo '$(srcdir)/'`rclib-util.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/librhythmcat_2_0_la-rclib-util.Tpo $(DEPDIR)/librhythmcat_2_0_la-rclib-util.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='rclib-util.c' object='librhythmcat_2_0_la-rclib-util.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(librhythmcat_2_0_la_CFLAGS) $(CFLAGS) -c -o librhythmcat_2_0_la-rclib-util.lo `test -f 'rclib-util.c' || echo '$(srcdir)/'`rclib-util.c
+
+librhythmcat_2_0_la-rclib-lyric.lo: rclib-lyric.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(librhythmcat_2_0_la_CFLAGS) $(CFLAGS) -MT librhythmcat_2_0_la-rclib-lyric.lo -MD -MP -MF $(DEPDIR)/librhythmcat_2_0_la-rclib-lyric.Tpo -c -o librhythmcat_2_0_la-rclib-lyric.lo `test -f 'rclib-lyric.c' || echo '$(srcdir)/'`rclib-lyric.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/librhythmcat_2_0_la-rclib-lyric.Tpo $(DEPDIR)/librhythmcat_2_0_la-rclib-lyric.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='rclib-lyric.c' object='librhythmcat_2_0_la-rclib-lyric.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(librhythmcat_2_0_la_CFLAGS) $(CFLAGS) -c -o librhythmcat_2_0_la-rclib-lyric.lo `test -f 'rclib-lyric.c' || echo '$(srcdir)/'`rclib-lyric.c
+
+librhythmcat_2_0_la-rclib-settings.lo: rclib-settings.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(librhythmcat_2_0_la_CFLAGS) $(CFLAGS) -MT librhythmcat_2_0_la-rclib-settings.lo -MD -MP -MF $(DEPDIR)/librhythmcat_2_0_la-rclib-settings.Tpo -c -o librhythmcat_2_0_la-rclib-settings.lo `test -f 'rclib-settings.c' || echo '$(srcdir)/'`rclib-settings.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/librhythmcat_2_0_la-rclib-settings.Tpo $(DEPDIR)/librhythmcat_2_0_la-rclib-settings.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='rclib-settings.c' object='librhythmcat_2_0_la-rclib-settings.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(librhythmcat_2_0_la_CFLAGS) $(CFLAGS) -c -o librhythmcat_2_0_la-rclib-settings.lo `test -f 'rclib-settings.c' || echo '$(srcdir)/'`rclib-settings.c
+
+librhythmcat_2_0_la-rclib-album.lo: rclib-album.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(librhythmcat_2_0_la_CFLAGS) $(CFLAGS) -MT librhythmcat_2_0_la-rclib-album.lo -MD -MP -MF $(DEPDIR)/librhythmcat_2_0_la-rclib-album.Tpo -c -o librhythmcat_2_0_la-rclib-album.lo `test -f 'rclib-album.c' || echo '$(srcdir)/'`rclib-album.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/librhythmcat_2_0_la-rclib-album.Tpo $(DEPDIR)/librhythmcat_2_0_la-rclib-album.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='rclib-album.c' object='librhythmcat_2_0_la-rclib-album.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(librhythmcat_2_0_la_CFLAGS) $(CFLAGS) -c -o librhythmcat_2_0_la-rclib-album.lo `test -f 'rclib-album.c' || echo '$(srcdir)/'`rclib-album.c
+
+librhythmcat_2_0_la-rclib-plugin.lo: rclib-plugin.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(librhythmcat_2_0_la_CFLAGS) $(CFLAGS) -MT librhythmcat_2_0_la-rclib-plugin.lo -MD -MP -MF $(DEPDIR)/librhythmcat_2_0_la-rclib-plugin.Tpo -c -o librhythmcat_2_0_la-rclib-plugin.lo `test -f 'rclib-plugin.c' || echo '$(srcdir)/'`rclib-plugin.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/librhythmcat_2_0_la-rclib-plugin.Tpo $(DEPDIR)/librhythmcat_2_0_la-rclib-plugin.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='rclib-plugin.c' object='librhythmcat_2_0_la-rclib-plugin.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(librhythmcat_2_0_la_CFLAGS) $(CFLAGS) -c -o librhythmcat_2_0_la-rclib-plugin.lo `test -f 'rclib-plugin.c' || echo '$(srcdir)/'`rclib-plugin.c
+
+librhythmcat_2_0_la-rclib.lo: rclib.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(librhythmcat_2_0_la_CFLAGS) $(CFLAGS) -MT librhythmcat_2_0_la-rclib.lo -MD -MP -MF $(DEPDIR)/librhythmcat_2_0_la-rclib.Tpo -c -o librhythmcat_2_0_la-rclib.lo `test -f 'rclib.c' || echo '$(srcdir)/'`rclib.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/librhythmcat_2_0_la-rclib.Tpo $(DEPDIR)/librhythmcat_2_0_la-rclib.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='rclib.c' object='librhythmcat_2_0_la-rclib.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(librhythmcat_2_0_la_CFLAGS) $(CFLAGS) -c -o librhythmcat_2_0_la-rclib.lo `test -f 'rclib.c' || echo '$(srcdir)/'`rclib.c
+
+librhythmcat_2_0_la-rclib-marshal.lo: rclib-marshal.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(librhythmcat_2_0_la_CFLAGS) $(CFLAGS) -MT librhythmcat_2_0_la-rclib-marshal.lo -MD -MP -MF $(DEPDIR)/librhythmcat_2_0_la-rclib-marshal.Tpo -c -o librhythmcat_2_0_la-rclib-marshal.lo `test -f 'rclib-marshal.c' || echo '$(srcdir)/'`rclib-marshal.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/librhythmcat_2_0_la-rclib-marshal.Tpo $(DEPDIR)/librhythmcat_2_0_la-rclib-marshal.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='rclib-marshal.c' object='librhythmcat_2_0_la-rclib-marshal.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(librhythmcat_2_0_la_CFLAGS) $(CFLAGS) -c -o librhythmcat_2_0_la-rclib-marshal.lo `test -f 'rclib-marshal.c' || echo '$(srcdir)/'`rclib-marshal.c
 
 mostlyclean-libtool:
 	-rm -f *.lo

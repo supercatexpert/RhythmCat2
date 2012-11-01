@@ -45,11 +45,14 @@
 #include &lt;rclib-core.h&gt;
 
 struct              <a class="link" href="RCLibCore.html#RCLibCore-struct" title="struct RCLibCore">RCLibCore</a>;
+enum                <a class="link" href="RCLibCore.html#RCLibCoreAudioOutputType" title="enum RCLibCoreAudioOutputType">RCLibCoreAudioOutputType</a>;
 struct              <a class="link" href="RCLibCore.html#RCLibCoreClass" title="struct RCLibCoreClass">RCLibCoreClass</a>;
 enum                <a class="link" href="RCLibCore.html#RCLibCoreEQType" title="enum RCLibCoreEQType">RCLibCoreEQType</a>;
 enum                <a class="link" href="RCLibCore.html#RCLibCoreErrorCode" title="enum RCLibCoreErrorCode">RCLibCoreErrorCode</a>;
 struct              <a class="link" href="RCLibCore.html#RCLibCoreMetadata" title="struct RCLibCoreMetadata">RCLibCoreMetadata</a>;
 enum                <a class="link" href="RCLibCore.html#RCLibCoreSourceType" title="enum RCLibCoreSourceType">RCLibCoreSourceType</a>;
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RCLibCore.html#rclib-core-audio-output-get" title="rclib_core_audio_output_get ()">rclib_core_audio_output_get</a>         (<em class="parameter"><code><a class="link" href="RCLibCore.html#RCLibCoreAudioOutputType" title="enum RCLibCoreAudioOutputType"><span class="type">RCLibCoreAudioOutputType</span></a> *output_type</code></em>);
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RCLibCore.html#rclib-core-audio-output-set" title="rclib_core_audio_output_set ()">rclib_core_audio_output_set</a>         (<em class="parameter"><code><a class="link" href="RCLibCore.html#RCLibCoreAudioOutputType" title="enum RCLibCoreAudioOutputType"><span class="type">RCLibCoreAudioOutputType</span></a> output_type</code></em>);
 <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RCLibCore.html#rclib-core-effect-plugin-add" title="rclib_core_effect_plugin_add ()">rclib_core_effect_plugin_add</a>        (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/gstreamer-0.10/GstElement.html"><span class="type">GstElement</span></a> *element</code></em>);
 <a href="/usr/share/gtk-doc/html/glib/glib-Doubly-Linked-Lists.html#GList"><span class="returnvalue">GList</span></a> *             <a class="link" href="RCLibCore.html#rclib-core-effect-plugin-get-list" title="rclib_core_effect_plugin_get_list ()">rclib_core_effect_plugin_get_list</a>   ();
 <span class="returnvalue">void</span>                <a class="link" href="RCLibCore.html#rclib-core-effect-plugin-remove" title="rclib_core_effect_plugin_remove ()">rclib_core_effect_plugin_remove</a>     (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/gstreamer-0.10/GstElement.html"><span class="type">GstElement</span></a> *element</code></em>);
@@ -143,6 +146,57 @@ and manages sound effects. The core uses GStreamer as its backend.
 The audio player core. The contents of the <a class="link" href="RCLibCore.html" title="RCLibCore"><span class="type">RCLibCore</span></a> structure are
 private and should only be accessed via the provided API.
 </p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="RCLibCoreAudioOutputType"></a><h3>enum RCLibCoreAudioOutputType</h3>
+<pre class="programlisting">typedef enum {
+    RCLIB_CORE_AUDIO_OUTPUT_AUTO = 0,
+    RCLIB_CORE_AUDIO_OUTPUT_PULSEAUDIO = 1,
+    RCLIB_CORE_AUDIO_OUTPUT_ALSA = 2,
+    RCLIB_CORE_AUDIO_OUTPUT_OSS = 3,
+    RCLIB_CORE_AUDIO_OUTPUT_JACK = 4,
+    RCLIB_CORE_AUDIO_OUTPUT_WAVEFORM = 5
+} RCLibCoreAudioOutputType;
+</pre>
+<p>
+The enum type for audio output plug-in selection.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><a name="RCLIB-CORE-AUDIO-OUTPUT-AUTO:CAPS"></a><span class="term"><code class="literal">RCLIB_CORE_AUDIO_OUTPUT_AUTO</code></span></p></td>
+<td>automatic audio output plug-in
+</td>
+</tr>
+<tr>
+<td><p><a name="RCLIB-CORE-AUDIO-OUTPUT-PULSEAUDIO:CAPS"></a><span class="term"><code class="literal">RCLIB_CORE_AUDIO_OUTPUT_PULSEAUDIO</code></span></p></td>
+<td>PulseAudio output plug-in
+</td>
+</tr>
+<tr>
+<td><p><a name="RCLIB-CORE-AUDIO-OUTPUT-ALSA:CAPS"></a><span class="term"><code class="literal">RCLIB_CORE_AUDIO_OUTPUT_ALSA</code></span></p></td>
+<td>ALSA output plug-in
+</td>
+</tr>
+<tr>
+<td><p><a name="RCLIB-CORE-AUDIO-OUTPUT-OSS:CAPS"></a><span class="term"><code class="literal">RCLIB_CORE_AUDIO_OUTPUT_OSS</code></span></p></td>
+<td>OSS audio output plug-in
+</td>
+</tr>
+<tr>
+<td><p><a name="RCLIB-CORE-AUDIO-OUTPUT-JACK:CAPS"></a><span class="term"><code class="literal">RCLIB_CORE_AUDIO_OUTPUT_JACK</code></span></p></td>
+<td>jack audio output plug-in
+</td>
+</tr>
+<tr>
+<td><p><a name="RCLIB-CORE-AUDIO-OUTPUT-WAVEFORM:CAPS"></a><span class="term"><code class="literal">RCLIB_CORE_AUDIO_OUTPUT_WAVEFORM</code></span></p></td>
+<td>waveform audio output plug-in
+</td>
+</tr>
+</tbody>
+</table></div>
 </div>
 <hr>
 <div class="refsect2">
@@ -386,6 +440,49 @@ The enum type for the source type.
 <td><p><a name="RCLIB-CORE-SOURCE-EMBEDDED-CUE:CAPS"></a><span class="term"><code class="literal">RCLIB_CORE_SOURCE_EMBEDDED_CUE</code></span></p></td>
 <td>the source is from embedded CUE sheet
 </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-core-audio-output-get"></a><h3>rclib_core_audio_output_get ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rclib_core_audio_output_get         (<em class="parameter"><code><a class="link" href="RCLibCore.html#RCLibCoreAudioOutputType" title="enum RCLibCoreAudioOutputType"><span class="type">RCLibCoreAudioOutputType</span></a> *output_type</code></em>);</pre>
+<p>
+Get the audio output plug-in used in the player.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>output_type</code></em> :</span></p></td>
+<td>the audio output plug-in type. <span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>]</span>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>Whether the operation succeeded.</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-core-audio-output-set"></a><h3>rclib_core_audio_output_set ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rclib_core_audio_output_set         (<em class="parameter"><code><a class="link" href="RCLibCore.html#RCLibCoreAudioOutputType" title="enum RCLibCoreAudioOutputType"><span class="type">RCLibCoreAudioOutputType</span></a> output_type</code></em>);</pre>
+<p>
+Set the audio output plug-in for the player.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>output_type</code></em> :</span></p></td>
+<td>the audio output plug-in type</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>Whether the operation succeeded.</td>
 </tr>
 </tbody>
 </table></div>

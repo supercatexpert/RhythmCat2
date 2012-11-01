@@ -31,11 +31,8 @@ librhythmcat_2_0_la_SOURCES = \
 AM_CFLAGS = @GLIB2_CFLAGS@ @GSTREAMER_CFLAGS@ \
     -DLOCALEDIR=\"$(localedir)\"
     
-if DEBUG_MODE
-    AM_CFLAGS += -DDEBUG_MODE=1 -g
-endif
-
 librhythmcat_2_0_la_LIBADD = @GLIB2_LIBS@ @GSTREAMER_LIBS@
+librhythmcat_2_0_la_CFLAGS = $(AM_CFLAGS)
 
 CLEANFILES = $(BUILT_SOURCES)
 
@@ -46,6 +43,10 @@ librhythmcat_2_0include_HEADERS = $(librhythmcat_2_0_priv_headers) \
 librhythmcat_2_0_la_SOURCES += $(BUILT_SOURCES)
 
 librhythmcat_2_0_la_LDFLAGS = -export-dynamic -O2
+
+if DEBUG_MODE
+    librhythmcat_2_0_la_CFLAGS += -DDEBUG_MODE=1 -g
+endif
 
 if PLATFORM_WIN32
     librhythmcat_2_0_la_LIBADD += -lkernel32

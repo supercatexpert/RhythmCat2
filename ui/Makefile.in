@@ -58,9 +58,10 @@ host_triplet = @host@
 @HAVE_INTROSPECTION_TRUE@@WITH_GTK_UI_TRUE@am__append_1 = @GINTROSPECTION_LIBS@
 @HAVE_INTROSPECTION_TRUE@@WITH_GTK_UI_TRUE@am__append_2 = -DENABLE_INTROSPECTION @GINTROSPECTION_CFLAGS@
 @DEBUG_MODE_TRUE@@WITH_GTK_UI_TRUE@am__append_3 = -DDEBUG_MODE=1 -g
-@PLATFORM_WIN32_TRUE@@WITH_GTK_UI_TRUE@am__append_4 = -lkernel32
-@PLATFORM_WIN32_TRUE@@WITH_GTK_UI_TRUE@am__append_5 = -mwindows
-@HAVE_INTROSPECTION_TRUE@@WITH_GTK_UI_TRUE@am__append_6 = $(gir_DATA) $(typelib_DATA)
+@DEBUG_MODE_TRUE@@WITH_GTK_UI_TRUE@am__append_4 = -DDEBUG_MODE=1 -g
+@PLATFORM_WIN32_TRUE@@WITH_GTK_UI_TRUE@am__append_5 = -lkernel32
+@PLATFORM_WIN32_TRUE@@WITH_GTK_UI_TRUE@am__append_6 = -mwindows
+@HAVE_INTROSPECTION_TRUE@@WITH_GTK_UI_TRUE@am__append_7 = $(gir_DATA) $(typelib_DATA)
 subdir = ui
 DIST_COMMON = $(am__librhythmcat_ui_2_0include_HEADERS_DIST) \
 	$(am__noinst_HEADERS_DIST) $(srcdir)/Makefile.am \
@@ -84,14 +85,24 @@ am__librhythmcat_ui_2_0_la_SOURCES_DIST = rc-ui-listmodel.c \
 	rc-ui-plugin.c rc-ui-settings.c rc-ui-effect.c \
 	rc-ui-cell-renderer-rating.c rc-main.c rc-ui-resources.c \
 	rc-marshal.c
-@WITH_GTK_UI_TRUE@am__objects_1 = rc-ui-listmodel.lo rc-ui-player.lo \
-@WITH_GTK_UI_TRUE@	rc-ui-window.lo rc-ui-listview.lo \
-@WITH_GTK_UI_TRUE@	rc-ui-menu.lo rc-ui-dialog.lo \
-@WITH_GTK_UI_TRUE@	rc-ui-slabel.lo rc-ui-spectrum.lo \
-@WITH_GTK_UI_TRUE@	rc-ui-style.lo rc-ui-plugin.lo \
-@WITH_GTK_UI_TRUE@	rc-ui-settings.lo rc-ui-effect.lo \
-@WITH_GTK_UI_TRUE@	rc-ui-cell-renderer-rating.lo rc-main.lo
-@WITH_GTK_UI_TRUE@am__objects_2 = rc-ui-resources.lo rc-marshal.lo
+@WITH_GTK_UI_TRUE@am__objects_1 =  \
+@WITH_GTK_UI_TRUE@	librhythmcat_ui_2_0_la-rc-ui-listmodel.lo \
+@WITH_GTK_UI_TRUE@	librhythmcat_ui_2_0_la-rc-ui-player.lo \
+@WITH_GTK_UI_TRUE@	librhythmcat_ui_2_0_la-rc-ui-window.lo \
+@WITH_GTK_UI_TRUE@	librhythmcat_ui_2_0_la-rc-ui-listview.lo \
+@WITH_GTK_UI_TRUE@	librhythmcat_ui_2_0_la-rc-ui-menu.lo \
+@WITH_GTK_UI_TRUE@	librhythmcat_ui_2_0_la-rc-ui-dialog.lo \
+@WITH_GTK_UI_TRUE@	librhythmcat_ui_2_0_la-rc-ui-slabel.lo \
+@WITH_GTK_UI_TRUE@	librhythmcat_ui_2_0_la-rc-ui-spectrum.lo \
+@WITH_GTK_UI_TRUE@	librhythmcat_ui_2_0_la-rc-ui-style.lo \
+@WITH_GTK_UI_TRUE@	librhythmcat_ui_2_0_la-rc-ui-plugin.lo \
+@WITH_GTK_UI_TRUE@	librhythmcat_ui_2_0_la-rc-ui-settings.lo \
+@WITH_GTK_UI_TRUE@	librhythmcat_ui_2_0_la-rc-ui-effect.lo \
+@WITH_GTK_UI_TRUE@	librhythmcat_ui_2_0_la-rc-ui-cell-renderer-rating.lo \
+@WITH_GTK_UI_TRUE@	librhythmcat_ui_2_0_la-rc-main.lo
+@WITH_GTK_UI_TRUE@am__objects_2 =  \
+@WITH_GTK_UI_TRUE@	librhythmcat_ui_2_0_la-rc-ui-resources.lo \
+@WITH_GTK_UI_TRUE@	librhythmcat_ui_2_0_la-rc-marshal.lo
 @WITH_GTK_UI_TRUE@am_librhythmcat_ui_2_0_la_OBJECTS =  \
 @WITH_GTK_UI_TRUE@	$(am__objects_1) $(am__objects_2)
 librhythmcat_ui_2_0_la_OBJECTS = $(am_librhythmcat_ui_2_0_la_OBJECTS)
@@ -100,19 +111,19 @@ am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
 am__v_lt_0 = --silent
 librhythmcat_ui_2_0_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC \
 	$(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link $(CCLD) \
-	$(AM_CFLAGS) $(CFLAGS) $(librhythmcat_ui_2_0_la_LDFLAGS) \
-	$(LDFLAGS) -o $@
+	$(librhythmcat_ui_2_0_la_CFLAGS) $(CFLAGS) \
+	$(librhythmcat_ui_2_0_la_LDFLAGS) $(LDFLAGS) -o $@
 @WITH_GTK_UI_TRUE@am_librhythmcat_ui_2_0_la_rpath =
 am__installdirs = "$(DESTDIR)$(bindir)" "$(DESTDIR)$(girdir)" \
 	"$(DESTDIR)$(pkgconfigdir)" "$(DESTDIR)$(typelibdir)" \
 	"$(DESTDIR)$(librhythmcat_ui_2_0includedir)"
 PROGRAMS = $(bin_PROGRAMS)
 am__RhythmCat2_SOURCES_DIST = main.c
-@WITH_GTK_UI_TRUE@am_RhythmCat2_OBJECTS = main.$(OBJEXT)
+@WITH_GTK_UI_TRUE@am_RhythmCat2_OBJECTS = RhythmCat2-main.$(OBJEXT)
 RhythmCat2_OBJECTS = $(am_RhythmCat2_OBJECTS)
 RhythmCat2_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
-	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
-	$(RhythmCat2_LDFLAGS) $(LDFLAGS) -o $@
+	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(RhythmCat2_CFLAGS) \
+	$(CFLAGS) $(RhythmCat2_LDFLAGS) $(LDFLAGS) -o $@
 DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__depfiles_maybe = depfiles
@@ -456,21 +467,23 @@ top_srcdir = @top_srcdir@
 @WITH_GTK_UI_TRUE@	@GLIB2_LIBS@ @GTK_LIBS@ @GSTREAMER_LIBS@ \
 @WITH_GTK_UI_TRUE@	$(top_builddir)/lib/librhythmcat-2.0.la \
 @WITH_GTK_UI_TRUE@	$(am__append_1)
-@WITH_GTK_UI_TRUE@CLEANFILES = $(BUILT_SOURCES) $(am__append_6)
+@WITH_GTK_UI_TRUE@CLEANFILES = $(BUILT_SOURCES) $(am__append_7)
 @WITH_GTK_UI_TRUE@RhythmCat2_DEPENDENCIES = @LIBOBJS@ librhythmcat-ui-2.0.la
 @WITH_GTK_UI_TRUE@RhythmCat2_LDFLAGS = -export-dynamic -no-undefined \
 @WITH_GTK_UI_TRUE@	-export-symbols-regex "^[[^_]].*" -O2 \
-@WITH_GTK_UI_TRUE@	$(am__append_5)
+@WITH_GTK_UI_TRUE@	$(am__append_6)
 @WITH_GTK_UI_TRUE@AM_CFLAGS = @GLIB2_CFLAGS@ @GTK_CFLAGS@ \
 @WITH_GTK_UI_TRUE@	@GSTREAMER_CFLAGS@ \
 @WITH_GTK_UI_TRUE@	-DLOCALEDIR=\"$(localedir)\" \
 @WITH_GTK_UI_TRUE@	-I$(top_srcdir)/lib -DLIBDIR=\"$(libdir)\" \
-@WITH_GTK_UI_TRUE@	-DPREFIXDIR=\"$(prefix)\" $(am__append_2) \
+@WITH_GTK_UI_TRUE@	-DPREFIXDIR=\"$(prefix)\" $(am__append_2)
+@WITH_GTK_UI_TRUE@librhythmcat_ui_2_0_la_CFLAGS = $(AM_CFLAGS) \
 @WITH_GTK_UI_TRUE@	$(am__append_3)
+@WITH_GTK_UI_TRUE@RhythmCat2_CFLAGS = $(AM_CFLAGS) $(am__append_4)
 @WITH_GTK_UI_TRUE@RhythmCat2_LDADD = @LIBOBJS@ @GLIB2_LIBS@ @GTK_LIBS@ \
 @WITH_GTK_UI_TRUE@	@GSTREAMER_LIBS@ \
 @WITH_GTK_UI_TRUE@	$(top_builddir)/lib/librhythmcat-2.0.la \
-@WITH_GTK_UI_TRUE@	librhythmcat-ui-2.0.la $(am__append_4)
+@WITH_GTK_UI_TRUE@	librhythmcat-ui-2.0.la $(am__append_5)
 @WITH_GTK_UI_TRUE@EXTRA_DIST = \
 @WITH_GTK_UI_TRUE@    rc-marshal.list \
 @WITH_GTK_UI_TRUE@    rhythmcat-2.0.pc.in \
@@ -600,23 +613,23 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/main.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rc-main.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rc-marshal.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rc-ui-cell-renderer-rating.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rc-ui-dialog.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rc-ui-effect.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rc-ui-listmodel.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rc-ui-listview.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rc-ui-menu.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rc-ui-player.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rc-ui-plugin.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rc-ui-resources.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rc-ui-settings.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rc-ui-slabel.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rc-ui-spectrum.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rc-ui-style.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rc-ui-window.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/RhythmCat2-main.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/librhythmcat_ui_2_0_la-rc-main.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/librhythmcat_ui_2_0_la-rc-marshal.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/librhythmcat_ui_2_0_la-rc-ui-cell-renderer-rating.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/librhythmcat_ui_2_0_la-rc-ui-dialog.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/librhythmcat_ui_2_0_la-rc-ui-effect.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/librhythmcat_ui_2_0_la-rc-ui-listmodel.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/librhythmcat_ui_2_0_la-rc-ui-listview.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/librhythmcat_ui_2_0_la-rc-ui-menu.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/librhythmcat_ui_2_0_la-rc-ui-player.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/librhythmcat_ui_2_0_la-rc-ui-plugin.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/librhythmcat_ui_2_0_la-rc-ui-resources.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/librhythmcat_ui_2_0_la-rc-ui-settings.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/librhythmcat_ui_2_0_la-rc-ui-slabel.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/librhythmcat_ui_2_0_la-rc-ui-spectrum.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/librhythmcat_ui_2_0_la-rc-ui-style.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/librhythmcat_ui_2_0_la-rc-ui-window.Plo@am__quote@
 
 .c.o:
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(COMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
@@ -638,6 +651,132 @@ distclean-compile:
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='$<' object='$@' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LTCOMPILE) -c -o $@ $<
+
+librhythmcat_ui_2_0_la-rc-ui-listmodel.lo: rc-ui-listmodel.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(librhythmcat_ui_2_0_la_CFLAGS) $(CFLAGS) -MT librhythmcat_ui_2_0_la-rc-ui-listmodel.lo -MD -MP -MF $(DEPDIR)/librhythmcat_ui_2_0_la-rc-ui-listmodel.Tpo -c -o librhythmcat_ui_2_0_la-rc-ui-listmodel.lo `test -f 'rc-ui-listmodel.c' || echo '$(srcdir)/'`rc-ui-listmodel.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/librhythmcat_ui_2_0_la-rc-ui-listmodel.Tpo $(DEPDIR)/librhythmcat_ui_2_0_la-rc-ui-listmodel.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='rc-ui-listmodel.c' object='librhythmcat_ui_2_0_la-rc-ui-listmodel.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(librhythmcat_ui_2_0_la_CFLAGS) $(CFLAGS) -c -o librhythmcat_ui_2_0_la-rc-ui-listmodel.lo `test -f 'rc-ui-listmodel.c' || echo '$(srcdir)/'`rc-ui-listmodel.c
+
+librhythmcat_ui_2_0_la-rc-ui-player.lo: rc-ui-player.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(librhythmcat_ui_2_0_la_CFLAGS) $(CFLAGS) -MT librhythmcat_ui_2_0_la-rc-ui-player.lo -MD -MP -MF $(DEPDIR)/librhythmcat_ui_2_0_la-rc-ui-player.Tpo -c -o librhythmcat_ui_2_0_la-rc-ui-player.lo `test -f 'rc-ui-player.c' || echo '$(srcdir)/'`rc-ui-player.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/librhythmcat_ui_2_0_la-rc-ui-player.Tpo $(DEPDIR)/librhythmcat_ui_2_0_la-rc-ui-player.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='rc-ui-player.c' object='librhythmcat_ui_2_0_la-rc-ui-player.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(librhythmcat_ui_2_0_la_CFLAGS) $(CFLAGS) -c -o librhythmcat_ui_2_0_la-rc-ui-player.lo `test -f 'rc-ui-player.c' || echo '$(srcdir)/'`rc-ui-player.c
+
+librhythmcat_ui_2_0_la-rc-ui-window.lo: rc-ui-window.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(librhythmcat_ui_2_0_la_CFLAGS) $(CFLAGS) -MT librhythmcat_ui_2_0_la-rc-ui-window.lo -MD -MP -MF $(DEPDIR)/librhythmcat_ui_2_0_la-rc-ui-window.Tpo -c -o librhythmcat_ui_2_0_la-rc-ui-window.lo `test -f 'rc-ui-window.c' || echo '$(srcdir)/'`rc-ui-window.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/librhythmcat_ui_2_0_la-rc-ui-window.Tpo $(DEPDIR)/librhythmcat_ui_2_0_la-rc-ui-window.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='rc-ui-window.c' object='librhythmcat_ui_2_0_la-rc-ui-window.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(librhythmcat_ui_2_0_la_CFLAGS) $(CFLAGS) -c -o librhythmcat_ui_2_0_la-rc-ui-window.lo `test -f 'rc-ui-window.c' || echo '$(srcdir)/'`rc-ui-window.c
+
+librhythmcat_ui_2_0_la-rc-ui-listview.lo: rc-ui-listview.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(librhythmcat_ui_2_0_la_CFLAGS) $(CFLAGS) -MT librhythmcat_ui_2_0_la-rc-ui-listview.lo -MD -MP -MF $(DEPDIR)/librhythmcat_ui_2_0_la-rc-ui-listview.Tpo -c -o librhythmcat_ui_2_0_la-rc-ui-listview.lo `test -f 'rc-ui-listview.c' || echo '$(srcdir)/'`rc-ui-listview.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/librhythmcat_ui_2_0_la-rc-ui-listview.Tpo $(DEPDIR)/librhythmcat_ui_2_0_la-rc-ui-listview.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='rc-ui-listview.c' object='librhythmcat_ui_2_0_la-rc-ui-listview.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(librhythmcat_ui_2_0_la_CFLAGS) $(CFLAGS) -c -o librhythmcat_ui_2_0_la-rc-ui-listview.lo `test -f 'rc-ui-listview.c' || echo '$(srcdir)/'`rc-ui-listview.c
+
+librhythmcat_ui_2_0_la-rc-ui-menu.lo: rc-ui-menu.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(librhythmcat_ui_2_0_la_CFLAGS) $(CFLAGS) -MT librhythmcat_ui_2_0_la-rc-ui-menu.lo -MD -MP -MF $(DEPDIR)/librhythmcat_ui_2_0_la-rc-ui-menu.Tpo -c -o librhythmcat_ui_2_0_la-rc-ui-menu.lo `test -f 'rc-ui-menu.c' || echo '$(srcdir)/'`rc-ui-menu.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/librhythmcat_ui_2_0_la-rc-ui-menu.Tpo $(DEPDIR)/librhythmcat_ui_2_0_la-rc-ui-menu.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='rc-ui-menu.c' object='librhythmcat_ui_2_0_la-rc-ui-menu.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(librhythmcat_ui_2_0_la_CFLAGS) $(CFLAGS) -c -o librhythmcat_ui_2_0_la-rc-ui-menu.lo `test -f 'rc-ui-menu.c' || echo '$(srcdir)/'`rc-ui-menu.c
+
+librhythmcat_ui_2_0_la-rc-ui-dialog.lo: rc-ui-dialog.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(librhythmcat_ui_2_0_la_CFLAGS) $(CFLAGS) -MT librhythmcat_ui_2_0_la-rc-ui-dialog.lo -MD -MP -MF $(DEPDIR)/librhythmcat_ui_2_0_la-rc-ui-dialog.Tpo -c -o librhythmcat_ui_2_0_la-rc-ui-dialog.lo `test -f 'rc-ui-dialog.c' || echo '$(srcdir)/'`rc-ui-dialog.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/librhythmcat_ui_2_0_la-rc-ui-dialog.Tpo $(DEPDIR)/librhythmcat_ui_2_0_la-rc-ui-dialog.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='rc-ui-dialog.c' object='librhythmcat_ui_2_0_la-rc-ui-dialog.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(librhythmcat_ui_2_0_la_CFLAGS) $(CFLAGS) -c -o librhythmcat_ui_2_0_la-rc-ui-dialog.lo `test -f 'rc-ui-dialog.c' || echo '$(srcdir)/'`rc-ui-dialog.c
+
+librhythmcat_ui_2_0_la-rc-ui-slabel.lo: rc-ui-slabel.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(librhythmcat_ui_2_0_la_CFLAGS) $(CFLAGS) -MT librhythmcat_ui_2_0_la-rc-ui-slabel.lo -MD -MP -MF $(DEPDIR)/librhythmcat_ui_2_0_la-rc-ui-slabel.Tpo -c -o librhythmcat_ui_2_0_la-rc-ui-slabel.lo `test -f 'rc-ui-slabel.c' || echo '$(srcdir)/'`rc-ui-slabel.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/librhythmcat_ui_2_0_la-rc-ui-slabel.Tpo $(DEPDIR)/librhythmcat_ui_2_0_la-rc-ui-slabel.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='rc-ui-slabel.c' object='librhythmcat_ui_2_0_la-rc-ui-slabel.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(librhythmcat_ui_2_0_la_CFLAGS) $(CFLAGS) -c -o librhythmcat_ui_2_0_la-rc-ui-slabel.lo `test -f 'rc-ui-slabel.c' || echo '$(srcdir)/'`rc-ui-slabel.c
+
+librhythmcat_ui_2_0_la-rc-ui-spectrum.lo: rc-ui-spectrum.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(librhythmcat_ui_2_0_la_CFLAGS) $(CFLAGS) -MT librhythmcat_ui_2_0_la-rc-ui-spectrum.lo -MD -MP -MF $(DEPDIR)/librhythmcat_ui_2_0_la-rc-ui-spectrum.Tpo -c -o librhythmcat_ui_2_0_la-rc-ui-spectrum.lo `test -f 'rc-ui-spectrum.c' || echo '$(srcdir)/'`rc-ui-spectrum.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/librhythmcat_ui_2_0_la-rc-ui-spectrum.Tpo $(DEPDIR)/librhythmcat_ui_2_0_la-rc-ui-spectrum.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='rc-ui-spectrum.c' object='librhythmcat_ui_2_0_la-rc-ui-spectrum.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(librhythmcat_ui_2_0_la_CFLAGS) $(CFLAGS) -c -o librhythmcat_ui_2_0_la-rc-ui-spectrum.lo `test -f 'rc-ui-spectrum.c' || echo '$(srcdir)/'`rc-ui-spectrum.c
+
+librhythmcat_ui_2_0_la-rc-ui-style.lo: rc-ui-style.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(librhythmcat_ui_2_0_la_CFLAGS) $(CFLAGS) -MT librhythmcat_ui_2_0_la-rc-ui-style.lo -MD -MP -MF $(DEPDIR)/librhythmcat_ui_2_0_la-rc-ui-style.Tpo -c -o librhythmcat_ui_2_0_la-rc-ui-style.lo `test -f 'rc-ui-style.c' || echo '$(srcdir)/'`rc-ui-style.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/librhythmcat_ui_2_0_la-rc-ui-style.Tpo $(DEPDIR)/librhythmcat_ui_2_0_la-rc-ui-style.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='rc-ui-style.c' object='librhythmcat_ui_2_0_la-rc-ui-style.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(librhythmcat_ui_2_0_la_CFLAGS) $(CFLAGS) -c -o librhythmcat_ui_2_0_la-rc-ui-style.lo `test -f 'rc-ui-style.c' || echo '$(srcdir)/'`rc-ui-style.c
+
+librhythmcat_ui_2_0_la-rc-ui-plugin.lo: rc-ui-plugin.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(librhythmcat_ui_2_0_la_CFLAGS) $(CFLAGS) -MT librhythmcat_ui_2_0_la-rc-ui-plugin.lo -MD -MP -MF $(DEPDIR)/librhythmcat_ui_2_0_la-rc-ui-plugin.Tpo -c -o librhythmcat_ui_2_0_la-rc-ui-plugin.lo `test -f 'rc-ui-plugin.c' || echo '$(srcdir)/'`rc-ui-plugin.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/librhythmcat_ui_2_0_la-rc-ui-plugin.Tpo $(DEPDIR)/librhythmcat_ui_2_0_la-rc-ui-plugin.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='rc-ui-plugin.c' object='librhythmcat_ui_2_0_la-rc-ui-plugin.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(librhythmcat_ui_2_0_la_CFLAGS) $(CFLAGS) -c -o librhythmcat_ui_2_0_la-rc-ui-plugin.lo `test -f 'rc-ui-plugin.c' || echo '$(srcdir)/'`rc-ui-plugin.c
+
+librhythmcat_ui_2_0_la-rc-ui-settings.lo: rc-ui-settings.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(librhythmcat_ui_2_0_la_CFLAGS) $(CFLAGS) -MT librhythmcat_ui_2_0_la-rc-ui-settings.lo -MD -MP -MF $(DEPDIR)/librhythmcat_ui_2_0_la-rc-ui-settings.Tpo -c -o librhythmcat_ui_2_0_la-rc-ui-settings.lo `test -f 'rc-ui-settings.c' || echo '$(srcdir)/'`rc-ui-settings.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/librhythmcat_ui_2_0_la-rc-ui-settings.Tpo $(DEPDIR)/librhythmcat_ui_2_0_la-rc-ui-settings.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='rc-ui-settings.c' object='librhythmcat_ui_2_0_la-rc-ui-settings.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(librhythmcat_ui_2_0_la_CFLAGS) $(CFLAGS) -c -o librhythmcat_ui_2_0_la-rc-ui-settings.lo `test -f 'rc-ui-settings.c' || echo '$(srcdir)/'`rc-ui-settings.c
+
+librhythmcat_ui_2_0_la-rc-ui-effect.lo: rc-ui-effect.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(librhythmcat_ui_2_0_la_CFLAGS) $(CFLAGS) -MT librhythmcat_ui_2_0_la-rc-ui-effect.lo -MD -MP -MF $(DEPDIR)/librhythmcat_ui_2_0_la-rc-ui-effect.Tpo -c -o librhythmcat_ui_2_0_la-rc-ui-effect.lo `test -f 'rc-ui-effect.c' || echo '$(srcdir)/'`rc-ui-effect.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/librhythmcat_ui_2_0_la-rc-ui-effect.Tpo $(DEPDIR)/librhythmcat_ui_2_0_la-rc-ui-effect.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='rc-ui-effect.c' object='librhythmcat_ui_2_0_la-rc-ui-effect.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(librhythmcat_ui_2_0_la_CFLAGS) $(CFLAGS) -c -o librhythmcat_ui_2_0_la-rc-ui-effect.lo `test -f 'rc-ui-effect.c' || echo '$(srcdir)/'`rc-ui-effect.c
+
+librhythmcat_ui_2_0_la-rc-ui-cell-renderer-rating.lo: rc-ui-cell-renderer-rating.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(librhythmcat_ui_2_0_la_CFLAGS) $(CFLAGS) -MT librhythmcat_ui_2_0_la-rc-ui-cell-renderer-rating.lo -MD -MP -MF $(DEPDIR)/librhythmcat_ui_2_0_la-rc-ui-cell-renderer-rating.Tpo -c -o librhythmcat_ui_2_0_la-rc-ui-cell-renderer-rating.lo `test -f 'rc-ui-cell-renderer-rating.c' || echo '$(srcdir)/'`rc-ui-cell-renderer-rating.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/librhythmcat_ui_2_0_la-rc-ui-cell-renderer-rating.Tpo $(DEPDIR)/librhythmcat_ui_2_0_la-rc-ui-cell-renderer-rating.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='rc-ui-cell-renderer-rating.c' object='librhythmcat_ui_2_0_la-rc-ui-cell-renderer-rating.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(librhythmcat_ui_2_0_la_CFLAGS) $(CFLAGS) -c -o librhythmcat_ui_2_0_la-rc-ui-cell-renderer-rating.lo `test -f 'rc-ui-cell-renderer-rating.c' || echo '$(srcdir)/'`rc-ui-cell-renderer-rating.c
+
+librhythmcat_ui_2_0_la-rc-main.lo: rc-main.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(librhythmcat_ui_2_0_la_CFLAGS) $(CFLAGS) -MT librhythmcat_ui_2_0_la-rc-main.lo -MD -MP -MF $(DEPDIR)/librhythmcat_ui_2_0_la-rc-main.Tpo -c -o librhythmcat_ui_2_0_la-rc-main.lo `test -f 'rc-main.c' || echo '$(srcdir)/'`rc-main.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/librhythmcat_ui_2_0_la-rc-main.Tpo $(DEPDIR)/librhythmcat_ui_2_0_la-rc-main.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='rc-main.c' object='librhythmcat_ui_2_0_la-rc-main.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(librhythmcat_ui_2_0_la_CFLAGS) $(CFLAGS) -c -o librhythmcat_ui_2_0_la-rc-main.lo `test -f 'rc-main.c' || echo '$(srcdir)/'`rc-main.c
+
+librhythmcat_ui_2_0_la-rc-ui-resources.lo: rc-ui-resources.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(librhythmcat_ui_2_0_la_CFLAGS) $(CFLAGS) -MT librhythmcat_ui_2_0_la-rc-ui-resources.lo -MD -MP -MF $(DEPDIR)/librhythmcat_ui_2_0_la-rc-ui-resources.Tpo -c -o librhythmcat_ui_2_0_la-rc-ui-resources.lo `test -f 'rc-ui-resources.c' || echo '$(srcdir)/'`rc-ui-resources.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/librhythmcat_ui_2_0_la-rc-ui-resources.Tpo $(DEPDIR)/librhythmcat_ui_2_0_la-rc-ui-resources.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='rc-ui-resources.c' object='librhythmcat_ui_2_0_la-rc-ui-resources.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(librhythmcat_ui_2_0_la_CFLAGS) $(CFLAGS) -c -o librhythmcat_ui_2_0_la-rc-ui-resources.lo `test -f 'rc-ui-resources.c' || echo '$(srcdir)/'`rc-ui-resources.c
+
+librhythmcat_ui_2_0_la-rc-marshal.lo: rc-marshal.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(librhythmcat_ui_2_0_la_CFLAGS) $(CFLAGS) -MT librhythmcat_ui_2_0_la-rc-marshal.lo -MD -MP -MF $(DEPDIR)/librhythmcat_ui_2_0_la-rc-marshal.Tpo -c -o librhythmcat_ui_2_0_la-rc-marshal.lo `test -f 'rc-marshal.c' || echo '$(srcdir)/'`rc-marshal.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/librhythmcat_ui_2_0_la-rc-marshal.Tpo $(DEPDIR)/librhythmcat_ui_2_0_la-rc-marshal.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='rc-marshal.c' object='librhythmcat_ui_2_0_la-rc-marshal.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(librhythmcat_ui_2_0_la_CFLAGS) $(CFLAGS) -c -o librhythmcat_ui_2_0_la-rc-marshal.lo `test -f 'rc-marshal.c' || echo '$(srcdir)/'`rc-marshal.c
+
+RhythmCat2-main.o: main.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(RhythmCat2_CFLAGS) $(CFLAGS) -MT RhythmCat2-main.o -MD -MP -MF $(DEPDIR)/RhythmCat2-main.Tpo -c -o RhythmCat2-main.o `test -f 'main.c' || echo '$(srcdir)/'`main.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/RhythmCat2-main.Tpo $(DEPDIR)/RhythmCat2-main.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='main.c' object='RhythmCat2-main.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(RhythmCat2_CFLAGS) $(CFLAGS) -c -o RhythmCat2-main.o `test -f 'main.c' || echo '$(srcdir)/'`main.c
+
+RhythmCat2-main.obj: main.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(RhythmCat2_CFLAGS) $(CFLAGS) -MT RhythmCat2-main.obj -MD -MP -MF $(DEPDIR)/RhythmCat2-main.Tpo -c -o RhythmCat2-main.obj `if test -f 'main.c'; then $(CYGPATH_W) 'main.c'; else $(CYGPATH_W) '$(srcdir)/main.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/RhythmCat2-main.Tpo $(DEPDIR)/RhythmCat2-main.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='main.c' object='RhythmCat2-main.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(RhythmCat2_CFLAGS) $(CFLAGS) -c -o RhythmCat2-main.obj `if test -f 'main.c'; then $(CYGPATH_W) 'main.c'; else $(CYGPATH_W) '$(srcdir)/main.c'; fi`
 
 mostlyclean-libtool:
 	-rm -f *.lo

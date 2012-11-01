@@ -3315,7 +3315,7 @@ gboolean rclib_db_playlist_data_query(RCLibDbPlaylistData *playlist_data,
     if(playlist_data==NULL || query==NULL)
         return FALSE;
     cancellable = g_object_ref(cancellable);
-    for(i=0;i<query->len;i++)
+    for(i=0;i<((GPtrArray *)query)->len;i++)
     {
         if(cancellable!=NULL)
         {
@@ -3325,7 +3325,7 @@ gboolean rclib_db_playlist_data_query(RCLibDbPlaylistData *playlist_data,
                 return FALSE;
             }
         }
-        query_data = g_ptr_array_index(query, i);
+        query_data = g_ptr_array_index((GPtrArray *)query, i);
         if(query_data==NULL) continue;
         switch(query_data->type)
         {
@@ -4295,7 +4295,7 @@ GPtrArray *rclib_db_playlist_query_get_iters(RCLibDbCatalogIter *catalog_iter,
  * @rating_limit: whether to use rating limit
  * @condition: the condition, #TRUE to get a random iter which pointed to
  *     the #RCLibDbPlaylistData whose rating is less or equal to the @rating,
- *     #FLASE to get the a random iter which pointed to the
+ *     #FALSE to get the a random iter which pointed to the
  *     #RCLibDbPlaylistData whose rating is greater or equal to the @rating
  * @rating: the rating limit value
  * 
@@ -4409,7 +4409,7 @@ RCLibDbPlaylistIter *rclib_db_playlist_get_random_iter(
  * @rating_limit: whether to use rating limit
  * @condition: the condition, #TRUE to get a random iter which pointed to
  *     the #RCLibDbPlaylistData whose rating is less or equal to the @rating,
- *     #FLASE to get the a random iter which pointed to the
+ *     #FALSE to get the a random iter which pointed to the
  *     #RCLibDbPlaylistData whose rating is greater or equal to the @rating
  * @rating: the rating limit value
  * 

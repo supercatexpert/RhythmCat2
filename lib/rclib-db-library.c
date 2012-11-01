@@ -1090,7 +1090,7 @@ gboolean rclib_db_library_data_query(RCLibDbLibraryData *library_data,
     if(library_data==NULL || query==NULL)
         return FALSE;
     cancellable = g_object_ref(cancellable);
-    for(i=0;i<query->len;i++)
+    for(i=0;i<((GPtrArray *)query)->len;i++)
     {
         if(cancellable!=NULL)
         {
@@ -1100,7 +1100,7 @@ gboolean rclib_db_library_data_query(RCLibDbLibraryData *library_data,
                 return FALSE;
             }
         }
-        query_data = g_ptr_array_index(query, i);
+        query_data = g_ptr_array_index((GPtrArray *)query, i);
         if(query_data==NULL) continue;
         switch(query_data->type)
         {

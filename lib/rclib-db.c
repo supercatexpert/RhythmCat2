@@ -47,6 +47,11 @@
  * the metadata in playlists asynchronously.
  */
 
+struct _RCLibDbQuery
+{
+    gint dummy;
+};
+
 typedef struct RCLibDbXMLParserData
 {
     gboolean db_flag;
@@ -2037,7 +2042,7 @@ RCLibDbQuery *rclib_db_query_parse_valist(
     RCLibDbQueryConditionType condition_type;
     GType query_data_type;
     gchar *error_str = NULL;
-    query = g_ptr_array_new();
+    query = (RCLibDbQuery *)g_ptr_array_new();
     condition_type = condition1;
     while(condition_type!=RCLIB_DB_QUERY_CONDITION_TYPE_NONE)
     {
@@ -2105,7 +2110,7 @@ RCLibDbQuery *rclib_db_query_parse_valist(
             default:
                 break;
         }
-        g_ptr_array_add(query, query_data);
+        g_ptr_array_add((GPtrArray *)query, query_data);
         condition_type = va_arg(args, RCLibDbQueryConditionType);
     }
     return query;
@@ -2128,9 +2133,9 @@ gboolean rclib_db_query_concatenate(RCLibDbQuery *target,
     RCLibDbQueryData *data;
     RCLibDbQueryData *new_data;
     if(target==NULL || src==NULL) return FALSE;
-    for(i=0;i<src->len;i++)
+    for(i=0;i<((GPtrArray *)src)->len;i++)
     {
-        data = g_ptr_array_index(src, i);
+        data = g_ptr_array_index((const GPtrArray *)src, i);
         new_data = g_new0(RCLibDbQueryData, 1);
         new_data->type = data->type;
         new_data->propid = data->propid;
@@ -2142,7 +2147,7 @@ gboolean rclib_db_query_concatenate(RCLibDbQuery *target,
         }
         if(data->subquery!=NULL)
             new_data->subquery = rclib_db_query_copy(data->subquery);
-        g_ptr_array_add(target, new_data);
+        g_ptr_array_add((GPtrArray *)target, new_data);
     }
     return TRUE;
 }
@@ -2160,7 +2165,7 @@ RCLibDbQuery *rclib_db_query_copy(const RCLibDbQuery *query)
 {
     RCLibDbQuery *new_query = NULL;
     if(query==NULL) return NULL;
-    new_query = g_ptr_array_new();
+    new_query = (RCLibDbQuery *)g_ptr_array_new();
     rclib_db_query_concatenate(new_query, query);
     return new_query;
 }
@@ -2177,9 +2182,9 @@ void rclib_db_query_free(RCLibDbQuery *query)
     RCLibDbQueryData *query_data;
     guint i;
     if(query==NULL) return;
-    for(i=0;i<query->len;i++)
+    for(i=0;i<((GPtrArray *)query)->len;i++)
     {
-        query_data = g_ptr_array_index(query, i);
+        query_data = g_ptr_array_index((GPtrArray *)query, i);
         switch(query_data->type)
         {
             case RCLIB_DB_QUERY_CONDITION_TYPE_SUBQUERY:
@@ -2208,7 +2213,7 @@ void rclib_db_query_free(RCLibDbQuery *query)
         }
         g_free(query_data);
     }
-    g_ptr_array_free(query, TRUE);
+    g_ptr_array_free((GPtrArray *)query, TRUE);
 }
 
 /**

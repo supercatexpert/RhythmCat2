@@ -309,7 +309,7 @@ typedef struct _RCLibDbPlaylistSequence RCLibDbPlaylistSequence;
 typedef struct _RCLibDbCatalogIter RCLibDbCatalogIter;
 typedef struct _RCLibDbPlaylistIter RCLibDbPlaylistIter;
 
-typedef GPtrArray RCLibDbQuery;
+typedef struct _RCLibDbQuery RCLibDbQuery;
 
 /**
  * RCLibDb:
