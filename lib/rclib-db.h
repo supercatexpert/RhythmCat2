@@ -50,7 +50,7 @@ G_BEGIN_DECLS
     (rclib_db_library_query_result_get_type())
 #define RCLIB_DB_LIBRARY_QUERY_RESULT(obj) (G_TYPE_CHECK_INSTANCE_CAST((obj), \
     RCLIB_TYPE_DB_LIBRARY_QUERY_RESULT, RCLibDbLibraryQueryResult))
-#define RCLIB_DB_LIBRARY_QUERY_RESULT_class(k) (G_TYPE_CHECK_CLASS_CAST((k), \
+#define RCLIB_DB_LIBRARY_QUERY_RESULT_CLASS(k) (G_TYPE_CHECK_CLASS_CAST((k), \
     RCLIB_TYPE_DB_LIBRARY_QUERY_RESULT, RCLibDbLibraryQueryResultClass))
 #define RCLIB_IS_DB_LIBRARY_QUERY_RESULT(o) (G_TYPE_CHECK_INSTANCE_TYPE((o), \
     RCLIB_TYPE_DB_LIBRARY_QUERY_RESULT))
@@ -62,7 +62,11 @@ G_BEGIN_DECLS
     
 #define RCLIB_TYPE_DB_CATALOG_DATA (rclib_db_catalog_data_get_type())
 #define RCLIB_TYPE_DB_PLAYLIST_DATA (rclib_db_playlist_data_get_type())
+#define RCLIB_TYPE_DB_CATALOG_ITER (rclib_db_catalog_iter_get_type())
+#define RCLIB_TYPE_DB_PLAYLIST_ITER (rclib_db_playlist_data_get_type())
 #define RCLIB_TYPE_DB_LIBRARY_DATA (rclib_db_library_data_get_type())
+#define RCLIB_TYPE_DB_LIBRARY_QUERY_RESULT_ITER \
+    (rclib_db_library_query_result_iter_get_type())
 #define RCLIB_TYPE_DB_QUERY (rclib_db_query_get_type())
 
 /**
@@ -110,7 +114,7 @@ typedef enum {
  * RCLibDbCatalogDataType:
  * @RCLIB_DB_CATALOG_DATA_TYPE_NONE: none type, not used by data
  * @RCLIB_DB_CATALOG_DATA_TYPE_PLAYLIST: the playlist
- *     (#RCLibDbPlaylistSequence)
+ *     (#RCLibDbPlaylistSequence), should not be used out of this module
  * @RCLIB_DB_CATALOG_DATA_TYPE_SELF_ITER: the iter pointed to self
  *     (#RCLibDbCatalogIter)
  * @RCLIB_DB_CATALOG_DATA_TYPE_NAME: the catalog name (string)
@@ -133,7 +137,7 @@ typedef enum {
 /**
  * RCLibDbPlaylistDataType:
  * @RCLIB_DB_PLAYLIST_DATA_TYPE_NONE: none type, not used by data
- * @RCLIB_DB_PLAYLIST_DATA_TYPE_CATALOG: the catalog (#RCLibDbCatalogSequence)
+ * @RCLIB_DB_PLAYLIST_DATA_TYPE_CATALOG: the catalog (#RCLibDbCatalogIter)
  * @RCLIB_DB_PLAYLIST_DATA_TYPE_SELF_ITER: the iter pointed to self
  *     (#RCLibDbPlaylistIter)
  * @RCLIB_DB_PLAYLIST_DATA_TYPE_TYPE: the playlist type (#RCLibDbPlaylistType)
@@ -303,12 +307,9 @@ typedef struct _RCLibDbLibraryQueryResult RCLibDbLibraryQueryResult;
 typedef struct _RCLibDbLibraryQueryResultClass RCLibDbLibraryQueryResultClass;
 typedef struct _RCLibDbLibraryQueryResultPrivate
     RCLibDbLibraryQueryResultPrivate;
-
-typedef struct _RCLibDbCatalogSequence RCLibDbCatalogSequence;
-typedef struct _RCLibDbPlaylistSequence RCLibDbPlaylistSequence;
 typedef struct _RCLibDbCatalogIter RCLibDbCatalogIter;
 typedef struct _RCLibDbPlaylistIter RCLibDbPlaylistIter;
-
+typedef struct _RCLibDbLibraryQueryResultIter RCLibDbLibraryQueryResultIter;
 typedef struct _RCLibDbQuery RCLibDbQuery;
 
 /**
@@ -380,6 +381,7 @@ GType rclib_db_library_query_result_get_type();
 GType rclib_db_catalog_data_get_type();
 GType rclib_db_playlist_data_get_type();
 GType rclib_db_library_data_get_type();
+GType rclib_db_library_query_result_iter_get_type();
 GType rclib_db_query_get_type();
 
 /*< public >*/
@@ -475,7 +477,6 @@ void rclib_db_playlist_foreach(RCLibDbCatalogIter *catalog_iter,
     GFunc func, gpointer user_data);
 void rclib_db_playlist_iter_foreach_range(RCLibDbPlaylistIter *begin,
     RCLibDbPlaylistIter *end, GFunc func, gpointer user_data);
-RCLibDbCatalogSequence *rclib_db_get_catalog();
 gboolean rclib_db_catalog_is_valid_iter(RCLibDbCatalogIter *catalog_iter);
 RCLibDbCatalogIter *rclib_db_catalog_add(const gchar *name,
     RCLibDbCatalogIter *iter, gint type);
@@ -538,6 +539,8 @@ void rclib_db_library_data_uri_set(const gchar *uri,
     RCLibDbLibraryDataType type1, ...);
 void rclib_db_library_data_uri_get(const gchar *uri,
     RCLibDbLibraryDataType type1, ...);
+
+/*    
 gboolean rclib_db_library_data_query(RCLibDbLibraryData *library_data,
     RCLibDbQuery *query, GCancellable *cancellable);
 GPtrArray *rclib_db_library_query(RCLibDbQuery *query,
@@ -545,7 +548,18 @@ GPtrArray *rclib_db_library_query(RCLibDbQuery *query,
 GPtrArray *rclib_db_library_query_get_uris(RCLibDbQuery *query,
     GCancellable *cancellable);
 GObject *rclib_db_library_query_result_new();
-
+RCLibDbLibraryData *rclib_db_library_query_result_get_data(
+    RCLibDbLibraryQueryResult *query_result,
+    RCLibDbLibraryQueryResultIter *iter);
+guint rclib_db_library_query_result_get_length(
+    RCLibDbLibraryQueryResult *query_result);
+void rclib_db_library_query_result_query_start(
+    RCLibDbLibraryQueryResult *query_result, RCLibDbQuery *query);
+void rclib_db_library_query_result_query_cancel(
+    RCLibDbLibraryQueryResult *query_result);
+RCLibDbQuery *rclib_db_library_query_result_get_query(
+    RCLibDbLibraryQueryResult *query_result);
+*/
 
 /* Query Interface */
 RCLibDbQuery *rclib_db_query_parse(RCLibDbQueryConditionType condition1, ...);

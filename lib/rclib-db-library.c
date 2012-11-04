@@ -37,6 +37,11 @@ enum
     SIGNAL_LIBRARY_QUERY_RESULT_LAST
 };
 
+struct _RCLibDbLibraryQueryResultIter
+{
+    gint dummy;
+};
+
 static gint db_library_query_result_signals[SIGNAL_LIBRARY_QUERY_RESULT_LAST] =
     {0};
 static gpointer rclib_db_library_query_result_parent_class = NULL;
@@ -351,11 +356,19 @@ static void rclib_db_library_query_result_finalize(GObject *object)
         rclib_db_query_free(priv->query);
         priv->query = NULL;
     }
-    if(priv->query_result!=NULL)
+    g_rw_lock_writer_lock(&(priv->query_rw_lock));
+    if(priv->query_iter_table!=NULL)
     {
-        g_ptr_array_free(priv->query_result, TRUE);
-        priv->query_result = NULL;
+        g_hash_table_destroy(priv->query_iter_table);
+        priv->query_iter_table = NULL;
     }
+    if(priv->query_sequence!=NULL)
+    {
+        g_sequence_free(priv->query_sequence);
+        priv->query_sequence = NULL;
+    }
+    g_rw_lock_writer_unlock(&(priv->query_rw_lock));
+    g_rw_lock_clear(&(priv->query_rw_lock));
     G_OBJECT_CLASS(rclib_db_library_query_result_parent_class)->
         finalize(object);
 }
@@ -379,7 +392,11 @@ static void rclib_db_library_query_result_instance_init(
         object, RCLIB_TYPE_DB_LIBRARY_QUERY_RESULT,
         RCLibDbLibraryQueryResultPrivate);
     object->priv = priv;
-    
+    g_rw_lock_init(&(priv->query_rw_lock));
+    priv->query_sequence = g_sequence_new((GDestroyNotify)
+        rclib_db_library_data_unref);
+    priv->query_iter_table = g_hash_table_new(g_direct_hash,
+        g_direct_equal);
 }
 
 GType rclib_db_library_query_result_get_type()

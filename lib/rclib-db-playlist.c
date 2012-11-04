@@ -2282,26 +2282,6 @@ RCLibDbCatalogIter *_rclib_db_catalog_append_data_internal(
 }
 
 /**
- * rclib_db_get_catalog:
- *
- * Get the catalog.
- *
- * Returns: (transfer none): (skip): The catalog, NULL if the catalog does
- *     not exist.
- */
-
-RCLibDbCatalogSequence *rclib_db_get_catalog()
-{
-    RCLibDbPrivate *priv;
-    GObject *instance;
-    instance = rclib_db_get_instance();
-    if(instance==NULL) return NULL;
-    priv = RCLIB_DB(instance)->priv;
-    if(priv==NULL) return NULL;
-    return priv->catalog;
-}
-
-/**
  * rclib_db_catalog_is_valid_iter:
  * @catalog_iter: the iter to check
  *

@@ -42,6 +42,9 @@ typedef enum
     RCLIB_DB_REFRESH_TYPE_LIBRARY = 1
 }RCLibDbRefreshType;
 
+typedef struct _RCLibDbCatalogSequence RCLibDbCatalogSequence;
+typedef struct _RCLibDbPlaylistSequence RCLibDbPlaylistSequence;
+
 typedef struct RCLibDbImportData
 {
     RCLibDbImportType type;
@@ -120,8 +123,10 @@ struct _RCLibDbPrivate
 struct _RCLibDbLibraryQueryResultPrivate
 {
     RCLibDbQuery *query;
-    GPtrArray *query_result;
+    GSequence *query_sequence;
+    GHashTable *query_iter_table;
     GThread *query_thread;
+    GRWLock query_rw_lock;
     GCancellable *cancellable;
 };
 

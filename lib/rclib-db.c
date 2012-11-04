@@ -1565,7 +1565,7 @@ static void rclib_db_class_init(RCLibDbClass *klass)
      * @uri: the new URI added to the music library
      * 
      * The ::library-added signal is emitted when a new music item is added
-     * to the music library.
+     * to the music library. This signal is emitted in main thread.
      */
     db_signals[SIGNAL_LIBRARY_ADDED] = g_signal_new("library-added",
         RCLIB_TYPE_DB, G_SIGNAL_RUN_FIRST, G_STRUCT_OFFSET(RCLibDbClass,
@@ -1578,7 +1578,7 @@ static void rclib_db_class_init(RCLibDbClass *klass)
      * @uri: the URI of the music item that changed in the music library
      * 
      * The ::library-added signal is emitted when the data of the music item
-     * in the music library is changed.
+     * in the music library is changed. This signal is emitted in main thread.
      */
     db_signals[SIGNAL_LIBRARY_CHANGED] = g_signal_new("library-changed",
         RCLIB_TYPE_DB, G_SIGNAL_RUN_FIRST, G_STRUCT_OFFSET(RCLibDbClass,
@@ -1591,7 +1591,7 @@ static void rclib_db_class_init(RCLibDbClass *klass)
      * @uri: the URI of the music item which is about to be deleted
      * 
      * The ::library-deleted signal is emitted when the data of the music item
-     * in the music library is removed.
+     * in the music library is removed. This signal is emitted in main thread.
      */
     db_signals[SIGNAL_LIBRARY_DELETED] = g_signal_new("library-deleted",
         RCLIB_TYPE_DB, G_SIGNAL_RUN_FIRST, G_STRUCT_OFFSET(RCLibDbClass,
@@ -1680,6 +1680,33 @@ GType rclib_db_playlist_data_get_type(void)
     return g_define_type_id__volatile;
 }
 
+
+GType rclib_db_catalog_iter_get_type(void)
+{
+    static volatile gsize g_define_type_id__volatile = 0;
+    GType g_define_type_id;
+    if(g_once_init_enter(&g_define_type_id__volatile))
+    {
+        g_define_type_id = g_pointer_type_register_static(
+            g_intern_static_string("RCLibDbCatalogIter"));
+        g_once_init_leave (&g_define_type_id__volatile, g_define_type_id);
+    }
+    return g_define_type_id__volatile;
+}
+
+GType rclib_db_playlist_iter_get_type(void)
+{
+    static volatile gsize g_define_type_id__volatile = 0;
+    GType g_define_type_id;
+    if(g_once_init_enter(&g_define_type_id__volatile))
+    {
+        g_define_type_id = g_pointer_type_register_static(
+            g_intern_static_string("RCLibDbPlaylistIter"));
+        g_once_init_leave (&g_define_type_id__volatile, g_define_type_id);
+    }
+    return g_define_type_id__volatile;
+}
+
 GType rclib_db_library_data_get_type(void)
 {
     static volatile gsize g_define_type_id__volatile = 0;
@@ -1690,6 +1717,19 @@ GType rclib_db_library_data_get_type(void)
             g_intern_static_string("RCLibDbLibraryData"),
             (GBoxedCopyFunc)rclib_db_library_data_ref,
             (GBoxedFreeFunc)rclib_db_library_data_unref);
+        g_once_init_leave (&g_define_type_id__volatile, g_define_type_id);
+    }
+    return g_define_type_id__volatile;
+}
+
+GType rclib_db_library_query_result_iter_get_type(void)
+{
+    static volatile gsize g_define_type_id__volatile = 0;
+    GType g_define_type_id;
+    if(g_once_init_enter(&g_define_type_id__volatile))
+    {
+        g_define_type_id = g_pointer_type_register_static(
+            g_intern_static_string("RCLibDbLibraryQueryResultIter"));
         g_once_init_leave (&g_define_type_id__volatile, g_define_type_id);
     }
     return g_define_type_id__volatile;
