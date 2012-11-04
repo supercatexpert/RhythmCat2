@@ -141,14 +141,16 @@
 <ANCHOR id="RCLibDbLibraryQueryResult.synopsis" href="LibRhythmCat/RCLibDbLibraryQueryResult.html#RCLibDbLibraryQueryResult.synopsis">
 <ANCHOR id="RCLibDb" href="LibRhythmCat/RCLibDbLibraryQueryResult.html#RCLibDb">
 <ANCHOR id="RCLibDbCatalogData" href="LibRhythmCat/RCLibDbLibraryQueryResult.html#RCLibDbCatalogData">
+<ANCHOR id="RCLibDbCatalogIter" href="LibRhythmCat/RCLibDbLibraryQueryResult.html#RCLibDbCatalogIter">
 <ANCHOR id="RCLibDbLibraryData" href="LibRhythmCat/RCLibDbLibraryQueryResult.html#RCLibDbLibraryData">
+<ANCHOR id="RCLibDbLibraryQueryResultIter" href="LibRhythmCat/RCLibDbLibraryQueryResult.html#RCLibDbLibraryQueryResultIter">
 <ANCHOR id="RCLibDbPlaylistData" href="LibRhythmCat/RCLibDbLibraryQueryResult.html#RCLibDbPlaylistData">
+<ANCHOR id="RCLibDbPlaylistIter" href="LibRhythmCat/RCLibDbLibraryQueryResult.html#RCLibDbPlaylistIter">
 <ANCHOR id="RCLibDbQuery" href="LibRhythmCat/RCLibDbLibraryQueryResult.html#RCLibDbQuery">
 <ANCHOR id="RCLibDbLibraryQueryResult.object-hierarchy" href="LibRhythmCat/RCLibDbLibraryQueryResult.html#RCLibDbLibraryQueryResult.object-hierarchy">
 <ANCHOR id="RCLibDbLibraryQueryResult.signals" href="LibRhythmCat/RCLibDbLibraryQueryResult.html#RCLibDbLibraryQueryResult.signals">
 <ANCHOR id="RCLibDbLibraryQueryResult.description" href="LibRhythmCat/RCLibDbLibraryQueryResult.html#RCLibDbLibraryQueryResult.description">
 <ANCHOR id="RCLibDbLibraryQueryResult.details" href="LibRhythmCat/RCLibDbLibraryQueryResult.html#RCLibDbLibraryQueryResult.details">
-<ANCHOR id="RCLIB-DB-LIBRARY-QUERY-RESULT-class" href="LibRhythmCat/RCLibDbLibraryQueryResult.html#RCLIB-DB-LIBRARY-QUERY-RESULT-class">
 <ANCHOR id="RCLibDb-struct" href="LibRhythmCat/RCLibDbLibraryQueryResult.html#RCLibDb-struct">
 <ANCHOR id="RCLibDbCatalogData-struct" href="LibRhythmCat/RCLibDbLibraryQueryResult.html#RCLibDbCatalogData-struct">
 <ANCHOR id="RCLibDbCatalogDataType" href="LibRhythmCat/RCLibDbLibraryQueryResult.html#RCLibDbCatalogDataType">
@@ -158,8 +160,7 @@
 <ANCHOR id="RCLIB-DB-CATALOG-DATA-TYPE-NAME:CAPS" href="LibRhythmCat/RCLibDbLibraryQueryResult.html#RCLIB-DB-CATALOG-DATA-TYPE-NAME:CAPS">
 <ANCHOR id="RCLIB-DB-CATALOG-DATA-TYPE-TYPE:CAPS" href="LibRhythmCat/RCLibDbLibraryQueryResult.html#RCLIB-DB-CATALOG-DATA-TYPE-TYPE:CAPS">
 <ANCHOR id="RCLIB-DB-CATALOG-DATA-TYPE-STORE:CAPS" href="LibRhythmCat/RCLibDbLibraryQueryResult.html#RCLIB-DB-CATALOG-DATA-TYPE-STORE:CAPS">
-<ANCHOR id="RCLibDbCatalogIter" href="LibRhythmCat/RCLibDbLibraryQueryResult.html#RCLibDbCatalogIter">
-<ANCHOR id="RCLibDbCatalogSequence" href="LibRhythmCat/RCLibDbLibraryQueryResult.html#RCLibDbCatalogSequence">
+<ANCHOR id="RCLibDbCatalogIter-struct" href="LibRhythmCat/RCLibDbLibraryQueryResult.html#RCLibDbCatalogIter-struct">
 <ANCHOR id="RCLibDbCatalogType" href="LibRhythmCat/RCLibDbLibraryQueryResult.html#RCLibDbCatalogType">
 <ANCHOR id="RCLIB-DB-CATALOG-TYPE-PLAYLIST:CAPS" href="LibRhythmCat/RCLibDbLibraryQueryResult.html#RCLIB-DB-CATALOG-TYPE-PLAYLIST:CAPS">
 <ANCHOR id="RCLibDbClass" href="LibRhythmCat/RCLibDbLibraryQueryResult.html#RCLibDbClass">
@@ -182,6 +183,7 @@
 <ANCHOR id="RCLIB-DB-LIBRARY-DATA-TYPE-GENRE:CAPS" href="LibRhythmCat/RCLibDbLibraryQueryResult.html#RCLIB-DB-LIBRARY-DATA-TYPE-GENRE:CAPS">
 <ANCHOR id="RCLibDbLibraryQueryResult-struct" href="LibRhythmCat/RCLibDbLibraryQueryResult.html#RCLibDbLibraryQueryResult-struct">
 <ANCHOR id="RCLibDbLibraryQueryResultClass" href="LibRhythmCat/RCLibDbLibraryQueryResult.html#RCLibDbLibraryQueryResultClass">
+<ANCHOR id="RCLibDbLibraryQueryResultIter-struct" href="LibRhythmCat/RCLibDbLibraryQueryResult.html#RCLibDbLibraryQueryResultIter-struct">
 <ANCHOR id="RCLibDbLibraryType" href="LibRhythmCat/RCLibDbLibraryQueryResult.html#RCLibDbLibraryType">
 <ANCHOR id="RCLIB-DB-LIBRARY-TYPE-MISSING:CAPS" href="LibRhythmCat/RCLibDbLibraryQueryResult.html#RCLIB-DB-LIBRARY-TYPE-MISSING:CAPS">
 <ANCHOR id="RCLIB-DB-LIBRARY-TYPE-MUSIC:CAPS" href="LibRhythmCat/RCLibDbLibraryQueryResult.html#RCLIB-DB-LIBRARY-TYPE-MUSIC:CAPS">
@@ -205,8 +207,7 @@
 <ANCHOR id="RCLIB-DB-PLAYLIST-DATA-TYPE-LYRICSECFILE:CAPS" href="LibRhythmCat/RCLibDbLibraryQueryResult.html#RCLIB-DB-PLAYLIST-DATA-TYPE-LYRICSECFILE:CAPS">
 <ANCHOR id="RCLIB-DB-PLAYLIST-DATA-TYPE-ALBUMFILE:CAPS" href="LibRhythmCat/RCLibDbLibraryQueryResult.html#RCLIB-DB-PLAYLIST-DATA-TYPE-ALBUMFILE:CAPS">
 <ANCHOR id="RCLIB-DB-PLAYLIST-DATA-TYPE-GENRE:CAPS" href="LibRhythmCat/RCLibDbLibraryQueryResult.html#RCLIB-DB-PLAYLIST-DATA-TYPE-GENRE:CAPS">
-<ANCHOR id="RCLibDbPlaylistIter" href="LibRhythmCat/RCLibDbLibraryQueryResult.html#RCLibDbPlaylistIter">
-<ANCHOR id="RCLibDbPlaylistSequence" href="LibRhythmCat/RCLibDbLibraryQueryResult.html#RCLibDbPlaylistSequence">
+<ANCHOR id="RCLibDbPlaylistIter-struct" href="LibRhythmCat/RCLibDbLibraryQueryResult.html#RCLibDbPlaylistIter-struct">
 <ANCHOR id="RCLibDbPlaylistType" href="LibRhythmCat/RCLibDbLibraryQueryResult.html#RCLibDbPlaylistType">
 <ANCHOR id="RCLIB-DB-PLAYLIST-TYPE-MISSING:CAPS" href="LibRhythmCat/RCLibDbLibraryQueryResult.html#RCLIB-DB-PLAYLIST-TYPE-MISSING:CAPS">
 <ANCHOR id="RCLIB-DB-PLAYLIST-TYPE-MUSIC:CAPS" href="LibRhythmCat/RCLibDbLibraryQueryResult.html#RCLIB-DB-PLAYLIST-TYPE-MUSIC:CAPS">
@@ -269,7 +270,6 @@
 <ANCHOR id="rclib-db-catalog-name-sort" href="LibRhythmCat/RCLibDbLibraryQueryResult.html#rclib-db-catalog-name-sort">
 <ANCHOR id="rclib-db-catalog-reorder" href="LibRhythmCat/RCLibDbLibraryQueryResult.html#rclib-db-catalog-reorder">
 <ANCHOR id="rclib-db-exit" href="LibRhythmCat/RCLibDbLibraryQueryResult.html#rclib-db-exit">
-<ANCHOR id="rclib-db-get-catalog" href="LibRhythmCat/RCLibDbLibraryQueryResult.html#rclib-db-get-catalog">
 <ANCHOR id="rclib-db-get-instance" href="LibRhythmCat/RCLibDbLibraryQueryResult.html#rclib-db-get-instance">
 <ANCHOR id="rclib-db-get-library-table" href="LibRhythmCat/RCLibDbLibraryQueryResult.html#rclib-db-get-library-table">
 <ANCHOR id="rclib-db-import-cancel" href="LibRhythmCat/RCLibDbLibraryQueryResult.html#rclib-db-import-cancel">
@@ -280,7 +280,6 @@
 <ANCHOR id="rclib-db-library-data-free" href="LibRhythmCat/RCLibDbLibraryQueryResult.html#rclib-db-library-data-free">
 <ANCHOR id="rclib-db-library-data-get" href="LibRhythmCat/RCLibDbLibraryQueryResult.html#rclib-db-library-data-get">
 <ANCHOR id="rclib-db-library-data-new" href="LibRhythmCat/RCLibDbLibraryQueryResult.html#rclib-db-library-data-new">
-<ANCHOR id="rclib-db-library-data-query" href="LibRhythmCat/RCLibDbLibraryQueryResult.html#rclib-db-library-data-query">
 <ANCHOR id="rclib-db-library-data-ref" href="LibRhythmCat/RCLibDbLibraryQueryResult.html#rclib-db-library-data-ref">
 <ANCHOR id="rclib-db-library-data-set" href="LibRhythmCat/RCLibDbLibraryQueryResult.html#rclib-db-library-data-set">
 <ANCHOR id="rclib-db-library-data-unref" href="LibRhythmCat/RCLibDbLibraryQueryResult.html#rclib-db-library-data-unref">
@@ -289,9 +288,6 @@
 <ANCHOR id="rclib-db-library-delete" href="LibRhythmCat/RCLibDbLibraryQueryResult.html#rclib-db-library-delete">
 <ANCHOR id="rclib-db-library-get-data" href="LibRhythmCat/RCLibDbLibraryQueryResult.html#rclib-db-library-get-data">
 <ANCHOR id="rclib-db-library-has-uri" href="LibRhythmCat/RCLibDbLibraryQueryResult.html#rclib-db-library-has-uri">
-<ANCHOR id="rclib-db-library-query" href="LibRhythmCat/RCLibDbLibraryQueryResult.html#rclib-db-library-query">
-<ANCHOR id="rclib-db-library-query-get-uris" href="LibRhythmCat/RCLibDbLibraryQueryResult.html#rclib-db-library-query-get-uris">
-<ANCHOR id="rclib-db-library-query-result-new" href="LibRhythmCat/RCLibDbLibraryQueryResult.html#rclib-db-library-query-result-new">
 <ANCHOR id="rclib-db-load-autosaved" href="LibRhythmCat/RCLibDbLibraryQueryResult.html#rclib-db-load-autosaved">
 <ANCHOR id="rclib-db-load-legacy" href="LibRhythmCat/RCLibDbLibraryQueryResult.html#rclib-db-load-legacy">
 <ANCHOR id="rclib-db-playlist-add-directory" href="LibRhythmCat/RCLibDbLibraryQueryResult.html#rclib-db-playlist-add-directory">

@@ -40,14 +40,12 @@
 
 struct _RCUiCatalogStorePrivate
 {
-    RCLibDbCatalogSequence *catalog;
     gint stamp;
     gint n_columns;
 };
 
 struct _RCUiPlaylistStorePrivate
 {
-    RCLibDbPlaylistSequence *playlist;
     RCLibDbCatalogIter *catalog_iter;
     gint stamp;
     gint n_columns;
@@ -885,7 +883,6 @@ static void rc_ui_catalog_store_init(RCUiCatalogStore *store)
         RCUiCatalogStorePrivate);
     store->priv = priv;
     g_return_if_fail(priv!=NULL);
-    priv->catalog = NULL;
 	priv->stamp = g_random_int();
     priv->n_columns = RC_UI_CATALOG_COLUMN_LAST;
 }
@@ -899,7 +896,6 @@ static void rc_ui_playlist_store_init(RCUiPlaylistStore *store)
     store->priv = priv;
     g_return_if_fail(priv!=NULL);
 	priv->stamp = g_random_int();
-    priv->playlist = NULL;
     priv->catalog_iter = NULL;
     priv->n_columns = RC_UI_PLAYLIST_COLUMN_LAST;
 }
@@ -985,8 +981,6 @@ static void rc_ui_list_model_catalog_added_cb(RCLibDb *db,
         RC_UI_TYPE_PLAYLIST_STORE, NULL));    
     playlist_priv = RC_UI_PLAYLIST_STORE(playlist_model)->priv;
     playlist_priv->catalog_iter = iter;
-    rclib_db_catalog_data_iter_get(iter, RCLIB_DB_CATALOG_DATA_TYPE_PLAYLIST,
-        &(playlist_priv->playlist), RCLIB_DB_CATALOG_DATA_TYPE_NONE);
     rclib_db_catalog_data_iter_set(iter, RCLIB_DB_CATALOG_DATA_TYPE_STORE,
         playlist_model, RCLIB_DB_CATALOG_DATA_TYPE_NONE);
     pos = rclib_db_catalog_iter_get_position(iter);
@@ -1148,22 +1142,14 @@ static gboolean rc_ui_list_model_init()
 {
     RCUiCatalogStorePrivate *catalog_priv;
     RCUiPlaylistStorePrivate *playlist_priv;
-    RCLibDbCatalogSequence *catalog_seq;
     RCLibDbCatalogIter *catalog_iter;
     GtkTreeModel *playlist_model;
     if(catalog_model!=NULL) return FALSE;
-    catalog_seq = rclib_db_get_catalog();
-    if(catalog_seq==NULL)
-    {
-        g_warning("Cannot load catalog from music database!");
-        return FALSE;
-    }
     if(format_string==NULL)
         format_string = g_strdup("%TITLE");
     catalog_model = GTK_TREE_MODEL(g_object_new(
         RC_UI_TYPE_CATALOG_STORE, NULL));
     catalog_priv = RC_UI_CATALOG_STORE(catalog_model)->priv;
-    catalog_priv->catalog = catalog_seq;
     for(catalog_iter = rclib_db_catalog_get_begin_iter();catalog_iter!=NULL;
         catalog_iter = rclib_db_catalog_iter_next(catalog_iter))
     {

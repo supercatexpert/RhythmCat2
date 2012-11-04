@@ -105,23 +105,21 @@
     <keyword type="function" name="rclib_cue_get_track_num ()" link="LibRhythmCat-Cue-Parser.html#rclib-cue-get-track-num"/>
     <keyword type="function" name="rclib_cue_read_data ()" link="LibRhythmCat-Cue-Parser.html#rclib-cue-read-data"/>
     <keyword type="function" name="rclib_cue_set_fallback_encoding ()" link="LibRhythmCat-Cue-Parser.html#rclib-cue-set-fallback-encoding"/>
-    <keyword type="macro" name="RCLIB_DB_LIBRARY_QUERY_RESULT_class()" link="RCLibDbLibraryQueryResult.html#RCLIB-DB-LIBRARY-QUERY-RESULT-class"/>
     <keyword type="struct" name="struct RCLibDb" link="RCLibDbLibraryQueryResult.html#RCLibDb-struct"/>
     <keyword type="struct" name="RCLibDbCatalogData" link="RCLibDbLibraryQueryResult.html#RCLibDbCatalogData-struct"/>
     <keyword type="enum" name="enum RCLibDbCatalogDataType" link="RCLibDbLibraryQueryResult.html#RCLibDbCatalogDataType"/>
-    <keyword type="struct" name="RCLibDbCatalogIter" link="RCLibDbLibraryQueryResult.html#RCLibDbCatalogIter"/>
-    <keyword type="struct" name="RCLibDbCatalogSequence" link="RCLibDbLibraryQueryResult.html#RCLibDbCatalogSequence"/>
+    <keyword type="struct" name="RCLibDbCatalogIter" link="RCLibDbLibraryQueryResult.html#RCLibDbCatalogIter-struct"/>
     <keyword type="enum" name="enum RCLibDbCatalogType" link="RCLibDbLibraryQueryResult.html#RCLibDbCatalogType"/>
     <keyword type="struct" name="struct RCLibDbClass" link="RCLibDbLibraryQueryResult.html#RCLibDbClass"/>
     <keyword type="struct" name="RCLibDbLibraryData" link="RCLibDbLibraryQueryResult.html#RCLibDbLibraryData-struct"/>
     <keyword type="enum" name="enum RCLibDbLibraryDataType" link="RCLibDbLibraryQueryResult.html#RCLibDbLibraryDataType"/>
     <keyword type="struct" name="struct RCLibDbLibraryQueryResult" link="RCLibDbLibraryQueryResult.html#RCLibDbLibraryQueryResult-struct"/>
     <keyword type="struct" name="struct RCLibDbLibraryQueryResultClass" link="RCLibDbLibraryQueryResult.html#RCLibDbLibraryQueryResultClass"/>
+    <keyword type="struct" name="RCLibDbLibraryQueryResultIter" link="RCLibDbLibraryQueryResult.html#RCLibDbLibraryQueryResultIter-struct"/>
     <keyword type="enum" name="enum RCLibDbLibraryType" link="RCLibDbLibraryQueryResult.html#RCLibDbLibraryType"/>
     <keyword type="struct" name="RCLibDbPlaylistData" link="RCLibDbLibraryQueryResult.html#RCLibDbPlaylistData-struct"/>
     <keyword type="enum" name="enum RCLibDbPlaylistDataType" link="RCLibDbLibraryQueryResult.html#RCLibDbPlaylistDataType"/>
-    <keyword type="struct" name="RCLibDbPlaylistIter" link="RCLibDbLibraryQueryResult.html#RCLibDbPlaylistIter"/>
-    <keyword type="struct" name="RCLibDbPlaylistSequence" link="RCLibDbLibraryQueryResult.html#RCLibDbPlaylistSequence"/>
+    <keyword type="struct" name="RCLibDbPlaylistIter" link="RCLibDbLibraryQueryResult.html#RCLibDbPlaylistIter-struct"/>
     <keyword type="enum" name="enum RCLibDbPlaylistType" link="RCLibDbLibraryQueryResult.html#RCLibDbPlaylistType"/>
     <keyword type="struct" name="RCLibDbQuery" link="RCLibDbLibraryQueryResult.html#RCLibDbQuery-struct"/>
     <keyword type="enum" name="enum RCLibDbQueryConditionType" link="RCLibDbLibraryQueryResult.html#RCLibDbQueryConditionType"/>
@@ -157,7 +155,6 @@
     <keyword type="function" name="rclib_db_catalog_name_sort ()" link="RCLibDbLibraryQueryResult.html#rclib-db-catalog-name-sort"/>
     <keyword type="function" name="rclib_db_catalog_reorder ()" link="RCLibDbLibraryQueryResult.html#rclib-db-catalog-reorder"/>
     <keyword type="function" name="rclib_db_exit ()" link="RCLibDbLibraryQueryResult.html#rclib-db-exit"/>
-    <keyword type="function" name="rclib_db_get_catalog ()" link="RCLibDbLibraryQueryResult.html#rclib-db-get-catalog"/>
     <keyword type="function" name="rclib_db_get_instance ()" link="RCLibDbLibraryQueryResult.html#rclib-db-get-instance"/>
     <keyword type="function" name="rclib_db_get_library_table ()" link="RCLibDbLibraryQueryResult.html#rclib-db-get-library-table"/>
     <keyword type="function" name="rclib_db_import_cancel ()" link="RCLibDbLibraryQueryResult.html#rclib-db-import-cancel"/>
@@ -168,7 +165,6 @@
     <keyword type="function" name="rclib_db_library_data_free ()" link="RCLibDbLibraryQueryResult.html#rclib-db-library-data-free"/>
     <keyword type="function" name="rclib_db_library_data_get ()" link="RCLibDbLibraryQueryResult.html#rclib-db-library-data-get"/>
     <keyword type="function" name="rclib_db_library_data_new ()" link="RCLibDbLibraryQueryResult.html#rclib-db-library-data-new"/>
-    <keyword type="function" name="rclib_db_library_data_query ()" link="RCLibDbLibraryQueryResult.html#rclib-db-library-data-query"/>
     <keyword type="function" name="rclib_db_library_data_ref ()" link="RCLibDbLibraryQueryResult.html#rclib-db-library-data-ref"/>
     <keyword type="function" name="rclib_db_library_data_set ()" link="RCLibDbLibraryQueryResult.html#rclib-db-library-data-set"/>
     <keyword type="function" name="rclib_db_library_data_unref ()" link="RCLibDbLibraryQueryResult.html#rclib-db-library-data-unref"/>
@@ -177,9 +173,6 @@
     <keyword type="function" name="rclib_db_library_delete ()" link="RCLibDbLibraryQueryResult.html#rclib-db-library-delete"/>
     <keyword type="function" name="rclib_db_library_get_data ()" link="RCLibDbLibraryQueryResult.html#rclib-db-library-get-data"/>
     <keyword type="function" name="rclib_db_library_has_uri ()" link="RCLibDbLibraryQueryResult.html#rclib-db-library-has-uri"/>
-    <keyword type="function" name="rclib_db_library_query ()" link="RCLibDbLibraryQueryResult.html#rclib-db-library-query"/>
-    <keyword type="function" name="rclib_db_library_query_get_uris ()" link="RCLibDbLibraryQueryResult.html#rclib-db-library-query-get-uris"/>
-    <keyword type="function" name="rclib_db_library_query_result_new ()" link="RCLibDbLibraryQueryResult.html#rclib-db-library-query-result-new"/>
     <keyword type="function" name="rclib_db_load_autosaved ()" link="RCLibDbLibraryQueryResult.html#rclib-db-load-autosaved"/>
     <keyword type="function" name="rclib_db_load_legacy ()" link="RCLibDbLibraryQueryResult.html#rclib-db-load-legacy"/>
     <keyword type="function" name="rclib_db_playlist_add_directory ()" link="RCLibDbLibraryQueryResult.html#rclib-db-playlist-add-directory"/>

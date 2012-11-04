@@ -63,7 +63,7 @@ G_BEGIN_DECLS
 #define RCLIB_TYPE_DB_CATALOG_DATA (rclib_db_catalog_data_get_type())
 #define RCLIB_TYPE_DB_PLAYLIST_DATA (rclib_db_playlist_data_get_type())
 #define RCLIB_TYPE_DB_CATALOG_ITER (rclib_db_catalog_iter_get_type())
-#define RCLIB_TYPE_DB_PLAYLIST_ITER (rclib_db_playlist_data_get_type())
+#define RCLIB_TYPE_DB_PLAYLIST_ITER (rclib_db_playlist_iter_get_type())
 #define RCLIB_TYPE_DB_LIBRARY_DATA (rclib_db_library_data_get_type())
 #define RCLIB_TYPE_DB_LIBRARY_QUERY_RESULT_ITER \
     (rclib_db_library_query_result_iter_get_type())
@@ -380,6 +380,8 @@ GType rclib_db_get_type();
 GType rclib_db_library_query_result_get_type();
 GType rclib_db_catalog_data_get_type();
 GType rclib_db_playlist_data_get_type();
+GType rclib_db_catalog_iter_get_type();
+GType rclib_db_playlist_iter_get_type();
 GType rclib_db_library_data_get_type();
 GType rclib_db_library_query_result_iter_get_type();
 GType rclib_db_query_get_type();

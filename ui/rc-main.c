@@ -468,7 +468,6 @@ gint rc_main_run(gint *argc, gchar **argv[])
     };
     GOptionContext *context;
     GtkApplication *app;
-    RCLibDbCatalogSequence *catalog;
     GError *error = NULL;
     const gchar *home_dir = NULL;
     gint status;
@@ -565,8 +564,7 @@ gint rc_main_run(gint *argc, gchar **argv[])
     g_print("LibRhythmCat loaded. Version: %d.%d.%d, build date: %s\n",
         rclib_major_version, rclib_minor_version, rclib_micro_version,
         rclib_build_date);
-    catalog = rclib_db_get_catalog();
-    if(catalog!=NULL && rclib_db_catalog_get_length()==0)
+    if(rclib_db_catalog_get_length()==0)
     {
         rclib_db_catalog_add(_("Default Playlist"), NULL,
             RCLIB_DB_CATALOG_TYPE_PLAYLIST);
