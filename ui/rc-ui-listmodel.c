@@ -1140,7 +1140,6 @@ static void rc_ui_list_model_playlist_reordered_cb(RCLibDb *db,
 
 static gboolean rc_ui_list_model_init()
 {
-    RCUiCatalogStorePrivate *catalog_priv;
     RCUiPlaylistStorePrivate *playlist_priv;
     RCLibDbCatalogIter *catalog_iter;
     GtkTreeModel *playlist_model;
@@ -1149,7 +1148,6 @@ static gboolean rc_ui_list_model_init()
         format_string = g_strdup("%TITLE");
     catalog_model = GTK_TREE_MODEL(g_object_new(
         RC_UI_TYPE_CATALOG_STORE, NULL));
-    catalog_priv = RC_UI_CATALOG_STORE(catalog_model)->priv;
     for(catalog_iter = rclib_db_catalog_get_begin_iter();catalog_iter!=NULL;
         catalog_iter = rclib_db_catalog_iter_next(catalog_iter))
     {

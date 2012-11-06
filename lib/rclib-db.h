@@ -541,8 +541,6 @@ void rclib_db_library_data_uri_set(const gchar *uri,
     RCLibDbLibraryDataType type1, ...);
 void rclib_db_library_data_uri_get(const gchar *uri,
     RCLibDbLibraryDataType type1, ...);
-
-/*    
 gboolean rclib_db_library_data_query(RCLibDbLibraryData *library_data,
     RCLibDbQuery *query, GCancellable *cancellable);
 GPtrArray *rclib_db_library_query(RCLibDbQuery *query,
@@ -555,6 +553,22 @@ RCLibDbLibraryData *rclib_db_library_query_result_get_data(
     RCLibDbLibraryQueryResultIter *iter);
 guint rclib_db_library_query_result_get_length(
     RCLibDbLibraryQueryResult *query_result);
+RCLibDbLibraryQueryResultIter *rclib_db_library_query_result_get_begin_iter(
+    RCLibDbLibraryQueryResult *query_result);
+RCLibDbLibraryQueryResultIter *rclib_db_library_query_result_get_last_iter(
+    RCLibDbLibraryQueryResult *query_result);
+RCLibDbLibraryQueryResultIter *rclib_db_library_query_result_get_next_iter(
+    RCLibDbLibraryQueryResult *query_result,
+    RCLibDbLibraryQueryResultIter *iter);
+RCLibDbLibraryQueryResultIter *rclib_db_library_query_result_get_prev_iter(
+    RCLibDbLibraryQueryResult *query_result,
+    RCLibDbLibraryQueryResultIter *iter);
+gint rclib_db_library_query_result_get_position(
+    RCLibDbLibraryQueryResult *query_result,
+    RCLibDbLibraryQueryResultIter *iter);
+RCLibDbLibraryQueryResultIter *rclib_db_library_query_result_get_iter_at_pos(
+    RCLibDbLibraryQueryResult *query_result, gint pos);
+/*
 void rclib_db_library_query_result_query_start(
     RCLibDbLibraryQueryResult *query_result, RCLibDbQuery *query);
 void rclib_db_library_query_result_query_cancel(

@@ -2020,3 +2020,251 @@ GObject *rclib_db_library_query_result_new()
         NULL);
     return query_result_instance;
 }
+
+/**
+ * rclib_db_library_query_result_get_data:
+ * @query_result: the #RCLibDbLibraryQueryResult instance
+ * @iter: the iter
+ * 
+ * Get the library data which the @iter points to.
+ * 
+ * Returns: The library data, #NULL if not found or any error occurs.
+ */
+
+RCLibDbLibraryData *rclib_db_library_query_result_get_data(
+    RCLibDbLibraryQueryResult *query_result,
+    RCLibDbLibraryQueryResultIter *iter)
+{
+    RCLibDbLibraryQueryResultPrivate *priv;
+    RCLibDbLibraryData *library_data = NULL;
+    if(query_result==NULL) return NULL;
+    priv = RCLIB_DB_LIBRARY_QUERY_RESULT(query_result)->priv;
+    if(priv==NULL) return NULL;
+    g_rw_lock_reader_lock(&(priv->query_rw_lock));
+    G_STMT_START
+    {
+        if(!g_hash_table_contains(priv->query_iter_table, iter))
+            break;
+        library_data = g_sequence_get((GSequenceIter *)iter);
+        if(library_data==NULL) break;
+        library_data = rclib_db_library_data_ref(library_data);
+    }
+    G_STMT_END;
+    g_rw_lock_reader_unlock(&(priv->query_rw_lock));
+    return library_data;
+}
+
+/**
+ * rclib_db_library_query_result_get_length:
+ * @query_result: the #RCLibDbLibraryQueryResult instance
+ * 
+ * Get the query result length number.
+ * 
+ * Returns: The number of the query result.
+ */
+
+guint rclib_db_library_query_result_get_length(
+    RCLibDbLibraryQueryResult *query_result)
+{
+    RCLibDbLibraryQueryResultPrivate *priv;
+    guint length = 0;
+    if(query_result==NULL) return 0;
+    priv = RCLIB_DB_LIBRARY_QUERY_RESULT(query_result)->priv;
+    if(priv==NULL || priv->query_sequence==NULL) return 0;
+    g_rw_lock_reader_lock(&(priv->query_rw_lock));
+    length = g_sequence_get_length(priv->query_sequence);
+    g_rw_lock_reader_unlock(&(priv->query_rw_lock));
+    return length;
+}
+
+/**
+ * rclib_db_library_query_result_get_begin_iter:
+ * @query_result: the #RCLibDbLibraryQueryResult instance
+ * 
+ * Get the begin iter of the query result.
+ * 
+ * Returns: (transfer none): (skip): The begin iter, #NULL if the query
+ *     result is empty or any error occurs.
+ */
+
+RCLibDbLibraryQueryResultIter *rclib_db_library_query_result_get_begin_iter(
+    RCLibDbLibraryQueryResult *query_result)
+{
+    RCLibDbLibraryQueryResultIter *iter = NULL;
+    RCLibDbLibraryQueryResultPrivate *priv;
+    if(query_result==NULL) return NULL;
+    priv = RCLIB_DB_LIBRARY_QUERY_RESULT(query_result)->priv;
+    if(priv==NULL || priv->query_sequence==NULL) return NULL;
+    g_rw_lock_reader_lock(&(priv->query_rw_lock));
+    iter = (RCLibDbLibraryQueryResultIter *)g_sequence_get_begin_iter(
+        priv->query_sequence);
+    if(g_sequence_iter_is_end((GSequenceIter *)iter))
+        iter = NULL;
+    g_rw_lock_reader_unlock(&(priv->query_rw_lock));
+    return iter;
+}
+ 
+/**
+ * rclib_db_library_query_result_get_last_iter:
+ * @query_result: the #RCLibDbLibraryQueryResult instance
+ * 
+ * Get the last iter of the query result.
+ * 
+ * Returns: (transfer none): (skip): The last iter, #NULL if the query
+ *     result is empty or any error occurs.
+ */
+    
+RCLibDbLibraryQueryResultIter *rclib_db_library_query_result_get_last_iter(
+    RCLibDbLibraryQueryResult *query_result)
+{
+    RCLibDbLibraryQueryResultIter *iter = NULL;
+    RCLibDbLibraryQueryResultPrivate *priv;
+    if(query_result==NULL) return NULL;
+    priv = RCLIB_DB_LIBRARY_QUERY_RESULT(query_result)->priv;
+    if(priv==NULL || priv->query_sequence==NULL) return NULL;
+    g_rw_lock_reader_lock(&(priv->query_rw_lock));
+    iter = (RCLibDbLibraryQueryResultIter *)g_sequence_get_end_iter(
+        priv->query_sequence);
+    iter = (RCLibDbLibraryQueryResultIter *)g_sequence_iter_prev(
+        (GSequenceIter *)iter);
+    if(g_sequence_iter_is_end((GSequenceIter *)iter))
+        iter = NULL;
+    g_rw_lock_reader_unlock(&(priv->query_rw_lock));
+    return iter;
+}
+
+/**
+ * rclib_db_library_query_result_get_next_iter:
+ * @query_result: the #RCLibDbLibraryQueryResult instance
+ * @iter: the iter
+ * 
+ * Get the next iter of @iter.
+ * 
+ * Returns: (transfer none): (skip): The next iter, #NULL if there is no
+ *     next one or any error occurs.
+ */
+
+RCLibDbLibraryQueryResultIter *rclib_db_library_query_result_get_next_iter(
+    RCLibDbLibraryQueryResult *query_result,
+    RCLibDbLibraryQueryResultIter *iter)
+{
+    RCLibDbLibraryQueryResultIter *iter_next = NULL;
+    RCLibDbLibraryQueryResultPrivate *priv;
+    if(query_result==NULL) return NULL;
+    priv = RCLIB_DB_LIBRARY_QUERY_RESULT(query_result)->priv;
+    if(priv==NULL || priv->query_sequence==NULL) return NULL;
+    g_rw_lock_reader_lock(&(priv->query_rw_lock));
+    G_STMT_START
+    {
+        if(!g_hash_table_contains(priv->query_iter_table, iter))
+            break;
+        iter_next = (RCLibDbLibraryQueryResultIter *)g_sequence_iter_next(
+            (GSequenceIter *)iter);
+        if(g_sequence_iter_is_end((GSequenceIter *)iter))
+            iter_next = NULL;
+    }
+    G_STMT_END;
+    g_rw_lock_reader_unlock(&(priv->query_rw_lock));
+    return iter_next; 
+}
+
+/**
+ * rclib_db_library_query_result_get_prev_iter:
+ * @query_result: the #RCLibDbLibraryQueryResult instance
+ * @iter: the iter
+ * 
+ * Get the previous iter of @iter.
+ * 
+ * Returns: (transfer none): (skip): The previous iter, #NULL if there is no
+ *     previous one or any error occurs.
+ */
+
+RCLibDbLibraryQueryResultIter *rclib_db_library_query_result_get_prev_iter(
+    RCLibDbLibraryQueryResult *query_result,
+    RCLibDbLibraryQueryResultIter *iter)
+{
+    RCLibDbLibraryQueryResultIter *iter_prev = NULL;
+    RCLibDbLibraryQueryResultPrivate *priv;
+    if(query_result==NULL) return NULL;
+    priv = RCLIB_DB_LIBRARY_QUERY_RESULT(query_result)->priv;
+    if(priv==NULL || priv->query_sequence==NULL) return NULL;
+    g_rw_lock_reader_lock(&(priv->query_rw_lock));
+    G_STMT_START
+    {
+        if(!g_hash_table_contains(priv->query_iter_table, iter))
+            break;
+        if(g_sequence_iter_is_begin((GSequenceIter *)iter))
+            iter_prev = NULL;
+        iter_prev = (RCLibDbLibraryQueryResultIter *)g_sequence_iter_prev(
+            (GSequenceIter *)iter);
+
+    }
+    G_STMT_END;
+    g_rw_lock_reader_unlock(&(priv->query_rw_lock));
+    return iter_prev; 
+}
+
+/**
+ * rclib_db_library_query_result_get_position:
+ * @query_result: the #RCLibDbLibraryQueryResult instance
+ * @iter: the iter
+ *
+ * Returns the position of @iter.
+ *
+ * Returns: the position of @iter, -1 if the @iter is not valid.
+ */
+
+gint rclib_db_library_query_result_get_position(
+    RCLibDbLibraryQueryResult *query_result,
+    RCLibDbLibraryQueryResultIter *iter)
+{
+    gint pos = 0;
+    RCLibDbLibraryQueryResultPrivate *priv;
+    if(query_result==NULL) return -1;
+    priv = RCLIB_DB_LIBRARY_QUERY_RESULT(query_result)->priv;
+    if(priv==NULL || priv->query_sequence==NULL) return -1;
+    g_rw_lock_reader_lock(&(priv->query_rw_lock));
+    G_STMT_START
+    {
+        if(!g_hash_table_contains(priv->query_iter_table, iter))
+        {
+            pos = -1;
+            break;
+        }
+        pos = g_sequence_iter_get_position((GSequenceIter *)iter);
+
+    }
+    G_STMT_END;
+    g_rw_lock_reader_unlock(&(priv->query_rw_lock));
+    return pos; 
+}
+
+/**
+ * rclib_db_library_query_result_get_iter_at_pos:
+ * @query_result: the #RCLibDbLibraryQueryResult instance
+ * @pos: the position in the playlist catalog, or -1 for the end.
+ *
+ * Return the iterator at position @pos. If @pos is negative or larger
+ * than the number of items in the playlist catalog, the end iterator
+ * is returned.
+ *
+ * Returns: (transfer none): (skip): The #RCLibDbLibraryQueryResultIter at
+ *     position @pos.
+ */
+
+RCLibDbLibraryQueryResultIter *rclib_db_library_query_result_get_iter_at_pos(
+    RCLibDbLibraryQueryResult *query_result, gint pos)
+{
+    RCLibDbLibraryQueryResultIter *iter_new = NULL;
+    RCLibDbLibraryQueryResultPrivate *priv;
+    if(query_result==NULL) return NULL;
+    priv = RCLIB_DB_LIBRARY_QUERY_RESULT(query_result)->priv;
+    if(priv==NULL || priv->query_sequence==NULL) return NULL;
+    g_rw_lock_reader_lock(&(priv->query_rw_lock));
+    iter_new = (RCLibDbLibraryQueryResultIter *)g_sequence_get_iter_at_pos(
+        (GSequence *)priv->query_sequence, pos);
+    g_rw_lock_reader_unlock(&(priv->query_rw_lock));
+    return iter_new; 
+}
+
+
