@@ -123,6 +123,7 @@ struct _RCLibDbPrivate
 struct _RCLibDbLibraryQueryResultPrivate
 {
     RCLibDbQuery *query;
+    GAsyncQueue *query_queue;
     GSequence *query_sequence;
     GHashTable *query_iter_table;
     GThread *query_thread;

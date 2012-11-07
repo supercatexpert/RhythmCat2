@@ -568,9 +568,9 @@ gint rclib_db_library_query_result_get_position(
     RCLibDbLibraryQueryResultIter *iter);
 RCLibDbLibraryQueryResultIter *rclib_db_library_query_result_get_iter_at_pos(
     RCLibDbLibraryQueryResult *query_result, gint pos);
-/*
 void rclib_db_library_query_result_query_start(
-    RCLibDbLibraryQueryResult *query_result, RCLibDbQuery *query);
+    RCLibDbLibraryQueryResult *query_result, const RCLibDbQuery *query);
+/*
 void rclib_db_library_query_result_query_cancel(
     RCLibDbLibraryQueryResult *query_result);
 RCLibDbQuery *rclib_db_library_query_result_get_query(

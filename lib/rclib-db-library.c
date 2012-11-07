@@ -336,21 +336,47 @@ void rclib_db_library_data_free(RCLibDbLibraryData *data)
     g_slice_free(RCLibDbLibraryData, data);
 }
 
+static gpointer rclib_db_library_query_result_query_thread_cb(gpointer data)
+{
+    RCLibDbLibraryQueryResultPrivate *priv = NULL;
+    RCLibDbLibraryQueryResult *object = RCLIB_DB_LIBRARY_QUERY_RESULT(data);
+    RCLibDbQuery **query_data = NULL;
+    RCLibDbQuery *query = NULL;
+    if(data==NULL) return NULL;
+    priv = object->priv;
+    if(priv==NULL) return NULL;
+    while(priv->query_queue!=NULL)
+    {
+        query_data = g_async_queue_pop(priv->query_queue);
+        query = *query_data;
+        g_free(query_data);
+        if(query==NULL) break;
+        
+    }
+    return NULL;
+}
+
 static void rclib_db_library_query_result_finalize(GObject *object)
 {
     RCLibDbLibraryQueryResultPrivate *priv =
         RCLIB_DB_LIBRARY_QUERY_RESULT(object)->priv;
+    RCLibDbQuery **query_data = NULL;
     if(priv->cancellable!=NULL)
     {
         g_cancellable_cancel(priv->cancellable);
         g_object_unref(priv->cancellable);
         priv->cancellable = NULL;
     }
+    query_data = g_new(RCLibDbQuery *, 1);
+    *query_data = NULL;
+    g_async_queue_push(priv->query_queue, query_data);
     if(priv->query_thread!=NULL)
     {
         g_thread_join(priv->query_thread);
         priv->query_thread = NULL;
     }
+    g_async_queue_unref(priv->query_queue);
+    priv->query_queue = NULL;
     if(priv->query!=NULL)
     {
         rclib_db_query_free(priv->query);
@@ -397,6 +423,9 @@ static void rclib_db_library_query_result_instance_init(
         rclib_db_library_data_unref);
     priv->query_iter_table = g_hash_table_new(g_direct_hash,
         g_direct_equal);
+    priv->query_queue = g_async_queue_new_full(g_free);
+    priv->query_thread = g_thread_new("RC2-Library-Query-Thread",
+        rclib_db_library_query_result_query_thread_cb, object);
 }
 
 GType rclib_db_library_query_result_get_type()
@@ -2266,5 +2295,28 @@ RCLibDbLibraryQueryResultIter *rclib_db_library_query_result_get_iter_at_pos(
     g_rw_lock_reader_unlock(&(priv->query_rw_lock));
     return iter_new; 
 }
+
+/**
+ * rclib_db_library_query_result_query_start:
+ * @query_result: the #RCLibDbLibraryQueryResult instance
+ * @query: the query to perform
+ * 
+ * Start query process by the given @query condition.
+ */
+
+void rclib_db_library_query_result_query_start(
+    RCLibDbLibraryQueryResult *query_result, const RCLibDbQuery *query)
+{
+    RCLibDbLibraryQueryResultPrivate *priv;
+    RCLibDbQuery **query_data = NULL;
+    if(query_result==NULL || query==NULL) return;
+    priv = RCLIB_DB_LIBRARY_QUERY_RESULT(query_result)->priv;
+    if(priv==NULL || priv->query_queue==NULL) return;
+    query_data = g_new(RCLibDbQuery *, 1);
+    *query_data = rclib_db_query_copy(query);
+    g_async_queue_push(priv->query_queue, query_data);
+}
+
+
 
 
