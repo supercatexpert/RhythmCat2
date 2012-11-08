@@ -33,7 +33,9 @@
 
 enum
 {
-    SIGNAL_LIBRARY_QUERY_RESULT_DUMMY,
+    SIGNAL_LIBRARY_QUERY_RESULT_ADDED,
+    SIGNAL_LIBRARY_QUERY_RESULT_DELETE,
+    SIGNAL_LIBRARY_QUERY_RESULT_CHANGED,
     SIGNAL_LIBRARY_QUERY_RESULT_LAST
 };
 
@@ -388,6 +390,11 @@ static void rclib_db_library_query_result_finalize(GObject *object)
         g_hash_table_destroy(priv->query_iter_table);
         priv->query_iter_table = NULL;
     }
+    if(priv->query_uri_table!=NULL)
+    {
+        g_hash_table_destroy(priv->query_uri_table);
+        priv->query_uri_table = NULL;
+    }
     if(priv->query_sequence!=NULL)
     {
         g_sequence_free(priv->query_sequence);
@@ -408,7 +415,50 @@ static void rclib_db_library_query_result_class_init(
         g_type_class_peek_parent(klass);
     object_class->finalize = rclib_db_library_query_result_finalize;
     g_type_class_add_private(klass, sizeof(RCLibDbLibraryQueryResultPrivate));
-    
+
+    /**
+     * RCLibDbLibraryQueryResult::query-result-added:
+     * @qr: the #RCLibDb that received the signal
+     * @iter: the iter pointed to the added item
+     * 
+     * The ::query-result-added signal is emitted when a new item has been
+     * added to the query result.
+     */
+    db_library_query_result_signals[SIGNAL_LIBRARY_QUERY_RESULT_ADDED] =
+        g_signal_new("query-result-added", RCLIB_TYPE_DB_LIBRARY_QUERY_RESULT,
+        G_SIGNAL_RUN_FIRST, G_STRUCT_OFFSET(RCLibDbLibraryQueryResultClass,
+        query_result_added), NULL, NULL, g_cclosure_marshal_VOID__POINTER,
+        G_TYPE_NONE, 1, G_TYPE_POINTER, NULL);
+
+    /**
+     * RCLibDbLibraryQueryResult::query-result-delete:
+     * @qr: the #RCLibDb that received the signal
+     * @iter: the iter pointed to the item to be deleted
+     * 
+     * The ::query-result-delete signal is emitted before the item which the
+     * @iter pointed to removed from the query result.
+     */
+    db_library_query_result_signals[SIGNAL_LIBRARY_QUERY_RESULT_DELETE] =
+        g_signal_new("query-result-delete", RCLIB_TYPE_DB_LIBRARY_QUERY_RESULT,
+        G_SIGNAL_RUN_FIRST, G_STRUCT_OFFSET(RCLibDbLibraryQueryResultClass,
+        query_result_delete), NULL, NULL, g_cclosure_marshal_VOID__POINTER,
+        G_TYPE_NONE, 1, G_TYPE_POINTER, NULL);
+
+    /**
+     * RCLibDbLibraryQueryResult::query-result-changed:
+     * @qr: the #RCLibDb that received the signal
+     * @iter: the iter pointed to the changed item
+     * 
+     * The ::query-result-changed signal is emitted when the item which
+     * the @iter pointed to has been changed.
+     */
+    db_library_query_result_signals[SIGNAL_LIBRARY_QUERY_RESULT_CHANGED] =
+        g_signal_new("query-result-changed",
+        RCLIB_TYPE_DB_LIBRARY_QUERY_RESULT, G_SIGNAL_RUN_FIRST,
+        G_STRUCT_OFFSET(RCLibDbLibraryQueryResultClass, query_result_changed),
+        NULL, NULL, g_cclosure_marshal_VOID__POINTER, G_TYPE_NONE, 1,
+        G_TYPE_POINTER, NULL);
+
 }
 
 static void rclib_db_library_query_result_instance_init(
@@ -423,6 +473,8 @@ static void rclib_db_library_query_result_instance_init(
         rclib_db_library_data_unref);
     priv->query_iter_table = g_hash_table_new(g_direct_hash,
         g_direct_equal);
+    priv->query_uri_table = g_hash_table_new_full(g_str_hash, g_str_equal,
+        g_free, NULL);
     priv->query_queue = g_async_queue_new_full(g_free);
     priv->query_thread = g_thread_new("RC2-Library-Query-Thread",
         rclib_db_library_query_result_query_thread_cb, object);
@@ -2317,6 +2369,55 @@ void rclib_db_library_query_result_query_start(
     g_async_queue_push(priv->query_queue, query_data);
 }
 
+/**
+ * rclib_db_library_query_result_query_cancel:
+ * @query_result: the #RCLibDbLibraryQueryResult instance
+ * 
+ * Cancel the current query process.
+ */
+
+void rclib_db_library_query_result_query_cancel(
+    RCLibDbLibraryQueryResult *query_result)
+{
+    RCLibDbLibraryQueryResultPrivate *priv;
+    if(query_result==NULL) return;
+    priv = RCLIB_DB_LIBRARY_QUERY_RESULT(query_result)->priv;
+    if(priv==NULL || priv->cancellable==NULL)
+        return;
+    g_cancellable_cancel(priv->cancellable);
+}
+
+/**
+ * rclib_db_library_query_result_query_clear:
+ * @query_result: the #RCLibDbLibraryQueryResult instance
+ * 
+ * Clear the query result.
+ */
+ 
+void rclib_db_library_query_result_query_clear(
+    RCLibDbLibraryQueryResult *query_result)
+{
+    RCLibDbLibraryQueryResultPrivate *priv;
+    GSequenceIter *iter;
+    if(query_result==NULL) return;
+    priv = RCLIB_DB_LIBRARY_QUERY_RESULT(query_result)->priv;
+    if(priv==NULL || priv->query_iter_table==NULL || priv->query_uri_table)
+        return;
+    g_rw_lock_reader_lock(&(priv->query_rw_lock)); 
+    for(iter=g_sequence_get_begin_iter(priv->query_sequence);
+        !g_sequence_iter_is_end(iter);iter=g_sequence_iter_next(iter))
+    {
+        g_signal_emit(query_result, db_library_query_result_signals[
+            SIGNAL_LIBRARY_QUERY_RESULT_DELETE], 0, iter);
+    }
+    g_rw_lock_reader_unlock(&(priv->query_rw_lock));    
+    g_rw_lock_writer_lock(&(priv->query_rw_lock));
+    g_hash_table_remove_all(priv->query_iter_table);
+    g_hash_table_remove_all(priv->query_uri_table);
+    g_sequence_remove_range(g_sequence_get_begin_iter(priv->query_sequence),
+        g_sequence_get_end_iter(priv->query_sequence));
+    g_rw_lock_writer_unlock(&(priv->query_rw_lock));
+}
 
 
 

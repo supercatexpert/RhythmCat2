@@ -373,6 +373,12 @@ struct _RCLibDbLibraryQueryResult {
 struct _RCLibDbLibraryQueryResultClass {
     /*< private >*/
     GObjectClass parent_class;
+    void (*query_result_added)(RCLibDbLibraryQueryResult *qr,
+        RCLibDbLibraryQueryResultIter *iter);
+    void (*query_result_delete)(RCLibDbLibraryQueryResult *qr,
+        RCLibDbLibraryQueryResultIter *iter);
+    void (*query_result_changed)(RCLibDbLibraryQueryResult *qr,
+        RCLibDbLibraryQueryResultIter *iter);
 };
 
 /*< private >*/
@@ -570,9 +576,11 @@ RCLibDbLibraryQueryResultIter *rclib_db_library_query_result_get_iter_at_pos(
     RCLibDbLibraryQueryResult *query_result, gint pos);
 void rclib_db_library_query_result_query_start(
     RCLibDbLibraryQueryResult *query_result, const RCLibDbQuery *query);
-/*
 void rclib_db_library_query_result_query_cancel(
     RCLibDbLibraryQueryResult *query_result);
+void rclib_db_library_query_result_query_clear(
+    RCLibDbLibraryQueryResult *query_result);
+/*
 RCLibDbQuery *rclib_db_library_query_result_get_query(
     RCLibDbLibraryQueryResult *query_result);
 */

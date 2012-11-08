@@ -1426,7 +1426,7 @@ static void rclib_db_class_init(RCLibDbClass *klass)
     /**
      * RCLibDb::catalog-added:
      * @db: the #RCLibDb that received the signal
-     * @iter: the #iter pointed to the added item
+     * @iter: the iter pointed to the added item
      * 
      * The ::catalog-added signal is emitted when a new item has been
      * added to the catalog.
@@ -1439,7 +1439,7 @@ static void rclib_db_class_init(RCLibDbClass *klass)
     /**
      * RCLibDb::catalog-changed:
      * @db: the #RCLibDb that received the signal
-     * @iter: the #iter pointed to the changed item
+     * @iter: the iter pointed to the changed item
      * 
      * The ::catalog-changed signal is emitted when an item has been
      * changed in the catalog.
@@ -1452,7 +1452,7 @@ static void rclib_db_class_init(RCLibDbClass *klass)
     /**
      * RCLibDb::catalog-delete:
      * @db: the #RCLibDb that received the signal
-     * @iter: the #iter pointed to the item which is about to be deleted
+     * @iter: the iter pointed to the item which is about to be deleted
      * 
      * The ::catalog-delete signal is emitted before an item in the catalog
      * is about to be deleted.
@@ -1480,7 +1480,7 @@ static void rclib_db_class_init(RCLibDbClass *klass)
     /**
      * RCLibDb::playlist-added:
      * @db: the #RCLibDb that received the signal
-     * @iter: the #iter pointed to the added item
+     * @iter: the iter pointed to the added item
      * 
      * The ::playlist-added signal is emitted when a new item has been
      * added to the playlist.
@@ -1493,7 +1493,7 @@ static void rclib_db_class_init(RCLibDbClass *klass)
     /**
      * RCLibDb::playlist-changed:
      * @db: the #RCLibDb that received the signal
-     * @iter: the #iter pointed to the changed item
+     * @iter: the iter pointed to the changed item
      * 
      * The ::playlist-changed signal is emitted when an item has been
      * changed in the playlist.
@@ -1506,7 +1506,7 @@ static void rclib_db_class_init(RCLibDbClass *klass)
     /**
      * RCLibDb::playlist-delete:
      * @db: the #RCLibDb that received the signal
-     * @iter: the #iter pointed to the item which is about to be deleted
+     * @iter: the iter pointed to the item which is about to be deleted
      * 
      * The ::playlist-delete signal is emitted before an item in the playlist
      * is about to be deleted.
@@ -1519,7 +1519,7 @@ static void rclib_db_class_init(RCLibDbClass *klass)
     /**
      * RCLibDb::playlist-reordered:
      * @db: the #RCLibDb that received the signal
-     * @iter: the #iter pointed to the catalog item which contains the
+     * @iter: the iter pointed to the catalog item which contains the
      * reordered playlist items
      * @new_order: an array of integers mapping the current position of each
      * playlist item to its old position before the re-ordering,

@@ -126,6 +126,7 @@ struct _RCLibDbLibraryQueryResultPrivate
     GAsyncQueue *query_queue;
     GSequence *query_sequence;
     GHashTable *query_iter_table;
+    GHashTable *query_uri_table;
     GThread *query_thread;
     GRWLock query_rw_lock;
     GCancellable *cancellable;
