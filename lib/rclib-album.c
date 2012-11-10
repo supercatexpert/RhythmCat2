@@ -135,6 +135,7 @@ static void rclib_album_uri_changed_cb(RCLibCore *core, const gchar *uri,
 static void rclib_album_finalize(GObject *object)
 {
     RCLibAlbumPrivate *priv = RCLIB_ALBUM(object)->priv;
+    RCLIB_ALBUM(object)->priv = NULL;
     if(priv->tag_found_handler>0)
         rclib_core_signal_disconnect(priv->tag_found_handler);
     if(priv->uri_changed_handler>0)

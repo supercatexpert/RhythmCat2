@@ -342,6 +342,7 @@ static void rclib_player_eos_cb(RCLibCore *core, gpointer data)
 static void rclib_player_finalize(GObject *object)
 {
     RCLibPlayerPrivate *priv = RCLIB_PLAYER(object)->priv;
+    RCLIB_PLAYER(object)->priv = NULL;
     rclib_core_signal_disconnect(priv->eos_handler);
     G_OBJECT_CLASS(rclib_player_parent_class)->finalize(object);
 }

@@ -338,12 +338,59 @@ void rclib_db_library_data_free(RCLibDbLibraryData *data)
     g_slice_free(RCLibDbLibraryData, data);
 }
 
+static gboolean rclib_db_library_query_result_query_idle_cb(gpointer data)
+{
+    RCLibDbLibraryQueryResult *object;
+    RCLibDbLibraryQueryResultPrivate *priv;
+    GPtrArray *result = NULL;
+    RCLibDbLibraryData *library_data;
+    guint i;
+    gchar *uri;
+    gpointer *idle_data = (gpointer *)data;
+    GSequenceIter *iter;
+    if(data==NULL) return FALSE;
+    object = (RCLibDbLibraryQueryResult *)idle_data[0];
+    result = (GPtrArray *)result;
+    if(result==NULL)
+        return FALSE;
+    if(object==NULL || object->priv==NULL)
+    {
+        if(result!=NULL)
+        {
+            g_ptr_array_free(result, TRUE);
+            g_free(idle_data);
+            return FALSE;
+        }
+    }
+    priv = object->priv;
+    for(i=0;i<result->len;i++)
+    {
+        library_data = g_ptr_array_index(result, i);
+        if(library_data==NULL) continue;
+        uri = NULL;
+        library_data = rclib_db_library_data_ref(library_data);
+        rclib_db_library_data_get(library_data, RCLIB_DB_LIBRARY_DATA_TYPE_URI,
+            &uri, RCLIB_DB_LIBRARY_DATA_TYPE_NONE);
+        g_rw_lock_writer_lock(&(priv->query_rw_lock));
+        iter = g_sequence_append(priv->query_sequence, library_data);
+        g_hash_table_replace(priv->query_iter_table, iter, iter);
+        g_hash_table_replace(priv->query_uri_table, uri, iter);
+        g_rw_lock_writer_unlock(&(priv->query_rw_lock));
+        g_signal_emit(object, db_library_query_result_signals[
+            SIGNAL_LIBRARY_QUERY_RESULT_ADDED], 0, iter);
+    }
+    g_free(idle_data);
+    return FALSE;
+}
+
 static gpointer rclib_db_library_query_result_query_thread_cb(gpointer data)
 {
     RCLibDbLibraryQueryResultPrivate *priv = NULL;
     RCLibDbLibraryQueryResult *object = RCLIB_DB_LIBRARY_QUERY_RESULT(data);
     RCLibDbQuery **query_data = NULL;
     RCLibDbQuery *query = NULL;
+    gpointer *idle_data;
+    GPtrArray *result;
     if(data==NULL) return NULL;
     priv = object->priv;
     if(priv==NULL) return NULL;
@@ -353,7 +400,12 @@ static gpointer rclib_db_library_query_result_query_thread_cb(gpointer data)
         query = *query_data;
         g_free(query_data);
         if(query==NULL) break;
-        
+        result = rclib_db_library_query(query, priv->cancellable);
+        if(result==NULL) continue;
+        idle_data = g_new(gpointer, 2);
+        idle_data[0] = object;
+        idle_data[1] = result;
+        g_idle_add(rclib_db_library_query_result_query_idle_cb, idle_data);
     }
     return NULL;
 }
@@ -363,6 +415,7 @@ static void rclib_db_library_query_result_finalize(GObject *object)
     RCLibDbLibraryQueryResultPrivate *priv =
         RCLIB_DB_LIBRARY_QUERY_RESULT(object)->priv;
     RCLibDbQuery **query_data = NULL;
+    RCLIB_DB_LIBRARY_QUERY_RESULT(object)->priv = NULL;
     if(priv->cancellable!=NULL)
     {
         g_cancellable_cancel(priv->cancellable);
@@ -405,7 +458,6 @@ static void rclib_db_library_query_result_finalize(GObject *object)
     G_OBJECT_CLASS(rclib_db_library_query_result_parent_class)->
         finalize(object);
 }
-
 
 static void rclib_db_library_query_result_class_init(
     RCLibDbLibraryQueryResultClass *klass)
@@ -2419,5 +2471,23 @@ void rclib_db_library_query_result_query_clear(
     g_rw_lock_writer_unlock(&(priv->query_rw_lock));
 }
 
+/**
+ * rclib_db_library_query_result_get_query:
+ * @query_result: the #RCLibDbLibraryQueryResult instance
+ * 
+ * Get the current query applied to the query result.
+ * 
+ * Returns: (transfer none): The current query appiled to the query result.
+ */
 
+const RCLibDbQuery *rclib_db_library_query_result_get_query(
+    RCLibDbLibraryQueryResult *query_result)
+{
+    RCLibDbLibraryQueryResultPrivate *priv;
+    if(query_result==NULL) return NULL;
+    priv = RCLIB_DB_LIBRARY_QUERY_RESULT(query_result)->priv;
+    if(priv==NULL)
+        return NULL;
+    return priv->query;
+}
 

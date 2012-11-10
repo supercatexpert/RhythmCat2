@@ -1375,6 +1375,7 @@ static void rclib_db_finalize(GObject *object)
     RCLibDbRefreshData *refresh_data;
     gchar *autosave_file;
     RCLibDbPrivate *priv = RCLIB_DB(object)->priv;
+    RCLIB_DB(object)->priv = NULL;
     priv->work_flag = FALSE;
     g_mutex_lock(&(priv->autosave_mutex));
     g_cond_signal(&(priv->autosave_cond));

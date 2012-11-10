@@ -107,6 +107,7 @@ static void rc_ui_player_tray_icon_activated(GtkStatusIcon *icon,
 static void rc_ui_player_finalize(GObject *object)
 {
     RCUiPlayerPrivate *priv = RC_UI_PLAYER(object)->priv;
+    RC_UI_PLAYER(object)->priv = NULL;
     GList *window_list = NULL;
     if(priv->main_window!=NULL)
         gtk_widget_destroy(priv->main_window);

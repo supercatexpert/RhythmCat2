@@ -218,6 +218,7 @@ static void rc_ui_scrollable_label_finalize(GObject *object)
     RCUiScrollableLabel *label = RC_UI_SCROLLABLE_LABEL(object);
     RCUiScrollableLabelPrivate *priv;
     priv = label->priv;
+    label->priv = NULL;
     if(priv->text!=NULL) g_free(priv->text);
     if(priv->layout!=NULL) g_object_unref(priv->layout);
     if(priv->attrs!=NULL) pango_attr_list_unref(priv->attrs);

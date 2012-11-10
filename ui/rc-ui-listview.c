@@ -720,6 +720,7 @@ static void rc_ui_catalog_view_finalize(GObject *object)
 {
     RCUiCatalogViewPrivate *priv = NULL;
     priv = RC_UI_CATALOG_VIEW(object)->priv;
+    RC_UI_CATALOG_VIEW(object)->priv = NULL;
     if(priv->catalog_delete_id>0)
         rclib_db_signal_disconnect(priv->catalog_delete_id);
     G_OBJECT_CLASS(rc_ui_catalog_view_parent_class)->finalize(object);
@@ -727,6 +728,7 @@ static void rc_ui_catalog_view_finalize(GObject *object)
 
 static void rc_ui_playlist_view_finalize(GObject *object)
 {
+    RC_UI_PLAYLIST_VIEW(object)->priv = NULL;
     G_OBJECT_CLASS(rc_ui_playlist_view_parent_class)->finalize(object);
 }
 

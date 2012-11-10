@@ -848,12 +848,14 @@ static void rc_ui_playlist_store_tree_model_init(GtkTreeModelIface *iface)
 
 static void rc_ui_catalog_store_finalize(GObject *object)
 {
+    RC_UI_CATALOG_STORE(object)->priv = NULL;
     g_return_if_fail(RC_UI_IS_CATALOG_STORE(object));
     G_OBJECT_CLASS(rc_ui_catalog_store_parent_class)->finalize(object);
 }
 
 static void rc_ui_playlist_store_finalize(GObject *object)
 {
+    RC_UI_PLAYLIST_STORE(object)->priv = NULL;
     g_return_if_fail(RC_UI_IS_PLAYLIST_STORE(object));
     G_OBJECT_CLASS(rc_ui_playlist_store_parent_class)->finalize(object);
 }

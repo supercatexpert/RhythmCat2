@@ -1247,6 +1247,7 @@ static void rc_ui_main_window_signal_bind(RCUiMainWindow *window)
 static void rc_ui_main_window_finalize(GObject *object)
 {
     RCUiMainWindowPrivate *priv = RC_UI_MAIN_WINDOW(object)->priv;
+    RC_UI_MAIN_WINDOW(object)->priv = NULL;
     if(priv->update_timeout>0)
         g_source_remove(priv->update_timeout);
     if(priv->tag_found_id>0)

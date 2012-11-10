@@ -274,6 +274,7 @@ static inline gboolean rclib_core_parse_metadata(const GstTagList *tags,
 static void rclib_core_finalize(GObject *object)
 {
     RCLibCorePrivate *priv = RCLIB_CORE(object)->priv;
+    RCLIB_CORE(object)->priv = NULL;
     if(priv->query_pad!=NULL)
     {
         gst_object_unref(priv->query_pad);

@@ -580,10 +580,8 @@ void rclib_db_library_query_result_query_cancel(
     RCLibDbLibraryQueryResult *query_result);
 void rclib_db_library_query_result_query_clear(
     RCLibDbLibraryQueryResult *query_result);
-/*
-RCLibDbQuery *rclib_db_library_query_result_get_query(
+const RCLibDbQuery *rclib_db_library_query_result_get_query(
     RCLibDbLibraryQueryResult *query_result);
-*/
 
 /* Query Interface */
 RCLibDbQuery *rclib_db_query_parse(RCLibDbQueryConditionType condition1, ...);
