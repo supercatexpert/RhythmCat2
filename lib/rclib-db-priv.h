@@ -130,6 +130,16 @@ struct _RCLibDbLibraryQueryResultPrivate
     GThread *query_thread;
     GRWLock query_rw_lock;
     GCancellable *cancellable;
+    gulong library_added_id;
+    gulong library_changed_id;
+    gulong library_deleted_id;
+};
+
+struct _RCLibDbLibraryQueryPropPrivate
+{
+    RCLibDbLibraryDataType prop;
+    GSequence *prop_sequence;
+    GSequence *prop_iter_table;
 };
 
 struct _RCLibDbCatalogData

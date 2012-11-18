@@ -2,7 +2,7 @@
  * RhythmCat Library Music Database Module (Library Part.)
  * Manage the library part of the music database.
  *
- * rclib-db-playlist.c
+ * rclib-db-library.c
  * This file is part of RhythmCat Library (LibRhythmCat)
  *
  * Copyright (C) 2012 - SuperCat, license: GPL v3
@@ -39,6 +39,14 @@ enum
     SIGNAL_LIBRARY_QUERY_RESULT_LAST
 };
 
+enum
+{
+    SIGNAL_LIBRARY_QUERY_PROP_ADDED,
+    SIGNAL_LIBRARY_QUERY_PROP_DELETE,
+    SIGNAL_LIBRARY_QUERY_PROP_CHANGED,
+    SIGNAL_LIBRARY_QUERY_PROP_LAST
+};
+
 struct _RCLibDbLibraryQueryResultIter
 {
     gint dummy;
@@ -47,6 +55,10 @@ struct _RCLibDbLibraryQueryResultIter
 static gint db_library_query_result_signals[SIGNAL_LIBRARY_QUERY_RESULT_LAST] =
     {0};
 static gpointer rclib_db_library_query_result_parent_class = NULL;
+
+static gint db_library_query_prop_signals[SIGNAL_LIBRARY_QUERY_PROP_LAST] =
+    {0};
+static gpointer rclib_db_library_query_prop_parent_class = NULL;
 
 static gboolean rclib_db_library_changed_entry_idle_cb(gpointer data)
 {
@@ -66,7 +78,7 @@ static gboolean rclib_db_library_changed_entry_idle_cb(gpointer data)
     return FALSE;
 }
 
-static gboolean rclib_db_library_delete_entry_idle_cb(gpointer data)
+static gboolean rclib_db_library_deleted_entry_idle_cb(gpointer data)
 {
     GObject *instance;
     RCLibDbPrivate *priv;
@@ -76,12 +88,102 @@ static gboolean rclib_db_library_delete_entry_idle_cb(gpointer data)
     if(instance==NULL) return FALSE;
     priv = RCLIB_DB(instance)->priv;
     if(priv==NULL) return FALSE;
-    g_rw_lock_reader_lock(&(priv->library_rw_lock));
-    if(!g_hash_table_contains(priv->library_table, uri)) return FALSE;
-    g_signal_emit_by_name(instance, "library-delete", uri);
+    g_signal_emit_by_name(instance, "library-deleted", uri);
     g_free(uri);
-    g_rw_lock_reader_unlock(&(priv->library_rw_lock));
     return FALSE;
+}
+
+static void rclib_db_library_query_result_added_cb(RCLibDb *db,
+    const gchar *uri, gpointer data)
+{
+    RCLibDbLibraryQueryResult *object;
+    RCLibDbLibraryQueryResultPrivate *priv;
+    RCLibDbLibraryData *library_data;
+    GSequenceIter *iter;
+    object = (RCLibDbLibraryQueryResult *)data;
+    if(data==NULL || uri==NULL) return;
+    priv = object->priv;
+    if(priv==NULL) return;
+    if(priv->query==NULL) return;
+    library_data = rclib_db_library_get_data(uri);
+    if(library_data==NULL) return;
+    if(rclib_db_library_data_query(library_data, priv->query, NULL))
+    {
+        g_rw_lock_writer_lock(&(priv->query_rw_lock));
+        iter = g_sequence_append(priv->query_sequence, library_data);
+        g_hash_table_replace(priv->query_iter_table, iter, iter);
+        g_hash_table_replace(priv->query_uri_table, g_strdup(uri), iter);
+        g_rw_lock_writer_unlock(&(priv->query_rw_lock));
+        g_signal_emit(object, db_library_query_result_signals[
+            SIGNAL_LIBRARY_QUERY_RESULT_ADDED], 0, iter);
+    }
+    rclib_db_library_data_unref(library_data);
+}
+
+static void rclib_db_library_query_result_deleted_cb(RCLibDb *db,
+    const gchar *uri, gpointer data)
+{
+    RCLibDbLibraryQueryResult *object;
+    RCLibDbLibraryQueryResultPrivate *priv;
+    GSequenceIter *iter;
+    object = (RCLibDbLibraryQueryResult *)data;
+    if(data==NULL || uri==NULL) return;
+    priv = object->priv;
+    if(priv==NULL) return;
+    g_rw_lock_writer_lock(&(priv->query_rw_lock));
+    if(g_hash_table_contains(priv->query_uri_table, uri))
+    {
+        iter = g_hash_table_lookup(priv->query_uri_table, uri);
+        if(iter!=NULL)
+        {
+            g_signal_emit(object, db_library_query_result_signals[
+                SIGNAL_LIBRARY_QUERY_RESULT_DELETE], 0, iter);
+            g_sequence_remove(iter);
+            g_hash_table_remove(priv->query_uri_table, uri);
+            g_hash_table_remove(priv->query_iter_table, iter);
+        }
+    }
+    g_rw_lock_writer_unlock(&(priv->query_rw_lock));
+}
+
+static void rclib_db_library_query_result_changed_cb(RCLibDb *db,
+    const gchar *uri, gpointer data)
+{
+    RCLibDbLibraryQueryResult *object;
+    RCLibDbLibraryData *library_data;
+    RCLibDbLibraryQueryResultPrivate *priv;
+    GSequenceIter *iter;
+    object = (RCLibDbLibraryQueryResult *)data;
+    if(data==NULL || uri==NULL) return;
+    priv = object->priv;
+    if(priv==NULL) return;
+    g_rw_lock_writer_lock(&(priv->query_rw_lock));
+    if(g_hash_table_contains(priv->query_uri_table, uri))
+    {
+        library_data = rclib_db_library_get_data(uri);
+        if(library_data!=NULL)
+        {
+            if(!rclib_db_library_data_query(library_data, priv->query, NULL))
+            {
+                iter = g_hash_table_lookup(priv->query_uri_table, uri);
+                if(iter!=NULL)
+                {
+                    g_signal_emit(object, db_library_query_result_signals[
+                        SIGNAL_LIBRARY_QUERY_RESULT_DELETE], 0, iter);
+                    g_sequence_remove(iter);
+                    g_hash_table_remove(priv->query_uri_table, uri);
+                    g_hash_table_remove(priv->query_iter_table, iter);
+                }
+            }
+        }
+        rclib_db_library_data_unref(library_data);
+        g_rw_lock_writer_unlock(&(priv->query_rw_lock));
+    }
+    else
+    {
+        g_rw_lock_writer_unlock(&(priv->query_rw_lock));
+        rclib_db_library_query_result_added_cb(db, uri, data);
+    }
 }
 
 static inline gboolean rclib_db_library_keyword_table_add_entry(
@@ -416,6 +518,21 @@ static void rclib_db_library_query_result_finalize(GObject *object)
         RCLIB_DB_LIBRARY_QUERY_RESULT(object)->priv;
     RCLibDbQuery **query_data = NULL;
     RCLIB_DB_LIBRARY_QUERY_RESULT(object)->priv = NULL;
+    if(priv->library_added_id>0)
+    {
+        rclib_db_signal_disconnect(priv->library_added_id);
+        priv->library_added_id = 0;
+    }
+    if(priv->library_changed_id>0)
+    {
+        rclib_db_signal_disconnect(priv->library_changed_id);
+        priv->library_changed_id = 0;
+    }
+    if(priv->library_deleted_id>0)
+    {
+        rclib_db_signal_disconnect(priv->library_deleted_id);
+        priv->library_deleted_id = 0;
+    }
     if(priv->cancellable!=NULL)
     {
         g_cancellable_cancel(priv->cancellable);
@@ -457,6 +574,14 @@ static void rclib_db_library_query_result_finalize(GObject *object)
     g_rw_lock_clear(&(priv->query_rw_lock));
     G_OBJECT_CLASS(rclib_db_library_query_result_parent_class)->
         finalize(object);
+}
+
+static void rclib_db_library_query_prop_finalize(GObject *object)
+{
+    RCLibDbLibraryQueryPropPrivate *priv =
+        RCLIB_DB_LIBRARY_QUERY_PROP(object)->priv;
+    RCLIB_DB_LIBRARY_QUERY_PROP(object)->priv = NULL;
+    
 }
 
 static void rclib_db_library_query_result_class_init(
@@ -513,6 +638,18 @@ static void rclib_db_library_query_result_class_init(
 
 }
 
+static void rclib_db_library_query_prop_class_init(
+    RCLibDbLibraryQueryPropClass *klass)
+{
+    GObjectClass *object_class = (GObjectClass *)klass;
+    rclib_db_library_query_prop_parent_class =
+        g_type_class_peek_parent(klass);
+    object_class->finalize = rclib_db_library_query_prop_finalize;
+    g_type_class_add_private(klass, sizeof(RCLibDbLibraryQueryPropPrivate));
+    
+    db_library_query_prop_signals[SIGNAL_LIBRARY_QUERY_PROP_ADDED] = 0;
+}
+
 static void rclib_db_library_query_result_instance_init(
     RCLibDbLibraryQueryResult *object)
 {
@@ -530,8 +667,24 @@ static void rclib_db_library_query_result_instance_init(
     priv->query_queue = g_async_queue_new_full(g_free);
     priv->query_thread = g_thread_new("RC2-Library-Query-Thread",
         rclib_db_library_query_result_query_thread_cb, object);
+    priv->library_added_id = rclib_db_signal_connect("library-added",
+        G_CALLBACK(rclib_db_library_query_result_added_cb), object);
+    priv->library_deleted_id = rclib_db_signal_connect("library-deleted",
+        G_CALLBACK(rclib_db_library_query_result_deleted_cb), object);
+    priv->library_changed_id = rclib_db_signal_connect("library-changed",
+        G_CALLBACK(rclib_db_library_query_result_changed_cb), object);
 }
 
+static void rclib_db_library_query_prop_instance_init(
+    RCLibDbLibraryQueryProp *object)
+{
+    RCLibDbLibraryQueryPropPrivate *priv = G_TYPE_INSTANCE_GET_PRIVATE(
+        object, RCLIB_TYPE_DB_LIBRARY_QUERY_PROP,
+        RCLibDbLibraryQueryPropPrivate);
+    object->priv = priv;
+    
+}    
+    
 GType rclib_db_library_query_result_get_type()
 {
     static volatile gsize g_define_type_id__volatile = 0;
@@ -543,7 +696,7 @@ GType rclib_db_library_query_result_get_type()
         .class_init = (GClassInitFunc)rclib_db_library_query_result_class_init,
         .class_finalize = NULL,
         .class_data = NULL,
-        .instance_size = sizeof(RCLibDb),
+        .instance_size = sizeof(RCLibDbLibraryQueryResult),
         .n_preallocs = 0,
         .instance_init = (GInstanceInitFunc)
             rclib_db_library_query_result_instance_init
@@ -552,6 +705,32 @@ GType rclib_db_library_query_result_get_type()
     {
         g_define_type_id = g_type_register_static(G_TYPE_OBJECT,
             g_intern_static_string("RCLibDbLibraryQueryResult"), &class_info,
+            0);
+        g_once_init_leave(&g_define_type_id__volatile, g_define_type_id);
+    }
+    return g_define_type_id__volatile;
+}
+
+GType rclib_db_library_query_prop_get_type()
+{
+    static volatile gsize g_define_type_id__volatile = 0;
+    GType g_define_type_id;
+    static const GTypeInfo class_info = {
+        .class_size = sizeof(RCLibDbLibraryQueryPropClass),
+        .base_init = NULL,
+        .base_finalize = NULL,
+        .class_init = (GClassInitFunc)rclib_db_library_query_prop_class_init,
+        .class_finalize = NULL,
+        .class_data = NULL,
+        .instance_size = sizeof(RCLibDbLibraryQueryProp),
+        .n_preallocs = 0,
+        .instance_init = (GInstanceInitFunc)
+            rclib_db_library_query_prop_instance_init
+    };
+    if(g_once_init_enter(&g_define_type_id__volatile))
+    {
+        g_define_type_id = g_type_register_static(G_TYPE_OBJECT,
+            g_intern_static_string("RCLibDbLibraryQueryProp"), &class_info,
             0);
         g_once_init_leave(&g_define_type_id__volatile, g_define_type_id);
     }
@@ -1025,7 +1204,7 @@ void rclib_db_library_delete(const gchar *uri)
     if(!g_hash_table_contains(priv->library_table, uri)) return;
     g_hash_table_remove(priv->library_table, uri);
     g_rw_lock_writer_unlock(&(priv->library_rw_lock));
-    g_idle_add(rclib_db_library_delete_entry_idle_cb, g_strdup(uri));
+    g_idle_add(rclib_db_library_deleted_entry_idle_cb, g_strdup(uri));
     priv->dirty_flag = TRUE;
 }
 
@@ -2416,6 +2595,11 @@ void rclib_db_library_query_result_query_start(
     if(query_result==NULL || query==NULL) return;
     priv = RCLIB_DB_LIBRARY_QUERY_RESULT(query_result)->priv;
     if(priv==NULL || priv->query_queue==NULL) return;
+    if(priv->query!=NULL)
+    {
+        rclib_db_query_free(priv->query);
+    }
+    priv->query = rclib_db_query_copy(query);
     query_data = g_new(RCLibDbQuery *, 1);
     *query_data = rclib_db_query_copy(query);
     g_async_queue_push(priv->query_queue, query_data);
@@ -2469,6 +2653,11 @@ void rclib_db_library_query_result_query_clear(
     g_sequence_remove_range(g_sequence_get_begin_iter(priv->query_sequence),
         g_sequence_get_end_iter(priv->query_sequence));
     g_rw_lock_writer_unlock(&(priv->query_rw_lock));
+    if(priv->query!=NULL)
+    {
+        rclib_db_query_free(priv->query);
+    }
+    priv->query = NULL;
 }
 
 /**

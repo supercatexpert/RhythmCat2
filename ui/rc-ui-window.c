@@ -212,8 +212,8 @@ static inline void rc_ui_main_window_info_label_set_value(
     g_string_free(info, TRUE);
 }
 
-static gboolean rc_ui_main_window_cover_image_set_pixbuf(RCUiMainWindowPrivate *priv,
-    const GdkPixbuf *pixbuf)
+static gboolean rc_ui_main_window_cover_image_set_pixbuf(
+    RCUiMainWindowPrivate *priv, const GdkPixbuf *pixbuf)
 {
     GdkPixbuf *album_new_pixbuf;
     if(priv==NULL) return FALSE;
@@ -261,8 +261,8 @@ static gboolean rc_ui_main_window_cover_image_set_gst_buffer(
     return flag;
 }
 
-static gboolean rc_ui_main_window_cover_image_set_file(RCUiMainWindowPrivate *priv,
-    const gchar *file)
+static gboolean rc_ui_main_window_cover_image_set_file(
+    RCUiMainWindowPrivate *priv, const gchar *file)
 {
     gboolean flag;
     GdkPixbuf *pixbuf;
