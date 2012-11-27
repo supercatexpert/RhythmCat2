@@ -2085,6 +2085,13 @@ RCLibDbQuery *rclib_db_query_parse_valist(
     gchar *error_str = NULL;
     query = (RCLibDbQuery *)g_ptr_array_new();
     condition_type = condition1;
+    if(condition_type==RCLIB_DB_QUERY_CONDITION_TYPE_NONE)
+    {
+        query_data = g_new0(RCLibDbQueryData, 1);
+        query_data->type = RCLIB_DB_QUERY_CONDITION_TYPE_NONE;
+        g_ptr_array_add((GPtrArray *)query, query_data);
+        return query;
+    }
     while(condition_type!=RCLIB_DB_QUERY_CONDITION_TYPE_NONE)
     {
         query_data = g_new0(RCLibDbQueryData, 1);

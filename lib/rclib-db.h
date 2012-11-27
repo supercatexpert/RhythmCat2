@@ -603,6 +603,11 @@ GPtrArray *rclib_db_library_query(RCLibDbQuery *query,
 GPtrArray *rclib_db_library_query_get_uris(RCLibDbQuery *query,
     GCancellable *cancellable);
 GObject *rclib_db_library_query_result_new();
+void rclib_db_library_query_result_copy_contents(
+    RCLibDbLibraryQueryResult *dst, RCLibDbLibraryQueryResult *src);
+void rclib_db_library_query_result_chain(
+    RCLibDbLibraryQueryResult *query_result, RCLibDbLibraryQueryResult *base,
+    gboolean import_entries);
 RCLibDbLibraryData *rclib_db_library_query_result_get_data(
     RCLibDbLibraryQueryResult *query_result,
     RCLibDbLibraryQueryResultIter *iter);
@@ -623,8 +628,10 @@ gint rclib_db_library_query_result_get_position(
     RCLibDbLibraryQueryResultIter *iter);
 RCLibDbLibraryQueryResultIter *rclib_db_library_query_result_get_iter_at_pos(
     RCLibDbLibraryQueryResult *query_result, gint pos);
+void rclib_db_library_query_result_set_query(
+    RCLibDbLibraryQueryResult *query_result, const RCLibDbQuery *query);    
 void rclib_db_library_query_result_query_start(
-    RCLibDbLibraryQueryResult *query_result, const RCLibDbQuery *query);
+    RCLibDbLibraryQueryResult *query_result);
 void rclib_db_library_query_result_query_cancel(
     RCLibDbLibraryQueryResult *query_result);
 void rclib_db_library_query_result_query_clear(

@@ -122,6 +122,7 @@ struct _RCLibDbPrivate
 
 struct _RCLibDbLibraryQueryResultPrivate
 {
+    RCLibDbLibraryQueryResult *base_query_result;
     RCLibDbQuery *query;
     GAsyncQueue *query_queue;
     GSequence *query_sequence;
@@ -133,13 +134,16 @@ struct _RCLibDbLibraryQueryResultPrivate
     gulong library_added_id;
     gulong library_changed_id;
     gulong library_deleted_id;
+    gulong base_added_id;
+    gulong base_changed_id;
+    gulong base_delete_id;
 };
 
 struct _RCLibDbLibraryQueryPropPrivate
 {
     RCLibDbLibraryDataType prop;
-    GSequence *prop_sequence;
-    GSequence *prop_iter_table;
+    GHashTable *prop_table;
+    GHashTable *prop_iter_table;
 };
 
 struct _RCLibDbCatalogData
