@@ -128,8 +128,8 @@ struct _RCLibDbLibraryQueryResultPrivate
     GSequence *query_sequence;
     GHashTable *query_iter_table;
     GHashTable *query_uri_table;
+    GHashTable *prop_table;
     GThread *query_thread;
-    GRWLock query_rw_lock;
     GCancellable *cancellable;
     gulong library_added_id;
     gulong library_changed_id;
@@ -137,13 +137,6 @@ struct _RCLibDbLibraryQueryResultPrivate
     gulong base_added_id;
     gulong base_changed_id;
     gulong base_delete_id;
-};
-
-struct _RCLibDbLibraryQueryPropPrivate
-{
-    RCLibDbLibraryDataType prop;
-    GHashTable *prop_table;
-    GHashTable *prop_iter_table;
 };
 
 struct _RCLibDbCatalogData

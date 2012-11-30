@@ -1736,6 +1736,19 @@ GType rclib_db_library_query_result_iter_get_type(void)
     return g_define_type_id__volatile;
 }
 
+GType rclib_db_library_query_result_prop_iter_get_type(void)
+{
+    static volatile gsize g_define_type_id__volatile = 0;
+    GType g_define_type_id;
+    if(g_once_init_enter(&g_define_type_id__volatile))
+    {
+        g_define_type_id = g_pointer_type_register_static(
+            g_intern_static_string("RCLibDbLibraryQueryResultPropIter"));
+        g_once_init_leave (&g_define_type_id__volatile, g_define_type_id);
+    }
+    return g_define_type_id__volatile;
+}
+
 GType rclib_db_query_get_type(void)
 {
     static volatile gsize g_define_type_id__volatile = 0;

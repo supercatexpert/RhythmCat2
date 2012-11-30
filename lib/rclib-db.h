@@ -59,21 +59,7 @@ G_BEGIN_DECLS
 #define RCLIB_DB_LIBRARY_QUERY_RESULT_GET_CLASS(o) \
     (G_TYPE_INSTANCE_GET_CLASS((o), RCLIB_TYPE_DB_LIBRARY_QUERY_RESULT, \
     RCLibDbLibraryQueryResultClass))
-    
-#define RCLIB_TYPE_DB_LIBRARY_QUERY_PROP \
-    (rclib_db_library_query_prop_get_type())
-#define RCLIB_DB_LIBRARY_QUERY_PROP(obj) (G_TYPE_CHECK_INSTANCE_CAST((obj), \
-    RCLIB_TYPE_DB_LIBRARY_QUERY_PROP, RCLibDbLibraryQueryProp))
-#define RCLIB_DB_LIBRARY_QUERY_PROP_CLASS(k) (G_TYPE_CHECK_CLASS_CAST((k), \
-    RCLIB_TYPE_DB_LIBRARY_QUERY_PROP, RCLibDbLibraryQueryPropClass))
-#define RCLIB_IS_DB_LIBRARY_QUERY_PROP(o) (G_TYPE_CHECK_INSTANCE_TYPE((o), \
-    RCLIB_TYPE_DB_LIBRARY_QUERY_PROP))
-#define RCLIB_IS_DB_LIBRARY_QUERY_PROP_CLASS(k) \
-    (G_TYPE_CHECK_CLASS_TYPE((k), RCLIB_TYPE_DB_LIBRARY_QUERY_PROP))
-#define RCLIB_DB_LIBRARY_QUERY_PROP_GET_CLASS(o) \
-    (G_TYPE_INSTANCE_GET_CLASS((o), RCLIB_TYPE_DB_LIBRARY_QUERY_PROP, \
-    RCLibDbLibraryQueryPropClass))
-    
+        
 #define RCLIB_TYPE_DB_CATALOG_DATA (rclib_db_catalog_data_get_type())
 #define RCLIB_TYPE_DB_PLAYLIST_DATA (rclib_db_playlist_data_get_type())
 #define RCLIB_TYPE_DB_CATALOG_ITER (rclib_db_catalog_iter_get_type())
@@ -81,6 +67,8 @@ G_BEGIN_DECLS
 #define RCLIB_TYPE_DB_LIBRARY_DATA (rclib_db_library_data_get_type())
 #define RCLIB_TYPE_DB_LIBRARY_QUERY_RESULT_ITER \
     (rclib_db_library_query_result_iter_get_type())
+#define RCLIB_TYPE_DB_LIBRARY_QUERY_RESULT_PROP_ITER \
+    (rclib_db_library_query_result_prop_iter_get_type())
 #define RCLIB_TYPE_DB_QUERY (rclib_db_query_get_type())
 
 /**
@@ -324,14 +312,12 @@ typedef struct _RCLibDbLibraryQueryResultClass RCLibDbLibraryQueryResultClass;
 typedef struct _RCLibDbLibraryQueryResultPrivate
     RCLibDbLibraryQueryResultPrivate;
 
-typedef struct _RCLibDbLibraryQueryProp RCLibDbLibraryQueryProp;
-typedef struct _RCLibDbLibraryQueryPropClass RCLibDbLibraryQueryPropClass;
-typedef struct _RCLibDbLibraryQueryPropPrivate RCLibDbLibraryQueryPropPrivate; 
-
 typedef struct _RCLibDbCatalogIter RCLibDbCatalogIter;
 typedef struct _RCLibDbPlaylistIter RCLibDbPlaylistIter;
 
 typedef struct _RCLibDbLibraryQueryResultIter RCLibDbLibraryQueryResultIter;
+typedef struct _RCLibDbLibraryQueryResultPropIter
+    RCLibDbLibraryQueryResultPropIter;
 
 typedef struct _RCLibDbQuery RCLibDbQuery;
 
@@ -402,37 +388,17 @@ struct _RCLibDbLibraryQueryResultClass {
         RCLibDbLibraryQueryResultIter *iter);
     void (*query_result_changed)(RCLibDbLibraryQueryResult *qr,
         RCLibDbLibraryQueryResultIter *iter);
-};
-
-/**
- * RCLibDbLibraryQueryProp:
- *
- * The property query result from the library. The contents of the
- * #RCLibDbLibraryQueryProp structure are private and should only be
- * accessed via the provided API.
- */
-
-struct _RCLibDbLibraryQueryProp {
-    /*< private >*/
-    GObject parent;
-    RCLibDbLibraryQueryPropPrivate *priv;
-};
-
-/**
- * RCLibDbLibraryQueryPropClass:
- *
- * #RCLibDbLibraryQueryPropClass class.
- */
-
-struct _RCLibDbLibraryQueryPropClass {
-    /*< private >*/
-    GObjectClass parent_class;
+    void (*prop_added)(RCLibDbLibraryQueryResult *qr,
+        guint prop_type, RCLibDbLibraryQueryResultPropIter *iter);
+    void (*prop_delete)(RCLibDbLibraryQueryResult *qr,
+        guint prop_type, RCLibDbLibraryQueryResultPropIter *iter);
+    void (*prop_changed)(RCLibDbLibraryQueryResult *qr,
+        guint prop_type, RCLibDbLibraryQueryResultPropIter *iter);
 };
 
 /*< private >*/
 GType rclib_db_get_type();
 GType rclib_db_library_query_result_get_type();
-GType rclib_db_library_query_prop_get_type();
 GType rclib_db_catalog_data_get_type();
 GType rclib_db_playlist_data_get_type();
 GType rclib_db_catalog_iter_get_type();
