@@ -489,6 +489,11 @@ static void rclib_db_library_query_result_base_added_cb(
     RCLibDbLibraryQueryResult *qr;
     RCLibDbLibraryQueryResultPrivate *priv;
     RCLibDbLibraryData *library_data;
+    RCLibDbLibraryQueryResultPropItem *prop_item;
+    RCLibDbLibraryQueryResultPropData *prop_data;
+    gchar *prop_string;
+    guint prop_type;
+    GHashTableIter prop_iter;
     GSequenceIter *iter;
     gchar *uri = NULL;
     qr = (RCLibDbLibraryQueryResult *)data;
@@ -512,11 +517,59 @@ static void rclib_db_library_query_result_base_added_cb(
         rclib_db_library_data_unref(library_data);
         return;
     }
-    iter = g_sequence_append(priv->query_sequence, library_data);
+    iter = g_sequence_append(priv->query_sequence,
+        rclib_db_library_data_ref(library_data));
     g_hash_table_replace(priv->query_iter_table, iter, iter);
     g_hash_table_replace(priv->query_uri_table, uri, iter);
     g_signal_emit(qr, db_library_query_result_signals[
         SIGNAL_LIBRARY_QUERY_RESULT_ADDED], 0, iter);
+    
+    g_hash_table_iter_init(&prop_iter, priv->prop_table);
+    while(g_hash_table_iter_next(&prop_iter, (gpointer *)&prop_type,
+        (gpointer *)&prop_item))
+    {
+        if(prop_item==NULL) continue;
+        if(rclib_db_query_get_query_data_type((RCLibDbQueryDataType)
+            prop_type)!=G_TYPE_STRING)
+        {
+            continue;
+        }
+        prop_string = NULL;
+        rclib_db_library_data_get(library_data, prop_type, &prop_string,
+            RCLIB_DB_LIBRARY_DATA_TYPE_NONE);
+        if(prop_string==NULL)
+            prop_string = g_strdup("");
+        iter = g_hash_table_lookup(prop_item->prop_name_table,
+            prop_string);
+        if(iter!=NULL)
+        {
+            g_hash_table_insert(prop_item->prop_uri_table, g_strdup(uri),
+                iter);
+            prop_data = g_sequence_get(iter);
+            prop_data->prop_count++;
+            g_signal_emit(qr, db_library_query_result_signals[
+                SIGNAL_LIBRARY_QUERY_RESULT_PROP_CHANGED], 0, prop_type,
+                iter);
+        }
+        else
+        {
+            prop_data = rclib_db_library_query_result_prop_data_new();
+            prop_data->prop_count = 1;
+            prop_data->prop_name = g_strdup(prop_string);
+            iter = g_sequence_append(prop_item->prop_sequence, prop_data);
+            g_hash_table_insert(prop_item->prop_iter_table, iter, iter);
+            g_hash_table_insert(prop_item->prop_name_table,
+                g_strdup(prop_string), iter);
+            g_hash_table_insert(prop_item->prop_uri_table,
+                g_strdup(uri), iter);
+            g_signal_emit(qr, db_library_query_result_signals[
+                SIGNAL_LIBRARY_QUERY_RESULT_PROP_ADDED], 0, prop_type,
+                iter);
+        }
+        g_free(prop_string);
+    }
+    
+    rclib_db_library_data_unref(library_data);
 }
 
 static void rclib_db_library_query_result_base_delete_cb(
@@ -525,6 +578,11 @@ static void rclib_db_library_query_result_base_delete_cb(
 {
     RCLibDbLibraryQueryResult *qr;
     RCLibDbLibraryQueryResultPrivate *priv;
+    RCLibDbLibraryQueryResultPropItem *prop_item;
+    RCLibDbLibraryQueryResultPropData *prop_data;
+    gchar *prop_string;
+    guint prop_type;
+    GHashTableIter prop_iter;
     qr = (RCLibDbLibraryQueryResult *)data;
     RCLibDbLibraryData *library_data;
     GSequenceIter *iter;
@@ -534,9 +592,14 @@ static void rclib_db_library_query_result_base_delete_cb(
     if(priv==NULL) return;
     library_data = g_sequence_get((GSequenceIter *)base_iter);
     if(library_data==NULL) return;
+    library_data = rclib_db_library_data_ref(library_data);
     rclib_db_library_data_get(library_data, RCLIB_DB_LIBRARY_DATA_TYPE_URI,
         &uri, RCLIB_DB_LIBRARY_DATA_TYPE_NONE);
-    if(uri==NULL) return;
+    if(uri==NULL)
+    {
+        rclib_db_library_data_unref(library_data);
+        return;
+    }
     iter = g_hash_table_lookup(priv->query_uri_table, uri);
     if(iter!=NULL)
     {
@@ -546,7 +609,56 @@ static void rclib_db_library_query_result_base_delete_cb(
         g_hash_table_remove(priv->query_uri_table, uri);
         g_hash_table_remove(priv->query_iter_table, iter);
     }
+    
+    g_hash_table_iter_init(&prop_iter, priv->prop_table);
+    while(g_hash_table_iter_next(&prop_iter, (gpointer *)&prop_type,
+        (gpointer *)&prop_item))
+    {
+        if(prop_item==NULL) continue;
+        if(rclib_db_query_get_query_data_type((RCLibDbQueryDataType)
+            prop_type)!=G_TYPE_STRING)
+        {
+            continue;
+        }
+        prop_string = NULL;
+        rclib_db_library_data_get(library_data, prop_type, &prop_string,
+            RCLIB_DB_LIBRARY_DATA_TYPE_NONE);
+        if(prop_string==NULL)
+            prop_string = g_strdup("");
+        iter = g_hash_table_lookup(prop_item->prop_name_table,
+            prop_string);
+        if(iter==NULL)
+        {
+            g_free(prop_string);
+            continue;
+        }
+        prop_data = g_sequence_get(iter);
+        if(prop_data==NULL)
+        {
+            g_free(prop_string);
+            continue;
+        }
+        if(prop_data->prop_count>1)
+        {
+            prop_data->prop_count--;
+            g_hash_table_remove(prop_item->prop_uri_table, uri);
+            g_signal_emit(qr, db_library_query_result_signals[
+                SIGNAL_LIBRARY_QUERY_RESULT_PROP_CHANGED], 0, prop_type, iter);
+        }
+        else
+        {
+            g_signal_emit(qr, db_library_query_result_signals[
+                SIGNAL_LIBRARY_QUERY_RESULT_PROP_DELETE], 0, prop_type, iter);
+            g_sequence_remove(iter);
+            g_hash_table_remove(prop_item->prop_name_table, prop_string);
+            g_hash_table_remove(prop_item->prop_iter_table, iter);
+            g_hash_table_remove(prop_item->prop_uri_table, uri);
+        }
+        g_free(prop_string);
+    }
+    
     g_free(uri);
+    rclib_db_library_data_unref(library_data);
 }
 
 static void rclib_db_library_query_result_base_changed_cb(
@@ -556,7 +668,12 @@ static void rclib_db_library_query_result_base_changed_cb(
     RCLibDbLibraryQueryResult *qr;
     RCLibDbLibraryQueryResultPrivate *priv;
     RCLibDbLibraryData *library_data;
-    GSequenceIter *iter;
+    GSequenceIter *iter, *prop_item_iter;
+    RCLibDbLibraryQueryResultPropItem *prop_item;
+    RCLibDbLibraryQueryResultPropData *prop_data;
+    gchar *prop_string;
+    guint prop_type;
+    GHashTableIter prop_iter;
     gchar *uri = NULL;
     qr = (RCLibDbLibraryQueryResult *)data;
     if(data==NULL) return;
@@ -596,17 +713,138 @@ static void rclib_db_library_query_result_base_changed_cb(
         g_sequence_remove(iter);
         g_hash_table_remove(priv->query_uri_table, uri);
         g_hash_table_remove(priv->query_iter_table, iter);
-        rclib_db_library_data_unref(library_data);
-        g_free(uri);
-        return;
+        
+        g_hash_table_iter_init(&prop_iter, priv->prop_table);
+        while(g_hash_table_iter_next(&prop_iter,
+            (gpointer *)&prop_type, (gpointer *)&prop_item))
+        {
+            if(prop_item==NULL) continue;
+            if(rclib_db_query_get_query_data_type(
+                (RCLibDbQueryDataType)prop_type)!=G_TYPE_STRING)
+            {
+                continue;
+            }
+            prop_string = NULL;
+            rclib_db_library_data_get(library_data, prop_type,
+                &prop_string, RCLIB_DB_LIBRARY_DATA_TYPE_NONE);
+            if(prop_string==NULL)
+                prop_string = g_strdup("");
+            prop_item_iter = g_hash_table_lookup(prop_item->prop_name_table,
+                prop_string);
+            if(prop_item_iter==NULL)
+            {
+                g_free(prop_string);
+                continue;
+            }
+            prop_data = g_sequence_get(prop_item_iter);
+            if(prop_data==NULL)
+            {
+                g_free(prop_string);
+                continue;
+            }
+            if(prop_data->prop_count>1)
+            {
+                prop_data->prop_count--;
+                g_hash_table_remove(prop_item->prop_uri_table, uri);
+                g_signal_emit(qr, db_library_query_result_signals[
+                    SIGNAL_LIBRARY_QUERY_RESULT_PROP_CHANGED], 0,
+                    prop_type, prop_item_iter);
+            }
+            else
+            {
+                g_signal_emit(qr, db_library_query_result_signals[
+                    SIGNAL_LIBRARY_QUERY_RESULT_PROP_DELETE], 0,
+                    prop_type, prop_item_iter);
+                g_sequence_remove(prop_item_iter);
+                g_hash_table_remove(prop_item->prop_name_table,
+                    prop_string);
+                g_hash_table_remove(prop_item->prop_iter_table,
+                    prop_item_iter);
+                g_hash_table_remove(prop_item->prop_uri_table, uri);
+            }
+            g_free(prop_string);
+        }
     }
     else
     {
-        rclib_db_library_data_unref(library_data);
-        g_free(uri);
         g_signal_emit(qr, db_library_query_result_signals[
             SIGNAL_LIBRARY_QUERY_RESULT_CHANGED], 0, iter);
+    
+        g_hash_table_iter_init(&prop_iter, priv->prop_table);
+        while(g_hash_table_iter_next(&prop_iter,
+            (gpointer *)&prop_type, (gpointer *)&prop_item))
+        {
+            if(prop_item==NULL) continue;
+            if(rclib_db_query_get_query_data_type(
+                (RCLibDbQueryDataType)prop_type)!=G_TYPE_STRING)
+            {
+                continue;
+            }
+            prop_string = NULL;
+            rclib_db_library_data_get(library_data, prop_type,
+                &prop_string, RCLIB_DB_LIBRARY_DATA_TYPE_NONE);
+            if(prop_string==NULL)
+                prop_string = g_strdup("");
+            prop_item_iter = g_hash_table_lookup(
+                prop_item->prop_name_table, prop_string);
+            if(prop_item_iter==NULL)
+            {
+                prop_data = rclib_db_library_query_result_prop_data_new();
+                prop_data->prop_count = 1;
+                prop_data->prop_name = g_strdup(prop_string);
+                prop_item_iter = g_sequence_append(
+                    prop_item->prop_sequence, prop_data);
+                g_hash_table_insert(prop_item->prop_iter_table,
+                    prop_item_iter, prop_item_iter);
+                g_hash_table_insert(prop_item->prop_name_table,
+                    g_strdup(prop_string), prop_item_iter);
+                g_hash_table_insert(prop_item->prop_uri_table,
+                    g_strdup(uri), prop_item_iter);
+                g_signal_emit(qr, db_library_query_result_signals[
+                    SIGNAL_LIBRARY_QUERY_RESULT_PROP_ADDED], 0, prop_type,
+                    prop_item_iter);
+            }
+            else
+            {
+                prop_data = g_sequence_get(prop_item_iter);
+                if(prop_data==NULL)
+                {
+                    g_free(prop_string);
+                    continue;
+                }
+                
+                if(g_strcmp0(prop_data->prop_name, prop_string)!=0)
+                {
+                    if(prop_data->prop_count>1)
+                    {
+                        prop_data->prop_count--;
+                        g_hash_table_remove(prop_item->prop_uri_table, uri);
+                        g_signal_emit(qr, db_library_query_result_signals[
+                            SIGNAL_LIBRARY_QUERY_RESULT_PROP_CHANGED], 0,
+                            prop_type, prop_item_iter);
+                    }
+                    else
+                    {
+                        g_signal_emit(qr, db_library_query_result_signals[
+                            SIGNAL_LIBRARY_QUERY_RESULT_PROP_DELETE], 0,
+                            prop_type, prop_item_iter);
+                        g_sequence_remove(prop_item_iter);
+                        g_hash_table_remove(prop_item->prop_name_table,
+                            prop_string);
+                        g_hash_table_remove(prop_item->prop_iter_table,
+                            prop_item_iter);
+                        g_hash_table_remove(prop_item->prop_uri_table,
+                            uri);
+                    }
+                }    
+            }
+            g_free(prop_string);
+        }
+    
     }
+    
+    rclib_db_library_data_unref(library_data);
+    g_free(uri);
 }
 
 static inline gboolean rclib_db_library_keyword_table_add_entry(
