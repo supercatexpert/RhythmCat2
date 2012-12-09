@@ -604,6 +604,34 @@ void rclib_db_library_query_result_query_clear(
     RCLibDbLibraryQueryResult *query_result);
 const RCLibDbQuery *rclib_db_library_query_result_get_query(
     RCLibDbLibraryQueryResult *query_result);
+gboolean rclib_db_library_query_result_prop_get_data(
+    RCLibDbLibraryQueryResult *query_result, RCLibDbQueryDataType prop_type,
+    RCLibDbLibraryQueryResultPropIter *iter, gchar **prop_name,
+    guint *prop_count);
+guint rclib_db_library_query_result_prop_get_length(
+    RCLibDbLibraryQueryResult *query_result, RCLibDbQueryDataType prop_type);
+RCLibDbLibraryQueryResultPropIter *
+    rclib_db_library_query_result_prop_get_begin_iter(
+    RCLibDbLibraryQueryResult *query_result, RCLibDbQueryDataType prop_type);
+RCLibDbLibraryQueryResultPropIter *
+    rclib_db_library_query_result_prop_get_last_iter(
+    RCLibDbLibraryQueryResult *query_result, RCLibDbQueryDataType prop_type);
+RCLibDbLibraryQueryResultPropIter *
+    rclib_db_library_query_result_prop_get_next_iter(
+    RCLibDbLibraryQueryResult *query_result, RCLibDbQueryDataType prop_type,
+    RCLibDbLibraryQueryResultPropIter *iter);
+RCLibDbLibraryQueryResultPropIter *
+    rclib_db_library_query_result_prop_get_prev_iter(
+    RCLibDbLibraryQueryResult *query_result, RCLibDbQueryDataType prop_type,
+    RCLibDbLibraryQueryResultPropIter *iter);
+gint rclib_db_library_query_result_prop_get_position(
+    RCLibDbLibraryQueryResult *query_result, RCLibDbQueryDataType prop_type,
+    RCLibDbLibraryQueryResultPropIter *iter);
+RCLibDbLibraryQueryResultPropIter *
+    rclib_db_library_query_result_prop_get_iter_at_pos(
+    RCLibDbLibraryQueryResult *query_result, RCLibDbQueryDataType prop_type,
+    gint pos);
+
 
 /* Query Interface */
 RCLibDbQuery *rclib_db_query_parse(RCLibDbQueryConditionType condition1, ...);

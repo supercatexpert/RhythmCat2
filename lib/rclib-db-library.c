@@ -840,7 +840,6 @@ static void rclib_db_library_query_result_base_changed_cb(
             }
             g_free(prop_string);
         }
-    
     }
     
     rclib_db_library_data_unref(library_data);
@@ -3300,7 +3299,7 @@ RCLibDbLibraryQueryResultIter *rclib_db_library_query_result_get_next_iter(
             break;
         iter_next = (RCLibDbLibraryQueryResultIter *)g_sequence_iter_next(
             (GSequenceIter *)iter);
-        if(g_sequence_iter_is_end((GSequenceIter *)iter))
+        if(g_sequence_iter_is_end((GSequenceIter *)iter_next))
             iter_next = NULL;
     }
     G_STMT_END;
@@ -3333,9 +3332,11 @@ RCLibDbLibraryQueryResultIter *rclib_db_library_query_result_get_prev_iter(
             break;
         if(g_sequence_iter_is_begin((GSequenceIter *)iter))
             iter_prev = NULL;
-        iter_prev = (RCLibDbLibraryQueryResultIter *)g_sequence_iter_prev(
-            (GSequenceIter *)iter);
-
+        else
+        {
+            iter_prev = (RCLibDbLibraryQueryResultIter *)g_sequence_iter_prev(
+                (GSequenceIter *)iter);
+        }
     }
     G_STMT_END;
     return iter_prev; 
@@ -3377,10 +3378,10 @@ gint rclib_db_library_query_result_get_position(
 /**
  * rclib_db_library_query_result_get_iter_at_pos:
  * @query_result: the #RCLibDbLibraryQueryResult instance
- * @pos: the position in the playlist catalog, or -1 for the end.
+ * @pos: the position in the query result sequence, or -1 for the end.
  *
  * Return the iterator at position @pos. If @pos is negative or larger
- * than the number of items in the playlist catalog, the end iterator
+ * than the number of items in the query result sequence, the end iterator
  * is returned.
  *
  * Returns: (transfer none): (skip): The #RCLibDbLibraryQueryResultIter at
@@ -3528,3 +3529,273 @@ const RCLibDbQuery *rclib_db_library_query_result_get_query(
     return priv->query;
 }
 
+/**
+ * rclib_db_library_query_result_prop_get_data:
+ * @query_result: the #RCLibDbLibraryQueryResult instance
+ * @prop_type: the property type
+ * @iter: the iter pointed to the property
+ * @prop_name: (out): the property name
+ * @prop_count: (out): the number of the property name used
+ * 
+ * Get the data of the property in the query result.
+ * 
+ * Returns: Whether the property data exists.
+ */
+
+gboolean rclib_db_library_query_result_prop_get_data(
+    RCLibDbLibraryQueryResult *query_result, RCLibDbQueryDataType prop_type,
+    RCLibDbLibraryQueryResultPropIter *iter, gchar **prop_name,
+    guint *prop_count)
+{
+    RCLibDbLibraryQueryResultPrivate *priv;
+    RCLibDbLibraryQueryResultPropItem *item;
+    RCLibDbLibraryQueryResultPropData *data;
+    if(query_result==NULL) return FALSE;
+    priv = RCLIB_DB_LIBRARY_QUERY_RESULT(query_result)->priv;
+    if(priv==NULL || priv->prop_table==NULL)
+        return FALSE;
+    item = g_hash_table_lookup(priv->prop_table, GUINT_TO_POINTER(prop_type));
+    if(item==NULL)
+        return FALSE;
+    if(!g_hash_table_contains(item->prop_iter_table, iter))
+        return FALSE;
+    data = g_sequence_get((GSequenceIter *)iter);
+    if(data==NULL)
+        return FALSE;
+    if(prop_name!=NULL)
+        *prop_name = g_strdup(data->prop_name);
+    if(prop_count!=NULL)
+        *prop_count = data->prop_count;
+    return TRUE;
+}
+
+/**
+ * rclib_db_library_query_result_prop_get_length:
+ * @query_result: the #RCLibDbLibraryQueryResult instance
+ * @prop_type: the property type
+ * 
+ * Get length of the given property type in the the query result.
+ * 
+ * Returns: The length of the given property type.
+ */
+
+guint rclib_db_library_query_result_prop_get_length(
+    RCLibDbLibraryQueryResult *query_result, RCLibDbQueryDataType prop_type)
+{
+    RCLibDbLibraryQueryResultPrivate *priv;
+    RCLibDbLibraryQueryResultPropItem *item;
+    if(query_result==NULL) return 0;
+    priv = RCLIB_DB_LIBRARY_QUERY_RESULT(query_result)->priv;
+    if(priv==NULL || priv->prop_table==NULL)
+        return 0;
+    item = g_hash_table_lookup(priv->prop_table, GUINT_TO_POINTER(prop_type));
+    if(item==NULL)
+        return 0;
+    return g_sequence_get_length(item->prop_sequence);
+}
+
+/**
+ * rclib_db_library_query_result_prop_get_begin_iter:
+ * @query_result: the #RCLibDbLibraryQueryResult instance
+ * @prop_type: the property type
+ * 
+ * Get the begin iter of the given property type in the the query result.
+ * 
+ * Returns: (transfer none): (skip): The begin iter, #NULL if the query
+ *     result is empty or any error occurs.
+ */
+
+RCLibDbLibraryQueryResultPropIter *
+    rclib_db_library_query_result_prop_get_begin_iter(
+    RCLibDbLibraryQueryResult *query_result, RCLibDbQueryDataType prop_type)
+{
+    RCLibDbLibraryQueryResultPrivate *priv;
+    RCLibDbLibraryQueryResultPropItem *item;
+    RCLibDbLibraryQueryResultPropIter *iter;
+    if(query_result==NULL) return NULL;
+    priv = RCLIB_DB_LIBRARY_QUERY_RESULT(query_result)->priv;
+    if(priv==NULL || priv->prop_table==NULL)
+        return NULL;
+    item = g_hash_table_lookup(priv->prop_table, GUINT_TO_POINTER(prop_type));
+    if(item==NULL)
+        return NULL;
+    iter = (RCLibDbLibraryQueryResultPropIter *)g_sequence_get_begin_iter(
+        item->prop_sequence);
+    if(g_sequence_iter_is_end((GSequenceIter *)iter))
+        iter = NULL;
+    return iter;
+}
+
+/**
+ * rclib_db_library_query_result_prop_get_last_iter:
+ * @query_result: the #RCLibDbLibraryQueryResult instance
+ * @prop_type: the property type
+ * 
+ * Get the last iter of the given property type in the the query result.
+ * 
+ * Returns: (transfer none): (skip): The last iter, #NULL if the query
+ *     result is empty or any error occurs.
+ */
+ 
+RCLibDbLibraryQueryResultPropIter *
+    rclib_db_library_query_result_prop_get_last_iter(
+    RCLibDbLibraryQueryResult *query_result, RCLibDbQueryDataType prop_type)
+{
+    RCLibDbLibraryQueryResultPrivate *priv;
+    RCLibDbLibraryQueryResultPropItem *item;
+    RCLibDbLibraryQueryResultPropIter *iter;
+    if(query_result==NULL) return NULL;
+    priv = RCLIB_DB_LIBRARY_QUERY_RESULT(query_result)->priv;
+    if(priv==NULL || priv->prop_table==NULL)
+        return NULL;
+    item = g_hash_table_lookup(priv->prop_table, GUINT_TO_POINTER(prop_type));
+    if(item==NULL)
+        return NULL;
+    iter = (RCLibDbLibraryQueryResultPropIter *)g_sequence_get_end_iter(
+        item->prop_sequence);
+    iter = (RCLibDbLibraryQueryResultPropIter *)g_sequence_iter_prev(
+        (GSequenceIter *)iter);
+    if(g_sequence_iter_is_end((GSequenceIter *)iter))
+        iter = NULL;
+    return iter;
+}
+
+/**
+ * rclib_db_library_query_result_prop_get_next_iter:
+ * @query_result: the #RCLibDbLibraryQueryResult instance
+ * @prop_type: the property type
+ * @iter: the iter pointed to the property
+ * 
+ * Get the next iter of @iter.
+ * 
+ * Returns: (transfer none): (skip): The next iter, #NULL if there is no
+ *     next one or any error occurs.
+ */
+
+RCLibDbLibraryQueryResultPropIter *
+    rclib_db_library_query_result_prop_get_next_iter(
+    RCLibDbLibraryQueryResult *query_result, RCLibDbQueryDataType prop_type,
+    RCLibDbLibraryQueryResultPropIter *iter)
+{
+    RCLibDbLibraryQueryResultPrivate *priv;
+    RCLibDbLibraryQueryResultPropItem *item;
+    RCLibDbLibraryQueryResultPropIter *iter_next = NULL;
+    if(query_result==NULL) return NULL;
+    priv = RCLIB_DB_LIBRARY_QUERY_RESULT(query_result)->priv;
+    if(priv==NULL || priv->prop_table==NULL)
+        return NULL;
+    item = g_hash_table_lookup(priv->prop_table, GUINT_TO_POINTER(prop_type));
+    if(item==NULL)
+        return NULL;
+    if(!g_hash_table_contains(item->prop_iter_table, iter))
+        return NULL;
+    iter_next = (RCLibDbLibraryQueryResultPropIter *)g_sequence_iter_prev(
+        (GSequenceIter *)iter);
+    if(g_sequence_iter_is_end((GSequenceIter *)iter_next))
+        iter_next = NULL;
+    return iter_next;
+}
+
+/**
+ * rclib_db_library_query_result_prop_get_prev_iter:
+ * @query_result: the #RCLibDbLibraryQueryResult instance
+ * @prop_type: the property type
+ * @iter: the iter pointed to the property
+ * 
+ * Get the previous iter of @iter.
+ * 
+ * Returns: (transfer none): (skip): The previous iter, #NULL if there is no
+ *     next one or any error occurs.
+ */
+
+RCLibDbLibraryQueryResultPropIter *
+    rclib_db_library_query_result_prop_get_prev_iter(
+    RCLibDbLibraryQueryResult *query_result, RCLibDbQueryDataType prop_type,
+    RCLibDbLibraryQueryResultPropIter *iter)
+{
+    RCLibDbLibraryQueryResultPrivate *priv;
+    RCLibDbLibraryQueryResultPropItem *item;
+    RCLibDbLibraryQueryResultPropIter *iter_prev = NULL;
+    if(query_result==NULL) return NULL;
+    priv = RCLIB_DB_LIBRARY_QUERY_RESULT(query_result)->priv;
+    if(priv==NULL || priv->prop_table==NULL)
+        return NULL;
+    item = g_hash_table_lookup(priv->prop_table, GUINT_TO_POINTER(prop_type));
+    if(item==NULL)
+        return NULL;
+    if(!g_hash_table_contains(item->prop_iter_table, iter))
+        return NULL;
+    if(g_sequence_iter_is_begin((GSequenceIter *)iter))
+        iter_prev = NULL;
+    else
+    {
+        iter_prev = (RCLibDbLibraryQueryResultPropIter *)g_sequence_iter_prev(
+            (GSequenceIter *)iter);
+    }
+    return iter_prev;
+}
+
+/**
+ * rclib_db_library_query_result_prop_get_position:
+ * @query_result: the #RCLibDbLibraryQueryResult instance
+ * @prop_type: the property type
+ * @iter: the iter pointed to the property
+ * 
+ * Returns the position of @iter.
+ *
+ * Returns: the position of @iter, -1 if the @iter is not valid.
+ */
+
+gint rclib_db_library_query_result_prop_get_position(
+    RCLibDbLibraryQueryResult *query_result, RCLibDbQueryDataType prop_type,
+    RCLibDbLibraryQueryResultPropIter *iter)
+{
+    RCLibDbLibraryQueryResultPrivate *priv;
+    RCLibDbLibraryQueryResultPropItem *item;
+    gint pos = 0;
+    if(query_result==NULL) return -1;
+    priv = RCLIB_DB_LIBRARY_QUERY_RESULT(query_result)->priv;
+    if(priv==NULL || priv->prop_table==NULL)
+        return -1;
+    item = g_hash_table_lookup(priv->prop_table, GUINT_TO_POINTER(prop_type));
+    if(item==NULL)
+        return -1;
+    if(!g_hash_table_contains(item->prop_iter_table, iter))
+        return -1;
+    pos = g_sequence_iter_get_position((GSequenceIter *)iter);
+    return pos;  
+}
+
+/**
+ * rclib_db_library_query_result_prop_get_iter_at_pos:
+ * @query_result: the #RCLibDbLibraryQueryResult instance
+ * @prop_type: the property type
+ * @pos: the position in the property sequence, or -1 for the end.
+ * 
+ * Return the iterator at position @pos. If @pos is negative or larger
+ * than the number of items in the property sequence, the end iterator
+ * is returned.
+ *
+ * Returns: (transfer none): (skip): The #RCLibDbLibraryQueryResultPropIter at
+ *     position @pos.
+ */
+
+RCLibDbLibraryQueryResultPropIter *
+    rclib_db_library_query_result_prop_get_iter_at_pos(
+    RCLibDbLibraryQueryResult *query_result, RCLibDbQueryDataType prop_type,
+    gint pos)
+{
+    RCLibDbLibraryQueryResultPrivate *priv;
+    RCLibDbLibraryQueryResultPropItem *item;
+    RCLibDbLibraryQueryResultPropIter *iter = NULL;
+    if(query_result==NULL) return NULL;
+    priv = RCLIB_DB_LIBRARY_QUERY_RESULT(query_result)->priv;
+    if(priv==NULL || priv->prop_table==NULL)
+        return NULL;
+    item = g_hash_table_lookup(priv->prop_table, GUINT_TO_POINTER(prop_type));
+    if(item==NULL)
+        return NULL;
+    iter = (RCLibDbLibraryQueryResultPropIter *)g_sequence_get_iter_at_pos(
+        (GSequence *)item->prop_sequence, pos);
+    return iter;
+}

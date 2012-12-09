@@ -44,6 +44,7 @@
 <a name="RCLibDb"></a><a name="RCLibDbCatalogData"></a><a name="RCLibDbCatalogIter"></a><a name="RCLibDbLibraryData"></a><a name="RCLibDbLibraryQueryResultIter"></a><a name="RCLibDbPlaylistData"></a><a name="RCLibDbPlaylistIter"></a><a name="RCLibDbQuery"></a><pre class="synopsis">
 #include &lt;rclib-db.h&gt;
 
+#define             <a class="link" href="RCLibDbLibraryQueryResult.html#RCLIB-TYPE-DB-LIBRARY-QUERY-RESULT-PROP-ITER:CAPS" title="RCLIB_TYPE_DB_LIBRARY_QUERY_RESULT_PROP_ITER">RCLIB_TYPE_DB_LIBRARY_QUERY_RESULT_PROP_ITER</a>
 struct              <a class="link" href="RCLibDbLibraryQueryResult.html#RCLibDb-struct" title="struct RCLibDb">RCLibDb</a>;
                     <a class="link" href="RCLibDbLibraryQueryResult.html#RCLibDbCatalogData-struct" title="RCLibDbCatalogData">RCLibDbCatalogData</a>;
 enum                <a class="link" href="RCLibDbLibraryQueryResult.html#RCLibDbCatalogDataType" title="enum RCLibDbCatalogDataType">RCLibDbCatalogDataType</a>;
@@ -123,6 +124,9 @@ enum                <a class="link" href="RCLibDbLibraryQueryResult.html#RCLibDb
                                                          <em class="parameter"><code><a class="link" href="RCLibDbLibraryQueryResult.html#RCLibDbLibraryDataType" title="enum RCLibDbLibraryDataType"><span class="type">RCLibDbLibraryDataType</span></a> type1</code></em>,
                                                          <em class="parameter"><code>...</code></em>);
 <a class="link" href="RCLibDbLibraryQueryResult.html#RCLibDbLibraryData"><span class="returnvalue">RCLibDbLibraryData</span></a> * <a class="link" href="RCLibDbLibraryQueryResult.html#rclib-db-library-data-new" title="rclib_db_library_data_new ()">rclib_db_library_data_new</a>          ();
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RCLibDbLibraryQueryResult.html#rclib-db-library-data-query" title="rclib_db_library_data_query ()">rclib_db_library_data_query</a>         (<em class="parameter"><code><a class="link" href="RCLibDbLibraryQueryResult.html#RCLibDbLibraryData"><span class="type">RCLibDbLibraryData</span></a> *library_data</code></em>,
+                                                         <em class="parameter"><code><a class="link" href="RCLibDbLibraryQueryResult.html#RCLibDbQuery"><span class="type">RCLibDbQuery</span></a> *query</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/gio/GCancellable.html"><span class="type">GCancellable</span></a> *cancellable</code></em>);
 <a class="link" href="RCLibDbLibraryQueryResult.html#RCLibDbLibraryData"><span class="returnvalue">RCLibDbLibraryData</span></a> * <a class="link" href="RCLibDbLibraryQueryResult.html#rclib-db-library-data-ref" title="rclib_db_library_data_ref ()">rclib_db_library_data_ref</a>          (<em class="parameter"><code><a class="link" href="RCLibDbLibraryQueryResult.html#RCLibDbLibraryData"><span class="type">RCLibDbLibraryData</span></a> *data</code></em>);
 <span class="returnvalue">void</span>                <a class="link" href="RCLibDbLibraryQueryResult.html#rclib-db-library-data-set" title="rclib_db_library_data_set ()">rclib_db_library_data_set</a>           (<em class="parameter"><code><a class="link" href="RCLibDbLibraryQueryResult.html#RCLibDbLibraryData"><span class="type">RCLibDbLibraryData</span></a> *data</code></em>,
                                                          <em class="parameter"><code><a class="link" href="RCLibDbLibraryQueryResult.html#RCLibDbLibraryDataType" title="enum RCLibDbLibraryDataType"><span class="type">RCLibDbLibraryDataType</span></a> type1</code></em>,
@@ -137,6 +141,80 @@ enum                <a class="link" href="RCLibDbLibraryQueryResult.html#RCLibDb
 <span class="returnvalue">void</span>                <a class="link" href="RCLibDbLibraryQueryResult.html#rclib-db-library-delete" title="rclib_db_library_delete ()">rclib_db_library_delete</a>             (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *uri</code></em>);
 <a class="link" href="RCLibDbLibraryQueryResult.html#RCLibDbLibraryData"><span class="returnvalue">RCLibDbLibraryData</span></a> * <a class="link" href="RCLibDbLibraryQueryResult.html#rclib-db-library-get-data" title="rclib_db_library_get_data ()">rclib_db_library_get_data</a>          (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *uri</code></em>);
 <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RCLibDbLibraryQueryResult.html#rclib-db-library-has-uri" title="rclib_db_library_has_uri ()">rclib_db_library_has_uri</a>            (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *uri</code></em>);
+<a href="/usr/share/gtk-doc/html/glib/glib-Pointer-Arrays.html#GPtrArray"><span class="returnvalue">GPtrArray</span></a> *         <a class="link" href="RCLibDbLibraryQueryResult.html#rclib-db-library-query" title="rclib_db_library_query ()">rclib_db_library_query</a>              (<em class="parameter"><code><a class="link" href="RCLibDbLibraryQueryResult.html#RCLibDbQuery"><span class="type">RCLibDbQuery</span></a> *query</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/gio/GCancellable.html"><span class="type">GCancellable</span></a> *cancellable</code></em>);
+<a href="/usr/share/gtk-doc/html/glib/glib-Pointer-Arrays.html#GPtrArray"><span class="returnvalue">GPtrArray</span></a> *         <a class="link" href="RCLibDbLibraryQueryResult.html#rclib-db-library-query-get-uris" title="rclib_db_library_query_get_uris ()">rclib_db_library_query_get_uris</a>     (<em class="parameter"><code><a class="link" href="RCLibDbLibraryQueryResult.html#RCLibDbQuery"><span class="type">RCLibDbQuery</span></a> *query</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/gio/GCancellable.html"><span class="type">GCancellable</span></a> *cancellable</code></em>);
+<span class="returnvalue">void</span>                <a class="link" href="RCLibDbLibraryQueryResult.html#rclib-db-library-query-result-chain" title="rclib_db_library_query_result_chain ()">rclib_db_library_query_result_chain</a> (<em class="parameter"><code><a class="link" href="RCLibDbLibraryQueryResult.html" title="RCLibDb"><span class="type">RCLibDbLibraryQueryResult</span></a> *query_result</code></em>,
+                                                         <em class="parameter"><code><a class="link" href="RCLibDbLibraryQueryResult.html" title="RCLibDb"><span class="type">RCLibDbLibraryQueryResult</span></a> *base</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> import_entries</code></em>);
+<span class="returnvalue">void</span>                <a class="link" href="RCLibDbLibraryQueryResult.html#rclib-db-library-query-result-copy-contents" title="rclib_db_library_query_result_copy_contents ()">rclib_db_library_query_result_copy_contents</a>
+                                                        (<em class="parameter"><code><a class="link" href="RCLibDbLibraryQueryResult.html" title="RCLibDb"><span class="type">RCLibDbLibraryQueryResult</span></a> *dst</code></em>,
+                                                         <em class="parameter"><code><a class="link" href="RCLibDbLibraryQueryResult.html" title="RCLibDb"><span class="type">RCLibDbLibraryQueryResult</span></a> *src</code></em>);
+<a class="link" href="RCLibDbLibraryQueryResult.html#RCLibDbLibraryQueryResultIter"><span class="returnvalue">RCLibDbLibraryQueryResultIter</span></a> * <a class="link" href="RCLibDbLibraryQueryResult.html#rclib-db-library-query-result-get-begin-iter" title="rclib_db_library_query_result_get_begin_iter ()">rclib_db_library_query_result_get_begin_iter</a>
+                                                        (<em class="parameter"><code><a class="link" href="RCLibDbLibraryQueryResult.html" title="RCLibDb"><span class="type">RCLibDbLibraryQueryResult</span></a> *query_result</code></em>);
+<a class="link" href="RCLibDbLibraryQueryResult.html#RCLibDbLibraryData"><span class="returnvalue">RCLibDbLibraryData</span></a> * <a class="link" href="RCLibDbLibraryQueryResult.html#rclib-db-library-query-result-get-data" title="rclib_db_library_query_result_get_data ()">rclib_db_library_query_result_get_data</a>
+                                                        (<em class="parameter"><code><a class="link" href="RCLibDbLibraryQueryResult.html" title="RCLibDb"><span class="type">RCLibDbLibraryQueryResult</span></a> *query_result</code></em>,
+                                                         <em class="parameter"><code><a class="link" href="RCLibDbLibraryQueryResult.html#RCLibDbLibraryQueryResultIter"><span class="type">RCLibDbLibraryQueryResultIter</span></a> *iter</code></em>);
+<a class="link" href="RCLibDbLibraryQueryResult.html#RCLibDbLibraryQueryResultIter"><span class="returnvalue">RCLibDbLibraryQueryResultIter</span></a> * <a class="link" href="RCLibDbLibraryQueryResult.html#rclib-db-library-query-result-get-iter-at-pos" title="rclib_db_library_query_result_get_iter_at_pos ()">rclib_db_library_query_result_get_iter_at_pos</a>
+                                                        (<em class="parameter"><code><a class="link" href="RCLibDbLibraryQueryResult.html" title="RCLibDb"><span class="type">RCLibDbLibraryQueryResult</span></a> *query_result</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> pos</code></em>);
+<a class="link" href="RCLibDbLibraryQueryResult.html#RCLibDbLibraryQueryResultIter"><span class="returnvalue">RCLibDbLibraryQueryResultIter</span></a> * <a class="link" href="RCLibDbLibraryQueryResult.html#rclib-db-library-query-result-get-last-iter" title="rclib_db_library_query_result_get_last_iter ()">rclib_db_library_query_result_get_last_iter</a>
+                                                        (<em class="parameter"><code><a class="link" href="RCLibDbLibraryQueryResult.html" title="RCLibDb"><span class="type">RCLibDbLibraryQueryResult</span></a> *query_result</code></em>);
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="returnvalue">guint</span></a>               <a class="link" href="RCLibDbLibraryQueryResult.html#rclib-db-library-query-result-get-length" title="rclib_db_library_query_result_get_length ()">rclib_db_library_query_result_get_length</a>
+                                                        (<em class="parameter"><code><a class="link" href="RCLibDbLibraryQueryResult.html" title="RCLibDb"><span class="type">RCLibDbLibraryQueryResult</span></a> *query_result</code></em>);
+<a class="link" href="RCLibDbLibraryQueryResult.html#RCLibDbLibraryQueryResultIter"><span class="returnvalue">RCLibDbLibraryQueryResultIter</span></a> * <a class="link" href="RCLibDbLibraryQueryResult.html#rclib-db-library-query-result-get-next-iter" title="rclib_db_library_query_result_get_next_iter ()">rclib_db_library_query_result_get_next_iter</a>
+                                                        (<em class="parameter"><code><a class="link" href="RCLibDbLibraryQueryResult.html" title="RCLibDb"><span class="type">RCLibDbLibraryQueryResult</span></a> *query_result</code></em>,
+                                                         <em class="parameter"><code><a class="link" href="RCLibDbLibraryQueryResult.html#RCLibDbLibraryQueryResultIter"><span class="type">RCLibDbLibraryQueryResultIter</span></a> *iter</code></em>);
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="returnvalue">gint</span></a>                <a class="link" href="RCLibDbLibraryQueryResult.html#rclib-db-library-query-result-get-position" title="rclib_db_library_query_result_get_position ()">rclib_db_library_query_result_get_position</a>
+                                                        (<em class="parameter"><code><a class="link" href="RCLibDbLibraryQueryResult.html" title="RCLibDb"><span class="type">RCLibDbLibraryQueryResult</span></a> *query_result</code></em>,
+                                                         <em class="parameter"><code><a class="link" href="RCLibDbLibraryQueryResult.html#RCLibDbLibraryQueryResultIter"><span class="type">RCLibDbLibraryQueryResultIter</span></a> *iter</code></em>);
+<a class="link" href="RCLibDbLibraryQueryResult.html#RCLibDbLibraryQueryResultIter"><span class="returnvalue">RCLibDbLibraryQueryResultIter</span></a> * <a class="link" href="RCLibDbLibraryQueryResult.html#rclib-db-library-query-result-get-prev-iter" title="rclib_db_library_query_result_get_prev_iter ()">rclib_db_library_query_result_get_prev_iter</a>
+                                                        (<em class="parameter"><code><a class="link" href="RCLibDbLibraryQueryResult.html" title="RCLibDb"><span class="type">RCLibDbLibraryQueryResult</span></a> *query_result</code></em>,
+                                                         <em class="parameter"><code><a class="link" href="RCLibDbLibraryQueryResult.html#RCLibDbLibraryQueryResultIter"><span class="type">RCLibDbLibraryQueryResultIter</span></a> *iter</code></em>);
+const <a class="link" href="RCLibDbLibraryQueryResult.html#RCLibDbQuery"><span class="returnvalue">RCLibDbQuery</span></a> * <a class="link" href="RCLibDbLibraryQueryResult.html#rclib-db-library-query-result-get-query" title="rclib_db_library_query_result_get_query ()">rclib_db_library_query_result_get_query</a>
+                                                        (<em class="parameter"><code><a class="link" href="RCLibDbLibraryQueryResult.html" title="RCLibDb"><span class="type">RCLibDbLibraryQueryResult</span></a> *query_result</code></em>);
+<a href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GObject"><span class="returnvalue">GObject</span></a> *           <a class="link" href="RCLibDbLibraryQueryResult.html#rclib-db-library-query-result-new" title="rclib_db_library_query_result_new ()">rclib_db_library_query_result_new</a>   ();
+<span class="returnvalue">RCLibDbLibraryQueryResultPropIter</span> * <a class="link" href="RCLibDbLibraryQueryResult.html#rclib-db-library-query-result-prop-get-begin-iter" title="rclib_db_library_query_result_prop_get_begin_iter ()">rclib_db_library_query_result_prop_get_begin_iter</a>
+                                                        (<em class="parameter"><code><a class="link" href="RCLibDbLibraryQueryResult.html" title="RCLibDb"><span class="type">RCLibDbLibraryQueryResult</span></a> *query_result</code></em>,
+                                                         <em class="parameter"><code><a class="link" href="RCLibDbLibraryQueryResult.html#RCLibDbQueryDataType" title="enum RCLibDbQueryDataType"><span class="type">RCLibDbQueryDataType</span></a> prop_type</code></em>);
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RCLibDbLibraryQueryResult.html#rclib-db-library-query-result-prop-get-data" title="rclib_db_library_query_result_prop_get_data ()">rclib_db_library_query_result_prop_get_data</a>
+                                                        (<em class="parameter"><code><a class="link" href="RCLibDbLibraryQueryResult.html" title="RCLibDb"><span class="type">RCLibDbLibraryQueryResult</span></a> *query_result</code></em>,
+                                                         <em class="parameter"><code><a class="link" href="RCLibDbLibraryQueryResult.html#RCLibDbQueryDataType" title="enum RCLibDbQueryDataType"><span class="type">RCLibDbQueryDataType</span></a> prop_type</code></em>,
+                                                         <em class="parameter"><code><span class="type">RCLibDbLibraryQueryResultPropIter</span> *iter</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> **prop_name</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> *prop_count</code></em>);
+<span class="returnvalue">RCLibDbLibraryQueryResultPropIter</span> * <a class="link" href="RCLibDbLibraryQueryResult.html#rclib-db-library-query-result-prop-get-iter-at-pos" title="rclib_db_library_query_result_prop_get_iter_at_pos ()">rclib_db_library_query_result_prop_get_iter_at_pos</a>
+                                                        (<em class="parameter"><code><a class="link" href="RCLibDbLibraryQueryResult.html" title="RCLibDb"><span class="type">RCLibDbLibraryQueryResult</span></a> *query_result</code></em>,
+                                                         <em class="parameter"><code><a class="link" href="RCLibDbLibraryQueryResult.html#RCLibDbQueryDataType" title="enum RCLibDbQueryDataType"><span class="type">RCLibDbQueryDataType</span></a> prop_type</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> pos</code></em>);
+<span class="returnvalue">RCLibDbLibraryQueryResultPropIter</span> * <a class="link" href="RCLibDbLibraryQueryResult.html#rclib-db-library-query-result-prop-get-last-iter" title="rclib_db_library_query_result_prop_get_last_iter ()">rclib_db_library_query_result_prop_get_last_iter</a>
+                                                        (<em class="parameter"><code><a class="link" href="RCLibDbLibraryQueryResult.html" title="RCLibDb"><span class="type">RCLibDbLibraryQueryResult</span></a> *query_result</code></em>,
+                                                         <em class="parameter"><code><a class="link" href="RCLibDbLibraryQueryResult.html#RCLibDbQueryDataType" title="enum RCLibDbQueryDataType"><span class="type">RCLibDbQueryDataType</span></a> prop_type</code></em>);
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="returnvalue">guint</span></a>               <a class="link" href="RCLibDbLibraryQueryResult.html#rclib-db-library-query-result-prop-get-length" title="rclib_db_library_query_result_prop_get_length ()">rclib_db_library_query_result_prop_get_length</a>
+                                                        (<em class="parameter"><code><a class="link" href="RCLibDbLibraryQueryResult.html" title="RCLibDb"><span class="type">RCLibDbLibraryQueryResult</span></a> *query_result</code></em>,
+                                                         <em class="parameter"><code><a class="link" href="RCLibDbLibraryQueryResult.html#RCLibDbQueryDataType" title="enum RCLibDbQueryDataType"><span class="type">RCLibDbQueryDataType</span></a> prop_type</code></em>);
+<span class="returnvalue">RCLibDbLibraryQueryResultPropIter</span> * <a class="link" href="RCLibDbLibraryQueryResult.html#rclib-db-library-query-result-prop-get-next-iter" title="rclib_db_library_query_result_prop_get_next_iter ()">rclib_db_library_query_result_prop_get_next_iter</a>
+                                                        (<em class="parameter"><code><a class="link" href="RCLibDbLibraryQueryResult.html" title="RCLibDb"><span class="type">RCLibDbLibraryQueryResult</span></a> *query_result</code></em>,
+                                                         <em class="parameter"><code><a class="link" href="RCLibDbLibraryQueryResult.html#RCLibDbQueryDataType" title="enum RCLibDbQueryDataType"><span class="type">RCLibDbQueryDataType</span></a> prop_type</code></em>,
+                                                         <em class="parameter"><code><span class="type">RCLibDbLibraryQueryResultPropIter</span> *iter</code></em>);
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="returnvalue">gint</span></a>                <a class="link" href="RCLibDbLibraryQueryResult.html#rclib-db-library-query-result-prop-get-position" title="rclib_db_library_query_result_prop_get_position ()">rclib_db_library_query_result_prop_get_position</a>
+                                                        (<em class="parameter"><code><a class="link" href="RCLibDbLibraryQueryResult.html" title="RCLibDb"><span class="type">RCLibDbLibraryQueryResult</span></a> *query_result</code></em>,
+                                                         <em class="parameter"><code><a class="link" href="RCLibDbLibraryQueryResult.html#RCLibDbQueryDataType" title="enum RCLibDbQueryDataType"><span class="type">RCLibDbQueryDataType</span></a> prop_type</code></em>,
+                                                         <em class="parameter"><code><span class="type">RCLibDbLibraryQueryResultPropIter</span> *iter</code></em>);
+<span class="returnvalue">RCLibDbLibraryQueryResultPropIter</span> * <a class="link" href="RCLibDbLibraryQueryResult.html#rclib-db-library-query-result-prop-get-prev-iter" title="rclib_db_library_query_result_prop_get_prev_iter ()">rclib_db_library_query_result_prop_get_prev_iter</a>
+                                                        (<em class="parameter"><code><a class="link" href="RCLibDbLibraryQueryResult.html" title="RCLibDb"><span class="type">RCLibDbLibraryQueryResult</span></a> *query_result</code></em>,
+                                                         <em class="parameter"><code><a class="link" href="RCLibDbLibraryQueryResult.html#RCLibDbQueryDataType" title="enum RCLibDbQueryDataType"><span class="type">RCLibDbQueryDataType</span></a> prop_type</code></em>,
+                                                         <em class="parameter"><code><span class="type">RCLibDbLibraryQueryResultPropIter</span> *iter</code></em>);
+<span class="returnvalue">void</span>                <a class="link" href="RCLibDbLibraryQueryResult.html#rclib-db-library-query-result-query-cancel" title="rclib_db_library_query_result_query_cancel ()">rclib_db_library_query_result_query_cancel</a>
+                                                        (<em class="parameter"><code><a class="link" href="RCLibDbLibraryQueryResult.html" title="RCLibDb"><span class="type">RCLibDbLibraryQueryResult</span></a> *query_result</code></em>);
+<span class="returnvalue">void</span>                <a class="link" href="RCLibDbLibraryQueryResult.html#rclib-db-library-query-result-query-clear" title="rclib_db_library_query_result_query_clear ()">rclib_db_library_query_result_query_clear</a>
+                                                        (<em class="parameter"><code><a class="link" href="RCLibDbLibraryQueryResult.html" title="RCLibDb"><span class="type">RCLibDbLibraryQueryResult</span></a> *query_result</code></em>);
+<span class="returnvalue">void</span>                <a class="link" href="RCLibDbLibraryQueryResult.html#rclib-db-library-query-result-query-start" title="rclib_db_library_query_result_query_start ()">rclib_db_library_query_result_query_start</a>
+                                                        (<em class="parameter"><code><a class="link" href="RCLibDbLibraryQueryResult.html" title="RCLibDb"><span class="type">RCLibDbLibraryQueryResult</span></a> *query_result</code></em>);
+<span class="returnvalue">void</span>                <a class="link" href="RCLibDbLibraryQueryResult.html#rclib-db-library-query-result-set-query" title="rclib_db_library_query_result_set_query ()">rclib_db_library_query_result_set_query</a>
+                                                        (<em class="parameter"><code><a class="link" href="RCLibDbLibraryQueryResult.html" title="RCLibDb"><span class="type">RCLibDbLibraryQueryResult</span></a> *query_result</code></em>,
+                                                         <em class="parameter"><code>const <a class="link" href="RCLibDbLibraryQueryResult.html#RCLibDbQuery"><span class="type">RCLibDbQuery</span></a> *query</code></em>);
 <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RCLibDbLibraryQueryResult.html#rclib-db-load-autosaved" title="rclib_db_load_autosaved ()">rclib_db_load_autosaved</a>             ();
 <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RCLibDbLibraryQueryResult.html#rclib-db-load-legacy" title="rclib_db_load_legacy ()">rclib_db_load_legacy</a>                ();
 <span class="returnvalue">void</span>                <a class="link" href="RCLibDbLibraryQueryResult.html#rclib-db-playlist-add-directory" title="rclib_db_playlist_add_directory ()">rclib_db_playlist_add_directory</a>     (<em class="parameter"><code><a class="link" href="RCLibDbLibraryQueryResult.html#RCLibDbCatalogIter"><span class="type">RCLibDbCatalogIter</span></a> *iter</code></em>,
@@ -315,6 +393,12 @@ enum                <a class="link" href="RCLibDbLibraryQueryResult.html#RCLibDb
   "<a class="link" href="RCLibDbLibraryQueryResult.html#RCLibDb-playlist-delete" title='The "playlist-delete" signal'>playlist-delete</a>"                                : <a href="/usr/share/gtk-doc/html/gobject/gobject-Signals.html#G-SIGNAL-RUN-FIRST:CAPS"><code class="literal">Run First</code></a>
   "<a class="link" href="RCLibDbLibraryQueryResult.html#RCLibDb-playlist-reordered" title='The "playlist-reordered" signal'>playlist-reordered</a>"                             : <a href="/usr/share/gtk-doc/html/gobject/gobject-Signals.html#G-SIGNAL-RUN-FIRST:CAPS"><code class="literal">Run First</code></a>
   "<a class="link" href="RCLibDbLibraryQueryResult.html#RCLibDb-refresh-updated" title='The "refresh-updated" signal'>refresh-updated</a>"                                : <a href="/usr/share/gtk-doc/html/gobject/gobject-Signals.html#G-SIGNAL-RUN-FIRST:CAPS"><code class="literal">Run First</code></a>
+  "<a class="link" href="RCLibDbLibraryQueryResult.html#RCLibDbLibraryQueryResult-prop-added" title='The "prop-added" signal'>prop-added</a>"                                     : <a href="/usr/share/gtk-doc/html/gobject/gobject-Signals.html#G-SIGNAL-RUN-FIRST:CAPS"><code class="literal">Run First</code></a>
+  "<a class="link" href="RCLibDbLibraryQueryResult.html#RCLibDbLibraryQueryResult-prop-changed" title='The "prop-changed" signal'>prop-changed</a>"                                   : <a href="/usr/share/gtk-doc/html/gobject/gobject-Signals.html#G-SIGNAL-RUN-FIRST:CAPS"><code class="literal">Run First</code></a>
+  "<a class="link" href="RCLibDbLibraryQueryResult.html#RCLibDbLibraryQueryResult-prop-delete" title='The "prop-delete" signal'>prop-delete</a>"                                    : <a href="/usr/share/gtk-doc/html/gobject/gobject-Signals.html#G-SIGNAL-RUN-FIRST:CAPS"><code class="literal">Run First</code></a>
+  "<a class="link" href="RCLibDbLibraryQueryResult.html#RCLibDbLibraryQueryResult-query-result-added" title='The "query-result-added" signal'>query-result-added</a>"                             : <a href="/usr/share/gtk-doc/html/gobject/gobject-Signals.html#G-SIGNAL-RUN-FIRST:CAPS"><code class="literal">Run First</code></a>
+  "<a class="link" href="RCLibDbLibraryQueryResult.html#RCLibDbLibraryQueryResult-query-result-changed" title='The "query-result-changed" signal'>query-result-changed</a>"                           : <a href="/usr/share/gtk-doc/html/gobject/gobject-Signals.html#G-SIGNAL-RUN-FIRST:CAPS"><code class="literal">Run First</code></a>
+  "<a class="link" href="RCLibDbLibraryQueryResult.html#RCLibDbLibraryQueryResult-query-result-delete" title='The "query-result-delete" signal'>query-result-delete</a>"                            : <a href="/usr/share/gtk-doc/html/gobject/gobject-Signals.html#G-SIGNAL-RUN-FIRST:CAPS"><code class="literal">Run First</code></a>
 </pre>
 </div>
 <div class="refsect1">
@@ -330,6 +414,11 @@ the metadata in playlists asynchronously.
 </div>
 <div class="refsect1">
 <a name="RCLibDbLibraryQueryResult.details"></a><h2>Details</h2>
+<div class="refsect2">
+<a name="RCLIB-TYPE-DB-LIBRARY-QUERY-RESULT-PROP-ITER:CAPS"></a><h3>RCLIB_TYPE_DB_LIBRARY_QUERY_RESULT_PROP_ITER</h3>
+<pre class="programlisting">#define             RCLIB_TYPE_DB_LIBRARY_QUERY_RESULT_PROP_ITER</pre>
+</div>
+<hr>
 <div class="refsect2">
 <a name="RCLibDb-struct"></a><h3>struct RCLibDb</h3>
 <pre class="programlisting">struct RCLibDb;</pre>
@@ -1822,6 +1911,39 @@ and set the reference count to 1. MT safe.
 </div>
 <hr>
 <div class="refsect2">
+<a name="rclib-db-library-data-query"></a><h3>rclib_db_library_data_query ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rclib_db_library_data_query         (<em class="parameter"><code><a class="link" href="RCLibDbLibraryQueryResult.html#RCLibDbLibraryData"><span class="type">RCLibDbLibraryData</span></a> *library_data</code></em>,
+                                                         <em class="parameter"><code><a class="link" href="RCLibDbLibraryQueryResult.html#RCLibDbQuery"><span class="type">RCLibDbQuery</span></a> *query</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/gio/GCancellable.html"><span class="type">GCancellable</span></a> *cancellable</code></em>);</pre>
+<p>
+Check whether the library data satisfied the query condition.
+MT safe.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>library_data</code></em> :</span></p></td>
+<td>the library data to check</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>query</code></em> :</span></p></td>
+<td>the query condition</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>cancellable</code></em> :</span></p></td>
+<td>optional <a href="/usr/share/gtk-doc/html/gio/GCancellable.html"><span class="type">GCancellable</span></a> object, NULL to ignore. <span class="annotation">[<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>Whether the library data satisfied the query condition.</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
 <a name="rclib-db-library-data-ref"></a><h3>rclib_db_library_data_ref ()</h3>
 <pre class="programlisting"><a class="link" href="RCLibDbLibraryQueryResult.html#RCLibDbLibraryData"><span class="returnvalue">RCLibDbLibraryData</span></a> * rclib_db_library_data_ref          (<em class="parameter"><code><a class="link" href="RCLibDbLibraryQueryResult.html#RCLibDbLibraryData"><span class="type">RCLibDbLibraryData</span></a> *data</code></em>);</pre>
 <p>
@@ -2009,6 +2131,707 @@ Check whether the give URI exists in the library. MT safe.
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
 <td>Whether the URI exists in the library.</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-db-library-query"></a><h3>rclib_db_library_query ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Pointer-Arrays.html#GPtrArray"><span class="returnvalue">GPtrArray</span></a> *         rclib_db_library_query              (<em class="parameter"><code><a class="link" href="RCLibDbLibraryQueryResult.html#RCLibDbQuery"><span class="type">RCLibDbQuery</span></a> *query</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/gio/GCancellable.html"><span class="type">GCancellable</span></a> *cancellable</code></em>);</pre>
+<p>
+Query data from the music library. MT safe.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>query</code></em> :</span></p></td>
+<td>he query condition</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>cancellable</code></em> :</span></p></td>
+<td>optional <a href="/usr/share/gtk-doc/html/gio/GCancellable.html"><span class="type">GCancellable</span></a> object, NULL to ignore. <span class="annotation">[<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>The library data array which satisfied
+the query condition. Free with #<a href="/usr/share/gtk-doc/html/glib/glib-Pointer-Arrays.html#g-ptr-array-free"><code class="function">g_ptr_array_free()</code></a> or
+#<a href="/usr/share/gtk-doc/html/glib/glib-Pointer-Arrays.html#g-ptr-array-unref"><code class="function">g_ptr_array_unref()</code></a> after usage. <span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span>
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-db-library-query-get-uris"></a><h3>rclib_db_library_query_get_uris ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Pointer-Arrays.html#GPtrArray"><span class="returnvalue">GPtrArray</span></a> *         rclib_db_library_query_get_uris     (<em class="parameter"><code><a class="link" href="RCLibDbLibraryQueryResult.html#RCLibDbQuery"><span class="type">RCLibDbQuery</span></a> *query</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/gio/GCancellable.html"><span class="type">GCancellable</span></a> *cancellable</code></em>);</pre>
+<p>
+Query data from the music library, and get an array of the URIs which
+points to the music that satisfied the query condition. MT safe.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>query</code></em> :</span></p></td>
+<td>he query condition</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>cancellable</code></em> :</span></p></td>
+<td>optional <a href="/usr/share/gtk-doc/html/gio/GCancellable.html"><span class="type">GCancellable</span></a> object, NULL to ignore. <span class="annotation">[<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>The URI array which points to the music that
+satisfied the query condition. Free with #<a href="/usr/share/gtk-doc/html/glib/glib-Pointer-Arrays.html#g-ptr-array-free"><code class="function">g_ptr_array_free()</code></a> or
+#<a href="/usr/share/gtk-doc/html/glib/glib-Pointer-Arrays.html#g-ptr-array-unref"><code class="function">g_ptr_array_unref()</code></a> after usage. <span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span>
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-db-library-query-result-chain"></a><h3>rclib_db_library_query_result_chain ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rclib_db_library_query_result_chain (<em class="parameter"><code><a class="link" href="RCLibDbLibraryQueryResult.html" title="RCLibDb"><span class="type">RCLibDbLibraryQueryResult</span></a> *query_result</code></em>,
+                                                         <em class="parameter"><code><a class="link" href="RCLibDbLibraryQueryResult.html" title="RCLibDb"><span class="type">RCLibDbLibraryQueryResult</span></a> *base</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> import_entries</code></em>);</pre>
+<p>
+Chain <em class="parameter"><code>query_result</code></em> to <em class="parameter"><code>base</code></em>,  All changes made to the base instance will
+be reflected in the child instance.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>query_result</code></em> :</span></p></td>
+<td>the <a class="link" href="RCLibDbLibraryQueryResult.html" title="RCLibDb"><span class="type">RCLibDbLibraryQueryResult</span></a> instance</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>base</code></em> :</span></p></td>
+<td>the base <a class="link" href="RCLibDbLibraryQueryResult.html" title="RCLibDb"><span class="type">RCLibDbLibraryQueryResult</span></a> instance</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>import_entries</code></em> :</span></p></td>
+<td>whether to copy the contents from <em class="parameter"><code>base</code></em>
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-db-library-query-result-copy-contents"></a><h3>rclib_db_library_query_result_copy_contents ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rclib_db_library_query_result_copy_contents
+                                                        (<em class="parameter"><code><a class="link" href="RCLibDbLibraryQueryResult.html" title="RCLibDb"><span class="type">RCLibDbLibraryQueryResult</span></a> *dst</code></em>,
+                                                         <em class="parameter"><code><a class="link" href="RCLibDbLibraryQueryResult.html" title="RCLibDb"><span class="type">RCLibDbLibraryQueryResult</span></a> *src</code></em>);</pre>
+<p>
+Deep copy the content data from <em class="parameter"><code>src</code></em> to <em class="parameter"><code>dst</code></em>.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>dst</code></em> :</span></p></td>
+<td>the destination <a class="link" href="RCLibDbLibraryQueryResult.html" title="RCLibDb"><span class="type">RCLibDbLibraryQueryResult</span></a> instance</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>src</code></em> :</span></p></td>
+<td>the source <a class="link" href="RCLibDbLibraryQueryResult.html" title="RCLibDb"><span class="type">RCLibDbLibraryQueryResult</span></a> instance</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-db-library-query-result-get-begin-iter"></a><h3>rclib_db_library_query_result_get_begin_iter ()</h3>
+<pre class="programlisting"><a class="link" href="RCLibDbLibraryQueryResult.html#RCLibDbLibraryQueryResultIter"><span class="returnvalue">RCLibDbLibraryQueryResultIter</span></a> * rclib_db_library_query_result_get_begin_iter
+                                                        (<em class="parameter"><code><a class="link" href="RCLibDbLibraryQueryResult.html" title="RCLibDb"><span class="type">RCLibDbLibraryQueryResult</span></a> *query_result</code></em>);</pre>
+<p>
+Get the begin iter of the query result.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>query_result</code></em> :</span></p></td>
+<td>the <a class="link" href="RCLibDbLibraryQueryResult.html" title="RCLibDb"><span class="type">RCLibDbLibraryQueryResult</span></a> instance</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>(skip): The begin iter, <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><span class="type">NULL</span></a> if the query
+result is empty or any error occurs. <span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span>
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-db-library-query-result-get-data"></a><h3>rclib_db_library_query_result_get_data ()</h3>
+<pre class="programlisting"><a class="link" href="RCLibDbLibraryQueryResult.html#RCLibDbLibraryData"><span class="returnvalue">RCLibDbLibraryData</span></a> * rclib_db_library_query_result_get_data
+                                                        (<em class="parameter"><code><a class="link" href="RCLibDbLibraryQueryResult.html" title="RCLibDb"><span class="type">RCLibDbLibraryQueryResult</span></a> *query_result</code></em>,
+                                                         <em class="parameter"><code><a class="link" href="RCLibDbLibraryQueryResult.html#RCLibDbLibraryQueryResultIter"><span class="type">RCLibDbLibraryQueryResultIter</span></a> *iter</code></em>);</pre>
+<p>
+Get the library data which the <em class="parameter"><code>iter</code></em> points to.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>query_result</code></em> :</span></p></td>
+<td>the <a class="link" href="RCLibDbLibraryQueryResult.html" title="RCLibDb"><span class="type">RCLibDbLibraryQueryResult</span></a> instance</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>iter</code></em> :</span></p></td>
+<td>the iter</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>The library data, <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><span class="type">NULL</span></a> if not found or any error occurs.</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-db-library-query-result-get-iter-at-pos"></a><h3>rclib_db_library_query_result_get_iter_at_pos ()</h3>
+<pre class="programlisting"><a class="link" href="RCLibDbLibraryQueryResult.html#RCLibDbLibraryQueryResultIter"><span class="returnvalue">RCLibDbLibraryQueryResultIter</span></a> * rclib_db_library_query_result_get_iter_at_pos
+                                                        (<em class="parameter"><code><a class="link" href="RCLibDbLibraryQueryResult.html" title="RCLibDb"><span class="type">RCLibDbLibraryQueryResult</span></a> *query_result</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> pos</code></em>);</pre>
+<p>
+Return the iterator at position <em class="parameter"><code>pos</code></em>. If <em class="parameter"><code>pos</code></em> is negative or larger
+than the number of items in the query result sequence, the end iterator
+is returned.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>query_result</code></em> :</span></p></td>
+<td>the <a class="link" href="RCLibDbLibraryQueryResult.html" title="RCLibDb"><span class="type">RCLibDbLibraryQueryResult</span></a> instance</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>pos</code></em> :</span></p></td>
+<td>the position in the query result sequence, or -1 for the end.</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>(skip): The <a class="link" href="RCLibDbLibraryQueryResult.html#RCLibDbLibraryQueryResultIter"><span class="type">RCLibDbLibraryQueryResultIter</span></a> at
+position <em class="parameter"><code>pos</code></em>. <span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span>
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-db-library-query-result-get-last-iter"></a><h3>rclib_db_library_query_result_get_last_iter ()</h3>
+<pre class="programlisting"><a class="link" href="RCLibDbLibraryQueryResult.html#RCLibDbLibraryQueryResultIter"><span class="returnvalue">RCLibDbLibraryQueryResultIter</span></a> * rclib_db_library_query_result_get_last_iter
+                                                        (<em class="parameter"><code><a class="link" href="RCLibDbLibraryQueryResult.html" title="RCLibDb"><span class="type">RCLibDbLibraryQueryResult</span></a> *query_result</code></em>);</pre>
+<p>
+Get the last iter of the query result.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>query_result</code></em> :</span></p></td>
+<td>the <a class="link" href="RCLibDbLibraryQueryResult.html" title="RCLibDb"><span class="type">RCLibDbLibraryQueryResult</span></a> instance</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>(skip): The last iter, <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><span class="type">NULL</span></a> if the query
+result is empty or any error occurs. <span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span>
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-db-library-query-result-get-length"></a><h3>rclib_db_library_query_result_get_length ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="returnvalue">guint</span></a>               rclib_db_library_query_result_get_length
+                                                        (<em class="parameter"><code><a class="link" href="RCLibDbLibraryQueryResult.html" title="RCLibDb"><span class="type">RCLibDbLibraryQueryResult</span></a> *query_result</code></em>);</pre>
+<p>
+Get the query result length number.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>query_result</code></em> :</span></p></td>
+<td>the <a class="link" href="RCLibDbLibraryQueryResult.html" title="RCLibDb"><span class="type">RCLibDbLibraryQueryResult</span></a> instance</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>The number of the query result.</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-db-library-query-result-get-next-iter"></a><h3>rclib_db_library_query_result_get_next_iter ()</h3>
+<pre class="programlisting"><a class="link" href="RCLibDbLibraryQueryResult.html#RCLibDbLibraryQueryResultIter"><span class="returnvalue">RCLibDbLibraryQueryResultIter</span></a> * rclib_db_library_query_result_get_next_iter
+                                                        (<em class="parameter"><code><a class="link" href="RCLibDbLibraryQueryResult.html" title="RCLibDb"><span class="type">RCLibDbLibraryQueryResult</span></a> *query_result</code></em>,
+                                                         <em class="parameter"><code><a class="link" href="RCLibDbLibraryQueryResult.html#RCLibDbLibraryQueryResultIter"><span class="type">RCLibDbLibraryQueryResultIter</span></a> *iter</code></em>);</pre>
+<p>
+Get the next iter of <em class="parameter"><code>iter</code></em>.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>query_result</code></em> :</span></p></td>
+<td>the <a class="link" href="RCLibDbLibraryQueryResult.html" title="RCLibDb"><span class="type">RCLibDbLibraryQueryResult</span></a> instance</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>iter</code></em> :</span></p></td>
+<td>the iter</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>(skip): The next iter, <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><span class="type">NULL</span></a> if there is no
+next one or any error occurs. <span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span>
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-db-library-query-result-get-position"></a><h3>rclib_db_library_query_result_get_position ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="returnvalue">gint</span></a>                rclib_db_library_query_result_get_position
+                                                        (<em class="parameter"><code><a class="link" href="RCLibDbLibraryQueryResult.html" title="RCLibDb"><span class="type">RCLibDbLibraryQueryResult</span></a> *query_result</code></em>,
+                                                         <em class="parameter"><code><a class="link" href="RCLibDbLibraryQueryResult.html#RCLibDbLibraryQueryResultIter"><span class="type">RCLibDbLibraryQueryResultIter</span></a> *iter</code></em>);</pre>
+<p>
+Returns the position of <em class="parameter"><code>iter</code></em>.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>query_result</code></em> :</span></p></td>
+<td>the <a class="link" href="RCLibDbLibraryQueryResult.html" title="RCLibDb"><span class="type">RCLibDbLibraryQueryResult</span></a> instance</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>iter</code></em> :</span></p></td>
+<td>the iter</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>the position of <em class="parameter"><code>iter</code></em>, -1 if the <em class="parameter"><code>iter</code></em> is not valid.</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-db-library-query-result-get-prev-iter"></a><h3>rclib_db_library_query_result_get_prev_iter ()</h3>
+<pre class="programlisting"><a class="link" href="RCLibDbLibraryQueryResult.html#RCLibDbLibraryQueryResultIter"><span class="returnvalue">RCLibDbLibraryQueryResultIter</span></a> * rclib_db_library_query_result_get_prev_iter
+                                                        (<em class="parameter"><code><a class="link" href="RCLibDbLibraryQueryResult.html" title="RCLibDb"><span class="type">RCLibDbLibraryQueryResult</span></a> *query_result</code></em>,
+                                                         <em class="parameter"><code><a class="link" href="RCLibDbLibraryQueryResult.html#RCLibDbLibraryQueryResultIter"><span class="type">RCLibDbLibraryQueryResultIter</span></a> *iter</code></em>);</pre>
+<p>
+Get the previous iter of <em class="parameter"><code>iter</code></em>.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>query_result</code></em> :</span></p></td>
+<td>the <a class="link" href="RCLibDbLibraryQueryResult.html" title="RCLibDb"><span class="type">RCLibDbLibraryQueryResult</span></a> instance</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>iter</code></em> :</span></p></td>
+<td>the iter</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>(skip): The previous iter, <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><span class="type">NULL</span></a> if there is no
+previous one or any error occurs. <span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span>
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-db-library-query-result-get-query"></a><h3>rclib_db_library_query_result_get_query ()</h3>
+<pre class="programlisting">const <a class="link" href="RCLibDbLibraryQueryResult.html#RCLibDbQuery"><span class="returnvalue">RCLibDbQuery</span></a> * rclib_db_library_query_result_get_query
+                                                        (<em class="parameter"><code><a class="link" href="RCLibDbLibraryQueryResult.html" title="RCLibDb"><span class="type">RCLibDbLibraryQueryResult</span></a> *query_result</code></em>);</pre>
+<p>
+Get the current query applied to the query result.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>query_result</code></em> :</span></p></td>
+<td>the <a class="link" href="RCLibDbLibraryQueryResult.html" title="RCLibDb"><span class="type">RCLibDbLibraryQueryResult</span></a> instance</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>The current query appiled to the query result. <span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span>
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-db-library-query-result-new"></a><h3>rclib_db_library_query_result_new ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GObject"><span class="returnvalue">GObject</span></a> *           rclib_db_library_query_result_new   ();</pre>
+<p>
+Create a new library query result object instance.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>The <a class="link" href="RCLibDbLibraryQueryResult.html" title="RCLibDb"><span class="type">RCLibDbLibraryQueryResult</span></a> instance, <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><span class="type">NULL</span></a> the operation
+failed.</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-db-library-query-result-prop-get-begin-iter"></a><h3>rclib_db_library_query_result_prop_get_begin_iter ()</h3>
+<pre class="programlisting"><span class="returnvalue">RCLibDbLibraryQueryResultPropIter</span> * rclib_db_library_query_result_prop_get_begin_iter
+                                                        (<em class="parameter"><code><a class="link" href="RCLibDbLibraryQueryResult.html" title="RCLibDb"><span class="type">RCLibDbLibraryQueryResult</span></a> *query_result</code></em>,
+                                                         <em class="parameter"><code><a class="link" href="RCLibDbLibraryQueryResult.html#RCLibDbQueryDataType" title="enum RCLibDbQueryDataType"><span class="type">RCLibDbQueryDataType</span></a> prop_type</code></em>);</pre>
+<p>
+Get the begin iter of the given property type in the the query result.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>query_result</code></em> :</span></p></td>
+<td>the <a class="link" href="RCLibDbLibraryQueryResult.html" title="RCLibDb"><span class="type">RCLibDbLibraryQueryResult</span></a> instance</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>prop_type</code></em> :</span></p></td>
+<td>the property type</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>(skip): The begin iter, <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><span class="type">NULL</span></a> if the query
+result is empty or any error occurs. <span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span>
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-db-library-query-result-prop-get-data"></a><h3>rclib_db_library_query_result_prop_get_data ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rclib_db_library_query_result_prop_get_data
+                                                        (<em class="parameter"><code><a class="link" href="RCLibDbLibraryQueryResult.html" title="RCLibDb"><span class="type">RCLibDbLibraryQueryResult</span></a> *query_result</code></em>,
+                                                         <em class="parameter"><code><a class="link" href="RCLibDbLibraryQueryResult.html#RCLibDbQueryDataType" title="enum RCLibDbQueryDataType"><span class="type">RCLibDbQueryDataType</span></a> prop_type</code></em>,
+                                                         <em class="parameter"><code><span class="type">RCLibDbLibraryQueryResultPropIter</span> *iter</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> **prop_name</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> *prop_count</code></em>);</pre>
+<p>
+Get the data of the property in the query result.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>query_result</code></em> :</span></p></td>
+<td>the <a class="link" href="RCLibDbLibraryQueryResult.html" title="RCLibDb"><span class="type">RCLibDbLibraryQueryResult</span></a> instance</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>prop_type</code></em> :</span></p></td>
+<td>the property type</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>iter</code></em> :</span></p></td>
+<td>the iter pointed to the property</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>prop_name</code></em> :</span></p></td>
+<td>the property name. <span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>]</span>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>prop_count</code></em> :</span></p></td>
+<td>the number of the property name used. <span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>]</span>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>Whether the property data exists.</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-db-library-query-result-prop-get-iter-at-pos"></a><h3>rclib_db_library_query_result_prop_get_iter_at_pos ()</h3>
+<pre class="programlisting"><span class="returnvalue">RCLibDbLibraryQueryResultPropIter</span> * rclib_db_library_query_result_prop_get_iter_at_pos
+                                                        (<em class="parameter"><code><a class="link" href="RCLibDbLibraryQueryResult.html" title="RCLibDb"><span class="type">RCLibDbLibraryQueryResult</span></a> *query_result</code></em>,
+                                                         <em class="parameter"><code><a class="link" href="RCLibDbLibraryQueryResult.html#RCLibDbQueryDataType" title="enum RCLibDbQueryDataType"><span class="type">RCLibDbQueryDataType</span></a> prop_type</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> pos</code></em>);</pre>
+<p>
+Return the iterator at position <em class="parameter"><code>pos</code></em>. If <em class="parameter"><code>pos</code></em> is negative or larger
+than the number of items in the property sequence, the end iterator
+is returned.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>query_result</code></em> :</span></p></td>
+<td>the <a class="link" href="RCLibDbLibraryQueryResult.html" title="RCLibDb"><span class="type">RCLibDbLibraryQueryResult</span></a> instance</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>prop_type</code></em> :</span></p></td>
+<td>the property type</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>pos</code></em> :</span></p></td>
+<td>the position in the property sequence, or -1 for the end.</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>(skip): The <span class="type">RCLibDbLibraryQueryResultPropIter</span> at
+position <em class="parameter"><code>pos</code></em>. <span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span>
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-db-library-query-result-prop-get-last-iter"></a><h3>rclib_db_library_query_result_prop_get_last_iter ()</h3>
+<pre class="programlisting"><span class="returnvalue">RCLibDbLibraryQueryResultPropIter</span> * rclib_db_library_query_result_prop_get_last_iter
+                                                        (<em class="parameter"><code><a class="link" href="RCLibDbLibraryQueryResult.html" title="RCLibDb"><span class="type">RCLibDbLibraryQueryResult</span></a> *query_result</code></em>,
+                                                         <em class="parameter"><code><a class="link" href="RCLibDbLibraryQueryResult.html#RCLibDbQueryDataType" title="enum RCLibDbQueryDataType"><span class="type">RCLibDbQueryDataType</span></a> prop_type</code></em>);</pre>
+<p>
+Get the last iter of the given property type in the the query result.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>query_result</code></em> :</span></p></td>
+<td>the <a class="link" href="RCLibDbLibraryQueryResult.html" title="RCLibDb"><span class="type">RCLibDbLibraryQueryResult</span></a> instance</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>prop_type</code></em> :</span></p></td>
+<td>the property type</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>(skip): The last iter, <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><span class="type">NULL</span></a> if the query
+result is empty or any error occurs. <span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span>
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-db-library-query-result-prop-get-length"></a><h3>rclib_db_library_query_result_prop_get_length ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="returnvalue">guint</span></a>               rclib_db_library_query_result_prop_get_length
+                                                        (<em class="parameter"><code><a class="link" href="RCLibDbLibraryQueryResult.html" title="RCLibDb"><span class="type">RCLibDbLibraryQueryResult</span></a> *query_result</code></em>,
+                                                         <em class="parameter"><code><a class="link" href="RCLibDbLibraryQueryResult.html#RCLibDbQueryDataType" title="enum RCLibDbQueryDataType"><span class="type">RCLibDbQueryDataType</span></a> prop_type</code></em>);</pre>
+<p>
+Get length of the given property type in the the query result.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>query_result</code></em> :</span></p></td>
+<td>the <a class="link" href="RCLibDbLibraryQueryResult.html" title="RCLibDb"><span class="type">RCLibDbLibraryQueryResult</span></a> instance</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>prop_type</code></em> :</span></p></td>
+<td>the property type</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>The length of the given property type.</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-db-library-query-result-prop-get-next-iter"></a><h3>rclib_db_library_query_result_prop_get_next_iter ()</h3>
+<pre class="programlisting"><span class="returnvalue">RCLibDbLibraryQueryResultPropIter</span> * rclib_db_library_query_result_prop_get_next_iter
+                                                        (<em class="parameter"><code><a class="link" href="RCLibDbLibraryQueryResult.html" title="RCLibDb"><span class="type">RCLibDbLibraryQueryResult</span></a> *query_result</code></em>,
+                                                         <em class="parameter"><code><a class="link" href="RCLibDbLibraryQueryResult.html#RCLibDbQueryDataType" title="enum RCLibDbQueryDataType"><span class="type">RCLibDbQueryDataType</span></a> prop_type</code></em>,
+                                                         <em class="parameter"><code><span class="type">RCLibDbLibraryQueryResultPropIter</span> *iter</code></em>);</pre>
+<p>
+Get the next iter of <em class="parameter"><code>iter</code></em>.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>query_result</code></em> :</span></p></td>
+<td>the <a class="link" href="RCLibDbLibraryQueryResult.html" title="RCLibDb"><span class="type">RCLibDbLibraryQueryResult</span></a> instance</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>prop_type</code></em> :</span></p></td>
+<td>the property type</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>iter</code></em> :</span></p></td>
+<td>the iter pointed to the property</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>(skip): The next iter, <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><span class="type">NULL</span></a> if there is no
+next one or any error occurs. <span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span>
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-db-library-query-result-prop-get-position"></a><h3>rclib_db_library_query_result_prop_get_position ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="returnvalue">gint</span></a>                rclib_db_library_query_result_prop_get_position
+                                                        (<em class="parameter"><code><a class="link" href="RCLibDbLibraryQueryResult.html" title="RCLibDb"><span class="type">RCLibDbLibraryQueryResult</span></a> *query_result</code></em>,
+                                                         <em class="parameter"><code><a class="link" href="RCLibDbLibraryQueryResult.html#RCLibDbQueryDataType" title="enum RCLibDbQueryDataType"><span class="type">RCLibDbQueryDataType</span></a> prop_type</code></em>,
+                                                         <em class="parameter"><code><span class="type">RCLibDbLibraryQueryResultPropIter</span> *iter</code></em>);</pre>
+<p>
+Returns the position of <em class="parameter"><code>iter</code></em>.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>query_result</code></em> :</span></p></td>
+<td>the <a class="link" href="RCLibDbLibraryQueryResult.html" title="RCLibDb"><span class="type">RCLibDbLibraryQueryResult</span></a> instance</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>prop_type</code></em> :</span></p></td>
+<td>the property type</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>iter</code></em> :</span></p></td>
+<td>the iter pointed to the property</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>the position of <em class="parameter"><code>iter</code></em>, -1 if the <em class="parameter"><code>iter</code></em> is not valid.</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-db-library-query-result-prop-get-prev-iter"></a><h3>rclib_db_library_query_result_prop_get_prev_iter ()</h3>
+<pre class="programlisting"><span class="returnvalue">RCLibDbLibraryQueryResultPropIter</span> * rclib_db_library_query_result_prop_get_prev_iter
+                                                        (<em class="parameter"><code><a class="link" href="RCLibDbLibraryQueryResult.html" title="RCLibDb"><span class="type">RCLibDbLibraryQueryResult</span></a> *query_result</code></em>,
+                                                         <em class="parameter"><code><a class="link" href="RCLibDbLibraryQueryResult.html#RCLibDbQueryDataType" title="enum RCLibDbQueryDataType"><span class="type">RCLibDbQueryDataType</span></a> prop_type</code></em>,
+                                                         <em class="parameter"><code><span class="type">RCLibDbLibraryQueryResultPropIter</span> *iter</code></em>);</pre>
+<p>
+Get the previous iter of <em class="parameter"><code>iter</code></em>.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>query_result</code></em> :</span></p></td>
+<td>the <a class="link" href="RCLibDbLibraryQueryResult.html" title="RCLibDb"><span class="type">RCLibDbLibraryQueryResult</span></a> instance</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>prop_type</code></em> :</span></p></td>
+<td>the property type</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>iter</code></em> :</span></p></td>
+<td>the iter pointed to the property</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>(skip): The previous iter, <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><span class="type">NULL</span></a> if there is no
+next one or any error occurs. <span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span>
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-db-library-query-result-query-cancel"></a><h3>rclib_db_library_query_result_query_cancel ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rclib_db_library_query_result_query_cancel
+                                                        (<em class="parameter"><code><a class="link" href="RCLibDbLibraryQueryResult.html" title="RCLibDb"><span class="type">RCLibDbLibraryQueryResult</span></a> *query_result</code></em>);</pre>
+<p>
+Cancel the current query process.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><em class="parameter"><code>query_result</code></em> :</span></p></td>
+<td>the <a class="link" href="RCLibDbLibraryQueryResult.html" title="RCLibDb"><span class="type">RCLibDbLibraryQueryResult</span></a> instance</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-db-library-query-result-query-clear"></a><h3>rclib_db_library_query_result_query_clear ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rclib_db_library_query_result_query_clear
+                                                        (<em class="parameter"><code><a class="link" href="RCLibDbLibraryQueryResult.html" title="RCLibDb"><span class="type">RCLibDbLibraryQueryResult</span></a> *query_result</code></em>);</pre>
+<p>
+Clear the query result.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><em class="parameter"><code>query_result</code></em> :</span></p></td>
+<td>the <a class="link" href="RCLibDbLibraryQueryResult.html" title="RCLibDb"><span class="type">RCLibDbLibraryQueryResult</span></a> instance</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-db-library-query-result-query-start"></a><h3>rclib_db_library_query_result_query_start ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rclib_db_library_query_result_query_start
+                                                        (<em class="parameter"><code><a class="link" href="RCLibDbLibraryQueryResult.html" title="RCLibDb"><span class="type">RCLibDbLibraryQueryResult</span></a> *query_result</code></em>);</pre>
+<p>
+Start query operation.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><em class="parameter"><code>query_result</code></em> :</span></p></td>
+<td>the <a class="link" href="RCLibDbLibraryQueryResult.html" title="RCLibDb"><span class="type">RCLibDbLibraryQueryResult</span></a> instance</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-db-library-query-result-set-query"></a><h3>rclib_db_library_query_result_set_query ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rclib_db_library_query_result_set_query
+                                                        (<em class="parameter"><code><a class="link" href="RCLibDbLibraryQueryResult.html" title="RCLibDb"><span class="type">RCLibDbLibraryQueryResult</span></a> *query_result</code></em>,
+                                                         <em class="parameter"><code>const <a class="link" href="RCLibDbLibraryQueryResult.html#RCLibDbQuery"><span class="type">RCLibDbQuery</span></a> *query</code></em>);</pre>
+<p>
+Set the query condition with <em class="parameter"><code>query</code></em>.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>query_result</code></em> :</span></p></td>
+<td>the <a class="link" href="RCLibDbLibraryQueryResult.html" title="RCLibDb"><span class="type">RCLibDbLibraryQueryResult</span></a> instance</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>query</code></em> :</span></p></td>
+<td>the query to set</td>
 </tr>
 </tbody>
 </table></div>
@@ -3554,7 +4377,7 @@ added to the catalog.
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>iter</code></em> :</span></p></td>
-<td>the <span class="type">iter</span> pointed to the added item</td>
+<td>the iter pointed to the added item</td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>user_data</code></em> :</span></p></td>
@@ -3582,7 +4405,7 @@ changed in the catalog.
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>iter</code></em> :</span></p></td>
-<td>the <span class="type">iter</span> pointed to the changed item</td>
+<td>the iter pointed to the changed item</td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>user_data</code></em> :</span></p></td>
@@ -3610,7 +4433,7 @@ is about to be deleted.
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>iter</code></em> :</span></p></td>
-<td>the <span class="type">iter</span> pointed to the item which is about to be deleted</td>
+<td>the iter pointed to the item which is about to be deleted</td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>user_data</code></em> :</span></p></td>
@@ -3781,7 +4604,7 @@ added to the playlist.
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>iter</code></em> :</span></p></td>
-<td>the <span class="type">iter</span> pointed to the added item</td>
+<td>the iter pointed to the added item</td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>user_data</code></em> :</span></p></td>
@@ -3809,7 +4632,7 @@ changed in the playlist.
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>iter</code></em> :</span></p></td>
-<td>the <span class="type">iter</span> pointed to the changed item</td>
+<td>the iter pointed to the changed item</td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>user_data</code></em> :</span></p></td>
@@ -3837,7 +4660,7 @@ is about to be deleted.
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>iter</code></em> :</span></p></td>
-<td>the <span class="type">iter</span> pointed to the item which is about to be deleted</td>
+<td>the iter pointed to the item which is about to be deleted</td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>user_data</code></em> :</span></p></td>
@@ -3866,7 +4689,7 @@ been reordered.
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>iter</code></em> :</span></p></td>
-<td>the <span class="type">iter</span> pointed to the catalog item which contains the
+<td>the iter pointed to the catalog item which contains the
 reordered playlist items</td>
 </tr>
 <tr>
@@ -3903,6 +4726,189 @@ queue have been processed.
 <tr>
 <td><p><span class="term"><em class="parameter"><code>remaining</code></em> :</span></p></td>
 <td>the number of remaing jobs in current refresh queue</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>user_data</code></em> :</span></p></td>
+<td>user data set when the signal handler was connected.</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="RCLibDbLibraryQueryResult-prop-added"></a><h3>The <code class="literal">"prop-added"</code> signal</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                user_function                      (<a class="link" href="RCLibDbLibraryQueryResult.html" title="RCLibDb"><span class="type">RCLibDbLibraryQueryResult</span></a> *qr,
+                                                        <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a>                      prop_type,
+                                                        <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>                   iter,
+                                                        <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>                   user_data)      : <a href="/usr/share/gtk-doc/html/gobject/gobject-Signals.html#G-SIGNAL-RUN-FIRST:CAPS"><code class="literal">Run First</code></a></pre>
+<p>
+The ::query-result-changed signal is emitted when new property item
+which the <em class="parameter"><code>iter</code></em> pointed to has been added.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>qr</code></em> :</span></p></td>
+<td>the <a class="link" href="RCLibDbLibraryQueryResult.html#RCLibDb"><span class="type">RCLibDb</span></a> that received the signal</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>prop_type</code></em> :</span></p></td>
+<td>the property type</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>iter</code></em> :</span></p></td>
+<td>the iter pointed to the a item</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>user_data</code></em> :</span></p></td>
+<td>user data set when the signal handler was connected.</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="RCLibDbLibraryQueryResult-prop-changed"></a><h3>The <code class="literal">"prop-changed"</code> signal</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                user_function                      (<a class="link" href="RCLibDbLibraryQueryResult.html" title="RCLibDb"><span class="type">RCLibDbLibraryQueryResult</span></a> *qr,
+                                                        <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a>                      prop_type,
+                                                        <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>                   iter,
+                                                        <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>                   user_data)      : <a href="/usr/share/gtk-doc/html/gobject/gobject-Signals.html#G-SIGNAL-RUN-FIRST:CAPS"><code class="literal">Run First</code></a></pre>
+<p>
+The ::query-result-changed signal is emitted when the property item 
+which the <em class="parameter"><code>iter</code></em> pointed to has been changed.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>qr</code></em> :</span></p></td>
+<td>the <a class="link" href="RCLibDbLibraryQueryResult.html#RCLibDb"><span class="type">RCLibDb</span></a> that received the signal</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>prop_type</code></em> :</span></p></td>
+<td>the property type</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>iter</code></em> :</span></p></td>
+<td>the iter pointed to the a item</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>user_data</code></em> :</span></p></td>
+<td>user data set when the signal handler was connected.</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="RCLibDbLibraryQueryResult-prop-delete"></a><h3>The <code class="literal">"prop-delete"</code> signal</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                user_function                      (<a class="link" href="RCLibDbLibraryQueryResult.html" title="RCLibDb"><span class="type">RCLibDbLibraryQueryResult</span></a> *qr,
+                                                        <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a>                      prop_type,
+                                                        <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>                   iter,
+                                                        <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>                   user_data)      : <a href="/usr/share/gtk-doc/html/gobject/gobject-Signals.html#G-SIGNAL-RUN-FIRST:CAPS"><code class="literal">Run First</code></a></pre>
+<p>
+The ::query-result-changed signal is emitted when the property item 
+which the <em class="parameter"><code>iter</code></em> pointed to is about to be deleted.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>qr</code></em> :</span></p></td>
+<td>the <a class="link" href="RCLibDbLibraryQueryResult.html#RCLibDb"><span class="type">RCLibDb</span></a> that received the signal</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>prop_type</code></em> :</span></p></td>
+<td>the property type</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>iter</code></em> :</span></p></td>
+<td>the iter pointed to the a item</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>user_data</code></em> :</span></p></td>
+<td>user data set when the signal handler was connected.</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="RCLibDbLibraryQueryResult-query-result-added"></a><h3>The <code class="literal">"query-result-added"</code> signal</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                user_function                      (<a class="link" href="RCLibDbLibraryQueryResult.html" title="RCLibDb"><span class="type">RCLibDbLibraryQueryResult</span></a> *qr,
+                                                        <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>                   iter,
+                                                        <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>                   user_data)      : <a href="/usr/share/gtk-doc/html/gobject/gobject-Signals.html#G-SIGNAL-RUN-FIRST:CAPS"><code class="literal">Run First</code></a></pre>
+<p>
+The ::query-result-added signal is emitted when a new item has been
+added to the query result.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>qr</code></em> :</span></p></td>
+<td>the <a class="link" href="RCLibDbLibraryQueryResult.html#RCLibDb"><span class="type">RCLibDb</span></a> that received the signal</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>iter</code></em> :</span></p></td>
+<td>the iter pointed to the added item</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>user_data</code></em> :</span></p></td>
+<td>user data set when the signal handler was connected.</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="RCLibDbLibraryQueryResult-query-result-changed"></a><h3>The <code class="literal">"query-result-changed"</code> signal</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                user_function                      (<a class="link" href="RCLibDbLibraryQueryResult.html" title="RCLibDb"><span class="type">RCLibDbLibraryQueryResult</span></a> *qr,
+                                                        <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>                   iter,
+                                                        <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>                   user_data)      : <a href="/usr/share/gtk-doc/html/gobject/gobject-Signals.html#G-SIGNAL-RUN-FIRST:CAPS"><code class="literal">Run First</code></a></pre>
+<p>
+The ::query-result-changed signal is emitted when the item which
+the <em class="parameter"><code>iter</code></em> pointed to has been changed.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>qr</code></em> :</span></p></td>
+<td>the <a class="link" href="RCLibDbLibraryQueryResult.html#RCLibDb"><span class="type">RCLibDb</span></a> that received the signal</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>iter</code></em> :</span></p></td>
+<td>the iter pointed to the changed item</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>user_data</code></em> :</span></p></td>
+<td>user data set when the signal handler was connected.</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="RCLibDbLibraryQueryResult-query-result-delete"></a><h3>The <code class="literal">"query-result-delete"</code> signal</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                user_function                      (<a class="link" href="RCLibDbLibraryQueryResult.html" title="RCLibDb"><span class="type">RCLibDbLibraryQueryResult</span></a> *qr,
+                                                        <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>                   iter,
+                                                        <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>                   user_data)      : <a href="/usr/share/gtk-doc/html/gobject/gobject-Signals.html#G-SIGNAL-RUN-FIRST:CAPS"><code class="literal">Run First</code></a></pre>
+<p>
+The ::query-result-delete signal is emitted before the item which the
+<em class="parameter"><code>iter</code></em> pointed to removed from the query result.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>qr</code></em> :</span></p></td>
+<td>the <a class="link" href="RCLibDbLibraryQueryResult.html#RCLibDb"><span class="type">RCLibDb</span></a> that received the signal</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>iter</code></em> :</span></p></td>
+<td>the iter pointed to the item to be deleted</td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>user_data</code></em> :</span></p></td>

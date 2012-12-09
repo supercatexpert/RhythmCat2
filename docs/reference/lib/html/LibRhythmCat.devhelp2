@@ -105,6 +105,7 @@
     <keyword type="function" name="rclib_cue_get_track_num ()" link="LibRhythmCat-Cue-Parser.html#rclib-cue-get-track-num"/>
     <keyword type="function" name="rclib_cue_read_data ()" link="LibRhythmCat-Cue-Parser.html#rclib-cue-read-data"/>
     <keyword type="function" name="rclib_cue_set_fallback_encoding ()" link="LibRhythmCat-Cue-Parser.html#rclib-cue-set-fallback-encoding"/>
+    <keyword type="macro" name="RCLIB_TYPE_DB_LIBRARY_QUERY_RESULT_PROP_ITER" link="RCLibDbLibraryQueryResult.html#RCLIB-TYPE-DB-LIBRARY-QUERY-RESULT-PROP-ITER:CAPS"/>
     <keyword type="struct" name="struct RCLibDb" link="RCLibDbLibraryQueryResult.html#RCLibDb-struct"/>
     <keyword type="struct" name="RCLibDbCatalogData" link="RCLibDbLibraryQueryResult.html#RCLibDbCatalogData-struct"/>
     <keyword type="enum" name="enum RCLibDbCatalogDataType" link="RCLibDbLibraryQueryResult.html#RCLibDbCatalogDataType"/>
@@ -165,6 +166,7 @@
     <keyword type="function" name="rclib_db_library_data_free ()" link="RCLibDbLibraryQueryResult.html#rclib-db-library-data-free"/>
     <keyword type="function" name="rclib_db_library_data_get ()" link="RCLibDbLibraryQueryResult.html#rclib-db-library-data-get"/>
     <keyword type="function" name="rclib_db_library_data_new ()" link="RCLibDbLibraryQueryResult.html#rclib-db-library-data-new"/>
+    <keyword type="function" name="rclib_db_library_data_query ()" link="RCLibDbLibraryQueryResult.html#rclib-db-library-data-query"/>
     <keyword type="function" name="rclib_db_library_data_ref ()" link="RCLibDbLibraryQueryResult.html#rclib-db-library-data-ref"/>
     <keyword type="function" name="rclib_db_library_data_set ()" link="RCLibDbLibraryQueryResult.html#rclib-db-library-data-set"/>
     <keyword type="function" name="rclib_db_library_data_unref ()" link="RCLibDbLibraryQueryResult.html#rclib-db-library-data-unref"/>
@@ -173,6 +175,32 @@
     <keyword type="function" name="rclib_db_library_delete ()" link="RCLibDbLibraryQueryResult.html#rclib-db-library-delete"/>
     <keyword type="function" name="rclib_db_library_get_data ()" link="RCLibDbLibraryQueryResult.html#rclib-db-library-get-data"/>
     <keyword type="function" name="rclib_db_library_has_uri ()" link="RCLibDbLibraryQueryResult.html#rclib-db-library-has-uri"/>
+    <keyword type="function" name="rclib_db_library_query ()" link="RCLibDbLibraryQueryResult.html#rclib-db-library-query"/>
+    <keyword type="function" name="rclib_db_library_query_get_uris ()" link="RCLibDbLibraryQueryResult.html#rclib-db-library-query-get-uris"/>
+    <keyword type="function" name="rclib_db_library_query_result_chain ()" link="RCLibDbLibraryQueryResult.html#rclib-db-library-query-result-chain"/>
+    <keyword type="function" name="rclib_db_library_query_result_copy_contents ()" link="RCLibDbLibraryQueryResult.html#rclib-db-library-query-result-copy-contents"/>
+    <keyword type="function" name="rclib_db_library_query_result_get_begin_iter ()" link="RCLibDbLibraryQueryResult.html#rclib-db-library-query-result-get-begin-iter"/>
+    <keyword type="function" name="rclib_db_library_query_result_get_data ()" link="RCLibDbLibraryQueryResult.html#rclib-db-library-query-result-get-data"/>
+    <keyword type="function" name="rclib_db_library_query_result_get_iter_at_pos ()" link="RCLibDbLibraryQueryResult.html#rclib-db-library-query-result-get-iter-at-pos"/>
+    <keyword type="function" name="rclib_db_library_query_result_get_last_iter ()" link="RCLibDbLibraryQueryResult.html#rclib-db-library-query-result-get-last-iter"/>
+    <keyword type="function" name="rclib_db_library_query_result_get_length ()" link="RCLibDbLibraryQueryResult.html#rclib-db-library-query-result-get-length"/>
+    <keyword type="function" name="rclib_db_library_query_result_get_next_iter ()" link="RCLibDbLibraryQueryResult.html#rclib-db-library-query-result-get-next-iter"/>
+    <keyword type="function" name="rclib_db_library_query_result_get_position ()" link="RCLibDbLibraryQueryResult.html#rclib-db-library-query-result-get-position"/>
+    <keyword type="function" name="rclib_db_library_query_result_get_prev_iter ()" link="RCLibDbLibraryQueryResult.html#rclib-db-library-query-result-get-prev-iter"/>
+    <keyword type="function" name="rclib_db_library_query_result_get_query ()" link="RCLibDbLibraryQueryResult.html#rclib-db-library-query-result-get-query"/>
+    <keyword type="function" name="rclib_db_library_query_result_new ()" link="RCLibDbLibraryQueryResult.html#rclib-db-library-query-result-new"/>
+    <keyword type="function" name="rclib_db_library_query_result_prop_get_begin_iter ()" link="RCLibDbLibraryQueryResult.html#rclib-db-library-query-result-prop-get-begin-iter"/>
+    <keyword type="function" name="rclib_db_library_query_result_prop_get_data ()" link="RCLibDbLibraryQueryResult.html#rclib-db-library-query-result-prop-get-data"/>
+    <keyword type="function" name="rclib_db_library_query_result_prop_get_iter_at_pos ()" link="RCLibDbLibraryQueryResult.html#rclib-db-library-query-result-prop-get-iter-at-pos"/>
+    <keyword type="function" name="rclib_db_library_query_result_prop_get_last_iter ()" link="RCLibDbLibraryQueryResult.html#rclib-db-library-query-result-prop-get-last-iter"/>
+    <keyword type="function" name="rclib_db_library_query_result_prop_get_length ()" link="RCLibDbLibraryQueryResult.html#rclib-db-library-query-result-prop-get-length"/>
+    <keyword type="function" name="rclib_db_library_query_result_prop_get_next_iter ()" link="RCLibDbLibraryQueryResult.html#rclib-db-library-query-result-prop-get-next-iter"/>
+    <keyword type="function" name="rclib_db_library_query_result_prop_get_position ()" link="RCLibDbLibraryQueryResult.html#rclib-db-library-query-result-prop-get-position"/>
+    <keyword type="function" name="rclib_db_library_query_result_prop_get_prev_iter ()" link="RCLibDbLibraryQueryResult.html#rclib-db-library-query-result-prop-get-prev-iter"/>
+    <keyword type="function" name="rclib_db_library_query_result_query_cancel ()" link="RCLibDbLibraryQueryResult.html#rclib-db-library-query-result-query-cancel"/>
+    <keyword type="function" name="rclib_db_library_query_result_query_clear ()" link="RCLibDbLibraryQueryResult.html#rclib-db-library-query-result-query-clear"/>
+    <keyword type="function" name="rclib_db_library_query_result_query_start ()" link="RCLibDbLibraryQueryResult.html#rclib-db-library-query-result-query-start"/>
+    <keyword type="function" name="rclib_db_library_query_result_set_query ()" link="RCLibDbLibraryQueryResult.html#rclib-db-library-query-result-set-query"/>
     <keyword type="function" name="rclib_db_load_autosaved ()" link="RCLibDbLibraryQueryResult.html#rclib-db-load-autosaved"/>
     <keyword type="function" name="rclib_db_load_legacy ()" link="RCLibDbLibraryQueryResult.html#rclib-db-load-legacy"/>
     <keyword type="function" name="rclib_db_playlist_add_directory ()" link="RCLibDbLibraryQueryResult.html#rclib-db-playlist-add-directory"/>
@@ -246,6 +274,12 @@
     <keyword type="signal" name="The &quot;playlist-delete&quot; signal" link="RCLibDbLibraryQueryResult.html#RCLibDb-playlist-delete"/>
     <keyword type="signal" name="The &quot;playlist-reordered&quot; signal" link="RCLibDbLibraryQueryResult.html#RCLibDb-playlist-reordered"/>
     <keyword type="signal" name="The &quot;refresh-updated&quot; signal" link="RCLibDbLibraryQueryResult.html#RCLibDb-refresh-updated"/>
+    <keyword type="signal" name="The &quot;prop-added&quot; signal" link="RCLibDbLibraryQueryResult.html#RCLibDbLibraryQueryResult-prop-added"/>
+    <keyword type="signal" name="The &quot;prop-changed&quot; signal" link="RCLibDbLibraryQueryResult.html#RCLibDbLibraryQueryResult-prop-changed"/>
+    <keyword type="signal" name="The &quot;prop-delete&quot; signal" link="RCLibDbLibraryQueryResult.html#RCLibDbLibraryQueryResult-prop-delete"/>
+    <keyword type="signal" name="The &quot;query-result-added&quot; signal" link="RCLibDbLibraryQueryResult.html#RCLibDbLibraryQueryResult-query-result-added"/>
+    <keyword type="signal" name="The &quot;query-result-changed&quot; signal" link="RCLibDbLibraryQueryResult.html#RCLibDbLibraryQueryResult-query-result-changed"/>
+    <keyword type="signal" name="The &quot;query-result-delete&quot; signal" link="RCLibDbLibraryQueryResult.html#RCLibDbLibraryQueryResult-query-result-delete"/>
     <keyword type="struct" name="struct RCLibLyric" link="RCLibLyric.html#RCLibLyric-struct"/>
     <keyword type="struct" name="struct RCLibLyricClass" link="RCLibLyric.html#RCLibLyricClass"/>
     <keyword type="struct" name="struct RCLibLyricData" link="RCLibLyric.html#RCLibLyricData"/>
