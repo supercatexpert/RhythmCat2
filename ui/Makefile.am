@@ -11,13 +11,13 @@ librhythmcat_ui_2_0_sources = \
     rc-ui-listmodel.c rc-ui-player.c rc-ui-window.c rc-ui-listview.c \
     rc-ui-menu.c rc-ui-dialog.c rc-ui-slabel.c rc-ui-spectrum.c \
     rc-ui-style.c rc-ui-plugin.c rc-ui-settings.c rc-ui-effect.c \
-    rc-ui-cell-renderer-rating.c rc-main.c
+    rc-ui-cell-renderer-rating.c rc-ui-library-model.c rc-main.c
 
 librhythmcat_ui_2_0_headers = \
     rc-ui-listmodel.h rc-ui-listview.h rc-ui-player.h rc-ui-window.h \
     rc-ui-menu.h rc-ui-dialog.h rc-ui-slabel.h rc-ui-style.h \
     rc-ui-spectrum.h rc-ui-plugin.h rc-ui-settings.h rc-ui-effect.h \
-    rc-ui-cell-renderer-rating.h rc-main.h
+    rc-ui-cell-renderer-rating.h rc-ui-library-model.h rc-main.h
 
 librhythmcat_ui_2_0_builtsources = rc-ui-resources.c rc-marshal.c
 
@@ -56,7 +56,7 @@ librhythmcat_ui_2_0includedir=$(includedir)/rhythmcat2
 librhythmcat_ui_2_0include_HEADERS = rc-common.h \
     $(librhythmcat_ui_2_0_headers) $(librhythmcat_ui_2_0_builtheaders)
 
-librhythmcat_ui_2_0_la_LDFLAGS = -fPIC -export-dynamic -O2 -no-undefined -export-symbols-regex "^[[^_]].*"
+librhythmcat_ui_2_0_la_LDFLAGS = -fPIC -export-dynamic -O2
 librhythmcat_ui_2_0_la_LIBADD = @LIBOBJS@ @GLIB2_LIBS@ @GTK_LIBS@ @GSTREAMER_LIBS@ \
     $(top_builddir)/lib/librhythmcat-2.0.la
 

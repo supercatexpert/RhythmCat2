@@ -377,7 +377,8 @@ librhythmcat_2_0includedir = $(includedir)/librhythmcat2
 librhythmcat_2_0include_HEADERS = $(librhythmcat_2_0_priv_headers) \
     $(librhythmcat_2_0_headers) $(librhythmcat_2_0_builtheaders)
 
-librhythmcat_2_0_la_LDFLAGS = -export-dynamic -O2 $(am__append_3)
+librhythmcat_2_0_la_LDFLAGS = -fPIC -export-dynamic -O2 \
+	$(am__append_3)
 @HAVE_INTROSPECTION_TRUE@INTROSPECTION_GIRS = RhythmCatLib-2.0.gir
 @HAVE_INTROSPECTION_TRUE@INTROSPECTION_SCANNER_ARGS = --add-include-path=$(srcdir)/lib --warn-all
 @HAVE_INTROSPECTION_TRUE@INTROSPECTION_COMPILER_ARGS = --includedir=$(srcdir)/lib

@@ -58,6 +58,7 @@ typedef struct _RCLibDbLibraryQueryResultPropItem
     GHashTable *prop_iter_table;
     GHashTable *prop_name_table;
     GHashTable *prop_uri_table;
+    guint count;
 }RCLibDbLibraryQueryResultPropItem;
 
 typedef struct _RCLibDbLibraryQueryResultPropData
@@ -201,6 +202,7 @@ static void rclib_db_library_query_result_added_cb(RCLibDb *db,
                     iter);
                 prop_data = g_sequence_get(iter);
                 prop_data->prop_count++;
+                prop_item->count++;
                 g_signal_emit(object, db_library_query_result_signals[
                     SIGNAL_LIBRARY_QUERY_RESULT_PROP_CHANGED], 0, prop_type,
                     iter);
@@ -209,6 +211,7 @@ static void rclib_db_library_query_result_added_cb(RCLibDb *db,
             {
                 prop_data = rclib_db_library_query_result_prop_data_new();
                 prop_data->prop_count = 1;
+                prop_item->count++;
                 prop_data->prop_name = g_strdup(prop_string);
                 iter = g_sequence_append(prop_item->prop_sequence, prop_data);
                 g_hash_table_insert(prop_item->prop_iter_table, iter, iter);
@@ -288,12 +291,14 @@ static void rclib_db_library_query_result_deleted_cb(RCLibDb *db,
         if(prop_data->prop_count>1)
         {
             prop_data->prop_count--;
+            prop_item->count--;
             g_hash_table_remove(prop_item->prop_uri_table, uri);
             g_signal_emit(object, db_library_query_result_signals[
                 SIGNAL_LIBRARY_QUERY_RESULT_PROP_CHANGED], 0, prop_type, iter);
         }
         else
         {
+            prop_item->count--;
             g_signal_emit(object, db_library_query_result_signals[
                 SIGNAL_LIBRARY_QUERY_RESULT_PROP_DELETE], 0, prop_type, iter);
             g_sequence_remove(iter);
@@ -369,6 +374,7 @@ static void rclib_db_library_query_result_changed_cb(RCLibDb *db,
                     if(prop_data->prop_count>1)
                     {
                         prop_data->prop_count--;
+                        prop_item->count--;
                         g_hash_table_remove(prop_item->prop_uri_table, uri);
                         g_signal_emit(object, db_library_query_result_signals[
                             SIGNAL_LIBRARY_QUERY_RESULT_PROP_CHANGED], 0,
@@ -376,6 +382,7 @@ static void rclib_db_library_query_result_changed_cb(RCLibDb *db,
                     }
                     else
                     {
+                        prop_item->count--;
                         g_signal_emit(object, db_library_query_result_signals[
                             SIGNAL_LIBRARY_QUERY_RESULT_PROP_DELETE], 0,
                             prop_type, prop_item_iter);
@@ -421,6 +428,7 @@ static void rclib_db_library_query_result_changed_cb(RCLibDb *db,
                     prop_data = rclib_db_library_query_result_prop_data_new();
                     prop_data->prop_count = 1;
                     prop_data->prop_name = g_strdup(prop_string);
+                    prop_item->count++;
                     prop_item_iter = g_sequence_append(
                         prop_item->prop_sequence, prop_data);
                     g_hash_table_insert(prop_item->prop_iter_table,
@@ -447,6 +455,7 @@ static void rclib_db_library_query_result_changed_cb(RCLibDb *db,
                         if(prop_data->prop_count>1)
                         {
                             prop_data->prop_count--;
+                            prop_item->count--;
                             g_hash_table_remove(prop_item->prop_uri_table, uri);
                             g_signal_emit(object,
                                 db_library_query_result_signals[
@@ -455,6 +464,7 @@ static void rclib_db_library_query_result_changed_cb(RCLibDb *db,
                         }
                         else
                         {
+                            prop_item->count--;
                             g_signal_emit(object,
                                 db_library_query_result_signals[
                                 SIGNAL_LIBRARY_QUERY_RESULT_PROP_DELETE], 0,
@@ -468,8 +478,6 @@ static void rclib_db_library_query_result_changed_cb(RCLibDb *db,
                                 uri);
                         }
                     }
-                    
-                    
                 }
                 g_free(prop_string);
             }
@@ -547,6 +555,7 @@ static void rclib_db_library_query_result_base_added_cb(
                 iter);
             prop_data = g_sequence_get(iter);
             prop_data->prop_count++;
+            prop_item->count++;
             g_signal_emit(qr, db_library_query_result_signals[
                 SIGNAL_LIBRARY_QUERY_RESULT_PROP_CHANGED], 0, prop_type,
                 iter);
@@ -556,6 +565,7 @@ static void rclib_db_library_query_result_base_added_cb(
             prop_data = rclib_db_library_query_result_prop_data_new();
             prop_data->prop_count = 1;
             prop_data->prop_name = g_strdup(prop_string);
+            prop_item->count++;
             iter = g_sequence_append(prop_item->prop_sequence, prop_data);
             g_hash_table_insert(prop_item->prop_iter_table, iter, iter);
             g_hash_table_insert(prop_item->prop_name_table,
@@ -641,12 +651,14 @@ static void rclib_db_library_query_result_base_delete_cb(
         if(prop_data->prop_count>1)
         {
             prop_data->prop_count--;
+            prop_item->count--;
             g_hash_table_remove(prop_item->prop_uri_table, uri);
             g_signal_emit(qr, db_library_query_result_signals[
                 SIGNAL_LIBRARY_QUERY_RESULT_PROP_CHANGED], 0, prop_type, iter);
         }
         else
         {
+            prop_item->count--;
             g_signal_emit(qr, db_library_query_result_signals[
                 SIGNAL_LIBRARY_QUERY_RESULT_PROP_DELETE], 0, prop_type, iter);
             g_sequence_remove(iter);
@@ -745,6 +757,7 @@ static void rclib_db_library_query_result_base_changed_cb(
             if(prop_data->prop_count>1)
             {
                 prop_data->prop_count--;
+                prop_item->count--;
                 g_hash_table_remove(prop_item->prop_uri_table, uri);
                 g_signal_emit(qr, db_library_query_result_signals[
                     SIGNAL_LIBRARY_QUERY_RESULT_PROP_CHANGED], 0,
@@ -752,6 +765,7 @@ static void rclib_db_library_query_result_base_changed_cb(
             }
             else
             {
+                prop_item->count--;
                 g_signal_emit(qr, db_library_query_result_signals[
                     SIGNAL_LIBRARY_QUERY_RESULT_PROP_DELETE], 0,
                     prop_type, prop_item_iter);
@@ -792,6 +806,7 @@ static void rclib_db_library_query_result_base_changed_cb(
                 prop_data = rclib_db_library_query_result_prop_data_new();
                 prop_data->prop_count = 1;
                 prop_data->prop_name = g_strdup(prop_string);
+                prop_item->count++;
                 prop_item_iter = g_sequence_append(
                     prop_item->prop_sequence, prop_data);
                 g_hash_table_insert(prop_item->prop_iter_table,
@@ -818,6 +833,7 @@ static void rclib_db_library_query_result_base_changed_cb(
                     if(prop_data->prop_count>1)
                     {
                         prop_data->prop_count--;
+                        prop_item->count--;
                         g_hash_table_remove(prop_item->prop_uri_table, uri);
                         g_signal_emit(qr, db_library_query_result_signals[
                             SIGNAL_LIBRARY_QUERY_RESULT_PROP_CHANGED], 0,
@@ -825,6 +841,7 @@ static void rclib_db_library_query_result_base_changed_cb(
                     }
                     else
                     {
+                        prop_item->count--;
                         g_signal_emit(qr, db_library_query_result_signals[
                             SIGNAL_LIBRARY_QUERY_RESULT_PROP_DELETE], 0,
                             prop_type, prop_item_iter);
@@ -1165,6 +1182,7 @@ static gboolean rclib_db_library_query_result_query_idle_cb(gpointer data)
             {
                 prop_data = g_sequence_get(iter);
                 prop_data->prop_count++;
+                prop_item->count++;
                 g_hash_table_insert(prop_item->prop_uri_table, g_strdup(uri),
                     iter);
                 g_signal_emit(object, db_library_query_result_signals[
@@ -1176,6 +1194,7 @@ static gboolean rclib_db_library_query_result_query_idle_cb(gpointer data)
                 prop_data = rclib_db_library_query_result_prop_data_new();
                 prop_data->prop_count = 1;
                 prop_data->prop_name = g_strdup(prop_string);
+                prop_item->count++;
                 iter = g_sequence_append(prop_item->prop_sequence, prop_data);
                 g_hash_table_insert(prop_item->prop_iter_table, iter, iter);
                 g_hash_table_insert(prop_item->prop_name_table,
@@ -1229,6 +1248,7 @@ static void rclib_db_library_query_result_finalize(GObject *object)
     RCLIB_DB_LIBRARY_QUERY_RESULT(object)->priv = NULL;
     if(priv->base_query_result!=NULL)
     {
+        g_object_unref(priv->base_query_result);
         priv->base_query_result = NULL;
     }
     if(priv->base_added_id>0)
@@ -3133,6 +3153,7 @@ void rclib_db_library_query_result_chain(
     if(query_result==NULL || base==NULL) return;
     priv = query_result->priv;
     if(priv==NULL) return;
+    base = g_object_ref(base);
     if(import_entries)
     {
         rclib_db_library_query_result_copy_contents(query_result, base);
@@ -3167,6 +3188,27 @@ void rclib_db_library_query_result_chain(
     priv->base_changed_id = rclib_db_signal_connect("query-result-changed",
         G_CALLBACK(rclib_db_library_query_result_base_changed_cb), base);
     priv->base_query_result = base;
+}
+
+/**
+ * rclib_db_library_query_result_get_base:
+ * @query_result: the #RCLibDbLibraryQueryResult instance
+ * 
+ * Get the base query result of current query result, if the query result is
+ * chained to another query result, or return #NULL.
+ * 
+ * Returns: (transfer full): The base query result, #NULL if not exist
+ * or any error occurs. Dereference it after Usage.
+ */
+
+RCLibDbLibraryQueryResult *rclib_db_library_query_result_get_base(
+    RCLibDbLibraryQueryResult *query_result)
+{
+    RCLibDbLibraryQueryResultPrivate *priv;
+    if(query_result==NULL) return NULL;
+    priv = query_result->priv;
+    if(priv==NULL || priv->base_query_result==NULL) return NULL;
+    return g_object_ref(priv->base_query_result);
 }
 
 /**
@@ -3402,6 +3444,58 @@ RCLibDbLibraryQueryResultIter *rclib_db_library_query_result_get_iter_at_pos(
 }
 
 /**
+ * rclib_db_library_query_result_iter_is_begin:
+ * @query_result: the #RCLibDbLibraryQueryResult instance
+ * @iter: the iter
+ *
+ * Return whether @iter is the begin iterator.
+ * Notice that this function will NOT check whether the @iter is valid.
+ *
+ * Returns: whether @iter is the begin iterator
+ */
+
+gboolean rclib_db_library_query_result_iter_is_begin(
+    RCLibDbLibraryQueryResult *query_result,
+    RCLibDbLibraryQueryResultIter *iter)
+{
+    RCLibDbLibraryQueryResultPrivate *priv;
+    if(query_result==NULL)
+        return FALSE;
+    if(iter==NULL)
+        return TRUE;
+    priv = RCLIB_DB_LIBRARY_QUERY_RESULT(query_result)->priv;
+    if(priv==NULL)
+        return FALSE;
+    return g_sequence_iter_is_begin((GSequenceIter *)iter);
+}
+
+/**
+ * rclib_db_library_query_result_iter_is_end:
+ * @query_result: the #RCLibDbLibraryQueryResult instance
+ * @iter: the iter
+ *
+ * Return whether @iter is the end iterator.
+ * Notice that this function will NOT check whether the @iter is valid.
+ *
+ * Returns: whether @iter is the end iterator
+ */
+ 
+gboolean rclib_db_library_query_result_iter_is_end(
+    RCLibDbLibraryQueryResult *query_result,
+    RCLibDbLibraryQueryResultIter *iter)
+{
+    RCLibDbLibraryQueryResultPrivate *priv;
+    if(query_result==NULL)
+        return FALSE;
+    if(iter==NULL)
+        return TRUE;
+    priv = RCLIB_DB_LIBRARY_QUERY_RESULT(query_result)->priv;
+    if(priv==NULL)
+        return FALSE;
+    return g_sequence_iter_is_end((GSequenceIter *)iter);
+}
+
+/**
  * rclib_db_library_query_result_set_query:
  * @query_result: the #RCLibDbLibraryQueryResult instance
  * @query: the query to set
@@ -3566,6 +3660,35 @@ gboolean rclib_db_library_query_result_prop_get_data(
         *prop_name = g_strdup(data->prop_name);
     if(prop_count!=NULL)
         *prop_count = data->prop_count;
+    return TRUE;
+}
+
+/**
+ * rclib_db_library_query_result_prop_get_total_count:
+ * @query_result: the #RCLibDbLibraryQueryResult instance
+ * @prop_type: the property type
+ * @count: (out): the total count of music in this property type
+ * 
+ * Get the total count of music in the given property type in the query result.
+ * 
+ * Returns: Whether the property type exists.
+ */
+
+gboolean rclib_db_library_query_result_prop_get_total_count(
+    RCLibDbLibraryQueryResult *query_result, RCLibDbQueryDataType prop_type,
+    guint *count)
+{
+    RCLibDbLibraryQueryResultPrivate *priv;
+    RCLibDbLibraryQueryResultPropItem *item;
+    if(query_result==NULL) return FALSE;
+    priv = RCLIB_DB_LIBRARY_QUERY_RESULT(query_result)->priv;
+    if(priv==NULL || priv->prop_table==NULL)
+        return FALSE;
+    item = g_hash_table_lookup(priv->prop_table, GUINT_TO_POINTER(prop_type));
+    if(item==NULL)
+        return FALSE;
+    if(count!=NULL)
+        *count = item->count;
     return TRUE;
 }
 
@@ -3799,3 +3922,58 @@ RCLibDbLibraryQueryResultPropIter *
         (GSequence *)item->prop_sequence, pos);
     return iter;
 }
+
+/**
+ * rclib_db_library_query_result_prop_iter_is_begin:
+ * @query_result: the #RCLibDbLibraryQueryResult instance
+ * @prop_type: the property type
+ * @iter: the iter
+ *
+ * Return whether @iter is the begin iterator.
+ * Notice that this function will NOT check whether the @iter is valid.
+ *
+ * Returns: whether @iter is the begin iterator.
+ */
+
+gboolean rclib_db_library_query_result_prop_iter_is_begin(
+    RCLibDbLibraryQueryResult *query_result, RCLibDbQueryDataType prop_type,
+    RCLibDbLibraryQueryResultPropIter *iter)
+{
+    RCLibDbLibraryQueryResultPrivate *priv;
+    if(query_result==NULL)
+        return FALSE;
+    if(iter==NULL)
+        return TRUE;
+    priv = RCLIB_DB_LIBRARY_QUERY_RESULT(query_result)->priv;
+    if(priv==NULL)
+        return FALSE;
+    return g_sequence_iter_is_begin((GSequenceIter *)iter);
+}
+    
+/**
+ * rclib_db_library_query_result_prop_iter_is_end:
+ * @query_result: the #RCLibDbLibraryQueryResult instance
+ * @prop_type: the property type
+ * @iter: the iter
+ *
+ * Return whether @iter is the end iterator.
+ * Notice that this function will NOT check whether the @iter is valid.
+ *
+ * Returns: whether @iter is the end iterator.
+ */
+    
+gboolean rclib_db_library_query_result_prop_iter_is_end(
+    RCLibDbLibraryQueryResult *query_result, RCLibDbQueryDataType prop_type,
+    RCLibDbLibraryQueryResultPropIter *iter)
+{
+    RCLibDbLibraryQueryResultPrivate *priv;
+    if(query_result==NULL)
+        return FALSE;
+    if(iter==NULL)
+        return TRUE;
+    priv = RCLIB_DB_LIBRARY_QUERY_RESULT(query_result)->priv;
+    if(priv==NULL)
+        return FALSE;
+    return g_sequence_iter_is_end((GSequenceIter *)iter);
+}
+    

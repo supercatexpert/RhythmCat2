@@ -574,6 +574,8 @@ void rclib_db_library_query_result_copy_contents(
 void rclib_db_library_query_result_chain(
     RCLibDbLibraryQueryResult *query_result, RCLibDbLibraryQueryResult *base,
     gboolean import_entries);
+RCLibDbLibraryQueryResult *rclib_db_library_query_result_get_base(
+    RCLibDbLibraryQueryResult *query_result);
 RCLibDbLibraryData *rclib_db_library_query_result_get_data(
     RCLibDbLibraryQueryResult *query_result,
     RCLibDbLibraryQueryResultIter *iter);
@@ -594,6 +596,12 @@ gint rclib_db_library_query_result_get_position(
     RCLibDbLibraryQueryResultIter *iter);
 RCLibDbLibraryQueryResultIter *rclib_db_library_query_result_get_iter_at_pos(
     RCLibDbLibraryQueryResult *query_result, gint pos);
+gboolean rclib_db_library_query_result_iter_is_begin(
+    RCLibDbLibraryQueryResult *query_result,
+    RCLibDbLibraryQueryResultIter *iter);
+gboolean rclib_db_library_query_result_iter_is_end(
+    RCLibDbLibraryQueryResult *query_result,
+    RCLibDbLibraryQueryResultIter *iter);
 void rclib_db_library_query_result_set_query(
     RCLibDbLibraryQueryResult *query_result, const RCLibDbQuery *query);    
 void rclib_db_library_query_result_query_start(
@@ -608,6 +616,9 @@ gboolean rclib_db_library_query_result_prop_get_data(
     RCLibDbLibraryQueryResult *query_result, RCLibDbQueryDataType prop_type,
     RCLibDbLibraryQueryResultPropIter *iter, gchar **prop_name,
     guint *prop_count);
+gboolean rclib_db_library_query_result_prop_get_total_count(
+    RCLibDbLibraryQueryResult *query_result, RCLibDbQueryDataType prop_type,
+    guint *count);
 guint rclib_db_library_query_result_prop_get_length(
     RCLibDbLibraryQueryResult *query_result, RCLibDbQueryDataType prop_type);
 RCLibDbLibraryQueryResultPropIter *
@@ -631,7 +642,12 @@ RCLibDbLibraryQueryResultPropIter *
     rclib_db_library_query_result_prop_get_iter_at_pos(
     RCLibDbLibraryQueryResult *query_result, RCLibDbQueryDataType prop_type,
     gint pos);
-
+gboolean rclib_db_library_query_result_prop_iter_is_begin(
+    RCLibDbLibraryQueryResult *query_result, RCLibDbQueryDataType prop_type,
+    RCLibDbLibraryQueryResultPropIter *iter);
+gboolean rclib_db_library_query_result_prop_iter_is_end(
+    RCLibDbLibraryQueryResult *query_result, RCLibDbQueryDataType prop_type,
+    RCLibDbLibraryQueryResultPropIter *iter);
 
 /* Query Interface */
 RCLibDbQuery *rclib_db_query_parse(RCLibDbQueryConditionType condition1, ...);

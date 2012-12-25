@@ -42,7 +42,7 @@ librhythmcat_2_0include_HEADERS = $(librhythmcat_2_0_priv_headers) \
     
 librhythmcat_2_0_la_SOURCES += $(BUILT_SOURCES)
 
-librhythmcat_2_0_la_LDFLAGS = -export-dynamic -O2
+librhythmcat_2_0_la_LDFLAGS = -fPIC -export-dynamic -O2
 
 if DEBUG_MODE
     librhythmcat_2_0_la_CFLAGS += -DDEBUG_MODE=1 -g

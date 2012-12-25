@@ -762,7 +762,7 @@ static gint rc_ui_playlist_store_iter_n_children(GtkTreeModel *model,
     return 0;
 }
 
-static gboolean rc_ui_catalog_store_iter_nth_child (GtkTreeModel *model,
+static gboolean rc_ui_catalog_store_iter_nth_child(GtkTreeModel *model,
     GtkTreeIter *iter, GtkTreeIter *parent, gint n)
 {
     RCUiCatalogStore *store;
@@ -780,7 +780,7 @@ static gboolean rc_ui_catalog_store_iter_nth_child (GtkTreeModel *model,
     return TRUE;
 }
 
-static gboolean rc_ui_playlist_store_iter_nth_child (GtkTreeModel *model,
+static gboolean rc_ui_playlist_store_iter_nth_child(GtkTreeModel *model,
     GtkTreeIter *iter, GtkTreeIter *parent, gint n)
 {
     RCUiPlaylistStore *store;
