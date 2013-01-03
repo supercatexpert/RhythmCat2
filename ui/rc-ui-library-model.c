@@ -46,6 +46,9 @@ struct _RCUiLibraryListStorePrivate
     RCLibDbLibraryQueryResult *query_result;
     gint stamp;
     gint n_columns;
+    gulong query_result_added_id;
+    gulong query_result_delete_id;
+    gulong query_result_changed_id;
 };
 
 struct _RCUiLibraryPropStorePrivate
@@ -54,12 +57,161 @@ struct _RCUiLibraryPropStorePrivate
     RCLibDbQueryDataType prop_type;
     gint stamp;
     gint n_columns;
+    gulong prop_added_id;
+    gulong prop_delete_id;
+    gulong prop_changed_id;
 };
 
-static gchar *format_string = NULL;
+enum
+{
+    LIST_STORE_PROP_O,
+    LIST_STORE_PROP_QUERY_RESULT
+};
+
+enum
+{
+    PROP_STORE_PROP_O,
+    PROP_STORE_PROP_BASE,
+    PROP_STORE_PROP_PROP_TYPE
+};
+
 static gpointer rc_ui_library_list_store_parent_class = NULL;
 static gpointer rc_ui_library_prop_store_parent_class = NULL;
 
+static void rc_ui_library_list_query_result_added_cb(
+    RCLibDbLibraryQueryResult *qr, RCLibDbLibraryQueryResultIter *iter,
+    gpointer data)
+{
+    RCUiLibraryListStorePrivate *priv;
+    GtkTreeModel *model;
+    GtkTreePath *path;
+    GtkTreeIter tree_iter;
+    gint pos;
+    if(data==NULL) return;
+    g_return_if_fail(iter!=NULL);
+    model = GTK_TREE_MODEL(data);
+    g_return_if_fail(RC_UI_IS_LIBRARY_LIST_STORE(model));
+    priv = RC_UI_LIBRARY_LIST_STORE(model)->priv;
+    if(priv==NULL) return;
+    pos = rclib_db_library_query_result_get_position(qr, iter);
+    path = gtk_tree_path_new();
+    gtk_tree_path_append_index(path, pos);
+    tree_iter.user_data = iter;
+    tree_iter.stamp = priv->stamp;
+    gtk_tree_model_row_inserted(model, path, &tree_iter);
+    gtk_tree_path_free(path);
+}
+
+static void rc_ui_library_list_query_result_delete_cb(
+    RCLibDbLibraryQueryResult *qr, RCLibDbLibraryQueryResultIter *iter,
+    gpointer data)
+{
+    GtkTreeModel *model;
+    GtkTreePath *path;
+    gint pos;
+    if(data==NULL) return;
+    g_return_if_fail(iter!=NULL);
+    model = GTK_TREE_MODEL(data);
+    g_return_if_fail(RC_UI_IS_LIBRARY_LIST_STORE(model));
+    pos = rclib_db_library_query_result_get_position(qr, iter);
+    path = gtk_tree_path_new();
+    gtk_tree_path_append_index(path, pos);
+    gtk_tree_model_row_deleted(model, path);
+    gtk_tree_path_free(path);
+}
+
+static void rc_ui_library_list_query_result_changed_cb(
+    RCLibDbLibraryQueryResult *qr, RCLibDbLibraryQueryResultIter *iter,
+    gpointer data)
+{
+    RCUiLibraryListStorePrivate *priv;
+    GtkTreeModel *model;
+    GtkTreePath *path;
+    GtkTreeIter tree_iter;
+    gint pos;
+    if(data==NULL) return;
+    g_return_if_fail(iter!=NULL);
+    model = GTK_TREE_MODEL(data);
+    g_return_if_fail(RC_UI_IS_LIBRARY_LIST_STORE(model));
+    priv = RC_UI_LIBRARY_LIST_STORE(model)->priv;
+    if(priv==NULL) return;
+    pos = rclib_db_library_query_result_get_position(qr, iter);
+    path = gtk_tree_path_new();
+    gtk_tree_path_append_index(path, pos);
+    tree_iter.user_data = iter;
+    tree_iter.stamp = priv->stamp;
+    gtk_tree_model_row_changed(model, path, &tree_iter);
+    gtk_tree_path_free(path);
+}
+
+static void rc_ui_library_prop_prop_added_cb(RCLibDbLibraryQueryResult *qr,
+    guint prop_type, RCLibDbLibraryQueryResultPropIter *iter, gpointer data)
+{
+    RCUiLibraryPropStorePrivate *priv;
+    GtkTreeModel *model;
+    GtkTreePath *path;
+    GtkTreeIter tree_iter;
+    gint pos;
+    if(data==NULL) return;
+    g_return_if_fail(iter!=NULL);
+    model = GTK_TREE_MODEL(data);
+    g_return_if_fail(RC_UI_IS_LIBRARY_PROP_STORE(model));
+    priv = RC_UI_LIBRARY_PROP_STORE(model)->priv;
+    if(priv==NULL) return;
+    pos = rclib_db_library_query_result_prop_get_position(qr,
+        priv->prop_type, iter) + 1;
+    path = gtk_tree_path_new();
+    gtk_tree_path_append_index(path, pos);
+    tree_iter.user_data = iter;
+    tree_iter.stamp = priv->stamp;
+    gtk_tree_model_row_inserted(model, path, &tree_iter);
+    gtk_tree_path_free(path);
+}
+
+static void rc_ui_library_prop_prop_delete_cb(RCLibDbLibraryQueryResult *qr,
+    guint prop_type, RCLibDbLibraryQueryResultPropIter *iter, gpointer data)
+{
+    RCUiLibraryPropStorePrivate *priv;
+    GtkTreeModel *model;
+    GtkTreePath *path;
+    gint pos;
+    if(data==NULL) return;
+    g_return_if_fail(iter!=NULL);
+    model = GTK_TREE_MODEL(data);
+    g_return_if_fail(RC_UI_IS_LIBRARY_PROP_STORE(model));
+    priv = RC_UI_LIBRARY_PROP_STORE(model)->priv;
+    if(priv==NULL) return;
+    pos = rclib_db_library_query_result_prop_get_position(qr, priv->prop_type,
+        iter) + 1;
+    path = gtk_tree_path_new();
+    gtk_tree_path_append_index(path, pos);
+    gtk_tree_model_row_deleted(model, path);
+    gtk_tree_path_free(path);
+}
+
+static void rc_ui_library_prop_prop_changed_cb(RCLibDbLibraryQueryResult *qr,
+    guint prop_type, RCLibDbLibraryQueryResultPropIter *iter, gpointer data)
+{
+    RCUiLibraryPropStorePrivate *priv;
+    GtkTreeModel *model;
+    GtkTreePath *path;
+    GtkTreeIter tree_iter;
+    gint pos;
+    if(data==NULL) return;
+    g_return_if_fail(iter!=NULL);
+    model = GTK_TREE_MODEL(data);
+    g_return_if_fail(RC_UI_IS_LIBRARY_PROP_STORE(model));
+    priv = RC_UI_LIBRARY_PROP_STORE(model)->priv;
+    if(priv==NULL) return;
+    pos = rclib_db_library_query_result_prop_get_position(qr,
+        priv->prop_type, iter) + 1;
+    path = gtk_tree_path_new();
+    gtk_tree_path_append_index(path, pos);
+    tree_iter.user_data = iter;
+    tree_iter.stamp = priv->stamp;
+    gtk_tree_model_row_changed(model, path, &tree_iter);
+    gtk_tree_path_free(path);
+}
 
 static GtkTreeModelFlags rc_ui_library_list_store_get_flags(
     GtkTreeModel *model)
@@ -342,12 +494,7 @@ static void rc_ui_library_list_store_get_value(GtkTreeModel *model,
         {
             gchar *duri = NULL;
             gchar *dtitle = NULL;
-            gchar *dalbum = NULL;
-            gchar *dartist = NULL;
             gchar *rtitle = NULL;
-            gchar *rartist, *ralbum;
-            GString *ftitle;
-            gsize i, len;
             library_data = rclib_db_library_query_result_get_data(
                 priv->query_result, seq_iter);
             if(library_data!=NULL)
@@ -355,8 +502,6 @@ static void rc_ui_library_list_store_get_value(GtkTreeModel *model,
                 rclib_db_library_data_get(library_data,
                     RCLIB_DB_PLAYLIST_DATA_TYPE_URI, &duri,
                     RCLIB_DB_PLAYLIST_DATA_TYPE_TITLE, &dtitle,
-                    RCLIB_DB_PLAYLIST_DATA_TYPE_ARTIST, &dartist,
-                    RCLIB_DB_PLAYLIST_DATA_TYPE_ALBUM, &dalbum,
                     RCLIB_DB_PLAYLIST_DATA_TYPE_NONE);
                 rclib_db_library_data_unref(library_data);
             }
@@ -370,48 +515,8 @@ static void rc_ui_library_list_store_get_value(GtkTreeModel *model,
             g_free(duri);
             g_free(dtitle);
             if(rtitle==NULL) rtitle = g_strdup(_("Unknown Title"));
-            if(dartist!=NULL && strlen(dartist)>0)
-                rartist = g_strdup(dartist);
-            else
-                rartist = g_strdup(_("Unknown Artist"));
-            g_free(dartist);
-            if(dalbum!=NULL && strlen(dalbum)>0)
-                ralbum = g_strdup(dalbum);
-            else
-                ralbum = g_strdup(_("Unknown Album"));
-            g_free(dalbum);
-            len = strlen(format_string);
-            ftitle = g_string_new(NULL);
-            for(i=0;i<len;i++)
-            {
-                if(format_string[i]!='%')
-                    g_string_append_c(ftitle, format_string[i]);
-                else
-                {
-                    if(strncmp(format_string+i, "%TITLE", 6)==0)
-                    {
-                        g_string_append(ftitle, rtitle);
-                        i+=5;
-                    }
-                    else if(strncmp(format_string+i, "%ARTIST", 7)==0)
-                    {
-                        g_string_append(ftitle, rartist);
-                        i+=6;
-                    }
-                    else if(strncmp(format_string+i, "%ALBUM", 6)==0)
-                    {
-                        g_string_append(ftitle, ralbum);
-                        i+=5;
-                    }
-                    else
-                        g_string_append_c(ftitle, format_string[i]);
-                }
-            }
-            g_free(rtitle);
-            g_free(rartist);
-            g_free(ralbum);
             g_value_init(value, G_TYPE_STRING);
-            g_value_take_string(value, g_string_free(ftitle, FALSE));
+            g_value_take_string(value, rtitle);
             break;
         }
         case RC_UI_LIBRARY_LIST_COLUMN_TITLE:
@@ -958,6 +1063,168 @@ static void rc_ui_library_prop_store_tree_model_init(GtkTreeModelIface *iface)
     iface->iter_parent = rc_ui_library_prop_store_iter_parent;
 }
 
+static void rc_ui_library_list_set_property(GObject *object,
+    guint prop_id, const GValue *value, GParamSpec *pspec)
+{
+    RCUiLibraryListStorePrivate *priv;
+    g_return_if_fail(RC_UI_IS_LIBRARY_LIST_STORE(object));
+    priv = RC_UI_LIBRARY_LIST_STORE(object)->priv;
+    if(priv==NULL) return;
+    switch(prop_id)
+    {
+        case LIST_STORE_PROP_QUERY_RESULT:
+        {
+            if(priv->query_result!=NULL)
+            {
+                if(priv->query_result_added_id>0)
+                {
+                    g_signal_handler_disconnect(priv->query_result,
+                        priv->query_result_added_id);
+                    priv->query_result_added_id = 0;
+                }
+                if(priv->query_result_delete_id>0)
+                {
+                    g_signal_handler_disconnect(priv->query_result,
+                        priv->query_result_delete_id);
+                    priv->query_result_delete_id = 0;
+                }
+                if(priv->query_result_changed_id>0)
+                {
+                    g_signal_handler_disconnect(priv->query_result,
+                        priv->query_result_changed_id);
+                    priv->query_result_changed_id = 0;
+                }
+                g_object_unref(priv->query_result);
+                priv->query_result = NULL;
+            }
+            priv->query_result = g_value_dup_object(value);
+            priv->query_result_added_id = g_signal_connect(priv->query_result,
+                "query-result-added",
+                G_CALLBACK(rc_ui_library_list_query_result_added_cb),
+                object);
+            priv->query_result_delete_id = g_signal_connect(priv->query_result,
+                "query-result-delete",
+                G_CALLBACK(rc_ui_library_list_query_result_delete_cb),
+                object);
+            priv->query_result_changed_id = g_signal_connect(priv->query_result,
+                "query-result-changed",
+                G_CALLBACK(rc_ui_library_list_query_result_changed_cb),
+                object);
+            break;
+        }
+        default:
+        {
+            G_OBJECT_WARN_INVALID_PROPERTY_ID(object, prop_id, pspec);
+            break;
+        }
+    }
+}
+
+static void rc_ui_library_prop_set_property(GObject *object,
+    guint prop_id, const GValue *value, GParamSpec *pspec)
+{
+    RCUiLibraryPropStorePrivate *priv;
+    g_return_if_fail(RC_UI_IS_LIBRARY_PROP_STORE(object));
+    priv = RC_UI_LIBRARY_PROP_STORE(object)->priv;
+    if(priv==NULL) return;
+    switch(prop_id)
+    {
+        case PROP_STORE_PROP_BASE:
+        {
+            if(priv->base!=NULL)
+            {
+                if(priv->prop_added_id>0)
+                {
+                    g_signal_handler_disconnect(priv->base,
+                        priv->prop_added_id);
+                    priv->prop_added_id = 0;
+                }
+                if(priv->prop_delete_id>0)
+                {
+                    g_signal_handler_disconnect(priv->base,
+                        priv->prop_delete_id);
+                    priv->prop_delete_id = 0;
+                }
+                if(priv->prop_changed_id>0)
+                {
+                    g_signal_handler_disconnect(priv->base,
+                        priv->prop_changed_id);
+                    priv->prop_changed_id = 0;
+                }
+                g_object_unref(priv->base);
+                priv->base = NULL;
+            }
+            priv->base = g_value_dup_object(value);
+            priv->prop_added_id = g_signal_connect(priv->base, "prop-added",
+                G_CALLBACK(rc_ui_library_prop_prop_added_cb), object);
+            priv->prop_delete_id = g_signal_connect(priv->base, "prop-delete",
+                G_CALLBACK(rc_ui_library_prop_prop_delete_cb), object);
+            priv->prop_changed_id = g_signal_connect(priv->base,
+                "prop-changed", G_CALLBACK(rc_ui_library_prop_prop_changed_cb),
+                object);
+            break;
+        }
+        case PROP_STORE_PROP_PROP_TYPE:
+        {
+            priv->prop_type = g_value_get_uint(value);
+            break;
+        }
+        default:
+        {
+            G_OBJECT_WARN_INVALID_PROPERTY_ID(object, prop_id, pspec);
+            break;
+        }
+    }
+}
+
+static void rc_ui_library_list_get_property(GObject *object,
+    guint prop_id, GValue *value, GParamSpec *pspec)
+{
+    RCUiLibraryListStorePrivate *priv;
+    g_return_if_fail(RC_UI_IS_LIBRARY_LIST_STORE(object));
+    priv = RC_UI_LIBRARY_LIST_STORE(object)->priv;
+    if(priv==NULL) return;
+    switch(prop_id)
+    {
+        case LIST_STORE_PROP_QUERY_RESULT:
+        {
+            g_value_set_object(value, priv->query_result);
+            break;
+        }
+        default:
+        {
+            G_OBJECT_WARN_INVALID_PROPERTY_ID(object, prop_id, pspec);
+            break;
+        }
+    }
+}
+
+static void rc_ui_library_prop_get_property(GObject *object,
+    guint prop_id, GValue *value, GParamSpec *pspec)
+{
+    RCUiLibraryPropStorePrivate *priv;
+    g_return_if_fail(RC_UI_IS_LIBRARY_PROP_STORE(object));
+    priv = RC_UI_LIBRARY_PROP_STORE(object)->priv;
+    if(priv==NULL) return;
+    switch(prop_id)
+    {
+        case PROP_STORE_PROP_BASE:
+        {
+            g_value_set_object(value, priv->base);
+            break;
+        }
+        case PROP_STORE_PROP_PROP_TYPE:
+        {
+            g_value_set_uint(value, priv->prop_type);
+        }
+        default:
+        {
+            G_OBJECT_WARN_INVALID_PROPERTY_ID(object, prop_id, pspec);
+            break;
+        }
+    }
+}
+
 static void rc_ui_library_list_store_finalize(GObject *object)
 {
     RCUiLibraryListStorePrivate *priv;
@@ -966,6 +1233,24 @@ static void rc_ui_library_list_store_finalize(GObject *object)
     RC_UI_LIBRARY_LIST_STORE(object)->priv = NULL;
     if(priv->query_result!=NULL)
     {
+        if(priv->query_result_added_id>0)
+        {
+            g_signal_handler_disconnect(priv->query_result,
+                priv->query_result_added_id);
+            priv->query_result_added_id = 0;
+        }
+        if(priv->query_result_delete_id>0)
+        {
+            g_signal_handler_disconnect(priv->query_result,
+                priv->query_result_delete_id);
+            priv->query_result_delete_id = 0;
+        }
+        if(priv->query_result_changed_id>0)
+        {
+            g_signal_handler_disconnect(priv->query_result,
+                priv->query_result_changed_id);
+            priv->query_result_changed_id = 0;
+        }
         g_object_unref(priv->query_result);
         priv->query_result = NULL;
     }
@@ -973,7 +1258,7 @@ static void rc_ui_library_list_store_finalize(GObject *object)
     {
         g_object_unref(priv->base);
         priv->base = NULL;
-    }    
+    }
     G_OBJECT_CLASS(rc_ui_library_list_store_parent_class)->finalize(object);
 }
 
@@ -985,6 +1270,21 @@ static void rc_ui_library_prop_store_finalize(GObject *object)
     RC_UI_LIBRARY_PROP_STORE(object)->priv = NULL;
     if(priv->base!=NULL)
     {
+        if(priv->prop_added_id>0)
+        {
+            g_signal_handler_disconnect(priv->base, priv->prop_added_id);
+            priv->prop_added_id = 0;
+        }   
+        if(priv->prop_delete_id>0)
+        {
+            g_signal_handler_disconnect(priv->base, priv->prop_delete_id);
+            priv->prop_delete_id = 0;
+        }
+        if(priv->prop_changed_id>0)
+        {
+            g_signal_handler_disconnect(priv->base, priv->prop_changed_id);
+            priv->prop_changed_id = 0;
+        }
         g_object_unref(priv->base);
         priv->base = NULL;
     }   
@@ -995,9 +1295,23 @@ static void rc_ui_library_list_store_class_init(
     RCUiLibraryListStoreClass *klass)
 {
     GObjectClass *object_class = (GObjectClass *)klass;
-    rc_ui_library_prop_store_parent_class = g_type_class_peek_parent(klass);
+    rc_ui_library_list_store_parent_class = g_type_class_peek_parent(klass);
     object_class->finalize = rc_ui_library_list_store_finalize;
+    object_class->set_property = rc_ui_library_list_set_property;
+    object_class->get_property = rc_ui_library_list_get_property;
     g_type_class_add_private(klass, sizeof(RCUiLibraryListStorePrivate));
+    
+    /**
+     * RCUiLibraryListStore:query-result:
+     *
+     * Sets the query result object of the library list store.
+     *
+     */
+    g_object_class_install_property(object_class, LIST_STORE_PROP_QUERY_RESULT,
+        g_param_spec_object("query-result", "Query Result",
+        "The query result of the library list store",
+        RCLIB_TYPE_DB_LIBRARY_QUERY_RESULT, G_PARAM_READWRITE |
+        G_PARAM_CONSTRUCT_ONLY));
 }
 
 static void rc_ui_library_prop_store_class_init(
@@ -1006,7 +1320,34 @@ static void rc_ui_library_prop_store_class_init(
     GObjectClass *object_class = (GObjectClass *)klass;
     rc_ui_library_prop_store_parent_class = g_type_class_peek_parent(klass);
     object_class->finalize = rc_ui_library_prop_store_finalize;
+    object_class->set_property = rc_ui_library_prop_set_property;
+    object_class->get_property = rc_ui_library_prop_get_property;
     g_type_class_add_private(klass, sizeof(RCUiLibraryPropStorePrivate));
+    
+    /**
+     * RCUiLibraryPropStore:base:
+     *
+     * Sets the base query result object of the library property store.
+     *
+     */
+    g_object_class_install_property(object_class, PROP_STORE_PROP_BASE,
+        g_param_spec_object("base", "Base Query Result",
+        "The base query result of the library property store",
+        RCLIB_TYPE_DB_LIBRARY_QUERY_RESULT, G_PARAM_READWRITE |
+        G_PARAM_CONSTRUCT_ONLY));
+        
+    /**
+     * RCUiLibraryPropStore:property-type:
+     *
+     * Sets the property type for the library property store.
+     *
+     */
+    g_object_class_install_property(object_class, PROP_STORE_PROP_BASE,
+        g_param_spec_uint("property-type", "Property Type",
+        "The property type of the library property store",
+        RCLIB_DB_QUERY_DATA_TYPE_NONE, RCLIB_DB_QUERY_DATA_TYPE_GENRE,
+        RCLIB_DB_QUERY_DATA_TYPE_ARTIST, G_PARAM_READWRITE |
+        G_PARAM_CONSTRUCT_ONLY));
 }
 
 static void rc_ui_library_list_store_init(RCUiLibraryListStore *store)
@@ -1103,7 +1444,7 @@ GType rc_ui_library_prop_store_get_type()
  * 
  * Create a new library list store.
  * 
- * Returns: The new library list store, #NULL if failed.
+ * Returns: (transfer full): The new library list store, #NULL if failed.
  */
 
 GtkTreeModel *rc_ui_library_list_store_new(
@@ -1121,7 +1462,7 @@ GtkTreeModel *rc_ui_library_list_store_new(
  * 
  * Create a new library property store.
  * 
- * Returns: The new library property store, #NULL if failed.
+ * Returns: (transfer full): The new library property store, #NULL if failed.
  */
 
 GtkTreeModel *rc_ui_library_prop_store_new(

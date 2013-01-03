@@ -956,7 +956,6 @@ gboolean _rclib_db_library_import_idle_cb(gpointer data)
     if(idle_data->mmd==NULL) return FALSE;
     priv = RCLIB_DB(instance)->priv;
     if(priv==NULL) return FALSE;
-    if(instance==NULL) return FALSE;
     if(idle_data->mmd->uri==NULL)
     {
         rclib_db_library_import_idle_data_free(idle_data);
@@ -976,14 +975,10 @@ gboolean _rclib_db_library_import_idle_cb(gpointer data)
     library_data->tracknum = mmd->tracknum;
     library_data->year = mmd->year;
     library_data->rating = 3.0;
-    g_hash_table_replace(priv->library_table, g_strdup(library_data->uri),
+    _rclib_db_library_append_data_internal(library_data->uri,
         library_data);
-    priv->dirty_flag = TRUE;
-    
-    /* Send a signal that the operation succeeded. */
-    g_signal_emit_by_name(instance, "library-added",
-        library_data->uri);
-        
+    rclib_db_library_data_unref(library_data);
+    priv->dirty_flag = TRUE;        
     rclib_db_library_import_idle_data_free(idle_data);
     return FALSE;
 }
@@ -1008,10 +1003,12 @@ gboolean _rclib_db_library_refresh_idle_cb(gpointer data)
         return FALSE;
     }
     mmd = idle_data->mmd;
+    g_rw_lock_writer_lock(&(priv->library_rw_lock));
     library_data = g_hash_table_lookup(priv->library_table, mmd->uri);
     if(library_data==NULL)
     {
         rclib_db_library_refresh_idle_data_free(idle_data);
+        g_rw_lock_writer_unlock(&(priv->library_rw_lock));
         return FALSE;
     }
     library_data->type = idle_data->type;
@@ -1030,6 +1027,7 @@ gboolean _rclib_db_library_refresh_idle_cb(gpointer data)
         library_data->tracknum = mmd->tracknum;
         library_data->year = mmd->year;
     }
+    g_rw_lock_writer_unlock(&(priv->library_rw_lock));
     priv->dirty_flag = TRUE;
     
     /* Send a signal that the operation succeeded. */
@@ -1038,6 +1036,28 @@ gboolean _rclib_db_library_refresh_idle_cb(gpointer data)
     
     rclib_db_library_refresh_idle_data_free(idle_data);
     return FALSE;
+}
+
+void _rclib_db_library_append_data_internal(const gchar *uri,
+    RCLibDbLibraryData *library_data)
+{
+    RCLibDbPrivate *priv;
+    GObject *instance;
+    instance = rclib_db_get_instance();
+    if(instance==NULL) return;
+    priv = RCLIB_DB(instance)->priv;
+    if(priv==NULL) return;
+    g_rw_lock_writer_lock(&(priv->library_rw_lock));
+    if(g_hash_table_contains(priv->library_table, uri))
+    {
+        g_rw_lock_writer_unlock(&(priv->library_rw_lock));
+        return;
+    }
+    library_data = rclib_db_library_data_ref(library_data);
+    g_hash_table_replace(priv->library_table, g_strdup(uri),
+        library_data);
+    g_rw_lock_writer_unlock(&(priv->library_rw_lock));
+    g_signal_emit_by_name(instance, "library-added", uri);
 }
 
 /**
@@ -1246,25 +1266,28 @@ static void rclib_db_library_query_result_finalize(GObject *object)
         RCLIB_DB_LIBRARY_QUERY_RESULT(object)->priv;
     RCLibDbQuery **query_data = NULL;
     RCLIB_DB_LIBRARY_QUERY_RESULT(object)->priv = NULL;
-    if(priv->base_query_result!=NULL)
-    {
-        g_object_unref(priv->base_query_result);
-        priv->base_query_result = NULL;
-    }
     if(priv->base_added_id>0)
     {
-        rclib_db_signal_disconnect(priv->base_added_id);
+        g_signal_handler_disconnect(priv->base_query_result,
+            priv->base_added_id);
         priv->base_added_id = 0;
     }    
     if(priv->base_changed_id>0)
     {
-        rclib_db_signal_disconnect(priv->base_changed_id);
+        g_signal_handler_disconnect(priv->base_query_result,
+            priv->base_changed_id);
         priv->base_changed_id = 0;
     }
     if(priv->base_delete_id>0)
     {
-        rclib_db_signal_disconnect(priv->base_delete_id);
+        g_signal_handler_disconnect(priv->base_query_result,
+            priv->base_delete_id);
         priv->base_delete_id = 0;
+    }
+    if(priv->base_query_result!=NULL)
+    {
+        g_object_unref(priv->base_query_result);
+        priv->base_query_result = NULL;
     }
     if(priv->library_added_id>0)
     {
@@ -1507,12 +1530,48 @@ gboolean _rclib_db_instance_init_library(RCLibDb *db, RCLibDbPrivate *priv)
         g_str_equal, g_free, (GDestroyNotify)g_hash_table_destroy);
     
     g_rw_lock_init(&(priv->library_rw_lock));
+    
+    priv->library_query_base = rclib_db_library_query_result_new();
+    priv->library_query_genre = rclib_db_library_query_result_new();
+    priv->library_query_artist = rclib_db_library_query_result_new();
+    priv->library_query_album = rclib_db_library_query_result_new();
+    
+    rclib_db_library_query_result_chain(RCLIB_DB_LIBRARY_QUERY_RESULT(
+        priv->library_query_genre), RCLIB_DB_LIBRARY_QUERY_RESULT(
+        priv->library_query_base), FALSE);
+    rclib_db_library_query_result_chain(RCLIB_DB_LIBRARY_QUERY_RESULT(
+        priv->library_query_artist), RCLIB_DB_LIBRARY_QUERY_RESULT(
+        priv->library_query_genre), FALSE);
+    rclib_db_library_query_result_chain(RCLIB_DB_LIBRARY_QUERY_RESULT(
+        priv->library_query_album), RCLIB_DB_LIBRARY_QUERY_RESULT(
+        priv->library_query_artist), FALSE);
+    
     return TRUE;
 }
 
 void _rclib_db_instance_finalize_library(RCLibDbPrivate *priv)
 {
     if(priv==NULL) return;
+    if(priv->library_query_album!=NULL)
+    {
+        g_object_unref(priv->library_query_album);
+        priv->library_query_album = NULL;
+    }
+    if(priv->library_query_artist!=NULL)
+    {
+        g_object_unref(priv->library_query_artist);
+        priv->library_query_artist = NULL;
+    }
+    if(priv->library_query_genre!=NULL)
+    {
+        g_object_unref(priv->library_query_genre);
+        priv->library_query_genre = NULL;
+    }
+    if(priv->library_query_base!=NULL)
+    {
+        g_object_unref(priv->library_query_base);
+        priv->library_query_base = NULL;
+    }
     g_rw_lock_writer_lock(&(priv->library_rw_lock));
     if(priv->library_query!=NULL)
         g_sequence_free(priv->library_query);
@@ -3181,12 +3240,13 @@ void rclib_db_library_query_result_chain(
         g_thread_join(priv->query_thread);
         priv->query_thread = NULL;
     }
-    priv->base_added_id = rclib_db_signal_connect("query-result-added",
-        G_CALLBACK(rclib_db_library_query_result_base_added_cb), base);
-    priv->base_delete_id = rclib_db_signal_connect("query-result-delete",
-        G_CALLBACK(rclib_db_library_query_result_base_delete_cb), base);
-    priv->base_changed_id = rclib_db_signal_connect("query-result-changed",
-        G_CALLBACK(rclib_db_library_query_result_base_changed_cb), base);
+    priv->base_added_id = g_signal_connect(base, "query-result-added",
+        G_CALLBACK(rclib_db_library_query_result_base_added_cb), query_result);
+    priv->base_delete_id = g_signal_connect(base, "query-result-delete",
+        G_CALLBACK(rclib_db_library_query_result_base_delete_cb), query_result);
+    priv->base_changed_id = g_signal_connect(base, "query-result-changed",
+        G_CALLBACK(rclib_db_library_query_result_base_changed_cb),
+        query_result);
     priv->base_query_result = base;
 }
 

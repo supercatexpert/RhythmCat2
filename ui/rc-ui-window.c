@@ -26,6 +26,7 @@
 #include "rc-ui-window.h"
 #include "rc-ui-listview.h"
 #include "rc-ui-listmodel.h"
+#include "rc-ui-library-model.h"
 #include "rc-ui-menu.h"
 #include "rc-ui-dialog.h"
 #include "rc-ui-slabel.h"
@@ -84,6 +85,10 @@ struct _RCUiMainWindowPrivate
     GtkWidget *progress_eventbox;
     GdkPixbuf *cover_default_pixbuf;
     GdkPixbuf *cover_using_pixbuf;
+    GtkTreeModel *library_genre_model;
+    GtkTreeModel *library_album_model;
+    GtkTreeModel *library_artist_model;
+    GtkTreeModel *library_list_model;
     gchar *cover_file_path;
     GtkStatusIcon *tray_icon;
     guint cover_image_width;
@@ -1272,6 +1277,15 @@ static void rc_ui_main_window_finalize(GObject *object)
         rclib_album_signal_disconnect(priv->album_found_id);
     if(priv->album_none_id>0)
         rclib_album_signal_disconnect(priv->album_none_id);
+    
+    if(priv->library_genre_model!=NULL)
+        g_object_unref(priv->library_genre_model);
+    if(priv->library_album_model!=NULL)
+        g_object_unref(priv->library_album_model);
+    if(priv->library_artist_model!=NULL)
+        g_object_unref(priv->library_artist_model);
+    if(priv->library_list_model!=NULL)
+        g_object_unref(priv->library_list_model);
     G_OBJECT_CLASS(rc_ui_main_window_parent_class)->finalize(object);
 }
 
@@ -1466,7 +1480,15 @@ static void rc_ui_main_window_instance_init(RCUiMainWindow *window)
         catalog_selection, NULL);
     rc_ui_main_window_playlist_listview_selection_changed_cb(
         playlist_selection, NULL); 
-    g_object_unref(icon_pixbuf);   
+    g_object_unref(icon_pixbuf);
+    
+    priv->library_genre_model = rc_ui_library_prop_store_new(NULL,
+        RCLIB_DB_QUERY_DATA_TYPE_GENRE);
+    priv->library_album_model = rc_ui_library_prop_store_new(NULL,
+        RCLIB_DB_QUERY_DATA_TYPE_ALBUM);
+    priv->library_artist_model = rc_ui_library_prop_store_new(NULL,
+        RCLIB_DB_QUERY_DATA_TYPE_ARTIST);
+    priv->library_list_model = rc_ui_library_list_store_new(NULL);
 }
 
 GType rc_ui_main_window_get_type()

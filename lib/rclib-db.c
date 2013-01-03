@@ -934,8 +934,9 @@ static void rclib_db_xml_parser_start_element_cb(GMarkupParseContext *context,
                 library_data->genre = g_strdup(attribute_values[i]);
             }
         }
-        g_hash_table_replace(parser_data->library_table,
-            g_strdup(library_data->uri), library_data);
+        _rclib_db_library_append_data_internal(library_data->uri,
+            library_data);
+        rclib_db_library_data_unref(library_data);
     }
 }
 

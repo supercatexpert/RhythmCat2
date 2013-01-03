@@ -105,6 +105,10 @@ struct _RCLibDbPrivate
     GHashTable *library_table;
     GRWLock library_rw_lock;
     GHashTable *library_keyword_table;
+    GObject *library_query_base;
+    GObject *library_query_genre;
+    GObject *library_query_artist;
+    GObject *library_query_album;
     GThread *import_thread;
     GThread *refresh_thread;
     GThread *autosave_thread;
@@ -223,6 +227,8 @@ RCLibDbPlaylistIter *_rclib_db_playlist_append_data_internal(
     RCLibDbPlaylistData *playlist_data);
 gboolean _rclib_db_library_import_idle_cb(gpointer data);
 gboolean _rclib_db_library_refresh_idle_cb(gpointer data);
+void _rclib_db_library_append_data_internal(const gchar *uri,
+    RCLibDbLibraryData *library_data);
 
 #endif
 
