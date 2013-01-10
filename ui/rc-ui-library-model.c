@@ -79,20 +79,22 @@ static gpointer rc_ui_library_list_store_parent_class = NULL;
 static gpointer rc_ui_library_prop_store_parent_class = NULL;
 
 static void rc_ui_library_list_query_result_added_cb(
-    RCLibDbLibraryQueryResult *qr, RCLibDbLibraryQueryResultIter *iter,
-    gpointer data)
+    RCLibDbLibraryQueryResult *qr, const gchar *uri, gpointer data)
 {
     RCUiLibraryListStorePrivate *priv;
     GtkTreeModel *model;
     GtkTreePath *path;
     GtkTreeIter tree_iter;
+    RCLibDbLibraryQueryResultIter *iter;
     gint pos;
+    if(uri==NULL) return;
     if(data==NULL) return;
-    g_return_if_fail(iter!=NULL);
     model = GTK_TREE_MODEL(data);
     g_return_if_fail(RC_UI_IS_LIBRARY_LIST_STORE(model));
     priv = RC_UI_LIBRARY_LIST_STORE(model)->priv;
     if(priv==NULL) return;
+    iter = rclib_db_library_query_result_get_iter_by_uri(qr, uri);
+    if(iter==NULL) return;
     pos = rclib_db_library_query_result_get_position(qr, iter);
     path = gtk_tree_path_new();
     gtk_tree_path_append_index(path, pos);
@@ -103,16 +105,18 @@ static void rc_ui_library_list_query_result_added_cb(
 }
 
 static void rc_ui_library_list_query_result_delete_cb(
-    RCLibDbLibraryQueryResult *qr, RCLibDbLibraryQueryResultIter *iter,
-    gpointer data)
+    RCLibDbLibraryQueryResult *qr, const gchar *uri, gpointer data)
 {
     GtkTreeModel *model;
     GtkTreePath *path;
     gint pos;
+    RCLibDbLibraryQueryResultIter *iter;
+    if(uri==NULL) return;
     if(data==NULL) return;
-    g_return_if_fail(iter!=NULL);
     model = GTK_TREE_MODEL(data);
     g_return_if_fail(RC_UI_IS_LIBRARY_LIST_STORE(model));
+    iter = rclib_db_library_query_result_get_iter_by_uri(qr, uri);
+    if(iter==NULL) return;
     pos = rclib_db_library_query_result_get_position(qr, iter);
     path = gtk_tree_path_new();
     gtk_tree_path_append_index(path, pos);
@@ -121,20 +125,22 @@ static void rc_ui_library_list_query_result_delete_cb(
 }
 
 static void rc_ui_library_list_query_result_changed_cb(
-    RCLibDbLibraryQueryResult *qr, RCLibDbLibraryQueryResultIter *iter,
-    gpointer data)
+    RCLibDbLibraryQueryResult *qr, const gchar *uri, gpointer data)
 {
     RCUiLibraryListStorePrivate *priv;
     GtkTreeModel *model;
     GtkTreePath *path;
     GtkTreeIter tree_iter;
+    RCLibDbLibraryQueryResultIter *iter;
     gint pos;
+    if(uri==NULL) return;
     if(data==NULL) return;
-    g_return_if_fail(iter!=NULL);
     model = GTK_TREE_MODEL(data);
     g_return_if_fail(RC_UI_IS_LIBRARY_LIST_STORE(model));
     priv = RC_UI_LIBRARY_LIST_STORE(model)->priv;
     if(priv==NULL) return;
+    iter = rclib_db_library_query_result_get_iter_by_uri(qr, uri);
+    if(iter==NULL) return;
     pos = rclib_db_library_query_result_get_position(qr, iter);
     path = gtk_tree_path_new();
     gtk_tree_path_append_index(path, pos);
@@ -145,19 +151,23 @@ static void rc_ui_library_list_query_result_changed_cb(
 }
 
 static void rc_ui_library_prop_prop_added_cb(RCLibDbLibraryQueryResult *qr,
-    guint prop_type, RCLibDbLibraryQueryResultPropIter *iter, gpointer data)
+    guint prop_type, const gchar *prop_text, gpointer data)
 {
     RCUiLibraryPropStorePrivate *priv;
     GtkTreeModel *model;
     GtkTreePath *path;
     GtkTreeIter tree_iter;
+    RCLibDbLibraryQueryResultPropIter *iter;
     gint pos;
+    if(prop_text==NULL) return;
     if(data==NULL) return;
-    g_return_if_fail(iter!=NULL);
     model = GTK_TREE_MODEL(data);
     g_return_if_fail(RC_UI_IS_LIBRARY_PROP_STORE(model));
     priv = RC_UI_LIBRARY_PROP_STORE(model)->priv;
     if(priv==NULL) return;
+    iter = rclib_db_library_query_result_prop_get_iter_by_prop(qr,
+        priv->prop_type, prop_text);
+    if(iter==NULL) return;
     pos = rclib_db_library_query_result_prop_get_position(qr,
         priv->prop_type, iter) + 1;
     path = gtk_tree_path_new();
@@ -169,18 +179,22 @@ static void rc_ui_library_prop_prop_added_cb(RCLibDbLibraryQueryResult *qr,
 }
 
 static void rc_ui_library_prop_prop_delete_cb(RCLibDbLibraryQueryResult *qr,
-    guint prop_type, RCLibDbLibraryQueryResultPropIter *iter, gpointer data)
+    guint prop_type, const gchar *prop_text, gpointer data)
 {
     RCUiLibraryPropStorePrivate *priv;
     GtkTreeModel *model;
     GtkTreePath *path;
     gint pos;
+    RCLibDbLibraryQueryResultPropIter *iter;
+    if(prop_text==NULL) return;
     if(data==NULL) return;
-    g_return_if_fail(iter!=NULL);
     model = GTK_TREE_MODEL(data);
     g_return_if_fail(RC_UI_IS_LIBRARY_PROP_STORE(model));
     priv = RC_UI_LIBRARY_PROP_STORE(model)->priv;
     if(priv==NULL) return;
+    iter = rclib_db_library_query_result_prop_get_iter_by_prop(qr,
+        priv->prop_type, prop_text);
+    if(iter==NULL) return;
     pos = rclib_db_library_query_result_prop_get_position(qr, priv->prop_type,
         iter) + 1;
     path = gtk_tree_path_new();
@@ -1342,7 +1356,7 @@ static void rc_ui_library_prop_store_class_init(
      * Sets the property type for the library property store.
      *
      */
-    g_object_class_install_property(object_class, PROP_STORE_PROP_BASE,
+    g_object_class_install_property(object_class, PROP_STORE_PROP_PROP_TYPE,
         g_param_spec_uint("property-type", "Property Type",
         "The property type of the library property store",
         RCLIB_DB_QUERY_DATA_TYPE_NONE, RCLIB_DB_QUERY_DATA_TYPE_GENRE,

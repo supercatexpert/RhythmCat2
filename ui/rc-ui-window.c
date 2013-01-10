@@ -1330,6 +1330,7 @@ static void rc_ui_main_window_instance_init(RCUiMainWindow *window)
         RC_UI_TYPE_MAIN_WINDOW, RCUiMainWindowPrivate);
     window->priv = priv;
     GdkPixbuf *icon_pixbuf;
+    GObject *library_query_result;
     GdkGeometry main_window_hints =
     {
         .min_width = 500,
@@ -1482,13 +1483,25 @@ static void rc_ui_main_window_instance_init(RCUiMainWindow *window)
         playlist_selection, NULL); 
     g_object_unref(icon_pixbuf);
     
-    priv->library_genre_model = rc_ui_library_prop_store_new(NULL,
+    library_query_result = rclib_db_library_get_base_query_result();
+    priv->library_genre_model = rc_ui_library_prop_store_new(
+        RCLIB_DB_LIBRARY_QUERY_RESULT(library_query_result),
         RCLIB_DB_QUERY_DATA_TYPE_GENRE);
-    priv->library_album_model = rc_ui_library_prop_store_new(NULL,
-        RCLIB_DB_QUERY_DATA_TYPE_ALBUM);
-    priv->library_artist_model = rc_ui_library_prop_store_new(NULL,
+    g_object_unref(library_query_result);
+    library_query_result = rclib_db_library_get_genre_query_result();
+    priv->library_artist_model = rc_ui_library_prop_store_new(
+        RCLIB_DB_LIBRARY_QUERY_RESULT(library_query_result),
         RCLIB_DB_QUERY_DATA_TYPE_ARTIST);
-    priv->library_list_model = rc_ui_library_list_store_new(NULL);
+    g_object_unref(library_query_result);
+    library_query_result = rclib_db_library_get_artist_query_result();   
+    priv->library_album_model = rc_ui_library_prop_store_new(
+        RCLIB_DB_LIBRARY_QUERY_RESULT(library_query_result),
+        RCLIB_DB_QUERY_DATA_TYPE_ALBUM);
+    g_object_unref(library_query_result);
+    library_query_result = rclib_db_library_get_album_query_result();
+    priv->library_list_model = rc_ui_library_list_store_new(
+        RCLIB_DB_LIBRARY_QUERY_RESULT(library_query_result));
+    g_object_unref(library_query_result);
 }
 
 GType rc_ui_main_window_get_type()

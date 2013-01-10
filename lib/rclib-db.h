@@ -383,17 +383,17 @@ struct _RCLibDbLibraryQueryResultClass {
     /*< private >*/
     GObjectClass parent_class;
     void (*query_result_added)(RCLibDbLibraryQueryResult *qr,
-        RCLibDbLibraryQueryResultIter *iter);
+        const gchar *uri);
     void (*query_result_delete)(RCLibDbLibraryQueryResult *qr,
-        RCLibDbLibraryQueryResultIter *iter);
+        const gchar *uri);
     void (*query_result_changed)(RCLibDbLibraryQueryResult *qr,
-        RCLibDbLibraryQueryResultIter *iter);
+        const gchar *uri);
     void (*prop_added)(RCLibDbLibraryQueryResult *qr,
-        guint prop_type, RCLibDbLibraryQueryResultPropIter *iter);
+        guint prop_type, const gchar *prop_string);
     void (*prop_delete)(RCLibDbLibraryQueryResult *qr,
-        guint prop_type, RCLibDbLibraryQueryResultPropIter *iter);
+        guint prop_type, const gchar *prop_string);
     void (*prop_changed)(RCLibDbLibraryQueryResult *qr,
-        guint prop_type, RCLibDbLibraryQueryResultPropIter *iter);
+        guint prop_type, const gchar *prop_string);
 };
 
 /*< private >*/
@@ -568,7 +568,12 @@ GPtrArray *rclib_db_library_query(RCLibDbQuery *query,
     GCancellable *cancellable);
 GPtrArray *rclib_db_library_query_get_uris(RCLibDbQuery *query,
     GCancellable *cancellable);
-GObject *rclib_db_library_query_result_new();
+GObject *rclib_db_library_get_base_query_result();
+GObject *rclib_db_library_get_genre_query_result();
+GObject *rclib_db_library_get_artist_query_result();
+GObject *rclib_db_library_get_album_query_result();
+GObject *rclib_db_library_query_result_new(RCLibDbLibraryQueryResult *base,
+    RCLibDbQueryDataType *prop_types);
 void rclib_db_library_query_result_copy_contents(
     RCLibDbLibraryQueryResult *dst, RCLibDbLibraryQueryResult *src);
 void rclib_db_library_query_result_chain(
@@ -579,6 +584,8 @@ RCLibDbLibraryQueryResult *rclib_db_library_query_result_get_base(
 RCLibDbLibraryData *rclib_db_library_query_result_get_data(
     RCLibDbLibraryQueryResult *query_result,
     RCLibDbLibraryQueryResultIter *iter);
+RCLibDbLibraryQueryResultIter *rclib_db_library_query_result_get_iter_by_uri(
+    RCLibDbLibraryQueryResult *query_result, const gchar *uri);
 guint rclib_db_library_query_result_get_length(
     RCLibDbLibraryQueryResult *query_result);
 RCLibDbLibraryQueryResultIter *rclib_db_library_query_result_get_begin_iter(
@@ -605,7 +612,7 @@ gboolean rclib_db_library_query_result_iter_is_end(
 void rclib_db_library_query_result_set_query(
     RCLibDbLibraryQueryResult *query_result, const RCLibDbQuery *query);    
 void rclib_db_library_query_result_query_start(
-    RCLibDbLibraryQueryResult *query_result);
+    RCLibDbLibraryQueryResult *query_result, gboolean clear);
 void rclib_db_library_query_result_query_cancel(
     RCLibDbLibraryQueryResult *query_result);
 void rclib_db_library_query_result_query_clear(
@@ -619,6 +626,10 @@ gboolean rclib_db_library_query_result_prop_get_data(
 gboolean rclib_db_library_query_result_prop_get_total_count(
     RCLibDbLibraryQueryResult *query_result, RCLibDbQueryDataType prop_type,
     guint *count);
+RCLibDbLibraryQueryResultPropIter *
+    rclib_db_library_query_result_prop_get_iter_by_prop(
+    RCLibDbLibraryQueryResult *query_result, RCLibDbQueryDataType prop_type,
+    const gchar *prop_text);
 guint rclib_db_library_query_result_prop_get_length(
     RCLibDbLibraryQueryResult *query_result, RCLibDbQueryDataType prop_type);
 RCLibDbLibraryQueryResultPropIter *
