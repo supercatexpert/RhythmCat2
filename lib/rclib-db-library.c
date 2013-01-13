@@ -37,9 +37,11 @@ enum
     SIGNAL_LIBRARY_QUERY_RESULT_ADDED,
     SIGNAL_LIBRARY_QUERY_RESULT_DELETE,
     SIGNAL_LIBRARY_QUERY_RESULT_CHANGED,
+    SIGNAL_LIBRARY_QUERY_RESULT_REORDERED,
     SIGNAL_LIBRARY_QUERY_RESULT_PROP_ADDED,
     SIGNAL_LIBRARY_QUERY_RESULT_PROP_DELETE,
     SIGNAL_LIBRARY_QUERY_RESULT_PROP_CHANGED,
+    SIGNAL_LIBRARY_QUERY_RESULT_PROP_REORDERED,
     SIGNAL_LIBRARY_QUERY_RESULT_LAST
 };
 
@@ -60,6 +62,7 @@ typedef struct _RCLibDbLibraryQueryResultPropItem
     GHashTable *prop_name_table;
     GHashTable *prop_uri_table;
     guint count;
+    gboolean sort_direction;
 }RCLibDbLibraryQueryResultPropItem;
 
 typedef struct _RCLibDbLibraryQueryResultPropData
@@ -71,6 +74,26 @@ typedef struct _RCLibDbLibraryQueryResultPropData
 static gint db_library_query_result_signals[SIGNAL_LIBRARY_QUERY_RESULT_LAST] =
     {0};
 static gpointer rclib_db_library_query_result_parent_class = NULL;
+
+static gint rclib_db_variant_sort_asc_func(GSequenceIter *a, GSequenceIter *b,
+    gpointer user_data)
+{
+    GHashTable *new_positions = user_data;
+    GVariant *variant1, *variant2;
+    variant1 = g_hash_table_lookup(new_positions, a);
+    variant2 = g_hash_table_lookup(new_positions, b);
+    return g_variant_compare(variant1, variant2);
+}
+
+static gint rclib_db_variant_sort_dsc_func(GSequenceIter *a, GSequenceIter *b,
+    gpointer user_data)
+{
+    GHashTable *new_positions = user_data;
+    GVariant *variant1, *variant2;
+    variant1 = g_hash_table_lookup(new_positions, a);
+    variant2 = g_hash_table_lookup(new_positions, b);
+    return g_variant_compare(variant2, variant1);
+}
 
 static RCLibDbLibraryQueryResultPropData *
     rclib_db_library_query_result_prop_data_new()
@@ -85,7 +108,9 @@ static void rclib_db_library_query_result_prop_data_free(
 {
     if(data==NULL) return;
     if(data->prop_name!=NULL)
+    {
         g_free(data->prop_name);
+    }
     g_free(data);
 }
 
@@ -1381,6 +1406,23 @@ static void rclib_db_library_query_result_class_init(
         G_STRUCT_OFFSET(RCLibDbLibraryQueryResultClass, query_result_changed),
         NULL, NULL, g_cclosure_marshal_VOID__STRING, G_TYPE_NONE, 1,
         G_TYPE_STRING, NULL);
+        
+    /**
+     * RCLibDbLibraryQueryResult::query-result-reordered:
+     * @qr: the #RCLibDb that received the signal
+     * @new_order: an array of integers mapping the current position of each
+     * playlist item to its old position before the re-ordering,
+     * i.e. @new_order<literal>[newpos] = oldpos</literal>
+     * 
+     * The ::query-result-reordered signal is emitted when the query result
+     * items have been reordered.
+     */
+    db_library_query_result_signals[SIGNAL_LIBRARY_QUERY_RESULT_REORDERED] =
+        g_signal_new("query-result-reordered",
+        RCLIB_TYPE_DB_LIBRARY_QUERY_RESULT, G_SIGNAL_RUN_FIRST,
+        G_STRUCT_OFFSET(RCLibDbLibraryQueryResultClass, query_result_reordered),
+        NULL, NULL, g_cclosure_marshal_VOID__POINTER, G_TYPE_NONE, 1,
+        G_TYPE_POINTER, NULL);
 
     /**
      * RCLibDbLibraryQueryResult::prop-added:
@@ -1426,7 +1468,25 @@ static void rclib_db_library_query_result_class_init(
         G_SIGNAL_RUN_FIRST, G_STRUCT_OFFSET(RCLibDbLibraryQueryResultClass,
         prop_changed), NULL, NULL, rclib_marshal_VOID__UINT_STRING,
         G_TYPE_NONE, 2, G_TYPE_UINT, G_TYPE_STRING, NULL);
-
+        
+    /**
+     * RCLibDbLibraryQueryResult::prop-reordered:
+     * @qr: the #RCLibDb that received the signal
+     * @prop_type: the property type
+     * @new_order: an array of integers mapping the current position of each
+     * playlist item to its old position before the re-ordering,
+     * i.e. @new_order<literal>[newpos] = oldpos</literal>
+     * 
+     * The ::prop-reordered signal is emitted when the query result property
+     * items have been reordered.
+     */
+    db_library_query_result_signals[
+        SIGNAL_LIBRARY_QUERY_RESULT_PROP_REORDERED] =
+        g_signal_new("prop-reordered",
+        RCLIB_TYPE_DB_LIBRARY_QUERY_RESULT, G_SIGNAL_RUN_FIRST,
+        G_STRUCT_OFFSET(RCLibDbLibraryQueryResultClass, prop_reordered),
+        NULL, NULL, rclib_marshal_VOID__UINT_POINTER, G_TYPE_NONE, 2,
+        G_TYPE_UINT, G_TYPE_POINTER, NULL);
 }
 
 static void rclib_db_library_query_result_instance_init(
@@ -1436,6 +1496,8 @@ static void rclib_db_library_query_result_instance_init(
         object, RCLIB_TYPE_DB_LIBRARY_QUERY_RESULT,
         RCLibDbLibraryQueryResultPrivate);
     object->priv = priv;
+    priv->sort_column = RCLIB_DB_LIBRARY_DATA_TYPE_TITLE;
+    priv->sort_direction = FALSE;
     priv->query_sequence = g_sequence_new((GDestroyNotify)
         rclib_db_library_data_unref);
     priv->query_iter_table = g_hash_table_new(g_direct_hash,
@@ -1444,7 +1506,6 @@ static void rclib_db_library_query_result_instance_init(
         g_free, NULL);
     priv->prop_table = g_hash_table_new_full(g_direct_hash, g_direct_equal,
         NULL, (GDestroyNotify)rclib_db_library_query_result_prop_item_free);
-        
     priv->base_query_result = NULL;
 }
     
@@ -3924,6 +3985,175 @@ const RCLibDbQuery *rclib_db_library_query_result_get_query(
 }
 
 /**
+ * rclib_db_library_query_result_sort:
+ * @query_result: the #RCLibDbLibraryQueryResult instance
+ * @column: the column to sort
+ * @direction: the sort direction, #FALSE to use ascending, #TRUE to use
+ *     descending
+ * 
+ * Sort the query result items by the alphabets order (ascending or descending)
+ * of the given @column.
+ */
+
+void rclib_db_library_query_result_sort(
+    RCLibDbLibraryQueryResult *query_result, RCLibDbLibraryDataType column,
+    gboolean direction)
+{
+    RCLibDbLibraryQueryResultPrivate *priv;
+    gint i;
+    gint *order = NULL;
+    GHashTable *new_positions, *sort_table;
+    GSequenceIter *ptr;
+    gint length;
+    GType column_type = G_TYPE_NONE;
+    if(query_result==NULL) return;
+    priv = RCLIB_DB_LIBRARY_QUERY_RESULT(query_result)->priv;
+    GVariant *variant;
+    RCLibDbLibraryData *library_data;
+    if(priv==NULL) return;
+    switch(column)
+    {
+        case RCLIB_DB_LIBRARY_DATA_TYPE_TITLE:
+        case RCLIB_DB_LIBRARY_DATA_TYPE_ARTIST:
+        case RCLIB_DB_LIBRARY_DATA_TYPE_ALBUM:
+        case RCLIB_DB_LIBRARY_DATA_TYPE_FTYPE:
+        case RCLIB_DB_LIBRARY_DATA_TYPE_GENRE:
+        {
+            column_type = G_TYPE_STRING;
+            break;
+        }
+        case RCLIB_DB_LIBRARY_DATA_TYPE_LENGTH:
+        {
+            column_type = G_TYPE_INT64;
+            break;
+        }
+        case RCLIB_DB_LIBRARY_DATA_TYPE_TRACKNUM:
+        case RCLIB_DB_LIBRARY_DATA_TYPE_YEAR:
+        {
+            column_type = G_TYPE_INT;
+            break;
+        }
+        case RCLIB_DB_LIBRARY_DATA_TYPE_RATING:
+        {
+            column_type = G_TYPE_FLOAT;
+            break;
+        }
+        default:
+        {
+            g_warning("Error column type: %u", column);
+            return;
+            break;
+        }
+    }
+    sort_table = g_hash_table_new_full(g_direct_hash, g_direct_equal, NULL,
+        (GDestroyNotify)g_variant_unref);
+    new_positions = g_hash_table_new(g_direct_hash, g_direct_equal);
+    for(i=0, ptr=g_sequence_get_begin_iter(priv->query_sequence);
+        ptr!=NULL && !g_sequence_iter_is_end(ptr);
+        ptr=g_sequence_iter_next(ptr))
+    {
+        variant = NULL;
+        library_data = g_sequence_get(ptr);
+        switch(column_type)
+        {
+            case G_TYPE_STRING:
+            {
+                gchar *vstr = NULL;
+                gchar *uri = NULL;
+                if(library_data!=NULL)
+                {
+                    rclib_db_library_data_get(library_data, column, &vstr,
+                        RCLIB_DB_LIBRARY_DATA_TYPE_NONE);
+                    if(column==RCLIB_DB_LIBRARY_DATA_TYPE_TITLE &&
+                        (vstr==NULL || strlen(vstr)==0))
+                    {
+                        rclib_db_library_data_get(library_data,
+                            RCLIB_DB_LIBRARY_DATA_TYPE_URI, &uri,
+                            RCLIB_DB_LIBRARY_DATA_TYPE_NONE);
+                        if(uri!=NULL)
+                            vstr = rclib_tag_get_name_from_uri(uri);
+                        g_free(uri);
+                    }
+                }                
+                if(vstr==NULL) vstr = g_strdup("");
+                variant = g_variant_new_string(vstr);
+                g_free(vstr);
+                break;
+            }
+            case G_TYPE_INT:
+            {
+                gint vint = 0;
+                if(library_data!=NULL)
+                {
+                    rclib_db_library_data_get(library_data, column, &vint,
+                        RCLIB_DB_LIBRARY_DATA_TYPE_NONE);
+                }
+                variant = g_variant_new_int32(vint);
+                break;
+            }
+            case G_TYPE_INT64:
+            {
+                gint64 vint64 = 0;
+                if(library_data!=NULL)
+                {
+                    rclib_db_library_data_get(library_data, column, &vint64,
+                        RCLIB_DB_LIBRARY_DATA_TYPE_NONE);
+                }
+                variant = g_variant_new_int64(vint64);
+                break;
+            }
+            case G_TYPE_FLOAT:
+            {
+                gfloat vfloat = 0;
+                if(library_data!=NULL)
+                {
+                    rclib_db_library_data_get(library_data, column, &vfloat,
+                        RCLIB_DB_LIBRARY_DATA_TYPE_NONE);
+                }
+                variant = g_variant_new_double(vfloat);
+                break;
+            }
+            default:
+            {
+                variant = g_variant_new_boolean(FALSE);
+                g_warning("Wrong column data type, this should not happen!");
+                break;
+            }
+        }
+        g_hash_table_insert(new_positions, ptr, GINT_TO_POINTER(i));
+        g_hash_table_insert(sort_table, ptr, g_variant_take_ref(variant));
+        i++;
+    }
+    if(direction)
+    {
+        g_sequence_sort_iter(priv->query_sequence,
+            rclib_db_variant_sort_dsc_func, sort_table);
+    }
+    else
+    {
+        g_sequence_sort_iter(priv->query_sequence,
+            rclib_db_variant_sort_asc_func, sort_table);
+    }
+    g_hash_table_destroy(sort_table);
+    length = g_hash_table_size(new_positions);
+    order = g_new(gint, length);
+    for(i=0, ptr=g_sequence_get_begin_iter(priv->query_sequence);
+        ptr!=NULL && !g_sequence_iter_is_end(ptr);
+        ptr=g_sequence_iter_next(ptr))
+    {
+        order[i] = GPOINTER_TO_INT(g_hash_table_lookup(new_positions,
+            ptr));
+        i++;
+    }
+    g_hash_table_destroy(new_positions);
+    g_signal_emit(query_result, db_library_query_result_signals[
+        SIGNAL_LIBRARY_QUERY_RESULT_REORDERED], 0, order);
+    g_free(order);
+    priv->sort_column = column;
+    priv->sort_direction = direction;
+}
+
+/**
  * rclib_db_library_query_result_prop_get_data:
  * @query_result: the #RCLibDbLibraryQueryResult instance
  * @prop_type: the property type
@@ -4306,4 +4536,81 @@ gboolean rclib_db_library_query_result_prop_iter_is_end(
         return FALSE;
     return g_sequence_iter_is_end((GSequenceIter *)iter);
 }
-    
+
+/**
+ * rclib_db_library_query_result_prop_sort:
+ * @query_result: the #RCLibDbLibraryQueryResult instance
+ * @prop_type: the property type
+ * @direction: the sort direction, #FALSE to use ascending, #TRUE to use
+ *     descending
+ * 
+ * Sort the query result property items by the alphabets order 
+ * (ascending or descending) of the given @column.
+ */
+
+void rclib_db_library_query_result_prop_sort(
+    RCLibDbLibraryQueryResult *query_result, RCLibDbQueryDataType prop_type,
+    gboolean direction)
+{
+    RCLibDbLibraryQueryResultPrivate *priv;
+    RCLibDbLibraryQueryResultPropItem *item;
+    RCLibDbLibraryQueryResultPropData *prop_data;
+    gint i;
+    gint *order = NULL;
+    GHashTable *new_positions, *sort_table;
+    GSequenceIter *ptr;
+    gint length;
+    if(query_result==NULL) return;
+    priv = RCLIB_DB_LIBRARY_QUERY_RESULT(query_result)->priv;
+    GVariant *variant;
+    if(priv==NULL) return;
+    item = g_hash_table_lookup(priv->prop_table, GUINT_TO_POINTER(prop_type));
+    if(item==NULL) return;
+    sort_table = g_hash_table_new_full(g_direct_hash, g_direct_equal, NULL,
+        (GDestroyNotify)g_variant_unref);
+    new_positions = g_hash_table_new(g_direct_hash, g_direct_equal);
+    for(i=0, ptr=g_sequence_get_begin_iter(item->prop_sequence);
+        ptr!=NULL && !g_sequence_iter_is_end(ptr);
+        ptr=g_sequence_iter_next(ptr))
+    {
+        variant = NULL;
+        prop_data = g_sequence_get(ptr);
+        if(prop_data!=NULL && prop_data->prop_name!=NULL)
+        {
+            variant = g_variant_new_string(prop_data->prop_name);
+        }
+        else
+        {
+            variant = g_variant_new_string("");
+        }
+        g_hash_table_insert(new_positions, ptr, GINT_TO_POINTER(i));
+        g_hash_table_insert(sort_table, ptr, g_variant_take_ref(variant));
+        i++;
+    }
+    if(direction)
+    {
+        g_sequence_sort_iter(item->prop_sequence,
+            rclib_db_variant_sort_dsc_func, sort_table);
+    }
+    else
+    {
+        g_sequence_sort_iter(item->prop_sequence,
+            rclib_db_variant_sort_asc_func, sort_table);
+    }
+    g_hash_table_destroy(sort_table);
+    length = g_hash_table_size(new_positions);
+    order = g_new(gint, length);
+    for(i=0, ptr=g_sequence_get_begin_iter(item->prop_sequence);
+        ptr!=NULL && !g_sequence_iter_is_end(ptr);
+        ptr=g_sequence_iter_next(ptr))
+    {
+        order[i] = GPOINTER_TO_INT(g_hash_table_lookup(new_positions,
+            ptr));
+        i++;
+    }
+    g_hash_table_destroy(new_positions);
+    g_signal_emit(query_result, db_library_query_result_signals[
+        SIGNAL_LIBRARY_QUERY_RESULT_PROP_REORDERED], 0, prop_type, order);
+    g_free(order);
+    item->sort_direction = direction;
+}

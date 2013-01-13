@@ -133,6 +133,8 @@ struct _RCLibDbLibraryQueryResultPrivate
     GHashTable *query_iter_table;
     GHashTable *query_uri_table;
     GHashTable *prop_table;
+    RCLibDbLibraryDataType sort_column;
+    gboolean sort_direction;
     GThread *query_thread;
     GCancellable *cancellable;
     gulong library_added_id;

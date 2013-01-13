@@ -88,6 +88,9 @@ extern void rclib_marshal_VOID__UINT_STRING (GClosure     *closure,
                                              gpointer      invocation_hint,
                                              gpointer      marshal_data);
 
+/* VOID:UINT,POINTER (../lib/rclib-marshal.list:12) */
+#define rclib_marshal_VOID__UINT_POINTER	g_cclosure_marshal_VOID__UINT_POINTER
+
 G_END_DECLS
 
 #endif /* __rclib_marshal_MARSHAL_H__ */

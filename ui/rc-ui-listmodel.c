@@ -42,6 +42,14 @@ struct _RCUiCatalogStorePrivate
 {
     gint stamp;
     gint n_columns;
+    gulong catalog_added_id;
+    gulong catalog_changed_id ;
+    gulong catalog_delete_id;
+    gulong catalog_reordered_id;
+    gulong playlist_added_id;
+    gulong playlist_changed_id;
+    gulong playlist_delete_id;
+    gulong playlist_reordered;
 };
 
 struct _RCUiPlaylistStorePrivate
@@ -848,8 +856,49 @@ static void rc_ui_playlist_store_tree_model_init(GtkTreeModelIface *iface)
 
 static void rc_ui_catalog_store_finalize(GObject *object)
 {
+    RCUiCatalogStorePrivate *priv = RC_UI_CATALOG_STORE(object)->priv;
     RC_UI_CATALOG_STORE(object)->priv = NULL;
     g_return_if_fail(RC_UI_IS_CATALOG_STORE(object));
+    if(priv->catalog_added_id>0)
+    {
+        rclib_db_signal_disconnect(priv->catalog_added_id);
+        priv->catalog_added_id = 0;
+    }
+    if(priv->catalog_changed_id>0)
+    {
+        rclib_db_signal_disconnect(priv->catalog_changed_id);
+        priv->catalog_changed_id = 0;
+    }
+    if(priv->catalog_delete_id>0)
+    {
+        rclib_db_signal_disconnect(priv->catalog_delete_id);
+        priv->catalog_delete_id = 0;
+    }
+    if(priv->catalog_reordered_id>0)
+    {
+        rclib_db_signal_disconnect(priv->catalog_reordered_id);
+        priv->catalog_reordered_id = 0;
+    }
+    if(priv->playlist_added_id>0)
+    {
+        rclib_db_signal_disconnect(priv->playlist_added_id);
+        priv->playlist_added_id = 0;
+    }
+    if(priv->playlist_changed_id>0)
+    {
+        rclib_db_signal_disconnect(priv->playlist_changed_id);
+        priv->playlist_changed_id = 0;
+    }
+    if(priv->playlist_delete_id>0)
+    {
+        rclib_db_signal_disconnect(priv->playlist_delete_id);
+        priv->playlist_delete_id = 0;
+    }
+    if(priv->playlist_reordered>0)
+    {
+        rclib_db_signal_disconnect(priv->playlist_reordered);
+        priv->playlist_reordered = 0;
+    }
     G_OBJECT_CLASS(rc_ui_catalog_store_parent_class)->finalize(object);
 }
 
@@ -1143,6 +1192,7 @@ static void rc_ui_list_model_playlist_reordered_cb(RCLibDb *db,
 static gboolean rc_ui_list_model_init()
 {
     RCUiPlaylistStorePrivate *playlist_priv;
+    RCUiCatalogStorePrivate *catalog_priv;
     RCLibDbCatalogIter *catalog_iter;
     GtkTreeModel *playlist_model;
     if(catalog_model!=NULL) return FALSE;
@@ -1150,6 +1200,7 @@ static gboolean rc_ui_list_model_init()
         format_string = g_strdup("%TITLE");
     catalog_model = GTK_TREE_MODEL(g_object_new(
         RC_UI_TYPE_CATALOG_STORE, NULL));
+    catalog_priv = RC_UI_CATALOG_STORE(catalog_model)->priv;
     for(catalog_iter = rclib_db_catalog_get_begin_iter();catalog_iter!=NULL;
         catalog_iter = rclib_db_catalog_iter_next(catalog_iter))
     {
@@ -1161,21 +1212,29 @@ static gboolean rc_ui_list_model_init()
             RCLIB_DB_CATALOG_DATA_TYPE_NONE);         
         playlist_priv->catalog_iter = catalog_iter;
     }
-    rclib_db_signal_connect("catalog-added",
+    catalog_priv->catalog_added_id = rclib_db_signal_connect(
+        "catalog-added",
         G_CALLBACK(rc_ui_list_model_catalog_added_cb), NULL);
-    rclib_db_signal_connect("catalog-changed",
+    catalog_priv->catalog_changed_id = rclib_db_signal_connect(
+        "catalog-changed",
         G_CALLBACK(rc_ui_list_model_catalog_changed_cb), NULL);
-    rclib_db_signal_connect("catalog-delete",
+    catalog_priv->catalog_delete_id = rclib_db_signal_connect(
+        "catalog-delete",
         G_CALLBACK(rc_ui_list_model_catalog_delete_cb), NULL);
-    rclib_db_signal_connect("catalog-reordered",
+    catalog_priv->catalog_reordered_id = rclib_db_signal_connect(
+        "catalog-reordered",
         G_CALLBACK(rc_ui_list_model_catalog_reordered_cb), NULL);
-    rclib_db_signal_connect("playlist-added",
+    catalog_priv->playlist_added_id = rclib_db_signal_connect(
+        "playlist-added",
         G_CALLBACK(rc_ui_list_model_playlist_added_cb), NULL);
-    rclib_db_signal_connect("playlist-changed",
+    catalog_priv->playlist_changed_id = rclib_db_signal_connect(
+        "playlist-changed",
         G_CALLBACK(rc_ui_list_model_playlist_changed_cb), NULL);
-    rclib_db_signal_connect("playlist-delete",
+    catalog_priv->playlist_delete_id = rclib_db_signal_connect(
+        "playlist-delete",
         G_CALLBACK(rc_ui_list_model_playlist_delete_cb), NULL);
-    rclib_db_signal_connect("playlist-reordered",
+    catalog_priv->playlist_reordered = rclib_db_signal_connect(
+        "playlist-reordered",
         G_CALLBACK(rc_ui_list_model_playlist_reordered_cb), NULL);
     return TRUE;
 }

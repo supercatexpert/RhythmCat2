@@ -388,12 +388,16 @@ struct _RCLibDbLibraryQueryResultClass {
         const gchar *uri);
     void (*query_result_changed)(RCLibDbLibraryQueryResult *qr,
         const gchar *uri);
+    void (*query_result_reordered)(RCLibDbLibraryQueryResult *qr,
+        gint *new_order);
     void (*prop_added)(RCLibDbLibraryQueryResult *qr,
         guint prop_type, const gchar *prop_string);
     void (*prop_delete)(RCLibDbLibraryQueryResult *qr,
         guint prop_type, const gchar *prop_string);
     void (*prop_changed)(RCLibDbLibraryQueryResult *qr,
         guint prop_type, const gchar *prop_string);
+    void (*prop_reordered)(RCLibDbLibraryQueryResult *qr,
+        guint prop_type, gint *new_order);
 };
 
 /*< private >*/
@@ -619,6 +623,9 @@ void rclib_db_library_query_result_query_clear(
     RCLibDbLibraryQueryResult *query_result);
 const RCLibDbQuery *rclib_db_library_query_result_get_query(
     RCLibDbLibraryQueryResult *query_result);
+void rclib_db_library_query_result_sort(
+    RCLibDbLibraryQueryResult *query_result, RCLibDbLibraryDataType column,
+    gboolean direction);
 gboolean rclib_db_library_query_result_prop_get_data(
     RCLibDbLibraryQueryResult *query_result, RCLibDbQueryDataType prop_type,
     RCLibDbLibraryQueryResultPropIter *iter, gchar **prop_name,
@@ -659,6 +666,9 @@ gboolean rclib_db_library_query_result_prop_iter_is_begin(
 gboolean rclib_db_library_query_result_prop_iter_is_end(
     RCLibDbLibraryQueryResult *query_result, RCLibDbQueryDataType prop_type,
     RCLibDbLibraryQueryResultPropIter *iter);
+void rclib_db_library_query_result_prop_sort(
+    RCLibDbLibraryQueryResult *query_result, RCLibDbQueryDataType prop_type,
+    gboolean direction);
 
 /* Query Interface */
 RCLibDbQuery *rclib_db_query_parse(RCLibDbQueryConditionType condition1, ...);

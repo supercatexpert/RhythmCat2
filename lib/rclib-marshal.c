@@ -433,3 +433,5 @@ rclib_marshal_VOID__UINT_STRING (GClosure     *closure,
             data2);
 }
 
+/* VOID:UINT,POINTER (../lib/rclib-marshal.list:12) */
+
