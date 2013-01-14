@@ -61,6 +61,9 @@ typedef struct RCLibDbXMLParserData
     GHashTable *catalog_iter_table;
     GHashTable *playlist_iter_table;
     GHashTable *library_table;
+    gulong catalog_count;
+    gulong playlist_count;
+    gulong library_count;
 }RCLibDbXMLParserData;
 
 enum
@@ -837,6 +840,7 @@ static void rclib_db_xml_parser_start_element_cb(GMarkupParseContext *context,
         }
         _rclib_db_playlist_append_data_internal(parser_data->catalog_iter,
             NULL, playlist_data);
+        parser_data->playlist_count++;
     }
     else if(parser_data->catalog!=NULL &&
         g_strcmp0(element_name, "playlist")==0)
@@ -857,6 +861,7 @@ static void rclib_db_xml_parser_start_element_cb(GMarkupParseContext *context,
         catalog_iter = _rclib_db_catalog_append_data_internal(NULL,
             catalog_data);
         parser_data->catalog_iter = catalog_iter;
+        parser_data->catalog_count++;
     }
     if(parser_data->library_table!=NULL && g_strcmp0(element_name,
         "libitem")==0)
@@ -937,6 +942,7 @@ static void rclib_db_xml_parser_start_element_cb(GMarkupParseContext *context,
         _rclib_db_library_append_data_internal(library_data->uri,
             library_data);
         rclib_db_library_data_unref(library_data);
+        parser_data->library_count++;
     }
 }
 
@@ -1012,7 +1018,9 @@ static gboolean rclib_db_load_library_db(RCLibDbCatalogSequence *catalog,
     g_markup_parse_context_end_parse(parse_context, NULL);
     g_object_unref(decompress_istream);
     g_markup_parse_context_free(parse_context);
-    g_message("Playlist loaded.");
+    g_message("Player Database loaded, catalog count: %lu, playlist count: "
+        "%lu, library count: %lu.", parser_data.catalog_count,
+        parser_data.playlist_count, parser_data.library_count);
     if(dirty_flag!=NULL) *dirty_flag = FALSE;
     return TRUE;
 }
@@ -1032,6 +1040,7 @@ static inline GString *rclib_db_build_xml_data(RCLibDbCatalogSequence *catalog,
     extern guint rclib_major_version;
     extern guint rclib_minor_version;
     extern guint rclib_micro_version;
+    gulong catalog_count = 0, playlist_count = 0, library_count = 0;
     data_str = g_string_new("<?xml version=\"1.0\" standalone=\"yes\"?>\n");
     g_string_append_printf(data_str, "<rclibdb version=\"%u.%u.%u\">\n",
         rclib_major_version, rclib_minor_version, rclib_micro_version);
@@ -1134,8 +1143,10 @@ static inline GString *rclib_db_build_xml_data(RCLibDbCatalogSequence *catalog,
                     g_free(tmp);
                 }
                 g_string_append(data_str, "/>\n");
+                playlist_count++;
             }    
             g_string_append(data_str, "  </playlist>\n");
+            catalog_count++;
         }
     }
     if(library!=NULL)
@@ -1221,10 +1232,14 @@ static inline GString *rclib_db_build_xml_data(RCLibDbCatalogSequence *catalog,
                 g_free(tmp);
             }
             g_string_append(data_str, "/>\n");
+            library_count++;
         }
         g_string_append(data_str, "  </library>\n");
     }
     g_string_append(data_str, "</rclibdb>\n");
+    g_message("Player Database XML built successfully, catalog item count: "
+        "%lu, playlist item count: %lu, library item count: %lu.",
+        catalog_count, playlist_count, library_count);
     return data_str;
 }
 
@@ -1278,7 +1293,8 @@ static gboolean rclib_db_save_library_db(RCLibDbCatalogSequence *catalog,
     g_object_unref(compress_ostream);
     if(flag)
     {
-        g_message("Playlist saved, wrote %ld bytes.", (glong)write_size);
+        g_message("Player Database saved, wrote %lu bytes.",
+            (gulong)write_size);
     }
     if(dirty_flag!=NULL) *dirty_flag = FALSE;  
     return flag;

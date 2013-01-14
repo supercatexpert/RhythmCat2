@@ -315,27 +315,11 @@ static void rc_main_app_activate(GApplication *application)
     
     /*
     //Just a query test!
-    rclib_core_audio_output_set(RCLIB_CORE_AUDIO_OUTPUT_AUTO);
-    RCLibDbQuery *query = rclib_db_query_parse(
-        RCLIB_DB_QUERY_CONDITION_TYPE_PROP_LIKE,
-        RCLIB_DB_QUERY_DATA_TYPE_TITLE, "The",
-        RCLIB_DB_QUERY_CONDITION_TYPE_NONE);
-    GPtrArray *query_result = rclib_db_playlist_query(NULL, query, NULL);
-    rclib_db_query_free(query);
-    g_printf("Query matched length: %d\n", query_result->len);
-    for(i=0;i<query_result->len;i++)
-    {
-        gchar *title = NULL;
-        RCLibDbPlaylistData *playlist_data;
-        playlist_data = g_ptr_array_index(query_result, i);
-        if(playlist_data==NULL) continue;
-        rclib_db_playlist_data_get(playlist_data, RCLIB_DB_PLAYLIST_DATA_TYPE_TITLE, &title,
-            RCLIB_DB_PLAYLIST_DATA_TYPE_NONE);
-        g_printf("Title: %s\n", title);
-        g_free(title);
-    }
-    g_ptr_array_unref(query_result);
     */
+    //rclib_db_library_add_music("file:///home/supercat/Music/My%20Love.FLAC");
+    //GObject *base_query_result = rclib_db_library_get_base_query_result();
+    //rclib_db_library_query_result_query_start(base_query_result, TRUE);
+    //g_object_unref(base_query_result);
 }
 
 static void rc_main_app_open(GApplication *application, GFile **files,

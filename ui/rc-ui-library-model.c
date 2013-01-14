@@ -49,6 +49,7 @@ struct _RCUiLibraryListStorePrivate
     gulong query_result_added_id;
     gulong query_result_delete_id;
     gulong query_result_changed_id;
+    gulong query_result_reordered_id;
 };
 
 struct _RCUiLibraryPropStorePrivate
@@ -60,6 +61,7 @@ struct _RCUiLibraryPropStorePrivate
     gulong prop_added_id;
     gulong prop_delete_id;
     gulong prop_changed_id;
+    gulong prop_reordered_id;
 };
 
 enum
@@ -150,6 +152,20 @@ static void rc_ui_library_list_query_result_changed_cb(
     gtk_tree_path_free(path);
 }
 
+static void rc_ui_library_list_query_result_reordered_cb(
+    RCLibDbLibraryQueryResult *qr, gint *new_order, gpointer data)
+{
+    GtkTreeModel *model;
+    GtkTreePath *path;
+    if(new_order==NULL) return;
+    if(data==NULL) return;
+    model = GTK_TREE_MODEL(data);
+    g_return_if_fail(RC_UI_IS_LIBRARY_LIST_STORE(model));
+    path = gtk_tree_path_new();
+    gtk_tree_model_rows_reordered(model, path, NULL, new_order);
+    gtk_tree_path_free(path);
+}
+
 static void rc_ui_library_prop_prop_added_cb(RCLibDbLibraryQueryResult *qr,
     guint prop_type, const gchar *prop_text, gpointer data)
 {
@@ -224,6 +240,20 @@ static void rc_ui_library_prop_prop_changed_cb(RCLibDbLibraryQueryResult *qr,
     tree_iter.user_data = iter;
     tree_iter.stamp = priv->stamp;
     gtk_tree_model_row_changed(model, path, &tree_iter);
+    gtk_tree_path_free(path);
+}
+
+static void rc_ui_library_prop_prop_reordered_cb(RCLibDbLibraryQueryResult *qr,
+    guint prop_type, gint *new_order, gpointer data)
+{
+    GtkTreeModel *model;
+    GtkTreePath *path;
+    if(new_order==NULL) return;
+    if(data==NULL) return;
+    model = GTK_TREE_MODEL(data);
+    g_return_if_fail(RC_UI_IS_LIBRARY_PROP_STORE(model));
+    path = gtk_tree_path_new();
+    gtk_tree_model_rows_reordered(model, path, NULL, new_order);
     gtk_tree_path_free(path);
 }
 
@@ -1108,6 +1138,12 @@ static void rc_ui_library_list_set_property(GObject *object,
                         priv->query_result_changed_id);
                     priv->query_result_changed_id = 0;
                 }
+                if(priv->query_result_reordered_id>0)
+                {
+                    g_signal_handler_disconnect(priv->query_result,
+                        priv->query_result_reordered_id);
+                    priv->query_result_reordered_id = 0;
+                }
                 g_object_unref(priv->query_result);
                 priv->query_result = NULL;
             }
@@ -1123,6 +1159,10 @@ static void rc_ui_library_list_set_property(GObject *object,
             priv->query_result_changed_id = g_signal_connect(priv->query_result,
                 "query-result-changed",
                 G_CALLBACK(rc_ui_library_list_query_result_changed_cb),
+                object);
+            priv->query_result_reordered_id = g_signal_connect(
+                priv->query_result, "query-result-reordered",
+                G_CALLBACK(rc_ui_library_list_query_result_reordered_cb),
                 object);
             break;
         }
@@ -1165,6 +1205,12 @@ static void rc_ui_library_prop_set_property(GObject *object,
                         priv->prop_changed_id);
                     priv->prop_changed_id = 0;
                 }
+                if(priv->prop_reordered_id>0)
+                {
+                    g_signal_handler_disconnect(priv->base,
+                        priv->prop_reordered_id);
+                    priv->prop_reordered_id = 0;
+                }
                 g_object_unref(priv->base);
                 priv->base = NULL;
             }
@@ -1176,6 +1222,9 @@ static void rc_ui_library_prop_set_property(GObject *object,
             priv->prop_changed_id = g_signal_connect(priv->base,
                 "prop-changed", G_CALLBACK(rc_ui_library_prop_prop_changed_cb),
                 object);
+            priv->prop_reordered_id = g_signal_connect(priv->base,
+                "prop-reordered",
+                G_CALLBACK(rc_ui_library_prop_prop_reordered_cb), object);
             break;
         }
         case PROP_STORE_PROP_PROP_TYPE:
@@ -1265,6 +1314,12 @@ static void rc_ui_library_list_store_finalize(GObject *object)
                 priv->query_result_changed_id);
             priv->query_result_changed_id = 0;
         }
+        if(priv->query_result_reordered_id>0)
+        {
+            g_signal_handler_disconnect(priv->query_result,
+                priv->query_result_reordered_id);
+            priv->query_result_reordered_id = 0;
+        }
         g_object_unref(priv->query_result);
         priv->query_result = NULL;
     }
@@ -1298,6 +1353,11 @@ static void rc_ui_library_prop_store_finalize(GObject *object)
         {
             g_signal_handler_disconnect(priv->base, priv->prop_changed_id);
             priv->prop_changed_id = 0;
+        }
+        if(priv->prop_reordered_id>0)
+        {
+            g_signal_handler_disconnect(priv->base, priv->prop_reordered_id);
+            priv->prop_reordered_id = 0;
         }
         g_object_unref(priv->base);
         priv->base = NULL;

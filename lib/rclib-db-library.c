@@ -95,6 +95,164 @@ static gint rclib_db_variant_sort_dsc_func(GSequenceIter *a, GSequenceIter *b,
     return g_variant_compare(variant2, variant1);
 }
 
+static gint rclib_db_library_query_result_item_compare_func(gconstpointer a,
+    gconstpointer b, gpointer data)
+{
+    RCLibDbLibraryQueryResultPrivate *priv;
+    gint ret = 0;
+    GType column_type;
+    GVariant *variant1, *variant2;
+    RCLibDbLibraryData *data1 = (RCLibDbLibraryData *)a;
+    RCLibDbLibraryData *data2 = (RCLibDbLibraryData *)b;
+    priv = (RCLibDbLibraryQueryResultPrivate *)data;
+    if(data==NULL) return 0;
+    switch(priv->sort_column)
+    {
+        case RCLIB_DB_LIBRARY_DATA_TYPE_TITLE:
+        case RCLIB_DB_LIBRARY_DATA_TYPE_ARTIST:
+        case RCLIB_DB_LIBRARY_DATA_TYPE_ALBUM:
+        case RCLIB_DB_LIBRARY_DATA_TYPE_FTYPE:
+        case RCLIB_DB_LIBRARY_DATA_TYPE_GENRE:
+        {
+            column_type = G_TYPE_STRING;
+            break;
+        }
+        case RCLIB_DB_LIBRARY_DATA_TYPE_LENGTH:
+        {
+            column_type = G_TYPE_INT64;
+            break;
+        }
+        case RCLIB_DB_LIBRARY_DATA_TYPE_TRACKNUM:
+        case RCLIB_DB_LIBRARY_DATA_TYPE_YEAR:
+        {
+            column_type = G_TYPE_INT;
+            break;
+        }
+        case RCLIB_DB_LIBRARY_DATA_TYPE_RATING:
+        {
+            column_type = G_TYPE_FLOAT;
+            break;
+        }
+        default:
+        {
+            g_warning("Error column type: %u", priv->sort_column);
+            return 0;
+            break;
+        }
+    }
+    switch(column_type)
+    {
+        case G_TYPE_STRING:
+        {
+            gchar *vstr = NULL;
+            gchar *uri = NULL;
+            if(data1!=NULL)
+            {
+                rclib_db_library_data_get(data1, priv->sort_column, &vstr,
+                    RCLIB_DB_LIBRARY_DATA_TYPE_NONE);
+                if(priv->sort_column==RCLIB_DB_LIBRARY_DATA_TYPE_TITLE &&
+                    (vstr==NULL || strlen(vstr)==0))
+                {
+                    rclib_db_library_data_get(data1,
+                        RCLIB_DB_LIBRARY_DATA_TYPE_URI, &uri,
+                        RCLIB_DB_LIBRARY_DATA_TYPE_NONE);
+                    if(uri!=NULL)
+                        vstr = rclib_tag_get_name_from_uri(uri);
+                    g_free(uri);
+                }
+            }                
+            if(vstr==NULL) vstr = g_strdup("");
+            variant1 = g_variant_new_string(vstr);
+            g_free(vstr);
+            vstr = NULL;
+            if(data2!=NULL)
+            {
+                rclib_db_library_data_get(data2, priv->sort_column, &vstr,
+                    RCLIB_DB_LIBRARY_DATA_TYPE_NONE);
+                if(priv->sort_column==RCLIB_DB_LIBRARY_DATA_TYPE_TITLE &&
+                    (vstr==NULL || strlen(vstr)==0))
+                {
+                    rclib_db_library_data_get(data2,
+                        RCLIB_DB_LIBRARY_DATA_TYPE_URI, &uri,
+                        RCLIB_DB_LIBRARY_DATA_TYPE_NONE);
+                    if(uri!=NULL)
+                        vstr = rclib_tag_get_name_from_uri(uri);
+                    g_free(uri);
+                }
+            }                
+            if(vstr==NULL) vstr = g_strdup("");
+            variant2 = g_variant_new_string(vstr);
+            g_free(vstr);
+            break;
+        }
+        case G_TYPE_INT:
+        {
+            gint vint = 0;
+            if(data1!=NULL)
+            {
+                rclib_db_library_data_get(data1, priv->sort_column, &vint,
+                    RCLIB_DB_LIBRARY_DATA_TYPE_NONE);
+            }
+            variant1 = g_variant_new_int32(vint);
+            vint = 0;
+            if(data2!=NULL)
+            {
+                rclib_db_library_data_get(data2, priv->sort_column, &vint,
+                    RCLIB_DB_LIBRARY_DATA_TYPE_NONE);
+            }
+            variant2 = g_variant_new_int32(vint);
+            break;
+        }
+        case G_TYPE_INT64:
+        {
+            gint64 vint64 = 0;
+            if(data1!=NULL)
+            {
+                rclib_db_library_data_get(data1, priv->sort_column, &vint64,
+                    RCLIB_DB_LIBRARY_DATA_TYPE_NONE);
+            }
+            variant1 = g_variant_new_int64(vint64);
+            vint64 = 0;
+            if(data2!=NULL)
+            {
+                rclib_db_library_data_get(data2, priv->sort_column, &vint64,
+                    RCLIB_DB_LIBRARY_DATA_TYPE_NONE);
+            }
+            variant2 = g_variant_new_int64(vint64);
+            break;
+        }
+        case G_TYPE_FLOAT:
+        {
+            gfloat vfloat = 0;
+            if(data1!=NULL)
+            {
+                rclib_db_library_data_get(data1, priv->sort_column, &vfloat,
+                    RCLIB_DB_LIBRARY_DATA_TYPE_NONE);
+            }
+            variant1 = g_variant_new_double(vfloat);
+            if(data2!=NULL)
+            {
+                rclib_db_library_data_get(data2, priv->sort_column, &vfloat,
+                    RCLIB_DB_LIBRARY_DATA_TYPE_NONE);
+            }
+            variant2 = g_variant_new_double(vfloat);
+            break;
+        }
+        default:
+        {
+            variant1 = g_variant_new_boolean(FALSE);
+            variant2 = g_variant_new_boolean(FALSE);
+            g_warning("Wrong column data type, this should not happen!");
+            break;
+        }
+    }
+    ret = g_variant_compare(variant1, variant2);
+    if(priv->sort_direction)
+        return -ret;
+    else
+        return ret;
+}
+
 static RCLibDbLibraryQueryResultPropData *
     rclib_db_library_query_result_prop_data_new()
 {
@@ -198,8 +356,9 @@ static void rclib_db_library_query_result_added_cb(RCLibDb *db,
     if(library_data==NULL) return;
     if(rclib_db_library_data_query(library_data, priv->query, NULL))
     {
-        iter = g_sequence_append(priv->query_sequence, 
-            rclib_db_library_data_ref(library_data));
+        iter = g_sequence_insert_sorted(priv->query_sequence, 
+            rclib_db_library_data_ref(library_data),
+            rclib_db_library_query_result_item_compare_func, priv);
         g_hash_table_replace(priv->query_iter_table, iter, iter);
         g_hash_table_replace(priv->query_uri_table, g_strdup(uri), iter);
         g_signal_emit(object, db_library_query_result_signals[
@@ -545,8 +704,9 @@ static void rclib_db_library_query_result_base_added_cb(
         rclib_db_library_data_unref(library_data);
         return;
     }
-    iter = g_sequence_append(priv->query_sequence,
-        rclib_db_library_data_ref(library_data));
+    iter = g_sequence_insert_sorted(priv->query_sequence, 
+        rclib_db_library_data_ref(library_data),
+        rclib_db_library_query_result_item_compare_func, priv);
     g_hash_table_replace(priv->query_iter_table, iter, iter);
     g_hash_table_replace(priv->query_uri_table, g_strdup(uri), iter);
     g_signal_emit(qr, db_library_query_result_signals[
@@ -1175,7 +1335,8 @@ static gboolean rclib_db_library_query_result_query_idle_cb(gpointer data)
         library_data = rclib_db_library_data_ref(library_data);
         rclib_db_library_data_get(library_data, RCLIB_DB_LIBRARY_DATA_TYPE_URI,
             &uri, RCLIB_DB_LIBRARY_DATA_TYPE_NONE);
-        iter = g_sequence_append(priv->query_sequence, library_data);
+        iter = g_sequence_insert_sorted(priv->query_sequence, library_data,
+            rclib_db_library_query_result_item_compare_func, priv);
         g_hash_table_replace(priv->query_iter_table, iter, iter);
         g_hash_table_replace(priv->query_uri_table, g_strdup(uri), iter);
         g_signal_emit(object, db_library_query_result_signals[
@@ -3342,8 +3503,9 @@ void rclib_db_library_query_result_copy_contents(
         if(uri==NULL) continue;
         if(!g_hash_table_contains(dst_priv->query_uri_table, uri))
         {
-            dst_iter = g_sequence_append(dst_priv->query_sequence,
-                rclib_db_library_data_ref(library_data));
+            dst_iter = g_sequence_insert_sorted(dst_priv->query_sequence, 
+                rclib_db_library_data_ref(library_data),
+                rclib_db_library_query_result_item_compare_func, dst_priv);
             g_hash_table_replace(dst_priv->query_iter_table, dst_iter,
                 dst_iter);
             g_hash_table_replace(dst_priv->query_uri_table, g_strdup(uri),
