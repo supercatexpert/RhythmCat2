@@ -277,9 +277,11 @@
     <keyword type="signal" name="The &quot;prop-added&quot; signal" link="RCLibDbLibraryQueryResult.html#RCLibDbLibraryQueryResult-prop-added"/>
     <keyword type="signal" name="The &quot;prop-changed&quot; signal" link="RCLibDbLibraryQueryResult.html#RCLibDbLibraryQueryResult-prop-changed"/>
     <keyword type="signal" name="The &quot;prop-delete&quot; signal" link="RCLibDbLibraryQueryResult.html#RCLibDbLibraryQueryResult-prop-delete"/>
+    <keyword type="signal" name="The &quot;prop-reordered&quot; signal" link="RCLibDbLibraryQueryResult.html#RCLibDbLibraryQueryResult-prop-reordered"/>
     <keyword type="signal" name="The &quot;query-result-added&quot; signal" link="RCLibDbLibraryQueryResult.html#RCLibDbLibraryQueryResult-query-result-added"/>
     <keyword type="signal" name="The &quot;query-result-changed&quot; signal" link="RCLibDbLibraryQueryResult.html#RCLibDbLibraryQueryResult-query-result-changed"/>
     <keyword type="signal" name="The &quot;query-result-delete&quot; signal" link="RCLibDbLibraryQueryResult.html#RCLibDbLibraryQueryResult-query-result-delete"/>
+    <keyword type="signal" name="The &quot;query-result-reordered&quot; signal" link="RCLibDbLibraryQueryResult.html#RCLibDbLibraryQueryResult-query-result-reordered"/>
     <keyword type="struct" name="struct RCLibLyric" link="RCLibLyric.html#RCLibLyric-struct"/>
     <keyword type="struct" name="struct RCLibLyricClass" link="RCLibLyric.html#RCLibLyricClass"/>
     <keyword type="struct" name="struct RCLibLyricData" link="RCLibLyric.html#RCLibLyricData"/>

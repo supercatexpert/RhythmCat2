@@ -22,8 +22,8 @@
  * Boston, MA  02110-1301  USA
  */
 
-#ifndef HAVE_RC_UI_LIBRARY_VIEW_H
-#define HAVE_RC_UI_LIBRARY_VIEW_H
+#ifndef HAVE_RC_UI_LIBRARY_MODEL_H
+#define HAVE_RC_UI_LIBRARY_MODEL_H
 
 #include <glib.h>
 #include <glib-object.h>

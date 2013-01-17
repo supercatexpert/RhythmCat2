@@ -75,6 +75,48 @@ static gint db_library_query_result_signals[SIGNAL_LIBRARY_QUERY_RESULT_LAST] =
     {0};
 static gpointer rclib_db_library_query_result_parent_class = NULL;
 
+static inline RCLibDbLibraryDataType rclib_db_library_query_type_to_data_type(
+    RCLibDbQueryDataType query_type)
+{
+    switch(query_type)
+    {
+        case RCLIB_DB_QUERY_DATA_TYPE_NONE:
+            return RCLIB_DB_LIBRARY_DATA_TYPE_NONE;
+            break;
+        case RCLIB_DB_QUERY_DATA_TYPE_URI:
+            return RCLIB_DB_LIBRARY_DATA_TYPE_URI;
+            break;
+        case RCLIB_DB_QUERY_DATA_TYPE_TITLE:
+            return RCLIB_DB_LIBRARY_DATA_TYPE_TITLE;
+            break;
+        case RCLIB_DB_QUERY_DATA_TYPE_ARTIST:
+            return RCLIB_DB_LIBRARY_DATA_TYPE_ARTIST;
+            break;
+        case RCLIB_DB_QUERY_DATA_TYPE_ALBUM:
+            return RCLIB_DB_LIBRARY_DATA_TYPE_ALBUM;
+            break;
+        case RCLIB_DB_QUERY_DATA_TYPE_FTYPE:
+            return RCLIB_DB_LIBRARY_DATA_TYPE_FTYPE;
+            break;
+        case RCLIB_DB_QUERY_DATA_TYPE_LENGTH:
+            return RCLIB_DB_LIBRARY_DATA_TYPE_LENGTH;
+            break;
+        case RCLIB_DB_QUERY_DATA_TYPE_TRACKNUM:
+            return RCLIB_DB_LIBRARY_DATA_TYPE_TRACKNUM;
+            break;
+        case RCLIB_DB_QUERY_DATA_TYPE_YEAR:
+            return RCLIB_DB_LIBRARY_DATA_TYPE_YEAR;
+            break;
+        case RCLIB_DB_QUERY_DATA_TYPE_RATING:
+            return RCLIB_DB_LIBRARY_DATA_TYPE_RATING;
+            break;
+        case RCLIB_DB_QUERY_DATA_TYPE_GENRE:
+            return RCLIB_DB_LIBRARY_DATA_TYPE_GENRE;
+            break;
+    }
+    return RCLIB_DB_LIBRARY_DATA_TYPE_NONE;
+}
+
 static gint rclib_db_variant_sort_asc_func(GSequenceIter *a, GSequenceIter *b,
     gpointer user_data)
 {
@@ -375,8 +417,9 @@ static void rclib_db_library_query_result_added_cb(RCLibDb *db,
                 continue;
             }
             prop_string = NULL;
-            rclib_db_library_data_get(library_data, prop_type, &prop_string,
-                RCLIB_DB_LIBRARY_DATA_TYPE_NONE);
+            rclib_db_library_data_get(library_data,
+                rclib_db_library_query_type_to_data_type(prop_type),
+                &prop_string, RCLIB_DB_LIBRARY_DATA_TYPE_NONE);
             if(prop_string==NULL)
                 prop_string = g_strdup("");
             iter = g_hash_table_lookup(prop_item->prop_name_table,
@@ -456,7 +499,8 @@ static void rclib_db_library_query_result_deleted_cb(RCLibDb *db,
             continue;
         }
         prop_string = NULL;
-        rclib_db_library_data_get(library_data, prop_type, &prop_string,
+        rclib_db_library_data_get(library_data,
+            rclib_db_library_query_type_to_data_type(prop_type), &prop_string,
             RCLIB_DB_LIBRARY_DATA_TYPE_NONE);
         if(prop_string==NULL)
             prop_string = g_strdup("");
@@ -541,7 +585,8 @@ static void rclib_db_library_query_result_changed_cb(RCLibDb *db,
                         continue;
                     }
                     prop_string = NULL;
-                    rclib_db_library_data_get(library_data, prop_type,
+                    rclib_db_library_data_get(library_data,
+                        rclib_db_library_query_type_to_data_type(prop_type),
                         &prop_string, RCLIB_DB_LIBRARY_DATA_TYPE_NONE);
                     if(prop_string==NULL)
                         prop_string = g_strdup("");
@@ -604,7 +649,8 @@ static void rclib_db_library_query_result_changed_cb(RCLibDb *db,
                     continue;
                 }
                 prop_string = NULL;
-                rclib_db_library_data_get(library_data, prop_type,
+                rclib_db_library_data_get(library_data,
+                    rclib_db_library_query_type_to_data_type(prop_type),
                     &prop_string, RCLIB_DB_LIBRARY_DATA_TYPE_NONE);
                 if(prop_string==NULL)
                     prop_string = g_strdup("");
@@ -723,7 +769,8 @@ static void rclib_db_library_query_result_base_added_cb(
             continue;
         }
         prop_string = NULL;
-        rclib_db_library_data_get(library_data, prop_type, &prop_string,
+        rclib_db_library_data_get(library_data,
+            rclib_db_library_query_type_to_data_type(prop_type), &prop_string,
             RCLIB_DB_LIBRARY_DATA_TYPE_NONE);
         if(prop_string==NULL)
             prop_string = g_strdup("");
@@ -803,7 +850,8 @@ static void rclib_db_library_query_result_base_delete_cb(
             continue;
         }
         prop_string = NULL;
-        rclib_db_library_data_get(library_data, prop_type, &prop_string,
+        rclib_db_library_data_get(library_data,
+            rclib_db_library_query_type_to_data_type(prop_type), &prop_string,
             RCLIB_DB_LIBRARY_DATA_TYPE_NONE);
         if(prop_string==NULL)
             prop_string = g_strdup("");
@@ -898,7 +946,8 @@ static void rclib_db_library_query_result_base_changed_cb(
                 continue;
             }
             prop_string = NULL;
-            rclib_db_library_data_get(library_data, prop_type,
+            rclib_db_library_data_get(library_data,
+                rclib_db_library_query_type_to_data_type(prop_type),
                 &prop_string, RCLIB_DB_LIBRARY_DATA_TYPE_NONE);
             if(prop_string==NULL)
                 prop_string = g_strdup("");
@@ -956,7 +1005,8 @@ static void rclib_db_library_query_result_base_changed_cb(
                 continue;
             }
             prop_string = NULL;
-            rclib_db_library_data_get(library_data, prop_type,
+            rclib_db_library_data_get(library_data,
+                rclib_db_library_query_type_to_data_type(prop_type),
                 &prop_string, RCLIB_DB_LIBRARY_DATA_TYPE_NONE);
             if(prop_string==NULL)
                 prop_string = g_strdup("");
@@ -1314,7 +1364,7 @@ static gboolean rclib_db_library_query_result_query_idle_cb(gpointer data)
     GSequenceIter *iter;
     if(data==NULL) return FALSE;
     object = (RCLibDbLibraryQueryResult *)idle_data[0];
-    result = (GPtrArray *)result;
+    result = (GPtrArray *)idle_data[1];
     if(result==NULL)
         return FALSE;
     if(object==NULL || object->priv==NULL)
@@ -1353,8 +1403,9 @@ static gboolean rclib_db_library_query_result_query_idle_cb(gpointer data)
                 continue;
             }
             prop_string = NULL;
-            rclib_db_library_data_get(library_data, prop_type, &prop_string,
-                RCLIB_DB_LIBRARY_DATA_TYPE_NONE);
+            rclib_db_library_data_get(library_data,
+                rclib_db_library_query_type_to_data_type(prop_type),
+                &prop_string, RCLIB_DB_LIBRARY_DATA_TYPE_NONE);
             if(prop_string==NULL)
                 prop_string = g_strdup("");
             iter = g_hash_table_lookup(prop_item->prop_name_table,
@@ -1624,7 +1675,7 @@ static void rclib_db_library_query_result_class_init(
      * The ::query-result-changed signal is emitted when the property item 
      * which the @prop_string pointed to has been changed.
      */
-    db_library_query_result_signals[SIGNAL_LIBRARY_QUERY_RESULT_PROP_ADDED] =
+    db_library_query_result_signals[SIGNAL_LIBRARY_QUERY_RESULT_PROP_CHANGED] =
         g_signal_new("prop-changed", RCLIB_TYPE_DB_LIBRARY_QUERY_RESULT,
         G_SIGNAL_RUN_FIRST, G_STRUCT_OFFSET(RCLibDbLibraryQueryResultClass,
         prop_changed), NULL, NULL, rclib_marshal_VOID__UINT_STRING,
@@ -1738,7 +1789,7 @@ gboolean _rclib_db_instance_init_library(RCLibDb *db, RCLibDbPrivate *priv)
     rclib_db_library_query_result_chain(RCLIB_DB_LIBRARY_QUERY_RESULT(
         priv->library_query_album), RCLIB_DB_LIBRARY_QUERY_RESULT(
         priv->library_query_artist), FALSE);
-    
+
     return TRUE;
 }
 
@@ -2027,7 +2078,7 @@ static inline void rclib_db_library_data_get_valist(
             case RCLIB_DB_LIBRARY_DATA_TYPE_GENRE:
             {
                 str = va_arg(var_args, gchar **);
-                *str = data->genre;
+                *str = g_strdup(data->genre);
                 break;
             }
             default:
@@ -2423,7 +2474,8 @@ gboolean rclib_db_library_data_query(RCLibDbLibraryData *library_data,
     gchar *uri;
     if(library_data==NULL || query==NULL)
         return FALSE;
-    cancellable = g_object_ref(cancellable);
+    if(cancellable!=NULL)
+        cancellable = g_object_ref(cancellable);
     for(i=0;i<((GPtrArray *)query)->len;i++)
     {
         if(cancellable!=NULL)
@@ -3218,7 +3270,8 @@ gboolean rclib_db_library_data_query(RCLibDbLibraryData *library_data,
         }
         if(!result) break;
     }
-    g_object_unref(cancellable);
+    if(cancellable!=NULL)
+        g_object_unref(cancellable);
     return result;
 }
 
@@ -3247,7 +3300,8 @@ GPtrArray *rclib_db_library_query(RCLibDbQuery *query,
     if(instance==NULL) return NULL;
     priv = RCLIB_DB(instance)->priv;
     if(priv==NULL) return NULL;
-    cancellable = g_object_ref(cancellable);
+    if(cancellable!=NULL)
+        cancellable = g_object_ref(cancellable);
     query_result = g_ptr_array_new_with_free_func((GDestroyNotify)
         rclib_db_library_data_unref);
     g_rw_lock_reader_lock(&(priv->library_rw_lock));
@@ -3267,8 +3321,9 @@ GPtrArray *rclib_db_library_query(RCLibDbQuery *query,
                 library_data));
         }
     }
-    g_rw_lock_reader_unlock(&(priv->library_rw_lock)); 
-    g_object_unref(cancellable);   
+    g_rw_lock_reader_unlock(&(priv->library_rw_lock));
+    if(cancellable!=NULL) 
+        g_object_unref(cancellable);   
     return query_result;
 }
 
@@ -3298,7 +3353,8 @@ GPtrArray *rclib_db_library_query_get_uris(RCLibDbQuery *query,
     if(instance==NULL) return NULL;
     priv = RCLIB_DB(instance)->priv;
     if(priv==NULL) return NULL;
-    cancellable = g_object_ref(cancellable);
+    if(cancellable!=NULL)
+        cancellable = g_object_ref(cancellable);
     query_result = g_ptr_array_new_with_free_func(g_free);
     g_rw_lock_reader_lock(&(priv->library_rw_lock));
     g_hash_table_iter_init(&iter, priv->library_table);
@@ -3317,7 +3373,8 @@ GPtrArray *rclib_db_library_query_get_uris(RCLibDbQuery *query,
         }
     }
     g_rw_lock_reader_unlock(&(priv->library_rw_lock));
-    g_object_unref(cancellable);    
+    if(cancellable!=NULL)
+        g_object_unref(cancellable);    
     return query_result;
 }
 
@@ -3424,6 +3481,8 @@ GObject *rclib_db_library_query_result_new(RCLibDbLibraryQueryResult *base,
     if(priv==NULL)
         return NULL;
     
+    priv->query = rclib_db_query_parse(RCLIB_DB_QUERY_CONDITION_TYPE_NONE);
+    
     for(i=0;prop_types!=NULL && prop_types[i]!=RCLIB_DB_QUERY_DATA_TYPE_NONE;
         i++)
     {
@@ -3525,8 +3584,9 @@ void rclib_db_library_query_result_copy_contents(
                 continue;
             }
             prop_string = NULL;
-            rclib_db_library_data_get(library_data, prop_type, &prop_string,
-                RCLIB_DB_LIBRARY_DATA_TYPE_NONE);
+            rclib_db_library_data_get(library_data,
+                rclib_db_library_query_type_to_data_type(prop_type),
+                &prop_string, RCLIB_DB_LIBRARY_DATA_TYPE_NONE);
             if(prop_string==NULL)
                 prop_string = g_strdup("");
             iter = g_hash_table_lookup(prop_item->prop_name_table,
@@ -3973,6 +4033,10 @@ void rclib_db_library_query_result_set_query(
     if(priv->query!=NULL)
     {
         rclib_db_query_free(priv->query);
+    }
+    if(query==NULL)
+    {
+        query = rclib_db_query_parse(RCLIB_DB_QUERY_CONDITION_TYPE_NONE);
     }
     priv->query = rclib_db_query_copy(query);
 }

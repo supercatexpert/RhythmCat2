@@ -302,7 +302,6 @@ static void rc_plugin_lrcshow_show(GtkWidget *widget,
         index_now = g_sequence_iter_get_position(iter_now);
     else
         index_now = -1;
-    
     for(iter_foreach = g_sequence_get_begin_iter(seq);
         !g_sequence_iter_is_end(iter_foreach);
         iter_foreach = g_sequence_iter_next(iter_foreach))
@@ -315,7 +314,9 @@ static void rc_plugin_lrcshow_show(GtkWidget *widget,
         if(lrc_y<0 || lrc_y>allocation.height) continue;
         if(index_foreach!=index_now)
         {
+            if(priv->lrc_normal_surface==NULL) continue;
             surface = priv->lrc_normal_surface[index_foreach];
+            if(surface==NULL) continue;
             surface_width = cairo_image_surface_get_width(surface);
             surface_height = cairo_image_surface_get_height(surface);
             lrc_x = roundf((allocation.width - surface_width) / 2);
@@ -329,7 +330,9 @@ static void rc_plugin_lrcshow_show(GtkWidget *widget,
         }
         else
         {
+            if(priv->lrc_active_surface==NULL) continue;
             surface = priv->lrc_active_surface[index_foreach];
+            if(surface==NULL) continue;
             surface_width = cairo_image_surface_get_width(surface);
             surface_height = cairo_image_surface_get_height(surface);
             if(surface_width>allocation.width && !priv->drag_action)
@@ -627,6 +630,7 @@ static gboolean rc_plugin_lrcshow_load(RCLibPluginData *plugin)
         (GSourceFunc)rc_plugin_lrcshow_update, priv);
     if(!priv->show_window)
         gtk_toggle_action_set_active(priv->action, FALSE);
+    rc_plugin_lrcshow_lyric_ready_cb(NULL, 0, priv);
     return TRUE;
 }
 

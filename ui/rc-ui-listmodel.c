@@ -24,6 +24,7 @@
  */
 
 #include "rc-ui-listmodel.h"
+#include "rc-ui-library-view.h"
 #include "rc-common.h"
 
 /**

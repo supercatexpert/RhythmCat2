@@ -27,6 +27,7 @@
 #include "rc-ui-listview.h"
 #include "rc-ui-listmodel.h"
 #include "rc-ui-library-model.h"
+#include "rc-ui-library-view.h"
 #include "rc-ui-menu.h"
 #include "rc-ui-dialog.h"
 #include "rc-ui-slabel.h"
@@ -109,6 +110,9 @@ struct _RCUiMainWindowPrivate
     gulong refresh_updated_id;  
     gulong album_found_id;
     gulong album_none_id;
+    
+    GtkWidget *library_window;
+    GtkWidget *library_list_view;
 };
 
 enum
@@ -1502,6 +1506,14 @@ static void rc_ui_main_window_instance_init(RCUiMainWindow *window)
     priv->library_list_model = rc_ui_library_list_store_new(
         RCLIB_DB_LIBRARY_QUERY_RESULT(library_query_result));
     g_object_unref(library_query_result);
+    
+    priv->library_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+    priv->library_list_view = rc_ui_library_list_view_new();
+    gtk_tree_view_set_model(GTK_TREE_VIEW(priv->library_list_view),
+        priv->library_list_model);
+    gtk_container_add(GTK_CONTAINER(priv->library_window),
+        priv->library_list_view);
+    gtk_widget_show_all(priv->library_window);
 }
 
 GType rc_ui_main_window_get_type()

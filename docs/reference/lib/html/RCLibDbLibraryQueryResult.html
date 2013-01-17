@@ -174,7 +174,8 @@ enum                <a class="link" href="RCLibDbLibraryQueryResult.html#RCLibDb
                                                          <em class="parameter"><code><a class="link" href="RCLibDbLibraryQueryResult.html#RCLibDbLibraryQueryResultIter"><span class="type">RCLibDbLibraryQueryResultIter</span></a> *iter</code></em>);
 const <a class="link" href="RCLibDbLibraryQueryResult.html#RCLibDbQuery"><span class="returnvalue">RCLibDbQuery</span></a> * <a class="link" href="RCLibDbLibraryQueryResult.html#rclib-db-library-query-result-get-query" title="rclib_db_library_query_result_get_query ()">rclib_db_library_query_result_get_query</a>
                                                         (<em class="parameter"><code><a class="link" href="RCLibDbLibraryQueryResult.html" title="RCLibDb"><span class="type">RCLibDbLibraryQueryResult</span></a> *query_result</code></em>);
-<a href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GObject"><span class="returnvalue">GObject</span></a> *           <a class="link" href="RCLibDbLibraryQueryResult.html#rclib-db-library-query-result-new" title="rclib_db_library_query_result_new ()">rclib_db_library_query_result_new</a>   ();
+<a href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GObject"><span class="returnvalue">GObject</span></a> *           <a class="link" href="RCLibDbLibraryQueryResult.html#rclib-db-library-query-result-new" title="rclib_db_library_query_result_new ()">rclib_db_library_query_result_new</a>   (<em class="parameter"><code><a class="link" href="RCLibDbLibraryQueryResult.html" title="RCLibDb"><span class="type">RCLibDbLibraryQueryResult</span></a> *base</code></em>,
+                                                         <em class="parameter"><code><a class="link" href="RCLibDbLibraryQueryResult.html#RCLibDbQueryDataType" title="enum RCLibDbQueryDataType"><span class="type">RCLibDbQueryDataType</span></a> *prop_types</code></em>);
 <span class="returnvalue">RCLibDbLibraryQueryResultPropIter</span> * <a class="link" href="RCLibDbLibraryQueryResult.html#rclib-db-library-query-result-prop-get-begin-iter" title="rclib_db_library_query_result_prop_get_begin_iter ()">rclib_db_library_query_result_prop_get_begin_iter</a>
                                                         (<em class="parameter"><code><a class="link" href="RCLibDbLibraryQueryResult.html" title="RCLibDb"><span class="type">RCLibDbLibraryQueryResult</span></a> *query_result</code></em>,
                                                          <em class="parameter"><code><a class="link" href="RCLibDbLibraryQueryResult.html#RCLibDbQueryDataType" title="enum RCLibDbQueryDataType"><span class="type">RCLibDbQueryDataType</span></a> prop_type</code></em>);
@@ -211,7 +212,8 @@ const <a class="link" href="RCLibDbLibraryQueryResult.html#RCLibDbQuery"><span c
 <span class="returnvalue">void</span>                <a class="link" href="RCLibDbLibraryQueryResult.html#rclib-db-library-query-result-query-clear" title="rclib_db_library_query_result_query_clear ()">rclib_db_library_query_result_query_clear</a>
                                                         (<em class="parameter"><code><a class="link" href="RCLibDbLibraryQueryResult.html" title="RCLibDb"><span class="type">RCLibDbLibraryQueryResult</span></a> *query_result</code></em>);
 <span class="returnvalue">void</span>                <a class="link" href="RCLibDbLibraryQueryResult.html#rclib-db-library-query-result-query-start" title="rclib_db_library_query_result_query_start ()">rclib_db_library_query_result_query_start</a>
-                                                        (<em class="parameter"><code><a class="link" href="RCLibDbLibraryQueryResult.html" title="RCLibDb"><span class="type">RCLibDbLibraryQueryResult</span></a> *query_result</code></em>);
+                                                        (<em class="parameter"><code><a class="link" href="RCLibDbLibraryQueryResult.html" title="RCLibDb"><span class="type">RCLibDbLibraryQueryResult</span></a> *query_result</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> clear</code></em>);
 <span class="returnvalue">void</span>                <a class="link" href="RCLibDbLibraryQueryResult.html#rclib-db-library-query-result-set-query" title="rclib_db_library_query_result_set_query ()">rclib_db_library_query_result_set_query</a>
                                                         (<em class="parameter"><code><a class="link" href="RCLibDbLibraryQueryResult.html" title="RCLibDb"><span class="type">RCLibDbLibraryQueryResult</span></a> *query_result</code></em>,
                                                          <em class="parameter"><code>const <a class="link" href="RCLibDbLibraryQueryResult.html#RCLibDbQuery"><span class="type">RCLibDbQuery</span></a> *query</code></em>);
@@ -396,9 +398,11 @@ const <a class="link" href="RCLibDbLibraryQueryResult.html#RCLibDbQuery"><span c
   "<a class="link" href="RCLibDbLibraryQueryResult.html#RCLibDbLibraryQueryResult-prop-added" title='The "prop-added" signal'>prop-added</a>"                                     : <a href="/usr/share/gtk-doc/html/gobject/gobject-Signals.html#G-SIGNAL-RUN-FIRST:CAPS"><code class="literal">Run First</code></a>
   "<a class="link" href="RCLibDbLibraryQueryResult.html#RCLibDbLibraryQueryResult-prop-changed" title='The "prop-changed" signal'>prop-changed</a>"                                   : <a href="/usr/share/gtk-doc/html/gobject/gobject-Signals.html#G-SIGNAL-RUN-FIRST:CAPS"><code class="literal">Run First</code></a>
   "<a class="link" href="RCLibDbLibraryQueryResult.html#RCLibDbLibraryQueryResult-prop-delete" title='The "prop-delete" signal'>prop-delete</a>"                                    : <a href="/usr/share/gtk-doc/html/gobject/gobject-Signals.html#G-SIGNAL-RUN-FIRST:CAPS"><code class="literal">Run First</code></a>
+  "<a class="link" href="RCLibDbLibraryQueryResult.html#RCLibDbLibraryQueryResult-prop-reordered" title='The "prop-reordered" signal'>prop-reordered</a>"                                 : <a href="/usr/share/gtk-doc/html/gobject/gobject-Signals.html#G-SIGNAL-RUN-FIRST:CAPS"><code class="literal">Run First</code></a>
   "<a class="link" href="RCLibDbLibraryQueryResult.html#RCLibDbLibraryQueryResult-query-result-added" title='The "query-result-added" signal'>query-result-added</a>"                             : <a href="/usr/share/gtk-doc/html/gobject/gobject-Signals.html#G-SIGNAL-RUN-FIRST:CAPS"><code class="literal">Run First</code></a>
   "<a class="link" href="RCLibDbLibraryQueryResult.html#RCLibDbLibraryQueryResult-query-result-changed" title='The "query-result-changed" signal'>query-result-changed</a>"                           : <a href="/usr/share/gtk-doc/html/gobject/gobject-Signals.html#G-SIGNAL-RUN-FIRST:CAPS"><code class="literal">Run First</code></a>
   "<a class="link" href="RCLibDbLibraryQueryResult.html#RCLibDbLibraryQueryResult-query-result-delete" title='The "query-result-delete" signal'>query-result-delete</a>"                            : <a href="/usr/share/gtk-doc/html/gobject/gobject-Signals.html#G-SIGNAL-RUN-FIRST:CAPS"><code class="literal">Run First</code></a>
+  "<a class="link" href="RCLibDbLibraryQueryResult.html#RCLibDbLibraryQueryResult-query-result-reordered" title='The "query-result-reordered" signal'>query-result-reordered</a>"                         : <a href="/usr/share/gtk-doc/html/gobject/gobject-Signals.html#G-SIGNAL-RUN-FIRST:CAPS"><code class="literal">Run First</code></a>
 </pre>
 </div>
 <div class="refsect1">
@@ -458,7 +462,7 @@ The enum type for set/get the data in the <a class="link" href="RCLibDbLibraryQu
 <tr>
 <td><p><a name="RCLIB-DB-CATALOG-DATA-TYPE-PLAYLIST:CAPS"></a><span class="term"><code class="literal">RCLIB_DB_CATALOG_DATA_TYPE_PLAYLIST</code></span></p></td>
 <td>the playlist
-    (<a href="RCLibDb.html#RCLibDbPlaylistSequence"><span class="type">RCLibDbPlaylistSequence</span></a>), should not be used out of this module
+    (<span class="type">RCLibDbPlaylistSequence</span>), should not be used out of this module
 </td>
 </tr>
 <tr>
@@ -1455,7 +1459,7 @@ Return a negative number if <em class="parameter"><code>a</code></em> comes befo
 and a positive number if <em class="parameter"><code>a</code></em> comes after <em class="parameter"><code>b</code></em>. MT safe.
 </p>
 <p>
-The <em class="parameter"><code>a</code></em> and <em class="parameter"><code>b</code></em> iterators must point into the same <a href="RCLibDb.html#RCLibDbCatalogSequence"><span class="type">RCLibDbCatalogSequence</span></a>.
+The <em class="parameter"><code>a</code></em> and <em class="parameter"><code>b</code></em> iterators must point into the same <span class="type">RCLibDbCatalogSequence</span>.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -1670,7 +1674,7 @@ guaranteed to be <span class="emphasis"><em>exactly</em></span> in the middle.
 </p>
 <p>
 The <em class="parameter"><code>begin</code></em> and <em class="parameter"><code>end</code></em> iterators must both point to the same
-<a href="RCLibDb.html#RCLibDbCatalogSequence"><span class="type">RCLibDbCatalogSequence</span></a> and <em class="parameter"><code>begin</code></em> must come before or be equal
+<span class="type">RCLibDbCatalogSequence</span> and <em class="parameter"><code>begin</code></em> must come before or be equal
 to <em class="parameter"><code>end</code></em> in the sequence. MT safe.
 </p>
 <div class="variablelist"><table border="0">
@@ -2487,17 +2491,31 @@ Get the current query applied to the query result.
 <hr>
 <div class="refsect2">
 <a name="rclib-db-library-query-result-new"></a><h3>rclib_db_library_query_result_new ()</h3>
-<pre class="programlisting"><a href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GObject"><span class="returnvalue">GObject</span></a> *           rclib_db_library_query_result_new   ();</pre>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GObject"><span class="returnvalue">GObject</span></a> *           rclib_db_library_query_result_new   (<em class="parameter"><code><a class="link" href="RCLibDbLibraryQueryResult.html" title="RCLibDb"><span class="type">RCLibDbLibraryQueryResult</span></a> *base</code></em>,
+                                                         <em class="parameter"><code><a class="link" href="RCLibDbLibraryQueryResult.html#RCLibDbQueryDataType" title="enum RCLibDbQueryDataType"><span class="type">RCLibDbQueryDataType</span></a> *prop_types</code></em>);</pre>
 <p>
 Create a new library query result object instance.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
-<tbody><tr>
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>base</code></em> :</span></p></td>
+<td>the base instance of the query result, <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><span class="type">NULL</span></a> to create a base
+instance</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>prop_types</code></em> :</span></p></td>
+<td>the property type list, end with <a class="link" href="RCLibDbLibraryQueryResult.html#RCLIB-DB-QUERY-DATA-TYPE-NONE:CAPS"><span class="type">RCLIB_DB_QUERY_DATA_TYPE_NONE</span></a>
+</td>
+</tr>
+<tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>The <a class="link" href="RCLibDbLibraryQueryResult.html" title="RCLibDb"><span class="type">RCLibDbLibraryQueryResult</span></a> instance, <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><span class="type">NULL</span></a> the operation
-failed.</td>
-</tr></tbody>
+<td>The <a class="link" href="RCLibDbLibraryQueryResult.html" title="RCLibDb"><span class="type">RCLibDbLibraryQueryResult</span></a> instance, <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><span class="type">NULL</span></a>
+the operation failed. <span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span>
+</td>
+</tr>
+</tbody>
 </table></div>
 </div>
 <hr>
@@ -2801,16 +2819,23 @@ Clear the query result.
 <div class="refsect2">
 <a name="rclib-db-library-query-result-query-start"></a><h3>rclib_db_library_query_result_query_start ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>                rclib_db_library_query_result_query_start
-                                                        (<em class="parameter"><code><a class="link" href="RCLibDbLibraryQueryResult.html" title="RCLibDb"><span class="type">RCLibDbLibraryQueryResult</span></a> *query_result</code></em>);</pre>
+                                                        (<em class="parameter"><code><a class="link" href="RCLibDbLibraryQueryResult.html" title="RCLibDb"><span class="type">RCLibDbLibraryQueryResult</span></a> *query_result</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> clear</code></em>);</pre>
 <p>
 Start query operation.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
-<tbody><tr>
+<tbody>
+<tr>
 <td><p><span class="term"><em class="parameter"><code>query_result</code></em> :</span></p></td>
 <td>the <a class="link" href="RCLibDbLibraryQueryResult.html" title="RCLibDb"><span class="type">RCLibDbLibraryQueryResult</span></a> instance</td>
-</tr></tbody>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>clear</code></em> :</span></p></td>
+<td>whether to clear the query result data</td>
+</tr>
+</tbody>
 </table></div>
 </div>
 <hr>
@@ -3517,7 +3542,7 @@ Return a negative number if <em class="parameter"><code>a</code></em> comes befo
 and a positive number if <em class="parameter"><code>a</code></em> comes after <em class="parameter"><code>b</code></em>. MT safe.
 </p>
 <p>
-The <em class="parameter"><code>a</code></em> and <em class="parameter"><code>b</code></em> iterators must point into the same <a href="RCLibDb.html#RCLibDbPlaylistSequence"><span class="type">RCLibDbPlaylistSequence</span></a>.
+The <em class="parameter"><code>a</code></em> and <em class="parameter"><code>b</code></em> iterators must point into the same <span class="type">RCLibDbPlaylistSequence</span>.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -3935,7 +3960,7 @@ guaranteed to be <span class="emphasis"><em>exactly</em></span> in the middle. M
 </p>
 <p>
 The <em class="parameter"><code>begin</code></em> and <em class="parameter"><code>end</code></em> iterators must both point to the same
-<a href="RCLibDb.html#RCLibDbPlaylistSequence"><span class="type">RCLibDbPlaylistSequence</span></a> and <em class="parameter"><code>begin</code></em> must come before or be equal
+<span class="type">RCLibDbPlaylistSequence</span> and <em class="parameter"><code>begin</code></em> must come before or be equal
 to <em class="parameter"><code>end</code></em> in the sequence.
 </p>
 <div class="variablelist"><table border="0">
@@ -4739,11 +4764,11 @@ queue have been processed.
 <a name="RCLibDbLibraryQueryResult-prop-added"></a><h3>The <code class="literal">"prop-added"</code> signal</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>                user_function                      (<a class="link" href="RCLibDbLibraryQueryResult.html" title="RCLibDb"><span class="type">RCLibDbLibraryQueryResult</span></a> *qr,
                                                         <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a>                      prop_type,
-                                                        <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>                   iter,
-                                                        <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>                   user_data)      : <a href="/usr/share/gtk-doc/html/gobject/gobject-Signals.html#G-SIGNAL-RUN-FIRST:CAPS"><code class="literal">Run First</code></a></pre>
+                                                        <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a>                     *prop_string,
+                                                        <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>                   user_data)        : <a href="/usr/share/gtk-doc/html/gobject/gobject-Signals.html#G-SIGNAL-RUN-FIRST:CAPS"><code class="literal">Run First</code></a></pre>
 <p>
 The ::query-result-changed signal is emitted when new property item
-which the <em class="parameter"><code>iter</code></em> pointed to has been added.
+which the <em class="parameter"><code>prop</code></em>)_string pointed to has been added.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -4757,8 +4782,8 @@ which the <em class="parameter"><code>iter</code></em> pointed to has been added
 <td>the property type</td>
 </tr>
 <tr>
-<td><p><span class="term"><em class="parameter"><code>iter</code></em> :</span></p></td>
-<td>the iter pointed to the a item</td>
+<td><p><span class="term"><em class="parameter"><code>prop_string</code></em> :</span></p></td>
+<td>the property text of the new item</td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>user_data</code></em> :</span></p></td>
@@ -4772,11 +4797,11 @@ which the <em class="parameter"><code>iter</code></em> pointed to has been added
 <a name="RCLibDbLibraryQueryResult-prop-changed"></a><h3>The <code class="literal">"prop-changed"</code> signal</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>                user_function                      (<a class="link" href="RCLibDbLibraryQueryResult.html" title="RCLibDb"><span class="type">RCLibDbLibraryQueryResult</span></a> *qr,
                                                         <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a>                      prop_type,
-                                                        <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>                   iter,
-                                                        <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>                   user_data)      : <a href="/usr/share/gtk-doc/html/gobject/gobject-Signals.html#G-SIGNAL-RUN-FIRST:CAPS"><code class="literal">Run First</code></a></pre>
+                                                        <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a>                     *prop_string,
+                                                        <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>                   user_data)        : <a href="/usr/share/gtk-doc/html/gobject/gobject-Signals.html#G-SIGNAL-RUN-FIRST:CAPS"><code class="literal">Run First</code></a></pre>
 <p>
 The ::query-result-changed signal is emitted when the property item 
-which the <em class="parameter"><code>iter</code></em> pointed to has been changed.
+which the <em class="parameter"><code>prop_string</code></em> pointed to has been changed.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -4790,8 +4815,8 @@ which the <em class="parameter"><code>iter</code></em> pointed to has been chang
 <td>the property type</td>
 </tr>
 <tr>
-<td><p><span class="term"><em class="parameter"><code>iter</code></em> :</span></p></td>
-<td>the iter pointed to the a item</td>
+<td><p><span class="term"><em class="parameter"><code>prop_string</code></em> :</span></p></td>
+<td>the property text of the item</td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>user_data</code></em> :</span></p></td>
@@ -4805,11 +4830,11 @@ which the <em class="parameter"><code>iter</code></em> pointed to has been chang
 <a name="RCLibDbLibraryQueryResult-prop-delete"></a><h3>The <code class="literal">"prop-delete"</code> signal</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>                user_function                      (<a class="link" href="RCLibDbLibraryQueryResult.html" title="RCLibDb"><span class="type">RCLibDbLibraryQueryResult</span></a> *qr,
                                                         <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a>                      prop_type,
-                                                        <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>                   iter,
-                                                        <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>                   user_data)      : <a href="/usr/share/gtk-doc/html/gobject/gobject-Signals.html#G-SIGNAL-RUN-FIRST:CAPS"><code class="literal">Run First</code></a></pre>
+                                                        <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a>                     *prop_string,
+                                                        <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>                   user_data)        : <a href="/usr/share/gtk-doc/html/gobject/gobject-Signals.html#G-SIGNAL-RUN-FIRST:CAPS"><code class="literal">Run First</code></a></pre>
 <p>
 The ::query-result-changed signal is emitted when the property item 
-which the <em class="parameter"><code>iter</code></em> pointed to is about to be deleted.
+which the <em class="parameter"><code>prop_string</code></em> pointed to is about to be deleted.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -4823,8 +4848,44 @@ which the <em class="parameter"><code>iter</code></em> pointed to is about to be
 <td>the property type</td>
 </tr>
 <tr>
-<td><p><span class="term"><em class="parameter"><code>iter</code></em> :</span></p></td>
-<td>the iter pointed to the a item</td>
+<td><p><span class="term"><em class="parameter"><code>prop_string</code></em> :</span></p></td>
+<td>the property text of the item</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>user_data</code></em> :</span></p></td>
+<td>user data set when the signal handler was connected.</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="RCLibDbLibraryQueryResult-prop-reordered"></a><h3>The <code class="literal">"prop-reordered"</code> signal</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                user_function                      (<a class="link" href="RCLibDbLibraryQueryResult.html" title="RCLibDb"><span class="type">RCLibDbLibraryQueryResult</span></a> *qr,
+                                                        <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a>                      prop_type,
+                                                        <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>                   new_order,
+                                                        <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>                   user_data)      : <a href="/usr/share/gtk-doc/html/gobject/gobject-Signals.html#G-SIGNAL-RUN-FIRST:CAPS"><code class="literal">Run First</code></a></pre>
+<p>
+The ::prop-reordered signal is emitted when the query result property
+items have been reordered.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>qr</code></em> :</span></p></td>
+<td>the <a class="link" href="RCLibDbLibraryQueryResult.html#RCLibDb"><span class="type">RCLibDb</span></a> that received the signal</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>prop_type</code></em> :</span></p></td>
+<td>the property type</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>new_order</code></em> :</span></p></td>
+<td>an array of integers mapping the current position of each
+playlist item to its old position before the re-ordering,
+i.e. <em class="parameter"><code>new_order</code></em><code class="literal">[newpos] = oldpos</code>
+</td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>user_data</code></em> :</span></p></td>
@@ -4837,7 +4898,7 @@ which the <em class="parameter"><code>iter</code></em> pointed to is about to be
 <div class="refsect2">
 <a name="RCLibDbLibraryQueryResult-query-result-added"></a><h3>The <code class="literal">"query-result-added"</code> signal</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>                user_function                      (<a class="link" href="RCLibDbLibraryQueryResult.html" title="RCLibDb"><span class="type">RCLibDbLibraryQueryResult</span></a> *qr,
-                                                        <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>                   iter,
+                                                        <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a>                     *uri,
                                                         <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>                   user_data)      : <a href="/usr/share/gtk-doc/html/gobject/gobject-Signals.html#G-SIGNAL-RUN-FIRST:CAPS"><code class="literal">Run First</code></a></pre>
 <p>
 The ::query-result-added signal is emitted when a new item has been
@@ -4851,8 +4912,8 @@ added to the query result.
 <td>the <a class="link" href="RCLibDbLibraryQueryResult.html#RCLibDb"><span class="type">RCLibDb</span></a> that received the signal</td>
 </tr>
 <tr>
-<td><p><span class="term"><em class="parameter"><code>iter</code></em> :</span></p></td>
-<td>the iter pointed to the added item</td>
+<td><p><span class="term"><em class="parameter"><code>uri</code></em> :</span></p></td>
+<td>the URI of the added item</td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>user_data</code></em> :</span></p></td>
@@ -4865,11 +4926,11 @@ added to the query result.
 <div class="refsect2">
 <a name="RCLibDbLibraryQueryResult-query-result-changed"></a><h3>The <code class="literal">"query-result-changed"</code> signal</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>                user_function                      (<a class="link" href="RCLibDbLibraryQueryResult.html" title="RCLibDb"><span class="type">RCLibDbLibraryQueryResult</span></a> *qr,
-                                                        <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>                   iter,
+                                                        <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a>                     *uri,
                                                         <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>                   user_data)      : <a href="/usr/share/gtk-doc/html/gobject/gobject-Signals.html#G-SIGNAL-RUN-FIRST:CAPS"><code class="literal">Run First</code></a></pre>
 <p>
-The ::query-result-changed signal is emitted when the item which
-the <em class="parameter"><code>iter</code></em> pointed to has been changed.
+The ::query-result-changed signal is emitted when the <em class="parameter"><code>uri</code></em> which
+pointed to the item has been changed.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -4879,8 +4940,8 @@ the <em class="parameter"><code>iter</code></em> pointed to has been changed.
 <td>the <a class="link" href="RCLibDbLibraryQueryResult.html#RCLibDb"><span class="type">RCLibDb</span></a> that received the signal</td>
 </tr>
 <tr>
-<td><p><span class="term"><em class="parameter"><code>iter</code></em> :</span></p></td>
-<td>the iter pointed to the changed item</td>
+<td><p><span class="term"><em class="parameter"><code>uri</code></em> :</span></p></td>
+<td>the URI of the changed item</td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>user_data</code></em> :</span></p></td>
@@ -4893,11 +4954,11 @@ the <em class="parameter"><code>iter</code></em> pointed to has been changed.
 <div class="refsect2">
 <a name="RCLibDbLibraryQueryResult-query-result-delete"></a><h3>The <code class="literal">"query-result-delete"</code> signal</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>                user_function                      (<a class="link" href="RCLibDbLibraryQueryResult.html" title="RCLibDb"><span class="type">RCLibDbLibraryQueryResult</span></a> *qr,
-                                                        <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>                   iter,
+                                                        <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a>                     *uri,
                                                         <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>                   user_data)      : <a href="/usr/share/gtk-doc/html/gobject/gobject-Signals.html#G-SIGNAL-RUN-FIRST:CAPS"><code class="literal">Run First</code></a></pre>
 <p>
-The ::query-result-delete signal is emitted before the item which the
-<em class="parameter"><code>iter</code></em> pointed to removed from the query result.
+The ::query-result-delete signal is emitted before the <em class="parameter"><code>uri</code></em> which
+pointed to the item removed from the query result.
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
@@ -4907,8 +4968,39 @@ The ::query-result-delete signal is emitted before the item which the
 <td>the <a class="link" href="RCLibDbLibraryQueryResult.html#RCLibDb"><span class="type">RCLibDb</span></a> that received the signal</td>
 </tr>
 <tr>
-<td><p><span class="term"><em class="parameter"><code>iter</code></em> :</span></p></td>
-<td>the iter pointed to the item to be deleted</td>
+<td><p><span class="term"><em class="parameter"><code>uri</code></em> :</span></p></td>
+<td>the URI of the deleted item</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>user_data</code></em> :</span></p></td>
+<td>user data set when the signal handler was connected.</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="RCLibDbLibraryQueryResult-query-result-reordered"></a><h3>The <code class="literal">"query-result-reordered"</code> signal</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                user_function                      (<a class="link" href="RCLibDbLibraryQueryResult.html" title="RCLibDb"><span class="type">RCLibDbLibraryQueryResult</span></a> *qr,
+                                                        <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>                   new_order,
+                                                        <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>                   user_data)      : <a href="/usr/share/gtk-doc/html/gobject/gobject-Signals.html#G-SIGNAL-RUN-FIRST:CAPS"><code class="literal">Run First</code></a></pre>
+<p>
+The ::query-result-reordered signal is emitted when the query result
+items have been reordered.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>qr</code></em> :</span></p></td>
+<td>the <a class="link" href="RCLibDbLibraryQueryResult.html#RCLibDb"><span class="type">RCLibDb</span></a> that received the signal</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>new_order</code></em> :</span></p></td>
+<td>an array of integers mapping the current position of each
+playlist item to its old position before the re-ordering,
+i.e. <em class="parameter"><code>new_order</code></em><code class="literal">[newpos] = oldpos</code>
+</td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>user_data</code></em> :</span></p></td>

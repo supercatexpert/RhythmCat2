@@ -1814,6 +1814,8 @@ gboolean rclib_db_init(const gchar *file)
         &(priv->dirty_flag));
     priv->filename = g_strdup(file);
     g_message("Database loaded.");
+    rclib_db_library_query_result_query_start(RCLIB_DB_LIBRARY_QUERY_RESULT(
+        priv->library_query_base), TRUE);
     return TRUE;
 }
 
