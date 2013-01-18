@@ -1513,7 +1513,7 @@ static void rc_ui_main_window_instance_init(RCUiMainWindow *window)
         priv->library_list_model);
     gtk_container_add(GTK_CONTAINER(priv->library_window),
         priv->library_list_view);
-    gtk_widget_show_all(priv->library_window);
+    //gtk_widget_show_all(priv->library_window);
 }
 
 GType rc_ui_main_window_get_type()

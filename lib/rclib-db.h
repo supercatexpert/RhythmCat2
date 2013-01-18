@@ -576,8 +576,8 @@ GObject *rclib_db_library_get_base_query_result();
 GObject *rclib_db_library_get_genre_query_result();
 GObject *rclib_db_library_get_artist_query_result();
 GObject *rclib_db_library_get_album_query_result();
-GObject *rclib_db_library_query_result_new(RCLibDbLibraryQueryResult *base,
-    RCLibDbQueryDataType *prop_types);
+GObject *rclib_db_library_query_result_new(RCLibDb *db,
+    RCLibDbLibraryQueryResult *base, RCLibDbQueryDataType *prop_types);
 void rclib_db_library_query_result_copy_contents(
     RCLibDbLibraryQueryResult *dst, RCLibDbLibraryQueryResult *src);
 void rclib_db_library_query_result_chain(

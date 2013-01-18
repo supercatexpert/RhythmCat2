@@ -316,7 +316,7 @@ static void rc_main_app_activate(GApplication *application)
     /*
     //Just a query test!
     */
-    //rclib_db_library_add_music("file:///home/supercat/Music/My%20Love.FLAC");
+    //rclib_db_library_add_music("file:///home/supercat/Music/HEART%20MOVING.FLAC");
     //GObject *base_query_result = rclib_db_library_get_base_query_result();
     //rclib_db_library_query_result_query_start(base_query_result, TRUE);
     //g_object_unref(base_query_result);

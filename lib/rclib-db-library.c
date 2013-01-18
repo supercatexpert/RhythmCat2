@@ -396,7 +396,8 @@ static void rclib_db_library_query_result_added_cb(RCLibDb *db,
     if(priv->query==NULL) return;
     library_data = rclib_db_library_get_data(uri);
     if(library_data==NULL) return;
-    if(rclib_db_library_data_query(library_data, priv->query, NULL))
+    if(rclib_db_library_data_query(library_data, priv->query, NULL) &&
+        !g_hash_table_contains(priv->query_uri_table, uri))
     {
         iter = g_sequence_insert_sorted(priv->query_sequence, 
             rclib_db_library_data_ref(library_data),
@@ -746,6 +747,11 @@ static void rclib_db_library_query_result_base_added_cb(
     library_data = rclib_db_library_data_ref(library_data);
     if(priv->query!=NULL && !rclib_db_library_data_query(library_data,
         priv->query, NULL))
+    {
+        rclib_db_library_data_unref(library_data);
+        return;
+    }
+    if(g_hash_table_contains(priv->query_uri_table, uri))
     {
         rclib_db_library_data_unref(library_data);
         return;
@@ -1768,27 +1774,17 @@ gboolean _rclib_db_instance_init_library(RCLibDb *db, RCLibDbPrivate *priv)
     g_rw_lock_init(&(priv->library_rw_lock));
     
     prop_types[0] = RCLIB_DB_QUERY_DATA_TYPE_GENRE;
-    priv->library_query_base = rclib_db_library_query_result_new(NULL, 
+    priv->library_query_base = rclib_db_library_query_result_new(db, NULL, 
         prop_types);
     prop_types[0] = RCLIB_DB_QUERY_DATA_TYPE_ARTIST;
-    priv->library_query_genre = rclib_db_library_query_result_new(
+    priv->library_query_genre = rclib_db_library_query_result_new(db, 
         RCLIB_DB_LIBRARY_QUERY_RESULT(priv->library_query_base), prop_types);
     prop_types[0] = RCLIB_DB_QUERY_DATA_TYPE_ALBUM;
-    priv->library_query_artist = rclib_db_library_query_result_new(
+    priv->library_query_artist = rclib_db_library_query_result_new(db, 
         RCLIB_DB_LIBRARY_QUERY_RESULT(priv->library_query_genre), prop_types);
     prop_types[0] = RCLIB_DB_QUERY_DATA_TYPE_NONE;
-    priv->library_query_album = rclib_db_library_query_result_new(
+    priv->library_query_album = rclib_db_library_query_result_new(db, 
         RCLIB_DB_LIBRARY_QUERY_RESULT(priv->library_query_artist), prop_types);
-    
-    rclib_db_library_query_result_chain(RCLIB_DB_LIBRARY_QUERY_RESULT(
-        priv->library_query_genre), RCLIB_DB_LIBRARY_QUERY_RESULT(
-        priv->library_query_base), FALSE);
-    rclib_db_library_query_result_chain(RCLIB_DB_LIBRARY_QUERY_RESULT(
-        priv->library_query_artist), RCLIB_DB_LIBRARY_QUERY_RESULT(
-        priv->library_query_genre), FALSE);
-    rclib_db_library_query_result_chain(RCLIB_DB_LIBRARY_QUERY_RESULT(
-        priv->library_query_album), RCLIB_DB_LIBRARY_QUERY_RESULT(
-        priv->library_query_artist), FALSE);
 
     return TRUE;
 }
@@ -3456,6 +3452,7 @@ GObject *rclib_db_library_get_album_query_result()
 
 /**
  * rclib_db_library_query_result_new:
+ * @db: the #RCLibDb instance
  * @base: the base instance of the query result, #NULL to create a base
  *     instance 
  * @prop_types: the property type list, end with #RCLIB_DB_QUERY_DATA_TYPE_NONE
@@ -3466,8 +3463,8 @@ GObject *rclib_db_library_get_album_query_result()
  *     the operation failed.
  */
 
-GObject *rclib_db_library_query_result_new(RCLibDbLibraryQueryResult *base,
-    RCLibDbQueryDataType *prop_types)
+GObject *rclib_db_library_query_result_new(RCLibDb *db,
+    RCLibDbLibraryQueryResult *base, RCLibDbQueryDataType *prop_types)
 {
     GObject *query_result_instance;
     guint i;
@@ -3497,13 +3494,13 @@ GObject *rclib_db_library_query_result_new(RCLibDbLibraryQueryResult *base,
         priv->query_thread = g_thread_new("RC2-Library-Query-Thread",
             rclib_db_library_query_result_query_thread_cb,
             query_result_instance);
-        priv->library_added_id = rclib_db_signal_connect("library-added",
+        priv->library_added_id = g_signal_connect(db, "library-added",
             G_CALLBACK(rclib_db_library_query_result_added_cb),
             query_result_instance);
-        priv->library_deleted_id = rclib_db_signal_connect("library-deleted",
+        priv->library_deleted_id = g_signal_connect(db, "library-deleted",
             G_CALLBACK(rclib_db_library_query_result_deleted_cb),
             query_result_instance);
-        priv->library_changed_id = rclib_db_signal_connect("library-changed",
+        priv->library_changed_id = g_signal_connect(db, "library-changed",
             G_CALLBACK(rclib_db_library_query_result_changed_cb),
             query_result_instance);
     }
@@ -3643,6 +3640,7 @@ void rclib_db_library_query_result_chain(
     if(query_result==NULL || base==NULL) return;
     priv = query_result->priv;
     if(priv==NULL) return;
+    if(priv->base_query_result!=NULL) return;
     base = g_object_ref(base);
     if(import_entries)
     {
@@ -4187,7 +4185,7 @@ void rclib_db_library_query_result_query_clear(
     {
         rclib_db_query_free(priv->query);
     }
-    priv->query = NULL;
+    priv->query = rclib_db_query_parse(RCLIB_DB_QUERY_CONDITION_TYPE_NONE);
 }
 
 /**
