@@ -184,6 +184,7 @@ static void rc_ui_library_prop_prop_added_cb(RCLibDbLibraryQueryResult *qr,
     iter = rclib_db_library_query_result_prop_get_iter_by_prop(qr,
         priv->prop_type, prop_text);
     if(iter==NULL) return;
+    //return;
     pos = rclib_db_library_query_result_prop_get_position(qr,
         priv->prop_type, iter) + 1;
     path = gtk_tree_path_new();
@@ -376,17 +377,17 @@ static gboolean rc_ui_library_prop_store_get_iter(GtkTreeModel *model,
     store = RC_UI_LIBRARY_PROP_STORE(model);
     priv = store->priv;
     i = gtk_tree_path_get_indices(path)[0];
-    if(priv->base==NULL ||
+    if(priv->base!=NULL && i>0 &&
         i-1>=rclib_db_library_query_result_prop_get_length(priv->base,
         priv->prop_type))
     {
         return FALSE;
     }
     iter->stamp = priv->stamp;
-    if(i>0)
+    if(i>0 && priv->base!=NULL)
     {
         iter->user_data = rclib_db_library_query_result_prop_get_iter_at_pos(
-            priv->base, priv->prop_type, i);
+            priv->base, priv->prop_type, i-1);
         iter->user_data2 = NULL;
     }
     else
@@ -452,7 +453,7 @@ static GtkTreePath *rc_ui_library_prop_store_get_path(GtkTreeModel *model,
         gtk_tree_path_append_index(path,
             rclib_db_library_query_result_prop_get_position(priv->base,
             priv->prop_type, (RCLibDbLibraryQueryResultPropIter *)
-            iter->user_data));
+            iter->user_data)+1);
     }
     return path;
 }
@@ -1001,8 +1002,15 @@ static gint rc_ui_library_prop_store_iter_n_children(GtkTreeModel *model,
     g_return_val_if_fail(priv!=NULL, -1);
     if(iter==NULL)
     {
-        return rclib_db_library_query_result_prop_get_length(priv->base,
-            priv->prop_type) + 1;
+        if(priv->base!=NULL)
+        {
+            return rclib_db_library_query_result_prop_get_length(priv->base,
+                priv->prop_type) + 1;
+        }
+        else
+        {
+            return 1;
+        }
     }
     g_return_val_if_fail(priv->stamp==iter->stamp, -1);
     return 0;
@@ -1054,6 +1062,7 @@ static gboolean rc_ui_library_prop_store_iter_nth_child(GtkTreeModel *model,
             return FALSE;
         }
         iter->user_data = child;
+        iter->user_data2 = NULL;
     }
     iter->stamp = priv->stamp;
     return TRUE;
@@ -1439,6 +1448,8 @@ static void rc_ui_library_list_store_init(RCUiLibraryListStore *store)
 static void rc_ui_library_prop_store_init(RCUiLibraryPropStore *store)
 {
     RCUiLibraryPropStorePrivate *priv;
+    GtkTreePath *path;
+    GtkTreeIter tree_iter;
     g_return_if_fail(RC_UI_IS_LIBRARY_PROP_STORE(store));
     priv = G_TYPE_INSTANCE_GET_PRIVATE(store, RC_UI_TYPE_LIBRARY_PROP_STORE,
         RCUiLibraryPropStorePrivate);
@@ -1446,6 +1457,13 @@ static void rc_ui_library_prop_store_init(RCUiLibraryPropStore *store)
     g_return_if_fail(priv!=NULL);
     priv->stamp = g_random_int();
     priv->n_columns = RC_UI_LIBRARY_PROP_COLUMN_LAST;
+    path = gtk_tree_path_new();
+    gtk_tree_path_append_index(path, 0);
+    tree_iter.user_data = GUINT_TO_POINTER(1);
+    tree_iter.user_data2 = GUINT_TO_POINTER(1);
+    tree_iter.stamp = priv->stamp;
+    gtk_tree_model_row_inserted(GTK_TREE_MODEL(store), path, &tree_iter);
+    gtk_tree_path_free(path);
 }
 
 GType rc_ui_library_list_store_get_type()

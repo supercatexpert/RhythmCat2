@@ -88,6 +88,19 @@ static void rc_ui_library_list_text_call_data_func(
         g_object_set(G_OBJECT(renderer), "weight", PANGO_WEIGHT_NORMAL, NULL);
 }
 
+static void rc_ui_library_prop_text_call_data_func(
+    GtkTreeViewColumn *column, GtkCellRenderer *renderer,
+    GtkTreeModel *model, GtkTreeIter *iter, gpointer data)
+{
+    gboolean flag;
+    gtk_tree_model_get(model, iter, RC_UI_LIBRARY_PROP_COLUMN_FLAG,
+        &flag, -1);
+    if(flag)
+        g_object_set(G_OBJECT(renderer), "weight", PANGO_WEIGHT_BOLD, NULL);
+    else
+        g_object_set(G_OBJECT(renderer), "weight", PANGO_WEIGHT_NORMAL, NULL);
+}
+
 static void rc_ui_library_list_view_finalize(GObject *object)
 {
     //RCUiLibraryListViewPrivate *priv = NULL;
@@ -271,10 +284,40 @@ static void rc_ui_library_list_view_instance_init(RCUiLibraryListView *view)
 static void rc_ui_library_prop_view_instance_init(RCUiLibraryPropView *view)
 {
     RCUiLibraryPropViewPrivate *priv = NULL;
+    GtkTreeSelection *selection;
     priv = G_TYPE_INSTANCE_GET_PRIVATE(view, RC_UI_TYPE_LIBRARY_PROP_VIEW,
         RCUiLibraryPropViewPrivate);
     view->priv = priv;
-    
+    g_object_set(view, "name", "RC2LibraryPropView", "headers-visible",
+        TRUE, "reorderable", FALSE, "rules-hint", TRUE, "enable-search",
+        TRUE, NULL);
+    priv->name_renderer = gtk_cell_renderer_text_new();
+    priv->count_renderer = gtk_cell_renderer_text_new();
+    gtk_cell_renderer_set_fixed_size(priv->count_renderer,
+        50, -1);
+    g_object_set(priv->name_renderer, "ellipsize", PANGO_ELLIPSIZE_END,
+        "ellipsize-set", TRUE, "weight", PANGO_WEIGHT_NORMAL,
+        "weight-set", TRUE, NULL);
+    g_object_set(priv->count_renderer, "weight", PANGO_WEIGHT_NORMAL,
+        "weight-set", TRUE, "xalign", 1.0, "width-chars", 6, NULL);
+    priv->name_column = gtk_tree_view_column_new_with_attributes(
+        _("Property"), priv->name_renderer, "text",
+        RC_UI_LIBRARY_PROP_COLUMN_NAME, NULL);
+    priv->count_column = gtk_tree_view_column_new_with_attributes(
+        _("Number"), priv->count_renderer, "text",
+        RC_UI_LIBRARY_PROP_COLUMN_COUNT, NULL);
+    gtk_tree_view_column_set_cell_data_func(priv->name_column,
+        priv->name_renderer, rc_ui_library_prop_text_call_data_func,
+        NULL, NULL);
+    gtk_tree_view_column_set_cell_data_func(priv->count_column,
+        priv->count_renderer, rc_ui_library_prop_text_call_data_func,
+        NULL, NULL);
+    g_object_set(priv->name_column, "expand", TRUE, "resizable", TRUE, NULL);
+    gtk_tree_view_append_column(GTK_TREE_VIEW(view), priv->name_column);
+    gtk_tree_view_append_column(GTK_TREE_VIEW(view), priv->count_column);
+    selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(view));
+    gtk_tree_selection_set_mode(selection, GTK_SELECTION_MULTIPLE);
+    gtk_tree_view_columns_autosize(GTK_TREE_VIEW(view));
 }
 
 GType rc_ui_library_list_view_get_type()

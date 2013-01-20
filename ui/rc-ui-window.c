@@ -86,10 +86,6 @@ struct _RCUiMainWindowPrivate
     GtkWidget *progress_eventbox;
     GdkPixbuf *cover_default_pixbuf;
     GdkPixbuf *cover_using_pixbuf;
-    GtkTreeModel *library_genre_model;
-    GtkTreeModel *library_album_model;
-    GtkTreeModel *library_artist_model;
-    GtkTreeModel *library_list_model;
     gchar *cover_file_path;
     GtkStatusIcon *tray_icon;
     guint cover_image_width;
@@ -111,8 +107,22 @@ struct _RCUiMainWindowPrivate
     gulong album_found_id;
     gulong album_none_id;
     
+    GtkTreeModel *library_genre_model;
+    GtkTreeModel *library_album_model;
+    GtkTreeModel *library_artist_model;
+    GtkTreeModel *library_list_model;
     GtkWidget *library_window;
+    GtkWidget *library_main_grid;
+    GtkWidget *library_view_paned;
+    GtkWidget *library_prop_grid;
+    GtkWidget *library_prop_genre_view;
+    GtkWidget *library_prop_album_view;
+    GtkWidget *library_prop_artist_view;
     GtkWidget *library_list_view;
+    GtkWidget *library_prop_genre_scr_window;
+    GtkWidget *library_prop_album_scr_window;
+    GtkWidget *library_prop_artist_scr_window;
+    GtkWidget *library_list_scr_window;
 };
 
 enum
@@ -1507,12 +1517,72 @@ static void rc_ui_main_window_instance_init(RCUiMainWindow *window)
         RCLIB_DB_LIBRARY_QUERY_RESULT(library_query_result));
     g_object_unref(library_query_result);
     
-    priv->library_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+    
     priv->library_list_view = rc_ui_library_list_view_new();
     gtk_tree_view_set_model(GTK_TREE_VIEW(priv->library_list_view),
         priv->library_list_model);
-    gtk_container_add(GTK_CONTAINER(priv->library_window),
+    priv->library_prop_genre_view = rc_ui_library_prop_view_new();
+    gtk_tree_view_set_model(GTK_TREE_VIEW(priv->library_prop_genre_view),
+        priv->library_genre_model);
+    priv->library_prop_album_view = rc_ui_library_prop_view_new();
+    gtk_tree_view_set_model(GTK_TREE_VIEW(priv->library_prop_album_view),
+        priv->library_album_model);
+    priv->library_prop_artist_view = rc_ui_library_prop_view_new();
+    gtk_tree_view_set_model(GTK_TREE_VIEW(priv->library_prop_artist_view),
+        priv->library_artist_model);  
+    priv->library_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+    g_object_set(priv->library_window, "default-width", 600,
+        "default-height", 400, "has-resize-grip", FALSE, NULL);
+    priv->library_list_scr_window = gtk_scrolled_window_new(NULL, NULL);
+    g_object_set(priv->library_list_scr_window, "name",
+        "RC2LibraryListScrolledWindow", "hscrollbar-policy", 
+        GTK_POLICY_AUTOMATIC, "vscrollbar-policy", GTK_POLICY_AUTOMATIC,
+        "expand", TRUE, NULL);
+    gtk_container_add(GTK_CONTAINER(priv->library_list_scr_window),
         priv->library_list_view);
+    priv->library_prop_genre_scr_window = gtk_scrolled_window_new(NULL, NULL);
+    g_object_set(priv->library_prop_genre_scr_window, "name",
+        "RC2LibraryPropGenreScrolledWindow", "hscrollbar-policy", 
+        GTK_POLICY_NEVER, "vscrollbar-policy", GTK_POLICY_AUTOMATIC,
+        "expand", TRUE, NULL);
+    gtk_container_add(GTK_CONTAINER(priv->library_prop_genre_scr_window),
+        priv->library_prop_genre_view);
+    priv->library_prop_artist_scr_window = gtk_scrolled_window_new(NULL, NULL);
+    g_object_set(priv->library_prop_artist_scr_window, "name",
+        "RC2LibraryPropArtitstScrolledWindow", "hscrollbar-policy", 
+        GTK_POLICY_NEVER, "vscrollbar-policy", GTK_POLICY_AUTOMATIC,
+        "expand", TRUE, NULL);
+    gtk_container_add(GTK_CONTAINER(priv->library_prop_artist_scr_window),
+        priv->library_prop_artist_view);
+    priv->library_prop_album_scr_window = gtk_scrolled_window_new(NULL, NULL);
+    g_object_set(priv->library_prop_album_scr_window, "name",
+        "RC2LibraryPropAlbumScrolledWindow", "hscrollbar-policy", 
+        GTK_POLICY_NEVER, "vscrollbar-policy", GTK_POLICY_AUTOMATIC,
+        "expand", TRUE, NULL);
+    gtk_container_add(GTK_CONTAINER(priv->library_prop_album_scr_window),
+        priv->library_prop_album_view);
+    priv->library_prop_grid = gtk_grid_new();
+    g_object_set(priv->library_prop_grid, "expand", TRUE, "column-homogeneous",
+        TRUE, NULL);
+    gtk_grid_attach(GTK_GRID(priv->library_prop_grid),
+        priv->library_prop_genre_scr_window, 0, 0, 1, 1);
+    gtk_grid_attach(GTK_GRID(priv->library_prop_grid),
+        priv->library_prop_album_scr_window, 1, 0, 1, 1);
+    gtk_grid_attach(GTK_GRID(priv->library_prop_grid),
+        priv->library_prop_artist_scr_window, 2, 0, 1, 1);
+    priv->library_view_paned = gtk_paned_new(GTK_ORIENTATION_VERTICAL);
+    g_object_set(priv->library_view_paned, "name", "RC2LibraryViewPaned",
+        "expand", TRUE, NULL);
+    gtk_paned_add1(GTK_PANED(priv->library_view_paned),
+        priv->library_prop_grid);
+    gtk_paned_add2(GTK_PANED(priv->library_view_paned),
+        priv->library_list_scr_window);
+    priv->library_main_grid = gtk_grid_new();
+    g_object_set(priv->library_main_grid, "expand", TRUE, NULL);
+    gtk_grid_attach(GTK_GRID(priv->library_main_grid),
+        priv->library_view_paned, 0, 0, 1, 1);
+    gtk_container_add(GTK_CONTAINER(priv->library_window),
+        priv->library_main_grid);
     //gtk_widget_show_all(priv->library_window);
 }
 

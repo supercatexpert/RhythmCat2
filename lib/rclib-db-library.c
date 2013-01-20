@@ -4596,7 +4596,7 @@ RCLibDbLibraryQueryResultPropIter *
         return NULL;
     if(!g_hash_table_contains(item->prop_iter_table, iter))
         return NULL;
-    iter_next = (RCLibDbLibraryQueryResultPropIter *)g_sequence_iter_prev(
+    iter_next = (RCLibDbLibraryQueryResultPropIter *)g_sequence_iter_next(
         (GSequenceIter *)iter);
     if(g_sequence_iter_is_end((GSequenceIter *)iter_next))
         iter_next = NULL;
