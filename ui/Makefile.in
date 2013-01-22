@@ -84,7 +84,8 @@ am__librhythmcat_ui_2_0_la_SOURCES_DIST = rc-ui-listmodel.c \
 	rc-ui-dialog.c rc-ui-slabel.c rc-ui-spectrum.c rc-ui-style.c \
 	rc-ui-plugin.c rc-ui-settings.c rc-ui-effect.c \
 	rc-ui-cell-renderer-rating.c rc-ui-library-model.c \
-	rc-ui-library-view.c rc-main.c rc-ui-resources.c rc-marshal.c
+	rc-ui-library-view.c rc-ui-library-window.c rc-main.c \
+	rc-ui-resources.c rc-marshal.c
 @WITH_GTK_UI_TRUE@am__objects_1 =  \
 @WITH_GTK_UI_TRUE@	librhythmcat_ui_2_0_la-rc-ui-listmodel.lo \
 @WITH_GTK_UI_TRUE@	librhythmcat_ui_2_0_la-rc-ui-player.lo \
@@ -101,6 +102,7 @@ am__librhythmcat_ui_2_0_la_SOURCES_DIST = rc-ui-listmodel.c \
 @WITH_GTK_UI_TRUE@	librhythmcat_ui_2_0_la-rc-ui-cell-renderer-rating.lo \
 @WITH_GTK_UI_TRUE@	librhythmcat_ui_2_0_la-rc-ui-library-model.lo \
 @WITH_GTK_UI_TRUE@	librhythmcat_ui_2_0_la-rc-ui-library-view.lo \
+@WITH_GTK_UI_TRUE@	librhythmcat_ui_2_0_la-rc-ui-library-window.lo \
 @WITH_GTK_UI_TRUE@	librhythmcat_ui_2_0_la-rc-main.lo
 @WITH_GTK_UI_TRUE@am__objects_2 =  \
 @WITH_GTK_UI_TRUE@	librhythmcat_ui_2_0_la-rc-ui-resources.lo \
@@ -200,8 +202,9 @@ am__librhythmcat_ui_2_0include_HEADERS_DIST = rc-common.h \
 	rc-ui-window.h rc-ui-menu.h rc-ui-dialog.h rc-ui-slabel.h \
 	rc-ui-style.h rc-ui-spectrum.h rc-ui-plugin.h rc-ui-settings.h \
 	rc-ui-effect.h rc-ui-cell-renderer-rating.h \
-	rc-ui-library-model.h rc-ui-library-view.h rc-main.h \
-	rc-ui-resources.h rc-marshal.h
+	rc-ui-library-model.h rc-ui-library-view.h \
+	rc-ui-library-window.h rc-main.h rc-ui-resources.h \
+	rc-marshal.h
 am__noinst_HEADERS_DIST = rc-ui-img-icon.xpm rc-ui-img-nocov.xpm \
 	rc-ui-unset-star-inline.h rc-ui-no-star-inline.h \
 	rc-ui-set-star-inline.h
@@ -438,14 +441,14 @@ top_srcdir = @top_srcdir@
 @WITH_GTK_UI_TRUE@    rc-ui-menu.c rc-ui-dialog.c rc-ui-slabel.c rc-ui-spectrum.c \
 @WITH_GTK_UI_TRUE@    rc-ui-style.c rc-ui-plugin.c rc-ui-settings.c rc-ui-effect.c \
 @WITH_GTK_UI_TRUE@    rc-ui-cell-renderer-rating.c rc-ui-library-model.c rc-ui-library-view.c \
-@WITH_GTK_UI_TRUE@    rc-main.c
+@WITH_GTK_UI_TRUE@    rc-ui-library-window.c rc-main.c
 
 @WITH_GTK_UI_TRUE@librhythmcat_ui_2_0_headers = \
 @WITH_GTK_UI_TRUE@    rc-ui-listmodel.h rc-ui-listview.h rc-ui-player.h rc-ui-window.h \
 @WITH_GTK_UI_TRUE@    rc-ui-menu.h rc-ui-dialog.h rc-ui-slabel.h rc-ui-style.h \
 @WITH_GTK_UI_TRUE@    rc-ui-spectrum.h rc-ui-plugin.h rc-ui-settings.h rc-ui-effect.h \
 @WITH_GTK_UI_TRUE@    rc-ui-cell-renderer-rating.h rc-ui-library-model.h rc-ui-library-view.h \
-@WITH_GTK_UI_TRUE@    rc-main.h
+@WITH_GTK_UI_TRUE@    rc-ui-library-window.h rc-main.h
 
 @WITH_GTK_UI_TRUE@librhythmcat_ui_2_0_builtsources = rc-ui-resources.c rc-marshal.c
 @WITH_GTK_UI_TRUE@librhythmcat_ui_2_0_builtheaders = rc-ui-resources.h rc-marshal.h
@@ -626,6 +629,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/librhythmcat_ui_2_0_la-rc-ui-effect.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/librhythmcat_ui_2_0_la-rc-ui-library-model.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/librhythmcat_ui_2_0_la-rc-ui-library-view.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/librhythmcat_ui_2_0_la-rc-ui-library-window.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/librhythmcat_ui_2_0_la-rc-ui-listmodel.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/librhythmcat_ui_2_0_la-rc-ui-listview.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/librhythmcat_ui_2_0_la-rc-ui-menu.Plo@am__quote@
@@ -763,6 +767,13 @@ librhythmcat_ui_2_0_la-rc-ui-library-view.lo: rc-ui-library-view.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='rc-ui-library-view.c' object='librhythmcat_ui_2_0_la-rc-ui-library-view.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(librhythmcat_ui_2_0_la_CFLAGS) $(CFLAGS) -c -o librhythmcat_ui_2_0_la-rc-ui-library-view.lo `test -f 'rc-ui-library-view.c' || echo '$(srcdir)/'`rc-ui-library-view.c
+
+librhythmcat_ui_2_0_la-rc-ui-library-window.lo: rc-ui-library-window.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(librhythmcat_ui_2_0_la_CFLAGS) $(CFLAGS) -MT librhythmcat_ui_2_0_la-rc-ui-library-window.lo -MD -MP -MF $(DEPDIR)/librhythmcat_ui_2_0_la-rc-ui-library-window.Tpo -c -o librhythmcat_ui_2_0_la-rc-ui-library-window.lo `test -f 'rc-ui-library-window.c' || echo '$(srcdir)/'`rc-ui-library-window.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/librhythmcat_ui_2_0_la-rc-ui-library-window.Tpo $(DEPDIR)/librhythmcat_ui_2_0_la-rc-ui-library-window.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='rc-ui-library-window.c' object='librhythmcat_ui_2_0_la-rc-ui-library-window.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(librhythmcat_ui_2_0_la_CFLAGS) $(CFLAGS) -c -o librhythmcat_ui_2_0_la-rc-ui-library-window.lo `test -f 'rc-ui-library-window.c' || echo '$(srcdir)/'`rc-ui-library-window.c
 
 librhythmcat_ui_2_0_la-rc-main.lo: rc-main.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(librhythmcat_ui_2_0_la_CFLAGS) $(CFLAGS) -MT librhythmcat_ui_2_0_la-rc-main.lo -MD -MP -MF $(DEPDIR)/librhythmcat_ui_2_0_la-rc-main.Tpo -c -o librhythmcat_ui_2_0_la-rc-main.lo `test -f 'rc-main.c' || echo '$(srcdir)/'`rc-main.c

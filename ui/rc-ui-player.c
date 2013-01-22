@@ -35,6 +35,7 @@
 #include "rc-ui-unset-star-inline.h"
 #include "rc-ui-no-star-inline.h"
 #include "rc-ui-set-star-inline.h"
+#include "rc-ui-library-window.h"
 #include "rc-common.h"
 
 /**
@@ -53,6 +54,7 @@ struct _RCUiPlayerPrivate
 {
     GtkApplication *app;
     GtkWidget *main_window;
+    GtkWidget *library_window;
     GtkUIManager *ui_manager;
     GtkStatusIcon *tray_icon;
     GdkPixbuf *icon_pixbuf;
@@ -109,6 +111,8 @@ static void rc_ui_player_finalize(GObject *object)
     RCUiPlayerPrivate *priv = RC_UI_PLAYER(object)->priv;
     RC_UI_PLAYER(object)->priv = NULL;
     GList *window_list = NULL;
+    if(priv->library_window!=NULL)
+        gtk_widget_destroy(priv->library_window);
     if(priv->main_window!=NULL)
         gtk_widget_destroy(priv->main_window);
     if(priv->ui_manager!=NULL)
@@ -184,6 +188,7 @@ static void rc_ui_player_instance_init(RCUiPlayer *ui)
     priv->tray_icon = gtk_status_icon_new_from_pixbuf(priv->icon_pixbuf);
     priv->main_window = rc_ui_main_window_get_widget();
     priv->ui_manager = rc_ui_menu_get_ui_manager();
+    priv->library_window = rc_ui_library_window_get_widget();
     g_signal_connect(priv->tray_icon, "activate", 
         G_CALLBACK(rc_ui_player_tray_icon_activated), priv);
     g_signal_connect(priv->tray_icon, "popup-menu",

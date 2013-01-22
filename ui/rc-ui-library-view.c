@@ -285,6 +285,7 @@ static void rc_ui_library_prop_view_instance_init(RCUiLibraryPropView *view)
 {
     RCUiLibraryPropViewPrivate *priv = NULL;
     GtkTreeSelection *selection;
+    GtkTreePath *path;
     priv = G_TYPE_INSTANCE_GET_PRIVATE(view, RC_UI_TYPE_LIBRARY_PROP_VIEW,
         RCUiLibraryPropViewPrivate);
     view->priv = priv;
@@ -303,21 +304,30 @@ static void rc_ui_library_prop_view_instance_init(RCUiLibraryPropView *view)
     priv->name_column = gtk_tree_view_column_new_with_attributes(
         _("Property"), priv->name_renderer, "text",
         RC_UI_LIBRARY_PROP_COLUMN_NAME, NULL);
+    gtk_tree_view_column_pack_end(priv->name_column, priv->count_renderer,
+        FALSE);
+    gtk_tree_view_column_add_attribute(priv->name_column,
+        priv->count_renderer, "text", RC_UI_LIBRARY_PROP_COLUMN_COUNT);
+    /*
     priv->count_column = gtk_tree_view_column_new_with_attributes(
         _("Number"), priv->count_renderer, "text",
         RC_UI_LIBRARY_PROP_COLUMN_COUNT, NULL);
+    */
     gtk_tree_view_column_set_cell_data_func(priv->name_column,
         priv->name_renderer, rc_ui_library_prop_text_call_data_func,
         NULL, NULL);
-    gtk_tree_view_column_set_cell_data_func(priv->count_column,
+    gtk_tree_view_column_set_cell_data_func(priv->name_column,
         priv->count_renderer, rc_ui_library_prop_text_call_data_func,
         NULL, NULL);
     g_object_set(priv->name_column, "expand", TRUE, "resizable", TRUE, NULL);
     gtk_tree_view_append_column(GTK_TREE_VIEW(view), priv->name_column);
-    gtk_tree_view_append_column(GTK_TREE_VIEW(view), priv->count_column);
+    //gtk_tree_view_append_column(GTK_TREE_VIEW(view), priv->count_column);
     selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(view));
     gtk_tree_selection_set_mode(selection, GTK_SELECTION_MULTIPLE);
     gtk_tree_view_columns_autosize(GTK_TREE_VIEW(view));
+    path = gtk_tree_path_new_first();
+    gtk_tree_view_set_cursor(GTK_TREE_VIEW(view), path, NULL, FALSE);
+    gtk_tree_path_free(path);
 }
 
 GType rc_ui_library_list_view_get_type()
@@ -385,15 +395,21 @@ GtkWidget *rc_ui_library_list_view_new()
 
 /**
  * rc_ui_library_prop_view_new:
+ * @property_text: the property text used in the column header
  * 
  * Create a new library property view widget.
  * 
  * Returns: The new library property view widget, #NULL if any error occurs.
  */
 
-GtkWidget *rc_ui_library_prop_view_new()
+GtkWidget *rc_ui_library_prop_view_new(const gchar *property_text)
 {
-    return GTK_WIDGET(g_object_new(RC_UI_TYPE_LIBRARY_PROP_VIEW, NULL));
+    RCUiLibraryPropView *view;
+    RCUiLibraryPropViewPrivate *priv;
+    view = g_object_new(RC_UI_TYPE_LIBRARY_PROP_VIEW, NULL);
+    priv = view->priv;
+    gtk_tree_view_column_set_title(priv->name_column, property_text);
+    return GTK_WIDGET(view);
 }
 
 

@@ -2520,6 +2520,8 @@ gboolean rclib_db_library_data_query(RCLibDbLibraryData *library_data,
                         lstring = NULL;
                         rclib_db_library_data_get(library_data, ltype,
                             &lstring, RCLIB_DB_LIBRARY_DATA_TYPE_NONE);
+                        if(lstring==NULL)
+                            lstring = g_strdup("");
                         if(ltype==RCLIB_DB_LIBRARY_DATA_TYPE_TITLE &&
                             (lstring==NULL || strlen(lstring)==0))
                         {
@@ -2611,6 +2613,8 @@ gboolean rclib_db_library_data_query(RCLibDbLibraryData *library_data,
                         lstring = NULL;
                         rclib_db_library_data_get(library_data, ltype,
                             &lstring, RCLIB_DB_LIBRARY_DATA_TYPE_NONE);
+                        if(lstring==NULL)
+                            lstring = g_strdup("");
                         if(ltype==RCLIB_DB_LIBRARY_DATA_TYPE_TITLE &&
                             (lstring==NULL || strlen(lstring)==0))
                         {
@@ -2702,6 +2706,8 @@ gboolean rclib_db_library_data_query(RCLibDbLibraryData *library_data,
                         lstring = NULL;
                         rclib_db_library_data_get(library_data, ltype,
                             &lstring, RCLIB_DB_LIBRARY_DATA_TYPE_NONE);
+                        if(lstring==NULL)
+                            lstring = g_strdup("");
                         if(ltype==RCLIB_DB_LIBRARY_DATA_TYPE_TITLE &&
                             (lstring==NULL || strlen(lstring)==0))
                         {
@@ -2793,6 +2799,8 @@ gboolean rclib_db_library_data_query(RCLibDbLibraryData *library_data,
                         lstring = NULL;
                         rclib_db_library_data_get(library_data, ltype,
                             &lstring, RCLIB_DB_LIBRARY_DATA_TYPE_NONE);
+                        if(lstring==NULL)
+                            lstring = g_strdup("");
                         if(ltype==RCLIB_DB_LIBRARY_DATA_TYPE_TITLE &&
                             (lstring==NULL || strlen(lstring)==0))
                         {
@@ -2884,6 +2892,8 @@ gboolean rclib_db_library_data_query(RCLibDbLibraryData *library_data,
                         lstring = NULL;
                         rclib_db_library_data_get(library_data, ltype,
                             &lstring, RCLIB_DB_LIBRARY_DATA_TYPE_NONE);
+                        if(lstring==NULL)
+                            lstring = g_strdup("");
                         if(ltype==RCLIB_DB_LIBRARY_DATA_TYPE_TITLE &&
                             (lstring==NULL || strlen(lstring)==0))
                         {
@@ -2975,6 +2985,8 @@ gboolean rclib_db_library_data_query(RCLibDbLibraryData *library_data,
                         lstring = NULL;
                         rclib_db_library_data_get(library_data, ltype,
                             &lstring, RCLIB_DB_LIBRARY_DATA_TYPE_NONE);
+                        if(lstring==NULL)
+                            lstring = g_strdup("");
                         if(ltype==RCLIB_DB_LIBRARY_DATA_TYPE_TITLE &&
                             (lstring==NULL || strlen(lstring)==0))
                         {
@@ -3067,6 +3079,8 @@ gboolean rclib_db_library_data_query(RCLibDbLibraryData *library_data,
                         lstring = NULL;
                         rclib_db_library_data_get(library_data, ltype,
                             &lstring, RCLIB_DB_LIBRARY_DATA_TYPE_NONE);
+                        if(lstring==NULL)
+                            lstring = g_strdup("");
                         if(ltype==RCLIB_DB_LIBRARY_DATA_TYPE_TITLE &&
                             (lstring==NULL || strlen(lstring)==0))
                         {
@@ -3123,6 +3137,8 @@ gboolean rclib_db_library_data_query(RCLibDbLibraryData *library_data,
                         lstring = NULL;
                         rclib_db_library_data_get(library_data, ltype,
                             &lstring, RCLIB_DB_LIBRARY_DATA_TYPE_NONE);
+                        if(lstring==NULL)
+                            lstring = g_strdup("");
                         if(ltype==RCLIB_DB_LIBRARY_DATA_TYPE_TITLE &&
                             (lstring==NULL || strlen(lstring)==0))
                         {
@@ -3179,6 +3195,8 @@ gboolean rclib_db_library_data_query(RCLibDbLibraryData *library_data,
                         lstring = NULL;
                         rclib_db_library_data_get(library_data, ltype,
                             &lstring, RCLIB_DB_LIBRARY_DATA_TYPE_NONE);
+                        if(lstring==NULL)
+                            lstring = g_strdup("");
                         if(ltype==RCLIB_DB_LIBRARY_DATA_TYPE_TITLE &&
                             (lstring==NULL || strlen(lstring)==0))
                         {
@@ -3230,6 +3248,8 @@ gboolean rclib_db_library_data_query(RCLibDbLibraryData *library_data,
                         lstring = NULL;
                         rclib_db_library_data_get(library_data, ltype,
                             &lstring, RCLIB_DB_LIBRARY_DATA_TYPE_NONE);
+                        if(lstring==NULL)
+                            lstring = g_strdup("");
                         if(ltype==RCLIB_DB_LIBRARY_DATA_TYPE_TITLE &&
                             (lstring==NULL || strlen(lstring)==0))
                         {
@@ -4121,24 +4141,21 @@ void rclib_db_library_query_result_query_clear(
     if(priv->query_uri_table!=NULL)
     {
         g_hash_table_iter_init(&hash_iter, priv->query_uri_table);
-        while(g_hash_table_iter_next(&hash_iter, (gpointer *)&uri, NULL))
+        while(g_hash_table_iter_next(&hash_iter, (gpointer *)&uri,
+            (gpointer *)&iter))
         {
             if(uri!=NULL)
             {
                 g_signal_emit(query_result, db_library_query_result_signals[
                     SIGNAL_LIBRARY_QUERY_RESULT_DELETE], 0, uri);
             }
+            if(iter!=NULL)
+            {
+                g_sequence_remove(iter);
+            }
         }
     }
-    
-    if(priv->query_iter_table!=NULL)
-    {
-        while(g_sequence_get_length(priv->query_sequence)>0)
-        {
-            iter = g_sequence_get_begin_iter(priv->query_sequence);
-            g_sequence_remove(iter);
-        }
-    }
+
     if(priv->query_iter_table!=NULL)
         g_hash_table_remove_all(priv->query_iter_table);
     if(priv->query_uri_table)
@@ -4155,21 +4172,15 @@ void rclib_db_library_query_result_query_clear(
             {
                 g_hash_table_iter_init(&prop_iter, prop_item->prop_name_table);
                 while(g_hash_table_iter_next(&prop_iter, (gpointer *)&prop_name,
-                    NULL))
+                    (gpointer *)&iter))
                 {
                     if(prop_name==NULL) continue;
                     g_signal_emit(query_result,
                         db_library_query_result_signals[
                         SIGNAL_LIBRARY_QUERY_RESULT_PROP_DELETE], 0, prop_type, 
                         prop_name);
-                }
-            }
-            if(prop_item->prop_sequence!=NULL)
-            {
-                while(g_sequence_get_length(prop_item->prop_sequence)>0)
-                {
-                    iter = g_sequence_get_begin_iter(prop_item->prop_sequence);
-                    g_sequence_remove(iter);
+                    if(iter!=NULL)
+                        g_sequence_remove(iter);
                 }
             }
 
@@ -4180,12 +4191,6 @@ void rclib_db_library_query_result_query_clear(
             prop_item->count = 0;
         }
     }
-    
-    if(priv->query!=NULL)
-    {
-        rclib_db_query_free(priv->query);
-    }
-    priv->query = rclib_db_query_parse(RCLIB_DB_QUERY_CONDITION_TYPE_NONE);
 }
 
 /**

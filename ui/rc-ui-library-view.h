@@ -120,6 +120,6 @@ GType rc_ui_library_prop_view_get_type();
 
 /*< public >*/
 GtkWidget *rc_ui_library_list_view_new();
-GtkWidget *rc_ui_library_prop_view_new();
+GtkWidget *rc_ui_library_prop_view_new(const gchar *property_text);
 
 #endif

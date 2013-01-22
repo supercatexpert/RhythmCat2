@@ -3343,6 +3343,8 @@ gboolean rclib_db_playlist_data_query(RCLibDbPlaylistData *playlist_data,
                         pstring = NULL;
                         rclib_db_playlist_data_get(playlist_data, ptype,
                             &pstring, RCLIB_DB_PLAYLIST_DATA_TYPE_NONE);
+                        if(pstring==NULL)
+                            pstring = g_strdup("");
                         if(ptype==RCLIB_DB_PLAYLIST_DATA_TYPE_TITLE &&
                             (pstring==NULL || strlen(pstring)==0))
                         {
@@ -3434,6 +3436,8 @@ gboolean rclib_db_playlist_data_query(RCLibDbPlaylistData *playlist_data,
                         pstring = NULL;
                         rclib_db_playlist_data_get(playlist_data, ptype,
                             &pstring, RCLIB_DB_PLAYLIST_DATA_TYPE_NONE);
+                        if(pstring==NULL)
+                            pstring = g_strdup("");
                         if(ptype==RCLIB_DB_PLAYLIST_DATA_TYPE_TITLE &&
                             (pstring==NULL || strlen(pstring)==0))
                         {
@@ -3525,6 +3529,8 @@ gboolean rclib_db_playlist_data_query(RCLibDbPlaylistData *playlist_data,
                         pstring = NULL;
                         rclib_db_playlist_data_get(playlist_data, ptype,
                             &pstring, RCLIB_DB_PLAYLIST_DATA_TYPE_NONE);
+                        if(pstring==NULL)
+                            pstring = g_strdup("");
                         if(ptype==RCLIB_DB_PLAYLIST_DATA_TYPE_TITLE &&
                             (pstring==NULL || strlen(pstring)==0))
                         {
@@ -3616,6 +3622,8 @@ gboolean rclib_db_playlist_data_query(RCLibDbPlaylistData *playlist_data,
                         pstring = NULL;
                         rclib_db_playlist_data_get(playlist_data, ptype,
                             &pstring, RCLIB_DB_PLAYLIST_DATA_TYPE_NONE);
+                        if(pstring==NULL)
+                            pstring = g_strdup("");
                         if(ptype==RCLIB_DB_PLAYLIST_DATA_TYPE_TITLE &&
                             (pstring==NULL || strlen(pstring)==0))
                         {
@@ -3707,6 +3715,8 @@ gboolean rclib_db_playlist_data_query(RCLibDbPlaylistData *playlist_data,
                         pstring = NULL;
                         rclib_db_playlist_data_get(playlist_data, ptype,
                             &pstring, RCLIB_DB_PLAYLIST_DATA_TYPE_NONE);
+                        if(pstring==NULL)
+                            pstring = g_strdup("");
                         if(ptype==RCLIB_DB_PLAYLIST_DATA_TYPE_TITLE &&
                             (pstring==NULL || strlen(pstring)==0))
                         {
@@ -3798,6 +3808,8 @@ gboolean rclib_db_playlist_data_query(RCLibDbPlaylistData *playlist_data,
                         pstring = NULL;
                         rclib_db_playlist_data_get(playlist_data, ptype,
                             &pstring, RCLIB_DB_PLAYLIST_DATA_TYPE_NONE);
+                        if(pstring==NULL)
+                            pstring = g_strdup("");
                         if(ptype==RCLIB_DB_PLAYLIST_DATA_TYPE_TITLE &&
                             (pstring==NULL || strlen(pstring)==0))
                         {
@@ -3890,6 +3902,8 @@ gboolean rclib_db_playlist_data_query(RCLibDbPlaylistData *playlist_data,
                         pstring = NULL;
                         rclib_db_playlist_data_get(playlist_data, ptype,
                             &pstring, RCLIB_DB_PLAYLIST_DATA_TYPE_NONE);
+                        if(pstring==NULL)
+                            pstring = g_strdup("");
                         if(ptype==RCLIB_DB_PLAYLIST_DATA_TYPE_TITLE &&
                             (pstring==NULL || strlen(pstring)==0))
                         {
@@ -3946,6 +3960,8 @@ gboolean rclib_db_playlist_data_query(RCLibDbPlaylistData *playlist_data,
                         pstring = NULL;
                         rclib_db_playlist_data_get(playlist_data, ptype,
                             &pstring, RCLIB_DB_PLAYLIST_DATA_TYPE_NONE);
+                        if(pstring==NULL)
+                            pstring = g_strdup("");
                         if(ptype==RCLIB_DB_PLAYLIST_DATA_TYPE_TITLE &&
                             (pstring==NULL || strlen(pstring)==0))
                         {
@@ -4002,6 +4018,8 @@ gboolean rclib_db_playlist_data_query(RCLibDbPlaylistData *playlist_data,
                         pstring = NULL;
                         rclib_db_playlist_data_get(playlist_data, ptype,
                             &pstring, RCLIB_DB_PLAYLIST_DATA_TYPE_NONE);
+                        if(pstring==NULL)
+                            pstring = g_strdup("");
                         if(ptype==RCLIB_DB_PLAYLIST_DATA_TYPE_TITLE &&
                             (pstring==NULL || strlen(pstring)==0))
                         {
@@ -4053,6 +4071,8 @@ gboolean rclib_db_playlist_data_query(RCLibDbPlaylistData *playlist_data,
                         pstring = NULL;
                         rclib_db_playlist_data_get(playlist_data, ptype,
                             &pstring, RCLIB_DB_PLAYLIST_DATA_TYPE_NONE);
+                        if(pstring==NULL)
+                            pstring = g_strdup("");
                         if(ptype==RCLIB_DB_PLAYLIST_DATA_TYPE_TITLE &&
                             (pstring==NULL || strlen(pstring)==0))
                         {

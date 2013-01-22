@@ -184,7 +184,6 @@ static void rc_ui_library_prop_prop_added_cb(RCLibDbLibraryQueryResult *qr,
     iter = rclib_db_library_query_result_prop_get_iter_by_prop(qr,
         priv->prop_type, prop_text);
     if(iter==NULL) return;
-    //return;
     pos = rclib_db_library_query_result_prop_get_position(qr,
         priv->prop_type, iter) + 1;
     path = gtk_tree_path_new();
@@ -211,7 +210,7 @@ static void rc_ui_library_prop_prop_delete_cb(RCLibDbLibraryQueryResult *qr,
     if(priv==NULL) return;
     iter = rclib_db_library_query_result_prop_get_iter_by_prop(qr,
         priv->prop_type, prop_text);
-    if(iter==NULL) return;
+    if(iter==NULL) return; 
     pos = rclib_db_library_query_result_prop_get_position(qr, priv->prop_type,
         iter) + 1;
     path = gtk_tree_path_new();
@@ -771,7 +770,15 @@ static void rc_ui_library_prop_store_get_value(GtkTreeModel *model,
                     priv->prop_type, seq_iter, &dstr, NULL);
             }
             g_value_init(value, G_TYPE_STRING);
-            g_value_take_string(value, dstr);
+            if(strlen(dstr)>0)
+            {
+                g_value_take_string(value, dstr);
+            }
+            else
+            {
+                g_value_set_string(value, _("(Unknown)"));
+                g_free(dstr);
+            }
             break;
         }
         case RC_UI_LIBRARY_PROP_COLUMN_COUNT:

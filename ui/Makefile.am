@@ -12,14 +12,14 @@ librhythmcat_ui_2_0_sources = \
     rc-ui-menu.c rc-ui-dialog.c rc-ui-slabel.c rc-ui-spectrum.c \
     rc-ui-style.c rc-ui-plugin.c rc-ui-settings.c rc-ui-effect.c \
     rc-ui-cell-renderer-rating.c rc-ui-library-model.c rc-ui-library-view.c \
-    rc-main.c
+    rc-ui-library-window.c rc-main.c
 
 librhythmcat_ui_2_0_headers = \
     rc-ui-listmodel.h rc-ui-listview.h rc-ui-player.h rc-ui-window.h \
     rc-ui-menu.h rc-ui-dialog.h rc-ui-slabel.h rc-ui-style.h \
     rc-ui-spectrum.h rc-ui-plugin.h rc-ui-settings.h rc-ui-effect.h \
     rc-ui-cell-renderer-rating.h rc-ui-library-model.h rc-ui-library-view.h \
-    rc-main.h
+    rc-ui-library-window.h rc-main.h
 
 librhythmcat_ui_2_0_builtsources = rc-ui-resources.c rc-marshal.c
 
