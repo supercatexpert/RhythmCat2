@@ -295,6 +295,33 @@ static gint rclib_db_library_query_result_item_compare_func(gconstpointer a,
         return ret;
 }
 
+
+static gint rclib_db_library_query_result_prop_item_compare_func(
+    gconstpointer a, gconstpointer b, gpointer data)
+{
+    RCLibDbLibraryQueryResultPrivate *priv;
+    RCLibDbLibraryQueryResultPropData *data1 =
+        (RCLibDbLibraryQueryResultPropData *)a;
+    RCLibDbLibraryQueryResultPropData *data2 =
+        (RCLibDbLibraryQueryResultPropData *)b;
+    const gchar *m, *n;
+    priv = (RCLibDbLibraryQueryResultPrivate *)data;
+    if(data==NULL) return 0;
+    if(data1->prop_name!=NULL)
+        m = data1->prop_name;
+    else
+        m = "";
+    if(data2->prop_name!=NULL)
+        n = data2->prop_name;
+    else
+        n = "";
+    if(priv->sort_direction)
+        return g_strcmp0(n, m);
+    else
+        return g_strcmp0(m, n);
+}
+
+
 static RCLibDbLibraryQueryResultPropData *
     rclib_db_library_query_result_prop_data_new()
 {
@@ -442,7 +469,10 @@ static void rclib_db_library_query_result_added_cb(RCLibDb *db,
                 prop_data->prop_count = 1;
                 prop_item->count++;
                 prop_data->prop_name = g_strdup(prop_string);
-                iter = g_sequence_append(prop_item->prop_sequence, prop_data);
+                iter = g_sequence_insert_sorted(prop_item->prop_sequence,
+                    prop_data,
+                    rclib_db_library_query_result_prop_item_compare_func,
+                    priv);
                 g_hash_table_insert(prop_item->prop_iter_table, iter, iter);
                 g_hash_table_insert(prop_item->prop_name_table,
                     g_strdup(prop_string), iter);
@@ -663,8 +693,10 @@ static void rclib_db_library_query_result_changed_cb(RCLibDb *db,
                     prop_data->prop_count = 1;
                     prop_data->prop_name = g_strdup(prop_string);
                     prop_item->count++;
-                    prop_item_iter = g_sequence_append(
-                        prop_item->prop_sequence, prop_data);
+                    prop_item_iter = g_sequence_insert_sorted(
+                        prop_item->prop_sequence, prop_data,
+                        rclib_db_library_query_result_prop_item_compare_func,
+                        priv);
                     g_hash_table_insert(prop_item->prop_iter_table,
                         prop_item_iter, prop_item_iter);
                     g_hash_table_insert(prop_item->prop_name_table,
@@ -799,7 +831,9 @@ static void rclib_db_library_query_result_base_added_cb(
             prop_data->prop_count = 1;
             prop_data->prop_name = g_strdup(prop_string);
             prop_item->count++;
-            iter = g_sequence_append(prop_item->prop_sequence, prop_data);
+            iter = g_sequence_insert_sorted(prop_item->prop_sequence,
+                prop_data,
+                rclib_db_library_query_result_prop_item_compare_func, priv);
             g_hash_table_insert(prop_item->prop_iter_table, iter, iter);
             g_hash_table_insert(prop_item->prop_name_table,
                 g_strdup(prop_string), iter);
@@ -1024,8 +1058,10 @@ static void rclib_db_library_query_result_base_changed_cb(
                 prop_data->prop_count = 1;
                 prop_data->prop_name = g_strdup(prop_string);
                 prop_item->count++;
-                prop_item_iter = g_sequence_append(
-                    prop_item->prop_sequence, prop_data);
+                prop_item_iter = g_sequence_insert_sorted(
+                    prop_item->prop_sequence, prop_data,
+                    rclib_db_library_query_result_prop_item_compare_func,
+                    priv);
                 g_hash_table_insert(prop_item->prop_iter_table,
                     prop_item_iter, prop_item_iter);
                 g_hash_table_insert(prop_item->prop_name_table,
@@ -1433,7 +1469,10 @@ static gboolean rclib_db_library_query_result_query_idle_cb(gpointer data)
                 prop_data->prop_count = 1;
                 prop_data->prop_name = g_strdup(prop_string);
                 prop_item->count++;
-                iter = g_sequence_append(prop_item->prop_sequence, prop_data);
+                iter = g_sequence_insert_sorted(prop_item->prop_sequence,
+                    prop_data,
+                    rclib_db_library_query_result_prop_item_compare_func,
+                    priv);
                 g_hash_table_insert(prop_item->prop_iter_table, iter, iter);
                 g_hash_table_insert(prop_item->prop_name_table,
                     g_strdup(prop_string), iter);
@@ -3625,7 +3664,10 @@ void rclib_db_library_query_result_copy_contents(
                 prop_data->prop_count = 1;
                 prop_item->count++;
                 prop_data->prop_name = g_strdup(prop_string);
-                iter = g_sequence_append(prop_item->prop_sequence, prop_data);
+                iter = g_sequence_insert_sorted(prop_item->prop_sequence,
+                    prop_data,
+                    rclib_db_library_query_result_prop_item_compare_func,
+                    dst_priv);
                 g_hash_table_insert(prop_item->prop_iter_table, iter, iter);
                 g_hash_table_insert(prop_item->prop_name_table,
                     g_strdup(prop_string), iter);

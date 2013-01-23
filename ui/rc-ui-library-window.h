@@ -77,7 +77,8 @@ GType rc_ui_library_window_get_type();
 /*< public >*/
 GtkWidget *rc_ui_library_window_get_widget();
 void rc_ui_library_window_show();
-void rc_ui_library_window_present_main_window();
+void rc_ui_library_window_hide();
+void rc_ui_library_window_present_window();
 
 G_END_DECLS
 

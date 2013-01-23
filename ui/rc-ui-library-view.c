@@ -327,6 +327,7 @@ static void rc_ui_library_prop_view_instance_init(RCUiLibraryPropView *view)
     gtk_tree_view_columns_autosize(GTK_TREE_VIEW(view));
     path = gtk_tree_path_new_first();
     gtk_tree_view_set_cursor(GTK_TREE_VIEW(view), path, NULL, FALSE);
+    gtk_tree_selection_select_path(selection, path);
     gtk_tree_path_free(path);
 }
 

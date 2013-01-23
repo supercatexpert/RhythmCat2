@@ -259,6 +259,7 @@ static void rc_ui_library_window_instance_init(RCUiLibraryWindow *window)
     RCUiLibraryWindowPrivate *priv = G_TYPE_INSTANCE_GET_PRIVATE(window,
         RC_UI_TYPE_LIBRARY_WINDOW, RCUiLibraryWindowPrivate);
     GObject *library_query_result;
+    GtkTreePath *path;
     window->priv = priv;
     
     library_query_result = rclib_db_library_get_base_query_result();
@@ -293,6 +294,15 @@ static void rc_ui_library_window_instance_init(RCUiLibraryWindow *window)
     priv->library_prop_artist_view = rc_ui_library_prop_view_new(_("Artist"));
     gtk_tree_view_set_model(GTK_TREE_VIEW(priv->library_prop_artist_view),
         priv->library_artist_model);
+    path = gtk_tree_path_new_first();
+    gtk_tree_view_set_cursor(GTK_TREE_VIEW(priv->library_prop_genre_view),
+        path, NULL, FALSE);
+    gtk_tree_view_set_cursor(GTK_TREE_VIEW(priv->library_prop_album_view),
+        path, NULL, FALSE);
+    gtk_tree_view_set_cursor(GTK_TREE_VIEW(priv->library_prop_artist_view),
+        path, NULL, FALSE);
+    gtk_tree_path_free(path);
+        
     g_object_set(window, "title", _("Music Library"), "type",
         GTK_WINDOW_TOPLEVEL, "default-width", 600, "default-height", 400,
         "has-resize-grip", FALSE, NULL);
@@ -410,7 +420,17 @@ void rc_ui_library_window_show()
     gtk_widget_show_all(GTK_WIDGET(ui_library_window_instance));
 }
 
+/**
+ * rc_ui_library_window_hide:
+ *
+ * Hide the library window of the player.
+ */
 
+void rc_ui_library_window_hide()
+{
+    if(ui_library_window_instance==NULL) return;
+    gtk_widget_hide(GTK_WIDGET(ui_library_window_instance));
+}
 
 
 

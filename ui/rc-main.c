@@ -314,14 +314,6 @@ static void rc_main_app_activate(GApplication *application)
     }
     if(rclib_db_autosaved_exist())
         g_idle_add(rc_main_autosave_idle, NULL);
-    
-    /*
-    //Just a query test!
-    */
-    //rclib_db_library_add_music("file:///home/supercat/Music/HEART%20MOVING.FLAC");
-    //GObject *base_query_result = rclib_db_library_get_base_query_result();
-    //rclib_db_library_query_result_query_start(base_query_result, TRUE);
-    //g_object_unref(base_query_result);
 }
 
 static void rc_main_app_open(GApplication *application, GFile **files,

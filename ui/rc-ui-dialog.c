@@ -1153,3 +1153,57 @@ void rc_ui_dialog_rating_limited_playing()
     gtk_widget_destroy(dialog);
 }
 
+/**
+ * rc_ui_dialog_library_add_music:
+ *
+ * Show a music import dialog for importing music files to the library.
+ */
+
+void rc_ui_dialog_library_add_music()
+{
+    GtkWidget *file_chooser;
+    GtkFileFilter *file_filter1;
+    gint result = 0;
+    GSList *filelist = NULL;
+    const GSList *filelist_foreach = NULL;
+    gchar *uri = NULL;
+    gchar *dialog_title = NULL;
+    const gchar *home_dir;
+    file_filter1 = gtk_file_filter_new();
+    gtk_file_filter_set_name(file_filter1,
+        _("All supported music files(*.FLAC;*.OGG;*.MP3;*.WAV;*.WMA...)"));
+    gtk_file_filter_add_custom(file_filter1, GTK_FILE_FILTER_DISPLAY_NAME,
+        rc_ui_dialog_music_file_filter, NULL, NULL);
+    dialog_title = _("Select the music you want to add...");
+    file_chooser = gtk_file_chooser_dialog_new(dialog_title, NULL,
+        GTK_FILE_CHOOSER_ACTION_OPEN, GTK_STOCK_OPEN, GTK_RESPONSE_ACCEPT,
+        GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL, NULL);
+    home_dir = g_getenv("HOME");
+    if(home_dir==NULL)
+        home_dir = g_get_home_dir();
+    gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(file_chooser),
+        home_dir);
+    gtk_file_chooser_set_select_multiple(GTK_FILE_CHOOSER(file_chooser),TRUE);
+    gtk_file_chooser_add_filter(GTK_FILE_CHOOSER(file_chooser), file_filter1);
+    result = gtk_dialog_run(GTK_DIALOG(file_chooser));
+    switch(result)
+    {
+        case GTK_RESPONSE_ACCEPT:
+            filelist = gtk_file_chooser_get_uris(
+                GTK_FILE_CHOOSER(file_chooser));
+            for(filelist_foreach=filelist;filelist_foreach!=NULL;
+                filelist_foreach=g_slist_next(filelist_foreach))
+            {
+                uri = filelist_foreach->data;
+                rclib_db_library_add_music(uri);
+                g_free(uri);
+            }
+            g_slist_free(filelist);
+            break;
+        case GTK_RESPONSE_CANCEL:
+            break;
+        default: break;
+    }
+    gtk_widget_destroy(file_chooser);
+}
+

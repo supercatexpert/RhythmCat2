@@ -26,6 +26,7 @@
 #include "rc-ui-menu.h"
 #include "rc-ui-player.h"
 #include "rc-ui-window.h"
+#include "rc-ui-library-window.h"
 #include "rc-ui-listview.h"
 #include "rc-ui-dialog.h"
 #include "rc-ui-plugin.h"
@@ -353,10 +354,27 @@ static void rc_ui_menu_playlist_rating_sort_descending_clicked_cb()
         RCLIB_DB_PLAYLIST_DATA_TYPE_RATING, TRUE);
 }
 
+static void rc_ui_menu_view_library_clicked_cb(GtkAction *action,
+    gpointer data)
+{
+    gboolean visible;
+    if(action==NULL) return;
+    g_signal_handlers_block_by_func(action,
+        G_CALLBACK(rc_ui_menu_view_library_clicked_cb), data);
+    visible = gtk_widget_get_visible(rc_ui_library_window_get_widget());
+    if(visible)
+        rc_ui_library_window_hide();
+    else
+        rc_ui_library_window_show();
+    g_signal_handlers_unblock_by_func(action,
+        G_CALLBACK(rc_ui_menu_view_library_clicked_cb), data);
+}
+
 static GtkActionEntry ui_menu_entries[] =
 {
     { "RhythmCatMenu", NULL, "_RhythmCat" },
     { "PlaylistMenu", NULL, N_("_Playlist") },
+    { "LibraryMenu", NULL, N_("_Library") },
     { "ViewMenu", NULL, N_("_View") },
     { "ControlMenu", NULL, N_("_Control") },
     { "HelpMenu", NULL, N_("_Help") },
@@ -436,6 +454,10 @@ static GtkActionEntry ui_menu_entries[] =
       N_("Bind Al_bum File"), NULL,
       N_("Bind album file to the selected music"),
       G_CALLBACK(rc_ui_dialog_bind_album) },
+    { "LibraryAddMusic", NULL,
+      N_("Add Music File"), NULL,
+      N_("Add music file to the library"),
+      G_CALLBACK(rc_ui_dialog_library_add_music) },
     { "ViewEffect", NULL,
       N_("_Audio Effects"), "<control>E",
       N_("Adjust the audio effects"),
@@ -720,6 +742,10 @@ static guint ui_menu_spectrum_n_entries =
 
 static GtkToggleActionEntry ui_menu_toggle_entries[] =
 {
+    { "ViewLibrary", NULL,
+      N_("Music _Library"), NULL,
+      N_("Music library"),
+      G_CALLBACK(rc_ui_menu_view_library_clicked_cb), TRUE },
     { "ViewAlwaysOnTop", GTK_STOCK_GOTO_TOP,
       N_("Always On _Top"), NULL,
       N_("Always on top"),
@@ -785,6 +811,9 @@ static const gchar *ui_menu_info =
     "      <menuitem action='PlaylistBindLyric'/>"
     "      <menuitem action='PlaylistBindAlbum'/>"
     "    </menu>"
+    "    <menu action='LibraryMenu'>"
+    "      <menuitem action='LibraryAddMusic'/>"
+    "    </menu>"
     "    <menu action='ControlMenu'>"
     "      <menuitem action='ControlPlay'/>"
     "      <menuitem action='ControlStop'/>"
@@ -813,6 +842,7 @@ static const gchar *ui_menu_info =
     "      <menuitem action='ControlRatingLimited'/>"
     "    </menu>"
     "    <menu action='ViewMenu'>"
+    "      <menuitem action='ViewLibrary'/>"
     "      <menuitem action='ViewEffect'/>"
     "      <separator name='ViewSep1'/>"
     "      <separator name='ViewSep2'/>"
