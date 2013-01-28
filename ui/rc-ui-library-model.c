@@ -463,7 +463,9 @@ static void rc_ui_library_list_store_get_value(GtkTreeModel *model,
     RCUiLibraryListStore *store;
     RCUiLibraryListStorePrivate *priv;
     RCLibDbLibraryData *library_data;
-    RCLibDbLibraryQueryResultIter *seq_iter, *reference;
+    RCLibCorePlaySource source_type = RCLIB_CORE_PLAY_SOURCE_NONE;
+    RCLibDbLibraryQueryResultIter *seq_iter;
+    gpointer reference = NULL;
     gchar *dstr;
     GstState state;
     gint vint;
@@ -510,8 +512,13 @@ static void rc_ui_library_list_store_get_value(GtkTreeModel *model,
                 g_value_set_static_string(value, GTK_STOCK_CANCEL);
                 break;
             }
-            rclib_core_get_external_reference(NULL, (gpointer *)&reference);
-            if(reference!=seq_iter)
+            if(!rclib_core_get_play_source(&source_type, &reference, NULL))
+            {
+                g_value_set_static_string(value, NULL);
+                break;
+            }
+            if(source_type!=RCLIB_CORE_PLAY_SOURCE_LIBRARY || 
+                reference!=seq_iter)
             {
                 g_value_set_static_string(value, NULL);
                 break;
@@ -726,8 +733,13 @@ static void rc_ui_library_list_store_get_value(GtkTreeModel *model,
             g_value_init(value, G_TYPE_BOOLEAN);
             g_value_set_boolean(value, FALSE);
             if(type==RCLIB_DB_LIBRARY_TYPE_MISSING) break;
-            rclib_core_get_external_reference(NULL, (gpointer *)&reference);
-            if(reference!=seq_iter) break;
+            if(!rclib_core_get_play_source(&source_type, &reference, NULL))
+                break;
+            if(source_type!=RCLIB_CORE_PLAY_SOURCE_LIBRARY ||
+                reference!=seq_iter)
+            {
+                break;
+            }
             if(!rclib_core_get_state(&state, NULL, 0))
                 break;
             if(state==GST_STATE_PLAYING || state==GST_STATE_PAUSED)

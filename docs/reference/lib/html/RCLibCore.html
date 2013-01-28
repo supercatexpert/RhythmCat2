@@ -58,12 +58,9 @@ enum                <a class="link" href="RCLibCore.html#RCLibCoreSourceType" ti
 <span class="returnvalue">void</span>                <a class="link" href="RCLibCore.html#rclib-core-effect-plugin-remove" title="rclib_core_effect_plugin_remove ()">rclib_core_effect_plugin_remove</a>     (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/gstreamer-0.10/GstElement.html"><span class="type">GstElement</span></a> *element</code></em>);
 <span class="returnvalue">void</span>                <a class="link" href="RCLibCore.html#rclib-core-exit" title="rclib_core_exit ()">rclib_core_exit</a>                     ();
 <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RCLibCore.html#rclib-core-get-balance" title="rclib_core_get_balance ()">rclib_core_get_balance</a>              (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gfloat"><span class="type">gfloat</span></a> *balance</code></em>);
-<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="returnvalue">gpointer</span></a>            <a class="link" href="RCLibCore.html#rclib-core-get-db-reference" title="rclib_core_get_db_reference ()">rclib_core_get_db_reference</a>         ();
 <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RCLibCore.html#rclib-core-get-eq" title="rclib_core_get_eq ()">rclib_core_get_eq</a>                   (<em class="parameter"><code><a class="link" href="RCLibCore.html#RCLibCoreEQType" title="enum RCLibCoreEQType"><span class="type">RCLibCoreEQType</span></a> *type</code></em>,
                                                          <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gdouble"><span class="type">gdouble</span></a> *band</code></em>);
 const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *       <a class="link" href="RCLibCore.html#rclib-core-get-eq-name" title="rclib_core_get_eq_name ()">rclib_core_get_eq_name</a>              (<em class="parameter"><code><a class="link" href="RCLibCore.html#RCLibCoreEQType" title="enum RCLibCoreEQType"><span class="type">RCLibCoreEQType</span></a> type</code></em>);
-<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RCLibCore.html#rclib-core-get-external-reference" title="rclib_core_get_external_reference ()">rclib_core_get_external_reference</a>   (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> **cookie</code></em>,
-                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> *ref</code></em>);
 <a href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GObject"><span class="returnvalue">GObject</span></a> *           <a class="link" href="RCLibCore.html#rclib-core-get-instance" title="rclib_core_get_instance ()">rclib_core_get_instance</a>             ();
 const <a class="link" href="RCLibCore.html#RCLibCoreMetadata" title="struct RCLibCoreMetadata"><span class="returnvalue">RCLibCoreMetadata</span></a> * <a class="link" href="RCLibCore.html#rclib-core-get-metadata" title="rclib_core_get_metadata ()">rclib_core_get_metadata</a>       ();
 <a class="link" href="RCLibCore.html#RCLibCoreSourceType" title="enum RCLibCoreSourceType"><span class="returnvalue">RCLibCoreSourceType</span></a> <a class="link" href="RCLibCore.html#rclib-core-get-source-type" title="rclib_core_get_source_type ()">rclib_core_get_source_type</a>          ();
@@ -90,21 +87,12 @@ const <a class="link" href="RCLibCore.html#RCLibCoreMetadata" title="struct RCLi
                                                          <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gdouble"><span class="type">gdouble</span></a> *band</code></em>);
 <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RCLibCore.html#rclib-core-set-position" title="rclib_core_set_position ()">rclib_core_set_position</a>             (<em class="parameter"><code><span class="type">gint64</span> pos</code></em>);
 <span class="returnvalue">void</span>                <a class="link" href="RCLibCore.html#rclib-core-set-uri" title="rclib_core_set_uri ()">rclib_core_set_uri</a>                  (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *uri</code></em>);
-<span class="returnvalue">void</span>                <a class="link" href="RCLibCore.html#rclib-core-set-uri-with-db-ref" title="rclib_core_set_uri_with_db_ref ()">rclib_core_set_uri_with_db_ref</a>      (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *uri</code></em>,
-                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> db_ref</code></em>);
-<span class="returnvalue">void</span>                <a class="link" href="RCLibCore.html#rclib-core-set-uri-with-ext-ref" title="rclib_core_set_uri_with_ext_ref ()">rclib_core_set_uri_with_ext_ref</a>     (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *uri</code></em>,
-                                                         <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *cookie</code></em>,
-                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> external_ref</code></em>);
 <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RCLibCore.html#rclib-core-set-volume" title="rclib_core_set_volume ()">rclib_core_set_volume</a>               (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gdouble"><span class="type">gdouble</span></a> volume</code></em>);
 <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gulong"><span class="returnvalue">gulong</span></a>              <a class="link" href="RCLibCore.html#rclib-core-signal-connect" title="rclib_core_signal_connect ()">rclib_core_signal_connect</a>           (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *name</code></em>,
                                                          <em class="parameter"><code><a href="/usr/share/gtk-doc/html/gobject/gobject-Closures.html#GCallback"><span class="type">GCallback</span></a> callback</code></em>,
                                                          <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> data</code></em>);
 <span class="returnvalue">void</span>                <a class="link" href="RCLibCore.html#rclib-core-signal-disconnect" title="rclib_core_signal_disconnect ()">rclib_core_signal_disconnect</a>        (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gulong"><span class="type">gulong</span></a> handler_id</code></em>);
 <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RCLibCore.html#rclib-core-stop" title="rclib_core_stop ()">rclib_core_stop</a>                     ();
-<span class="returnvalue">void</span>                <a class="link" href="RCLibCore.html#rclib-core-update-db-reference" title="rclib_core_update_db_reference ()">rclib_core_update_db_reference</a>      (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> new_ref</code></em>);
-<span class="returnvalue">void</span>                <a class="link" href="RCLibCore.html#rclib-core-update-external-reference" title="rclib_core_update_external_reference ()">rclib_core_update_external_reference</a>
-                                                        (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *cookie</code></em>,
-                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> new_ref</code></em>);
 </pre>
 </div>
 <div class="refsect1">
@@ -577,22 +565,6 @@ stereo panorama. <span class="annotation">[<acronym title="Parameter for returni
 </div>
 <hr>
 <div class="refsect2">
-<a name="rclib-core-get-db-reference"></a><h3>rclib_core_get_db_reference ()</h3>
-<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="returnvalue">gpointer</span></a>            rclib_core_get_db_reference         ();</pre>
-<p>
-Get the database reference.
-</p>
-<div class="variablelist"><table border="0">
-<col align="left" valign="top">
-<tbody><tr>
-<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>The database reference. <span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span>
-</td>
-</tr></tbody>
-</table></div>
-</div>
-<hr>
-<div class="refsect2">
 <a name="rclib-core-get-eq"></a><h3>rclib_core_get_eq ()</h3>
 <pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rclib_core_get_eq                   (<em class="parameter"><code><a class="link" href="RCLibCore.html#RCLibCoreEQType" title="enum RCLibCoreEQType"><span class="type">RCLibCoreEQType</span></a> *type</code></em>,
                                                          <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gdouble"><span class="type">gdouble</span></a> *band</code></em>);</pre>
@@ -637,35 +609,6 @@ Get the name of the equalizer style type.
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
 <td>The style name.</td>
-</tr>
-</tbody>
-</table></div>
-</div>
-<hr>
-<div class="refsect2">
-<a name="rclib-core-get-external-reference"></a><h3>rclib_core_get_external_reference ()</h3>
-<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rclib_core_get_external_reference   (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> **cookie</code></em>,
-                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> *ref</code></em>);</pre>
-<p>
-Get the external reference.
-</p>
-<div class="variablelist"><table border="0">
-<col align="left" valign="top">
-<tbody>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>cookie</code></em> :</span></p></td>
-<td>the reference cookie. <span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>][<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span>
-</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>ref</code></em> :</span></p></td>
-<td>the reference. <span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>][<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span>
-</td>
-</tr>
-<tr>
-<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
-<td>Whether the results are set. <span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span>
-</td>
 </tr>
 </tbody>
 </table></div>
@@ -1043,56 +986,6 @@ Set the URI to play.
 </div>
 <hr>
 <div class="refsect2">
-<a name="rclib-core-set-uri-with-db-ref"></a><h3>rclib_core_set_uri_with_db_ref ()</h3>
-<pre class="programlisting"><span class="returnvalue">void</span>                rclib_core_set_uri_with_db_ref      (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *uri</code></em>,
-                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> db_ref</code></em>);</pre>
-<p>
-Set the URI and the music DB playlist iter to play.
-</p>
-<div class="variablelist"><table border="0">
-<col align="left" valign="top">
-<tbody>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>uri</code></em> :</span></p></td>
-<td>the URI to play</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>db_ref</code></em> :</span></p></td>
-<td>the database reference to set, set to NULL if not used.
-Reference must be set to NULL if you want to use this reference</td>
-</tr>
-</tbody>
-</table></div>
-</div>
-<hr>
-<div class="refsect2">
-<a name="rclib-core-set-uri-with-ext-ref"></a><h3>rclib_core_set_uri_with_ext_ref ()</h3>
-<pre class="programlisting"><span class="returnvalue">void</span>                rclib_core_set_uri_with_ext_ref     (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *uri</code></em>,
-                                                         <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *cookie</code></em>,
-                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> external_ref</code></em>);</pre>
-<p>
-Set the URI to play, with external cookie and reference pointer.
-</p>
-<div class="variablelist"><table border="0">
-<col align="left" valign="top">
-<tbody>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>uri</code></em> :</span></p></td>
-<td>the URI to play</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>cookie</code></em> :</span></p></td>
-<td>the external reference cookie</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>external_ref</code></em> :</span></p></td>
-<td>the reference to set, set to NULL if not used.</td>
-</tr>
-</tbody>
-</table></div>
-</div>
-<hr>
-<div class="refsect2">
 <a name="rclib-core-set-volume"></a><h3>rclib_core_set_volume ()</h3>
 <pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rclib_core_set_volume               (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gdouble"><span class="type">gdouble</span></a> volume</code></em>);</pre>
 <p>
@@ -1176,45 +1069,6 @@ Set the player to stop state.
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
 <td>Whether the state is set to stop successfully.</td>
 </tr></tbody>
-</table></div>
-</div>
-<hr>
-<div class="refsect2">
-<a name="rclib-core-update-db-reference"></a><h3>rclib_core_update_db_reference ()</h3>
-<pre class="programlisting"><span class="returnvalue">void</span>                rclib_core_update_db_reference      (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> new_ref</code></em>);</pre>
-<p>
-Update the database reference.
-</p>
-<div class="variablelist"><table border="0">
-<col align="left" valign="top">
-<tbody><tr>
-<td><p><span class="term"><em class="parameter"><code>new_ref</code></em> :</span></p></td>
-<td>the new databse reference to set,
-set to NULL if not used</td>
-</tr></tbody>
-</table></div>
-</div>
-<hr>
-<div class="refsect2">
-<a name="rclib-core-update-external-reference"></a><h3>rclib_core_update_external_reference ()</h3>
-<pre class="programlisting"><span class="returnvalue">void</span>                rclib_core_update_external_reference
-                                                        (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *cookie</code></em>,
-                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> new_ref</code></em>);</pre>
-<p>
-Update the external reference.
-</p>
-<div class="variablelist"><table border="0">
-<col align="left" valign="top">
-<tbody>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>cookie</code></em> :</span></p></td>
-<td>the reference cookie</td>
-</tr>
-<tr>
-<td><p><span class="term"><em class="parameter"><code>new_ref</code></em> :</span></p></td>
-<td>the new databse reference to set, set to NULL if not used</td>
-</tr>
-</tbody>
 </table></div>
 </div>
 </div>

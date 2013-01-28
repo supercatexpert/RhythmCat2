@@ -57,13 +57,17 @@ static void rclib_main_update_db_metadata_cb(RCLibCore *core,
 {
     RCLibDbPlaylistData *playlist_data;
     gint ret;
+    RCLibCorePlaySource source_type = RCLIB_CORE_PLAY_SOURCE_NONE;
     RCLibCoreSourceType type;
     RCLibCoreSourceType new_type;
-    RCLibDbPlaylistIter *iter;
+    RCLibDbPlaylistIter *iter = NULL;
     gchar *puri = NULL;
     if(metadata==NULL || uri==NULL) return;
-    iter = (RCLibDbPlaylistIter *)rclib_core_get_db_reference();
-    if(iter==NULL || !rclib_db_playlist_is_valid_iter(iter)) return;
+    if(!rclib_core_get_play_source(&source_type, (gpointer *)&iter, NULL))
+        return;
+    if(source_type!=RCLIB_CORE_PLAY_SOURCE_PLAYLIST || iter!=NULL)
+        return;
+    if(!rclib_db_playlist_is_valid_iter(iter)) return;
     rclib_db_playlist_data_iter_get(iter, RCLIB_DB_PLAYLIST_DATA_TYPE_URI,
         &puri, RCLIB_DB_PLAYLIST_DATA_TYPE_TYPE, &type,
         RCLIB_DB_PLAYLIST_DATA_TYPE_NONE);
@@ -98,12 +102,18 @@ static void rclib_main_update_db_metadata_cb(RCLibCore *core,
 static void rclib_main_update_db_duration_cb(RCLibCore *core,
     gint64 duration, gpointer data)
 {
-    RCLibDbPlaylistIter *iter = (RCLibDbPlaylistIter *)
-        rclib_core_get_db_reference();
-    if(iter==NULL || duration<0) return;
-    rclib_db_playlist_data_iter_set(iter,
-        RCLIB_DB_PLAYLIST_DATA_TYPE_LENGTH, duration,
-        RCLIB_DB_PLAYLIST_DATA_TYPE_NONE);
+    RCLibCorePlaySource source_type = RCLIB_CORE_PLAY_SOURCE_NONE;
+    gpointer iter = NULL;
+    if(!rclib_core_get_play_source(&source_type, &iter, NULL))
+        return;
+    if(iter==NULL || duration<0)
+        return;
+    if(source_type==RCLIB_CORE_PLAY_SOURCE_PLAYLIST)
+    {
+        rclib_db_playlist_data_iter_set((RCLibDbPlaylistIter *)iter,
+            RCLIB_DB_PLAYLIST_DATA_TYPE_LENGTH, duration,
+            RCLIB_DB_PLAYLIST_DATA_TYPE_NONE);
+    }
 }
 
 static void rclib_main_catalog_delete_cb(RCLibDb *db,
@@ -111,34 +121,64 @@ static void rclib_main_catalog_delete_cb(RCLibDb *db,
 {
     RCLibDbCatalogIter *catalog_iter = NULL;
     RCLibDbPlaylistIter *reference_iter;
+    RCLibCorePlaySource source_type = RCLIB_CORE_PLAY_SOURCE_NONE;
     if(iter==NULL) return;
-    reference_iter = (RCLibDbPlaylistIter *)rclib_core_get_db_reference();
-    if(reference_iter!=NULL)
+    if(!rclib_core_get_play_source(&source_type, (gpointer *)&reference_iter,
+        NULL))
     {
-        rclib_db_playlist_data_iter_get(reference_iter,
-            RCLIB_DB_PLAYLIST_DATA_TYPE_CATALOG, &catalog_iter,
-            RCLIB_DB_PLAYLIST_DATA_TYPE_NONE);
-        if(catalog_iter==iter)
-            rclib_core_update_db_reference(NULL);
+        return;
+    }
+    if(source_type!=RCLIB_CORE_PLAY_SOURCE_PLAYLIST || reference_iter==NULL)
+        return;
+    rclib_db_playlist_data_iter_get(reference_iter,
+        RCLIB_DB_PLAYLIST_DATA_TYPE_CATALOG, &catalog_iter,
+        RCLIB_DB_PLAYLIST_DATA_TYPE_NONE);
+    if(catalog_iter==iter)
+    {
+        rclib_core_update_play_source(RCLIB_CORE_PLAY_SOURCE_PLAYLIST, NULL,
+            NULL, NULL);
     }
 }
 
-static void rclib_main_playlist_delete_cb(RCLibDb *db, GSequenceIter *iter,
-    gpointer data)
+static void rclib_main_playlist_delete_cb(RCLibDb *db,
+    RCLibDbPlaylistIter *iter, gpointer data)
 {
+    RCLibCorePlaySource source_type = RCLIB_CORE_PLAY_SOURCE_NONE;
+    RCLibDbPlaylistIter *reference_iter = NULL;
     if(iter==NULL) return;
-    if(iter==rclib_core_get_db_reference())
-        rclib_core_update_db_reference(NULL);
+    if(!rclib_core_get_play_source(&source_type, (gpointer *)&reference_iter,
+        NULL))
+    {
+        return;
+    }
+    if(source_type!=RCLIB_CORE_PLAY_SOURCE_PLAYLIST || reference_iter==NULL)
+        return;
+    if(iter==reference_iter)
+    {
+        rclib_core_update_play_source(RCLIB_CORE_PLAY_SOURCE_PLAYLIST, NULL,
+            NULL, NULL);
+    }
 }
 
 static void rclib_main_error_cb(RCLibCore *core, const gchar *message,
     gpointer data)
 {
-    RCLibDbPlaylistIter *iter;
-    iter = rclib_core_get_db_reference();
-    if(iter==NULL) return;
-    rclib_db_playlist_data_iter_set(iter, RCLIB_DB_PLAYLIST_DATA_TYPE_TYPE,
-        RCLIB_DB_PLAYLIST_TYPE_MISSING, RCLIB_DB_PLAYLIST_DATA_TYPE_NONE);
+    RCLibCorePlaySource source_type = RCLIB_CORE_PLAY_SOURCE_NONE;
+    gpointer reference = NULL;
+    gchar *cookie = NULL;
+    if(!rclib_core_get_play_source(&source_type, &reference, &cookie))
+        return;
+    if(reference==NULL)
+    {
+        g_free(cookie);
+        return;
+    }
+    if(source_type==RCLIB_CORE_PLAY_SOURCE_PLAYLIST)
+    {
+        rclib_db_playlist_data_iter_set((RCLibDbPlaylistIter *)reference,
+            RCLIB_DB_PLAYLIST_DATA_TYPE_TYPE, RCLIB_DB_PLAYLIST_TYPE_MISSING,
+            RCLIB_DB_PLAYLIST_DATA_TYPE_NONE);
+    }
 }
 
 /**

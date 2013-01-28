@@ -301,12 +301,14 @@ static void rc_ui_main_window_tag_found_cb(RCLibCore *core,
     RCLibCoreSourceType type;
     gint ret;
     gchar *puri = NULL;
-    RCLibDbPlaylistIter *iter = (RCLibDbPlaylistIter *)
-        rclib_core_get_db_reference();
+    RCLibCorePlaySource source_type = RCLIB_CORE_PLAY_SOURCE_NONE;
+    gpointer iter = NULL;
+    rclib_core_get_play_source(&source_type, &iter, NULL);
     if(data==NULL || metadata==NULL || uri==NULL) return;
-    if(iter!=NULL && rclib_db_playlist_is_valid_iter(iter))
+    if(source_type==RCLIB_CORE_PLAY_SOURCE_PLAYLIST && iter!=NULL &&
+        rclib_db_playlist_is_valid_iter((RCLibDbPlaylistIter *)iter))
     {
-        rclib_db_playlist_data_iter_get(iter,
+        rclib_db_playlist_data_iter_get((RCLibDbPlaylistIter *)iter,
             RCLIB_DB_PLAYLIST_DATA_TYPE_URI, &puri,
             RCLIB_DB_PLAYLIST_DATA_TYPE_NONE);
         type = rclib_core_get_source_type();
@@ -331,12 +333,13 @@ static void rc_ui_main_window_uri_changed_cb(RCLibCore *core, const gchar *uri,
     gpointer data)
 {
     RCUiMainWindowPrivate *priv = (RCUiMainWindowPrivate *)data;
-    RCLibDbPlaylistIter *reference;
+    RCLibCorePlaySource source_type = RCLIB_CORE_PLAY_SOURCE_NONE;
+    gpointer reference = NULL;
     gchar *ptitle = NULL;
     gchar *partist = NULL;
     gchar *palbum = NULL;
     if(data==NULL) return;
-    reference = (RCLibDbPlaylistIter *)rclib_core_get_db_reference();
+    rclib_core_get_play_source(&source_type, &reference, NULL);
     if(priv->cover_using_pixbuf!=NULL)
         g_object_unref(priv->cover_using_pixbuf);
     if(priv->cover_file_path!=NULL)
@@ -344,9 +347,9 @@ static void rc_ui_main_window_uri_changed_cb(RCLibCore *core, const gchar *uri,
     priv->cover_using_pixbuf = NULL;
     priv->cover_file_path = NULL;
     priv->cover_set_flag = FALSE;
-    if(reference!=NULL)
+    if(source_type==RCLIB_CORE_PLAY_SOURCE_PLAYLIST && reference!=NULL)
     {
-        rclib_db_playlist_data_iter_get(reference,
+        rclib_db_playlist_data_iter_get((RCLibDbPlaylistIter *)reference,
             RCLIB_DB_PLAYLIST_DATA_TYPE_TITLE, &ptitle,
             RCLIB_DB_PLAYLIST_DATA_TYPE_ARTIST, &partist,
             RCLIB_DB_PLAYLIST_DATA_TYPE_ALBUM, &palbum,

@@ -140,7 +140,8 @@ static void rclib_lyric_tag_found_cb(RCLibCore *core,
 static void rclib_lyric_uri_changed_cb(RCLibCore *core, const gchar *uri,
     gpointer data)
 {
-    RCLibDbPlaylistIter *iter = NULL;
+    RCLibCorePlaySource source_type = RCLIB_CORE_PLAY_SOURCE_NONE;
+    gpointer iter = NULL;
     gchar *lyric_path = NULL;
     gchar *lyric_sec_path = NULL;
     gboolean flag1 = FALSE;
@@ -149,15 +150,18 @@ static void rclib_lyric_uri_changed_cb(RCLibCore *core, const gchar *uri,
     gchar *partist = NULL;
     rclib_lyric_clean(0);
     rclib_lyric_clean(1);
-    iter = (RCLibDbPlaylistIter *)rclib_core_get_db_reference();
+    rclib_core_get_play_source(&source_type, &iter, NULL);
     if(iter!=NULL)
     {
-        rclib_db_playlist_data_iter_get(iter,
-            RCLIB_DB_PLAYLIST_DATA_TYPE_LYRICFILE, &lyric_path,
-            RCLIB_DB_PLAYLIST_DATA_TYPE_NONE);
-        rclib_db_playlist_data_iter_get(iter,
-            RCLIB_DB_PLAYLIST_DATA_TYPE_LYRICSECFILE, &lyric_sec_path,
-            RCLIB_DB_PLAYLIST_DATA_TYPE_NONE);
+        if(source_type==RCLIB_CORE_PLAY_SOURCE_PLAYLIST)
+        {
+            rclib_db_playlist_data_iter_get(iter,
+                RCLIB_DB_PLAYLIST_DATA_TYPE_LYRICFILE, &lyric_path,
+                RCLIB_DB_PLAYLIST_DATA_TYPE_NONE);
+            rclib_db_playlist_data_iter_get(iter,
+                RCLIB_DB_PLAYLIST_DATA_TYPE_LYRICSECFILE, &lyric_sec_path,
+                RCLIB_DB_PLAYLIST_DATA_TYPE_NONE);
+        }
     }
     if(lyric_path==NULL)
         lyric_path = rclib_lyric_search_lyric(uri, NULL, NULL);

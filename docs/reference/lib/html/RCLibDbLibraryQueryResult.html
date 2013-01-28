@@ -174,7 +174,8 @@ enum                <a class="link" href="RCLibDbLibraryQueryResult.html#RCLibDb
                                                          <em class="parameter"><code><a class="link" href="RCLibDbLibraryQueryResult.html#RCLibDbLibraryQueryResultIter"><span class="type">RCLibDbLibraryQueryResultIter</span></a> *iter</code></em>);
 const <a class="link" href="RCLibDbLibraryQueryResult.html#RCLibDbQuery"><span class="returnvalue">RCLibDbQuery</span></a> * <a class="link" href="RCLibDbLibraryQueryResult.html#rclib-db-library-query-result-get-query" title="rclib_db_library_query_result_get_query ()">rclib_db_library_query_result_get_query</a>
                                                         (<em class="parameter"><code><a class="link" href="RCLibDbLibraryQueryResult.html" title="RCLibDb"><span class="type">RCLibDbLibraryQueryResult</span></a> *query_result</code></em>);
-<a href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GObject"><span class="returnvalue">GObject</span></a> *           <a class="link" href="RCLibDbLibraryQueryResult.html#rclib-db-library-query-result-new" title="rclib_db_library_query_result_new ()">rclib_db_library_query_result_new</a>   (<em class="parameter"><code><a class="link" href="RCLibDbLibraryQueryResult.html" title="RCLibDb"><span class="type">RCLibDbLibraryQueryResult</span></a> *base</code></em>,
+<a href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GObject"><span class="returnvalue">GObject</span></a> *           <a class="link" href="RCLibDbLibraryQueryResult.html#rclib-db-library-query-result-new" title="rclib_db_library_query_result_new ()">rclib_db_library_query_result_new</a>   (<em class="parameter"><code><a class="link" href="RCLibDbLibraryQueryResult.html#RCLibDb"><span class="type">RCLibDb</span></a> *db</code></em>,
+                                                         <em class="parameter"><code><a class="link" href="RCLibDbLibraryQueryResult.html" title="RCLibDb"><span class="type">RCLibDbLibraryQueryResult</span></a> *base</code></em>,
                                                          <em class="parameter"><code><a class="link" href="RCLibDbLibraryQueryResult.html#RCLibDbQueryDataType" title="enum RCLibDbQueryDataType"><span class="type">RCLibDbQueryDataType</span></a> *prop_types</code></em>);
 <span class="returnvalue">RCLibDbLibraryQueryResultPropIter</span> * <a class="link" href="RCLibDbLibraryQueryResult.html#rclib-db-library-query-result-prop-get-begin-iter" title="rclib_db_library_query_result_prop_get_begin_iter ()">rclib_db_library_query_result_prop_get_begin_iter</a>
                                                         (<em class="parameter"><code><a class="link" href="RCLibDbLibraryQueryResult.html" title="RCLibDb"><span class="type">RCLibDbLibraryQueryResult</span></a> *query_result</code></em>,
@@ -2491,7 +2492,8 @@ Get the current query applied to the query result.
 <hr>
 <div class="refsect2">
 <a name="rclib-db-library-query-result-new"></a><h3>rclib_db_library_query_result_new ()</h3>
-<pre class="programlisting"><a href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GObject"><span class="returnvalue">GObject</span></a> *           rclib_db_library_query_result_new   (<em class="parameter"><code><a class="link" href="RCLibDbLibraryQueryResult.html" title="RCLibDb"><span class="type">RCLibDbLibraryQueryResult</span></a> *base</code></em>,
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GObject"><span class="returnvalue">GObject</span></a> *           rclib_db_library_query_result_new   (<em class="parameter"><code><a class="link" href="RCLibDbLibraryQueryResult.html#RCLibDb"><span class="type">RCLibDb</span></a> *db</code></em>,
+                                                         <em class="parameter"><code><a class="link" href="RCLibDbLibraryQueryResult.html" title="RCLibDb"><span class="type">RCLibDbLibraryQueryResult</span></a> *base</code></em>,
                                                          <em class="parameter"><code><a class="link" href="RCLibDbLibraryQueryResult.html#RCLibDbQueryDataType" title="enum RCLibDbQueryDataType"><span class="type">RCLibDbQueryDataType</span></a> *prop_types</code></em>);</pre>
 <p>
 Create a new library query result object instance.
@@ -2499,6 +2501,10 @@ Create a new library query result object instance.
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
 <tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>db</code></em> :</span></p></td>
+<td>the <a class="link" href="RCLibDbLibraryQueryResult.html#RCLibDb"><span class="type">RCLibDb</span></a> instance</td>
+</tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>base</code></em> :</span></p></td>
 <td>the base instance of the query result, <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><span class="type">NULL</span></a> to create a base

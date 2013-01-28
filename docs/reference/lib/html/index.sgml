@@ -78,10 +78,8 @@
 <ANCHOR id="rclib-core-effect-plugin-remove" href="LibRhythmCat/RCLibCore.html#rclib-core-effect-plugin-remove">
 <ANCHOR id="rclib-core-exit" href="LibRhythmCat/RCLibCore.html#rclib-core-exit">
 <ANCHOR id="rclib-core-get-balance" href="LibRhythmCat/RCLibCore.html#rclib-core-get-balance">
-<ANCHOR id="rclib-core-get-db-reference" href="LibRhythmCat/RCLibCore.html#rclib-core-get-db-reference">
 <ANCHOR id="rclib-core-get-eq" href="LibRhythmCat/RCLibCore.html#rclib-core-get-eq">
 <ANCHOR id="rclib-core-get-eq-name" href="LibRhythmCat/RCLibCore.html#rclib-core-get-eq-name">
-<ANCHOR id="rclib-core-get-external-reference" href="LibRhythmCat/RCLibCore.html#rclib-core-get-external-reference">
 <ANCHOR id="rclib-core-get-instance" href="LibRhythmCat/RCLibCore.html#rclib-core-get-instance">
 <ANCHOR id="rclib-core-get-metadata" href="LibRhythmCat/RCLibCore.html#rclib-core-get-metadata">
 <ANCHOR id="rclib-core-get-source-type" href="LibRhythmCat/RCLibCore.html#rclib-core-get-source-type">
@@ -102,14 +100,10 @@
 <ANCHOR id="rclib-core-set-eq" href="LibRhythmCat/RCLibCore.html#rclib-core-set-eq">
 <ANCHOR id="rclib-core-set-position" href="LibRhythmCat/RCLibCore.html#rclib-core-set-position">
 <ANCHOR id="rclib-core-set-uri" href="LibRhythmCat/RCLibCore.html#rclib-core-set-uri">
-<ANCHOR id="rclib-core-set-uri-with-db-ref" href="LibRhythmCat/RCLibCore.html#rclib-core-set-uri-with-db-ref">
-<ANCHOR id="rclib-core-set-uri-with-ext-ref" href="LibRhythmCat/RCLibCore.html#rclib-core-set-uri-with-ext-ref">
 <ANCHOR id="rclib-core-set-volume" href="LibRhythmCat/RCLibCore.html#rclib-core-set-volume">
 <ANCHOR id="rclib-core-signal-connect" href="LibRhythmCat/RCLibCore.html#rclib-core-signal-connect">
 <ANCHOR id="rclib-core-signal-disconnect" href="LibRhythmCat/RCLibCore.html#rclib-core-signal-disconnect">
 <ANCHOR id="rclib-core-stop" href="LibRhythmCat/RCLibCore.html#rclib-core-stop">
-<ANCHOR id="rclib-core-update-db-reference" href="LibRhythmCat/RCLibCore.html#rclib-core-update-db-reference">
-<ANCHOR id="rclib-core-update-external-reference" href="LibRhythmCat/RCLibCore.html#rclib-core-update-external-reference">
 <ANCHOR id="RCLibCore.signal-details" href="LibRhythmCat/RCLibCore.html#RCLibCore.signal-details">
 <ANCHOR id="RCLibCore-balance-changed" href="LibRhythmCat/RCLibCore.html#RCLibCore-balance-changed">
 <ANCHOR id="RCLibCore-buffer-probe" href="LibRhythmCat/RCLibCore.html#RCLibCore-buffer-probe">

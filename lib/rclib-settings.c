@@ -327,7 +327,8 @@ void rclib_settings_update()
     gfloat fvalue;
     gboolean bvalue, bvalue2;
     RCLibCoreAudioOutputType output_type;
-    RCLibDbPlaylistIter *db_reference;
+    RCLibCorePlaySource source_type = RCLIB_CORE_PLAY_SOURCE_NONE;
+    gpointer db_reference = NULL;
     RCLibDbCatalogIter *catalog_iter = NULL;
     if(rclib_core_audio_output_get(&output_type))
     {
@@ -351,19 +352,22 @@ void rclib_settings_update()
     }
     if(rclib_core_get_balance(&fvalue))
         rclib_settings_set_double("SoundEffect", "Balance", fvalue);
-    db_reference = (RCLibDbPlaylistIter *)rclib_core_get_db_reference();
+    rclib_core_get_play_source(&source_type, &db_reference, NULL);
     if(db_reference!=NULL)
     {
-        rclib_db_playlist_data_iter_get(db_reference,
-            RCLIB_DB_PLAYLIST_DATA_TYPE_CATALOG, &catalog_iter,
-            RCLIB_DB_PLAYLIST_DATA_TYPE_NONE);
-        if(catalog_iter!=NULL)
+        if(source_type==RCLIB_CORE_PLAY_SOURCE_PLAYLIST)
         {
-            ivalue = rclib_db_playlist_iter_get_position(db_reference);
-            rclib_settings_set_integer("Player", "LastPlayedMusic", ivalue);
-            ivalue = rclib_db_catalog_iter_get_position(catalog_iter);
-            rclib_settings_set_integer("Player", "LastPlayedCatalog",
-                ivalue);
+            rclib_db_playlist_data_iter_get((RCLibDbPlaylistIter *)
+                db_reference, RCLIB_DB_PLAYLIST_DATA_TYPE_CATALOG,
+                &catalog_iter, RCLIB_DB_PLAYLIST_DATA_TYPE_NONE);
+            if(catalog_iter!=NULL)
+            {
+                ivalue = rclib_db_playlist_iter_get_position(db_reference);
+                rclib_settings_set_integer("Player", "LastPlayedMusic", ivalue);
+                ivalue = rclib_db_catalog_iter_get_position(catalog_iter);
+                rclib_settings_set_integer("Player", "LastPlayedCatalog",
+                    ivalue);
+            }
         }
     }
 }

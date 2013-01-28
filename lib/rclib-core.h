@@ -134,6 +134,23 @@ typedef enum {
     RCLIB_CORE_AUDIO_OUTPUT_WAVEFORM = 5
 }RCLibCoreAudioOutputType;
 
+/**
+ * RCLibCorePlaySource:
+ * @RCLIB_CORE_PLAY_SOURCE_NONE: no play source
+ * @RCLIB_CORE_PLAY_SOURCE_PLAYLIST: the play source is playlist item
+ * @RCLIB_CORE_PLAY_SOURCE_LIBRARY: the play source is library item
+ * @RCLIB_CORE_PLAY_SOURCE_THIRDPARTY: the play source is third-party item
+ * 
+ * The enum type for play source.
+ */
+ 
+typedef enum {
+    RCLIB_CORE_PLAY_SOURCE_NONE = 0,
+    RCLIB_CORE_PLAY_SOURCE_PLAYLIST = 1,
+    RCLIB_CORE_PLAY_SOURCE_LIBRARY = 2,
+    RCLIB_CORE_PLAY_SOURCE_THIRDPARTY = 3
+}RCLibCorePlaySource;
+
 typedef struct _RCLibCoreMetadata RCLibCoreMetadata;
 typedef struct _RCLibCore RCLibCore;
 typedef struct _RCLibCoreClass RCLibCoreClass;
@@ -216,16 +233,14 @@ gulong rclib_core_signal_connect(const gchar *name,
     GCallback callback, gpointer data);
 void rclib_core_signal_disconnect(gulong handler_id);
 void rclib_core_set_uri(const gchar *uri);
-void rclib_core_set_uri_with_db_ref(const gchar *uri,
-    gpointer db_ref);
-void rclib_core_set_uri_with_ext_ref(const gchar *uri, const gchar *cookie,
-    gpointer external_ref);
-void rclib_core_update_db_reference(gpointer new_ref);
-void rclib_core_update_external_reference(const gchar *cookie,
-    gpointer new_ref);
+void rclib_core_set_uri_with_play_source(const gchar *uri,
+    RCLibCorePlaySource source_type, gpointer source_reference,
+    GDestroyNotify notify, const gchar *cookie);
+gboolean rclib_core_update_play_source(RCLibCorePlaySource source_type,
+    gpointer source_reference, GDestroyNotify notify, const gchar *cookie);
 gchar *rclib_core_get_uri();
-gpointer rclib_core_get_db_reference();
-gboolean rclib_core_get_external_reference(gchar **cookie, gpointer *ref);
+gboolean rclib_core_get_play_source(RCLibCorePlaySource *source_type,
+    gpointer *source_reference, gchar **cookie);
 RCLibCoreSourceType rclib_core_get_source_type();
 const RCLibCoreMetadata *rclib_core_get_metadata();
 gboolean rclib_core_set_position(gint64 pos);

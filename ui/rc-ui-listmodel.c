@@ -237,7 +237,8 @@ static void rc_ui_catalog_store_get_value(GtkTreeModel *model,
     RCUiCatalogStore *store;
     RCUiCatalogStorePrivate *priv;
     RCLibDbCatalogIter *seq_iter, *ref_catalog_iter = NULL;
-    RCLibDbPlaylistIter *reference_iter = NULL;
+    gpointer reference_iter = NULL;
+    RCLibCorePlaySource source_type = RCLIB_CORE_PLAY_SOURCE_NONE;
     GstState state;
     g_return_if_fail(RC_UI_IS_CATALOG_STORE(model));
     g_return_if_fail(iter!=NULL);
@@ -261,17 +262,17 @@ static void rc_ui_catalog_store_get_value(GtkTreeModel *model,
         case RC_UI_CATALOG_COLUMN_STATE:
         {
             g_value_init(value, G_TYPE_STRING);
-            reference_iter = (RCLibDbPlaylistIter *)
-                rclib_core_get_db_reference();
-            if(reference_iter==NULL ||
-                !rclib_db_playlist_is_valid_iter(reference_iter))
+            rclib_core_get_play_source(&source_type, &reference_iter, NULL);
+            if(source_type!=RCLIB_CORE_PLAY_SOURCE_PLAYLIST ||
+                reference_iter==NULL || !rclib_db_playlist_is_valid_iter(
+                (RCLibDbPlaylistIter *)reference_iter))
             {
                 g_value_set_static_string(value, NULL);
                 break;
             }
-            rclib_db_playlist_data_iter_get(reference_iter,
-                RCLIB_DB_PLAYLIST_DATA_TYPE_CATALOG, &ref_catalog_iter,
-                RCLIB_DB_PLAYLIST_DATA_TYPE_NONE);
+            rclib_db_playlist_data_iter_get((RCLibDbPlaylistIter *)
+                reference_iter, RCLIB_DB_PLAYLIST_DATA_TYPE_CATALOG,
+                &ref_catalog_iter, RCLIB_DB_PLAYLIST_DATA_TYPE_NONE);
             if(ref_catalog_iter==NULL || ref_catalog_iter!=seq_iter)
             {
                 g_value_set_static_string(value, NULL);
@@ -309,16 +310,16 @@ static void rc_ui_catalog_store_get_value(GtkTreeModel *model,
         {
             g_value_init(value, G_TYPE_BOOLEAN);
             g_value_set_boolean(value, FALSE);
-            reference_iter = (RCLibDbPlaylistIter *)
-                rclib_core_get_db_reference();
-            if(reference_iter==NULL ||
-                !rclib_db_playlist_is_valid_iter(reference_iter))
+            rclib_core_get_play_source(&source_type, &reference_iter, NULL);
+            if(source_type!=RCLIB_CORE_PLAY_SOURCE_PLAYLIST ||
+                reference_iter==NULL || !rclib_db_playlist_is_valid_iter(
+                (RCLibDbPlaylistIter *)reference_iter))
             {
                 break;
             }
-            rclib_db_playlist_data_iter_get(reference_iter,
-                RCLIB_DB_PLAYLIST_DATA_TYPE_CATALOG, &ref_catalog_iter,
-                RCLIB_DB_PLAYLIST_DATA_TYPE_NONE);
+            rclib_db_playlist_data_iter_get((RCLibDbPlaylistIter *)
+                reference_iter, RCLIB_DB_PLAYLIST_DATA_TYPE_CATALOG,
+                &ref_catalog_iter, RCLIB_DB_PLAYLIST_DATA_TYPE_NONE);
             if(ref_catalog_iter==NULL || ref_catalog_iter!=seq_iter)
             {
                 break;
@@ -341,7 +342,9 @@ static void rc_ui_playlist_store_get_value(GtkTreeModel *model,
 {
     RCUiPlaylistStore *store;
     RCUiPlaylistStorePrivate *priv;
-    RCLibDbPlaylistIter *seq_iter, *reference;
+    RCLibDbPlaylistIter *seq_iter;
+    gpointer reference = NULL;
+    RCLibCorePlaySource source_type = RCLIB_CORE_PLAY_SOURCE_NONE;
     gchar *dstr;
     GstState state;
     gint vint;
@@ -376,8 +379,9 @@ static void rc_ui_playlist_store_get_value(GtkTreeModel *model,
                 g_value_set_static_string(value, GTK_STOCK_CANCEL);
                 break;
             }
-            reference = (RCLibDbPlaylistIter *)rclib_core_get_db_reference();
-            if(reference!=seq_iter)
+            rclib_core_get_play_source(&source_type, &reference, NULL);
+            if(source_type!=RCLIB_CORE_PLAY_SOURCE_PLAYLIST ||
+                reference!=seq_iter)
             {
                 g_value_set_static_string(value, NULL);
                 break;
@@ -573,8 +577,12 @@ static void rc_ui_playlist_store_get_value(GtkTreeModel *model,
             g_value_init(value, G_TYPE_BOOLEAN);
             g_value_set_boolean(value, FALSE);
             if(type==RCLIB_DB_PLAYLIST_TYPE_MISSING) break;
-            reference = (RCLibDbPlaylistIter *)rclib_core_get_db_reference();
-            if(reference!=seq_iter) break;
+            rclib_core_get_play_source(&source_type, &reference, NULL);
+            if(source_type!=RCLIB_CORE_PLAY_SOURCE_PLAYLIST ||
+                reference!=seq_iter)
+            {
+                break;
+            }
             if(!rclib_core_get_state(&state, NULL, 0))
                 break;
             if(state==GST_STATE_PLAYING || state==GST_STATE_PAUSED)

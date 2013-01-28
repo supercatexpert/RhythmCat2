@@ -82,10 +82,11 @@ struct _RCLibCorePrivate
     gint channels;
     gint depth;
     RCLibCoreEQType eq_type;
+    RCLibCorePlaySource source_type;
+    gpointer source_reference;
+    GDestroyNotify source_destroy_notify;
     gpointer db_reference;
-    gpointer db_reference_pre;
     gpointer ext_reference;
-    gpointer ext_reference_pre;
     gchar *ext_cookie;
     gchar *ext_cookie_pre;
     GAsyncQueue *tag_update_queue;
@@ -1264,8 +1265,33 @@ void rclib_core_signal_disconnect(gulong handler_id)
     g_signal_handler_disconnect(core_instance, handler_id);
 }
 
-static inline void rclib_core_set_uri_internal(const gchar *uri,
-    gpointer db_ref, const gchar *cookie, gpointer external_ref)
+/**
+ * rclib_core_set_uri:
+ * @uri: the URI to play
+ *
+ * Set the URI to play.
+ */
+
+void rclib_core_set_uri(const gchar *uri)
+{
+    rclib_core_set_uri_with_play_source(uri, RCLIB_CORE_PLAY_SOURCE_NONE, NULL,
+        NULL, NULL);
+}
+
+/**
+ * rclib_core_set_uri_with_play_source:
+ * @uri: the URI to play
+ * @source_type: the source type
+ * @source_reference: (allow-none): the source reference
+ * @notify: (allow-none): the reference destroy notify
+ * @cookie: (allow-none): he cookie for third-party play item
+ * 
+ * Set the URI and the music source reference to play.
+ */
+
+void rclib_core_set_uri_with_play_source(const gchar *uri,
+    RCLibCorePlaySource source_type, gpointer source_reference,
+    GDestroyNotify notify, const gchar *cookie)
 {
     RCLibCorePrivate *priv;
     gchar *scheme;
@@ -1278,12 +1304,25 @@ static inline void rclib_core_set_uri_internal(const gchar *uri,
     if(core_instance==NULL || uri==NULL) return;
     priv = RCLIB_CORE(core_instance)->priv;
     rclib_core_stop();
-    g_free(priv->uri);
-    priv->uri = NULL;
-    priv->db_reference = NULL;
-    priv->ext_reference = NULL;
-    g_free(priv->ext_cookie);
-    priv->ext_cookie = NULL;
+    if(priv->uri!=NULL)
+    {
+        g_free(priv->uri);
+        priv->uri = NULL;
+    }
+    if(priv->source_reference!=NULL)
+    {
+        if(priv->source_destroy_notify!=NULL)
+        {
+            priv->source_destroy_notify(priv->source_reference);
+        }
+        priv->source_reference = NULL;
+    }
+    priv->source_destroy_notify = NULL;
+    if(priv->ext_cookie!=NULL)
+    {
+        g_free(priv->ext_cookie);
+        priv->ext_cookie = NULL;
+    }
     scheme = g_uri_parse_scheme(uri);
     /* We can only read CUE file on local machine. */
     if(g_strcmp0(scheme, "file")==0)
@@ -1351,90 +1390,60 @@ static inline void rclib_core_set_uri_internal(const gchar *uri,
         g_object_set(priv->playbin, "uri", uri, NULL);
         priv->uri = g_strdup(uri);
     }
-    priv->db_reference = db_ref;
-    priv->ext_cookie = g_strdup(cookie);
-    priv->ext_reference = external_ref;
+    priv->source_type = source_type;
+    if(priv->source_type!=RCLIB_CORE_PLAY_SOURCE_NONE)
+    {
+        priv->source_reference = source_reference;
+        priv->source_destroy_notify = notify;
+    }
+    if(priv->source_type==RCLIB_CORE_PLAY_SOURCE_THIRDPARTY)
+    {
+        priv->ext_cookie = g_strdup(cookie);
+    }
     gst_element_set_state(priv->playbin, GST_STATE_PAUSED);
     g_signal_emit(core_instance, core_signals[SIGNAL_URI_CHANGED], 0,
         priv->uri);
 }
 
 /**
- * rclib_core_set_uri:
- * @uri: the URI to play
+ * rclib_core_update_play_source:
+ * @source_type: the source type
+ * @source_reference: (allow-none): the source reference
+ * @notify: (allow-none): the reference destroy notify
+ * @cookie: (allow-none): he cookie for third-party play item
  *
- * Set the URI to play.
+ * Update the source reference.
+ * 
+ * Returns: Whether the source reference updated successfully.
  */
 
-void rclib_core_set_uri(const gchar *uri)
-{
-    rclib_core_set_uri_internal(uri, NULL, NULL, NULL);
-}
-
-/**
- * rclib_core_set_uri_with_db_ref:
- * @uri: the URI to play
- * @db_ref: the database reference to set, set to NULL if not used.
- * Reference must be set to NULL if you want to use this reference
- *
- * Set the URI and the music DB playlist iter to play.
- */
-
-void rclib_core_set_uri_with_db_ref(const gchar *uri,
-    gpointer db_ref)
-{
-    rclib_core_set_uri_internal(uri, db_ref, NULL, NULL);
-}
-
-/**
- * rclib_core_set_uri_with_ext_ref:
- * @uri: the URI to play
- * @cookie: the external reference cookie
- * @external_ref: the reference to set, set to NULL if not used.
- *
- * Set the URI to play, with external cookie and reference pointer.
- */
-
-void rclib_core_set_uri_with_ext_ref(const gchar *uri, const gchar *cookie,
-    gpointer external_ref)
-{
-    rclib_core_set_uri_internal(uri, NULL, cookie, external_ref);
-}
-
-/**
- * rclib_core_update_db_reference:
- * @new_ref: the new databse reference to set,
- * set to NULL if not used
- *
- * Update the database reference.
- */
-
-void rclib_core_update_db_reference(gpointer new_ref)
+gboolean rclib_core_update_play_source(RCLibCorePlaySource source_type,
+    gpointer source_reference, GDestroyNotify notify, const gchar *cookie)
 {
     RCLibCorePrivate *priv;
-    if(core_instance==NULL) return;
+    if(core_instance==NULL) return FALSE;
     priv = RCLIB_CORE(core_instance)->priv;
-    if(priv==NULL) return;
-    priv->db_reference = new_ref;
-}
-
-/**
- * rclib_core_update_external_reference:
- * @cookie: the reference cookie
- * @new_ref: the new databse reference to set, set to NULL if not used
- *
- * Update the external reference.
- */
-
-void rclib_core_update_external_reference(const gchar *cookie,
-    gpointer new_ref)
-{
-    RCLibCorePrivate *priv;
-    if(core_instance==NULL) return;
-    priv = RCLIB_CORE(core_instance)->priv;
-    if(priv==NULL || priv->db_reference!=NULL) return;
-    if(g_strcmp0(priv->ext_cookie, cookie)!=0) return;
-    priv->ext_reference = new_ref;
+    if(priv==NULL) return FALSE;
+    if(priv->source_type!=source_type)
+        return FALSE;
+    if(priv->source_reference!=NULL)
+    {
+        if(priv->source_destroy_notify!=NULL)
+        {
+            priv->source_destroy_notify(priv->source_reference);
+        }
+    }
+    if(priv->ext_cookie!=NULL)
+    {
+        g_free(priv->ext_cookie);
+    }
+    priv->source_reference = source_reference;
+    priv->source_destroy_notify = notify;
+    if(source_type==RCLIB_CORE_PLAY_SOURCE_THIRDPARTY)
+    {
+        priv->ext_cookie = g_strdup(cookie);
+    }
+    return TRUE;
 }
 
 /**
@@ -1457,48 +1466,31 @@ gchar *rclib_core_get_uri()
 }
 
 /**
- * rclib_core_get_db_reference:
+ * rclib_core_get_play_source:
+ * @source_type: (out): (allow-none): the source type
+ * @source_reference: (out): (allow-none): the source reference
+ * @cookie: (out): (transfer full): (allow-none): the cookie for
+ *     third-party play source
  *
- * Get the database reference.
+ * Get the play source reference.
  *
- * Returns: (transfer none): The database reference.
+ * Returns: Whether the play source returned.
  */
 
-gpointer rclib_core_get_db_reference()
-{
-    RCLibCorePrivate *priv;
-    if(core_instance==NULL) return FALSE;
-    priv = RCLIB_CORE(core_instance)->priv;
-    if(priv==NULL) return NULL;
-    return priv->db_reference;
-}
 
-/**
- * rclib_core_get_external_reference:
- * @cookie: (out) (allow-none): the reference cookie
- * @ref: (out) (allow-none): the reference
- *
- * Get the external reference.
- *
- * Returns: (transfer none): Whether the results are set.
- */
-
-gboolean rclib_core_get_external_reference(gchar **cookie, gpointer *ref)
+gboolean rclib_core_get_play_source(RCLibCorePlaySource *source_type,
+    gpointer *source_reference, gchar **cookie)
 {
     RCLibCorePrivate *priv;
     if(core_instance==NULL) return FALSE;
     priv = RCLIB_CORE(core_instance)->priv;
     if(priv==NULL) return FALSE;
-    if(priv->ext_cookie==NULL || priv->ext_reference==NULL)
-        return FALSE;
-    if(cookie!=NULL)
-    {
+    if(source_type!=NULL)
+        *source_type = priv->source_type;
+    if(source_reference!=NULL)
+        *source_reference = priv->source_reference;
+    if(priv->source_type==RCLIB_CORE_PLAY_SOURCE_THIRDPARTY && cookie!=NULL)
         *cookie = g_strdup(priv->ext_cookie);
-    }
-    if(priv->ext_reference!=NULL)
-    {
-        *ref = priv->ext_reference;
-    }
     return TRUE;
 }
 

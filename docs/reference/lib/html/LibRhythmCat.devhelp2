@@ -54,10 +54,8 @@
     <keyword type="function" name="rclib_core_effect_plugin_remove ()" link="RCLibCore.html#rclib-core-effect-plugin-remove"/>
     <keyword type="function" name="rclib_core_exit ()" link="RCLibCore.html#rclib-core-exit"/>
     <keyword type="function" name="rclib_core_get_balance ()" link="RCLibCore.html#rclib-core-get-balance"/>
-    <keyword type="function" name="rclib_core_get_db_reference ()" link="RCLibCore.html#rclib-core-get-db-reference"/>
     <keyword type="function" name="rclib_core_get_eq ()" link="RCLibCore.html#rclib-core-get-eq"/>
     <keyword type="function" name="rclib_core_get_eq_name ()" link="RCLibCore.html#rclib-core-get-eq-name"/>
-    <keyword type="function" name="rclib_core_get_external_reference ()" link="RCLibCore.html#rclib-core-get-external-reference"/>
     <keyword type="function" name="rclib_core_get_instance ()" link="RCLibCore.html#rclib-core-get-instance"/>
     <keyword type="function" name="rclib_core_get_metadata ()" link="RCLibCore.html#rclib-core-get-metadata"/>
     <keyword type="function" name="rclib_core_get_source_type ()" link="RCLibCore.html#rclib-core-get-source-type"/>
@@ -78,14 +76,10 @@
     <keyword type="function" name="rclib_core_set_eq ()" link="RCLibCore.html#rclib-core-set-eq"/>
     <keyword type="function" name="rclib_core_set_position ()" link="RCLibCore.html#rclib-core-set-position"/>
     <keyword type="function" name="rclib_core_set_uri ()" link="RCLibCore.html#rclib-core-set-uri"/>
-    <keyword type="function" name="rclib_core_set_uri_with_db_ref ()" link="RCLibCore.html#rclib-core-set-uri-with-db-ref"/>
-    <keyword type="function" name="rclib_core_set_uri_with_ext_ref ()" link="RCLibCore.html#rclib-core-set-uri-with-ext-ref"/>
     <keyword type="function" name="rclib_core_set_volume ()" link="RCLibCore.html#rclib-core-set-volume"/>
     <keyword type="function" name="rclib_core_signal_connect ()" link="RCLibCore.html#rclib-core-signal-connect"/>
     <keyword type="function" name="rclib_core_signal_disconnect ()" link="RCLibCore.html#rclib-core-signal-disconnect"/>
     <keyword type="function" name="rclib_core_stop ()" link="RCLibCore.html#rclib-core-stop"/>
-    <keyword type="function" name="rclib_core_update_db_reference ()" link="RCLibCore.html#rclib-core-update-db-reference"/>
-    <keyword type="function" name="rclib_core_update_external_reference ()" link="RCLibCore.html#rclib-core-update-external-reference"/>
     <keyword type="signal" name="The &quot;balance-changed&quot; signal" link="RCLibCore.html#RCLibCore-balance-changed"/>
     <keyword type="signal" name="The &quot;buffer-probe&quot; signal" link="RCLibCore.html#RCLibCore-buffer-probe"/>
     <keyword type="signal" name="The &quot;buffering&quot; signal" link="RCLibCore.html#RCLibCore-buffering"/>

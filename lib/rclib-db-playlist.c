@@ -2798,12 +2798,19 @@ void rclib_db_playlist_move_to_another_catalog(RCLibDbPlaylistIter **iters,
     RCLibDbPlaylistData *old_data, *new_data;
     RCLibDbPlaylistIter *new_iter;
     RCLibDbPlaylistIter *reference;
+    RCLibCorePlaySource source_type = RCLIB_CORE_PLAY_SOURCE_NONE;
     if(iters==NULL || catalog_iter==NULL || num<1) return;
     instance = rclib_db_get_instance();
     if(instance==NULL) return;
     priv = RCLIB_DB(instance)->priv;
     if(priv==NULL) return;
-    reference = (RCLibDbPlaylistIter *)rclib_core_get_db_reference();
+    if(!rclib_core_get_play_source(&source_type, (gpointer *)&reference,
+        NULL))
+    {
+        reference = NULL;
+    }
+    if(source_type!=RCLIB_CORE_PLAY_SOURCE_PLAYLIST)
+        reference = NULL;
     catalog_data = rclib_db_catalog_iter_get_data(catalog_iter);
     if(catalog_data==NULL) return;
     for(i=0;i<num;i++)
@@ -2822,7 +2829,10 @@ void rclib_db_playlist_move_to_another_catalog(RCLibDbPlaylistIter **iters,
         new_iter = (RCLibDbPlaylistIter *)g_sequence_append(
             (GSequence *)catalog_data->playlist, new_data);
         if(iters[i]==reference)
-            rclib_core_update_db_reference(new_iter);
+        {
+            rclib_core_update_play_source(RCLIB_CORE_PLAY_SOURCE_PLAYLIST,
+                new_iter, NULL, NULL);
+        }
         new_data->self_iter = new_iter;
         g_hash_table_replace(priv->playlist_iter_table, new_iter, new_iter);
         g_rw_lock_writer_unlock(&(priv->playlist_rw_lock));
