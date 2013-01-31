@@ -55,6 +55,7 @@ struct _RCUiLibraryWindowPrivate
     GtkWidget *library_prop_album_scr_window;
     GtkWidget *library_prop_artist_scr_window;
     GtkWidget *library_list_scr_window;
+    gulong state_changed_id;
 };
 
 static GObject *ui_library_window_instance = NULL;
@@ -217,11 +218,49 @@ static void rc_ui_library_prop_artist_row_selected(GtkTreeView *view,
     gtk_tree_path_free(path);
 }    
 
+static void rc_ui_library_list_row_activated(GtkTreeView *widget,
+    GtkTreePath *path, GtkTreeViewColumn *column, gpointer data)
+{
+    GtkTreeIter iter;
+    GtkTreeModel *model;
+    GObject *library_query_result;
+    gchar *uri = NULL;
+    RCLibDbLibraryData *library_data;
+    model = gtk_tree_view_get_model(widget);
+    if(model==NULL) return;
+    if(!gtk_tree_model_get_iter(model, &iter, path)) return;
+    library_query_result = rclib_db_library_get_album_query_result();
+    library_data = rclib_db_library_query_result_get_data(
+        RCLIB_DB_LIBRARY_QUERY_RESULT(library_query_result),
+        (RCLibDbLibraryQueryResultIter *)iter.user_data);
+    g_object_unref(library_query_result);
+    if(library_data==NULL) return;
+    rclib_db_library_data_get(library_data, RCLIB_DB_LIBRARY_DATA_TYPE_URI,
+        &uri, RCLIB_DB_LIBRARY_DATA_TYPE_NONE);
+    rclib_db_library_data_unref(library_data);
+    if(uri==NULL) return;
+    rclib_player_play_library(uri);
+    g_free(uri);
+    gtk_tree_model_row_changed(model, path, &iter);
+}
+
+static void rc_ui_library_window_core_state_changed_cb(RCLibCore *core,
+    GstState state, gpointer data)
+{
+    RCUiLibraryWindowPrivate *priv = (RCUiLibraryWindowPrivate *)data;
+    if(data==NULL) return;
+    gtk_widget_queue_draw(priv->library_list_view);
+}
 
 static void rc_ui_library_window_finalize(GObject *object)
 {
     RCUiLibraryWindowPrivate *priv = RC_UI_LIBRARY_WINDOW(object)->priv;
     RC_UI_LIBRARY_WINDOW(object)->priv = NULL;
+    if(priv->state_changed_id>0)
+    {
+        rclib_core_signal_disconnect(priv->state_changed_id);
+        priv->state_changed_id = 0;
+    }
     if(priv->library_genre_model!=NULL)
         g_object_unref(priv->library_genre_model);
     if(priv->library_album_model!=NULL)
@@ -361,6 +400,10 @@ static void rc_ui_library_window_instance_init(RCUiLibraryWindow *window)
         G_CALLBACK(rc_ui_library_prop_artist_row_selected), priv);
     g_signal_connect(priv->library_prop_album_view, "cursor-changed",
         G_CALLBACK(rc_ui_library_prop_album_row_selected), priv);
+    g_signal_connect(priv->library_list_view, "row-activated",
+        G_CALLBACK(rc_ui_library_list_row_activated), NULL);
+    priv->state_changed_id = rclib_core_signal_connect("state-changed",
+        G_CALLBACK(rc_ui_library_window_core_state_changed_cb), priv);
 }
 
 GType rc_ui_library_window_get_type()

@@ -603,7 +603,8 @@ static void rc_ui_listview_playlist_row_activated(GtkTreeView *widget,
     model = gtk_tree_view_get_model(widget);
     if(model==NULL) return;
     if(!gtk_tree_model_get_iter(model, &iter, path)) return;
-    rclib_player_play_db((GSequenceIter *)iter.user_data);
+    rclib_player_play_playlist(iter.user_data);
+    gtk_tree_model_row_changed(model, path, &iter);
 }
 
 static void rc_ui_listview_catalog_row_edited(GtkCellRendererText *renderer,

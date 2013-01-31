@@ -275,8 +275,6 @@ static void rc_ui_library_list_view_instance_init(RCUiLibraryListView *view)
     gtk_tree_view_columns_autosize(GTK_TREE_VIEW(view));
     //gtk_tree_view_set_search_equal_func(GTK_TREE_VIEW(view),
     //    rc_ui_listview_playlist_search_comparison_func, NULL, NULL);
-    //g_signal_connect(view, "row-activated",
-    //    G_CALLBACK(rc_ui_listview_playlist_row_activated), NULL);
     //g_signal_connect(priv->rating_renderer, "rated",
     //    G_CALLBACK(rc_ui_playlist_view_rated_cb), priv);
 }

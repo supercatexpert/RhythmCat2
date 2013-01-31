@@ -272,7 +272,7 @@ static void rc_main_app_activate(GApplication *application)
         }
         if(playlist_iter!=NULL)
         {
-            rclib_player_play_db(playlist_iter);
+            rclib_player_play_playlist(playlist_iter);
             if(!rclib_settings_get_boolean("Player", "AutoPlayWhenStartup",
                 NULL))
             {
@@ -290,7 +290,7 @@ static void rc_main_app_activate(GApplication *application)
             playlist_iter = rclib_db_playlist_get_begin_iter(catalog_iter);
         }
         if(playlist_iter!=NULL)
-            rclib_player_play_db(playlist_iter);
+            rclib_player_play_playlist(playlist_iter);
     }
     rc_ui_main_window_show();
     rc_ui_library_window_show();

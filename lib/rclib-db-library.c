@@ -1215,7 +1215,6 @@ gboolean _rclib_db_library_import_idle_cb(gpointer data)
     }
     mmd = idle_data->mmd;
     library_data = rclib_db_library_data_new();
-    library_data = rclib_db_library_data_new();
     library_data->type = idle_data->type;
     library_data->uri = g_strdup(mmd->uri);
     library_data->title = g_strdup(mmd->title);
@@ -3777,7 +3776,8 @@ RCLibDbLibraryQueryResult *rclib_db_library_query_result_get_base(
  * 
  * Get the library data which the @iter points to.
  * 
- * Returns: The library data, #NULL if not found or any error occurs.
+ * Returns: (transfer full): The library data, #NULL if not found or
+ *     any error occurs.
  */
 
 RCLibDbLibraryData *rclib_db_library_query_result_get_data(

@@ -469,6 +469,7 @@ static void rc_ui_library_list_store_get_value(GtkTreeModel *model,
     gchar *dstr;
     GstState state;
     gint vint;
+    gchar *uri;
     g_return_if_fail(RC_UI_IS_LIBRARY_LIST_STORE(model));
     g_return_if_fail(iter!=NULL);
     store = RC_UI_LIBRARY_LIST_STORE(model);
@@ -497,12 +498,14 @@ static void rc_ui_library_list_store_get_value(GtkTreeModel *model,
         case RC_UI_LIBRARY_LIST_COLUMN_STATE:
         {
             RCLibDbLibraryType type = 0;
+            uri = NULL;
             library_data = rclib_db_library_query_result_get_data(
                 priv->query_result, seq_iter);
             if(library_data!=NULL)
             {
                 rclib_db_library_data_get(library_data,
                     RCLIB_DB_LIBRARY_DATA_TYPE_TYPE, &type,
+                    RCLIB_DB_LIBRARY_DATA_TYPE_URI, &uri,
                     RCLIB_DB_LIBRARY_DATA_TYPE_NONE);
                 rclib_db_library_data_unref(library_data);
             }
@@ -510,19 +513,23 @@ static void rc_ui_library_list_store_get_value(GtkTreeModel *model,
             if(type==RCLIB_DB_LIBRARY_TYPE_MISSING)
             {
                 g_value_set_static_string(value, GTK_STOCK_CANCEL);
+                g_free(uri);
                 break;
             }
             if(!rclib_core_get_play_source(&source_type, &reference, NULL))
             {
                 g_value_set_static_string(value, NULL);
+                g_free(uri);
                 break;
             }
-            if(source_type!=RCLIB_CORE_PLAY_SOURCE_LIBRARY || 
-                reference!=seq_iter)
+            if(source_type!=RCLIB_CORE_PLAY_SOURCE_LIBRARY ||
+                g_strcmp0(uri, (const gchar *)reference)!=0)
             {
                 g_value_set_static_string(value, NULL);
+                g_free(uri);
                 break;
             }
+            g_free(uri);
             if(!rclib_core_get_state(&state, NULL, 0))
             {
                 g_value_set_static_string(value, NULL);
@@ -551,9 +558,9 @@ static void rc_ui_library_list_store_get_value(GtkTreeModel *model,
             if(library_data!=NULL)
             {
                 rclib_db_library_data_get(library_data,
-                    RCLIB_DB_PLAYLIST_DATA_TYPE_URI, &duri,
-                    RCLIB_DB_PLAYLIST_DATA_TYPE_TITLE, &dtitle,
-                    RCLIB_DB_PLAYLIST_DATA_TYPE_NONE);
+                    RCLIB_DB_LIBRARY_DATA_TYPE_URI, &duri,
+                    RCLIB_DB_LIBRARY_DATA_TYPE_TITLE, &dtitle,
+                    RCLIB_DB_LIBRARY_DATA_TYPE_NONE);
                 rclib_db_library_data_unref(library_data);
             }
             if(dtitle!=NULL && strlen(dtitle)>0)
@@ -721,25 +728,36 @@ static void rc_ui_library_list_store_get_value(GtkTreeModel *model,
         case RC_UI_LIBRARY_LIST_COLUMN_PLAYING_FLAG:
         {
             RCLibDbLibraryType type = 0;
+            uri = NULL;
             library_data = rclib_db_library_query_result_get_data(
                 priv->query_result, seq_iter);
             if(library_data!=NULL)
             {
                 rclib_db_library_data_get(library_data,
                     RCLIB_DB_LIBRARY_DATA_TYPE_TYPE, &type,
+                    RCLIB_DB_LIBRARY_DATA_TYPE_URI, &uri,
                     RCLIB_DB_LIBRARY_DATA_TYPE_NONE);
                 rclib_db_library_data_unref(library_data);
             }
             g_value_init(value, G_TYPE_BOOLEAN);
             g_value_set_boolean(value, FALSE);
-            if(type==RCLIB_DB_LIBRARY_TYPE_MISSING) break;
-            if(!rclib_core_get_play_source(&source_type, &reference, NULL))
-                break;
-            if(source_type!=RCLIB_CORE_PLAY_SOURCE_LIBRARY ||
-                reference!=seq_iter)
+            if(type==RCLIB_DB_LIBRARY_TYPE_MISSING)
             {
+                g_free(uri);
                 break;
             }
+            if(!rclib_core_get_play_source(&source_type, &reference, NULL))
+            {
+                g_free(uri);
+                break;
+            }
+            if(source_type!=RCLIB_CORE_PLAY_SOURCE_LIBRARY ||
+                g_strcmp0(uri, (const gchar *)reference)!=0)
+            {
+                g_free(uri);
+                break;
+            }
+            g_free(uri);
             if(!rclib_core_get_state(&state, NULL, 0))
                 break;
             if(state==GST_STATE_PLAYING || state==GST_STATE_PAUSED)
