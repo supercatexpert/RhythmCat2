@@ -607,6 +607,8 @@ gint rclib_db_library_query_result_get_position(
     RCLibDbLibraryQueryResultIter *iter);
 RCLibDbLibraryQueryResultIter *rclib_db_library_query_result_get_iter_at_pos(
     RCLibDbLibraryQueryResult *query_result, gint pos);
+RCLibDbLibraryQueryResultIter *rclib_db_library_query_result_get_random_iter(
+    RCLibDbLibraryQueryResult *query_result);
 gboolean rclib_db_library_query_result_iter_is_begin(
     RCLibDbLibraryQueryResult *query_result,
     RCLibDbLibraryQueryResultIter *iter);

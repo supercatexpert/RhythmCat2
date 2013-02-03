@@ -690,8 +690,8 @@ static gboolean rc_ui_listview_playlist_search_comparison_func(
     gboolean flag;
     gtk_tree_model_get(model, iter, RC_UI_PLAYLIST_COLUMN_FTITLE, &name, -1);
     if(name==NULL) return TRUE;
-    name_down = g_utf8_strdown(name, -1);
-    key_down = g_utf8_strdown(key, -1);
+    name_down = g_utf8_casefold(name, -1);
+    key_down = g_utf8_casefold(key, -1);
     g_free(name);
     if(g_strstr_len(name_down, -1, key_down)!=NULL)
         flag = FALSE;

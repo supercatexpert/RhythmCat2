@@ -26,6 +26,7 @@
 #include "rc-ui-library-window.h"
 #include "rc-ui-library-model.h"
 #include "rc-ui-library-view.h"
+#include "rc-ui-menu.h"
 #include "rc-common.h"
 
 /**
@@ -252,6 +253,13 @@ static void rc_ui_library_window_core_state_changed_cb(RCLibCore *core,
     gtk_widget_queue_draw(priv->library_list_view);
 }
 
+static gboolean rc_ui_library_window_delete_event_cb(GtkWidget *widget,
+    GdkEvent *event, gpointer data)
+{
+    rc_ui_library_window_hide();
+    return TRUE;
+}
+
 static void rc_ui_library_window_finalize(GObject *object)
 {
     RCUiLibraryWindowPrivate *priv = RC_UI_LIBRARY_WINDOW(object)->priv;
@@ -401,7 +409,9 @@ static void rc_ui_library_window_instance_init(RCUiLibraryWindow *window)
     g_signal_connect(priv->library_prop_album_view, "cursor-changed",
         G_CALLBACK(rc_ui_library_prop_album_row_selected), priv);
     g_signal_connect(priv->library_list_view, "row-activated",
-        G_CALLBACK(rc_ui_library_list_row_activated), NULL);
+        G_CALLBACK(rc_ui_library_list_row_activated), priv);
+    g_signal_connect(window, "delete-event",
+        G_CALLBACK(rc_ui_library_window_delete_event_cb), priv);
     priv->state_changed_id = rclib_core_signal_connect("state-changed",
         G_CALLBACK(rc_ui_library_window_core_state_changed_cb), priv);
 }
@@ -459,7 +469,15 @@ GtkWidget *rc_ui_library_window_get_widget()
 
 void rc_ui_library_window_show()
 {
+    GtkUIManager *ui_manager;
     if(ui_library_window_instance==NULL) return;
+    ui_manager = rc_ui_menu_get_ui_manager();
+    if(ui_manager!=NULL)
+    {
+        gtk_toggle_action_set_active(GTK_TOGGLE_ACTION(
+            gtk_ui_manager_get_action(ui_manager,
+            "/RC2MenuBar/ViewMenu/ViewLibrary")), TRUE);
+    }
     gtk_widget_show_all(GTK_WIDGET(ui_library_window_instance));
 }
 
@@ -471,7 +489,15 @@ void rc_ui_library_window_show()
 
 void rc_ui_library_window_hide()
 {
+    GtkUIManager *ui_manager;
     if(ui_library_window_instance==NULL) return;
+    ui_manager = rc_ui_menu_get_ui_manager();
+    if(ui_manager!=NULL)
+    {
+        gtk_toggle_action_set_active(GTK_TOGGLE_ACTION(
+            gtk_ui_manager_get_action(ui_manager,
+            "/RC2MenuBar/ViewMenu/ViewLibrary")), FALSE);
+    }
     gtk_widget_hide(GTK_WIDGET(ui_library_window_instance));
 }
 

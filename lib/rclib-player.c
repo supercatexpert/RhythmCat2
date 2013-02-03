@@ -474,7 +474,6 @@ static inline void rclib_player_play_next_internal(RCLibPlayerPrivate *priv,
 
 static void rclib_player_eos_cb(RCLibCore *core, gpointer data)
 {
-    RCLibDbPlaylistIter *iter;
     gpointer reference = NULL;
     RCLibCorePlaySource source_type = RCLIB_CORE_PLAY_SOURCE_NONE;
     RCLibPlayer *player;
@@ -485,6 +484,7 @@ static void rclib_player_eos_cb(RCLibCore *core, gpointer data)
     rclib_core_get_play_source(&source_type, &reference, NULL);
     if(source_type==RCLIB_CORE_PLAY_SOURCE_PLAYLIST)
     {
+        RCLibDbPlaylistIter *iter;
         if(priv->random_mode!=RCLIB_PLAYER_RANDOM_NONE)
         {
             switch(priv->random_mode)
@@ -526,6 +526,10 @@ static void rclib_player_eos_cb(RCLibCore *core, gpointer data)
     }
     else if(source_type==RCLIB_CORE_PLAY_SOURCE_LIBRARY)
     {
+        RCLibDbLibraryQueryResultIter *iter = NULL;
+        GObject *library_query_result = NULL;
+        gchar *uri = NULL;
+        RCLibDbLibraryData *library_data = NULL;
         if(priv->random_mode!=RCLIB_PLAYER_RANDOM_NONE)
         {
             switch(priv->random_mode)
@@ -536,7 +540,25 @@ static void rclib_player_eos_cb(RCLibCore *core, gpointer data)
                  */
                 case RCLIB_PLAYER_RANDOM_SINGLE: 
                 case RCLIB_PLAYER_RANDOM_ALL:
-                    /* TBD */
+                    library_query_result =
+                        rclib_db_library_get_album_query_result();
+                    if(library_query_result==NULL) break;
+                    iter = rclib_db_library_query_result_get_random_iter(
+                        RCLIB_DB_LIBRARY_QUERY_RESULT(library_query_result));
+                    if(iter!=NULL)
+                    {
+                        library_data = rclib_db_library_query_result_get_data(
+                            RCLIB_DB_LIBRARY_QUERY_RESULT(library_query_result),
+                            (RCLibDbLibraryQueryResultIter *)iter);
+                    }
+                    g_object_unref(library_query_result);
+                    if(library_data==NULL) break;
+                    rclib_db_library_data_get(library_data,
+                        RCLIB_DB_LIBRARY_DATA_TYPE_URI, &uri,
+                        RCLIB_DB_LIBRARY_DATA_TYPE_NONE);
+                    rclib_db_library_data_unref(library_data);
+                    rclib_player_play_library(uri);
+                    g_free(uri);
                     break;
                 default:
                     rclib_player_play_next_internal(priv, FALSE);
@@ -550,9 +572,6 @@ static void rclib_player_eos_cb(RCLibCore *core, gpointer data)
             {
                 if(reference!=NULL)
                 {
-                    gchar *uri = NULL;
-                    GObject *library_query_result;
-                    RCLibDbLibraryData *library_data;
                     if(reference==NULL) break;
                     library_query_result =
                         rclib_db_library_get_album_query_result();
@@ -789,9 +808,11 @@ void rclib_player_play_playlist(gpointer iter)
 
 void rclib_player_play_library(const gchar *uri)
 {
+    gchar *new_uri;
     if(uri==NULL) return;
-    rclib_core_set_uri_with_play_source(uri, RCLIB_CORE_PLAY_SOURCE_LIBRARY,
-        g_strdup(uri), g_free, NULL);
+    new_uri = g_strdup(uri);
+    rclib_core_set_uri_with_play_source(new_uri,
+        RCLIB_CORE_PLAY_SOURCE_LIBRARY, new_uri, g_free, NULL);
     rclib_core_play();
 }
 
@@ -814,12 +835,12 @@ gboolean rclib_player_play_prev(gboolean jump, gboolean repeat,
 {
     gpointer reference = NULL;
     RCLibCorePlaySource source_type = RCLIB_CORE_PLAY_SOURCE_NONE;
-    RCLibDbPlaylistIter *iter;
-    RCLibDbCatalogIter *catalog_iter, *catalog_prev_iter;
-    gint playlist_length;
     rclib_core_get_play_source(&source_type, &reference, NULL);
     if(source_type==RCLIB_CORE_PLAY_SOURCE_PLAYLIST)
     {
+        RCLibDbPlaylistIter *iter;
+        RCLibDbCatalogIter *catalog_iter, *catalog_prev_iter;
+        gint playlist_length;
         if(reference==NULL) return FALSE;
         if(!rclib_db_playlist_is_valid_iter((RCLibDbPlaylistIter *)reference))
             return FALSE;
@@ -881,7 +902,70 @@ gboolean rclib_player_play_prev(gboolean jump, gboolean repeat,
     }
     else
     {
-        return FALSE;
+        RCLibDbLibraryQueryResultIter *iter;
+        RCLibDbLibraryData *library_data;
+        GObject *library_query_result;
+        gchar *uri = NULL;
+        gboolean play_flag = FALSE;
+        if(reference==NULL) return FALSE;
+        library_query_result = rclib_db_library_get_album_query_result();
+        iter = rclib_db_library_query_result_get_iter_by_uri(
+            RCLIB_DB_LIBRARY_QUERY_RESULT(library_query_result),
+            (const gchar *)reference);
+        G_STMT_START
+        {
+            if(iter==NULL) break;
+            iter = rclib_db_library_query_result_get_prev_iter(
+                RCLIB_DB_LIBRARY_QUERY_RESULT(library_query_result),
+                iter);
+            if(iter==NULL)
+            {
+                if(repeat)
+                {
+                    rclib_player_play_library((const gchar *)reference);
+                    play_flag = TRUE;
+                    break;
+                }
+                if(loop)
+                {
+                    iter =
+                        rclib_db_library_query_result_get_last_iter(
+                        RCLIB_DB_LIBRARY_QUERY_RESULT(library_query_result));
+                    if(iter==NULL) break;
+                    library_data = rclib_db_library_query_result_get_data(
+                        RCLIB_DB_LIBRARY_QUERY_RESULT(library_query_result),
+                        iter);
+                    if(library_data==NULL) break;
+                    rclib_db_library_data_get(library_data,
+                        RCLIB_DB_LIBRARY_DATA_TYPE_URI, &uri,
+                        RCLIB_DB_LIBRARY_DATA_TYPE_NONE);
+                    if(uri!=NULL)
+                    {
+                        rclib_player_play_library(uri);
+                        play_flag = TRUE;
+                    }
+                    g_free(uri);
+                }
+                break;
+            }
+            library_data = rclib_db_library_query_result_get_data(
+                RCLIB_DB_LIBRARY_QUERY_RESULT(library_query_result),
+                iter);
+            if(library_data==NULL) break;
+            rclib_db_library_data_get(library_data,
+                RCLIB_DB_LIBRARY_DATA_TYPE_URI, &uri,
+                RCLIB_DB_LIBRARY_DATA_TYPE_NONE);
+            if(uri!=NULL)
+            {
+                rclib_player_play_library(uri);
+                play_flag = TRUE;
+            }
+            g_free(uri);
+            rclib_db_library_data_unref(library_data);
+        }
+        G_STMT_END;
+        g_object_unref(library_query_result);
+        return play_flag;
     }
     return TRUE;
 }
@@ -905,11 +989,11 @@ gboolean rclib_player_play_next(gboolean jump, gboolean repeat,
 {
     gpointer reference = NULL;
     RCLibCorePlaySource source_type = RCLIB_CORE_PLAY_SOURCE_NONE;
-    RCLibDbPlaylistIter *iter;
-    RCLibDbCatalogIter *catalog_iter;
     rclib_core_get_play_source(&source_type, &reference, NULL);
     if(source_type==RCLIB_CORE_PLAY_SOURCE_PLAYLIST)
     {
+        RCLibDbPlaylistIter *iter;
+        RCLibDbCatalogIter *catalog_iter;
         if(reference==NULL) return FALSE;
         if(!rclib_db_playlist_is_valid_iter((RCLibDbPlaylistIter *)reference))
             return FALSE;
@@ -960,7 +1044,70 @@ gboolean rclib_player_play_next(gboolean jump, gboolean repeat,
     }
     else
     {
-        return FALSE;
+        RCLibDbLibraryQueryResultIter *iter;
+        RCLibDbLibraryData *library_data;
+        GObject *library_query_result;
+        gchar *uri = NULL;
+        gboolean play_flag = FALSE;
+        if(reference==NULL) return FALSE;
+        library_query_result = rclib_db_library_get_album_query_result();
+        iter = rclib_db_library_query_result_get_iter_by_uri(
+            RCLIB_DB_LIBRARY_QUERY_RESULT(library_query_result),
+            (const gchar *)reference);
+        G_STMT_START
+        {
+            if(iter==NULL) break;
+            iter = rclib_db_library_query_result_get_next_iter(
+                RCLIB_DB_LIBRARY_QUERY_RESULT(library_query_result),
+                iter);
+            if(iter==NULL)
+            {
+                if(repeat)
+                {
+                    rclib_player_play_library((const gchar *)reference);
+                    play_flag = TRUE;
+                    break;
+                }
+                if(loop)
+                {
+                    iter =
+                        rclib_db_library_query_result_get_begin_iter(
+                        RCLIB_DB_LIBRARY_QUERY_RESULT(library_query_result));
+                    if(iter==NULL) break;
+                    library_data = rclib_db_library_query_result_get_data(
+                        RCLIB_DB_LIBRARY_QUERY_RESULT(library_query_result),
+                        iter);
+                    if(library_data==NULL) break;
+                    rclib_db_library_data_get(library_data,
+                        RCLIB_DB_LIBRARY_DATA_TYPE_URI, &uri,
+                        RCLIB_DB_LIBRARY_DATA_TYPE_NONE);
+                    if(uri!=NULL)
+                    {
+                        rclib_player_play_library(uri);
+                        play_flag = TRUE;
+                    }
+                    g_free(uri);
+                }
+                break;
+            }
+            library_data = rclib_db_library_query_result_get_data(
+                RCLIB_DB_LIBRARY_QUERY_RESULT(library_query_result),
+                iter);
+            if(library_data==NULL) break;
+            rclib_db_library_data_get(library_data,
+                RCLIB_DB_LIBRARY_DATA_TYPE_URI, &uri,
+                RCLIB_DB_LIBRARY_DATA_TYPE_NONE);
+            if(uri!=NULL)
+            {
+                rclib_player_play_library(uri);
+                play_flag = TRUE;
+            }
+            g_free(uri);
+            rclib_db_library_data_unref(library_data);
+        }
+        G_STMT_END;
+        g_object_unref(library_query_result);
+        return play_flag;
     }
     return TRUE;
 }

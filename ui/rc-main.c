@@ -293,7 +293,6 @@ static void rc_main_app_activate(GApplication *application)
             rclib_player_play_playlist(playlist_iter);
     }
     rc_ui_main_window_show();
-    rc_ui_library_window_show();
     if(main_remaining_args!=NULL)
     {
         catalog_iter = rclib_db_catalog_get_begin_iter();

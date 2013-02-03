@@ -358,10 +358,13 @@ static void rc_ui_menu_view_library_clicked_cb(GtkAction *action,
     gpointer data)
 {
     gboolean visible;
+    gboolean toggled;
     if(action==NULL) return;
+    visible = gtk_widget_get_visible(rc_ui_library_window_get_widget());
+    toggled = gtk_toggle_action_get_active(GTK_TOGGLE_ACTION(action));
+    if(visible==toggled) return;
     g_signal_handlers_block_by_func(action,
         G_CALLBACK(rc_ui_menu_view_library_clicked_cb), data);
-    visible = gtk_widget_get_visible(rc_ui_library_window_get_widget());
     if(visible)
         rc_ui_library_window_hide();
     else
@@ -745,7 +748,7 @@ static GtkToggleActionEntry ui_menu_toggle_entries[] =
     { "ViewLibrary", NULL,
       N_("Music _Library"), NULL,
       N_("Music library"),
-      G_CALLBACK(rc_ui_menu_view_library_clicked_cb), TRUE },
+      G_CALLBACK(rc_ui_menu_view_library_clicked_cb), FALSE },
     { "ViewAlwaysOnTop", GTK_STOCK_GOTO_TOP,
       N_("Always On _Top"), NULL,
       N_("Always on top"),
@@ -1114,8 +1117,11 @@ guint rc_ui_menu_add_menu_action(GtkAction *action, const gchar *path,
 {
     RCUiMenuPrivate *priv = &ui_menu_priv;
     guint id;
-    if(priv->ui_manager==NULL || priv->ui_actions==NULL || action==NULL || path==NULL ||
-        name==NULL) return 0;
+    if(priv->ui_manager==NULL || priv->ui_actions==NULL || action==NULL ||
+        path==NULL || name==NULL)
+    {
+        return 0;
+    }
     id = gtk_ui_manager_new_merge_id(priv->ui_manager);
     gtk_ui_manager_add_ui(priv->ui_manager, id, path, name, action_name,
         GTK_UI_MANAGER_MENUITEM, top);

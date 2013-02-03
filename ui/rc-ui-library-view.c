@@ -101,18 +101,42 @@ static void rc_ui_library_prop_text_call_data_func(
         g_object_set(G_OBJECT(renderer), "weight", PANGO_WEIGHT_NORMAL, NULL);
 }
 
+static void rc_ui_library_view_rated_cb(RCUiCellRendererRating *renderer,
+    const char *path, gfloat rating, gpointer data)
+{
+    GtkTreeModel *model;
+    GtkTreeIter iter = {0};
+    GObject *library_query_result = NULL;
+    RCLibDbLibraryData *library_data;
+    if(data==NULL) return;
+    model = gtk_tree_view_get_model(GTK_TREE_VIEW(data));
+    if(model==NULL) return;
+    if(!gtk_tree_model_get_iter_from_string(model, &iter, path))
+        return;
+    if(iter.user_data==NULL) return;
+    g_object_get(model, "query-result", &library_query_result, NULL);
+    if(library_query_result==NULL) return;
+    library_data = rclib_db_library_query_result_get_data(
+        RCLIB_DB_LIBRARY_QUERY_RESULT(library_query_result),
+        (RCLibDbLibraryQueryResultIter *)iter.user_data);
+    if(library_data!=NULL)
+    {
+        rclib_db_library_data_set(library_data,
+            RCLIB_DB_LIBRARY_DATA_TYPE_RATING, rating,
+            RCLIB_DB_LIBRARY_DATA_TYPE_NONE);
+        rclib_db_library_data_unref(library_data);
+    }
+    g_object_unref(library_query_result);
+}
+
 static void rc_ui_library_list_view_finalize(GObject *object)
 {
-    //RCUiLibraryListViewPrivate *priv = NULL;
-    //priv = RC_UI_LIBRARY_LIST_VIEW(object)->priv;
     RC_UI_LIBRARY_LIST_VIEW(object)->priv = NULL;
     G_OBJECT_CLASS(rc_ui_library_list_view_parent_class)->finalize(object);
 }
 
 static void rc_ui_library_prop_view_finalize(GObject *object)
 {
-    //RCUiLibraryPropViewPrivate *priv = NULL;
-    //priv = RC_UI_LIBRARY_PROP_VIEW(object)->priv;
     RC_UI_LIBRARY_PROP_VIEW(object)->priv = NULL;
     G_OBJECT_CLASS(rc_ui_library_prop_view_parent_class)->finalize(object);
 }
@@ -273,10 +297,8 @@ static void rc_ui_library_list_view_instance_init(RCUiLibraryListView *view)
     selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(view));
     gtk_tree_selection_set_mode(selection, GTK_SELECTION_MULTIPLE);
     gtk_tree_view_columns_autosize(GTK_TREE_VIEW(view));
-    //gtk_tree_view_set_search_equal_func(GTK_TREE_VIEW(view),
-    //    rc_ui_listview_playlist_search_comparison_func, NULL, NULL);
-    //g_signal_connect(priv->rating_renderer, "rated",
-    //    G_CALLBACK(rc_ui_playlist_view_rated_cb), priv);
+    g_signal_connect(priv->rating_renderer, "rated",
+        G_CALLBACK(rc_ui_library_view_rated_cb), view);
 }
 
 static void rc_ui_library_prop_view_instance_init(RCUiLibraryPropView *view)
@@ -306,11 +328,6 @@ static void rc_ui_library_prop_view_instance_init(RCUiLibraryPropView *view)
         FALSE);
     gtk_tree_view_column_add_attribute(priv->name_column,
         priv->count_renderer, "text", RC_UI_LIBRARY_PROP_COLUMN_COUNT);
-    /*
-    priv->count_column = gtk_tree_view_column_new_with_attributes(
-        _("Number"), priv->count_renderer, "text",
-        RC_UI_LIBRARY_PROP_COLUMN_COUNT, NULL);
-    */
     gtk_tree_view_column_set_cell_data_func(priv->name_column,
         priv->name_renderer, rc_ui_library_prop_text_call_data_func,
         NULL, NULL);
@@ -319,7 +336,6 @@ static void rc_ui_library_prop_view_instance_init(RCUiLibraryPropView *view)
         NULL, NULL);
     g_object_set(priv->name_column, "expand", TRUE, "resizable", TRUE, NULL);
     gtk_tree_view_append_column(GTK_TREE_VIEW(view), priv->name_column);
-    //gtk_tree_view_append_column(GTK_TREE_VIEW(view), priv->count_column);
     selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(view));
     gtk_tree_selection_set_mode(selection, GTK_SELECTION_MULTIPLE);
     gtk_tree_view_columns_autosize(GTK_TREE_VIEW(view));

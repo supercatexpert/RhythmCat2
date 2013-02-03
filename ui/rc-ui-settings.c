@@ -818,7 +818,8 @@ static inline GtkWidget *rc_ui_settings_interface_build(
     showcolumn_frame_grid = gtk_grid_new();
     priv->if_showcolumn_frame = gtk_frame_new(NULL);
     frame_label = gtk_label_new(NULL);
-    gtk_label_set_markup(GTK_LABEL(frame_label), _("<b>Visible Columns</b>"));
+    gtk_label_set_markup(GTK_LABEL(frame_label),
+        _("<b>Playlist Visible Columns</b>"));
     g_object_set(priv->if_showcolumn_frame, "label-widget", frame_label,
         "hexpand-set", TRUE, "hexpand", TRUE, NULL);
     titleformat_label = gtk_label_new(_("Title column format: "));
@@ -981,6 +982,7 @@ static inline void rc_ui_settings_window_init()
     GtkWidget *appearance_label;
     GtkWidget *interface_label;
     GtkWidget *button_hbox;
+    GtkWidget *scrolled_window;
     priv->settings_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
     main_grid = gtk_grid_new();
     priv->settings_notebook = gtk_notebook_new();
@@ -1002,14 +1004,34 @@ static inline void rc_ui_settings_window_init()
         "hexpand-set", TRUE, "hexpand", TRUE, "spacing", 4,
         "margin-left", 4, "margin-right", 4, "margin-top", 4,
         "margin-bottom", 4, NULL);
+    scrolled_window = gtk_scrolled_window_new(NULL, NULL);
+    g_object_set(scrolled_window, "hscrollbar-policy", GTK_POLICY_NEVER,
+        "vscrollbar-policy", GTK_POLICY_AUTOMATIC, NULL);
+    gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(scrolled_window),
+        rc_ui_settings_general_build(priv));
     gtk_notebook_append_page(GTK_NOTEBOOK(priv->settings_notebook),
-        rc_ui_settings_general_build(priv), general_label);
+        scrolled_window, general_label);
+    scrolled_window = gtk_scrolled_window_new(NULL, NULL);
+    g_object_set(scrolled_window, "hscrollbar-policy", GTK_POLICY_NEVER,
+        "vscrollbar-policy", GTK_POLICY_AUTOMATIC, NULL);
+    gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(scrolled_window),
+        rc_ui_settings_playlist_build(priv));
     gtk_notebook_append_page(GTK_NOTEBOOK(priv->settings_notebook),
-        rc_ui_settings_playlist_build(priv), playlist_label);
+        scrolled_window, playlist_label);
+    scrolled_window = gtk_scrolled_window_new(NULL, NULL);
+    g_object_set(scrolled_window, "hscrollbar-policy", GTK_POLICY_NEVER,
+        "vscrollbar-policy", GTK_POLICY_AUTOMATIC, NULL);
+    gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(scrolled_window),
+        rc_ui_settings_appearance_build(priv));
     gtk_notebook_append_page(GTK_NOTEBOOK(priv->settings_notebook),
-        rc_ui_settings_appearance_build(priv), appearance_label);
+        scrolled_window, appearance_label);
+    scrolled_window = gtk_scrolled_window_new(NULL, NULL);
+    g_object_set(scrolled_window, "hscrollbar-policy", GTK_POLICY_NEVER,
+        "vscrollbar-policy", GTK_POLICY_AUTOMATIC, NULL);
+    gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(scrolled_window),
+        rc_ui_settings_interface_build(priv));
     gtk_notebook_append_page(GTK_NOTEBOOK(priv->settings_notebook),
-        rc_ui_settings_interface_build(priv), interface_label);
+        scrolled_window, interface_label);
     gtk_box_pack_start(GTK_BOX(button_hbox), close_button, FALSE, FALSE, 2);
     gtk_grid_attach(GTK_GRID(main_grid), priv->settings_notebook, 0, 0,
         1, 1);

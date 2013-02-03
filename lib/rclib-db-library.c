@@ -187,6 +187,7 @@ static gint rclib_db_library_query_result_item_compare_func(gconstpointer a,
         case G_TYPE_STRING:
         {
             gchar *vstr = NULL;
+            gchar *cstr = NULL;
             gchar *uri = NULL;
             if(data1!=NULL)
             {
@@ -204,7 +205,9 @@ static gint rclib_db_library_query_result_item_compare_func(gconstpointer a,
                 }
             }                
             if(vstr==NULL) vstr = g_strdup("");
-            variant1 = g_variant_new_string(vstr);
+            cstr = g_utf8_casefold(vstr, -1);
+            variant1 = g_variant_new_string(cstr);
+            g_free(cstr);
             g_free(vstr);
             vstr = NULL;
             if(data2!=NULL)
@@ -223,7 +226,9 @@ static gint rclib_db_library_query_result_item_compare_func(gconstpointer a,
                 }
             }                
             if(vstr==NULL) vstr = g_strdup("");
-            variant2 = g_variant_new_string(vstr);
+            cstr = g_utf8_casefold(vstr, -1);
+            variant2 = g_variant_new_string(cstr);
+            g_free(cstr);
             g_free(vstr);
             break;
         }
@@ -304,21 +309,25 @@ static gint rclib_db_library_query_result_prop_item_compare_func(
         (RCLibDbLibraryQueryResultPropData *)a;
     RCLibDbLibraryQueryResultPropData *data2 =
         (RCLibDbLibraryQueryResultPropData *)b;
-    const gchar *m, *n;
+    gchar *m = NULL, *n = NULL;
+    gint ret = 0;
     priv = (RCLibDbLibraryQueryResultPrivate *)data;
     if(data==NULL) return 0;
     if(data1->prop_name!=NULL)
-        m = data1->prop_name;
+        m = g_utf8_casefold(data1->prop_name, -1);
     else
-        m = "";
+        m = g_strdup("");
     if(data2->prop_name!=NULL)
-        n = data2->prop_name;
+        n = g_utf8_casefold(data2->prop_name, -1);
     else
-        n = "";
+        n = g_strdup("");
     if(priv->sort_direction)
-        return g_strcmp0(n, m);
+        ret = g_strcmp0(n, m);
     else
-        return g_strcmp0(m, n);
+        ret = g_strcmp0(m, n);
+    g_free(m);
+    g_free(n);
+    return ret;
 }
 
 
@@ -4020,6 +4029,38 @@ RCLibDbLibraryQueryResultIter *rclib_db_library_query_result_get_iter_at_pos(
     if(priv==NULL || priv->query_sequence==NULL) return NULL;
     iter_new = (RCLibDbLibraryQueryResultIter *)g_sequence_get_iter_at_pos(
         (GSequence *)priv->query_sequence, pos);
+    if(g_sequence_iter_is_end((GSequenceIter *)iter_new))
+        return NULL;
+    return iter_new; 
+}
+
+/**
+ * rclib_db_library_query_result_get_random_iter:
+ * @query_result: the #RCLibDbLibraryQueryResult instance
+ *
+ * Return the iterator at arandom position. If there is nothing in the query
+ * result, #NULL is returned.
+ *
+ * Returns: (transfer none): (skip): The #RCLibDbLibraryQueryResultIter at
+ *     a random position.
+ */
+
+RCLibDbLibraryQueryResultIter *rclib_db_library_query_result_get_random_iter(
+    RCLibDbLibraryQueryResult *query_result)
+{
+    RCLibDbLibraryQueryResultIter *iter_new = NULL;
+    RCLibDbLibraryQueryResultPrivate *priv;
+    gint length;
+    if(query_result==NULL) return NULL;
+    priv = RCLIB_DB_LIBRARY_QUERY_RESULT(query_result)->priv;
+    if(priv==NULL || priv->query_sequence==NULL) return NULL;
+    length = g_sequence_get_length(priv->query_sequence);
+    if(length==0)
+        return NULL;
+    iter_new = (RCLibDbLibraryQueryResultIter *)g_sequence_get_iter_at_pos(
+        (GSequence *)priv->query_sequence, g_random_int_range(0, length));
+    if(g_sequence_iter_is_end((GSequenceIter *)iter_new))
+        return NULL;
     return iter_new; 
 }
 
@@ -4330,6 +4371,7 @@ void rclib_db_library_query_result_sort(
             case G_TYPE_STRING:
             {
                 gchar *vstr = NULL;
+                gchar *cstr = NULL;
                 gchar *uri = NULL;
                 if(library_data!=NULL)
                 {
@@ -4347,7 +4389,9 @@ void rclib_db_library_query_result_sort(
                     }
                 }                
                 if(vstr==NULL) vstr = g_strdup("");
-                variant = g_variant_new_string(vstr);
+                cstr = g_utf8_casefold(vstr, -1);
+                variant = g_variant_new_string(cstr);
+                g_free(cstr);
                 g_free(vstr);
                 break;
             }
@@ -4751,6 +4795,8 @@ RCLibDbLibraryQueryResultPropIter *
         return NULL;
     iter = (RCLibDbLibraryQueryResultPropIter *)g_sequence_get_iter_at_pos(
         (GSequence *)item->prop_sequence, pos);
+    if(g_sequence_iter_is_end((GSequenceIter *)iter))
+        return NULL;
     return iter;
 }
 

@@ -1153,6 +1153,8 @@ RCLibDbCatalogIter *rclib_db_catalog_get_iter_at_pos(gint pos)
     {
         catalog_iter = (RCLibDbCatalogIter *)g_sequence_get_iter_at_pos(
             (GSequence *)priv->catalog, pos);
+        if(g_sequence_iter_is_end((GSequenceIter *)catalog_iter))
+            catalog_iter = NULL;
     }
     G_STMT_END;
     g_rw_lock_reader_unlock(&(priv->catalog_rw_lock));
@@ -1808,6 +1810,8 @@ RCLibDbPlaylistIter *rclib_db_playlist_get_iter_at_pos(
         g_rw_lock_reader_lock(&(priv->playlist_rw_lock));
         playlist_iter = (RCLibDbPlaylistIter *)g_sequence_get_iter_at_pos(
             (GSequence *)playlist, pos);;
+        if(g_sequence_iter_is_end((GSequenceIter *)playlist_iter))
+            playlist_iter = NULL;
         g_rw_lock_reader_unlock(&(priv->playlist_rw_lock));
     }
     G_STMT_END;
@@ -1849,6 +1853,8 @@ RCLibDbPlaylistIter *rclib_db_playlist_iter_get_iter_at_pos(
             (GSequenceIter *)playlist_iter);
         result_iter = (RCLibDbPlaylistIter *)g_sequence_get_iter_at_pos(
             (GSequence *)playlist, pos);
+        if(g_sequence_iter_is_end((GSequenceIter *)result_iter))
+            result_iter = NULL;
     }
     G_STMT_END;
     g_rw_lock_reader_unlock(&(priv->playlist_rw_lock));
@@ -4710,6 +4716,7 @@ void rclib_db_playlist_item_sort(RCLibDbCatalogIter *catalog_iter,
             case G_TYPE_STRING:
             {
                 gchar *vstr = NULL;
+                gchar *cstr = NULL;
                 gchar *uri = NULL;
                 rclib_db_playlist_data_iter_get(ptr, column, &vstr,
                     RCLIB_DB_PLAYLIST_DATA_TYPE_NONE);
@@ -4724,7 +4731,9 @@ void rclib_db_playlist_item_sort(RCLibDbCatalogIter *catalog_iter,
                     g_free(uri);
                 }                
                 if(vstr==NULL) vstr = g_strdup("");
+                cstr = g_utf8_casefold(vstr, -1);
                 variant = g_variant_new_string(vstr);
+                g_free(cstr);
                 g_free(vstr);
                 break;
             }
