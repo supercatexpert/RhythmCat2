@@ -277,6 +277,7 @@ typedef enum {
  *     is greater than or equal to the property
  * @RCLIB_DB_QUERY_CONDITION_TYPE_PROP_LESS_OR_EQUAL: the query condition is
  *     lesser than or equal to the property
+ * @RCLIB_DB_QUERY_CONDITION_TYPE_OR: the or condition type
  * @RCLIB_DB_QUERY_CONDITION_TYPE_LAST: not used, just a last enum type 
  * 
  * The enum type for query the properties of the items in the library
@@ -296,7 +297,8 @@ typedef enum {
     RCLIB_DB_QUERY_CONDITION_TYPE_PROP_LESS = 9,
     RCLIB_DB_QUERY_CONDITION_TYPE_PROP_GREATER_OR_EQUAL = 10,
     RCLIB_DB_QUERY_CONDITION_TYPE_PROP_LESS_OR_EQUAL = 11,
-    RCLIB_DB_QUERY_CONDITION_TYPE_LAST = 12
+    RCLIB_DB_QUERY_CONDITION_TYPE_OR = 12,
+    RCLIB_DB_QUERY_CONDITION_TYPE_LAST = 13
 }RCLibDbQueryConditionType;
 
 typedef struct _RCLibDbCatalogData RCLibDbCatalogData;

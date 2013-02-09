@@ -52,6 +52,7 @@ struct _RCUiLibraryWindowPrivate
     GtkWidget *library_prop_album_view;
     GtkWidget *library_prop_artist_view;
     GtkWidget *library_list_view;
+    GtkWidget *search_entry;
     GtkWidget *library_prop_genre_scr_window;
     GtkWidget *library_prop_album_scr_window;
     GtkWidget *library_prop_artist_scr_window;
@@ -62,161 +63,280 @@ struct _RCUiLibraryWindowPrivate
 static GObject *ui_library_window_instance = NULL;
 static gpointer rc_ui_library_window_parent_class = NULL;
 
-static void rc_ui_library_prop_genre_row_selected(GtkTreeView *view,
+static void rc_ui_library_prop_genre_row_selected(GtkTreeSelection *selection,
     gpointer data)
 {
     GtkTreeIter iter;
     GtkTreePath *path = NULL;
-    GtkTreeModel *model;
-    RCLibDbQuery *query;
+    GtkTreeModel *model = NULL;
+    gboolean total_flag = FALSE;
+    GList *list, *list_foreach;
+    RCLibDbQuery *query = NULL, *query_tmp;
     RCLibDbLibraryQueryResultPropIter *prop_iter;
     GObject *library_query_result;
     gchar *prop_string = NULL;
     guint prop_count = 0;
-    model = gtk_tree_view_get_model(view);
-    if(model==NULL) return;
-    gtk_tree_view_get_cursor(view, &path, NULL);
-    if(path==NULL) return;
-    if(!gtk_tree_model_get_iter(model, &iter, path))
+    list = gtk_tree_selection_get_selected_rows(selection, &model);
+    if(list==NULL) return;
+    if(model==NULL)
     {
-        gtk_tree_path_free(path);
+        if(list!=NULL)
+        {
+            g_list_foreach(list, (GFunc)gtk_tree_path_free, NULL);
+        }
     }
-    if(iter.user_data2!=NULL)
+    library_query_result = rclib_db_library_get_base_query_result();
+    for(list_foreach=list;list_foreach!=NULL;
+        list_foreach=g_list_next(list_foreach))
     {
-        library_query_result = rclib_db_library_get_genre_query_result();
-        query = rclib_db_query_parse(RCLIB_DB_QUERY_CONDITION_TYPE_NONE);
-        rclib_db_library_query_result_set_query(
-            RCLIB_DB_LIBRARY_QUERY_RESULT(library_query_result), query);
-        rclib_db_library_query_result_query_start(
-            RCLIB_DB_LIBRARY_QUERY_RESULT(library_query_result), TRUE);
-        g_object_unref(library_query_result);
-    }
-    else
-    {
-        library_query_result = rclib_db_library_get_base_query_result();
+        prop_string = NULL;
+        path = list_foreach->data;
+        if(path==NULL) continue;
+        if(!gtk_tree_model_get_iter(model, &iter, path))
+        {
+            continue;
+        }
+        if(iter.user_data2!=NULL)
+        {
+            total_flag = TRUE;
+            continue;
+        }
         prop_iter = iter.user_data;
         rclib_db_library_query_result_prop_get_data(
             RCLIB_DB_LIBRARY_QUERY_RESULT(library_query_result),
             RCLIB_DB_QUERY_DATA_TYPE_GENRE, prop_iter, &prop_string,
             &prop_count);
-        g_object_unref(library_query_result);
-        query = rclib_db_query_parse(RCLIB_DB_QUERY_CONDITION_TYPE_PROP_EQUALS,
-            RCLIB_DB_QUERY_DATA_TYPE_GENRE, prop_string,
-            RCLIB_DB_QUERY_CONDITION_TYPE_NONE);
+        if(query!=NULL)
+        {
+            query_tmp = rclib_db_query_parse(
+                RCLIB_DB_QUERY_CONDITION_TYPE_OR,
+                RCLIB_DB_QUERY_CONDITION_TYPE_PROP_EQUALS,
+                RCLIB_DB_QUERY_DATA_TYPE_GENRE, prop_string,
+                RCLIB_DB_QUERY_CONDITION_TYPE_NONE);
+            rclib_db_query_concatenate(query, query_tmp);
+            rclib_db_query_free(query_tmp);
+        }
+        else
+        {
+            query = rclib_db_query_parse(
+                RCLIB_DB_QUERY_CONDITION_TYPE_PROP_EQUALS,
+                RCLIB_DB_QUERY_DATA_TYPE_GENRE, prop_string,
+                RCLIB_DB_QUERY_CONDITION_TYPE_NONE);
+        }
         g_free(prop_string);
-        library_query_result = rclib_db_library_get_genre_query_result();
-        rclib_db_library_query_result_set_query(
-            RCLIB_DB_LIBRARY_QUERY_RESULT(library_query_result), query);
-        rclib_db_library_query_result_query_start(
-            RCLIB_DB_LIBRARY_QUERY_RESULT(library_query_result), TRUE);
-        g_object_unref(library_query_result);
-        
     }
-    gtk_tree_path_free(path);
+    g_object_unref(library_query_result);
+    g_list_foreach(list, (GFunc)gtk_tree_path_free, NULL);
+    g_list_free(list);
+    if(total_flag)
+    {
+        g_signal_handlers_block_by_func(selection,
+            G_CALLBACK(rc_ui_library_prop_genre_row_selected), data);
+        gtk_tree_selection_unselect_all(selection);
+        if(gtk_tree_model_get_iter_first(model, &iter))
+            gtk_tree_selection_select_iter(selection, &iter);
+        g_signal_handlers_unblock_by_func(selection,
+            G_CALLBACK(rc_ui_library_prop_genre_row_selected), data);
+        if(query!=NULL)
+            rclib_db_query_free(query);
+        query = NULL;
+    }
+    if(query==NULL)
+    {
+        query = rclib_db_query_parse(RCLIB_DB_QUERY_CONDITION_TYPE_NONE);
+    }
+    if(query==NULL) return;
+    library_query_result = rclib_db_library_get_genre_query_result();
+    rclib_db_library_query_result_set_query(
+        RCLIB_DB_LIBRARY_QUERY_RESULT(library_query_result), query);
+    rclib_db_query_free(query);
+    rclib_db_library_query_result_query_start(
+        RCLIB_DB_LIBRARY_QUERY_RESULT(library_query_result), TRUE);
+    g_object_unref(library_query_result);
 }
 
-static void rc_ui_library_prop_album_row_selected(GtkTreeView *view,
+static void rc_ui_library_prop_album_row_selected(GtkTreeSelection *selection,
     gpointer data)
 {
     GtkTreeIter iter;
     GtkTreePath *path = NULL;
-    GtkTreeModel *model;
-    RCLibDbQuery *query;
+    GtkTreeModel *model = NULL;
+    gboolean total_flag = FALSE;
+    GList *list, *list_foreach;
+    RCLibDbQuery *query = NULL, *query_tmp;
     RCLibDbLibraryQueryResultPropIter *prop_iter;
     GObject *library_query_result;
     gchar *prop_string = NULL;
     guint prop_count = 0;
-    model = gtk_tree_view_get_model(view);
-    if(model==NULL) return;
-    gtk_tree_view_get_cursor(view, &path, NULL);
-    if(path==NULL) return;
-    if(!gtk_tree_model_get_iter(model, &iter, path))
+    list = gtk_tree_selection_get_selected_rows(selection, &model);
+    if(list==NULL) return;
+    if(model==NULL)
     {
-        gtk_tree_path_free(path);
+        if(list!=NULL)
+        {
+            g_list_foreach(list, (GFunc)gtk_tree_path_free, NULL);
+        }
     }
-    if(iter.user_data2!=NULL)
+    library_query_result = rclib_db_library_get_artist_query_result();
+    for(list_foreach=list;list_foreach!=NULL;
+        list_foreach=g_list_next(list_foreach))
     {
-        library_query_result = rclib_db_library_get_album_query_result();
-        query = rclib_db_query_parse(RCLIB_DB_QUERY_CONDITION_TYPE_NONE);
-        rclib_db_library_query_result_set_query(
-            RCLIB_DB_LIBRARY_QUERY_RESULT(library_query_result), query);
-        rclib_db_library_query_result_query_start(
-            RCLIB_DB_LIBRARY_QUERY_RESULT(library_query_result), TRUE);
-        g_object_unref(library_query_result);
-    }
-    else
-    {
-        library_query_result = rclib_db_library_get_artist_query_result();
+        prop_string = NULL;
+        path = list_foreach->data;
+        if(path==NULL) continue;
+        if(!gtk_tree_model_get_iter(model, &iter, path))
+        {
+            continue;
+        }
+        if(iter.user_data2!=NULL)
+        {
+            total_flag = TRUE;
+            continue;
+        }
         prop_iter = iter.user_data;
         rclib_db_library_query_result_prop_get_data(
             RCLIB_DB_LIBRARY_QUERY_RESULT(library_query_result),
             RCLIB_DB_QUERY_DATA_TYPE_ALBUM, prop_iter, &prop_string,
             &prop_count);
-        g_object_unref(library_query_result);
-        query = rclib_db_query_parse(RCLIB_DB_QUERY_CONDITION_TYPE_PROP_EQUALS,
-            RCLIB_DB_QUERY_DATA_TYPE_ALBUM, prop_string,
-            RCLIB_DB_QUERY_CONDITION_TYPE_NONE);
+        if(query!=NULL)
+        {
+            query_tmp = rclib_db_query_parse(
+                RCLIB_DB_QUERY_CONDITION_TYPE_OR,
+                RCLIB_DB_QUERY_CONDITION_TYPE_PROP_EQUALS,
+                RCLIB_DB_QUERY_DATA_TYPE_ALBUM, prop_string,
+                RCLIB_DB_QUERY_CONDITION_TYPE_NONE);
+            rclib_db_query_concatenate(query, query_tmp);
+            rclib_db_query_free(query_tmp);
+        }
+        else
+        {
+            query = rclib_db_query_parse(
+                RCLIB_DB_QUERY_CONDITION_TYPE_PROP_EQUALS,
+                RCLIB_DB_QUERY_DATA_TYPE_ALBUM, prop_string,
+                RCLIB_DB_QUERY_CONDITION_TYPE_NONE);
+        }
         g_free(prop_string);
-        library_query_result = rclib_db_library_get_album_query_result();
-        rclib_db_library_query_result_set_query(
-            RCLIB_DB_LIBRARY_QUERY_RESULT(library_query_result), query);
-        rclib_db_library_query_result_query_start(
-            RCLIB_DB_LIBRARY_QUERY_RESULT(library_query_result), TRUE);
-        g_object_unref(library_query_result);
     }
-    gtk_tree_path_free(path);
+    g_object_unref(library_query_result);
+    g_list_foreach(list, (GFunc)gtk_tree_path_free, NULL);
+    g_list_free(list);
+    if(total_flag)
+    {
+        g_signal_handlers_block_by_func(selection,
+            G_CALLBACK(rc_ui_library_prop_album_row_selected), data);
+        gtk_tree_selection_unselect_all(selection);
+        if(gtk_tree_model_get_iter_first(model, &iter))
+            gtk_tree_selection_select_iter(selection, &iter);
+        g_signal_handlers_unblock_by_func(selection,
+            G_CALLBACK(rc_ui_library_prop_album_row_selected), data);
+        if(query!=NULL)
+            rclib_db_query_free(query);
+        query = NULL;
+    }
+    if(query==NULL)
+    {
+        query = rclib_db_query_parse(RCLIB_DB_QUERY_CONDITION_TYPE_NONE);
+    }
+    if(query==NULL) return;
+    library_query_result = rclib_db_library_get_album_query_result();
+    rclib_db_library_query_result_set_query(
+        RCLIB_DB_LIBRARY_QUERY_RESULT(library_query_result), query);
+    rclib_db_query_free(query);
+    rclib_db_library_query_result_query_start(
+        RCLIB_DB_LIBRARY_QUERY_RESULT(library_query_result), TRUE);
+    g_object_unref(library_query_result);
 }
     
-static void rc_ui_library_prop_artist_row_selected(GtkTreeView *view,
+static void rc_ui_library_prop_artist_row_selected(GtkTreeSelection *selection,
     gpointer data)
 {
     GtkTreeIter iter;
     GtkTreePath *path = NULL;
-    GtkTreeModel *model;
-    RCLibDbQuery *query;
+    GtkTreeModel *model = NULL;
+    gboolean total_flag = FALSE;
+    GList *list, *list_foreach;
+    RCLibDbQuery *query = NULL, *query_tmp;
     RCLibDbLibraryQueryResultPropIter *prop_iter;
     GObject *library_query_result;
     gchar *prop_string = NULL;
     guint prop_count = 0;
-    model = gtk_tree_view_get_model(view);
-    if(model==NULL) return;
-    gtk_tree_view_get_cursor(view, &path, NULL);
-    if(path==NULL) return;
-    if(!gtk_tree_model_get_iter(model, &iter, path))
+    list = gtk_tree_selection_get_selected_rows(selection, &model);
+    if(list==NULL) return;
+    if(model==NULL)
     {
-        gtk_tree_path_free(path);
+        if(list!=NULL)
+        {
+            g_list_foreach(list, (GFunc)gtk_tree_path_free, NULL);
+        }
     }
-    if(iter.user_data2!=NULL)
+    library_query_result = rclib_db_library_get_genre_query_result();
+    for(list_foreach=list;list_foreach!=NULL;
+        list_foreach=g_list_next(list_foreach))
     {
-        library_query_result = rclib_db_library_get_artist_query_result();
-        query = rclib_db_query_parse(RCLIB_DB_QUERY_CONDITION_TYPE_NONE);
-        rclib_db_library_query_result_set_query(
-            RCLIB_DB_LIBRARY_QUERY_RESULT(library_query_result), query);
-        rclib_db_library_query_result_query_start(
-            RCLIB_DB_LIBRARY_QUERY_RESULT(library_query_result), TRUE);
-        g_object_unref(library_query_result);
-    }
-    else
-    {
-        library_query_result = rclib_db_library_get_genre_query_result();
+        prop_string = NULL;
+        path = list_foreach->data;
+        if(path==NULL) continue;
+        if(!gtk_tree_model_get_iter(model, &iter, path))
+        {
+            continue;
+        }
+        if(iter.user_data2!=NULL)
+        {
+            total_flag = TRUE;
+            continue;
+        }
         prop_iter = iter.user_data;
         rclib_db_library_query_result_prop_get_data(
             RCLIB_DB_LIBRARY_QUERY_RESULT(library_query_result),
             RCLIB_DB_QUERY_DATA_TYPE_ARTIST, prop_iter, &prop_string,
             &prop_count);
-        g_object_unref(library_query_result);
-        query = rclib_db_query_parse(RCLIB_DB_QUERY_CONDITION_TYPE_PROP_EQUALS,
-            RCLIB_DB_QUERY_DATA_TYPE_ARTIST, prop_string,
-            RCLIB_DB_QUERY_CONDITION_TYPE_NONE);
+        if(query!=NULL)
+        {
+            query_tmp = rclib_db_query_parse(
+                RCLIB_DB_QUERY_CONDITION_TYPE_OR,
+                RCLIB_DB_QUERY_CONDITION_TYPE_PROP_EQUALS,
+                RCLIB_DB_QUERY_DATA_TYPE_ARTIST, prop_string,
+                RCLIB_DB_QUERY_CONDITION_TYPE_NONE);
+            rclib_db_query_concatenate(query, query_tmp);
+            rclib_db_query_free(query_tmp);
+        }
+        else
+        {
+            query = rclib_db_query_parse(
+                RCLIB_DB_QUERY_CONDITION_TYPE_PROP_EQUALS,
+                RCLIB_DB_QUERY_DATA_TYPE_ARTIST, prop_string,
+                RCLIB_DB_QUERY_CONDITION_TYPE_NONE);
+        }
         g_free(prop_string);
-        library_query_result = rclib_db_library_get_artist_query_result();
-        rclib_db_library_query_result_set_query(
-            RCLIB_DB_LIBRARY_QUERY_RESULT(library_query_result), query);
-        rclib_db_library_query_result_query_start(
-            RCLIB_DB_LIBRARY_QUERY_RESULT(library_query_result), TRUE);
-        g_object_unref(library_query_result);
     }
-    gtk_tree_path_free(path);
+    g_object_unref(library_query_result);
+    g_list_foreach(list, (GFunc)gtk_tree_path_free, NULL);
+    g_list_free(list);
+    if(total_flag)
+    {
+        g_signal_handlers_block_by_func(selection,
+            G_CALLBACK(rc_ui_library_prop_artist_row_selected), data);
+        gtk_tree_selection_unselect_all(selection);
+        if(gtk_tree_model_get_iter_first(model, &iter))
+            gtk_tree_selection_select_iter(selection, &iter);
+        g_signal_handlers_unblock_by_func(selection,
+            G_CALLBACK(rc_ui_library_prop_artist_row_selected), data);
+        if(query!=NULL)
+            rclib_db_query_free(query);
+        query = NULL;
+    }
+    if(query==NULL)
+    {
+        query = rclib_db_query_parse(RCLIB_DB_QUERY_CONDITION_TYPE_NONE);
+    }
+    if(query==NULL) return;
+    library_query_result = rclib_db_library_get_artist_query_result();
+    rclib_db_library_query_result_set_query(
+        RCLIB_DB_LIBRARY_QUERY_RESULT(library_query_result), query);
+    rclib_db_query_free(query);
+    rclib_db_library_query_result_query_start(
+        RCLIB_DB_LIBRARY_QUERY_RESULT(library_query_result), TRUE);
+    g_object_unref(library_query_result);
 }    
 
 static void rc_ui_library_list_row_activated(GtkTreeView *widget,
@@ -307,6 +427,7 @@ static void rc_ui_library_window_instance_init(RCUiLibraryWindow *window)
         RC_UI_TYPE_LIBRARY_WINDOW, RCUiLibraryWindowPrivate);
     GObject *library_query_result;
     GtkTreePath *path;
+    GtkTreeSelection *selection;
     window->priv = priv;
     
     library_query_result = rclib_db_library_get_base_query_result();
@@ -349,10 +470,17 @@ static void rc_ui_library_window_instance_init(RCUiLibraryWindow *window)
     gtk_tree_view_set_cursor(GTK_TREE_VIEW(priv->library_prop_artist_view),
         path, NULL, FALSE);
     gtk_tree_path_free(path);
+    priv->search_entry = gtk_entry_new();
         
     g_object_set(window, "title", _("Music Library"), "type",
         GTK_WINDOW_TOPLEVEL, "default-width", 600, "default-height", 400,
         "has-resize-grip", FALSE, NULL);
+    gtk_entry_set_icon_from_stock(GTK_ENTRY(priv->search_entry),
+        GTK_ENTRY_ICON_PRIMARY, GTK_STOCK_FIND);
+    gtk_entry_set_icon_from_stock(GTK_ENTRY(priv->search_entry),
+        GTK_ENTRY_ICON_SECONDARY, GTK_STOCK_CLEAR);
+    g_object_set(priv->search_entry, "hexpand-set", TRUE, "hexpand", TRUE,
+        "name", "RC2LibrarySearchEntry", NULL);
     priv->library_list_scr_window = gtk_scrolled_window_new(NULL, NULL);
     g_object_set(priv->library_list_scr_window, "name",
         "RC2LibraryListScrolledWindow", "hscrollbar-policy", 
@@ -399,14 +527,22 @@ static void rc_ui_library_window_instance_init(RCUiLibraryWindow *window)
         priv->library_list_scr_window);
     priv->library_main_grid = gtk_grid_new();
     g_object_set(priv->library_main_grid, "expand", TRUE, NULL);
+    gtk_grid_attach(GTK_GRID(priv->library_main_grid), priv->search_entry,
+        0, 0, 1, 1);
     gtk_grid_attach(GTK_GRID(priv->library_main_grid),
-        priv->library_view_paned, 0, 0, 1, 1);
+        priv->library_view_paned, 0, 1, 1, 1);
     gtk_container_add(GTK_CONTAINER(window), priv->library_main_grid);
-    g_signal_connect(priv->library_prop_genre_view, "cursor-changed",
+    selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(
+        priv->library_prop_genre_view));
+    g_signal_connect(selection, "changed",
         G_CALLBACK(rc_ui_library_prop_genre_row_selected), priv);
-    g_signal_connect(priv->library_prop_artist_view, "cursor-changed",
+    selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(
+        priv->library_prop_artist_view));
+    g_signal_connect(selection, "changed",
         G_CALLBACK(rc_ui_library_prop_artist_row_selected), priv);
-    g_signal_connect(priv->library_prop_album_view, "cursor-changed",
+    selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(
+        priv->library_prop_album_view));
+    g_signal_connect(selection, "changed",
         G_CALLBACK(rc_ui_library_prop_album_row_selected), priv);
     g_signal_connect(priv->library_list_view, "row-activated",
         G_CALLBACK(rc_ui_library_list_row_activated), priv);
@@ -501,6 +637,21 @@ void rc_ui_library_window_hide()
     gtk_widget_hide(GTK_WIDGET(ui_library_window_instance));
 }
 
+/**
+ * rc_ui_library_window_get_library_list_widget:
+ * 
+ * Get the library list widget in the library window.
+ * 
+ * Returns: (transfer none): The library list widget.
+ */
 
+GtkWidget *rc_ui_library_window_get_library_list_widget()
+{
+    RCUiLibraryWindowPrivate *priv;
+    if(ui_library_window_instance==NULL) return NULL;
+    priv = RC_UI_LIBRARY_WINDOW(ui_library_window_instance)->priv;
+    if(priv==NULL) return NULL;
+    return priv->library_list_view;
+}
 
 

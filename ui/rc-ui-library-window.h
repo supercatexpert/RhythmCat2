@@ -79,6 +79,7 @@ GtkWidget *rc_ui_library_window_get_widget();
 void rc_ui_library_window_show();
 void rc_ui_library_window_hide();
 void rc_ui_library_window_present_window();
+GtkWidget *rc_ui_library_window_get_library_list_widget();
 
 G_END_DECLS
 

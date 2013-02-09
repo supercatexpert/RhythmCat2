@@ -513,7 +513,6 @@ static void rclib_db_library_query_result_deleted_cb(RCLibDb *db,
     if(data==NULL || uri==NULL) return;
     priv = object->priv;
     if(priv==NULL) return;
-    
     iter = g_hash_table_lookup(priv->query_uri_table, uri);
     if(iter!=NULL)
     {
@@ -869,24 +868,26 @@ static void rclib_db_library_query_result_base_delete_cb(
     guint prop_type;
     GHashTableIter prop_iter;
     qr = (RCLibDbLibraryQueryResult *)data;
-    RCLibDbLibraryData *library_data;
+    RCLibDbLibraryData *library_data = NULL;
     GSequenceIter *iter;
     if(data==NULL) return;
     if(uri==NULL) return;
     priv = qr->priv;
     if(priv==NULL) return;
-    library_data = rclib_db_library_get_data(uri);
-    if(library_data==NULL) return;
-    library_data = rclib_db_library_data_ref(library_data);
     iter = g_hash_table_lookup(priv->query_uri_table, uri);
     if(iter!=NULL)
     {
+        library_data = g_sequence_get(iter);
+        if(library_data!=NULL)
+            library_data = rclib_db_library_data_ref(library_data);
+        
         g_signal_emit(qr, db_library_query_result_signals[
             SIGNAL_LIBRARY_QUERY_RESULT_DELETE], 0, uri);
         g_sequence_remove(iter);
         g_hash_table_remove(priv->query_uri_table, uri);
         g_hash_table_remove(priv->query_iter_table, iter);
     }
+    if(library_data==NULL) return;
     
     g_hash_table_iter_init(&prop_iter, priv->prop_table);
     while(g_hash_table_iter_next(&prop_iter, (gpointer *)&prop_type,
@@ -2507,6 +2508,8 @@ gboolean rclib_db_library_data_query(RCLibDbLibraryData *library_data,
 {
     RCLibDbQueryData *query_data;
     gboolean result = FALSE;
+    gboolean or_flag = FALSE;
+    gboolean ret = TRUE;
     guint i;
     RCLibDbLibraryDataType ltype;
     GType dtype;
@@ -3325,17 +3328,33 @@ gboolean rclib_db_library_data_query(RCLibDbLibraryData *library_data,
                 }
                 break;
             }
+            case RCLIB_DB_QUERY_CONDITION_TYPE_OR:
+            {
+                or_flag = TRUE;
+                break;
+            }
             default:
             {
-                result = TRUE;
+                result = (i==0);
                 break;
             }
         }
-        if(!result) break;
+        if(or_flag)
+        {
+            if(result) ret = TRUE;
+        }
+        else
+        {
+            if(!result) ret = FALSE;
+        }
+        if(or_flag && query_data->type!=RCLIB_DB_QUERY_CONDITION_TYPE_OR)
+        {
+            or_flag = FALSE;
+        }
     }
     if(cancellable!=NULL)
         g_object_unref(cancellable);
-    return result;
+    return ret;
 }
 
 /**

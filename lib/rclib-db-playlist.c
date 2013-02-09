@@ -3300,6 +3300,8 @@ gboolean rclib_db_playlist_data_query(RCLibDbPlaylistData *playlist_data,
 {
     RCLibDbQueryData *query_data;
     gboolean result = FALSE;
+    gboolean or_flag = FALSE;
+    gboolean ret = FALSE;
     guint i;
     RCLibDbPlaylistDataType ptype;
     GType dtype;
@@ -4117,16 +4119,33 @@ gboolean rclib_db_playlist_data_query(RCLibDbPlaylistData *playlist_data,
                 }
                 break;
             }
+            case RCLIB_DB_QUERY_CONDITION_TYPE_OR:
+            {
+                or_flag = TRUE;
+                break;
+            }
             default:
             {
-                result = TRUE;
+                if(i==0) result = TRUE;
                 break;
             }
         }
-        if(!result) break;
+        if(or_flag)
+        {
+            if(result) ret = TRUE;
+        }
+        else
+        {
+            ret = result;
+        }
+        if(!ret && !or_flag) break;
+        if(or_flag && query_data->type!=RCLIB_DB_QUERY_CONDITION_TYPE_OR)
+        {
+            or_flag = FALSE;
+        }
     }
     g_object_unref(cancellable);
-    return result;
+    return ret;
 }
 
 /**

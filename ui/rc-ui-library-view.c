@@ -427,4 +427,81 @@ GtkWidget *rc_ui_library_prop_view_new(const gchar *property_text)
     return GTK_WIDGET(view);
 }
 
+/**
+ * rc_ui_library_list_select_all:
+ * @list_view: the #RCUiLibraryListView
+ * 
+ * Select all items in the #RCUiLibraryListView
+ */
+
+void rc_ui_library_list_select_all(RCUiLibraryListView *list_view)
+{
+    GtkTreeSelection *selection;
+    selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(list_view));
+    if(selection==NULL) return;
+    gtk_tree_selection_select_all(selection);
+}
+
+/**
+ * rc_ui_library_list_delete_items:
+ * @list_view: the #RCUiLibraryListView
+ * 
+ * Delete all selected items in the #RCUiLibraryListView.
+ */
+
+void rc_ui_library_list_delete_items(RCUiLibraryListView *list_view)
+{
+    GtkTreeSelection *selection;
+    GtkTreeModel *model;
+    GList *list, *list_foreach;
+    GtkTreePath *path;
+    GtkTreeIter iter;
+    GObject *library_query_result = NULL;
+    RCLibDbLibraryData *library_data;
+    gchar *uri;
+    selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(list_view));
+    model = gtk_tree_view_get_model(GTK_TREE_VIEW(list_view));
+    if(model==NULL || selection==NULL) return;
+    list = gtk_tree_selection_get_selected_rows(selection, NULL);
+    if(list==NULL) return;
+    g_object_get(model, "query-result", &library_query_result, NULL);
+    if(library_query_result!=NULL)
+    {
+        for(list_foreach=list;list_foreach!=NULL;
+            list_foreach=g_list_next(list_foreach))
+        {
+            uri = NULL;
+            path = list_foreach->data;
+            if(path==NULL) continue;
+            if(!gtk_tree_model_get_iter(model, &iter, path))
+                continue;
+            if(iter.user_data==NULL) continue;
+            library_data = rclib_db_library_query_result_get_data(
+                RCLIB_DB_LIBRARY_QUERY_RESULT(library_query_result),
+                (RCLibDbLibraryQueryResultIter *)iter.user_data);
+            rclib_db_library_data_get(library_data,
+                RCLIB_DB_LIBRARY_DATA_TYPE_URI, &uri,
+                RCLIB_DB_LIBRARY_DATA_TYPE_NONE);
+            rclib_db_library_data_unref(library_data);
+            if(uri==NULL) continue;
+            rclib_db_library_delete(uri);
+            g_free(uri);
+        }
+        g_object_unref(library_query_result);
+    }
+    g_list_foreach(list, (GFunc)gtk_tree_path_free, NULL);
+    g_list_free(list);
+}
+
+/**
+ * rc_ui_library_list_refresh:
+ * @list_view: the #RCUiLibraryListView
+ * 
+ * Refresh all selected items in the #RCUiLibraryListView.
+ */
+
+void rc_ui_library_list_refresh(RCUiLibraryListView *list_view)
+{
+    
+}
 

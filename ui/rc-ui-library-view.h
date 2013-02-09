@@ -121,5 +121,8 @@ GType rc_ui_library_prop_view_get_type();
 /*< public >*/
 GtkWidget *rc_ui_library_list_view_new();
 GtkWidget *rc_ui_library_prop_view_new(const gchar *property_text);
+void rc_ui_library_list_select_all(RCUiLibraryListView *list_view);
+void rc_ui_library_list_delete_items(RCUiLibraryListView *list_view);
+void rc_ui_library_list_refresh(RCUiLibraryListView *list_view);
 
 #endif

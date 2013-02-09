@@ -1,8 +1,7 @@
-- Bug Report Interface
 - New information and control pad
-- Music Library Interface (in LibRhythmCat)
 - Player Command Interpreter build in LibRhythmCat
 - Use desktop.in
+- Multi-word selectable filter in library window
 
 Long-term:
 - Command Line Interface (CLI), based on ncurses

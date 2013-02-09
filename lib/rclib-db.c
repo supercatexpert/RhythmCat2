@@ -480,7 +480,6 @@ static gpointer rclib_db_playlist_import_thread_cb(gpointer data)
     return NULL;
 }
 
-
 static gpointer rclib_db_playlist_refresh_thread_cb(gpointer data)
 {
     RCLibDbPlaylistRefreshIdleData *idle_data;
@@ -2185,6 +2184,8 @@ RCLibDbQuery *rclib_db_query_parse_valist(
                 if(error_str!=NULL) g_free(error_str);
                 break;
             }
+            case RCLIB_DB_QUERY_CONDITION_TYPE_OR:
+                break;
             case RCLIB_DB_QUERY_CONDITION_TYPE_NONE:
                 break;
             default:
@@ -2213,7 +2214,7 @@ gboolean rclib_db_query_concatenate(RCLibDbQuery *target,
     RCLibDbQueryData *data;
     RCLibDbQueryData *new_data;
     if(target==NULL || src==NULL) return FALSE;
-    for(i=0;i<((GPtrArray *)src)->len;i++)
+    for(i=0;i<((const GPtrArray *)src)->len;i++)
     {
         data = g_ptr_array_index((const GPtrArray *)src, i);
         new_data = g_new0(RCLibDbQueryData, 1);

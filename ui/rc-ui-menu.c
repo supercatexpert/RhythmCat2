@@ -27,6 +27,7 @@
 #include "rc-ui-player.h"
 #include "rc-ui-window.h"
 #include "rc-ui-library-window.h"
+#include "rc-ui-library-view.h"
 #include "rc-ui-listview.h"
 #include "rc-ui-dialog.h"
 #include "rc-ui-plugin.h"
@@ -373,6 +374,24 @@ static void rc_ui_menu_view_library_clicked_cb(GtkAction *action,
         G_CALLBACK(rc_ui_menu_view_library_clicked_cb), data);
 }
 
+static void rc_ui_menu_library_remove_music_clicked_cb(GtkAction *action,
+    gpointer data)
+{
+    GtkWidget *view;
+    view = rc_ui_library_window_get_library_list_widget();
+    if(view==NULL) return;
+    rc_ui_library_list_delete_items(RC_UI_LIBRARY_LIST_VIEW(view));
+}
+
+static void rc_ui_menu_library_select_all_clicked_cb(GtkAction *action,
+    gpointer data)
+{
+    GtkWidget *view;
+    view = rc_ui_library_window_get_library_list_widget();
+    if(view==NULL) return;
+    rc_ui_library_list_select_all(RC_UI_LIBRARY_LIST_VIEW(view));
+}
+
 static GtkActionEntry ui_menu_entries[] =
 {
     { "RhythmCatMenu", NULL, "_RhythmCat" },
@@ -461,6 +480,14 @@ static GtkActionEntry ui_menu_entries[] =
       N_("Add Music File"), NULL,
       N_("Add music file to the library"),
       G_CALLBACK(rc_ui_dialog_library_add_music) },
+    { "LibraryRemoveMusic", NULL,
+      N_("_Remove Music"), NULL,
+      N_("Remove music from the library"),
+      G_CALLBACK(rc_ui_menu_library_remove_music_clicked_cb) },
+    { "LibrarySelectAll", NULL,
+      N_("Select _All"), NULL,
+      N_("Select all music in the library list"),
+      G_CALLBACK(rc_ui_menu_library_select_all_clicked_cb), },
     { "ViewEffect", NULL,
       N_("_Audio Effects"), "<control>E",
       N_("Adjust the audio effects"),
@@ -505,10 +532,6 @@ static GtkActionEntry ui_menu_entries[] =
       N_("_About"), NULL,
       N_("About this player"),
       G_CALLBACK(rc_ui_dialog_about_player) },
-    { "HelpReport", NULL,
-      N_("_Bug Report"), NULL,
-      N_("Report bugs"),
-      G_CALLBACK(NULL) },
     { "HelpSupportedFormat", NULL,
       N_("_Supported Format"), NULL,
       N_("Check the supported music format of this player"),
@@ -816,6 +839,8 @@ static const gchar *ui_menu_info =
     "    </menu>"
     "    <menu action='LibraryMenu'>"
     "      <menuitem action='LibraryAddMusic'/>"
+    "      <menuitem action='LibraryRemoveMusic'/>"
+    "      <menuitem action='LibrarySelectAll'/>"
     "    </menu>"
     "    <menu action='ControlMenu'>"
     "      <menuitem action='ControlPlay'/>"
@@ -852,7 +877,6 @@ static const gchar *ui_menu_info =
     "      <menuitem action='ViewAlwaysOnTop'/>"
     "    </menu>"
     "    <menu action='HelpMenu'>"
-    "      <menuitem action='HelpReport'/>"
     "      <menuitem action='HelpAbout'/>"
     "      <menuitem action='HelpSupportedFormat'/>"
     "    </menu>"
@@ -1059,8 +1083,6 @@ static gboolean rc_ui_menu_init()
         "/ProgressPopupMenu/ProgressRefreshCancel"), FALSE);
         
     /* Seal the menus that are not available now */
-    gtk_action_set_sensitive(gtk_ui_manager_get_action(priv->ui_manager,
-        "/RC2MenuBar/HelpMenu/HelpReport"), FALSE);
 
     g_object_weak_ref(G_OBJECT(priv->ui_manager), rc_ui_menu_weak_ref_cb,
         priv);
