@@ -365,6 +365,18 @@ static void rc_ui_library_list_row_activated(GtkTreeView *widget,
     gtk_tree_model_row_changed(model, path, &iter);
 }
 
+static void rc_ui_library_window_search_entry_icon_pressed_cb(GtkEntry *entry,
+    GtkEntryIconPosition icon_pos, GdkEvent *event, gpointer data)
+{
+    
+}
+
+static void rc_ui_library_window_search_entry_text_changed_cb(GtkEntry *entry,
+    GParamSpec *pspec, gpointer data)
+{
+    
+}
+
 static void rc_ui_library_window_core_state_changed_cb(RCLibCore *core,
     GstState state, gpointer data)
 {
@@ -546,6 +558,10 @@ static void rc_ui_library_window_instance_init(RCUiLibraryWindow *window)
         G_CALLBACK(rc_ui_library_prop_album_row_selected), priv);
     g_signal_connect(priv->library_list_view, "row-activated",
         G_CALLBACK(rc_ui_library_list_row_activated), priv);
+    g_signal_connect(priv->search_entry, "icon-press",
+        G_CALLBACK(rc_ui_library_window_search_entry_icon_pressed_cb), priv);
+    g_signal_connect(priv->search_entry, "notify::text",
+        G_CALLBACK(rc_ui_library_window_search_entry_text_changed_cb), priv);
     g_signal_connect(window, "delete-event",
         G_CALLBACK(rc_ui_library_window_delete_event_cb), priv);
     priv->state_changed_id = rclib_core_signal_connect("state-changed",
