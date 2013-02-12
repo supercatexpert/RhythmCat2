@@ -160,6 +160,16 @@ static void rc_ui_menu_spectrum_clicked_cb(GtkAction *action,
         G_CALLBACK(rc_ui_menu_spectrum_clicked_cb), data);
 }
 
+static void rc_ui_menu_library_search_clicked_cb(GtkAction *action,
+    GtkRadioAction *current, gpointer data)
+{
+    g_signal_handlers_block_by_func(action,
+        G_CALLBACK(rc_ui_menu_library_search_clicked_cb), data);
+        
+    g_signal_handlers_unblock_by_func(action,
+        G_CALLBACK(rc_ui_menu_library_search_clicked_cb), data);
+}
+
 static void rc_ui_menu_keep_above_clicked_cb(GtkAction *action,
     gpointer data)
 {
@@ -766,6 +776,25 @@ static GtkRadioActionEntry ui_menu_spectrum_entries[] =
 static guint ui_menu_spectrum_n_entries =
     G_N_ELEMENTS(ui_menu_spectrum_entries);
 
+static GtkRadioActionEntry ui_menu_library_search_entries[] =
+{
+    { "LibrarySearchAllFields", NULL,
+      N_("Search All Fields"), NULL,
+      N_("Search all fields"), 0 },
+    { "LibrarySearchArtists", NULL,
+      N_("Search Artist"), NULL,
+      N_("Search artists"), 1 },
+    { "LibrarySearchAlbums", NULL,
+      N_("Search Albums"), NULL,
+      N_("Search albums"), 2 },
+    { "LibrarySearchTitles", NULL,
+      N_("Search Titles"), NULL,
+      N_("Search titles"), 3 },
+};
+
+static guint ui_menu_library_search_n_entries =
+    G_N_ELEMENTS(ui_menu_spectrum_entries);
+
 static GtkToggleActionEntry ui_menu_toggle_entries[] =
 {
     { "ViewLibrary", NULL,
@@ -926,6 +955,12 @@ static const gchar *ui_menu_info =
     "    <menuitem action='SpectrumWaveMulti'/>"
     "    <menuitem action='SpectrumSpectrum'/>"
     "  </popup>"
+    "  <popup action='LibrarySearchMenu'>"
+    "    <menuitem action='LibrarySearchAllFields'/>"
+    "    <menuitem action='LibrarySearchArtists'/>"
+    "    <menuitem action='LibrarySearchAlbums'/>"
+    "    <menuitem action='LibrarySearchTitles'/>"
+    "  </popup>"
     "</ui>";
 
 static void rc_ui_menu_core_state_changed_cb(RCLibCore *core,
@@ -1054,6 +1089,9 @@ static gboolean rc_ui_menu_init()
     gtk_action_group_add_radio_actions(priv->ui_actions,
         ui_menu_spectrum_entries, ui_menu_spectrum_n_entries, 0,
         G_CALLBACK(rc_ui_menu_spectrum_clicked_cb), NULL);
+    gtk_action_group_add_radio_actions(priv->ui_actions,
+        ui_menu_library_search_entries, ui_menu_library_search_n_entries, 0,
+        G_CALLBACK(rc_ui_menu_library_search_clicked_cb), NULL);
     gtk_action_group_add_toggle_actions(priv->ui_actions,
         ui_menu_toggle_entries, ui_menu_toogle_n_entries, NULL);
     gtk_ui_manager_insert_action_group(priv->ui_manager, priv->ui_actions, 0);

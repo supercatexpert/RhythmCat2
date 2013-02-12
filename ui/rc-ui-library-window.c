@@ -57,7 +57,9 @@ struct _RCUiLibraryWindowPrivate
     GtkWidget *library_prop_album_scr_window;
     GtkWidget *library_prop_artist_scr_window;
     GtkWidget *library_list_scr_window;
+    guint search_type;
     gulong state_changed_id;
+    guint search_timeout;
 };
 
 static GObject *ui_library_window_instance = NULL;
@@ -368,13 +370,53 @@ static void rc_ui_library_list_row_activated(GtkTreeView *widget,
 static void rc_ui_library_window_search_entry_icon_pressed_cb(GtkEntry *entry,
     GtkEntryIconPosition icon_pos, GdkEvent *event, gpointer data)
 {
+    GtkUIManager *ui_manager;
+    GtkWidget *search_menu = NULL;
+    RCUiLibraryWindowPrivate *priv = (RCUiLibraryWindowPrivate *)data;
+    if(data==NULL) return;
+    ui_manager = rc_ui_menu_get_ui_manager();
+    if(icon_pos==GTK_ENTRY_ICON_PRIMARY)
+    {
+        if(ui_manager!=NULL)
+        {
+            search_menu = gtk_ui_manager_get_widget(ui_manager,
+                "/LibrarySearchMenu");
+        }
+        if(search_menu!=NULL)
+        {
+            gtk_menu_popup(GTK_MENU(search_menu), NULL, NULL, NULL, NULL,
+                event->button.button, event->button.time);
+        }
+    }
+    else if(icon_pos==GTK_ENTRY_ICON_SECONDARY)
+    {
+        gtk_entry_set_text(GTK_ENTRY(priv->search_entry), "");
+    }   
+}
+
+static gboolean rc_ui_library_search_timeout_cb(gpointer data)
+{
+    RCUiLibraryWindowPrivate *priv = (RCUiLibraryWindowPrivate *)data;
+    if(data==NULL) return FALSE;
     
+    priv->search_timeout = 0;
+    return FALSE;
 }
 
 static void rc_ui_library_window_search_entry_text_changed_cb(GtkEntry *entry,
     GParamSpec *pspec, gpointer data)
 {
-    
+    RCUiLibraryWindowPrivate *priv = (RCUiLibraryWindowPrivate *)data;
+    gboolean has_text = FALSE;
+    if(data==NULL) return;
+    has_text = (gtk_entry_get_text_length(entry)>0);
+    gtk_entry_set_icon_sensitive(entry, GTK_ENTRY_ICON_SECONDARY, has_text);
+    if(priv->search_timeout>0)
+    {
+        g_source_remove(priv->search_timeout);
+    }
+    priv->search_timeout = g_timeout_add(500, (GSourceFunc)
+        rc_ui_library_search_timeout_cb, priv);
 }
 
 static void rc_ui_library_window_core_state_changed_cb(RCLibCore *core,
@@ -400,6 +442,10 @@ static void rc_ui_library_window_finalize(GObject *object)
     {
         rclib_core_signal_disconnect(priv->state_changed_id);
         priv->state_changed_id = 0;
+    }
+    if(priv->search_timeout>0)
+    {
+        g_source_remove(priv->search_timeout);
     }
     if(priv->library_genre_model!=NULL)
         g_object_unref(priv->library_genre_model);
@@ -440,8 +486,12 @@ static void rc_ui_library_window_instance_init(RCUiLibraryWindow *window)
     GObject *library_query_result;
     GtkTreePath *path;
     GtkTreeSelection *selection;
+    GtkUIManager *ui_manager;
+    GtkWidget *search_menu;
     window->priv = priv;
-    
+
+    priv->search_type = 0;
+
     library_query_result = rclib_db_library_get_base_query_result();
     priv->library_genre_model = rc_ui_library_prop_store_new(
         RCLIB_DB_LIBRARY_QUERY_RESULT(library_query_result),
@@ -462,6 +512,7 @@ static void rc_ui_library_window_instance_init(RCUiLibraryWindow *window)
         RCLIB_DB_LIBRARY_QUERY_RESULT(library_query_result));
     g_object_unref(library_query_result);
     
+    ui_manager = rc_ui_menu_get_ui_manager();
     priv->library_list_view = rc_ui_library_list_view_new();
     gtk_tree_view_set_model(GTK_TREE_VIEW(priv->library_list_view),
         priv->library_list_model);
@@ -491,6 +542,8 @@ static void rc_ui_library_window_instance_init(RCUiLibraryWindow *window)
         GTK_ENTRY_ICON_PRIMARY, GTK_STOCK_FIND);
     gtk_entry_set_icon_from_stock(GTK_ENTRY(priv->search_entry),
         GTK_ENTRY_ICON_SECONDARY, GTK_STOCK_CLEAR);
+    gtk_entry_set_icon_sensitive(GTK_ENTRY(priv->search_entry),
+        GTK_ENTRY_ICON_SECONDARY, FALSE);
     g_object_set(priv->search_entry, "hexpand-set", TRUE, "hexpand", TRUE,
         "name", "RC2LibrarySearchEntry", NULL);
     priv->library_list_scr_window = gtk_scrolled_window_new(NULL, NULL);
@@ -533,6 +586,15 @@ static void rc_ui_library_window_instance_init(RCUiLibraryWindow *window)
     priv->library_view_paned = gtk_paned_new(GTK_ORIENTATION_VERTICAL);
     g_object_set(priv->library_view_paned, "name", "RC2LibraryViewPaned",
         "expand", TRUE, "position-set", TRUE, "position", 180, NULL);
+    
+    if(ui_manager!=NULL)
+    {
+        search_menu = gtk_ui_manager_get_widget(ui_manager,
+            "/LibrarySearchMenu");
+        gtk_menu_attach_to_widget(GTK_MENU(search_menu), priv->search_entry,
+            NULL);
+    }
+        
     gtk_paned_add1(GTK_PANED(priv->library_view_paned),
         priv->library_prop_grid);
     gtk_paned_add2(GTK_PANED(priv->library_view_paned),

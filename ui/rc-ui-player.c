@@ -106,6 +106,20 @@ static void rc_ui_player_tray_icon_activated(GtkStatusIcon *icon,
         
 }
 
+static gboolean rc_ui_player_tray_icon_size_changed(GtkStatusIcon *status_icon,
+    gint size, gpointer data)
+{
+    RCUiPlayerPrivate *priv = (RCUiPlayerPrivate *)data;
+    GdkPixbuf *pixbuf;
+    if(data==NULL || priv->icon_pixbuf==NULL) return FALSE;
+    if(size<1) return FALSE;
+    pixbuf = gdk_pixbuf_scale_simple(priv->icon_pixbuf, size, size,
+        GDK_INTERP_BILINEAR);
+    gtk_status_icon_set_from_pixbuf(status_icon, pixbuf);
+    g_object_unref(pixbuf);
+    return TRUE;
+}
+
 static void rc_ui_player_finalize(GObject *object)
 {
     RCUiPlayerPrivate *priv = RC_UI_PLAYER(object)->priv;
@@ -193,6 +207,8 @@ static void rc_ui_player_instance_init(RCUiPlayer *ui)
         G_CALLBACK(rc_ui_player_tray_icon_activated), priv);
     g_signal_connect(priv->tray_icon, "popup-menu",
         G_CALLBACK(rc_ui_player_tray_icon_popup), priv);
+    g_signal_connect(priv->tray_icon, "size-changed",
+        G_CALLBACK(rc_ui_player_tray_icon_size_changed), priv);
     g_signal_emit(ui, ui_player_signals[SIGNAL_READY], 0);
 }
 

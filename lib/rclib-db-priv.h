@@ -137,6 +137,7 @@ struct _RCLibDbLibraryQueryResultPrivate
     gboolean sort_direction;
     GThread *query_thread;
     GCancellable *cancellable;
+    gboolean list_need_sort;
     gulong library_added_id;
     gulong library_changed_id;
     gulong library_deleted_id;

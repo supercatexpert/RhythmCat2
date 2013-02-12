@@ -205,7 +205,7 @@ static gint rclib_db_library_query_result_item_compare_func(gconstpointer a,
                 }
             }                
             if(vstr==NULL) vstr = g_strdup("");
-            cstr = g_utf8_casefold(vstr, -1);
+            cstr = g_utf8_collate_key(vstr, -1);
             variant1 = g_variant_new_string(cstr);
             g_free(cstr);
             g_free(vstr);
@@ -226,7 +226,7 @@ static gint rclib_db_library_query_result_item_compare_func(gconstpointer a,
                 }
             }                
             if(vstr==NULL) vstr = g_strdup("");
-            cstr = g_utf8_casefold(vstr, -1);
+            cstr = g_utf8_collate_key(vstr, -1);
             variant2 = g_variant_new_string(cstr);
             g_free(cstr);
             g_free(vstr);
@@ -314,17 +314,17 @@ static gint rclib_db_library_query_result_prop_item_compare_func(
     priv = (RCLibDbLibraryQueryResultPrivate *)data;
     if(data==NULL) return 0;
     if(data1->prop_name!=NULL)
-        m = g_utf8_casefold(data1->prop_name, -1);
+        m = g_utf8_collate_key(data1->prop_name, -1);
     else
         m = g_strdup("");
     if(data2->prop_name!=NULL)
-        n = g_utf8_casefold(data2->prop_name, -1);
+        n = g_utf8_collate_key(data2->prop_name, -1);
     else
         n = g_strdup("");
     if(priv->sort_direction)
-        ret = g_strcmp0(n, m);
+        ret = g_utf8_collate(n, m);
     else
-        ret = g_strcmp0(m, n);
+        ret = g_utf8_collate(m, n);
     g_free(m);
     g_free(n);
     return ret;
@@ -424,7 +424,7 @@ static void rclib_db_library_query_result_added_cb(RCLibDb *db,
     guint prop_type;
     GHashTableIter prop_iter;
     gchar *prop_string;
-    GSequenceIter *iter;
+    GSequenceIter *iter = NULL;
     object = (RCLibDbLibraryQueryResult *)data;
     if(data==NULL || uri==NULL) return;
     priv = object->priv;
@@ -435,10 +435,14 @@ static void rclib_db_library_query_result_added_cb(RCLibDb *db,
     if(rclib_db_library_data_query(library_data, priv->query, NULL) &&
         !g_hash_table_contains(priv->query_uri_table, uri))
     {
-        iter = g_sequence_insert_sorted(priv->query_sequence, 
-            rclib_db_library_data_ref(library_data),
-            rclib_db_library_query_result_item_compare_func, priv);
-        g_hash_table_replace(priv->query_iter_table, iter, iter);
+        if(priv->list_need_sort && priv->query_sequence!=NULL)
+        {
+            iter = g_sequence_insert_sorted(priv->query_sequence, 
+                rclib_db_library_data_ref(library_data),
+                rclib_db_library_query_result_item_compare_func, priv);
+            g_hash_table_replace(priv->query_iter_table, iter, iter);
+        }
+        
         g_hash_table_replace(priv->query_uri_table, g_strdup(uri), iter);
         g_signal_emit(object, db_library_query_result_signals[
             SIGNAL_LIBRARY_QUERY_RESULT_ADDED], 0, uri);
@@ -776,7 +780,7 @@ static void rclib_db_library_query_result_base_added_cb(
     gchar *prop_string;
     guint prop_type;
     GHashTableIter prop_iter;
-    GSequenceIter *iter;
+    GSequenceIter *iter = NULL;
     qr = (RCLibDbLibraryQueryResult *)data;
     if(data==NULL) return;
     priv = qr->priv;
@@ -796,10 +800,14 @@ static void rclib_db_library_query_result_base_added_cb(
         rclib_db_library_data_unref(library_data);
         return;
     }
-    iter = g_sequence_insert_sorted(priv->query_sequence, 
-        rclib_db_library_data_ref(library_data),
-        rclib_db_library_query_result_item_compare_func, priv);
-    g_hash_table_replace(priv->query_iter_table, iter, iter);
+    if(priv->list_need_sort && priv->query_sequence!=NULL)
+    {
+        iter = g_sequence_insert_sorted(priv->query_sequence, 
+            rclib_db_library_data_ref(library_data),
+            rclib_db_library_query_result_item_compare_func, priv);
+        g_hash_table_replace(priv->query_iter_table, iter, iter);
+    }
+    
     g_hash_table_replace(priv->query_uri_table, g_strdup(uri), iter);
     g_signal_emit(qr, db_library_query_result_signals[
         SIGNAL_LIBRARY_QUERY_RESULT_ADDED], 0, uri);
@@ -1433,12 +1441,17 @@ static gboolean rclib_db_library_query_result_query_idle_cb(gpointer data)
         library_data = g_ptr_array_index(result, i);
         if(library_data==NULL) continue;
         uri = NULL;
+        iter = NULL;
         library_data = rclib_db_library_data_ref(library_data);
         rclib_db_library_data_get(library_data, RCLIB_DB_LIBRARY_DATA_TYPE_URI,
             &uri, RCLIB_DB_LIBRARY_DATA_TYPE_NONE);
-        iter = g_sequence_insert_sorted(priv->query_sequence, library_data,
-            rclib_db_library_query_result_item_compare_func, priv);
-        g_hash_table_replace(priv->query_iter_table, iter, iter);
+        if(priv->list_need_sort && priv->query_sequence!=NULL)
+        {
+            iter = g_sequence_insert_sorted(priv->query_sequence, library_data,
+                rclib_db_library_query_result_item_compare_func, priv);
+            g_hash_table_replace(priv->query_iter_table, iter, iter);
+        }
+        
         g_hash_table_replace(priv->query_uri_table, g_strdup(uri), iter);
         g_signal_emit(object, db_library_query_result_signals[
             SIGNAL_LIBRARY_QUERY_RESULT_ADDED], 0, uri);
@@ -1773,6 +1786,7 @@ static void rclib_db_library_query_result_instance_init(
     priv->prop_table = g_hash_table_new_full(g_direct_hash, g_direct_equal,
         NULL, (GDestroyNotify)rclib_db_library_query_result_prop_item_free);
     priv->base_query_result = NULL;
+    priv->list_need_sort = TRUE;
 }
     
 GType rclib_db_library_query_result_get_type()
@@ -3611,25 +3625,27 @@ void rclib_db_library_query_result_copy_contents(
     RCLibDbLibraryQueryResult *dst, RCLibDbLibraryQueryResult *src)
 {
     RCLibDbLibraryQueryResultPrivate *dst_priv, *src_priv;
-    GSequenceIter *src_iter, *dst_iter, *iter;
+    GSequenceIter *dst_iter, *iter;
     RCLibDbLibraryData *library_data;
     RCLibDbLibraryQueryResultPropItem *prop_item;
     RCLibDbLibraryQueryResultPropData *prop_data;
     gchar *prop_string;
     gchar *uri;
     guint prop_type;
-    GHashTableIter prop_iter;
+    GHashTableIter src_uri_iter, prop_iter;
     if(dst==NULL || src==NULL)
         return;
     dst_priv = dst->priv;
     src_priv = src->priv;
     if(dst_priv==NULL || src_priv==NULL)
         return;
-    for(src_iter = g_sequence_get_begin_iter(src_priv->query_sequence);
-        !g_sequence_iter_is_end(src_iter);
-        src_iter = g_sequence_iter_next(src_iter))
+
+    g_hash_table_iter_init(&src_uri_iter, src_priv->query_uri_table);
+    while(g_hash_table_iter_next(&src_uri_iter, (gpointer *)&uri,
+        NULL))
     {
-        library_data = g_sequence_get(src_iter);
+        if(uri==NULL) continue;
+        library_data = rclib_db_library_get_data(uri);
         if(library_data==NULL) continue;
         if(dst_priv->query!=NULL)
         {
@@ -3639,17 +3655,18 @@ void rclib_db_library_query_result_copy_contents(
                 continue;
             }
         }
-        uri = NULL;
-        rclib_db_library_data_get(library_data, RCLIB_DB_LIBRARY_DATA_TYPE_URI,
-            &uri, RCLIB_DB_LIBRARY_DATA_TYPE_NONE);
-        if(uri==NULL) continue;
         if(!g_hash_table_contains(dst_priv->query_uri_table, uri))
         {
-            dst_iter = g_sequence_insert_sorted(dst_priv->query_sequence, 
-                rclib_db_library_data_ref(library_data),
-                rclib_db_library_query_result_item_compare_func, dst_priv);
-            g_hash_table_replace(dst_priv->query_iter_table, dst_iter,
-                dst_iter);
+            dst_iter = NULL;
+            if(dst_priv->list_need_sort && dst_priv->query_sequence!=NULL)
+            {
+                dst_iter = g_sequence_insert_sorted(dst_priv->query_sequence, 
+                    rclib_db_library_data_ref(library_data),
+                    rclib_db_library_query_result_item_compare_func, dst_priv);
+                g_hash_table_replace(dst_priv->query_iter_table, dst_iter,
+                    dst_iter);
+            }
+            
             g_hash_table_replace(dst_priv->query_uri_table, g_strdup(uri),
                 dst_iter);
             g_signal_emit(dst, db_library_query_result_signals[
@@ -3706,7 +3723,6 @@ void rclib_db_library_query_result_copy_contents(
             }
             g_free(prop_string);
         }
-        g_free(uri);
     }
 }
 
@@ -3724,13 +3740,20 @@ void rclib_db_library_query_result_chain(
     RCLibDbLibraryQueryResult *query_result, RCLibDbLibraryQueryResult *base,
     gboolean import_entries)
 {
-    RCLibDbLibraryQueryResultPrivate *priv;
+    RCLibDbLibraryQueryResultPrivate *priv, *base_priv;
     RCLibDbQuery **query_data;
     if(query_result==NULL || base==NULL) return;
     priv = query_result->priv;
-    if(priv==NULL) return;
+    base_priv = base->priv;
+    if(priv==NULL || base_priv==NULL) return;
     if(priv->base_query_result!=NULL) return;
     base = g_object_ref(base);
+    base_priv->list_need_sort = FALSE;
+    if(base_priv->query_sequence!=NULL)
+    {
+        g_sequence_free(base_priv->query_sequence);
+        base_priv->query_sequence = NULL;
+    }
     if(import_entries)
     {
         rclib_db_library_query_result_copy_contents(query_result, base);

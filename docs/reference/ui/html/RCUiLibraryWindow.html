@@ -1,0 +1,162 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>RCUiLibraryWindow</title>
+<meta name="generator" content="DocBook XSL Stylesheets V1.76.1">
+<link rel="home" href="index.html" title="RhythmCat Reference Manual">
+<link rel="up" href="ch01.html" title="API reference">
+<link rel="prev" href="RCUiMainWindow.html" title="RCUiMainWindow">
+<link rel="next" href="RhythmCat-Dialogs.html" title="Dialogs">
+<meta name="generator" content="GTK-Doc V1.18 (XML mode)">
+<link rel="stylesheet" href="style.css" type="text/css">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2">
+<tr valign="middle">
+<td><a accesskey="p" href="RCUiMainWindow.html"><img src="left.png" width="24" height="24" border="0" alt="Prev"></a></td>
+<td><a accesskey="u" href="ch01.html"><img src="up.png" width="24" height="24" border="0" alt="Up"></a></td>
+<td><a accesskey="h" href="index.html"><img src="home.png" width="24" height="24" border="0" alt="Home"></a></td>
+<th width="100%" align="center">RhythmCat Reference Manual</th>
+<td><a accesskey="n" href="RhythmCat-Dialogs.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
+</tr>
+<tr><td colspan="5" class="shortcuts">
+<a href="#RCUiLibraryWindow.synopsis" class="shortcut">Top</a>
+                   | 
+                  <a href="#RCUiLibraryWindow.description" class="shortcut">Description</a>
+                   | 
+                  <a href="#RCUiLibraryWindow.object-hierarchy" class="shortcut">Object Hierarchy</a>
+                   | 
+                  <a href="#RCUiLibraryWindow.implemented-interfaces" class="shortcut">Implemented Interfaces</a>
+</td></tr>
+</table>
+<div class="refentry">
+<a name="RCUiLibraryWindow"></a><div class="titlepage"></div>
+<div class="refnamediv"><table width="100%"><tr>
+<td valign="top">
+<h2><span class="refentrytitle"><a name="RCUiLibraryWindow.top_of_page"></a>RCUiLibraryWindow</span></h2>
+<p>RCUiLibraryWindow — The library window of the player</p>
+</td>
+<td valign="top" align="right"></td>
+</tr></table></div>
+<div class="refsynopsisdiv">
+<a name="RCUiLibraryWindow.synopsis"></a><h2>Synopsis</h2>
+<pre class="synopsis">
+#include &lt;rc-ui-library-window.h&gt;
+
+struct              <a class="link" href="RCUiLibraryWindow.html#RCUiLibraryWindow-struct" title="struct RCUiLibraryWindow">RCUiLibraryWindow</a>;
+struct              <a class="link" href="RCUiLibraryWindow.html#RCUiLibraryWindowClass" title="struct RCUiLibraryWindowClass">RCUiLibraryWindowClass</a>;
+<a href="/usr/share/gtk-doc/html/gtk3/GtkWidget.html"><span class="returnvalue">GtkWidget</span></a> *         <a class="link" href="RCUiLibraryWindow.html#rc-ui-library-window-get-library-list-widget" title="rc_ui_library_window_get_library_list_widget ()">rc_ui_library_window_get_library_list_widget</a>
+                                                        ();
+<a href="/usr/share/gtk-doc/html/gtk3/GtkWidget.html"><span class="returnvalue">GtkWidget</span></a> *         <a class="link" href="RCUiLibraryWindow.html#rc-ui-library-window-get-widget" title="rc_ui_library_window_get_widget ()">rc_ui_library_window_get_widget</a>     ();
+<span class="returnvalue">void</span>                <a class="link" href="RCUiLibraryWindow.html#rc-ui-library-window-hide" title="rc_ui_library_window_hide ()">rc_ui_library_window_hide</a>           ();
+<span class="returnvalue">void</span>                <a class="link" href="RCUiLibraryWindow.html#rc-ui-library-window-present-window" title="rc_ui_library_window_present_window ()">rc_ui_library_window_present_window</a> ();
+<span class="returnvalue">void</span>                <a class="link" href="RCUiLibraryWindow.html#rc-ui-library-window-show" title="rc_ui_library_window_show ()">rc_ui_library_window_show</a>           ();
+</pre>
+</div>
+<div class="refsect1">
+<a name="RCUiLibraryWindow.object-hierarchy"></a><h2>Object Hierarchy</h2>
+<pre class="synopsis">
+  <a href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GObject">GObject</a>
+   +----<a href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GInitiallyUnowned">GInitiallyUnowned</a>
+         +----<a href="/usr/share/gtk-doc/html/gtk3/GtkWidget.html">GtkWidget</a>
+               +----<a href="/usr/share/gtk-doc/html/gtk3/GtkContainer.html">GtkContainer</a>
+                     +----<a href="/usr/share/gtk-doc/html/gtk3/GtkBin.html">GtkBin</a>
+                           +----<a href="/usr/share/gtk-doc/html/gtk3/GtkWindow.html">GtkWindow</a>
+                                 +----RCUiLibraryWindow
+</pre>
+</div>
+<div class="refsect1">
+<a name="RCUiLibraryWindow.implemented-interfaces"></a><h2>Implemented Interfaces</h2>
+<p>
+RCUiLibraryWindow implements
+ AtkImplementorIface and  <a href="/usr/share/gtk-doc/html/gtk3/GtkBuildable.html">GtkBuildable</a>.</p>
+</div>
+<div class="refsect1">
+<a name="RCUiLibraryWindow.description"></a><h2>Description</h2>
+<p>
+This module implements the main window class <a class="link" href="RCUiLibraryWindow.html" title="RCUiLibraryWindow"><span class="type">RCUiLibraryWindow</span></a>,
+which implements the library window of the player.
+</p>
+</div>
+<div class="refsect1">
+<a name="RCUiLibraryWindow.details"></a><h2>Details</h2>
+<div class="refsect2">
+<a name="RCUiLibraryWindow-struct"></a><h3>struct RCUiLibraryWindow</h3>
+<pre class="programlisting">struct RCUiLibraryWindow;</pre>
+<p>
+The data structure used for <a class="link" href="RCUiLibraryWindow.html" title="RCUiLibraryWindow"><span class="type">RCUiLibraryWindow</span></a> class.
+</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="RCUiLibraryWindowClass"></a><h3>struct RCUiLibraryWindowClass</h3>
+<pre class="programlisting">struct RCUiLibraryWindowClass {
+};
+</pre>
+<p>
+<a class="link" href="RCUiLibraryWindow.html#RCUiLibraryWindowClass" title="struct RCUiLibraryWindowClass"><span class="type">RCUiLibraryWindowClass</span></a> class.
+</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rc-ui-library-window-get-library-list-widget"></a><h3>rc_ui_library_window_get_library_list_widget ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/gtk3/GtkWidget.html"><span class="returnvalue">GtkWidget</span></a> *         rc_ui_library_window_get_library_list_widget
+                                                        ();</pre>
+<p>
+Get the library list widget in the library window.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>The library list widget. <span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span>
+</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rc-ui-library-window-get-widget"></a><h3>rc_ui_library_window_get_widget ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/gtk3/GtkWidget.html"><span class="returnvalue">GtkWidget</span></a> *         rc_ui_library_window_get_widget     ();</pre>
+<p>
+Get the library window widget. If the widget is not initialized
+yet, it will be initialized.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>The library window widget. <span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span>
+</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rc-ui-library-window-hide"></a><h3>rc_ui_library_window_hide ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rc_ui_library_window_hide           ();</pre>
+<p>
+Hide the library window of the player.
+</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rc-ui-library-window-present-window"></a><h3>rc_ui_library_window_present_window ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rc_ui_library_window_present_window ();</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rc-ui-library-window-show"></a><h3>rc_ui_library_window_show ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rc_ui_library_window_show           ();</pre>
+<p>
+Show the library window of the player.
+</p>
+</div>
+</div>
+</div>
+<div class="footer">
+<hr>
+          Generated by GTK-Doc V1.18</div>
+</body>
+</html>

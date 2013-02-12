@@ -1373,7 +1373,7 @@ gint rclib_db_catalog_iter_get_position(RCLibDbCatalogIter *iter)
  * guaranteed to be <emphasis>exactly</emphasis> in the middle.
  *
  * The @begin and @end iterators must both point to the same
- * #RCLibDbCatalogSequence and @begin must come before or be equal
+ * catalog and @begin must come before or be equal
  * to @end in the sequence. MT safe.
  *
  * Returns: (transfer none): (skip): A #RCLibDbCatalogIter pointing
@@ -1414,7 +1414,7 @@ RCLibDbCatalogIter *rclib_db_catalog_iter_range_get_midpoint(
  * Return a negative number if @a comes before @b, 0 if they are equal,
  * and a positive number if @a comes after @b. MT safe.
  *
- * The @a and @b iterators must point into the same #RCLibDbCatalogSequence.
+ * The @a and @b iterators must point into the same catalog.
  *
  * Returns: A negative number if @a comes before @b, 0 if they are
  *     equal, and a positive number if @a comes after @b.
@@ -2045,7 +2045,7 @@ gint rclib_db_playlist_iter_get_position(RCLibDbPlaylistIter *iter)
  * guaranteed to be <emphasis>exactly</emphasis> in the middle. MT safe.
  *
  * The @begin and @end iterators must both point to the same
- * #RCLibDbPlaylistSequence and @begin must come before or be equal
+ * playlist and @begin must come before or be equal
  * to @end in the sequence.
  *
  * Returns: (transfer none): (skip): A #RCLibDbPlaylistIter pointing
@@ -2086,7 +2086,7 @@ RCLibDbPlaylistIter *rclib_db_playlist_iter_range_get_midpoint(
  * Return a negative number if @a comes before @b, 0 if they are equal,
  * and a positive number if @a comes after @b. MT safe.
  *
- * The @a and @b iterators must point into the same #RCLibDbPlaylistSequence.
+ * The @a and @b iterators must point into the same playlist.
  *
  * Returns: A negative number if @a comes before @b, 0 if they are
  *     equal, and a positive number if @a comes after @b.

@@ -878,21 +878,26 @@ static void rc_plugin_lrccrawler_may_missing_cb(RCLibLyric *lyric,
     RCPluginLyricCrawlerPrivate *priv = (RCPluginLyricCrawlerPrivate *)data;
     gchar *uri = NULL;
     gchar *filepath = NULL;
-    RCLibDbPlaylistIter *iter = NULL;
+    gpointer iter = NULL;
     gchar *rtitle;
     gchar *title = NULL, *artist = NULL;
     const gchar *ptitle = NULL, *partist = NULL;
     gchar *full_path;
     const gchar *home_dir;
+    RCLibCorePlaySource play_source = RCLIB_CORE_PLAY_SOURCE_NONE;
     if(data==NULL) return;
     if(!priv->auto_search) return;
     if(gtk_widget_get_visible(priv->search_window)) return;
     uri = rclib_core_get_uri();
     if(uri==NULL) return;
-    iter = (RCLibDbPlaylistIter *)rclib_core_get_db_reference();
-    rclib_db_playlist_data_iter_get(iter, RCLIB_DB_PLAYLIST_DATA_TYPE_TITLE,
-        &ptitle, RCLIB_DB_PLAYLIST_DATA_TYPE_ARTIST, &partist,
-        RCLIB_DB_PLAYLIST_DATA_TYPE_NONE);    
+    rclib_core_get_play_source(&play_source, &iter, NULL);
+    if(play_source==RCLIB_CORE_PLAY_SOURCE_PLAYLIST && iter!=NULL)
+    {
+        rclib_db_playlist_data_iter_get((RCLibDbPlaylistIter *)iter,
+            RCLIB_DB_PLAYLIST_DATA_TYPE_TITLE,
+            &ptitle, RCLIB_DB_PLAYLIST_DATA_TYPE_ARTIST, &partist,
+            RCLIB_DB_PLAYLIST_DATA_TYPE_NONE);    
+    }
     if(ptitle!=NULL && strlen(ptitle)>0)
     {
         gtk_entry_set_text(GTK_ENTRY(priv->title_entry), ptitle);

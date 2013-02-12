@@ -1,0 +1,357 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Library View Models</title>
+<meta name="generator" content="DocBook XSL Stylesheets V1.76.1">
+<link rel="home" href="index.html" title="RhythmCat Reference Manual">
+<link rel="up" href="ch01.html" title="API reference">
+<link rel="prev" href="RCUiPlaylistView.html" title="List Views">
+<link rel="next" href="RCUiLibraryPropView.html" title="Library Views">
+<meta name="generator" content="GTK-Doc V1.18 (XML mode)">
+<link rel="stylesheet" href="style.css" type="text/css">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2">
+<tr valign="middle">
+<td><a accesskey="p" href="RCUiPlaylistView.html"><img src="left.png" width="24" height="24" border="0" alt="Prev"></a></td>
+<td><a accesskey="u" href="ch01.html"><img src="up.png" width="24" height="24" border="0" alt="Up"></a></td>
+<td><a accesskey="h" href="index.html"><img src="home.png" width="24" height="24" border="0" alt="Home"></a></td>
+<th width="100%" align="center">RhythmCat Reference Manual</th>
+<td><a accesskey="n" href="RCUiLibraryPropView.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
+</tr>
+<tr><td colspan="5" class="shortcuts">
+<a href="#RCUiLibraryPropStore.synopsis" class="shortcut">Top</a>
+                   | 
+                  <a href="#RCUiLibraryPropStore.description" class="shortcut">Description</a>
+                   | 
+                  <a href="#RCUiLibraryPropStore.object-hierarchy" class="shortcut">Object Hierarchy</a>
+                   | 
+                  <a href="#RCUiLibraryPropStore.implemented-interfaces" class="shortcut">Implemented Interfaces</a>
+                   | 
+                  <a href="#RCUiLibraryPropStore.properties" class="shortcut">Properties</a>
+</td></tr>
+</table>
+<div class="refentry">
+<a name="RCUiLibraryPropStore"></a><div class="titlepage"></div>
+<div class="refnamediv"><table width="100%"><tr>
+<td valign="top">
+<h2><span class="refentrytitle"><a name="RCUiLibraryPropStore.top_of_page"></a>Library View Models</span></h2>
+<p>Library View Models — Library data and property models</p>
+</td>
+<td valign="top" align="right"></td>
+</tr></table></div>
+<div class="refsynopsisdiv">
+<a name="RCUiLibraryPropStore.synopsis"></a><h2>Synopsis</h2>
+<a name="RCUiLibraryListStore"></a><pre class="synopsis">
+#include &lt;rc-ui-library-model.h&gt;
+
+enum                <a class="link" href="RCUiLibraryPropStore.html#RCUiLibraryListColumns" title="enum RCUiLibraryListColumns">RCUiLibraryListColumns</a>;
+struct              <a class="link" href="RCUiLibraryPropStore.html#RCUiLibraryListStore-struct" title="struct RCUiLibraryListStore">RCUiLibraryListStore</a>;
+struct              <a class="link" href="RCUiLibraryPropStore.html#RCUiLibraryListStoreClass" title="struct RCUiLibraryListStoreClass">RCUiLibraryListStoreClass</a>;
+enum                <a class="link" href="RCUiLibraryPropStore.html#RCUiLibraryPropColumns" title="enum RCUiLibraryPropColumns">RCUiLibraryPropColumns</a>;
+struct              <a class="link" href="RCUiLibraryPropStore.html#RCUiLibraryPropStore-struct" title="struct RCUiLibraryPropStore">RCUiLibraryPropStore</a>;
+struct              <a class="link" href="RCUiLibraryPropStore.html#RCUiLibraryPropStoreClass" title="struct RCUiLibraryPropStoreClass">RCUiLibraryPropStoreClass</a>;
+<a href="/usr/share/gtk-doc/html/gtk3/GtkTreeModel.html"><span class="returnvalue">GtkTreeModel</span></a> *      <a class="link" href="RCUiLibraryPropStore.html#rc-ui-library-list-store-new" title="rc_ui_library_list_store_new ()">rc_ui_library_list_store_new</a>        (<em class="parameter"><code><span class="type">RCLibDbLibraryQueryResult</span> *query_result</code></em>);
+<a href="/usr/share/gtk-doc/html/gtk3/GtkTreeModel.html"><span class="returnvalue">GtkTreeModel</span></a> *      <a class="link" href="RCUiLibraryPropStore.html#rc-ui-library-prop-store-new" title="rc_ui_library_prop_store_new ()">rc_ui_library_prop_store_new</a>        (<em class="parameter"><code><span class="type">RCLibDbLibraryQueryResult</span> *base</code></em>,
+                                                         <em class="parameter"><code><span class="type">RCLibDbQueryDataType</span> prop_type</code></em>);
+</pre>
+</div>
+<div class="refsect1">
+<a name="RCUiLibraryPropStore.object-hierarchy"></a><h2>Object Hierarchy</h2>
+<pre class="synopsis">
+  <a href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GObject">GObject</a>
+   +----RCUiLibraryListStore
+</pre>
+<pre class="synopsis">
+  <a href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GObject">GObject</a>
+   +----RCUiLibraryPropStore
+</pre>
+</div>
+<div class="refsect1">
+<a name="RCUiLibraryPropStore.implemented-interfaces"></a><h2>Implemented Interfaces</h2>
+<p>
+RCUiLibraryListStore implements
+ <a href="/usr/share/gtk-doc/html/gtk3/GtkTreeModel.html">GtkTreeModel</a>.</p>
+<p>
+RCUiLibraryPropStore implements
+ <a href="/usr/share/gtk-doc/html/gtk3/GtkTreeModel.html">GtkTreeModel</a>.</p>
+</div>
+<div class="refsect1">
+<a name="RCUiLibraryPropStore.properties"></a><h2>Properties</h2>
+<pre class="synopsis">
+  "<a class="link" href="RCUiLibraryPropStore.html#RCUiLibraryListStore--query-result" title='The "query-result" property'>query-result</a>"             <span class="type">RCLibDbLibraryQueryResult</span>*  : Read / Write / Construct Only
+  "<a class="link" href="RCUiLibraryPropStore.html#RCUiLibraryPropStore--base" title='The "base" property'>base</a>"                     <span class="type">RCLibDbLibraryQueryResult</span>*  : Read / Write / Construct Only
+  "<a class="link" href="RCUiLibraryPropStore.html#RCUiLibraryPropStore--property-type" title='The "property-type" property'>property-type</a>"            <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a>                 : Read / Write / Construct Only
+</pre>
+</div>
+<div class="refsect1">
+<a name="RCUiLibraryPropStore.description"></a><h2>Description</h2>
+<p>
+This module provides 2 classes: <a class="link" href="RCUiLibraryPropStore.html#RCUiLibraryListStore"><span class="type">RCUiLibraryListStore</span></a> and
+<a class="link" href="RCUiLibraryPropStore.html" title="Library View Models"><span class="type">RCUiLibraryPropStore</span></a>, which implements interface <a href="/usr/share/gtk-doc/html/gtk3/GtkTreeModel.html"><span class="type">GtkTreeModel</span></a>.
+They can be used by <a href="/usr/share/gtk-doc/html/gtk3/GtkTreeView.html"><span class="type">GtkTreeView</span></a> for showing and operating the data
+inside. <a class="link" href="RCUiLibraryPropStore.html#RCUiLibraryListStore"><span class="type">RCUiLibraryListStore</span></a> contains the query result list obtained 
+from the library, and <a class="link" href="RCUiLibraryPropStore.html" title="Library View Models"><span class="type">RCUiLibraryPropStore</span></a> contains the property list
+of the query result.
+</p>
+</div>
+<div class="refsect1">
+<a name="RCUiLibraryPropStore.details"></a><h2>Details</h2>
+<div class="refsect2">
+<a name="RCUiLibraryListColumns"></a><h3>enum RCUiLibraryListColumns</h3>
+<pre class="programlisting">typedef enum {
+    RC_UI_LIBRARY_LIST_COLUMN_TYPE,
+    RC_UI_LIBRARY_LIST_COLUMN_STATE,
+    RC_UI_LIBRARY_LIST_COLUMN_FTITLE,
+    RC_UI_LIBRARY_LIST_COLUMN_TITLE,
+    RC_UI_LIBRARY_LIST_COLUMN_ARTIST,
+    RC_UI_LIBRARY_LIST_COLUMN_ALBUM,
+    RC_UI_LIBRARY_LIST_COLUMN_FTYPE,
+    RC_UI_LIBRARY_LIST_COLUMN_GENRE,
+    RC_UI_LIBRARY_LIST_COLUMN_LENGTH,
+    RC_UI_LIBRARY_LIST_COLUMN_TRACK,
+    RC_UI_LIBRARY_LIST_COLUMN_RATING,
+    RC_UI_LIBRARY_LIST_COLUMN_YEAR,
+    RC_UI_LIBRARY_LIST_COLUMN_PLAYING_FLAG,
+    RC_UI_LIBRARY_LIST_COLUMN_LAST
+} RCUiLibraryListColumns;
+</pre>
+<p>
+The enum type for the columns in the library list store.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><a name="RC-UI-LIBRARY-LIST-COLUMN-TYPE:CAPS"></a><span class="term"><code class="literal">RC_UI_LIBRARY_LIST_COLUMN_TYPE</code></span></p></td>
+<td>the type column
+</td>
+</tr>
+<tr>
+<td><p><a name="RC-UI-LIBRARY-LIST-COLUMN-STATE:CAPS"></a><span class="term"><code class="literal">RC_UI_LIBRARY_LIST_COLUMN_STATE</code></span></p></td>
+<td>the state column
+</td>
+</tr>
+<tr>
+<td><p><a name="RC-UI-LIBRARY-LIST-COLUMN-FTITLE:CAPS"></a><span class="term"><code class="literal">RC_UI_LIBRARY_LIST_COLUMN_FTITLE</code></span></p></td>
+<td>the title column
+</td>
+</tr>
+<tr>
+<td><p><a name="RC-UI-LIBRARY-LIST-COLUMN-TITLE:CAPS"></a><span class="term"><code class="literal">RC_UI_LIBRARY_LIST_COLUMN_TITLE</code></span></p></td>
+<td>the real title column
+</td>
+</tr>
+<tr>
+<td><p><a name="RC-UI-LIBRARY-LIST-COLUMN-ARTIST:CAPS"></a><span class="term"><code class="literal">RC_UI_LIBRARY_LIST_COLUMN_ARTIST</code></span></p></td>
+<td>the artist column
+</td>
+</tr>
+<tr>
+<td><p><a name="RC-UI-LIBRARY-LIST-COLUMN-ALBUM:CAPS"></a><span class="term"><code class="literal">RC_UI_LIBRARY_LIST_COLUMN_ALBUM</code></span></p></td>
+<td>the album column
+</td>
+</tr>
+<tr>
+<td><p><a name="RC-UI-LIBRARY-LIST-COLUMN-FTYPE:CAPS"></a><span class="term"><code class="literal">RC_UI_LIBRARY_LIST_COLUMN_FTYPE</code></span></p></td>
+<td>the file type (format) column
+</td>
+</tr>
+<tr>
+<td><p><a name="RC-UI-LIBRARY-LIST-COLUMN-GENRE:CAPS"></a><span class="term"><code class="literal">RC_UI_LIBRARY_LIST_COLUMN_GENRE</code></span></p></td>
+<td>the genre column
+</td>
+</tr>
+<tr>
+<td><p><a name="RC-UI-LIBRARY-LIST-COLUMN-LENGTH:CAPS"></a><span class="term"><code class="literal">RC_UI_LIBRARY_LIST_COLUMN_LENGTH</code></span></p></td>
+<td>the time length column
+</td>
+</tr>
+<tr>
+<td><p><a name="RC-UI-LIBRARY-LIST-COLUMN-TRACK:CAPS"></a><span class="term"><code class="literal">RC_UI_LIBRARY_LIST_COLUMN_TRACK</code></span></p></td>
+<td>the track number column
+</td>
+</tr>
+<tr>
+<td><p><a name="RC-UI-LIBRARY-LIST-COLUMN-RATING:CAPS"></a><span class="term"><code class="literal">RC_UI_LIBRARY_LIST_COLUMN_RATING</code></span></p></td>
+<td>the rating column
+</td>
+</tr>
+<tr>
+<td><p><a name="RC-UI-LIBRARY-LIST-COLUMN-YEAR:CAPS"></a><span class="term"><code class="literal">RC_UI_LIBRARY_LIST_COLUMN_YEAR</code></span></p></td>
+<td>the year column
+</td>
+</tr>
+<tr>
+<td><p><a name="RC-UI-LIBRARY-LIST-COLUMN-PLAYING-FLAG:CAPS"></a><span class="term"><code class="literal">RC_UI_LIBRARY_LIST_COLUMN_PLAYING_FLAG</code></span></p></td>
+<td>the playing flag column
+</td>
+</tr>
+<tr>
+<td><p><a name="RC-UI-LIBRARY-LIST-COLUMN-LAST:CAPS"></a><span class="term"><code class="literal">RC_UI_LIBRARY_LIST_COLUMN_LAST</code></span></p></td>
+<td>the last column, do not use it
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="RCUiLibraryListStore-struct"></a><h3>struct RCUiLibraryListStore</h3>
+<pre class="programlisting">struct RCUiLibraryListStore;</pre>
+<p>
+The data structure used for <a class="link" href="RCUiLibraryPropStore.html#RCUiLibraryListStore"><span class="type">RCUiLibraryListStore</span></a> class.
+</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="RCUiLibraryListStoreClass"></a><h3>struct RCUiLibraryListStoreClass</h3>
+<pre class="programlisting">struct RCUiLibraryListStoreClass {
+};
+</pre>
+<p>
+<a class="link" href="RCUiLibraryPropStore.html#RCUiLibraryListStoreClass" title="struct RCUiLibraryListStoreClass"><span class="type">RCUiLibraryListStoreClass</span></a> class.
+</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="RCUiLibraryPropColumns"></a><h3>enum RCUiLibraryPropColumns</h3>
+<pre class="programlisting">typedef enum {
+    RC_UI_LIBRARY_PROP_COLUMN_NAME,
+    RC_UI_LIBRARY_PROP_COLUMN_COUNT,
+    RC_UI_LIBRARY_PROP_COLUMN_FLAG,
+    RC_UI_LIBRARY_PROP_COLUMN_LAST
+} RCUiLibraryPropColumns;
+</pre>
+<p>
+The enum type for the columns in the library property store.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><a name="RC-UI-LIBRARY-PROP-COLUMN-NAME:CAPS"></a><span class="term"><code class="literal">RC_UI_LIBRARY_PROP_COLUMN_NAME</code></span></p></td>
+<td>the property text
+</td>
+</tr>
+<tr>
+<td><p><a name="RC-UI-LIBRARY-PROP-COLUMN-COUNT:CAPS"></a><span class="term"><code class="literal">RC_UI_LIBRARY_PROP_COLUMN_COUNT</code></span></p></td>
+<td>the number of the property used
+</td>
+</tr>
+<tr>
+<td><p><a name="RC-UI-LIBRARY-PROP-COLUMN-FLAG:CAPS"></a><span class="term"><code class="literal">RC_UI_LIBRARY_PROP_COLUMN_FLAG</code></span></p></td>
+<td>the flag of the property
+</td>
+</tr>
+<tr>
+<td><p><a name="RC-UI-LIBRARY-PROP-COLUMN-LAST:CAPS"></a><span class="term"><code class="literal">RC_UI_LIBRARY_PROP_COLUMN_LAST</code></span></p></td>
+<td>the last column, do not use it
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="RCUiLibraryPropStore-struct"></a><h3>struct RCUiLibraryPropStore</h3>
+<pre class="programlisting">struct RCUiLibraryPropStore;</pre>
+<p>
+The data structure used for <a class="link" href="RCUiLibraryPropStore.html" title="Library View Models"><span class="type">RCUiLibraryPropStore</span></a> class.
+</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="RCUiLibraryPropStoreClass"></a><h3>struct RCUiLibraryPropStoreClass</h3>
+<pre class="programlisting">struct RCUiLibraryPropStoreClass {
+};
+</pre>
+<p>
+<a class="link" href="RCUiLibraryPropStore.html#RCUiLibraryPropStoreClass" title="struct RCUiLibraryPropStoreClass"><span class="type">RCUiLibraryPropStoreClass</span></a> class.
+</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rc-ui-library-list-store-new"></a><h3>rc_ui_library_list_store_new ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/gtk3/GtkTreeModel.html"><span class="returnvalue">GtkTreeModel</span></a> *      rc_ui_library_list_store_new        (<em class="parameter"><code><span class="type">RCLibDbLibraryQueryResult</span> *query_result</code></em>);</pre>
+<p>
+Create a new library list store.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>query_result</code></em> :</span></p></td>
+<td>the query result</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>The new library list store, <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><span class="type">NULL</span></a> if failed. <span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span>
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rc-ui-library-prop-store-new"></a><h3>rc_ui_library_prop_store_new ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/gtk3/GtkTreeModel.html"><span class="returnvalue">GtkTreeModel</span></a> *      rc_ui_library_prop_store_new        (<em class="parameter"><code><span class="type">RCLibDbLibraryQueryResult</span> *base</code></em>,
+                                                         <em class="parameter"><code><span class="type">RCLibDbQueryDataType</span> prop_type</code></em>);</pre>
+<p>
+Create a new library property store.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>base</code></em> :</span></p></td>
+<td>the base query result</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>prop_type</code></em> :</span></p></td>
+<td>the property type</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>The new library property store, <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><span class="type">NULL</span></a> if failed. <span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span>
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+</div>
+<div class="refsect1">
+<a name="RCUiLibraryPropStore.property-details"></a><h2>Property Details</h2>
+<div class="refsect2">
+<a name="RCUiLibraryListStore--query-result"></a><h3>The <code class="literal">"query-result"</code> property</h3>
+<pre class="programlisting">  "query-result"             <span class="type">RCLibDbLibraryQueryResult</span>*  : Read / Write / Construct Only</pre>
+<p>
+Sets the query result object of the library list store.
+</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="RCUiLibraryPropStore--base"></a><h3>The <code class="literal">"base"</code> property</h3>
+<pre class="programlisting">  "base"                     <span class="type">RCLibDbLibraryQueryResult</span>*  : Read / Write / Construct Only</pre>
+<p>
+Sets the base query result object of the library property store.
+</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="RCUiLibraryPropStore--property-type"></a><h3>The <code class="literal">"property-type"</code> property</h3>
+<pre class="programlisting">  "property-type"            <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a>                 : Read / Write / Construct Only</pre>
+<p>
+Sets the property type for the library property store.
+</p>
+<p>Allowed values: &lt;= 10</p>
+<p>Default value: 3</p>
+</div>
+</div>
+</div>
+<div class="footer">
+<hr>
+          Generated by GTK-Doc V1.18</div>
+</body>
+</html>

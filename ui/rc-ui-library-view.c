@@ -314,13 +314,11 @@ static void rc_ui_library_prop_view_instance_init(RCUiLibraryPropView *view)
         TRUE, NULL);
     priv->name_renderer = gtk_cell_renderer_text_new();
     priv->count_renderer = gtk_cell_renderer_text_new();
-    gtk_cell_renderer_set_fixed_size(priv->count_renderer,
-        50, -1);
     g_object_set(priv->name_renderer, "ellipsize", PANGO_ELLIPSIZE_END,
         "ellipsize-set", TRUE, "weight", PANGO_WEIGHT_NORMAL,
         "weight-set", TRUE, NULL);
     g_object_set(priv->count_renderer, "weight", PANGO_WEIGHT_NORMAL,
-        "weight-set", TRUE, "xalign", 1.0, "width-chars", 6, NULL);
+        "weight-set", TRUE, "xalign", 1.0, NULL);
     priv->name_column = gtk_tree_view_column_new_with_attributes(
         _("Property"), priv->name_renderer, "text",
         RC_UI_LIBRARY_PROP_COLUMN_NAME, NULL);

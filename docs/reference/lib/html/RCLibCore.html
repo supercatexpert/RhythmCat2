@@ -50,6 +50,7 @@ struct              <a class="link" href="RCLibCore.html#RCLibCoreClass" title="
 enum                <a class="link" href="RCLibCore.html#RCLibCoreEQType" title="enum RCLibCoreEQType">RCLibCoreEQType</a>;
 enum                <a class="link" href="RCLibCore.html#RCLibCoreErrorCode" title="enum RCLibCoreErrorCode">RCLibCoreErrorCode</a>;
 struct              <a class="link" href="RCLibCore.html#RCLibCoreMetadata" title="struct RCLibCoreMetadata">RCLibCoreMetadata</a>;
+enum                <a class="link" href="RCLibCore.html#RCLibCorePlaySource" title="enum RCLibCorePlaySource">RCLibCorePlaySource</a>;
 enum                <a class="link" href="RCLibCore.html#RCLibCoreSourceType" title="enum RCLibCoreSourceType">RCLibCoreSourceType</a>;
 <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RCLibCore.html#rclib-core-audio-output-get" title="rclib_core_audio_output_get ()">rclib_core_audio_output_get</a>         (<em class="parameter"><code><a class="link" href="RCLibCore.html#RCLibCoreAudioOutputType" title="enum RCLibCoreAudioOutputType"><span class="type">RCLibCoreAudioOutputType</span></a> *output_type</code></em>);
 <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RCLibCore.html#rclib-core-audio-output-set" title="rclib_core_audio_output_set ()">rclib_core_audio_output_set</a>         (<em class="parameter"><code><a class="link" href="RCLibCore.html#RCLibCoreAudioOutputType" title="enum RCLibCoreAudioOutputType"><span class="type">RCLibCoreAudioOutputType</span></a> output_type</code></em>);
@@ -63,6 +64,9 @@ enum                <a class="link" href="RCLibCore.html#RCLibCoreSourceType" ti
 const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *       <a class="link" href="RCLibCore.html#rclib-core-get-eq-name" title="rclib_core_get_eq_name ()">rclib_core_get_eq_name</a>              (<em class="parameter"><code><a class="link" href="RCLibCore.html#RCLibCoreEQType" title="enum RCLibCoreEQType"><span class="type">RCLibCoreEQType</span></a> type</code></em>);
 <a href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GObject"><span class="returnvalue">GObject</span></a> *           <a class="link" href="RCLibCore.html#rclib-core-get-instance" title="rclib_core_get_instance ()">rclib_core_get_instance</a>             ();
 const <a class="link" href="RCLibCore.html#RCLibCoreMetadata" title="struct RCLibCoreMetadata"><span class="returnvalue">RCLibCoreMetadata</span></a> * <a class="link" href="RCLibCore.html#rclib-core-get-metadata" title="rclib_core_get_metadata ()">rclib_core_get_metadata</a>       ();
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RCLibCore.html#rclib-core-get-play-source" title="rclib_core_get_play_source ()">rclib_core_get_play_source</a>          (<em class="parameter"><code><a class="link" href="RCLibCore.html#RCLibCorePlaySource" title="enum RCLibCorePlaySource"><span class="type">RCLibCorePlaySource</span></a> *source_type</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> *source_reference</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> **cookie</code></em>);
 <a class="link" href="RCLibCore.html#RCLibCoreSourceType" title="enum RCLibCoreSourceType"><span class="returnvalue">RCLibCoreSourceType</span></a> <a class="link" href="RCLibCore.html#rclib-core-get-source-type" title="rclib_core_get_source_type ()">rclib_core_get_source_type</a>          ();
 <a href="/usr/share/gtk-doc/html/gstreamer-0.10/GstElement.html#GstStateChangeReturn"><span class="returnvalue">GstStateChangeReturn</span></a> <a class="link" href="RCLibCore.html#rclib-core-get-state" title="rclib_core_get_state ()">rclib_core_get_state</a>               (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/gstreamer-0.10/GstElement.html#GstState"><span class="type">GstState</span></a> *state</code></em>,
                                                          <em class="parameter"><code><a href="/usr/share/gtk-doc/html/gstreamer-0.10/GstElement.html#GstState"><span class="type">GstState</span></a> *pending</code></em>,
@@ -87,12 +91,21 @@ const <a class="link" href="RCLibCore.html#RCLibCoreMetadata" title="struct RCLi
                                                          <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gdouble"><span class="type">gdouble</span></a> *band</code></em>);
 <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RCLibCore.html#rclib-core-set-position" title="rclib_core_set_position ()">rclib_core_set_position</a>             (<em class="parameter"><code><span class="type">gint64</span> pos</code></em>);
 <span class="returnvalue">void</span>                <a class="link" href="RCLibCore.html#rclib-core-set-uri" title="rclib_core_set_uri ()">rclib_core_set_uri</a>                  (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *uri</code></em>);
+<span class="returnvalue">void</span>                <a class="link" href="RCLibCore.html#rclib-core-set-uri-with-play-source" title="rclib_core_set_uri_with_play_source ()">rclib_core_set_uri_with_play_source</a> (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *uri</code></em>,
+                                                         <em class="parameter"><code><a class="link" href="RCLibCore.html#RCLibCorePlaySource" title="enum RCLibCorePlaySource"><span class="type">RCLibCorePlaySource</span></a> source_type</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> source_reference</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Datasets.html#GDestroyNotify"><span class="type">GDestroyNotify</span></a> notify</code></em>,
+                                                         <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *cookie</code></em>);
 <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RCLibCore.html#rclib-core-set-volume" title="rclib_core_set_volume ()">rclib_core_set_volume</a>               (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gdouble"><span class="type">gdouble</span></a> volume</code></em>);
 <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gulong"><span class="returnvalue">gulong</span></a>              <a class="link" href="RCLibCore.html#rclib-core-signal-connect" title="rclib_core_signal_connect ()">rclib_core_signal_connect</a>           (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *name</code></em>,
                                                          <em class="parameter"><code><a href="/usr/share/gtk-doc/html/gobject/gobject-Closures.html#GCallback"><span class="type">GCallback</span></a> callback</code></em>,
                                                          <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> data</code></em>);
 <span class="returnvalue">void</span>                <a class="link" href="RCLibCore.html#rclib-core-signal-disconnect" title="rclib_core_signal_disconnect ()">rclib_core_signal_disconnect</a>        (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gulong"><span class="type">gulong</span></a> handler_id</code></em>);
 <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RCLibCore.html#rclib-core-stop" title="rclib_core_stop ()">rclib_core_stop</a>                     ();
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RCLibCore.html#rclib-core-update-play-source" title="rclib_core_update_play_source ()">rclib_core_update_play_source</a>       (<em class="parameter"><code><a class="link" href="RCLibCore.html#RCLibCorePlaySource" title="enum RCLibCorePlaySource"><span class="type">RCLibCorePlaySource</span></a> source_type</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> source_reference</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Datasets.html#GDestroyNotify"><span class="type">GDestroyNotify</span></a> notify</code></em>,
+                                                         <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *cookie</code></em>);
 </pre>
 </div>
 <div class="refsect1">
@@ -395,6 +408,45 @@ The structure for metadata read from core.
 </div>
 <hr>
 <div class="refsect2">
+<a name="RCLibCorePlaySource"></a><h3>enum RCLibCorePlaySource</h3>
+<pre class="programlisting">typedef enum {
+    RCLIB_CORE_PLAY_SOURCE_NONE = 0,
+    RCLIB_CORE_PLAY_SOURCE_PLAYLIST = 1,
+    RCLIB_CORE_PLAY_SOURCE_LIBRARY = 2,
+    RCLIB_CORE_PLAY_SOURCE_THIRDPARTY = 3
+} RCLibCorePlaySource;
+</pre>
+<p>
+The enum type for play source.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><a name="RCLIB-CORE-PLAY-SOURCE-NONE:CAPS"></a><span class="term"><code class="literal">RCLIB_CORE_PLAY_SOURCE_NONE</code></span></p></td>
+<td>no play source
+</td>
+</tr>
+<tr>
+<td><p><a name="RCLIB-CORE-PLAY-SOURCE-PLAYLIST:CAPS"></a><span class="term"><code class="literal">RCLIB_CORE_PLAY_SOURCE_PLAYLIST</code></span></p></td>
+<td>the play source is playlist item
+</td>
+</tr>
+<tr>
+<td><p><a name="RCLIB-CORE-PLAY-SOURCE-LIBRARY:CAPS"></a><span class="term"><code class="literal">RCLIB_CORE_PLAY_SOURCE_LIBRARY</code></span></p></td>
+<td>the play source is library item
+</td>
+</tr>
+<tr>
+<td><p><a name="RCLIB-CORE-PLAY-SOURCE-THIRDPARTY:CAPS"></a><span class="term"><code class="literal">RCLIB_CORE_PLAY_SOURCE_THIRDPARTY</code></span></p></td>
+<td>the play source is third-party item
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
 <a name="RCLibCoreSourceType"></a><h3>enum RCLibCoreSourceType</h3>
 <pre class="programlisting">typedef enum {
     RCLIB_CORE_SOURCE_NONE = 0,
@@ -642,6 +694,41 @@ Get metadata read from the loaded file in the core.
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
 <td>The metadata.</td>
 </tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-core-get-play-source"></a><h3>rclib_core_get_play_source ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rclib_core_get_play_source          (<em class="parameter"><code><a class="link" href="RCLibCore.html#RCLibCorePlaySource" title="enum RCLibCorePlaySource"><span class="type">RCLibCorePlaySource</span></a> *source_type</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> *source_reference</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> **cookie</code></em>);</pre>
+<p>
+Get the play source reference.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>source_type</code></em> :</span></p></td>
+<td>(allow-none): the source type. <span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>]</span>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>source_reference</code></em> :</span></p></td>
+<td>(allow-none): the source reference. <span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>]</span>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>cookie</code></em> :</span></p></td>
+<td>(transfer full): (allow-none): the cookie for
+third-party play source. <span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>]</span>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>Whether the play source returned.</td>
+</tr>
+</tbody>
 </table></div>
 </div>
 <hr>
@@ -986,6 +1073,46 @@ Set the URI to play.
 </div>
 <hr>
 <div class="refsect2">
+<a name="rclib-core-set-uri-with-play-source"></a><h3>rclib_core_set_uri_with_play_source ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rclib_core_set_uri_with_play_source (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *uri</code></em>,
+                                                         <em class="parameter"><code><a class="link" href="RCLibCore.html#RCLibCorePlaySource" title="enum RCLibCorePlaySource"><span class="type">RCLibCorePlaySource</span></a> source_type</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> source_reference</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Datasets.html#GDestroyNotify"><span class="type">GDestroyNotify</span></a> notify</code></em>,
+                                                         <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *cookie</code></em>);</pre>
+<p>
+Set the URI and the music source reference to play.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>uri</code></em> :</span></p></td>
+<td>the URI to play</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>source_type</code></em> :</span></p></td>
+<td>the source type</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>source_reference</code></em> :</span></p></td>
+<td>the source reference. <span class="annotation">[<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>notify</code></em> :</span></p></td>
+<td>the reference destroy notify. <span class="annotation">[<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>cookie</code></em> :</span></p></td>
+<td>he cookie for third-party play item. <span class="annotation">[<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span>
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
 <a name="rclib-core-set-volume"></a><h3>rclib_core_set_volume ()</h3>
 <pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rclib_core_set_volume               (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gdouble"><span class="type">gdouble</span></a> volume</code></em>);</pre>
 <p>
@@ -1069,6 +1196,45 @@ Set the player to stop state.
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
 <td>Whether the state is set to stop successfully.</td>
 </tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-core-update-play-source"></a><h3>rclib_core_update_play_source ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rclib_core_update_play_source       (<em class="parameter"><code><a class="link" href="RCLibCore.html#RCLibCorePlaySource" title="enum RCLibCorePlaySource"><span class="type">RCLibCorePlaySource</span></a> source_type</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> source_reference</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Datasets.html#GDestroyNotify"><span class="type">GDestroyNotify</span></a> notify</code></em>,
+                                                         <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *cookie</code></em>);</pre>
+<p>
+Update the source reference.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>source_type</code></em> :</span></p></td>
+<td>the source type</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>source_reference</code></em> :</span></p></td>
+<td>the source reference. <span class="annotation">[<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>notify</code></em> :</span></p></td>
+<td>the reference destroy notify. <span class="annotation">[<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>cookie</code></em> :</span></p></td>
+<td>he cookie for third-party play item. <span class="annotation">[<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>Whether the source reference updated successfully.</td>
+</tr>
+</tbody>
 </table></div>
 </div>
 </div>

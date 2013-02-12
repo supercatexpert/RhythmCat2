@@ -18,10 +18,13 @@
     <title>API reference</title>
         <xi:include href="xml/rc-main.xml"/>
     <xi:include href="xml/rc-ui-window.xml"/>
+    <xi:include href="xml/rc-ui-library-window.xml"/>
     <xi:include href="xml/rc-ui-dialog.xml"/>
     <xi:include href="xml/rc-ui-effect.xml"/>
     <xi:include href="xml/rc-ui-listmodel.xml"/>
     <xi:include href="xml/rc-ui-listview.xml"/>
+    <xi:include href="xml/rc-ui-library-model.xml"/>
+    <xi:include href="xml/rc-ui-library-view.xml"/>
     <xi:include href="xml/rc-ui-menu.xml"/>
     <xi:include href="xml/rc-ui-player.xml"/>
     <xi:include href="xml/rc-ui-plugin.xml"/>

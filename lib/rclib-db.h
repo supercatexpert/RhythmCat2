@@ -115,8 +115,8 @@ typedef enum {
 /**
  * RCLibDbCatalogDataType:
  * @RCLIB_DB_CATALOG_DATA_TYPE_NONE: none type, not used by data
- * @RCLIB_DB_CATALOG_DATA_TYPE_PLAYLIST: the playlist
- *     (#RCLibDbPlaylistSequence), should not be used out of this module
+ * @RCLIB_DB_CATALOG_DATA_TYPE_PLAYLIST: the playlist data structure,
+ *     should not be used out of this module
  * @RCLIB_DB_CATALOG_DATA_TYPE_SELF_ITER: the iter pointed to self
  *     (#RCLibDbCatalogIter)
  * @RCLIB_DB_CATALOG_DATA_TYPE_NAME: the catalog name (string)
@@ -318,8 +318,7 @@ typedef struct _RCLibDbCatalogIter RCLibDbCatalogIter;
 typedef struct _RCLibDbPlaylistIter RCLibDbPlaylistIter;
 
 typedef struct _RCLibDbLibraryQueryResultIter RCLibDbLibraryQueryResultIter;
-typedef struct _RCLibDbLibraryQueryResultPropIter
-    RCLibDbLibraryQueryResultPropIter;
+typedef struct _RCLibDbLibraryQueryResultPropIter RCLibDbLibraryQueryResultPropIter;
 
 typedef struct _RCLibDbQuery RCLibDbQuery;
 
