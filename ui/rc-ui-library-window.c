@@ -57,7 +57,7 @@ struct _RCUiLibraryWindowPrivate
     GtkWidget *library_prop_album_scr_window;
     GtkWidget *library_prop_artist_scr_window;
     GtkWidget *library_list_scr_window;
-    guint search_type;
+    RCUiLibraryWindowSearchType search_type;
     gulong state_changed_id;
     guint search_timeout;
 };
@@ -397,8 +397,69 @@ static void rc_ui_library_window_search_entry_icon_pressed_cb(GtkEntry *entry,
 static gboolean rc_ui_library_search_timeout_cb(gpointer data)
 {
     RCUiLibraryWindowPrivate *priv = (RCUiLibraryWindowPrivate *)data;
+    const gchar *text;
+    RCLibDbQuery *query = NULL;
+    GObject *library_query_result;
     if(data==NULL) return FALSE;
-    
+    text = gtk_entry_get_text(GTK_ENTRY(priv->search_entry));
+    if(text==NULL || strlen(text)==0)
+    {
+        query = rclib_db_query_parse(RCLIB_DB_QUERY_CONDITION_TYPE_NONE);
+    }
+    else
+    {
+        switch(priv->search_type)
+        {
+            case RC_UI_LIBRARY_WINDOW_SEARCH_TYPE_TITLE:
+            {
+                query = rclib_db_query_parse(
+                    RCLIB_DB_QUERY_CONDITION_TYPE_PROP_LIKE,
+                    RCLIB_DB_QUERY_DATA_TYPE_TITLE, text,
+                    RCLIB_DB_QUERY_CONDITION_TYPE_NONE);
+                break;
+            }
+            case RC_UI_LIBRARY_WINDOW_SEARCH_TYPE_ARTIST:
+            {
+                query = rclib_db_query_parse(
+                    RCLIB_DB_QUERY_CONDITION_TYPE_PROP_LIKE,
+                    RCLIB_DB_QUERY_DATA_TYPE_ARTIST, text,
+                    RCLIB_DB_QUERY_CONDITION_TYPE_NONE);
+                break;
+            }
+            case RC_UI_LIBRARY_WINDOW_SEARCH_TYPE_ALBUM:
+            {
+                query = rclib_db_query_parse(
+                    RCLIB_DB_QUERY_CONDITION_TYPE_PROP_LIKE,
+                    RCLIB_DB_QUERY_DATA_TYPE_ALBUM, text,
+                    RCLIB_DB_QUERY_CONDITION_TYPE_NONE);
+                break;
+            }
+            default:
+            {
+                query = rclib_db_query_parse(
+                    RCLIB_DB_QUERY_CONDITION_TYPE_PROP_LIKE,
+                    RCLIB_DB_QUERY_DATA_TYPE_TITLE, text,
+                    RCLIB_DB_QUERY_CONDITION_TYPE_OR,
+                    RCLIB_DB_QUERY_CONDITION_TYPE_PROP_LIKE,
+                    RCLIB_DB_QUERY_DATA_TYPE_ARTIST, text,
+                    RCLIB_DB_QUERY_CONDITION_TYPE_OR,
+                    RCLIB_DB_QUERY_CONDITION_TYPE_PROP_LIKE,
+                    RCLIB_DB_QUERY_DATA_TYPE_ALBUM, text,
+                    RCLIB_DB_QUERY_CONDITION_TYPE_OR,
+                    RCLIB_DB_QUERY_CONDITION_TYPE_PROP_LIKE,
+                    RCLIB_DB_QUERY_DATA_TYPE_GENRE, text,
+                    RCLIB_DB_QUERY_CONDITION_TYPE_NONE);
+                break;
+            }
+        }
+    }
+    library_query_result = rclib_db_library_get_base_query_result();
+    rclib_db_library_query_result_set_query(
+        RCLIB_DB_LIBRARY_QUERY_RESULT(library_query_result), query);
+    rclib_db_query_free(query);
+    rclib_db_library_query_result_query_start(
+        RCLIB_DB_LIBRARY_QUERY_RESULT(library_query_result), TRUE);
+    g_object_unref(library_query_result);
     priv->search_timeout = 0;
     return FALSE;
 }
@@ -489,8 +550,7 @@ static void rc_ui_library_window_instance_init(RCUiLibraryWindow *window)
     GtkUIManager *ui_manager;
     GtkWidget *search_menu;
     window->priv = priv;
-
-    priv->search_type = 0;
+    priv->search_type = RC_UI_LIBRARY_WINDOW_SEARCH_TYPE_ALL;
 
     library_query_result = rclib_db_library_get_base_query_result();
     priv->library_genre_model = rc_ui_library_prop_store_new(
@@ -732,4 +792,18 @@ GtkWidget *rc_ui_library_window_get_library_list_widget()
     return priv->library_list_view;
 }
 
+/**
+ * rc_ui_library_window_set_search_type:
+ * @type: the search type
+ * 
+ * Set the search type for the search entry.
+ */
 
+void rc_ui_library_window_set_search_type(RCUiLibraryWindowSearchType type)
+{
+    RCUiLibraryWindowPrivate *priv;
+    if(ui_library_window_instance==NULL) return;
+    priv = RC_UI_LIBRARY_WINDOW(ui_library_window_instance)->priv;
+    if(priv==NULL) return;
+    priv->search_type = type;
+}

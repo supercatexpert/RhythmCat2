@@ -163,9 +163,10 @@ static void rc_ui_menu_spectrum_clicked_cb(GtkAction *action,
 static void rc_ui_menu_library_search_clicked_cb(GtkAction *action,
     GtkRadioAction *current, gpointer data)
 {
+    gint value = gtk_radio_action_get_current_value(current);
     g_signal_handlers_block_by_func(action,
         G_CALLBACK(rc_ui_menu_library_search_clicked_cb), data);
-        
+    rc_ui_library_window_set_search_type((RCUiLibraryWindowSearchType)value);
     g_signal_handlers_unblock_by_func(action,
         G_CALLBACK(rc_ui_menu_library_search_clicked_cb), data);
 }
@@ -780,16 +781,16 @@ static GtkRadioActionEntry ui_menu_library_search_entries[] =
 {
     { "LibrarySearchAllFields", NULL,
       N_("Search All Fields"), NULL,
-      N_("Search all fields"), 0 },
+      N_("Search all fields"), RC_UI_LIBRARY_WINDOW_SEARCH_TYPE_ALL },
     { "LibrarySearchArtists", NULL,
       N_("Search Artist"), NULL,
-      N_("Search artists"), 1 },
+      N_("Search artists"), RC_UI_LIBRARY_WINDOW_SEARCH_TYPE_ARTIST },
     { "LibrarySearchAlbums", NULL,
       N_("Search Albums"), NULL,
-      N_("Search albums"), 2 },
+      N_("Search albums"), RC_UI_LIBRARY_WINDOW_SEARCH_TYPE_ALBUM },
     { "LibrarySearchTitles", NULL,
       N_("Search Titles"), NULL,
-      N_("Search titles"), 3 },
+      N_("Search titles"), RC_UI_LIBRARY_WINDOW_SEARCH_TYPE_TITLE },
 };
 
 static guint ui_menu_library_search_n_entries =

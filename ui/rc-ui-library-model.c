@@ -200,6 +200,7 @@ static void rc_ui_library_prop_prop_delete_cb(RCLibDbLibraryQueryResult *qr,
     RCUiLibraryPropStorePrivate *priv;
     GtkTreeModel *model;
     GtkTreePath *path;
+    GtkTreeIter tree_iter;
     gint pos;
     RCLibDbLibraryQueryResultPropIter *iter;
     if(prop_text==NULL) return;
@@ -208,37 +209,54 @@ static void rc_ui_library_prop_prop_delete_cb(RCLibDbLibraryQueryResult *qr,
     g_return_if_fail(RC_UI_IS_LIBRARY_PROP_STORE(model));
     priv = RC_UI_LIBRARY_PROP_STORE(model)->priv;
     if(priv==NULL) return;
+    if(prop_text==NULL) prop_text = "";
     iter = rclib_db_library_query_result_prop_get_iter_by_prop(qr,
         priv->prop_type, prop_text);
     if(iter==NULL) return; 
     pos = rclib_db_library_query_result_prop_get_position(qr, priv->prop_type,
         iter) + 1;
+    if(pos==0) return;
     path = gtk_tree_path_new();
     gtk_tree_path_append_index(path, pos);
     gtk_tree_model_row_deleted(model, path);
     gtk_tree_path_free(path);
+    
+    path = gtk_tree_path_new_first();
+    gtk_tree_model_get_iter_first(model, &tree_iter);
+    gtk_tree_model_row_changed(model, path, &tree_iter);
+    gtk_tree_path_free(path);
 }
 
 static void rc_ui_library_prop_prop_changed_cb(RCLibDbLibraryQueryResult *qr,
-    guint prop_type, RCLibDbLibraryQueryResultPropIter *iter, gpointer data)
+    guint prop_type, const gchar *prop_text, gpointer data)
 {
     RCUiLibraryPropStorePrivate *priv;
     GtkTreeModel *model;
     GtkTreePath *path;
     GtkTreeIter tree_iter;
     gint pos;
+    RCLibDbLibraryQueryResultPropIter *iter;
     if(data==NULL) return;
-    g_return_if_fail(iter!=NULL);
     model = GTK_TREE_MODEL(data);
     g_return_if_fail(RC_UI_IS_LIBRARY_PROP_STORE(model));
     priv = RC_UI_LIBRARY_PROP_STORE(model)->priv;
     if(priv==NULL) return;
+    if(prop_text==NULL) prop_text = "";
+    iter = rclib_db_library_query_result_prop_get_iter_by_prop(qr,
+        priv->prop_type, prop_text);
+    if(iter==NULL) return; 
     pos = rclib_db_library_query_result_prop_get_position(qr,
         priv->prop_type, iter) + 1;
+    if(pos==0) return;
     path = gtk_tree_path_new();
     gtk_tree_path_append_index(path, pos);
     tree_iter.user_data = iter;
     tree_iter.stamp = priv->stamp;
+    gtk_tree_model_row_changed(model, path, &tree_iter);
+    gtk_tree_path_free(path);
+    
+    path = gtk_tree_path_new_first();
+    gtk_tree_model_get_iter_first(model, &tree_iter);
     gtk_tree_model_row_changed(model, path, &tree_iter);
     gtk_tree_path_free(path);
 }

@@ -49,6 +49,23 @@ typedef struct _RCUiLibraryWindowClass RCUiLibraryWindowClass;
 typedef struct _RCUiLibraryWindowPrivate RCUiLibraryWindowPrivate;
 
 /**
+ * RCUiLibraryWindowSearchType:
+ * @RC_UI_LIBRARY_WINDOW_SEARCH_TYPE_ALL: search all fields
+ * @RC_UI_LIBRARY_WINDOW_SEARCH_TYPE_TITLE: search in titles
+ * @RC_UI_LIBRARY_WINDOW_SEARCH_TYPE_ARTIST: search in artists
+ * @RC_UI_LIBRARY_WINDOW_SEARCH_TYPE_ALBUM: search in albums
+ * 
+ * The enum type for search entry in the library window.
+ */
+
+typedef enum {
+    RC_UI_LIBRARY_WINDOW_SEARCH_TYPE_ALL = 0,
+    RC_UI_LIBRARY_WINDOW_SEARCH_TYPE_TITLE = 1,
+    RC_UI_LIBRARY_WINDOW_SEARCH_TYPE_ARTIST = 2,
+    RC_UI_LIBRARY_WINDOW_SEARCH_TYPE_ALBUM = 3
+}RCUiLibraryWindowSearchType;
+
+/**
  * RCUiLibraryWindow:
  *
  * The data structure used for #RCUiLibraryWindow class.
@@ -80,6 +97,7 @@ void rc_ui_library_window_show();
 void rc_ui_library_window_hide();
 void rc_ui_library_window_present_window();
 GtkWidget *rc_ui_library_window_get_library_list_widget();
+void rc_ui_library_window_set_search_type(RCUiLibraryWindowSearchType type);
 
 G_END_DECLS
 

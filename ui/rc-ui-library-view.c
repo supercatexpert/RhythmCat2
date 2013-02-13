@@ -267,23 +267,26 @@ static void rc_ui_library_list_view_instance_init(RCUiLibraryListView *view)
     g_object_set(priv->state_column, "sizing",
         GTK_TREE_VIEW_COLUMN_FIXED, "fixed-width", 30, "min-width", 30,
         "max-width", 30, NULL);        
-    g_object_set(priv->title_column, "expand", TRUE, "resizable", TRUE, NULL);
-    g_object_set(priv->artist_column, "expand", TRUE, "resizable", TRUE, NULL);
-    g_object_set(priv->album_column, "expand", TRUE, "resizable", TRUE, NULL);
-    g_object_set(priv->tracknum_column, "expand", TRUE, "visible",
-        FALSE, "resizable", TRUE, NULL);
-    g_object_set(priv->year_column, "expand", TRUE, "visible",
-        FALSE, "resizable", TRUE, NULL);
-    g_object_set(priv->ftype_column, "expand", TRUE, "visible",
-        FALSE, "resizable", TRUE, NULL);
-    g_object_set(priv->genre_column, "expand", TRUE, "visible",
-        FALSE, "resizable", TRUE, NULL);
+    g_object_set(priv->title_column, "expand", TRUE, "resizable", TRUE,
+        "sort-column-id", 1, NULL);
+    g_object_set(priv->artist_column, "expand", TRUE, "resizable", TRUE,
+        "sort-column-id", 2, NULL);
+    g_object_set(priv->album_column, "expand", TRUE, "resizable", TRUE,
+        "sort-column-id", 3, NULL);
+    g_object_set(priv->tracknum_column, "expand", TRUE, "visible", FALSE,
+        "resizable", TRUE, "sort-column-id", 4, NULL);
+    g_object_set(priv->year_column, "expand", TRUE, "visible", FALSE,
+        "resizable", TRUE, "sort-column-id", 5, NULL);
+    g_object_set(priv->ftype_column, "expand", TRUE, "visible", FALSE, 
+        "resizable", TRUE, "sort-column-id", 6, NULL);
+    g_object_set(priv->genre_column, "expand", TRUE, "visible", FALSE,
+        "resizable", TRUE, "sort-column-id", 7, NULL);
     g_object_set(priv->length_column, "sizing",
         GTK_TREE_VIEW_COLUMN_FIXED, "fixed-width", 55, "alignment",
-        1.0, NULL);
+        1.0, "sort-column-id", 8, NULL);
     g_object_set(priv->rating_column, "sizing",
         GTK_TREE_VIEW_COLUMN_FIXED, "fixed-width", 80, "alignment",
-        1.0, "visible", FALSE, NULL);
+        1.0, "visible", FALSE, "sort-column-id", 9, NULL);
     gtk_tree_view_append_column(GTK_TREE_VIEW(view), priv->state_column);
     gtk_tree_view_append_column(GTK_TREE_VIEW(view), priv->title_column);
     gtk_tree_view_append_column(GTK_TREE_VIEW(view), priv->artist_column);

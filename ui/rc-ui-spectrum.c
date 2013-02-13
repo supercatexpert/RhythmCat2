@@ -139,7 +139,7 @@ static gpointer rc_ui_spectrum_widget_parent_class = NULL;
             _bc);                                                         \
         _f = (_fx + _fy) / 2.0;                                           \
         rc_ui_spectrum_draw_dot_aa (_vd, _s, (_x + 1), (_y + 1), _st,     \
-            _c, _f, _bc);                                                      \
+            _c, _f, _bc);                                                 \
     }                                                                     \
 } G_STMT_END
 
