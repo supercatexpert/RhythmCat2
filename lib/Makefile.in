@@ -56,7 +56,9 @@ host_triplet = @host@
 @DEBUG_MODE_TRUE@am__append_1 = -DDEBUG_MODE=1 -g
 @PLATFORM_WIN32_TRUE@am__append_2 = -lkernel32
 @PLATFORM_WIN32_TRUE@am__append_3 = -mwindows
-@HAVE_INTROSPECTION_TRUE@am__append_4 = $(gir_DATA) $(typelib_DATA)
+@HAVE_INTROSPECTION_TRUE@@USE_GSTREAMER10_TRUE@am__append_4 = Gst-1.0 GstPbutils-1.0 GstBase-1.0 GstFft-1.0
+@HAVE_INTROSPECTION_TRUE@@USE_GSTREAMER10_FALSE@am__append_5 = Gst-0.10 GstPbutils-0.10 GstBase-0.10 GstFft-0.10
+@HAVE_INTROSPECTION_TRUE@am__append_6 = $(gir_DATA) $(typelib_DATA)
 subdir = lib
 DIST_COMMON = $(librhythmcat_2_0include_HEADERS) $(srcdir)/Makefile.am \
 	$(srcdir)/Makefile.in $(srcdir)/librhythmcat-2.0.pc.in
@@ -372,7 +374,7 @@ AM_CFLAGS = @GLIB2_CFLAGS@ @GSTREAMER_CFLAGS@ \
 librhythmcat_2_0_la_LIBADD = @GLIB2_LIBS@ @GSTREAMER_LIBS@ \
 	$(am__append_2)
 librhythmcat_2_0_la_CFLAGS = $(AM_CFLAGS) $(am__append_1)
-CLEANFILES = $(BUILT_SOURCES) $(am__append_4)
+CLEANFILES = $(BUILT_SOURCES) $(am__append_6)
 librhythmcat_2_0includedir = $(includedir)/librhythmcat2
 librhythmcat_2_0include_HEADERS = $(librhythmcat_2_0_priv_headers) \
     $(librhythmcat_2_0_headers) $(librhythmcat_2_0_builtheaders)
@@ -386,7 +388,9 @@ librhythmcat_2_0_la_LDFLAGS = -fPIC -export-dynamic -O2 \
 @HAVE_INTROSPECTION_TRUE@RhythmCatLib_2_0_gir_SCANNERFLAGS = --identifier-prefix=RCLib --symbol-prefix=rclib
 @HAVE_INTROSPECTION_TRUE@RhythmCatLib_2_0_gir_NAMESPACE = RhythmCatLib
 @HAVE_INTROSPECTION_TRUE@RhythmCatLib_2_0_gir_VERSION = 2.0
-@HAVE_INTROSPECTION_TRUE@RhythmCatLib_2_0_gir_INCLUDES = GObject-2.0 Gio-2.0 Gst-0.10 GstPbutils-0.10 GstBase-0.10 GstFft-0.10
+@HAVE_INTROSPECTION_TRUE@RhythmCatLib_2_0_gir_INCLUDES = GObject-2.0 \
+@HAVE_INTROSPECTION_TRUE@	Gio-2.0 $(am__append_4) \
+@HAVE_INTROSPECTION_TRUE@	$(am__append_5)
 @HAVE_INTROSPECTION_TRUE@RhythmCatLib_2_0_gir_CFLAGS = $(AM_CFLAGS)
 @HAVE_INTROSPECTION_TRUE@RhythmCatLib_2_0_gir_LIBS = librhythmcat-2.0.la
 @HAVE_INTROSPECTION_TRUE@RhythmCatLib_2_0_gir_FILES = $(introspection_sources)

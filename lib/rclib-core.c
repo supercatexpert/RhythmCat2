@@ -42,6 +42,12 @@
 
 #define RCLIB_CORE_ERROR rclib_core_error_quark()
 
+#if GST_VERSION_MAJOR==1
+    #define CORE_PLAYBIN "playbin"
+#else
+    #define CORE_PLAYBIN "playbin2"
+#endif
+
 typedef enum
 {
     GST_PLAY_FLAG_VIDEO = (1 << 0),
@@ -170,7 +176,11 @@ static inline gboolean rclib_core_parse_metadata(const GstTagList *tags,
 {
     gchar *string = NULL;
     gboolean update = FALSE;
-    GstBuffer *buffer = NULL;
+    #if GST_VERSION_MAJOR==1
+        GstSample *sample = NULL;
+    #else
+        GstBuffer *buffer = NULL;
+    #endif
     GDate *date = NULL;
     guint value = 0;
     gint intv = 0;    
@@ -224,24 +234,47 @@ static inline gboolean rclib_core_parse_metadata(const GstTagList *tags,
         }
         g_free(string);
     }
-    if(gst_tag_list_get_buffer(tags, GST_TAG_IMAGE, &buffer))
-    {
-        if(metadata->image==NULL)
+    #if GST_VERSION_MAJOR==1
+        if(gst_tag_list_get_sample(tags, GST_TAG_IMAGE, &sample))
         {
-            metadata->image = gst_buffer_ref(buffer);
-            update = TRUE;
+            if(metadata->image==NULL)
+            {
+                metadata->image = gst_buffer_ref(
+                    gst_sample_get_buffer(sample));
+                update = TRUE;
+            }
+            gst_sample_unref(sample);
         }
-        gst_buffer_unref(buffer);
-    }
-    if(gst_tag_list_get_buffer(tags, GST_TAG_PREVIEW_IMAGE, &buffer))
-    {
-        if(metadata->image==NULL)
+        if(gst_tag_list_get_sample(tags, GST_TAG_PREVIEW_IMAGE, &sample))
         {
-            metadata->image = gst_buffer_ref(buffer);
-            update = TRUE;
+            if(metadata->image==NULL)
+            {
+                metadata->image = gst_buffer_ref(
+                    gst_sample_get_buffer(sample));
+                update = TRUE;
+            }
+            gst_sample_unref(sample);
         }
-        gst_buffer_unref(buffer);
-    }
+    #else    
+        if(gst_tag_list_get_buffer(tags, GST_TAG_IMAGE, &buffer))
+        {
+            if(metadata->image==NULL)
+            {
+                metadata->image = gst_buffer_ref(buffer);
+                update = TRUE;
+            }
+            gst_buffer_unref(buffer);
+        }
+        if(gst_tag_list_get_buffer(tags, GST_TAG_PREVIEW_IMAGE, &buffer))
+        {
+            if(metadata->image==NULL)
+            {
+                metadata->image = gst_buffer_ref(buffer);
+                update = TRUE;
+            }
+            gst_buffer_unref(buffer);
+        }
+    #endif
     if(gst_tag_list_get_uint(tags, GST_TAG_NOMINAL_BITRATE, &value))
     {
         if(metadata->bitrate==0 && value>0)
@@ -452,6 +485,7 @@ static void rclib_core_class_init(RCLibCoreClass *klass)
      * RCLibCore::buffer-probe:
      * @core: the #RCLibCore that received the signal
      * @buffer: the #GstBuffer
+     * @caps: the #GstCaps
      *
      * The ::buffering signal is emitted when the buffer data pass through
      *     the pipeline.
@@ -459,8 +493,8 @@ static void rclib_core_class_init(RCLibCoreClass *klass)
      */
     core_signals[SIGNAL_BUFFER_PROBE] = g_signal_new("buffer-probe",
         RCLIB_TYPE_CORE, G_SIGNAL_RUN_FIRST, G_STRUCT_OFFSET(RCLibCoreClass,
-        buffer_probe), NULL, NULL, g_cclosure_marshal_VOID__POINTER,
-        G_TYPE_NONE, 1, G_TYPE_POINTER, NULL);
+        buffer_probe), NULL, NULL, rclib_marshal_VOID__POINTER_POINTER,
+        G_TYPE_NONE, 2, G_TYPE_POINTER, G_TYPE_POINTER, NULL);
 
     /**
      * RCLibCore::error:
@@ -520,7 +554,10 @@ static gboolean rclib_core_effect_add_element_internal(GstElement *effectbin,
         srcpad = gst_element_get_static_pad(effectbin, "sink");
         blockpad = gst_pad_get_peer(srcpad);
         gst_object_unref(srcpad);
-        gst_pad_set_blocked(blockpad, TRUE);
+        #if GST_VERSION_MAJOR==1
+        #else
+            gst_pad_set_blocked(blockpad, TRUE);
+        #endif
         gst_object_unref(blockpad);
     }
     realpad = gst_element_get_static_pad(audioconvert, "sink");
@@ -547,7 +584,10 @@ static gboolean rclib_core_effect_add_element_internal(GstElement *effectbin,
             srcpad = gst_element_get_static_pad(effectbin, "sink");
             blockpad = gst_pad_get_peer(srcpad);
             gst_object_unref(srcpad);
-            gst_pad_set_blocked(blockpad, FALSE);
+            #if GST_VERSION_MAJOR==1
+            #else
+                gst_pad_set_blocked(blockpad, FALSE);
+            #endif
             gst_object_unref(blockpad);
         }
         gst_object_unref(realpad);
@@ -563,7 +603,10 @@ static gboolean rclib_core_effect_add_element_internal(GstElement *effectbin,
             srcpad = gst_element_get_static_pad(effectbin, "sink");
             blockpad = gst_pad_get_peer(srcpad);
             gst_object_unref(srcpad);
-            gst_pad_set_blocked(blockpad, FALSE);
+            #if GST_VERSION_MAJOR==1
+            #else
+                gst_pad_set_blocked(blockpad, FALSE);
+            #endif
             gst_object_unref(blockpad);
         }
         return FALSE;
@@ -574,7 +617,10 @@ static gboolean rclib_core_effect_add_element_internal(GstElement *effectbin,
         srcpad = gst_element_get_static_pad(effectbin, "sink");
         blockpad = gst_pad_get_peer(srcpad);
         gst_object_unref(srcpad);
-        gst_pad_set_blocked(blockpad, FALSE);
+        #if GST_VERSION_MAJOR==1
+        #else
+            gst_pad_set_blocked(blockpad, FALSE);
+        #endif
         gst_object_unref(blockpad);
     }
     return TRUE;
@@ -596,7 +642,10 @@ static void rclib_core_effect_remove_element_internal(GstElement *effectbin,
         srcpad = gst_element_get_static_pad(effectbin, "sink");
         blockpad = gst_pad_get_peer(srcpad);
         gst_object_unref(srcpad);
-        gst_pad_set_blocked(blockpad, TRUE);
+        #if GST_VERSION_MAJOR==1
+        #else
+            gst_pad_set_blocked(blockpad, TRUE);
+        #endif
         gst_object_unref(blockpad);
     }
     mypad = gst_element_get_static_pad(bin, "sink");
@@ -615,7 +664,10 @@ static void rclib_core_effect_remove_element_internal(GstElement *effectbin,
         srcpad = gst_element_get_static_pad(effectbin, "sink");
         blockpad = gst_pad_get_peer(srcpad);
         gst_object_unref(srcpad);
-        gst_pad_set_blocked(blockpad, FALSE);
+        #if GST_VERSION_MAJOR==1
+        #else
+            gst_pad_set_blocked(blockpad, FALSE);
+        #endif
         gst_object_unref(blockpad);
     }
     gst_bin_remove(GST_BIN(effectbin), bin);
@@ -680,7 +732,11 @@ static void rclib_core_bus_callback(GstBus *bus, GstMessage *msg,
             }
             if(priv->query_pad!=NULL)
             {
-                caps = gst_pad_get_negotiated_caps(priv->query_pad);
+                #if GST_VERSION_MAJOR==1
+                    caps = gst_pad_get_current_caps(priv->query_pad);
+                #else
+                    caps = gst_pad_get_negotiated_caps(priv->query_pad);
+                #endif
                 structure = gst_caps_get_structure(caps, 0);
                 if(gst_structure_get_int(structure, "rate", &intv))
                 {
@@ -784,6 +840,7 @@ static void rclib_core_identity_buffer_cb(GstElement *identity,
     gint channels = 0;
     gint width = 0;
     gint depth = 0;
+    GstPad *pad;
     GstCaps *caps;
     GstStructure *structure;
     RCLibCorePrivate *priv = NULL;
@@ -791,33 +848,16 @@ static void rclib_core_identity_buffer_cb(GstElement *identity,
     if(object==NULL) return;
     priv = RCLIB_CORE(object)->priv;
     if(priv==NULL) return;
-    /*
-    GstMessage *msg;
-    gint64 pos, len;
-    pos = (gint64)GST_BUFFER_TIMESTAMP(buf);
-    len = rclib_core_query_duration();
-    if(len>0) priv->duration = len;
-    if(priv->end_time>0)
-    {
-        if(priv->end_time<pos)
-        {
-            msg = gst_message_new_eos(GST_OBJECT(priv->playbin));
-            if(!gst_element_post_message(priv->playbin, msg))
-                rclib_core_stop();
-            g_debug("Reached CUE ending time, EOS message has been "
-                "emitted.");
-        }
-    }
-    else if(len>0 && pos-len-priv->start_time>2*GST_SECOND)
-    {
-        msg = gst_message_new_eos(GST_OBJECT(priv->playbin));
-        if(!gst_element_post_message(priv->playbin, msg))
-            rclib_core_stop(); 
-        g_debug("Out of the duration, EOS message has been emitted.");
-    }*/
-    g_signal_emit(object, core_signals[SIGNAL_BUFFER_PROBE], 0, buf);
-    caps = gst_buffer_get_caps(buf);
+    pad = gst_element_get_static_pad(identity, "sink");
+    if(pad==NULL) return;
+    #if GST_VERSION_MAJOR==1
+        caps = gst_pad_get_current_caps(pad);
+    #else
+        caps = gst_pad_get_negotiated_caps(pad);
+    #endif
+    gst_object_unref(pad);
     if(caps==NULL) return;
+    g_signal_emit(object, core_signals[SIGNAL_BUFFER_PROBE], 0, buf, caps);
     structure = gst_caps_get_structure(caps, 0);
     gst_structure_get_int(structure, "rate", &rate);
     gst_structure_get_int(structure, "channels", &channels);
@@ -873,14 +913,22 @@ static gboolean rclib_core_audio_tags_changed_idle_cb(gpointer data)
             merged_tags = gst_tag_list_copy(tags);
         else
             gst_tag_list_insert(merged_tags, tags, GST_TAG_MERGE_REPLACE);
-        gst_tag_list_free(tags);
+        #if GST_VERSION_MAJOR==1
+            gst_tag_list_unref(tags);
+        #else
+            gst_tag_list_free(tags);
+        #endif
     }
     priv->tag_update_id = 0;
     g_async_queue_unlock(priv->tag_update_queue);
     if(merged_tags==NULL) return FALSE;
     flag = rclib_core_parse_metadata(merged_tags, &(priv->metadata),
         priv->start_time, priv->end_time);
-    gst_tag_list_free(merged_tags);
+    #if GST_VERSION_MAJOR==1
+        gst_tag_list_unref(merged_tags);
+    #else
+        gst_tag_list_free(merged_tags);
+    #endif
     if(!flag) return FALSE;
     g_signal_emit(core_instance, core_signals[SIGNAL_TAG_FOUND], 0,
         &(priv->metadata), priv->uri);
@@ -918,7 +966,11 @@ static void rclib_core_audio_tags_changed_cb(GstElement *playbin2,
     g_signal_emit_by_name(playbin2, "get-audio-pad", stream_id, &pad);
     if(pad!=NULL)
     {
-        caps = gst_pad_get_negotiated_caps(pad);
+        #if GST_VERSION_MAJOR==1
+            caps = gst_pad_get_current_caps(pad);
+        #else
+            caps = gst_pad_get_negotiated_caps(pad);
+        #endif
         if(caps!=NULL)
         {
             structure = gst_caps_get_structure(caps, 0);
@@ -964,13 +1016,13 @@ static void rclib_core_instance_init(RCLibCore *core)
     GstPlayFlags flags;
     G_STMT_START
     {
-        playbin = gst_element_factory_make("playbin2", "rclib-playbin");
+        playbin = gst_element_factory_make(CORE_PLAYBIN, "rclib-playbin");
         if(playbin==NULL)
         {
-            g_warning("Cannot load necessary plugin: %s", "playbin2");
+            g_warning("Cannot load necessary plugin: %s", CORE_PLAYBIN);
             g_set_error(&error, RCLIB_CORE_ERROR,
                 RCLIB_CORE_ERROR_MISSING_CORE_PLUGIN,
-                _("Cannot load necessary plugin: %s"), "playbin2");
+                _("Cannot load necessary plugin: %s"), CORE_PLAYBIN);
             break;
         }
         videosink = gst_element_factory_make("fakesink", "rclib-videosink");
@@ -1124,8 +1176,13 @@ static void rclib_core_instance_init(RCLibCore *core)
     }
     priv->extra_plugin_list = NULL;
     priv->tag_update_id = 0;
-    priv->tag_update_queue = g_async_queue_new_full((GDestroyNotify)
-        gst_tag_list_free);
+    #if GST_VERSION_MAJOR==1
+        priv->tag_update_queue = g_async_queue_new_full((GDestroyNotify)
+            gst_tag_list_unref);
+    #else
+        priv->tag_update_queue = g_async_queue_new_full((GDestroyNotify)
+            gst_tag_list_free);
+    #endif
     bus = gst_element_get_bus(playbin);
     gst_bus_add_signal_watch(bus);
     priv->message_id = g_signal_connect(bus, "message",
@@ -1572,11 +1629,19 @@ gint64 rclib_core_query_position()
     GstFormat format = GST_FORMAT_TIME;
     if(core_instance==NULL) return FALSE;
     priv = RCLIB_CORE(core_instance)->priv;
-    if(gst_element_query_position(priv->playbin, &format, &position))
-    {
-        if(position<0) position = 0;
-    }
-    else return 0;
+    #if GST_VERSION_MAJOR==1
+        if(gst_element_query_position(priv->playbin, format, &position))
+        {
+            if(position<0) position = 0;
+        }
+        else return 0;
+    #else
+        if(gst_element_query_position(priv->playbin, &format, &position))
+        {
+            if(position<0) position = 0;
+        }
+        else return 0;
+    #endif
     if(priv->start_time>0)
     {
         if(position>priv->start_time)
@@ -1606,10 +1671,17 @@ gint64 rclib_core_query_duration()
         duration = priv->end_time - priv->start_time;
         return duration;
     }
-    if(gst_element_query_duration(priv->playbin, &format, &duration))
-    {
-        if(duration<0) duration = 0;
-    }
+    #if GST_VERSION_MAJOR==1
+        if(gst_element_query_duration(priv->playbin, format, &duration))
+        {
+            if(duration<0) duration = 0;
+        }
+    #else
+        if(gst_element_query_duration(priv->playbin, &format, &duration))
+        {
+            if(duration<0) duration = 0;
+        }
+    #endif
     if(priv->start_time>0 && duration>priv->start_time)
         duration = duration - priv->start_time;
     return duration;  
@@ -1733,19 +1805,7 @@ gboolean rclib_core_pause()
     gboolean state_flag;
     if(core_instance==NULL) return FALSE;
     priv = RCLIB_CORE(core_instance)->priv;
-    /*
-    gint64 pos;
-    GstFormat format = GST_FORMAT_TIME;
-    gboolean flag;
-    flag = gst_element_query_position(priv->playbin, &format, &pos);
-    */
     state_flag = gst_element_set_state(priv->playbin, GST_STATE_PAUSED);
-    /*
-    if(flag)
-    {
-        gst_element_seek_simple(priv->playbin, GST_FORMAT_TIME, 
-            GST_SEEK_FLAG_FLUSH | GST_SEEK_FLAG_KEY_UNIT, pos);
-    }*/
     return state_flag;
 }
 
@@ -1777,7 +1837,11 @@ gboolean rclib_core_stop()
     while((tags=g_async_queue_try_pop_unlocked(priv->tag_update_queue))!=
         NULL)
     {
-        gst_tag_list_free(tags);
+        #if GST_VERSION_MAJOR==1
+            gst_tag_list_unref(tags);
+        #else
+            gst_tag_list_free(tags);
+        #endif
     }
     g_async_queue_unlock(priv->tag_update_queue);
     while((msg=gst_bus_pop_filtered(bus, GST_MESSAGE_STATE_CHANGED))!=NULL)

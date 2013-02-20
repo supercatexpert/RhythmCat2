@@ -344,7 +344,7 @@ gboolean rclib_album_save_file(const gchar *filename)
     GError *error = NULL;
     GstBuffer *buffer;
     GFile *file_src, *file_dst;
-    gboolean flag;
+    gboolean flag = FALSE;
     if(album_instance==NULL) return FALSE;
     priv = RCLIB_ALBUM(album_instance)->priv;
     if(priv==NULL) return FALSE;
@@ -352,8 +352,18 @@ gboolean rclib_album_save_file(const gchar *filename)
     if(priv->type==RCLIB_ALBUM_TYPE_BUFFER)
     {
         buffer = (GstBuffer *)priv->album_data;
-        flag =g_file_set_contents(filename, (const gchar *)buffer->data,
-            buffer->size, &error);
+        #if GST_VERSION_MAJOR==1
+            GstMapInfo map_info;
+            if(gst_buffer_map(buffer, &map_info, GST_MAP_READ))
+            {
+                flag = g_file_set_contents(filename,
+                    (const gchar *)map_info.data, map_info.size, &error);
+                gst_buffer_unmap(buffer, &map_info);
+            }
+        #else
+            flag = g_file_set_contents(filename, (const gchar *)buffer->data,
+                buffer->size, &error);
+        #endif
         if(!flag)
         {
             g_warning("Cannot save album data: %s", error->message);

@@ -53,6 +53,7 @@ struct _RCUiSpectrumWidgetPrivate
     guint fps;
     RCUiSpectrumStyle style;
     GstBuffer *buffer;
+    GstCaps *caps;
     GMutex buffer_mutex; 
     guint64 spectrum_num_frames;
     guint64 spectrum_num_fft;
@@ -429,12 +430,12 @@ static inline void rc_ui_spectrum_run(RCUiSpectrumWidget *spectrum,
     static guint64 spectrum_frames_todo = 0;
     gint i;
     RCUiSpectrumChannel *cd;
-    const guint8 *buf_data = GST_BUFFER_DATA(buf);
+    const guint8 *buf_data;
     gfloat max_value;
     gfloat threshold = -60;
     guint bands;
     guint nfft;
-    guint size = GST_BUFFER_SIZE(buf);
+    guint size;
     gint64 interval = GST_SECOND / 10;
     gint frame_size;
     gfloat *input;
@@ -444,6 +445,22 @@ static inline void rc_ui_spectrum_run(RCUiSpectrumWidget *spectrum,
     if(spectrum==NULL) return;
     priv = spectrum->priv;
     if(priv==NULL) return;
+    #if GST_VERSION_MAJOR==1
+        GstMapInfo map_info;
+        if(gst_buffer_map(buf, &map_info, GST_MAP_READ))
+        {
+            buf_data = map_info.data;
+            size = map_info.size;
+        }
+        else
+        {
+            g_warning("Cannot map buffer!\n");
+            return;
+        }
+    #else
+        buf_data = GST_BUFFER_DATA(buf);
+        size = GST_BUFFER_SIZE(buf);
+    #endif
     width = width / 8;
     frame_size = width * channels;
     max_value = (1UL << (depth - 1)) - 1;
@@ -516,6 +533,9 @@ static inline void rc_ui_spectrum_run(RCUiSpectrumWidget *spectrum,
         }
     }
     spectrum_input_pos = input_pos;
+    #if GST_VERSION_MAJOR==1
+        gst_buffer_unmap(buf, &map_info);
+    #endif
 }
 
 static inline gfloat rc_ui_spectrum_wave_get_unit_data(const guint8 *adata,
@@ -712,7 +732,7 @@ static inline void rc_ui_spectrum_wave_render_lines(guint32 *vdata,
 }
 
 static void rc_ui_spectrum_buffer_probe_cb(RCLibCore *core, GstBuffer *buf,
-    gpointer data)
+    GstCaps *caps, gpointer data)
 {
     /* WARNING: This function is not called in main thread! */
     RCUiSpectrumWidget *spectrum;
@@ -722,7 +742,6 @@ static void rc_ui_spectrum_buffer_probe_cb(RCLibCore *core, GstBuffer *buf,
     gint width = 0;
     gint depth = 0;
     const gchar *mimetype;
-    GstCaps *caps;
     GstStructure *structure;
     if(data==NULL) return;
     spectrum = RC_UI_SPECTRUM_WIDGET(data);
@@ -732,18 +751,16 @@ static void rc_ui_spectrum_buffer_probe_cb(RCLibCore *core, GstBuffer *buf,
     if(buf==NULL) return;
     g_mutex_lock(&(priv->buffer_mutex));
     gst_buffer_replace(&(priv->buffer), buf);
+    gst_caps_replace(&(priv->caps), caps);
     g_mutex_unlock(&(priv->buffer_mutex));
     if(priv->style==RC_UI_SPECTRUM_STYLE_SPECTRUM)
     {
-        caps = gst_buffer_get_caps(buf);
-        if(caps==NULL) return;
         structure = gst_caps_get_structure(caps, 0);
         mimetype = gst_structure_get_name(structure);
         gst_structure_get_int(structure, "rate", &rate);
         gst_structure_get_int(structure, "channels", &channels);
         gst_structure_get_int(structure, "width", &width);
         gst_structure_get_int(structure, "depth", &depth);
-        gst_caps_unref(caps);
         if(depth==0) depth = width;
         if(rate==0 || width==0 || channels==0) return;
         rc_ui_spectrum_run(spectrum, buf, mimetype, rate, channels,
@@ -811,12 +828,12 @@ static gboolean rc_ui_spectrum_widget_draw(GtkWidget *widget, cairo_t *cr)
 {
     RCUiSpectrumWidget *spectrum;
     RCUiSpectrumWidgetPrivate *priv;
-    GstCaps *caps;
+    GstCaps *caps = NULL;
     GstStructure *structure;
     GtkAllocation allocation;
     GstBuffer *buffer = NULL;
-    const guint8 *adata;
-    guint asize;
+    const guint8 *adata = NULL;
+    guint asize = 0;
     guint num_samples = 0;
     gint rate = 0, channels = 0, width = 0, depth = 0;
     const gchar *mimetype = NULL;
@@ -842,29 +859,35 @@ static gboolean rc_ui_spectrum_widget_draw(GtkWidget *widget, cairo_t *cr)
     g_mutex_lock(&(priv->buffer_mutex));
     if(priv->buffer!=NULL)
         buffer = gst_buffer_ref(priv->buffer);
+    if(priv->caps!=NULL)
+        caps = gst_caps_ref(priv->caps);
     g_mutex_unlock(&(priv->buffer_mutex));
     G_STMT_START
     {
         if(buffer==NULL) break;
-        caps = gst_buffer_get_caps(buffer);
         if(caps==NULL) break;
         structure = gst_caps_get_structure(caps, 0);
-        if(structure==NULL)
-        {
-            gst_caps_unref(caps);
-            break;
-        }
+        if(structure==NULL) break;
         mimetype = gst_structure_get_name(structure);
         gst_structure_get_int(structure, "rate", &rate);
         gst_structure_get_int(structure, "channels", &channels);
         gst_structure_get_int(structure, "width", &width);
         gst_structure_get_int(structure, "depth", &depth);
-        gst_caps_unref(caps);
         if(depth==0) depth = width;
         if(rate==0 || width==0 || channels==0) break;
-        adata = GST_BUFFER_DATA(buffer);
-        asize = GST_BUFFER_SIZE(buffer);
-        num_samples = GST_BUFFER_SIZE(buffer) / (channels * width / 8);
+        #if GST_VERSION_MAJOR==1
+            GstMapInfo map_info;
+            if(gst_buffer_map(buffer, &map_info, GST_MAP_READ))
+            {
+                adata = map_info.data;
+                asize = map_info.size;
+                break;
+            }
+        #else
+            adata = GST_BUFFER_DATA(buffer);
+            asize = GST_BUFFER_SIZE(buffer);
+        #endif
+        num_samples = asize / (channels * width / 8);
         switch(priv->style)
         {
             case RC_UI_SPECTRUM_STYLE_NONE:
@@ -969,9 +992,13 @@ static gboolean rc_ui_spectrum_widget_draw(GtkWidget *widget, cairo_t *cr)
             default:
                 break;
         }
+        #if GST_VERSION_MAJOR==1
+            gst_buffer_unmap(buffer, &map_info);
+        #endif
     }
     G_STMT_END;
     if(buffer!=NULL) gst_buffer_unref(buffer);
+    if(caps!=NULL) gst_caps_unref(caps);
     return TRUE;
 }
 
@@ -1009,6 +1036,8 @@ static void rc_ui_spectrum_widget_finalize(GObject *object)
     if(priv->buffer_probe_id>0)
         rclib_core_signal_disconnect(priv->buffer_probe_id);
     g_mutex_lock(&(priv->buffer_mutex));
+    if(priv->caps!=NULL)
+        gst_caps_unref(priv->caps);
     if(priv->buffer!=NULL)
         gst_buffer_unref(priv->buffer);
     g_mutex_unlock(&(priv->buffer_mutex));
@@ -1174,13 +1203,18 @@ void rc_ui_spectrum_widget_clean(RCUiSpectrumWidget *spectrum)
     RCUiSpectrumWidgetPrivate *priv;
     if(spectrum==NULL) return;
     GstBuffer *buffer;
+    GstCaps *caps;
     priv = RC_UI_SPECTRUM_WIDGET(spectrum)->priv;
     if(priv==NULL) return;
     g_mutex_lock(&(priv->buffer_mutex));
     buffer = priv->buffer;
+    caps = priv->caps;
     priv->buffer = NULL;
+    priv->caps = NULL;
     if(buffer!=NULL)
         gst_buffer_unref(buffer);
+    if(caps!=NULL)
+        gst_caps_unref(caps);
     g_mutex_unlock(&(priv->buffer_mutex));
     g_free(priv->wave_vdata);
     g_free(priv->spectrum_data);

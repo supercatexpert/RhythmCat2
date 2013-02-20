@@ -26,6 +26,7 @@
 #include "rc-ui-library-view.h"
 #include "rc-ui-library-model.h"
 #include "rc-common.h"
+#include "rc-ui-menu.h"
 #include "rc-ui-cell-renderer-rating.h"
 
 /**
@@ -127,6 +128,97 @@ static void rc_ui_library_view_rated_cb(RCUiCellRendererRating *renderer,
         rclib_db_library_data_unref(library_data);
     }
     g_object_unref(library_query_result);
+}
+
+static gboolean rc_ui_library_list_view_multidrag_selection_block(
+    GtkTreeSelection *selection, GtkTreeModel *model, GtkTreePath *path,
+    gboolean pcs, gpointer data)
+{
+    return *(const gboolean *)data;
+}
+
+static void rc_ui_library_list_view_block_selection(GtkWidget *widget,
+    gboolean block, gint x, gint y)
+{
+    GtkTreeSelection *selection;
+    gint *where;
+    static const gboolean which[] = {FALSE, TRUE};
+    selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(widget));
+    gtk_tree_selection_set_select_function(selection,
+        rc_ui_library_list_view_multidrag_selection_block,
+        (gboolean *)&which[!!block], NULL);
+    where = g_object_get_data(G_OBJECT(widget), "multidrag-where");
+    if(where==NULL)
+    {
+        where = g_new(gint, 2);
+        g_object_set_data_full(G_OBJECT(widget), "multidrag-where",
+            where, g_free);
+    }
+    where[0] = x;
+    where[1] = y; 
+}
+
+static gboolean rc_ui_library_list_view_button_pressed_event(
+    GtkWidget *widget, GdkEventButton *event, gpointer data)
+{
+    GtkTreePath *path = NULL;
+    GtkTreeSelection *selection;
+    selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(widget));
+    if(selection==NULL) return FALSE;
+    rc_ui_library_list_view_block_selection(widget, TRUE, -1, -1);
+    if(event->button!=3 && event->button!=1) return FALSE;
+    if(event->button==1)
+    {
+        if(event->state & (GDK_SHIFT_MASK | GDK_CONTROL_MASK))
+            return FALSE;
+        if(!gtk_tree_view_get_path_at_pos(GTK_TREE_VIEW(widget), event->x,
+            event->y, &path, NULL, NULL, NULL))
+            return FALSE;
+
+        if(gtk_tree_selection_path_is_selected(selection, path))
+        {
+            rc_ui_library_list_view_block_selection(widget, FALSE, event->x,
+                event->y);
+        }
+        if(path!=NULL) gtk_tree_path_free(path);
+        return FALSE;
+    }
+    if(gtk_tree_selection_count_selected_rows(selection)>1)
+        return TRUE;
+    return FALSE;
+}
+
+static gboolean rc_ui_library_list_view_button_release_event(
+    GtkWidget *widget, GdkEventButton *event, gpointer data)
+{
+    GtkTreePath *path = NULL;
+    GtkTreeViewColumn *col;
+    gint x, y;
+    gint *where = g_object_get_data(G_OBJECT(widget), "multidrag-where");
+    if(where && where[0] != -1)
+    {
+        x = where[0];
+        y = where[1];
+        rc_ui_library_list_view_block_selection(widget, TRUE, -1, -1);
+        if(x==event->x && y==event->y)
+        {
+
+            if(gtk_tree_view_get_path_at_pos(GTK_TREE_VIEW(widget),
+                event->x, event->y, &path, &col, NULL, NULL))
+            {
+                gtk_tree_view_set_cursor(GTK_TREE_VIEW(widget), path,
+                    col, FALSE);
+            }
+            if(path) gtk_tree_path_free(path);
+        }
+    }
+    if(event->button==3)
+    {
+        gtk_menu_popup(GTK_MENU(gtk_ui_manager_get_widget(
+            rc_ui_menu_get_ui_manager(), "/LibraryPopupMenu")),
+            NULL, NULL, NULL, NULL, 3, gtk_get_current_event_time());
+    }
+    return FALSE;
 }
 
 static void rc_ui_library_list_view_finalize(GObject *object)
@@ -302,6 +394,10 @@ static void rc_ui_library_list_view_instance_init(RCUiLibraryListView *view)
     gtk_tree_view_columns_autosize(GTK_TREE_VIEW(view));
     g_signal_connect(priv->rating_renderer, "rated",
         G_CALLBACK(rc_ui_library_view_rated_cb), view);
+    g_signal_connect(view, "button-press-event",
+        G_CALLBACK(rc_ui_library_list_view_button_pressed_event), NULL);
+    g_signal_connect(view, "button-release-event",
+        G_CALLBACK(rc_ui_library_list_view_button_release_event), NULL);
 }
 
 static void rc_ui_library_prop_view_instance_init(RCUiLibraryPropView *view)

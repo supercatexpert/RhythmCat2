@@ -61,7 +61,9 @@ host_triplet = @host@
 @DEBUG_MODE_TRUE@@WITH_GTK_UI_TRUE@am__append_4 = -DDEBUG_MODE=1 -g
 @PLATFORM_WIN32_TRUE@@WITH_GTK_UI_TRUE@am__append_5 = -lkernel32
 @PLATFORM_WIN32_TRUE@@WITH_GTK_UI_TRUE@am__append_6 = -mwindows
-@HAVE_INTROSPECTION_TRUE@@WITH_GTK_UI_TRUE@am__append_7 = $(gir_DATA) $(typelib_DATA)
+@HAVE_INTROSPECTION_TRUE@@USE_GSTREAMER10_TRUE@@WITH_GTK_UI_TRUE@am__append_7 = Gst-1.0 GstPbutils-1.0 GstBase-1.0 GstFft-1.0
+@HAVE_INTROSPECTION_TRUE@@USE_GSTREAMER10_FALSE@@WITH_GTK_UI_TRUE@am__append_8 = Gst-0.10 GstPbutils-0.10 GstBase-0.10 GstFft-0.10
+@HAVE_INTROSPECTION_TRUE@@WITH_GTK_UI_TRUE@am__append_9 = $(gir_DATA) $(typelib_DATA)
 subdir = ui
 DIST_COMMON = $(am__librhythmcat_ui_2_0include_HEADERS_DIST) \
 	$(am__noinst_HEADERS_DIST) $(srcdir)/Makefile.am \
@@ -475,7 +477,7 @@ top_srcdir = @top_srcdir@
 @WITH_GTK_UI_TRUE@	@GLIB2_LIBS@ @GTK_LIBS@ @GSTREAMER_LIBS@ \
 @WITH_GTK_UI_TRUE@	$(top_builddir)/lib/librhythmcat-2.0.la \
 @WITH_GTK_UI_TRUE@	$(am__append_1)
-@WITH_GTK_UI_TRUE@CLEANFILES = $(BUILT_SOURCES) $(am__append_7)
+@WITH_GTK_UI_TRUE@CLEANFILES = $(BUILT_SOURCES) $(am__append_9)
 @WITH_GTK_UI_TRUE@RhythmCat2_DEPENDENCIES = @LIBOBJS@ librhythmcat-ui-2.0.la
 @WITH_GTK_UI_TRUE@RhythmCat2_LDFLAGS = -export-dynamic -no-undefined \
 @WITH_GTK_UI_TRUE@	-export-symbols-regex "^[[^_]].*" -O2 \
@@ -510,7 +512,11 @@ top_srcdir = @top_srcdir@
 @HAVE_INTROSPECTION_TRUE@@WITH_GTK_UI_TRUE@RhythmCat_2_0_gir_SCANNERFLAGS = --identifier-prefix=RC --symbol-prefix=rc
 @HAVE_INTROSPECTION_TRUE@@WITH_GTK_UI_TRUE@RhythmCat_2_0_gir_NAMESPACE = RhythmCat
 @HAVE_INTROSPECTION_TRUE@@WITH_GTK_UI_TRUE@RhythmCat_2_0_gir_VERSION = 2.0
-@HAVE_INTROSPECTION_TRUE@@WITH_GTK_UI_TRUE@RhythmCat_2_0_gir_INCLUDES = GObject-2.0 Gio-2.0 Gtk-3.0 Gst-0.10 GstPbutils-0.10 GstBase-0.10 GstFft-0.10
+@HAVE_INTROSPECTION_TRUE@@WITH_GTK_UI_TRUE@RhythmCat_2_0_gir_INCLUDES =  \
+@HAVE_INTROSPECTION_TRUE@@WITH_GTK_UI_TRUE@	GObject-2.0 Gio-2.0 \
+@HAVE_INTROSPECTION_TRUE@@WITH_GTK_UI_TRUE@	Gtk-3.0 \
+@HAVE_INTROSPECTION_TRUE@@WITH_GTK_UI_TRUE@	$(am__append_7) \
+@HAVE_INTROSPECTION_TRUE@@WITH_GTK_UI_TRUE@	$(am__append_8)
 @HAVE_INTROSPECTION_TRUE@@WITH_GTK_UI_TRUE@RhythmCat_2_0_gir_CFLAGS = $(AM_CFLAGS)
 @HAVE_INTROSPECTION_TRUE@@WITH_GTK_UI_TRUE@RhythmCat_2_0_gir_PROGRAM = $(builddir)/RhythmCat2
 @HAVE_INTROSPECTION_TRUE@@WITH_GTK_UI_TRUE@RhythmCat_2_0_gir_FILES = $(introspection_sources)

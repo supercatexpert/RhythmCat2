@@ -895,99 +895,196 @@ void rc_ui_dialog_show_supported_format()
 
     /* Check FLAC support */
     gtk_list_store_append(list_store, &iter);
-    flag = gst_default_registry_check_feature_version("flacdec", 0, 10, 0);
+    #if GST_VERSION_MAJOR==1
+        flag = gst_registry_check_feature_version(gst_registry_get(),
+            "flacdec", 1, 0, 0);
+    #else
+        flag = gst_default_registry_check_feature_version("flacdec", 0, 10, 0);
+    #endif
     if(!flag)
     {
-        flag = gst_default_registry_check_feature_version("ffdec_flac", 0,
-            10, 0);
+        #if GST_VERSION_MAJOR==1
+            flag = gst_registry_check_feature_version(gst_registry_get(),
+                "ffdec_flac", 1, 0, 0);
+        #else
+            flag = gst_default_registry_check_feature_version("ffdec_flac", 0,
+                10, 0);
+        #endif
     }
     gtk_list_store_set(list_store, &iter, 0, "FLAC", 1, flag, -1);
 
     /* Check OGG Vorbis support */
     gtk_list_store_append(list_store, &iter);
-    flag = gst_default_registry_check_feature_version("oggdemux", 0, 10, 0)
-        && gst_default_registry_check_feature_version("vorbisdec", 0, 10, 0);
+    #if GST_VERSION_MAJOR==1
+        flag = gst_registry_check_feature_version(gst_registry_get(),
+            "oggdemux", 1, 0, 0) && gst_registry_check_feature_version(
+            gst_registry_get(), "vorbisdec", 1, 0, 0);
+    #else
+        flag = gst_default_registry_check_feature_version("oggdemux", 0, 10, 0)
+            && gst_default_registry_check_feature_version("vorbisdec", 0, 10,
+            0);
+    #endif
     gtk_list_store_set(list_store, &iter, 0, "OGG Vorbis", 1, flag, -1);
 
     /* Check MP3 support */
     gtk_list_store_append(list_store, &iter);
-    flag = gst_default_registry_check_feature_version("flump3dec", 0, 10, 0);
-    if(!flag)
-    {
-        flag = gst_default_registry_check_feature_version("mad", 0, 10, 0);
-    }
-    if(!flag)
-    {
-        flag = gst_default_registry_check_feature_version("ffdec_mp3", 0,
-            10, 0);
-    }
+    #if GST_VERSION_MAJOR==1
+        flag = gst_registry_check_feature_version(gst_registry_get(),
+            "flump3dec", 1, 0, 0);
+        if(!flag)
+        {
+            flag = gst_registry_check_feature_version(gst_registry_get(),
+                "mad", 1, 0, 0);
+        }
+        if(!flag)
+        {
+            flag = gst_registry_check_feature_version(gst_registry_get(),
+                "ffdec_mp3", 1, 0, 0);
+        }
+    #else
+        flag = gst_default_registry_check_feature_version("flump3dec", 0, 10,
+            0);
+        if(!flag)
+        {
+            flag = gst_default_registry_check_feature_version("mad", 0, 10, 0);
+        }
+        if(!flag)
+        {
+            flag = gst_default_registry_check_feature_version("ffdec_mp3", 0,
+                10, 0);
+        }
+    #endif
     gtk_list_store_set(list_store, &iter, 0, "MP3", 1, flag, -1);
 
     /* Check WMA support */
     gtk_list_store_append(list_store, &iter);
-    flag = gst_default_registry_check_feature_version("fluwmadec", 0, 10, 0);
-    if(!flag)
-    {
-        flag = gst_default_registry_check_feature_version("ffdec_wmapro", 0,
-            10, 0) && gst_default_registry_check_feature_version("ffdec_wmav1",
-            0, 10, 0) && gst_default_registry_check_feature_version(
-            "ffdec_wmav2", 0, 10, 0) &&
-            gst_default_registry_check_feature_version("ffdec_wmavoice", 0,
-            10, 0);
-    }
-    if(!flag)
-    {
-        flag = gst_default_registry_check_feature_version("ffdec_mp3", 0,
-            10, 0);
-    }
+    #if GST_VERSION_MAJOR==1
+        flag = gst_registry_check_feature_version(gst_registry_get(),
+            "fluwmadec", 1, 0, 0);
+        if(!flag)
+        {
+            flag = gst_registry_check_feature_version(gst_registry_get(),
+                "ffdec_wmapro", 1, 0, 0) && gst_registry_check_feature_version(
+                gst_registry_get(), "ffdec_wmav1", 1, 0, 0) &&
+                gst_registry_check_feature_version(gst_registry_get(),
+                "ffdec_wmav2", 1, 0, 0) && gst_registry_check_feature_version(
+                gst_registry_get(), "ffdec_wmavoice", 1, 0, 0);
+        }
+    #else
+        flag = gst_default_registry_check_feature_version("fluwmadec", 0, 10,
+            0);
+        if(!flag)
+        {
+            flag = gst_default_registry_check_feature_version("ffdec_wmapro",
+                0, 10, 0) && gst_default_registry_check_feature_version(
+                "ffdec_wmav1", 0, 10, 0) &&
+                gst_default_registry_check_feature_version("ffdec_wmav2", 0,
+                10, 0) && gst_default_registry_check_feature_version(
+                "ffdec_wmavoice", 0, 10, 0);
+        }
+    #endif
     gtk_list_store_set(list_store, &iter, 0, "WMA", 1, flag, -1);
 
     /* Check Wavpack support */
     gtk_list_store_append(list_store, &iter);
-    flag = gst_default_registry_check_feature_version("wavpackdec", 0, 10, 0);
+    #if GST_VERSION_MAJOR==1
+        flag = gst_registry_check_feature_version(gst_registry_get(),
+            "wavpackdec", 1, 0, 0);
+    #else
+        flag = gst_default_registry_check_feature_version("wavpackdec", 0,
+            10, 0);
+    #endif
     gtk_list_store_set(list_store, &iter, 0, "Wavpack", 1, flag, -1);
 
     /* Check APE support */
     gtk_list_store_append(list_store, &iter);
-    flag = gst_default_registry_check_feature_version("ffdec_ape", 0, 10, 0)
-        && gst_default_registry_check_feature_version("ffdemux_ape", 0, 10, 0);
+    #if GST_VERSION_MAJOR==1
+        flag = gst_registry_check_feature_version(gst_registry_get(),
+            "ffdec_ape", 1, 0, 0) && gst_registry_check_feature_version(
+            gst_registry_get(),"ffdemux_ape", 1, 0, 0);
+    #else
+        flag = gst_default_registry_check_feature_version("ffdec_ape", 0,
+            10, 0) && gst_default_registry_check_feature_version("ffdemux_ape",
+            0, 10, 0);
+    #endif
     gtk_list_store_set(list_store, &iter, 0, "APE", 1, flag, -1);
 
     /* Check TTA support */
     gtk_list_store_append(list_store, &iter);
-    flag = gst_default_registry_check_feature_version("ttadec", 0, 10, 0) &&
-        gst_default_registry_check_feature_version("ttaparse", 0, 10, 0);
-    if(!flag)
-    {
-        flag = gst_default_registry_check_feature_version("ffdemux_tta", 0,
-            10, 0) && gst_default_registry_check_feature_version("ffdec_tta",
-            0, 10, 0);
-    }
+    #if GST_VERSION_MAJOR==1
+        flag = gst_registry_check_feature_version(gst_registry_get(),
+            "ttadec", 1, 0, 0) && gst_registry_check_feature_version(
+            gst_registry_get(), "ttaparse", 1, 0, 0);
+        if(!flag)
+        {
+            flag = gst_registry_check_feature_version(gst_registry_get(),
+                "ffdemux_tta", 1, 0, 0) && gst_registry_check_feature_version(
+                gst_registry_get(), "ffdec_tta", 1, 0, 0);
+        }
+    #else
+        flag = gst_default_registry_check_feature_version("ttadec", 0, 10, 0)
+            && gst_default_registry_check_feature_version("ttaparse", 0, 10,
+            0);
+        if(!flag)
+        {
+            flag = gst_default_registry_check_feature_version("ffdemux_tta", 0,
+                10, 0) && gst_default_registry_check_feature_version(
+                "ffdec_tta", 0, 10, 0);
+        }
+    #endif
     gtk_list_store_set(list_store, &iter, 0, "TTA", 1, flag, -1);
 
     /* Check AAC support */
     gtk_list_store_append(list_store, &iter);
-    flag = gst_default_registry_check_feature_version("fluaacdec", 0, 10, 0);
-    if(!flag)
-    {
-        flag = gst_default_registry_check_feature_version("ffdec_aac", 0,
-            10, 0);
-    }
+    #if GST_VERSION_MAJOR==1
+        flag = gst_registry_check_feature_version(gst_registry_get(),
+            "fluaacdec", 1, 0, 0);
+        if(!flag)
+        {
+            flag = gst_registry_check_feature_version(gst_registry_get(),
+                "ffdec_aac", 1, 0, 0);
+        }
+    #else
+        flag = gst_default_registry_check_feature_version("fluaacdec", 0, 10,
+            0);
+        if(!flag)
+        {
+            flag = gst_default_registry_check_feature_version("ffdec_aac", 0,
+                10, 0);
+        }
+    #endif
     gtk_list_store_set(list_store, &iter, 0, "AAC", 1, flag, -1);
 
     /* Check AC3 support */
     gtk_list_store_append(list_store, &iter);
-    flag = gst_default_registry_check_feature_version("ffdec_ac3", 0, 10, 0);
+    #if GST_VERSION_MAJOR==1
+        flag = gst_registry_check_feature_version(gst_registry_get(),
+            "ffdec_ac3", 1, 0, 0);
+    #else
+        flag = gst_default_registry_check_feature_version("ffdec_ac3", 0,
+            10, 0);
+    #endif
     gtk_list_store_set(list_store, &iter, 0, "AC3", 1, flag, -1);
 
     /* Check MIDI support */
     gtk_list_store_append(list_store, &iter);
-    flag = gst_default_registry_check_feature_version("fluidsynth", 0, 10, 0);
-    if(!flag)
-    {
-        flag = gst_default_registry_check_feature_version("wildmidi", 0,
+    #if GST_VERSION_MAJOR==1
+        flag = gst_registry_check_feature_version(gst_registry_get(),
+            "fluidsynth", 1, 0, 0);
+        if(!flag)
+        {
+            flag = gst_registry_check_feature_version(gst_registry_get(),
+                "wildmidi", 1, 0, 0);
+        }
+    #else
+        flag = gst_default_registry_check_feature_version("fluidsynth", 0,
             10, 0);
-    }
+        if(!flag)
+        {
+            flag = gst_default_registry_check_feature_version("wildmidi", 0,
+                10, 0);
+        }
+    #endif
     gtk_list_store_set(list_store, &iter, 0, "MIDI", 1, flag, -1);
 
     g_object_unref(list_store);

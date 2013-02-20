@@ -34,8 +34,10 @@ AC_DEFINE(RC_MICRO_VERSION, [rc_micro_version],
 
 # Checks for programs.
 AC_PROG_CC
+AC_PROG_CC_C_O
 AC_PROG_INSTALL
 AC_PROG_LN_S
+AM_PROG_CC_C_O
 AC_PROG_LIBTOOL
 AM_PROG_LIBTOOL
 CFLAGS="-Wall -O2 -DINSTALL_PATH=\\\"$datadir/RhythmCat2/\\\""
@@ -57,9 +59,33 @@ m4_ifdef([GTK_DOC_CHECK], [GTK_DOC_CHECK([1.14],[--flavour no-tmpl])], \
 # Checks for libraries.
 PKG_CHECK_MODULES([GLIB2], [glib-2.0 >= 2.32, gthread-2.0 >= 2.32, \
     gmodule-2.0 >= 2.32, gio-2.0 >= 2.32])
-PKG_CHECK_MODULES([GSTREAMER], [gstreamer-0.10 >= 0.10.33, \
+    
+PKG_CHECK_MODULES([GSTREAMER], [gstreamer-1.0 >= 1.0, \
+    gstreamer-pbutils-1.0 >= 1.0, gstreamer-plugins-base-1.0 >= 1.0, \
+    gstreamer-fft-1.0 >= 1.0], have_gstreamer10=yes, \
+    have_gstreamer10=no)
+if test "x$enable_gstreamer10" = "xno"; then
+    have_gstreamer10=no
+fi
+if test "x$have_gstreamer10" = "xyes"; then
+    enable_gstreamer10=yes
+fi
+AC_ARG_ENABLE(gstreamer10, AS_HELP_STRING([--enable-gstreamer10], \
+    [use GStreamer 1.0 instead of GStreamer 1.0 [[default=yes]]]), \
+    enable_gstreamer10=yes, enable_gstreamer10=no)
+if test "x$enable_gstreamer10" = "xyes"; then
+    PKG_CHECK_MODULES([GSTREAMER], [gstreamer-1.0 >= 1.0, \
+        gstreamer-pbutils-1.0 >= 1.0, gstreamer-plugins-base-1.0 >= 1.0, \
+        gstreamer-fft-1.0 >= 1.0])
+    gstreamer_version="1.0.x"
+else
+    PKG_CHECK_MODULES([GSTREAMER], [gstreamer-0.10 >= 0.10.33, \
     gstreamer-pbutils-0.10 >= 0.10.33 gstreamer-plugins-base-0.10 >= 0.10.33 \
     gstreamer-fft-0.10 >= 0.10.33])
+    gstreamer_version="0.10.x"
+fi
+AM_CONDITIONAL(USE_GSTREAMER10, test "x$enable_gstreamer10" = "xyes")
+
 PKG_CHECK_MODULES([GTK], [gtk+-3.0 >= 3.4.0], have_gtk3=yes, have_gtk3=no)
 
 # Check additional libraries.
@@ -165,6 +191,8 @@ echo "
 $PACKAGE $VERSION
 
 Debug Mode Enabled...........: $enable_debug
+
+GStreamer Version............: $gstreamer_version
 
 Build GTK+ 3 UI............. : $with_gtk_ui
 Build Console UI............ : $with_console_ui

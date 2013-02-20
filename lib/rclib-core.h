@@ -218,7 +218,7 @@ struct _RCLibCoreClass {
         gdouble *values);
     void (*balance_changed)(RCLibCore *core, gfloat balance);
     void (*buffering)(RCLibCore *core, gint percent);
-    void (*buffer_probe)(RCLibCore *core, GstBuffer *buffer);
+    void (*buffer_probe)(RCLibCore *core, GstBuffer *buffer, GstCaps *caps);
     void (*error)(RCLibCore *core, const gchar *message);
 };
 

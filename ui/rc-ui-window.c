@@ -234,7 +234,7 @@ static gboolean rc_ui_main_window_cover_image_set_pixbuf(
 }
 
 static gboolean rc_ui_main_window_cover_image_set_gst_buffer(
-    RCUiMainWindowPrivate *priv, const GstBuffer *buf)
+    RCUiMainWindowPrivate *priv, GstBuffer *buf)
 {
     GdkPixbufLoader *loader;
     GdkPixbuf *pixbuf;
@@ -242,14 +242,33 @@ static gboolean rc_ui_main_window_cover_image_set_gst_buffer(
     GError *error = NULL;
     if(priv==NULL || buf==NULL) return FALSE;;
     loader = gdk_pixbuf_loader_new();
-    if(!gdk_pixbuf_loader_write(loader, buf->data, buf->size, &error))
-    {
-        g_warning("Cannot load cover image from GstBuffer: %s",
-            error->message);
-        g_error_free(error);
-        g_object_unref(loader);
-        return FALSE;
-    }
+    
+    #if GST_VERSION_MAJOR==1
+        GstMapInfo map_info;
+        if(gst_buffer_map(buf, &map_info, GST_MAP_READ))
+        {
+            if(!gdk_pixbuf_loader_write(loader, map_info.data, map_info.size,
+                &error))
+            {
+                g_warning("Cannot load cover image from GstBuffer: %s",
+                    error->message);
+                g_error_free(error);
+                gst_buffer_unmap(buf, &map_info);
+                g_object_unref(loader);
+                return FALSE;
+            }
+            gst_buffer_unmap(buf, &map_info);
+        }
+    #else
+        if(!gdk_pixbuf_loader_write(loader, buf->data, buf->size, &error))
+        {
+            g_warning("Cannot load cover image from GstBuffer: %s",
+                error->message);
+            g_error_free(error);
+            g_object_unref(loader);
+            return FALSE;
+        }
+    #endif
     pixbuf = gdk_pixbuf_loader_get_pixbuf(loader);
     if(pixbuf!=NULL) g_object_ref(pixbuf);
     gdk_pixbuf_loader_close(loader, NULL);
@@ -378,12 +397,12 @@ static gboolean rc_ui_main_window_album_found_cb(RCLibAlbum *album, guint type,
     gpointer album_data, gpointer data)
 {
     const gchar *filename;
-    const GstBuffer *buffer;
+    GstBuffer *buffer;
     RCUiMainWindowPrivate *priv = (RCUiMainWindowPrivate *)data;
     if(data==NULL) return FALSE;
     if(type==RCLIB_ALBUM_TYPE_BUFFER)
     {
-        buffer = (const GstBuffer *)album_data;
+        buffer = (GstBuffer *)album_data;
         if(rc_ui_main_window_cover_image_set_gst_buffer(priv, buffer))
         {
             priv->cover_set_flag = TRUE;

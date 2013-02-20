@@ -5,9 +5,9 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: RhythmCat2 1.9.3\n"
+"Project-Id-Version: RhythmCat2 1.9.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-02-13 19:27+0800\n"
+"POT-Creation-Date: 2013-02-15 01:30+0800\n"
 "PO-Revision-Date: 2012-04-20 20:57+0800\n"
 "Last-Translator: SuperCat <supercatexpert@gmail.com>\n"
 "Language-Team: Chinese (trandictional)\n"
@@ -242,11 +242,11 @@ msgstr "插件(_G)"
 msgid "Configure plugins"
 msgstr "插件配置"
 
-#: ../ui/rc-ui-menu.c:435 ../ui/rc-ui-menu.c:639
+#: ../ui/rc-ui-menu.c:435 ../ui/rc-ui-menu.c:651
 msgid "_Quit"
 msgstr "退出(_Q)"
 
-#: ../ui/rc-ui-menu.c:436 ../ui/rc-ui-menu.c:640
+#: ../ui/rc-ui-menu.c:436 ../ui/rc-ui-menu.c:652
 msgid "Quit this player"
 msgstr "退出播放器"
 
@@ -314,7 +314,7 @@ msgstr "導入目錄(_F)"
 msgid "Import all music from folder"
 msgstr "導入目錄中全部音樂檔案"
 
-#: ../ui/rc-ui-menu.c:471 ../ui/rc-ui-menu.c:495
+#: ../ui/rc-ui-menu.c:471 ../ui/rc-ui-menu.c:495 ../ui/rc-ui-menu.c:599
 msgid "_Remove Music"
 msgstr "移除音樂(_R)"
 
@@ -358,15 +358,15 @@ msgstr "綁定專輯封面檔案到所選音樂"
 msgid "Add Music File"
 msgstr "添加音樂檔案"
 
-#: ../ui/rc-ui-menu.c:492
+#: ../ui/rc-ui-menu.c:492 ../ui/rc-ui-menu.c:596
 msgid "Add music file to the library"
 msgstr "添加音樂檔案到音樂庫"
 
-#: ../ui/rc-ui-menu.c:496
+#: ../ui/rc-ui-menu.c:496 ../ui/rc-ui-menu.c:600
 msgid "Remove music from the library"
 msgstr "從音樂庫中移除音樂"
 
-#: ../ui/rc-ui-menu.c:500
+#: ../ui/rc-ui-menu.c:500 ../ui/rc-ui-menu.c:604
 msgid "Select all music in the library list"
 msgstr "選中當前音樂庫列表中全部音樂"
 
@@ -378,35 +378,35 @@ msgstr "音頻特效(_A)"
 msgid "Adjust the audio effects"
 msgstr "調整音頻特效"
 
-#: ../ui/rc-ui-menu.c:507 ../ui/rc-ui-menu.c:615
+#: ../ui/rc-ui-menu.c:507 ../ui/rc-ui-menu.c:627
 msgid "_Play/Pause"
 msgstr "播放/暫停(_P)"
 
-#: ../ui/rc-ui-menu.c:508 ../ui/rc-ui-menu.c:616
+#: ../ui/rc-ui-menu.c:508 ../ui/rc-ui-menu.c:628
 msgid "Play or pause the music"
 msgstr "播放或暫停當前播放音樂"
 
-#: ../ui/rc-ui-menu.c:511 ../ui/rc-ui-menu.c:619
+#: ../ui/rc-ui-menu.c:511 ../ui/rc-ui-menu.c:631
 msgid "_Stop"
 msgstr "停止(_S)"
 
-#: ../ui/rc-ui-menu.c:512 ../ui/rc-ui-menu.c:620
+#: ../ui/rc-ui-menu.c:512 ../ui/rc-ui-menu.c:632
 msgid "Stop the music"
 msgstr "停止播放"
 
-#: ../ui/rc-ui-menu.c:515 ../ui/rc-ui-menu.c:623
+#: ../ui/rc-ui-menu.c:515 ../ui/rc-ui-menu.c:635
 msgid "Pre_vious"
 msgstr "上一首(_V)"
 
-#: ../ui/rc-ui-menu.c:516 ../ui/rc-ui-menu.c:624
+#: ../ui/rc-ui-menu.c:516 ../ui/rc-ui-menu.c:636
 msgid "Play previous music"
 msgstr "播放上一首音樂"
 
-#: ../ui/rc-ui-menu.c:519 ../ui/rc-ui-menu.c:627
+#: ../ui/rc-ui-menu.c:519 ../ui/rc-ui-menu.c:639
 msgid "_Next"
 msgstr "下一首(_N)"
 
-#: ../ui/rc-ui-menu.c:520 ../ui/rc-ui-menu.c:628
+#: ../ui/rc-ui-menu.c:520 ../ui/rc-ui-menu.c:640
 msgid "Play next music"
 msgstr "播放下一首音樂"
 
@@ -450,11 +450,11 @@ msgstr "配置評等限制播放模式(_C)"
 msgid "Configure Rating Limited Playing Mode"
 msgstr "配置評等限制播放模式"
 
-#: ../ui/rc-ui-menu.c:543 ../ui/rc-ui-menu.c:635
+#: ../ui/rc-ui-menu.c:543 ../ui/rc-ui-menu.c:647
 msgid "_About"
 msgstr "關於(_A)"
 
-#: ../ui/rc-ui-menu.c:544 ../ui/rc-ui-menu.c:636
+#: ../ui/rc-ui-menu.c:544 ../ui/rc-ui-menu.c:648
 msgid "About this player"
 msgstr "關於這個播放器"
 
@@ -475,338 +475,346 @@ msgid "R_emove Music"
 msgstr "移除音樂(_E)"
 
 #: ../ui/rc-ui-menu.c:595
+msgid "_Add Music"
+msgstr "添加音樂檔案"
+
+#: ../ui/rc-ui-menu.c:603
+msgid "_Select All"
+msgstr "全選(_A)"
+
+#: ../ui/rc-ui-menu.c:607
 msgid "_Save Album Image As"
 msgstr "保存專輯封面圖像(_S)"
 
-#: ../ui/rc-ui-menu.c:596
+#: ../ui/rc-ui-menu.c:608
 msgid "Save the album image"
 msgstr "保存專輯封面圖像"
 
-#: ../ui/rc-ui-menu.c:599 ../ui/rc-ui-window.c:731
+#: ../ui/rc-ui-menu.c:611 ../ui/rc-ui-window.c:731
 msgid "Importing: 0 remaining"
 msgstr "導入中: 剩餘 0"
 
-#: ../ui/rc-ui-menu.c:603 ../ui/rc-ui-window.c:771
+#: ../ui/rc-ui-menu.c:615 ../ui/rc-ui-window.c:771
 msgid "Refreshing: 0 remaining"
 msgstr "刷新中: 剩餘 0"
 
-#: ../ui/rc-ui-menu.c:607
+#: ../ui/rc-ui-menu.c:619
 msgid "Stop _importing"
 msgstr "停止導入(_I)"
 
-#: ../ui/rc-ui-menu.c:608
+#: ../ui/rc-ui-menu.c:620
 msgid "Terminate the remaining importing jobs."
 msgstr "終止剩餘的導入工作"
 
-#: ../ui/rc-ui-menu.c:611
+#: ../ui/rc-ui-menu.c:623
 msgid "Stop _refreshing"
 msgstr "停止刷新(_R)"
 
-#: ../ui/rc-ui-menu.c:612
+#: ../ui/rc-ui-menu.c:624
 msgid "Terminate the remaining refreshing jobs."
 msgstr "終止剩餘的刷新工作"
 
-#: ../ui/rc-ui-menu.c:631
+#: ../ui/rc-ui-menu.c:643
 msgid "S_how Player"
 msgstr "顯示播放器(_H)"
 
-#: ../ui/rc-ui-menu.c:632
+#: ../ui/rc-ui-menu.c:644
 msgid "Show the window of player"
 msgstr "顯示播放器窗口"
 
-#: ../ui/rc-ui-menu.c:643
+#: ../ui/rc-ui-menu.c:655
 msgid "Name (Ascending)"
 msgstr "名稱 (升序)"
 
-#: ../ui/rc-ui-menu.c:644
+#: ../ui/rc-ui-menu.c:656
 msgid "Sort name in ascending order"
 msgstr "以名稱進行升序排列"
 
-#: ../ui/rc-ui-menu.c:647
+#: ../ui/rc-ui-menu.c:659
 msgid "Name (Descending)"
 msgstr "名稱 (降序)"
 
-#: ../ui/rc-ui-menu.c:648
+#: ../ui/rc-ui-menu.c:660
 msgid "Sort name in descending order"
 msgstr "以名稱進行降序排列"
 
-#: ../ui/rc-ui-menu.c:651
+#: ../ui/rc-ui-menu.c:663
 msgid "Title (Ascending)"
 msgstr "音樂標題 (升序)"
 
-#: ../ui/rc-ui-menu.c:652
+#: ../ui/rc-ui-menu.c:664
 msgid "Sort the title of the music in ascending order"
 msgstr "以音樂標題進行升序排列"
 
-#: ../ui/rc-ui-menu.c:655
+#: ../ui/rc-ui-menu.c:667
 msgid "Title (Descending)"
 msgstr "音樂標題 (降序)"
 
-#: ../ui/rc-ui-menu.c:656
+#: ../ui/rc-ui-menu.c:668
 msgid "Sort the title of the music in descending order"
 msgstr "以音樂標題進行降序排列"
 
-#: ../ui/rc-ui-menu.c:659
+#: ../ui/rc-ui-menu.c:671
 msgid "Artist (Ascending)"
 msgstr "藝術家名 (升序)"
 
-#: ../ui/rc-ui-menu.c:660
+#: ../ui/rc-ui-menu.c:672
 msgid "Sort the artist of the music in ascending order"
 msgstr "以藝術家名進行升序排列"
 
-#: ../ui/rc-ui-menu.c:663
+#: ../ui/rc-ui-menu.c:675
 msgid "Artist (Descending)"
 msgstr "藝術家名 (降序)"
 
-#: ../ui/rc-ui-menu.c:664
+#: ../ui/rc-ui-menu.c:676
 msgid "Sort the artist of the music in descending order"
 msgstr "以藝術家名進行降序排列"
 
-#: ../ui/rc-ui-menu.c:667
+#: ../ui/rc-ui-menu.c:679
 msgid "Album (Ascending)"
 msgstr "專輯名 (升序)"
 
-#: ../ui/rc-ui-menu.c:668
+#: ../ui/rc-ui-menu.c:680
 msgid "Sort the album of the music in ascending order"
 msgstr "以專輯名進行升序排列"
 
-#: ../ui/rc-ui-menu.c:671
+#: ../ui/rc-ui-menu.c:683
 msgid "Album (Descending)"
 msgstr "專輯名 (降序)"
 
-#: ../ui/rc-ui-menu.c:672
+#: ../ui/rc-ui-menu.c:684
 msgid "Sort the album of the music in descending order"
 msgstr "以專輯名進行降序排列"
 
-#: ../ui/rc-ui-menu.c:675
+#: ../ui/rc-ui-menu.c:687
 msgid "Length (Ascending)"
 msgstr "長度 (升序)"
 
-#: ../ui/rc-ui-menu.c:676
+#: ../ui/rc-ui-menu.c:688
 msgid "Sort the length of the music in ascending order"
 msgstr "以音樂長度進行升序排列"
 
-#: ../ui/rc-ui-menu.c:679
+#: ../ui/rc-ui-menu.c:691
 msgid "Length (Descending)"
 msgstr "長度 (降序)"
 
-#: ../ui/rc-ui-menu.c:680
+#: ../ui/rc-ui-menu.c:692
 msgid "Sort the length of the music in descending order"
 msgstr "以音樂長度進行降序排列"
 
-#: ../ui/rc-ui-menu.c:683
+#: ../ui/rc-ui-menu.c:695
 msgid "Genre (Ascending)"
 msgstr "流派 (升序)"
 
-#: ../ui/rc-ui-menu.c:684
+#: ../ui/rc-ui-menu.c:696
 msgid "Sort the genre of the music in ascending order"
 msgstr "以流派類型進行升序排列"
 
-#: ../ui/rc-ui-menu.c:687
+#: ../ui/rc-ui-menu.c:699
 msgid "Genre (Descending)"
 msgstr "流派 (降序)"
 
-#: ../ui/rc-ui-menu.c:688
+#: ../ui/rc-ui-menu.c:700
 msgid "Sort the genre of the music in descending order"
 msgstr "以流派類型進行降序排列"
 
-#: ../ui/rc-ui-menu.c:691
+#: ../ui/rc-ui-menu.c:703
 msgid "Track Number (Ascending)"
 msgstr "音軌號 (升序)"
 
-#: ../ui/rc-ui-menu.c:692
+#: ../ui/rc-ui-menu.c:704
 msgid "Sort the track number of the music in ascending order"
 msgstr "以音軌號進行升序排列"
 
-#: ../ui/rc-ui-menu.c:695
+#: ../ui/rc-ui-menu.c:707
 msgid "Track Number (Descending)"
 msgstr "音軌號 (降序)"
 
-#: ../ui/rc-ui-menu.c:696
+#: ../ui/rc-ui-menu.c:708
 msgid "Sort the track number of the music in descending order"
 msgstr "以音軌號進行降序排列"
 
-#: ../ui/rc-ui-menu.c:699
+#: ../ui/rc-ui-menu.c:711
 msgid "Year (Ascending)"
 msgstr "年份 (升序)"
 
-#: ../ui/rc-ui-menu.c:700
+#: ../ui/rc-ui-menu.c:712
 msgid "Sort the year of the music in ascending order"
 msgstr "以年份進行升序排列"
 
-#: ../ui/rc-ui-menu.c:703
+#: ../ui/rc-ui-menu.c:715
 msgid "Year (Descending)"
 msgstr "年份 (降序)"
 
-#: ../ui/rc-ui-menu.c:704
+#: ../ui/rc-ui-menu.c:716
 msgid "Sort the year of the music in descending order"
 msgstr "以年份進行降序排列"
 
-#: ../ui/rc-ui-menu.c:707
+#: ../ui/rc-ui-menu.c:719
 msgid "File Type (Ascending)"
 msgstr "檔案類型 (升序)"
 
-#: ../ui/rc-ui-menu.c:708
+#: ../ui/rc-ui-menu.c:720
 msgid "Sort the file type of the music in ascending order"
 msgstr "以檔案類型進行升序排列"
 
-#: ../ui/rc-ui-menu.c:711
+#: ../ui/rc-ui-menu.c:723
 msgid "File Type (Descending)"
 msgstr "檔案類型 (降序)"
 
-#: ../ui/rc-ui-menu.c:712
+#: ../ui/rc-ui-menu.c:724
 msgid "Sort the file type of the music in descending order"
 msgstr "以檔案類型進行降序排列"
 
-#: ../ui/rc-ui-menu.c:715
+#: ../ui/rc-ui-menu.c:727
 msgid "Rating (Ascending)"
 msgstr "評等 (升序)"
 
-#: ../ui/rc-ui-menu.c:716
+#: ../ui/rc-ui-menu.c:728
 msgid "Sort the rating of the music in ascending order"
 msgstr "以評等分數進行升序排列"
 
-#: ../ui/rc-ui-menu.c:719
+#: ../ui/rc-ui-menu.c:731
 msgid "Rating (Descending)"
 msgstr "評等 (降序)"
 
-#: ../ui/rc-ui-menu.c:720
+#: ../ui/rc-ui-menu.c:732
 msgid "Sort the rating of the music in descending order"
 msgstr "以評等分數進行降序排列"
 
-#: ../ui/rc-ui-menu.c:729
+#: ../ui/rc-ui-menu.c:741
 msgid "_No Repeat"
 msgstr "不重複(_N)"
 
-#: ../ui/rc-ui-menu.c:730
+#: ../ui/rc-ui-menu.c:742
 msgid "No repeat"
 msgstr "不重複"
 
-#: ../ui/rc-ui-menu.c:732
+#: ../ui/rc-ui-menu.c:744
 msgid "Single _Music Repeat"
 msgstr "單曲重複(_M)"
 
-#: ../ui/rc-ui-menu.c:733
+#: ../ui/rc-ui-menu.c:745
 msgid "Repeat playing single music"
 msgstr "重複播放當前音樂"
 
-#: ../ui/rc-ui-menu.c:735
+#: ../ui/rc-ui-menu.c:747
 msgid "Single _Playlist Repeat"
 msgstr "單列表重複(_P)"
 
-#: ../ui/rc-ui-menu.c:736
+#: ../ui/rc-ui-menu.c:748
 msgid "Repeat playing single playlist"
 msgstr "重複播放當前列表中的音樂"
 
-#: ../ui/rc-ui-menu.c:738
+#: ../ui/rc-ui-menu.c:750
 msgid "_All Playlists Repeat"
 msgstr "全列表重複(_A)"
 
-#: ../ui/rc-ui-menu.c:739
+#: ../ui/rc-ui-menu.c:751
 msgid "Repeat playing all playlists"
 msgstr "重複播放所有列表中的音樂"
 
-#: ../ui/rc-ui-menu.c:747
+#: ../ui/rc-ui-menu.c:759
 msgid "_No Random"
 msgstr "不隨機(_N)"
 
-#: ../ui/rc-ui-menu.c:748
+#: ../ui/rc-ui-menu.c:760
 msgid "No random playing"
 msgstr "不隨機播放"
 
-#: ../ui/rc-ui-menu.c:750
+#: ../ui/rc-ui-menu.c:762
 msgid "_Single Playlist Random"
 msgstr "單列表隨機(_S)"
 
-#: ../ui/rc-ui-menu.c:751
+#: ../ui/rc-ui-menu.c:763
 msgid "Random playing a music in the playlist"
 msgstr "隨機播放當前列表中的音樂"
 
-#: ../ui/rc-ui-menu.c:754
+#: ../ui/rc-ui-menu.c:766
 msgid "_All Playlists Random"
 msgstr "全列表隨機(_A)"
 
-#: ../ui/rc-ui-menu.c:755
+#: ../ui/rc-ui-menu.c:767
 msgid "Random playing a music in all playlists"
 msgstr "隨機播放全部播放列表中的音樂"
 
-#: ../ui/rc-ui-menu.c:764
+#: ../ui/rc-ui-menu.c:776
 msgid "_No Visualize"
 msgstr "無可視化效果(_N)"
 
-#: ../ui/rc-ui-menu.c:765
+#: ../ui/rc-ui-menu.c:777
 msgid "Disable visualize style"
 msgstr "禁用可視化效果"
 
-#: ../ui/rc-ui-menu.c:767
+#: ../ui/rc-ui-menu.c:779
 msgid "_Mono Wavescope"
 msgstr "單通道示波器(_M)"
 
-#: ../ui/rc-ui-menu.c:768
+#: ../ui/rc-ui-menu.c:780
 msgid "Wavescope with one channel"
 msgstr "單通道示波器"
 
-#: ../ui/rc-ui-menu.c:770
+#: ../ui/rc-ui-menu.c:782
 msgid "Multi-_channel Wavescope"
 msgstr "多通道示波器(_C)"
 
-#: ../ui/rc-ui-menu.c:771
+#: ../ui/rc-ui-menu.c:783
 msgid "Wavescope with multi-channel"
 msgstr "多通道示波器"
 
-#: ../ui/rc-ui-menu.c:773
+#: ../ui/rc-ui-menu.c:785
 msgid "_Spectrum"
 msgstr "頻譜(_S)"
 
-#: ../ui/rc-ui-menu.c:774
+#: ../ui/rc-ui-menu.c:786
 msgid "Spectrum"
 msgstr "頻譜"
 
-#: ../ui/rc-ui-menu.c:783
+#: ../ui/rc-ui-menu.c:795
 msgid "Search All Fields"
 msgstr "搜索所有域"
 
-#: ../ui/rc-ui-menu.c:784
+#: ../ui/rc-ui-menu.c:796
 msgid "Search all fields"
 msgstr "搜索所有域"
 
-#: ../ui/rc-ui-menu.c:786
+#: ../ui/rc-ui-menu.c:798
 msgid "Search Artist"
 msgstr "搜索藝術家"
 
-#: ../ui/rc-ui-menu.c:787
+#: ../ui/rc-ui-menu.c:799
 msgid "Search artists"
 msgstr "搜索藝術家"
 
-#: ../ui/rc-ui-menu.c:789
+#: ../ui/rc-ui-menu.c:801
 msgid "Search Albums"
 msgstr "搜索專輯"
 
-#: ../ui/rc-ui-menu.c:790
+#: ../ui/rc-ui-menu.c:802
 msgid "Search albums"
 msgstr "搜索專輯"
 
-#: ../ui/rc-ui-menu.c:792
+#: ../ui/rc-ui-menu.c:804
 msgid "Search Titles"
 msgstr "搜索標題"
 
-#: ../ui/rc-ui-menu.c:793
+#: ../ui/rc-ui-menu.c:805
 msgid "Search titles"
 msgstr "搜索標題"
 
-#: ../ui/rc-ui-menu.c:802
+#: ../ui/rc-ui-menu.c:814
 msgid "Music _Library"
 msgstr "音樂庫(_L)"
 
-#: ../ui/rc-ui-menu.c:803
+#: ../ui/rc-ui-menu.c:815
 msgid "Music library"
 msgstr "音樂庫"
 
-#: ../ui/rc-ui-menu.c:806 ../ui/rc-ui-menu.c:810
+#: ../ui/rc-ui-menu.c:818 ../ui/rc-ui-menu.c:822
 msgid "Always On _Top"
 msgstr "總在最上"
 
-#: ../ui/rc-ui-menu.c:807 ../ui/rc-ui-menu.c:811
+#: ../ui/rc-ui-menu.c:819 ../ui/rc-ui-menu.c:823
 msgid "Always on top"
 msgstr "總是處于所有窗口的最上方"
 

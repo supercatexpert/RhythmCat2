@@ -591,6 +591,18 @@ static GtkActionEntry ui_menu_entries[] =
       N_("Re_fresh Playlist"), NULL,
       N_("Refresh music information in the playlist"),
       G_CALLBACK(rc_ui_listview_playlist_refresh) },
+    { "LibraryPAddMusic", NULL,
+      N_("_Add Music"), NULL,
+      N_("Add music file to the library"),
+      G_CALLBACK(rc_ui_dialog_library_add_music) },
+    { "LibraryPRemoveMusic", NULL,
+      N_("_Remove Music"), NULL,
+      N_("Remove music from the library"),
+      G_CALLBACK(rc_ui_menu_library_remove_music_clicked_cb) },
+    { "LibraryPSelectAll", NULL,
+      N_("_Select All"), NULL,
+      N_("Select all music in the library list"),
+      G_CALLBACK(rc_ui_menu_library_select_all_clicked_cb), },
     { "AlbumSaveImage", GTK_STOCK_SAVE_AS,
       N_("_Save Album Image As"), NULL,
       N_("Save the album image"),
@@ -927,6 +939,11 @@ static const gchar *ui_menu_info =
     "    <menuitem action='PlaylistPRemoveMusic'/>"
     "    <separator name='PlaylistSep2'/>"
     "    <menuitem action='PlaylistPRefreshList'/>"
+    "  </popup>"
+    "  <popup action='LibraryPopupMenu'>"
+    "    <menuitem action='LibraryPAddMusic'/>"
+    "    <menuitem action='LibraryPRemoveMusic'/>"
+    "    <menuitem action='LibraryPSelectAll'/>"
     "  </popup>"
     "  <popup action='AlbumPopupMenu'>"
     "    <menuitem action='AlbumSaveImage'/>"

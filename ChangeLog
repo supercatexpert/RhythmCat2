@@ -161,3 +161,7 @@
 
     * Added music library.
 
+2013-02-21   SuperCat    <supercatexpert@gmail.com>
+
+    * Added GStreamer 1.0 support (except plug-ins).
+

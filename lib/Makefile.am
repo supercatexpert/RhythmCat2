@@ -65,7 +65,13 @@ RhythmCatLib-2.0.gir: librhythmcat-2.0.la
 RhythmCatLib_2_0_gir_SCANNERFLAGS = --identifier-prefix=RCLib --symbol-prefix=rclib
 RhythmCatLib_2_0_gir_NAMESPACE = RhythmCatLib
 RhythmCatLib_2_0_gir_VERSION = 2.0
-RhythmCatLib_2_0_gir_INCLUDES = GObject-2.0 Gio-2.0 Gst-0.10 GstPbutils-0.10 GstBase-0.10 GstFft-0.10
+RhythmCatLib_2_0_gir_INCLUDES = GObject-2.0 Gio-2.0
+if USE_GSTREAMER10
+    RhythmCatLib_2_0_gir_INCLUDES += Gst-1.0 GstPbutils-1.0 GstBase-1.0 GstFft-1.0
+else
+    RhythmCatLib_2_0_gir_INCLUDES += Gst-0.10 GstPbutils-0.10 GstBase-0.10 GstFft-0.10
+endif
+
 RhythmCatLib_2_0_gir_CFLAGS = $(AM_CFLAGS)
 RhythmCatLib_2_0_gir_LIBS = librhythmcat-2.0.la
 RhythmCatLib_2_0_gir_FILES = $(introspection_sources)

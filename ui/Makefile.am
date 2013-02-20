@@ -118,7 +118,13 @@ RhythmCat-2.0.gir: RhythmCat2
 RhythmCat_2_0_gir_SCANNERFLAGS = --identifier-prefix=RC --symbol-prefix=rc
 RhythmCat_2_0_gir_NAMESPACE = RhythmCat
 RhythmCat_2_0_gir_VERSION = 2.0
-RhythmCat_2_0_gir_INCLUDES = GObject-2.0 Gio-2.0 Gtk-3.0 Gst-0.10 GstPbutils-0.10 GstBase-0.10 GstFft-0.10
+RhythmCat_2_0_gir_INCLUDES = GObject-2.0 Gio-2.0 Gtk-3.0
+if USE_GSTREAMER10
+    RhythmCat_2_0_gir_INCLUDES += Gst-1.0 GstPbutils-1.0 GstBase-1.0 GstFft-1.0
+else
+    RhythmCat_2_0_gir_INCLUDES += Gst-0.10 GstPbutils-0.10 GstBase-0.10 GstFft-0.10
+endif
+
 RhythmCat_2_0_gir_CFLAGS = $(AM_CFLAGS)
 RhythmCat_2_0_gir_PROGRAM = $(builddir)/RhythmCat2
 RhythmCat_2_0_gir_FILES = $(introspection_sources)

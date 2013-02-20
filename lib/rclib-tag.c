@@ -37,6 +37,12 @@
  * structures and functions for tag processing.
  */
 
+#if GST_VERSION_MAJOR==1
+    #define TAG_DECODEBIN "decodebin"
+#else
+    #define TAG_DECODEBIN "decodebin2"
+#endif
+
 static gchar *tag_fallback_encoding = NULL;
 
 typedef struct RCTagDecodedPadData
@@ -72,7 +78,11 @@ static void rclib_tag_get_tag_cb(const GstTagList *tags, RCLibTagMetadata *mmd)
     gchar *string = NULL;
     GDate *date = NULL;
     gchar *cuelist = NULL;
-    GstBuffer *image = NULL;
+    #if GST_VERSION_MAJOR==1
+        GstSample *sample = NULL;
+    #else
+        GstBuffer *image = NULL;
+    #endif
     guint bitrates = 0;
     guint tracknum = 0;
     guint cue_num = 0;
@@ -114,18 +124,33 @@ static void rclib_tag_get_tag_cb(const GstTagList *tags, RCLibTagMetadata *mmd)
             mmd->genre = string;
         else g_free(string);
     }
-    if(gst_tag_list_get_buffer(tags, GST_TAG_IMAGE, &image))
-    {
-        if(mmd->image==NULL)
-            mmd->image = image;
-        else gst_buffer_unref(image);
-    }
-    if(gst_tag_list_get_buffer(tags, GST_TAG_PREVIEW_IMAGE, &image))
-    {
-        if(mmd->image==NULL)
-            mmd->image = image;
-        else gst_buffer_unref(image);
-    }
+    #if GST_VERSION_MAJOR==1
+        if(gst_tag_list_get_sample(tags, GST_TAG_IMAGE, &sample))
+        {
+            if(mmd->image==NULL)
+                mmd->image = gst_buffer_ref(gst_sample_get_buffer(sample));
+            gst_sample_unref(sample);
+        }
+        if(gst_tag_list_get_sample(tags, GST_TAG_PREVIEW_IMAGE, &sample))
+        {
+            if(mmd->image==NULL)
+                mmd->image = gst_buffer_ref(gst_sample_get_buffer(sample));
+            gst_sample_unref(sample);
+        }
+    #else
+        if(gst_tag_list_get_buffer(tags, GST_TAG_IMAGE, &image))
+        {
+            if(mmd->image==NULL)
+                mmd->image = image;
+            else gst_buffer_unref(image);
+        }
+        if(gst_tag_list_get_buffer(tags, GST_TAG_PREVIEW_IMAGE, &image))
+        {
+            if(mmd->image==NULL)
+                mmd->image = image;
+            else gst_buffer_unref(image);
+        }
+    #endif
     if(gst_tag_list_get_uint(tags, GST_TAG_NOMINAL_BITRATE, &bitrates))
         mmd->bitrate = bitrates;
     if(gst_tag_list_get_uint(tags, GST_TAG_TRACK_NUMBER, &tracknum))
@@ -156,15 +181,24 @@ static void rclib_tag_get_tag_cb(const GstTagList *tags, RCLibTagMetadata *mmd)
  * Callback for creating new decoded pad.
  */
 
+#if GST_VERSION_MAJOR==1
+static void rc_tag_gst_new_decoded_pad_cb(GstElement *decodebin, 
+    GstPad *pad, RCTagDecodedPadData *data)
+#else
 static void rc_tag_gst_new_decoded_pad_cb(GstElement *decodebin, 
     GstPad *pad, gboolean last, RCTagDecodedPadData *data)
+#endif
 {
     GstCaps *caps;
     GstStructure *structure;
     const gchar *mimetype;
     gboolean cancel = FALSE;
     GstPad *sink_pad;
-    caps = gst_pad_get_caps(pad);
+    #if GST_VERSION_MAJOR==1
+        caps = gst_pad_query_caps(pad, NULL);
+    #else
+        caps = gst_pad_get_caps(pad);
+    #endif
     /* we get "ANY" caps for text/plain files etc. */
     if(gst_caps_is_empty(caps) || gst_caps_is_any(caps))
     {
@@ -240,7 +274,12 @@ RCLibTagMetadata *rclib_tag_read_metadata(const gchar *uri)
     }
     mmd = g_new0(RCLibTagMetadata, 1);
     mmd->uri = g_strdup(uri);
-    urisrc = gst_element_make_from_uri(GST_URI_SRC, mmd->uri, "urisrc");
+    #if GST_VERSION_MAJOR==1
+        urisrc = gst_element_make_from_uri(GST_URI_SRC, mmd->uri, "urisrc",
+            NULL);
+    #else
+        urisrc = gst_element_make_from_uri(GST_URI_SRC, mmd->uri, "urisrc");
+    #endif
     if(urisrc==NULL)
     {
         g_warning("Cannot load urisrc from given URI!");
@@ -249,7 +288,7 @@ RCLibTagMetadata *rclib_tag_read_metadata(const gchar *uri)
     }
     G_STMT_START
     {
-        decodebin = gst_element_factory_make("decodebin2", NULL);
+        decodebin = gst_element_factory_make(TAG_DECODEBIN, NULL);
         if(decodebin==NULL) break;
         fakesink = gst_element_factory_make("fakesink", NULL);
         if(fakesink==NULL) break;
@@ -276,8 +315,13 @@ RCLibTagMetadata *rclib_tag_read_metadata(const gchar *uri)
     }
     decoded_pad_data.pipeline = pipeline;
     decoded_pad_data.fakesink = fakesink;
-    g_signal_connect(decodebin, "new-decoded-pad",
-        G_CALLBACK(rc_tag_gst_new_decoded_pad_cb), &decoded_pad_data);
+    #if GST_VERSION_MAJOR==1
+        g_signal_connect(decodebin, "pad-added",
+            G_CALLBACK(rc_tag_gst_new_decoded_pad_cb), &decoded_pad_data);
+    #else
+        g_signal_connect(decodebin, "new-decoded-pad",
+            G_CALLBACK(rc_tag_gst_new_decoded_pad_cb), &decoded_pad_data);
+    #endif
     gst_element_set_state(pipeline, GST_STATE_NULL);
     state_ret = gst_element_set_state(pipeline, GST_STATE_PAUSED);
     if(state_ret==GST_STATE_CHANGE_FAILURE)
@@ -303,18 +347,30 @@ RCLibTagMetadata *rclib_tag_read_metadata(const gchar *uri)
         }
         gst_message_parse_tag(msg, &tags);
         rclib_tag_get_tag_cb(tags, mmd);
-        gst_tag_list_free(tags);
+        #if GST_VERSION_MAJOR==1
+            gst_tag_list_unref(tags);
+        #else
+            gst_tag_list_free(tags);
+        #endif
         gst_message_unref(msg);
     }
     g_timer_stop(timer);
     g_timer_destroy(timer);
     if(msg_type==GST_MESSAGE_ERROR)
         g_warning("Cannot get tag from file: %s!", mmd->uri);
-    gst_element_query_duration(pipeline, &fmt, &dura);
+    #if GST_VERSION_MAJOR==1
+        gst_element_query_duration(pipeline, fmt, &dura);
+    #else
+        gst_element_query_duration(pipeline, &fmt, &dura);
+    #endif
     sink_pad = gst_element_get_static_pad(fakesink, "sink");
     if(sink_pad!=NULL)
     {
-        caps = gst_pad_get_negotiated_caps(sink_pad);
+        #if GST_VERSION_MAJOR==1
+            caps = gst_pad_get_current_caps(sink_pad);
+        #else
+            caps = gst_pad_get_negotiated_caps(sink_pad);
+        #endif
         if(caps!=NULL)
         {
             structure = gst_caps_get_structure(caps, 0);
