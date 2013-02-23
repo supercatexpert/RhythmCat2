@@ -1,18 +1,14 @@
 - New information and control pad
 - Player Command Interpreter build in LibRhythmCat
 - Use desktop.in
-- Multi-word selectable filter in library window
 
 Long-term:
 - Command Line Interface (CLI), based on ncurses
 - Mini mode (plug-in?)
 - More plug-ins
 - Non-Unix platform support
-- Music Library
 - More interfaces in MPRIS v2.1 support
 - Multi-touch support
-- Move to GStreamer 1.0 if it is available in Debian Wheezy (or later
-  release version)
 - New icon and default cover image.
 - Make a GTK+ 2 port for legacy systems (Will be RhythmCat 1.4.x).
 

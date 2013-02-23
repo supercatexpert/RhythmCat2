@@ -333,6 +333,8 @@ static void rc_plugin_mpris_player_method_call_cb(
     gint64 offset;
     gpointer track_id;
     gchar *uri;
+    gpointer reference = NULL;
+    RCLibCorePlaySource play_source = RCLIB_CORE_PLAY_SOURCE_NONE;
     if(data==NULL) return;
     if(g_strcmp0(object_path, DBUS_MPRIS_OBJECT_NAME)!= 0 ||
         g_strcmp0(interface_name, DBUS_MPRIS_PLAYER_INTERFACE)!=0)
@@ -413,7 +415,8 @@ static void rc_plugin_mpris_player_method_call_cb(
             return;
         }
         g_variant_get(parameters, "(&ox)", &track_id, &offset);
-        if(track_id!=rclib_core_get_db_reference())
+        rclib_core_get_play_source(&play_source, &reference, NULL);
+        if(track_id!=reference)
         {
             g_dbus_method_invocation_return_value(invocation, NULL);
             return;
@@ -447,7 +450,8 @@ static GVariant *rc_plugin_mpris_get_player_property(
     GstState state;
     gint64 pos;
     gdouble volume = 1.0;
-    RCLibDbPlaylistIter *reference;
+    gpointer reference = NULL;
+    RCLibCorePlaySource play_source = RCLIB_CORE_PLAY_SOURCE_NONE;
     gchar *uri;
     const RCLibCoreMetadata *metadata;
     GVariant *variant;
@@ -505,9 +509,12 @@ static GVariant *rc_plugin_mpris_get_player_property(
     else if(g_strcmp0(property_name, "Metadata")==0)
     {
         uri = rclib_core_get_uri();
-        reference = rclib_core_get_db_reference();
+        rclib_core_get_play_source(&play_source, &reference, NULL);
+        if(play_source!=RCLIB_CORE_PLAY_SOURCE_PLAYLIST)
+            reference = NULL;
         metadata = rclib_core_get_metadata();
-        variant = rc_plugin_mpris_get_metadata(uri, reference, metadata);
+        variant = rc_plugin_mpris_get_metadata(uri,
+            (RCLibDbPlaylistIter *)reference, metadata);
         g_free(uri);
         return variant;
     }
@@ -677,15 +684,17 @@ static void rc_plugin_mpris_state_changed_cb(RCLibCore *core, GstState state,
 static void rc_plugin_mpris_uri_changed_cb(RCLibCore *core,
     const gchar *uri, gpointer data)
 {
-    RCLibDbPlaylistIter *reference;
+    gpointer reference = NULL;
+    RCLibCorePlaySource play_source = RCLIB_CORE_PLAY_SOURCE_NONE;
     GVariant *metadata_variant;
     RCPluginMPRISPrivate *priv = (RCPluginMPRISPrivate *)data;
     if(data==NULL) return;
-    reference = rclib_core_get_db_reference();
+    rclib_core_get_play_source(&play_source, &reference, NULL);
+    if(play_source!=RCLIB_CORE_PLAY_SOURCE_PLAYLIST) return;
     if(reference!=NULL)
     {
-        metadata_variant = rc_plugin_mpris_get_metadata(uri, reference,
-            NULL);
+        metadata_variant = rc_plugin_mpris_get_metadata(uri,
+            (RCLibDbPlaylistIter *)reference, NULL);
         if(metadata_variant!=NULL)
         {
             rc_plugin_mpris_player_add_property_change(priv, "Metadata",

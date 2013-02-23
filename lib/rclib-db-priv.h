@@ -103,6 +103,7 @@ struct _RCLibDbPrivate
     GRWLock playlist_rw_lock;
     GSequence *library_query;
     GHashTable *library_table;
+    GHashTable *library_ptr_table;
     GRWLock library_rw_lock;
     GHashTable *library_keyword_table;
     GObject *library_query_base;

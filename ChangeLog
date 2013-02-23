@@ -165,3 +165,8 @@
 
     * Added GStreamer 1.0 support (except plug-ins).
 
+2013-02-23   SuperCat    <supercatexpert@gmail.com>
+
+    * Can be compiled with GStreamer 1.0 completely now.
+    * Fixed some bugs in Music Library.
+    

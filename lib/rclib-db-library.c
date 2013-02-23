@@ -1310,6 +1310,8 @@ void _rclib_db_library_append_data_internal(const gchar *uri,
     library_data = rclib_db_library_data_ref(library_data);
     g_hash_table_replace(priv->library_table, g_strdup(uri),
         library_data);
+    g_hash_table_replace(priv->library_ptr_table, library_data,
+        library_data);
     g_rw_lock_writer_unlock(&(priv->library_rw_lock));
     g_signal_emit_by_name(instance, "library-added", uri);
 }
@@ -1813,6 +1815,7 @@ gboolean _rclib_db_instance_init_library(RCLibDb *db, RCLibDbPrivate *priv)
     /* GHashTable<gchar *, RCLibDbLibraryData *> */
     priv->library_table = g_hash_table_new_full(g_str_hash,
         g_str_equal, g_free, (GDestroyNotify)rclib_db_library_data_unref);
+    priv->library_ptr_table = g_hash_table_new(g_direct_hash, g_direct_equal);
         
     /* GHashTable<gchar *, GHashTable<RCLibDbLibraryData *, 1>> */
     priv->library_keyword_table = g_hash_table_new_full(g_str_hash,
@@ -1866,8 +1869,11 @@ void _rclib_db_instance_finalize_library(RCLibDbPrivate *priv)
         g_hash_table_destroy(priv->library_keyword_table);
     if(priv->library_table!=NULL)
         g_hash_table_destroy(priv->library_table);
+    if(priv->library_ptr_table!=NULL)
+        g_hash_table_destroy(priv->library_ptr_table);
     priv->library_query = NULL;
     priv->library_table = NULL;
+    priv->library_ptr_table = NULL;
     g_rw_lock_writer_unlock(&(priv->library_rw_lock));
     g_rw_lock_clear(&(priv->library_rw_lock));
 }
@@ -2151,9 +2157,20 @@ void rclib_db_library_data_set(RCLibDbLibraryData *data,
 {
     RCLibDbPrivate *priv = NULL;
     GObject *instance = NULL;
+    gboolean exist;
     va_list var_args;
     gboolean send_signal = FALSE;
     if(data==NULL) return;
+    instance = rclib_db_get_instance();
+    if(instance!=NULL)
+        priv = RCLIB_DB(instance)->priv;
+    if(priv!=NULL)
+    {
+        g_rw_lock_reader_lock(&(priv->library_rw_lock));
+        exist = g_hash_table_contains(priv->library_ptr_table, data);
+        g_rw_lock_reader_unlock(&(priv->library_rw_lock));
+        if(!exist) return;
+    }
     va_start(var_args, type1);
     send_signal = rclib_db_library_data_set_valist(data, type1, var_args);
     va_end(var_args);
@@ -2166,7 +2183,7 @@ void rclib_db_library_data_set(RCLibDbLibraryData *data,
         {
             if(priv!=NULL)
                 priv->dirty_flag = TRUE;
-            g_idle_add(rclib_db_library_changed_entry_idle_cb,
+            g_main_context_invoke(NULL, rclib_db_library_changed_entry_idle_cb,
                 g_strdup(data->uri));
         }
     }
@@ -2186,8 +2203,21 @@ void rclib_db_library_data_set(RCLibDbLibraryData *data,
 void rclib_db_library_data_get(RCLibDbLibraryData *data,
     RCLibDbLibraryDataType type1, ...)
 {
+    gboolean exist;
+    GObject *instance = NULL;
+    RCLibDbPrivate *priv = NULL;
     va_list var_args;
     if(data==NULL) return;
+    instance = rclib_db_get_instance();
+    if(instance!=NULL)
+        priv = RCLIB_DB(instance)->priv;
+    if(priv!=NULL)
+    {
+        g_rw_lock_reader_lock(&(priv->library_rw_lock));
+        exist = g_hash_table_contains(priv->library_ptr_table, data);
+        g_rw_lock_reader_unlock(&(priv->library_rw_lock));
+        if(!exist) return;
+    }
     va_start(var_args, type1);
     rclib_db_library_data_get_valist(data, type1, var_args);
     va_end(var_args);
@@ -2233,6 +2263,30 @@ gboolean rclib_db_library_has_uri(const gchar *uri)
     if(priv==NULL) return FALSE;
     g_rw_lock_reader_lock(&(priv->library_rw_lock));
     result = g_hash_table_contains(priv->library_table, uri);
+    g_rw_lock_reader_unlock(&(priv->library_rw_lock));
+    return result;
+}
+
+/**
+ * rclib_db_library_exist:
+ * @library_data: the library data
+ * 
+ * Check whether the library data exists in the library.
+ * 
+ * Returns: Whether the library data exists in the library.
+ */
+
+gboolean rclib_db_library_exist(RCLibDbLibraryData *library_data)
+{
+    RCLibDbPrivate *priv;
+    GObject *instance;
+    gboolean result = FALSE;
+    instance = rclib_db_get_instance();
+    if(instance==NULL) return FALSE;
+    priv = RCLIB_DB(instance)->priv;
+    if(priv==NULL) return FALSE;
+    g_rw_lock_reader_lock(&(priv->library_rw_lock));
+    result = g_hash_table_contains(priv->library_ptr_table, library_data);
     g_rw_lock_reader_unlock(&(priv->library_rw_lock));
     return result;
 }
@@ -2294,6 +2348,7 @@ void rclib_db_library_delete(const gchar *uri)
 {
     RCLibDbPrivate *priv;
     GObject *instance;
+    RCLibDbLibraryData *library_data;
     if(uri==NULL) return;
     instance = rclib_db_get_instance();
     if(instance==NULL) return;
@@ -2301,9 +2356,12 @@ void rclib_db_library_delete(const gchar *uri)
     if(priv==NULL) return;
     g_rw_lock_writer_lock(&(priv->library_rw_lock));
     if(!g_hash_table_contains(priv->library_table, uri)) return;
+    library_data = g_hash_table_lookup(priv->library_table, uri);
+    g_hash_table_remove(priv->library_ptr_table, library_data);
     g_hash_table_remove(priv->library_table, uri);
     g_rw_lock_writer_unlock(&(priv->library_rw_lock));
-    g_idle_add(rclib_db_library_deleted_entry_idle_cb, g_strdup(uri));
+    g_idle_add(rclib_db_library_deleted_entry_idle_cb,
+        g_strdup(uri));
     priv->dirty_flag = TRUE;
 }
 
@@ -2368,7 +2426,8 @@ void rclib_db_library_data_uri_set(const gchar *uri,
         if(send_signal)
         {
             priv->dirty_flag = TRUE;
-            g_idle_add(rclib_db_library_changed_entry_idle_cb, g_strdup(uri));
+            g_main_context_invoke(NULL, rclib_db_library_changed_entry_idle_cb,
+                g_strdup(uri));
         }
     }
     g_rw_lock_writer_unlock(&(priv->library_rw_lock));
@@ -3829,8 +3888,12 @@ RCLibDbLibraryData *rclib_db_library_query_result_get_data(
     {
         if(!g_hash_table_contains(priv->query_iter_table, iter))
             break;
+        if(g_sequence_iter_is_end((GSequenceIter *)iter))
+            break;
         library_data = g_sequence_get((GSequenceIter *)iter);
         if(library_data==NULL) break;
+        if(!rclib_db_library_exist(library_data))
+            break;
         library_data = rclib_db_library_data_ref(library_data);
     }
     G_STMT_END;
@@ -4298,6 +4361,8 @@ void rclib_db_library_query_result_query_clear(
                 g_hash_table_remove_all(prop_item->prop_iter_table);
             if(prop_item->prop_name_table)
                 g_hash_table_remove_all(prop_item->prop_name_table);
+            if(prop_item->prop_uri_table)
+                g_hash_table_remove_all(prop_item->prop_uri_table);
             prop_item->count = 0;
         }
     }

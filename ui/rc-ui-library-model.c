@@ -120,6 +120,7 @@ static void rc_ui_library_list_query_result_delete_cb(
     iter = rclib_db_library_query_result_get_iter_by_uri(qr, uri);
     if(iter==NULL) return;
     pos = rclib_db_library_query_result_get_position(qr, iter);
+    if(pos<0) return;
     path = gtk_tree_path_new();
     gtk_tree_path_append_index(path, pos);
     gtk_tree_model_row_deleted(model, path);

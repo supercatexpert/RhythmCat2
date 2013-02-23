@@ -172,6 +172,7 @@
     <keyword type="function" name="rclib_db_library_data_uri_get ()" link="RCLibDbLibraryQueryResult.html#rclib-db-library-data-uri-get"/>
     <keyword type="function" name="rclib_db_library_data_uri_set ()" link="RCLibDbLibraryQueryResult.html#rclib-db-library-data-uri-set"/>
     <keyword type="function" name="rclib_db_library_delete ()" link="RCLibDbLibraryQueryResult.html#rclib-db-library-delete"/>
+    <keyword type="function" name="rclib_db_library_exist ()" link="RCLibDbLibraryQueryResult.html#rclib-db-library-exist"/>
     <keyword type="function" name="rclib_db_library_get_album_query_result ()" link="RCLibDbLibraryQueryResult.html#rclib-db-library-get-album-query-result"/>
     <keyword type="function" name="rclib_db_library_get_artist_query_result ()" link="RCLibDbLibraryQueryResult.html#rclib-db-library-get-artist-query-result"/>
     <keyword type="function" name="rclib_db_library_get_base_query_result ()" link="RCLibDbLibraryQueryResult.html#rclib-db-library-get-base-query-result"/>

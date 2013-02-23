@@ -559,6 +559,7 @@ void rclib_db_library_data_get(RCLibDbLibraryData *data,
     RCLibDbLibraryDataType type1, ...);
 GHashTable *rclib_db_get_library_table();
 gboolean rclib_db_library_has_uri(const gchar *uri);
+gboolean rclib_db_library_exist(RCLibDbLibraryData *library_data);
 void rclib_db_library_add_music(const gchar *uri);
 void rclib_db_library_add_music_and_play(const gchar *uri);
 void rclib_db_library_delete(const gchar *uri);

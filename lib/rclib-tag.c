@@ -26,6 +26,7 @@
 #include "rclib-tag.h"
 #include "rclib-common.h"
 #include <gst/pbutils/pbutils.h>
+#include <gst/audio/audio.h>
 
 /**
  * SECTION: rclib-tag
@@ -257,7 +258,7 @@ RCLibTagMetadata *rclib_tag_read_metadata(const gchar *uri)
     GstElement *fakesink = NULL;
     GstPad *sink_pad;
     GstCaps *caps;
-    GstStructure *structure;
+    GstAudioInfo audio_info;
     gint64 dura = 0;
     GstStateChangeReturn state_ret;
     GstMessage *msg;
@@ -373,9 +374,12 @@ RCLibTagMetadata *rclib_tag_read_metadata(const gchar *uri)
         #endif
         if(caps!=NULL)
         {
-            structure = gst_caps_get_structure(caps, 0);
-            gst_structure_get_int(structure, "rate", &(mmd->samplerate));
-            gst_structure_get_int(structure, "channels", &(mmd->channels));
+            gst_audio_info_init(&audio_info);
+            if(gst_audio_info_from_caps(&audio_info, caps))
+            {
+                mmd->samplerate = GST_AUDIO_INFO_RATE(&audio_info);
+                mmd->channels = GST_AUDIO_INFO_CHANNELS(&audio_info);
+            }
             gst_caps_unref(caps);
         }
         gst_object_unref(sink_pad);

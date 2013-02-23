@@ -30,6 +30,7 @@
 #include <glib-object.h>
 #include <gst/gst.h>
 #include <gst/audio/gstaudiofilter.h>
+#include <gst/audio/audio.h>
 #include <gst/fft/gstfftf32.h>
 
 G_BEGIN_DECLS

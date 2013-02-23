@@ -2020,16 +2020,6 @@ gboolean rclib_db_load_autosaved()
         priv->playlist_iter_table, priv->library_table, filename,
         &(priv->dirty_flag));
     g_free(filename);
-    if(flag)
-    {
-        for(iter=rclib_db_catalog_get_begin_iter();
-            !rclib_db_catalog_iter_is_end(iter);
-            iter=rclib_db_catalog_iter_next(iter))
-        {
-            g_signal_emit(db_instance, db_signals[SIGNAL_CATALOG_ADDED],
-                0, iter);
-        }
-    }
     return flag;
 }
 

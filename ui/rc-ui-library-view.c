@@ -553,15 +553,18 @@ void rc_ui_library_list_delete_items(RCUiLibraryListView *list_view)
     GList *list, *list_foreach;
     GtkTreePath *path;
     GtkTreeIter iter;
+    GPtrArray *uri_array;
     GObject *library_query_result = NULL;
     RCLibDbLibraryData *library_data;
     gchar *uri;
+    guint i;
     selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(list_view));
     model = gtk_tree_view_get_model(GTK_TREE_VIEW(list_view));
     if(model==NULL || selection==NULL) return;
     list = gtk_tree_selection_get_selected_rows(selection, NULL);
     if(list==NULL) return;
     g_object_get(model, "query-result", &library_query_result, NULL);
+    uri_array = g_ptr_array_new_with_free_func(g_free);
     if(library_query_result!=NULL)
     {
         for(list_foreach=list;list_foreach!=NULL;
@@ -581,13 +584,19 @@ void rc_ui_library_list_delete_items(RCUiLibraryListView *list_view)
                 RCLIB_DB_LIBRARY_DATA_TYPE_NONE);
             rclib_db_library_data_unref(library_data);
             if(uri==NULL) continue;
-            rclib_db_library_delete(uri);
-            g_free(uri);
+            g_ptr_array_add(uri_array, uri);
         }
         g_object_unref(library_query_result);
     }
     g_list_foreach(list, (GFunc)gtk_tree_path_free, NULL);
     g_list_free(list);
+    for(i=0;i<uri_array->len;i++)
+    {
+        uri = g_ptr_array_index(uri_array, i);
+        if(uri==NULL) continue;
+        rclib_db_library_delete(uri);
+    }
+    g_ptr_array_free(uri_array, TRUE); 
 }
 
 /**

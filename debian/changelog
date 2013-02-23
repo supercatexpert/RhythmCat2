@@ -1,3 +1,8 @@
+rhythmcat2 (1.9.5-5) unstable; urgency=low
+
+  * Added Music Library. (Closes: #112934)
+
+ -- SuperCat <supercatexpert@gmail.com>  Sat, 23 Feb 2013 22:10:32 +0800
 
 rhythmcat2 (1.9.3-1) unstable; urgency=low
 

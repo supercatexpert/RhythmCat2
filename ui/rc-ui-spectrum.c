@@ -24,6 +24,7 @@
  */
  
 #include "rc-ui-spectrum.h"
+#include <gst/audio/audio.h>
 
 /**
  * SECTION: rc-ui-spectrum
@@ -447,6 +448,7 @@ static inline void rc_ui_spectrum_run(RCUiSpectrumWidget *spectrum,
     if(priv==NULL) return;
     #if GST_VERSION_MAJOR==1
         GstMapInfo map_info;
+        memset(&map_info, 0, sizeof(GstMapInfo));
         if(gst_buffer_map(buf, &map_info, GST_MAP_READ))
         {
             buf_data = map_info.data;
@@ -737,6 +739,7 @@ static void rc_ui_spectrum_buffer_probe_cb(RCLibCore *core, GstBuffer *buf,
     /* WARNING: This function is not called in main thread! */
     RCUiSpectrumWidget *spectrum;
     RCUiSpectrumWidgetPrivate *priv;
+    GstAudioInfo audio_info;
     gint rate = 0;
     gint channels = 0;
     gint width = 0;
@@ -753,14 +756,19 @@ static void rc_ui_spectrum_buffer_probe_cb(RCLibCore *core, GstBuffer *buf,
     gst_buffer_replace(&(priv->buffer), buf);
     gst_caps_replace(&(priv->caps), caps);
     g_mutex_unlock(&(priv->buffer_mutex));
+    if(caps==NULL) return;
     if(priv->style==RC_UI_SPECTRUM_STYLE_SPECTRUM)
     {
+        gst_audio_info_init(&audio_info);
+        if(gst_audio_info_from_caps(&audio_info, caps))
+        {
+            rate = GST_AUDIO_INFO_RATE(&audio_info);
+            channels = GST_AUDIO_INFO_CHANNELS(&audio_info);
+            width = GST_AUDIO_INFO_WIDTH(&audio_info);
+            depth = GST_AUDIO_INFO_DEPTH(&audio_info);
+        }
         structure = gst_caps_get_structure(caps, 0);
         mimetype = gst_structure_get_name(structure);
-        gst_structure_get_int(structure, "rate", &rate);
-        gst_structure_get_int(structure, "channels", &channels);
-        gst_structure_get_int(structure, "width", &width);
-        gst_structure_get_int(structure, "depth", &depth);
         if(depth==0) depth = width;
         if(rate==0 || width==0 || channels==0) return;
         rc_ui_spectrum_run(spectrum, buf, mimetype, rate, channels,
@@ -830,6 +838,7 @@ static gboolean rc_ui_spectrum_widget_draw(GtkWidget *widget, cairo_t *cr)
     RCUiSpectrumWidgetPrivate *priv;
     GstCaps *caps = NULL;
     GstStructure *structure;
+    GstAudioInfo audio_info;
     GtkAllocation allocation;
     GstBuffer *buffer = NULL;
     const guint8 *adata = NULL;
@@ -869,19 +878,23 @@ static gboolean rc_ui_spectrum_widget_draw(GtkWidget *widget, cairo_t *cr)
         structure = gst_caps_get_structure(caps, 0);
         if(structure==NULL) break;
         mimetype = gst_structure_get_name(structure);
-        gst_structure_get_int(structure, "rate", &rate);
-        gst_structure_get_int(structure, "channels", &channels);
-        gst_structure_get_int(structure, "width", &width);
-        gst_structure_get_int(structure, "depth", &depth);
+        gst_audio_info_init(&audio_info);
+        if(gst_audio_info_from_caps(&audio_info, caps))
+        {
+            rate = GST_AUDIO_INFO_RATE(&audio_info);
+            channels = GST_AUDIO_INFO_CHANNELS(&audio_info);
+            width = GST_AUDIO_INFO_WIDTH(&audio_info);
+            depth = GST_AUDIO_INFO_DEPTH(&audio_info);
+        }
         if(depth==0) depth = width;
         if(rate==0 || width==0 || channels==0) break;
         #if GST_VERSION_MAJOR==1
             GstMapInfo map_info;
+            memset(&map_info, 0, sizeof(GstMapInfo));
             if(gst_buffer_map(buffer, &map_info, GST_MAP_READ))
             {
                 adata = map_info.data;
                 asize = map_info.size;
-                break;
             }
         #else
             adata = GST_BUFFER_DATA(buffer);

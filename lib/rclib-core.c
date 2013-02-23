@@ -722,8 +722,7 @@ static void rclib_core_bus_callback(GstBus *bus, GstMessage *msg,
         {
             gint64 duration;
             GstCaps *caps;
-            gint intv;
-            GstStructure *structure;
+            GstAudioInfo audio_info;
             duration = rclib_core_query_duration();
             if(duration>0)
             {
@@ -737,18 +736,12 @@ static void rclib_core_bus_callback(GstBus *bus, GstMessage *msg,
                 #else
                     caps = gst_pad_get_negotiated_caps(priv->query_pad);
                 #endif
-                structure = gst_caps_get_structure(caps, 0);
-                if(gst_structure_get_int(structure, "rate", &intv))
+                gst_audio_info_init(&audio_info);
+                if(caps!=NULL && gst_audio_info_from_caps(&audio_info, caps))
                 {
-                    priv->sample_rate = intv;
-                }
-                if(gst_structure_get_int(structure, "channels", &intv))
-                {
-                    priv->channels = intv;
-                }
-                if(gst_structure_get_int(structure, "depth", &intv))
-                {
-                    priv->depth = intv;
+                    priv->sample_rate = GST_AUDIO_INFO_RATE(&audio_info);
+                    priv->channels = GST_AUDIO_INFO_CHANNELS(&audio_info);
+                    priv->depth = GST_AUDIO_INFO_DEPTH(&audio_info);
                 }
                 gst_caps_unref(caps);
             }
@@ -836,19 +829,19 @@ static void rclib_core_identity_buffer_cb(GstElement *identity,
     GstBuffer *buf, gpointer data)
 {
     /* WARNING: This function is not called in main thread! */
+    GstAudioInfo audio_info;
     gint rate = 0;
     gint channels = 0;
     gint width = 0;
     gint depth = 0;
     GstPad *pad;
     GstCaps *caps;
-    GstStructure *structure;
     RCLibCorePrivate *priv = NULL;
     GObject *object = G_OBJECT(data);
     if(object==NULL) return;
     priv = RCLIB_CORE(object)->priv;
     if(priv==NULL) return;
-    pad = gst_element_get_static_pad(identity, "sink");
+    pad = gst_element_get_static_pad(identity, "src");
     if(pad==NULL) return;
     #if GST_VERSION_MAJOR==1
         caps = gst_pad_get_current_caps(pad);
@@ -858,11 +851,14 @@ static void rclib_core_identity_buffer_cb(GstElement *identity,
     gst_object_unref(pad);
     if(caps==NULL) return;
     g_signal_emit(object, core_signals[SIGNAL_BUFFER_PROBE], 0, buf, caps);
-    structure = gst_caps_get_structure(caps, 0);
-    gst_structure_get_int(structure, "rate", &rate);
-    gst_structure_get_int(structure, "channels", &channels);
-    gst_structure_get_int(structure, "width", &width);
-    gst_structure_get_int(structure, "depth", &depth);
+    gst_audio_info_init(&audio_info);
+    if(gst_audio_info_from_caps(&audio_info, caps))
+    {
+        rate = GST_AUDIO_INFO_RATE(&audio_info);
+        channels = GST_AUDIO_INFO_CHANNELS(&audio_info);
+        width = GST_AUDIO_INFO_WIDTH(&audio_info);
+        depth = GST_AUDIO_INFO_DEPTH(&audio_info);
+    }
     gst_caps_unref(caps);
     if(depth==0) depth = width;
     if(rate==0 || width==0 || channels==0) return;
@@ -945,8 +941,7 @@ static void rclib_core_audio_tags_changed_cb(GstElement *playbin2,
     gint current_stream_id = 0;
     GstPad *pad;
     GstCaps *caps;
-    gint intv;
-    GstStructure *structure;
+    GstAudioInfo audio_info;
     if(data==NULL) return;
     if(priv->tag_update_queue==NULL) return;
     g_object_get(playbin2, "current-audio", &current_stream_id, NULL);
@@ -973,21 +968,12 @@ static void rclib_core_audio_tags_changed_cb(GstElement *playbin2,
         #endif
         if(caps!=NULL)
         {
-            structure = gst_caps_get_structure(caps, 0);
-            if(structure!=NULL)
+            gst_audio_info_init(&audio_info);
+            if(gst_audio_info_from_caps(&audio_info, caps))
             {
-                if(gst_structure_get_int(structure, "rate", &intv))
-                {
-                    if(intv>0) priv->sample_rate = intv;
-                }
-                if(gst_structure_get_int(structure, "channels", &intv))
-                {
-                    if(intv>0) priv->channels = intv;
-                }
-                if(gst_structure_get_int(structure, "depth", &intv))
-                {
-                    if(intv>0) priv->depth = intv;
-                }
+                priv->sample_rate = GST_AUDIO_INFO_RATE(&audio_info);
+                priv->channels = GST_AUDIO_INFO_CHANNELS(&audio_info);
+                priv->depth = GST_AUDIO_INFO_DEPTH(&audio_info);
             }
         }
         gst_object_unref(pad);

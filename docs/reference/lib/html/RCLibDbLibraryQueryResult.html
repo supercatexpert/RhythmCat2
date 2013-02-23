@@ -140,6 +140,7 @@ enum                <a class="link" href="RCLibDbLibraryQueryResult.html#RCLibDb
                                                          <em class="parameter"><code><a class="link" href="RCLibDbLibraryQueryResult.html#RCLibDbLibraryDataType" title="enum RCLibDbLibraryDataType"><span class="type">RCLibDbLibraryDataType</span></a> type1</code></em>,
                                                          <em class="parameter"><code>...</code></em>);
 <span class="returnvalue">void</span>                <a class="link" href="RCLibDbLibraryQueryResult.html#rclib-db-library-delete" title="rclib_db_library_delete ()">rclib_db_library_delete</a>             (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *uri</code></em>);
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RCLibDbLibraryQueryResult.html#rclib-db-library-exist" title="rclib_db_library_exist ()">rclib_db_library_exist</a>              (<em class="parameter"><code><a class="link" href="RCLibDbLibraryQueryResult.html#RCLibDbLibraryData"><span class="type">RCLibDbLibraryData</span></a> *library_data</code></em>);
 <a href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GObject"><span class="returnvalue">GObject</span></a> *           <a class="link" href="RCLibDbLibraryQueryResult.html#rclib-db-library-get-album-query-result" title="rclib_db_library_get_album_query_result ()">rclib_db_library_get_album_query_result</a>
                                                         ();
 <a href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GObject"><span class="returnvalue">GObject</span></a> *           <a class="link" href="RCLibDbLibraryQueryResult.html#rclib-db-library-get-artist-query-result" title="rclib_db_library_get_artist_query_result ()">rclib_db_library_get_artist_query_result</a>
@@ -2150,6 +2151,27 @@ Delete the the music item by the given URI. MT safe.
 <td><p><span class="term"><em class="parameter"><code>uri</code></em> :</span></p></td>
 <td>the URI of the music item to delete</td>
 </tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-db-library-exist"></a><h3>rclib_db_library_exist ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rclib_db_library_exist              (<em class="parameter"><code><a class="link" href="RCLibDbLibraryQueryResult.html#RCLibDbLibraryData"><span class="type">RCLibDbLibraryData</span></a> *library_data</code></em>);</pre>
+<p>
+Check whether the library data exists in the library.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>library_data</code></em> :</span></p></td>
+<td>the library data</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>Whether the library data exists in the library.</td>
+</tr>
+</tbody>
 </table></div>
 </div>
 <hr>

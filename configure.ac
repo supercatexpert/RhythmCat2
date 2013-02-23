@@ -62,8 +62,8 @@ PKG_CHECK_MODULES([GLIB2], [glib-2.0 >= 2.32, gthread-2.0 >= 2.32, \
     
 PKG_CHECK_MODULES([GSTREAMER], [gstreamer-1.0 >= 1.0, \
     gstreamer-pbutils-1.0 >= 1.0, gstreamer-plugins-base-1.0 >= 1.0, \
-    gstreamer-fft-1.0 >= 1.0], have_gstreamer10=yes, \
-    have_gstreamer10=no)
+    gstreamer-fft-1.0 >= 1.0 gstreamer-audio-1.0 >= 1.0], \
+    have_gstreamer10=yes, have_gstreamer10=no)
 if test "x$enable_gstreamer10" = "xno"; then
     have_gstreamer10=no
 fi
@@ -76,12 +76,12 @@ AC_ARG_ENABLE(gstreamer10, AS_HELP_STRING([--enable-gstreamer10], \
 if test "x$enable_gstreamer10" = "xyes"; then
     PKG_CHECK_MODULES([GSTREAMER], [gstreamer-1.0 >= 1.0, \
         gstreamer-pbutils-1.0 >= 1.0, gstreamer-plugins-base-1.0 >= 1.0, \
-        gstreamer-fft-1.0 >= 1.0])
+        gstreamer-fft-1.0 >= 1.0 gstreamer-audio-1.0 >= 1.0])
     gstreamer_version="1.0.x"
 else
     PKG_CHECK_MODULES([GSTREAMER], [gstreamer-0.10 >= 0.10.33, \
     gstreamer-pbutils-0.10 >= 0.10.33 gstreamer-plugins-base-0.10 >= 0.10.33 \
-    gstreamer-fft-0.10 >= 0.10.33])
+    gstreamer-fft-0.10 >= 0.10.33 gstreamer-audio-0.10 >= 0.10.33])
     gstreamer_version="0.10.x"
 fi
 AM_CONDITIONAL(USE_GSTREAMER10, test "x$enable_gstreamer10" = "xyes")

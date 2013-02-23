@@ -155,19 +155,45 @@ static void rc_plugin_notify_metadata_changed_cb(RCLibCore *core,
     if(metadata->image!=NULL)
     {
         loader = gdk_pixbuf_loader_new();
-        if(gdk_pixbuf_loader_write(loader, metadata->image->data,
-            metadata->image->size, &error))
-        {
-            pixbuf = gdk_pixbuf_loader_get_pixbuf(loader);
-            if(pixbuf!=NULL) g_object_ref(pixbuf);
-            gdk_pixbuf_loader_close(loader, NULL);
-        }
-        else
-        {
-            g_warning("NotifyPopups: Cannot load cover image "
-                "from GstBuffer: %s", error->message);
-            g_error_free(error);
-        }
+        #if GST_VERSION_MAJOR==1
+            GstMapInfo map_info;
+            if(gst_buffer_map(metadata->image, &map_info, GST_MAP_READ))
+            {
+                if(gdk_pixbuf_loader_write(loader, map_info.data,
+                    map_info.size, &error))
+                {
+                    pixbuf = gdk_pixbuf_loader_get_pixbuf(loader);
+                    if(pixbuf!=NULL) g_object_ref(pixbuf);
+                    gdk_pixbuf_loader_close(loader, NULL);
+                }
+                else
+                {
+                    g_warning("NotifyPopups: Cannot load cover image "
+                        "from GstBuffer: %s", error->message);
+                    g_error_free(error);
+                }
+                gst_buffer_unmap(metadata->image, &map_info);
+            }
+            else
+            {
+                g_warning("NotifyPopups: Cannot map image buffer!");
+                g_error_free(error);
+            }
+        #else
+            if(gdk_pixbuf_loader_write(loader, metadata->image->data,
+                metadata->image->size, &error))
+            {
+                pixbuf = gdk_pixbuf_loader_get_pixbuf(loader);
+                if(pixbuf!=NULL) g_object_ref(pixbuf);
+                gdk_pixbuf_loader_close(loader, NULL);
+            }
+            else
+            {
+                g_warning("NotifyPopups: Cannot load cover image "
+                    "from GstBuffer: %s", error->message);
+                g_error_free(error);
+            }
+        #endif
         g_object_unref(loader);
     }
     if(pixbuf!=NULL)
