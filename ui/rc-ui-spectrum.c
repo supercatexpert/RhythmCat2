@@ -437,7 +437,7 @@ static inline void rc_ui_spectrum_run(RCUiSpectrumWidget *spectrum,
     guint bands;
     guint nfft;
     guint size;
-    gint64 interval = GST_SECOND / 10;
+    gint64 interval = GST_SECOND / 25;
     gint frame_size;
     gfloat *input;
     guint input_pos;

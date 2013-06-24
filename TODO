@@ -1,4 +1,6 @@
-- New information and control pad
+- New information and control pad, client-side decoration
+- Move configuration files to ~/.config/RhythmCat2
+- Move user plug-in files to ~/.local/share/RhythmCat2/plugins
 - Player Command Interpreter build in LibRhythmCat
 - Use desktop.in
 

@@ -74,6 +74,7 @@ static gboolean main_malloc_flag = FALSE;
 static gchar **main_remaining_args = NULL;
 static gchar *main_data_dir = NULL;
 static gchar *main_user_dir = NULL;
+static gchar *main_plugin_dir = NULL;
 
 static inline void rc_main_settings_init()
 {
@@ -233,7 +234,7 @@ static void rc_main_app_activate(GApplication *application)
         NULL);
     rclib_plugin_init(plugin_conf);
     g_free(plugin_conf);
-    plugin_dir = g_build_filename(main_user_dir, "Plugins", NULL);
+    plugin_dir = g_build_filename(main_plugin_dir, NULL);
     g_mkdir_with_parents(plugin_dir, 0700);
     rclib_plugin_load_from_dir(plugin_dir);
     prefixdir_gfile = g_file_new_for_path(PREFIXDIR);
@@ -471,8 +472,8 @@ gint rc_main_run(gint *argc, gchar **argv[])
     g_option_context_add_group(context, gst_init_get_option_group());
     g_option_context_add_group(context, gtk_get_option_group(TRUE));
     #ifdef ENABLE_INTROSPECTION
-	    g_option_context_add_group(context,
-	        g_irepository_get_option_group());
+        g_option_context_add_group(context,
+        g_irepository_get_option_group());
     #endif
     if(!g_option_context_parse(context, argc, argv, &error))
     {
@@ -526,7 +527,9 @@ gint rc_main_run(gint *argc, gchar **argv[])
     home_dir = g_getenv("HOME");
     if(home_dir==NULL)
         home_dir = g_get_home_dir();
-    main_user_dir = g_build_filename(home_dir, ".RhythmCat2", NULL);
+    main_user_dir = g_build_filename(home_dir, ".config", "RhythmCat2", NULL);
+    main_plugin_dir = g_build_filename(home_dir, ".local", "share",
+        "RhythmCat2", "Plugins", NULL);
     if(!rclib_init(argc, argv, main_user_dir, &error))
     {
         g_error("Cannot load core: %s", error->message);
@@ -574,6 +577,7 @@ void rc_main_exit()
     rclib_exit();
     g_free(main_data_dir);
     g_free(main_user_dir);
+    g_free(main_plugin_dir);
 }
 
 /**

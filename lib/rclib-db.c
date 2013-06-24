@@ -52,6 +52,30 @@ struct _RCLibDbQuery
     gint dummy;
 };
 
+struct _RCLibDbEntry
+{
+    gint ref_count;
+    RCLibMetadata *metadata;
+    gfloat rating;
+    RCLibString *lyric_file;
+    RCLibString *lyric_file_sec;
+    RCLibString *album_file;
+};
+
+struct _RCLibDbEntryList
+{
+    gint ref_count;
+    GHashTable *entry_table;
+    GSequence *order;
+};
+
+struct _RCLibDbEntryManager
+{
+    gint ref_count;
+    GHashTable *list_table;
+    GSequence *order;
+};
+
 typedef struct RCLibDbXMLParserData
 {
     gboolean db_flag;
@@ -1666,7 +1690,22 @@ GType rclib_db_get_type()
     }
     return g_define_type_id__volatile;
 }
-
+/*
+GType rclib_db_entry_get_type()
+{
+    static volatile gsize g_define_type_id__volatile = 0;
+    GType g_define_type_id;
+    if(g_once_init_enter(&g_define_type_id__volatile))
+    {
+        g_define_type_id = g_boxed_type_register_static(
+            g_intern_static_string("RCLibDbEntry"),
+            (GBoxedCopyFunc)rclib_db_entry_ref,
+            (GBoxedFreeFunc)rclib_db_entry_unref);
+        g_once_init_leave (&g_define_type_id__volatile, g_define_type_id);
+    }
+    return g_define_type_id__volatile;
+}
+*/
 GType rclib_db_catalog_data_get_type(void)
 {
     static volatile gsize g_define_type_id__volatile = 0;

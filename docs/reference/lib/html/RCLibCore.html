@@ -54,9 +54,9 @@ enum                <a class="link" href="RCLibCore.html#RCLibCorePlaySource" ti
 enum                <a class="link" href="RCLibCore.html#RCLibCoreSourceType" title="enum RCLibCoreSourceType">RCLibCoreSourceType</a>;
 <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RCLibCore.html#rclib-core-audio-output-get" title="rclib_core_audio_output_get ()">rclib_core_audio_output_get</a>         (<em class="parameter"><code><a class="link" href="RCLibCore.html#RCLibCoreAudioOutputType" title="enum RCLibCoreAudioOutputType"><span class="type">RCLibCoreAudioOutputType</span></a> *output_type</code></em>);
 <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RCLibCore.html#rclib-core-audio-output-set" title="rclib_core_audio_output_set ()">rclib_core_audio_output_set</a>         (<em class="parameter"><code><a class="link" href="RCLibCore.html#RCLibCoreAudioOutputType" title="enum RCLibCoreAudioOutputType"><span class="type">RCLibCoreAudioOutputType</span></a> output_type</code></em>);
-<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RCLibCore.html#rclib-core-effect-plugin-add" title="rclib_core_effect_plugin_add ()">rclib_core_effect_plugin_add</a>        (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/gstreamer-0.10/GstElement.html"><span class="type">GstElement</span></a> *element</code></em>);
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RCLibCore.html#rclib-core-effect-plugin-add" title="rclib_core_effect_plugin_add ()">rclib_core_effect_plugin_add</a>        (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstElement.html"><span class="type">GstElement</span></a> *element</code></em>);
 <a href="/usr/share/gtk-doc/html/glib/glib-Doubly-Linked-Lists.html#GList"><span class="returnvalue">GList</span></a> *             <a class="link" href="RCLibCore.html#rclib-core-effect-plugin-get-list" title="rclib_core_effect_plugin_get_list ()">rclib_core_effect_plugin_get_list</a>   ();
-<span class="returnvalue">void</span>                <a class="link" href="RCLibCore.html#rclib-core-effect-plugin-remove" title="rclib_core_effect_plugin_remove ()">rclib_core_effect_plugin_remove</a>     (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/gstreamer-0.10/GstElement.html"><span class="type">GstElement</span></a> *element</code></em>);
+<span class="returnvalue">void</span>                <a class="link" href="RCLibCore.html#rclib-core-effect-plugin-remove" title="rclib_core_effect_plugin_remove ()">rclib_core_effect_plugin_remove</a>     (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstElement.html"><span class="type">GstElement</span></a> *element</code></em>);
 <span class="returnvalue">void</span>                <a class="link" href="RCLibCore.html#rclib-core-exit" title="rclib_core_exit ()">rclib_core_exit</a>                     ();
 <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RCLibCore.html#rclib-core-get-balance" title="rclib_core_get_balance ()">rclib_core_get_balance</a>              (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gfloat"><span class="type">gfloat</span></a> *balance</code></em>);
 <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RCLibCore.html#rclib-core-get-eq" title="rclib_core_get_eq ()">rclib_core_get_eq</a>                   (<em class="parameter"><code><a class="link" href="RCLibCore.html#RCLibCoreEQType" title="enum RCLibCoreEQType"><span class="type">RCLibCoreEQType</span></a> *type</code></em>,
@@ -68,9 +68,9 @@ const <a class="link" href="RCLibCore.html#RCLibCoreMetadata" title="struct RCLi
                                                          <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> *source_reference</code></em>,
                                                          <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> **cookie</code></em>);
 <a class="link" href="RCLibCore.html#RCLibCoreSourceType" title="enum RCLibCoreSourceType"><span class="returnvalue">RCLibCoreSourceType</span></a> <a class="link" href="RCLibCore.html#rclib-core-get-source-type" title="rclib_core_get_source_type ()">rclib_core_get_source_type</a>          ();
-<a href="/usr/share/gtk-doc/html/gstreamer-0.10/GstElement.html#GstStateChangeReturn"><span class="returnvalue">GstStateChangeReturn</span></a> <a class="link" href="RCLibCore.html#rclib-core-get-state" title="rclib_core_get_state ()">rclib_core_get_state</a>               (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/gstreamer-0.10/GstElement.html#GstState"><span class="type">GstState</span></a> *state</code></em>,
-                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/gstreamer-0.10/GstElement.html#GstState"><span class="type">GstState</span></a> *pending</code></em>,
-                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/gstreamer-0.10/GstClock.html#GstClockTime"><span class="type">GstClockTime</span></a> timeout</code></em>);
+<a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstElement.html#GstStateChangeReturn"><span class="returnvalue">GstStateChangeReturn</span></a> <a class="link" href="RCLibCore.html#rclib-core-get-state" title="rclib_core_get_state ()">rclib_core_get_state</a>               (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstElement.html#GstState"><span class="type">GstState</span></a> *state</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstElement.html#GstState"><span class="type">GstState</span></a> *pending</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstClock.html#GstClockTime"><span class="type">GstClockTime</span></a> timeout</code></em>);
 <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *             <a class="link" href="RCLibCore.html#rclib-core-get-uri" title="rclib_core_get_uri ()">rclib_core_get_uri</a>                  ();
 <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RCLibCore.html#rclib-core-get-volume" title="rclib_core_get_volume ()">rclib_core_get_volume</a>               (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gdouble"><span class="type">gdouble</span></a> *volume</code></em>);
 <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RCLibCore.html#rclib-core-init" title="rclib_core_init ()">rclib_core_init</a>                     (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Error-Reporting.html#GError"><span class="type">GError</span></a> **error</code></em>);
@@ -330,12 +330,12 @@ The enum type for core error messages.
 </tr>
 <tr>
 <td><p><a name="RCLIB-CORE-ERROR-CREATE-BIN-FAILED:CAPS"></a><span class="term"><code class="literal">RCLIB_CORE_ERROR_CREATE_BIN_FAILED</code></span></p></td>
-<td>cannot create necessary <a href="/usr/share/gtk-doc/html/gstreamer-0.10/GstBin.html"><span class="type">GstBin</span></a>
+<td>cannot create necessary <a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstBin.html"><span class="type">GstBin</span></a>
 </td>
 </tr>
 <tr>
 <td><p><a name="RCLIB-CORE-ERROR-LINK-FAILED:CAPS"></a><span class="term"><code class="literal">RCLIB_CORE_ERROR_LINK_FAILED</code></span></p></td>
-<td>cannot link necessary <a href="/usr/share/gtk-doc/html/gstreamer-0.10/GstElement.html"><span class="type">GstElement</span></a>
+<td>cannot link necessary <a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstElement.html"><span class="type">GstElement</span></a>
 </td>
 </tr>
 </tbody>
@@ -400,7 +400,7 @@ The structure for metadata read from core.
 <td>the year</td>
 </tr>
 <tr>
-<td><p><span class="term"><a href="/usr/share/gtk-doc/html/gstreamer-0.10/gstreamer-GstBuffer.html#GstBuffer"><span class="type">GstBuffer</span></a> *<em class="structfield"><code><a name="RCLibCoreMetadata.image"></a>image</code></em>;</span></p></td>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/gstreamer-1.0/gstreamer-GstBuffer.html#GstBuffer"><span class="type">GstBuffer</span></a> *<em class="structfield"><code><a name="RCLibCoreMetadata.image"></a>image</code></em>;</span></p></td>
 <td>the cover image buffer</td>
 </tr>
 </tbody>
@@ -530,7 +530,7 @@ Set the audio output plug-in for the player.
 <hr>
 <div class="refsect2">
 <a name="rclib-core-effect-plugin-add"></a><h3>rclib_core_effect_plugin_add ()</h3>
-<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rclib_core_effect_plugin_add        (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/gstreamer-0.10/GstElement.html"><span class="type">GstElement</span></a> *element</code></em>);</pre>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rclib_core_effect_plugin_add        (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstElement.html"><span class="type">GstElement</span></a> *element</code></em>);</pre>
 <p>
 Add a new GStreamer sound effect plugin to the player.
 Notice that this operation must be done when the player is not
@@ -570,7 +570,7 @@ please do not modify or free it. <span class="annotation">[<acronym title="Gener
 <hr>
 <div class="refsect2">
 <a name="rclib-core-effect-plugin-remove"></a><h3>rclib_core_effect_plugin_remove ()</h3>
-<pre class="programlisting"><span class="returnvalue">void</span>                rclib_core_effect_plugin_remove     (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/gstreamer-0.10/GstElement.html"><span class="type">GstElement</span></a> *element</code></em>);</pre>
+<pre class="programlisting"><span class="returnvalue">void</span>                rclib_core_effect_plugin_remove     (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstElement.html"><span class="type">GstElement</span></a> *element</code></em>);</pre>
 <p>
 Remove an existed GStreamer sound effect plugin to the player.
 Notice that this operation must be done when the player is not
@@ -749,9 +749,9 @@ Get source type of the URI.
 <hr>
 <div class="refsect2">
 <a name="rclib-core-get-state"></a><h3>rclib_core_get_state ()</h3>
-<pre class="programlisting"><a href="/usr/share/gtk-doc/html/gstreamer-0.10/GstElement.html#GstStateChangeReturn"><span class="returnvalue">GstStateChangeReturn</span></a> rclib_core_get_state               (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/gstreamer-0.10/GstElement.html#GstState"><span class="type">GstState</span></a> *state</code></em>,
-                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/gstreamer-0.10/GstElement.html#GstState"><span class="type">GstState</span></a> *pending</code></em>,
-                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/gstreamer-0.10/GstClock.html#GstClockTime"><span class="type">GstClockTime</span></a> timeout</code></em>);</pre>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstElement.html#GstStateChangeReturn"><span class="returnvalue">GstStateChangeReturn</span></a> rclib_core_get_state               (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstElement.html#GstState"><span class="type">GstState</span></a> *state</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstElement.html#GstState"><span class="type">GstState</span></a> *pending</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstClock.html#GstClockTime"><span class="type">GstClockTime</span></a> timeout</code></em>);</pre>
 <p>
 Gets the state of the element.
 </p>
@@ -760,28 +760,28 @@ Gets the state of the element.
 <tbody>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>state</code></em> :</span></p></td>
-<td>a pointer to <a href="/usr/share/gtk-doc/html/gstreamer-0.10/GstElement.html#GstState"><span class="type">GstState</span></a> to hold the state.
+<td>a pointer to <a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstElement.html#GstState"><span class="type">GstState</span></a> to hold the state.
 Can be <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><span class="type">NULL</span></a>. <span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>][<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span>
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>pending</code></em> :</span></p></td>
-<td>a pointer to <a href="/usr/share/gtk-doc/html/gstreamer-0.10/GstElement.html#GstState"><span class="type">GstState</span></a> to hold the
+<td>a pointer to <a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstElement.html#GstState"><span class="type">GstState</span></a> to hold the
 pending state. Can be <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><span class="type">NULL</span></a>. <span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>][<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span>
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>timeout</code></em> :</span></p></td>
-<td>a <a href="/usr/share/gtk-doc/html/gstreamer-0.10/GstClock.html#GstClockTime"><span class="type">GstClockTime</span></a> to specify the timeout for an async state
+<td>a <a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstClock.html#GstClockTime"><span class="type">GstClockTime</span></a> to specify the timeout for an async state
 change or GST_CLOCK_TIME_NONE for infinite timeout</td>
 </tr>
 <tr>
 <td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
 <td>
-<a href="/usr/share/gtk-doc/html/gstreamer-0.10/GstElement.html#GST-STATE-CHANGE-SUCCESS:CAPS"><span class="type">GST_STATE_CHANGE_SUCCESS</span></a> if the element has no more pending
-state and the last state change succeeded, <a href="/usr/share/gtk-doc/html/gstreamer-0.10/GstElement.html#GST-STATE-CHANGE-ASYNC:CAPS"><span class="type">GST_STATE_CHANGE_ASYNC</span></a> if
+<a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstElement.html#GST-STATE-CHANGE-SUCCESS:CAPS"><span class="type">GST_STATE_CHANGE_SUCCESS</span></a> if the element has no more pending
+state and the last state change succeeded, <a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstElement.html#GST-STATE-CHANGE-ASYNC:CAPS"><span class="type">GST_STATE_CHANGE_ASYNC</span></a> if
 the element is still performing a state change or
-<a href="/usr/share/gtk-doc/html/gstreamer-0.10/GstElement.html#GST-STATE-CHANGE-FAILURE:CAPS"><span class="type">GST_STATE_CHANGE_FAILURE</span></a> if the last state change failed. MT safe.</td>
+<a href="/usr/share/gtk-doc/html/gstreamer-1.0/GstElement.html#GST-STATE-CHANGE-FAILURE:CAPS"><span class="type">GST_STATE_CHANGE_FAILURE</span></a> if the last state change failed. MT safe.</td>
 </tr>
 </tbody>
 </table></div>
@@ -1287,12 +1287,12 @@ Warning: This signal is emitted from the working thread of GStreamer.
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>buffer</code></em> :</span></p></td>
-<td>the <a href="/usr/share/gtk-doc/html/gstreamer-0.10/gstreamer-GstBuffer.html#GstBuffer"><span class="type">GstBuffer</span></a>
+<td>the <a href="/usr/share/gtk-doc/html/gstreamer-1.0/gstreamer-GstBuffer.html#GstBuffer"><span class="type">GstBuffer</span></a>
 </td>
 </tr>
 <tr>
 <td><p><span class="term"><em class="parameter"><code>caps</code></em> :</span></p></td>
-<td>the <a href="/usr/share/gtk-doc/html/gstreamer-0.10/gstreamer-GstCaps.html#GstCaps"><span class="type">GstCaps</span></a>
+<td>the <a href="/usr/share/gtk-doc/html/gstreamer-1.0/gstreamer-GstCaps.html#GstCaps"><span class="type">GstCaps</span></a>
 </td>
 </tr>
 <tr>

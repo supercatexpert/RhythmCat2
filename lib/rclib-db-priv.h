@@ -27,6 +27,7 @@
 
 #include "rclib-db.h"
 #include "rclib-tag.h"
+#include "rclib-util.h"
 
 #define RCLIB_DB_ERROR rclib_db_error_quark()
 

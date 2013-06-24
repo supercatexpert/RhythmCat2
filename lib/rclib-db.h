@@ -45,7 +45,9 @@ G_BEGIN_DECLS
 #define RCLIB_IS_DB_CLASS(k) (G_TYPE_CHECK_CLASS_TYPE((k), RCLIB_TYPE_DB))
 #define RCLIB_DB_GET_CLASS(o) (G_TYPE_INSTANCE_GET_CLASS((o), \
     RCLIB_TYPE_DB, RCLibDbClass))
-    
+
+#define RCLIB_TYPE_DB_ENTRY (rclib_db_entry_get_type())
+
 #define RCLIB_TYPE_DB_LIBRARY_QUERY_RESULT \
     (rclib_db_library_query_result_get_type())
 #define RCLIB_DB_LIBRARY_QUERY_RESULT(obj) (G_TYPE_CHECK_INSTANCE_CAST((obj), \
@@ -301,6 +303,7 @@ typedef enum {
     RCLIB_DB_QUERY_CONDITION_TYPE_LAST = 13
 }RCLibDbQueryConditionType;
 
+typedef struct _RCLibDbEntry RCLibDbEntry;
 typedef struct _RCLibDbCatalogData RCLibDbCatalogData;
 typedef struct _RCLibDbPlaylistData RCLibDbPlaylistData;
 typedef struct _RCLibDbLibraryData RCLibDbLibraryData;
@@ -403,6 +406,7 @@ struct _RCLibDbLibraryQueryResultClass {
 
 /*< private >*/
 GType rclib_db_get_type();
+//GType rclib_db_entry_get_type();
 GType rclib_db_library_query_result_get_type();
 GType rclib_db_catalog_data_get_type();
 GType rclib_db_playlist_data_get_type();

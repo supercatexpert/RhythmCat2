@@ -767,21 +767,21 @@ static void rclib_core_bus_callback(GstBus *bus, GstMessage *msg,
                 if(priv->end_time>0 && (priv->end_time - priv->start_time>0))
                 {
                     gst_element_seek(priv->playbin, 1.0, GST_FORMAT_TIME, 
-                        GST_SEEK_FLAG_FLUSH | GST_SEEK_FLAG_KEY_UNIT,
+                        GST_SEEK_FLAG_FLUSH | GST_SEEK_FLAG_ACCURATE,
                         GST_SEEK_TYPE_SET, priv->start_time,
                         GST_SEEK_TYPE_SET, priv->end_time);
                 } 
                 else
                 {
                     gst_element_seek_simple(priv->playbin, GST_FORMAT_TIME,
-                        GST_SEEK_FLAG_FLUSH | GST_SEEK_FLAG_KEY_UNIT,
+                        GST_SEEK_FLAG_FLUSH | GST_SEEK_FLAG_ACCURATE,
                         priv->start_time);
                 }
             }
             else if(priv->end_time>0)
             {
                 gst_element_seek(priv->playbin, 1.0, GST_FORMAT_TIME, 
-                    GST_SEEK_FLAG_FLUSH | GST_SEEK_FLAG_KEY_UNIT,
+                    GST_SEEK_FLAG_FLUSH | GST_SEEK_FLAG_ACCURATE,
                     GST_SEEK_TYPE_NONE, 0,
                     GST_SEEK_TYPE_SET, priv->end_time);
             }
@@ -1590,13 +1590,13 @@ gboolean rclib_core_set_position(gint64 pos)
     if(priv->start_time>0)
     {
         return gst_element_seek_simple(priv->playbin, GST_FORMAT_TIME, 
-            GST_SEEK_FLAG_FLUSH | GST_SEEK_FLAG_KEY_UNIT,
+            GST_SEEK_FLAG_FLUSH | GST_SEEK_FLAG_ACCURATE,
             pos + priv->start_time);
     }
     else
     {
         return gst_element_seek_simple(priv->playbin, GST_FORMAT_TIME, 
-            GST_SEEK_FLAG_FLUSH | GST_SEEK_FLAG_KEY_UNIT, pos);
+            GST_SEEK_FLAG_FLUSH | GST_SEEK_FLAG_ACCURATE, pos);
     }
 }
 
