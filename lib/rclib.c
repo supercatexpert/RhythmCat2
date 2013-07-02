@@ -24,7 +24,7 @@
  */
 
 #include "rclib.h"
-#include "rclib-common.h"
+#include "rclib-common-priv.h"
 
 /**
  * SECTION: rclib

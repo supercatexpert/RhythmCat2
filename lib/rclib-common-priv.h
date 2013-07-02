@@ -1,7 +1,7 @@
 /*
- * RhythmCat Library Common Header Declaration
+ * RhythmCat Library Common Private Header Declaration
  *
- * rclib-common.h
+ * rclib-common-priv.h
  * This file is part of RhythmCat Library (LibRhythmCat)
  *
  * Copyright (C) 2012 - SuperCat, license: GPL v3
@@ -22,15 +22,23 @@
  * Boston, MA  02110-1301  USA
  */
 
-#ifndef HAVE_RCLIB_COMMON_H
-#define HAVE_RCLIB_COMMON_H
+#ifndef HAVE_RCLIB_COMMON_PRIVATE_H
+#define HAVE_RCLIB_COMMON_PRIVATE_H
 
 #include <glib.h>
+#include <glib/gi18n.h>
 
 G_BEGIN_DECLS
 
-typedef struct _RCLibString RCLibString;
+#ifdef G_LOG_DOMAIN
+#undef G_LOG_DOMAIN
+#endif
+
+#define G_LOG_DOMAIN "LibRhythmCat2"
+#define GETTEXT_PACKAGE "RhythmCat2"
+#define PACKAGE "RhythmCat2"
 
 G_END_DECLS
 
 #endif
+

@@ -10,7 +10,9 @@ rclib_db_playlist_data_get_type
 rclib_db_playlist_iter_get_type
 rclib_db_query_get_type
 rclib_lyric_get_type
+rclib_metadata_get_type
 rclib_player_get_type
 rclib_plugin_data_get_type
 rclib_plugin_get_type
+rclib_string_get_type
 rclib_tag_metadata_get_type

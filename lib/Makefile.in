@@ -121,6 +121,7 @@ am__objects_1 = librhythmcat_2_0_la-rclib-core.lo \
 	librhythmcat_2_0_la-rclib-settings.lo \
 	librhythmcat_2_0_la-rclib-album.lo \
 	librhythmcat_2_0_la-rclib-plugin.lo \
+	librhythmcat_2_0_la-rclib-string.lo \
 	librhythmcat_2_0_la-rclib.lo
 am__objects_2 = librhythmcat_2_0_la-rclib-marshal.lo
 am_librhythmcat_2_0_la_OBJECTS = $(am__objects_1) $(am__objects_2)
@@ -360,15 +361,16 @@ lib_LTLIBRARIES = librhythmcat-2.0.la
 librhythmcat_2_0_sources = \
     rclib-core.c  rclib-cue.c rclib-tag.c rclib-db.c rclib-db-playlist.c \
     rclib-db-library.c rclib-player.c rclib-util.c rclib-lyric.c \
-    rclib-settings.c rclib-album.c rclib-plugin.c rclib.c
+    rclib-settings.c rclib-album.c rclib-plugin.c rclib-string.c rclib.c
 
 librhythmcat_2_0_builtsources = rclib-marshal.c
 librhythmcat_2_0_headers = \
     rclib-core.h rclib-cue.h rclib-db.h rclib-tag.h rclib-util.h \
     rclib-player.h rclib-lyric.h rclib-settings.h rclib-album.h \
-    rclib-plugin.h rclib.h
+    rclib-plugin.h rclib-string.h rclib-common.h \
+    rclib.h
 
-librhythmcat_2_0_priv_headers = rclib-common.h rclib-db-priv.h
+librhythmcat_2_0_priv_headers = rclib-common-priv.h rclib-db-priv.h
 librhythmcat_2_0_builtheaders = rclib-marshal.h
 librhythmcat_2_0_la_SOURCES = $(librhythmcat_2_0_sources) \
 	$(librhythmcat_2_0_builtsources) $(BUILT_SOURCES)
@@ -493,6 +495,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/librhythmcat_2_0_la-rclib-player.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/librhythmcat_2_0_la-rclib-plugin.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/librhythmcat_2_0_la-rclib-settings.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/librhythmcat_2_0_la-rclib-string.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/librhythmcat_2_0_la-rclib-tag.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/librhythmcat_2_0_la-rclib-util.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/librhythmcat_2_0_la-rclib.Plo@am__quote@
@@ -601,6 +604,13 @@ librhythmcat_2_0_la-rclib-plugin.lo: rclib-plugin.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='rclib-plugin.c' object='librhythmcat_2_0_la-rclib-plugin.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(librhythmcat_2_0_la_CFLAGS) $(CFLAGS) -c -o librhythmcat_2_0_la-rclib-plugin.lo `test -f 'rclib-plugin.c' || echo '$(srcdir)/'`rclib-plugin.c
+
+librhythmcat_2_0_la-rclib-string.lo: rclib-string.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(librhythmcat_2_0_la_CFLAGS) $(CFLAGS) -MT librhythmcat_2_0_la-rclib-string.lo -MD -MP -MF $(DEPDIR)/librhythmcat_2_0_la-rclib-string.Tpo -c -o librhythmcat_2_0_la-rclib-string.lo `test -f 'rclib-string.c' || echo '$(srcdir)/'`rclib-string.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/librhythmcat_2_0_la-rclib-string.Tpo $(DEPDIR)/librhythmcat_2_0_la-rclib-string.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='rclib-string.c' object='librhythmcat_2_0_la-rclib-string.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(librhythmcat_2_0_la_CFLAGS) $(CFLAGS) -c -o librhythmcat_2_0_la-rclib-string.lo `test -f 'rclib-string.c' || echo '$(srcdir)/'`rclib-string.c
 
 librhythmcat_2_0_la-rclib.lo: rclib.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(librhythmcat_2_0_la_CFLAGS) $(CFLAGS) -MT librhythmcat_2_0_la-rclib.lo -MD -MP -MF $(DEPDIR)/librhythmcat_2_0_la-rclib.Tpo -c -o librhythmcat_2_0_la-rclib.lo `test -f 'rclib.c' || echo '$(srcdir)/'`rclib.c

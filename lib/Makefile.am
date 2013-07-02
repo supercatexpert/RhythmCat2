@@ -4,16 +4,17 @@ lib_LTLIBRARIES = librhythmcat-2.0.la
 librhythmcat_2_0_sources = \
     rclib-core.c  rclib-cue.c rclib-tag.c rclib-db.c rclib-db-playlist.c \
     rclib-db-library.c rclib-player.c rclib-util.c rclib-lyric.c \
-    rclib-settings.c rclib-album.c rclib-plugin.c rclib.c
+    rclib-settings.c rclib-album.c rclib-plugin.c rclib-string.c rclib.c
     
 librhythmcat_2_0_builtsources = rclib-marshal.c
 
 librhythmcat_2_0_headers = \
     rclib-core.h rclib-cue.h rclib-db.h rclib-tag.h rclib-util.h \
     rclib-player.h rclib-lyric.h rclib-settings.h rclib-album.h \
-    rclib-plugin.h rclib.h
+    rclib-plugin.h rclib-string.h rclib-common.h \
+    rclib.h
 
-librhythmcat_2_0_priv_headers = rclib-common.h rclib-db-priv.h
+librhythmcat_2_0_priv_headers = rclib-common-priv.h rclib-db-priv.h
 
 librhythmcat_2_0_builtheaders = rclib-marshal.h
 

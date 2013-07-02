@@ -26,7 +26,7 @@
 #include <gobject/gvaluecollector.h>
 #include "rclib-db.h"
 #include "rclib-db-priv.h"
-#include "rclib-common.h"
+#include "rclib-common-priv.h"
 #include "rclib-marshal.h"
 #include "rclib-tag.h"
 #include "rclib-cue.h"

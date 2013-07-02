@@ -44,6 +44,7 @@
 <a name="RCLibDb"></a><a name="RCLibDbCatalogData"></a><a name="RCLibDbCatalogIter"></a><a name="RCLibDbLibraryData"></a><a name="RCLibDbLibraryQueryResultIter"></a><a name="RCLibDbPlaylistData"></a><a name="RCLibDbPlaylistIter"></a><a name="RCLibDbQuery"></a><pre class="synopsis">
 #include &lt;rclib-db.h&gt;
 
+#define             <a class="link" href="RCLibDbLibraryQueryResult.html#RCLIB-TYPE-DB-ENTRY:CAPS" title="RCLIB_TYPE_DB_ENTRY">RCLIB_TYPE_DB_ENTRY</a>
 #define             <a class="link" href="RCLibDbLibraryQueryResult.html#RCLIB-TYPE-DB-LIBRARY-QUERY-RESULT-PROP-ITER:CAPS" title="RCLIB_TYPE_DB_LIBRARY_QUERY_RESULT_PROP_ITER">RCLIB_TYPE_DB_LIBRARY_QUERY_RESULT_PROP_ITER</a>
 struct              <a class="link" href="RCLibDbLibraryQueryResult.html#RCLibDb-struct" title="struct RCLibDb">RCLibDb</a>;
                     <a class="link" href="RCLibDbLibraryQueryResult.html#RCLibDbCatalogData-struct" title="RCLibDbCatalogData">RCLibDbCatalogData</a>;
@@ -51,6 +52,7 @@ enum                <a class="link" href="RCLibDbLibraryQueryResult.html#RCLibDb
                     <a class="link" href="RCLibDbLibraryQueryResult.html#RCLibDbCatalogIter-struct" title="RCLibDbCatalogIter">RCLibDbCatalogIter</a>;
 enum                <a class="link" href="RCLibDbLibraryQueryResult.html#RCLibDbCatalogType" title="enum RCLibDbCatalogType">RCLibDbCatalogType</a>;
 struct              <a class="link" href="RCLibDbLibraryQueryResult.html#RCLibDbClass" title="struct RCLibDbClass">RCLibDbClass</a>;
+                    <a class="link" href="RCLibDbLibraryQueryResult.html#RCLibDbEntry" title="RCLibDbEntry">RCLibDbEntry</a>;
                     <a class="link" href="RCLibDbLibraryQueryResult.html#RCLibDbLibraryData-struct" title="RCLibDbLibraryData">RCLibDbLibraryData</a>;
 enum                <a class="link" href="RCLibDbLibraryQueryResult.html#RCLibDbLibraryDataType" title="enum RCLibDbLibraryDataType">RCLibDbLibraryDataType</a>;
 struct              <a class="link" href="RCLibDbLibraryQueryResult.html#RCLibDbLibraryQueryResult-struct" title="struct RCLibDbLibraryQueryResult">RCLibDbLibraryQueryResult</a>;
@@ -466,6 +468,12 @@ the metadata in playlists asynchronously.
 <div class="refsect1">
 <a name="RCLibDbLibraryQueryResult.details"></a><h2>Details</h2>
 <div class="refsect2">
+<a name="RCLIB-TYPE-DB-ENTRY:CAPS"></a><h3>RCLIB_TYPE_DB_ENTRY</h3>
+<pre class="programlisting">#define RCLIB_TYPE_DB_ENTRY (rclib_db_entry_get_type())
+</pre>
+</div>
+<hr>
+<div class="refsect2">
 <a name="RCLIB-TYPE-DB-LIBRARY-QUERY-RESULT-PROP-ITER:CAPS"></a><h3>RCLIB_TYPE_DB_LIBRARY_QUERY_RESULT_PROP_ITER</h3>
 <pre class="programlisting">#define             RCLIB_TYPE_DB_LIBRARY_QUERY_RESULT_PROP_ITER</pre>
 </div>
@@ -570,6 +578,11 @@ The enum type for catalog type.
 <p>
 <a class="link" href="RCLibDbLibraryQueryResult.html#RCLibDb"><span class="type">RCLibDb</span></a> class.
 </p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="RCLibDbEntry"></a><h3>RCLibDbEntry</h3>
+<pre class="programlisting">typedef struct _RCLibDbEntry RCLibDbEntry;</pre>
 </div>
 <hr>
 <div class="refsect2">

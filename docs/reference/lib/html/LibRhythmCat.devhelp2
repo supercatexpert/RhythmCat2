@@ -14,6 +14,7 @@
       <sub name="Settings" link="LibRhythmCat-Settings.html"/>
       <sub name="Tag Processor" link="LibRhythmCat-Tag-Processor.html"/>
       <sub name="Utilities" link="LibRhythmCat-Utilities.html"/>
+      <sub name="Refable String" link="LibRhythmCat-Refable-String.html"/>
     </sub>
     <sub name="Object Hierarchy" link="object-tree.html"/>
     <sub name="API Index" link="api-index-full.html"/>
@@ -103,6 +104,7 @@
     <keyword type="function" name="rclib_cue_get_track_num ()" link="LibRhythmCat-Cue-Parser.html#rclib-cue-get-track-num"/>
     <keyword type="function" name="rclib_cue_read_data ()" link="LibRhythmCat-Cue-Parser.html#rclib-cue-read-data"/>
     <keyword type="function" name="rclib_cue_set_fallback_encoding ()" link="LibRhythmCat-Cue-Parser.html#rclib-cue-set-fallback-encoding"/>
+    <keyword type="macro" name="RCLIB_TYPE_DB_ENTRY" link="RCLibDbLibraryQueryResult.html#RCLIB-TYPE-DB-ENTRY:CAPS"/>
     <keyword type="macro" name="RCLIB_TYPE_DB_LIBRARY_QUERY_RESULT_PROP_ITER" link="RCLibDbLibraryQueryResult.html#RCLIB-TYPE-DB-LIBRARY-QUERY-RESULT-PROP-ITER:CAPS"/>
     <keyword type="struct" name="struct RCLibDb" link="RCLibDbLibraryQueryResult.html#RCLibDb-struct"/>
     <keyword type="struct" name="RCLibDbCatalogData" link="RCLibDbLibraryQueryResult.html#RCLibDbCatalogData-struct"/>
@@ -110,6 +112,7 @@
     <keyword type="struct" name="RCLibDbCatalogIter" link="RCLibDbLibraryQueryResult.html#RCLibDbCatalogIter-struct"/>
     <keyword type="enum" name="enum RCLibDbCatalogType" link="RCLibDbLibraryQueryResult.html#RCLibDbCatalogType"/>
     <keyword type="struct" name="struct RCLibDbClass" link="RCLibDbLibraryQueryResult.html#RCLibDbClass"/>
+    <keyword type="struct" name="RCLibDbEntry" link="RCLibDbLibraryQueryResult.html#RCLibDbEntry"/>
     <keyword type="struct" name="RCLibDbLibraryData" link="RCLibDbLibraryQueryResult.html#RCLibDbLibraryData-struct"/>
     <keyword type="enum" name="enum RCLibDbLibraryDataType" link="RCLibDbLibraryQueryResult.html#RCLibDbLibraryDataType"/>
     <keyword type="struct" name="struct RCLibDbLibraryQueryResult" link="RCLibDbLibraryQueryResult.html#RCLibDbLibraryQueryResult-struct"/>
@@ -409,6 +412,23 @@
     <keyword type="function" name="rclib_tag_get_name_from_uri ()" link="LibRhythmCat-Tag-Processor.html#rclib-tag-get-name-from-uri"/>
     <keyword type="function" name="rclib_tag_read_metadata ()" link="LibRhythmCat-Tag-Processor.html#rclib-tag-read-metadata"/>
     <keyword type="function" name="rclib_tag_set_fallback_encoding ()" link="LibRhythmCat-Tag-Processor.html#rclib-tag-set-fallback-encoding"/>
+    <keyword type="struct" name="RCLibMetadata" link="LibRhythmCat-Utilities.html#RCLibMetadata-struct"/>
+    <keyword type="enum" name="enum RCLibMetadataPropType" link="LibRhythmCat-Utilities.html#RCLibMetadataPropType"/>
+    <keyword type="function" name="rclib_metadata_dup_cstring ()" link="LibRhythmCat-Utilities.html#rclib-metadata-dup-cstring"/>
+    <keyword type="function" name="rclib_metadata_free ()" link="LibRhythmCat-Utilities.html#rclib-metadata-free"/>
+    <keyword type="function" name="rclib_metadata_get_cstring ()" link="LibRhythmCat-Utilities.html#rclib-metadata-get-cstring"/>
+    <keyword type="function" name="rclib_metadata_get_int ()" link="LibRhythmCat-Utilities.html#rclib-metadata-get-int"/>
+    <keyword type="function" name="rclib_metadata_get_int64 ()" link="LibRhythmCat-Utilities.html#rclib-metadata-get-int64"/>
+    <keyword type="function" name="rclib_metadata_get_string ()" link="LibRhythmCat-Utilities.html#rclib-metadata-get-string"/>
+    <keyword type="function" name="rclib_metadata_get_uint ()" link="LibRhythmCat-Utilities.html#rclib-metadata-get-uint"/>
+    <keyword type="function" name="rclib_metadata_new ()" link="LibRhythmCat-Utilities.html#rclib-metadata-new"/>
+    <keyword type="function" name="rclib_metadata_ref ()" link="LibRhythmCat-Utilities.html#rclib-metadata-ref"/>
+    <keyword type="function" name="rclib_metadata_set_cstring ()" link="LibRhythmCat-Utilities.html#rclib-metadata-set-cstring"/>
+    <keyword type="function" name="rclib_metadata_set_int ()" link="LibRhythmCat-Utilities.html#rclib-metadata-set-int"/>
+    <keyword type="function" name="rclib_metadata_set_int64 ()" link="LibRhythmCat-Utilities.html#rclib-metadata-set-int64"/>
+    <keyword type="function" name="rclib_metadata_set_string ()" link="LibRhythmCat-Utilities.html#rclib-metadata-set-string"/>
+    <keyword type="function" name="rclib_metadata_set_uint ()" link="LibRhythmCat-Utilities.html#rclib-metadata-set-uint"/>
+    <keyword type="function" name="rclib_metadata_unref ()" link="LibRhythmCat-Utilities.html#rclib-metadata-unref"/>
     <keyword type="function" name="rclib_util_detect_encoding_by_locale ()" link="LibRhythmCat-Utilities.html#rclib-util-detect-encoding-by-locale"/>
     <keyword type="function" name="rclib_util_get_cover_search_dir ()" link="LibRhythmCat-Utilities.html#rclib-util-get-cover-search-dir"/>
     <keyword type="function" name="rclib_util_get_data_dir ()" link="LibRhythmCat-Utilities.html#rclib-util-get-data-dir"/>
@@ -416,6 +436,31 @@
     <keyword type="function" name="rclib_util_is_supported_media ()" link="LibRhythmCat-Utilities.html#rclib-util-is-supported-media"/>
     <keyword type="function" name="rclib_util_search_cover ()" link="LibRhythmCat-Utilities.html#rclib-util-search-cover"/>
     <keyword type="function" name="rclib_util_set_cover_search_dir ()" link="LibRhythmCat-Utilities.html#rclib-util-set-cover-search-dir"/>
+    <keyword type="struct" name="RCLibString" link="LibRhythmCat-Refable-String.html#RCLibString-struct"/>
+    <keyword type="function" name="rclib_string_append ()" link="LibRhythmCat-Refable-String.html#rclib-string-append"/>
+    <keyword type="function" name="rclib_string_append_len ()" link="LibRhythmCat-Refable-String.html#rclib-string-append-len"/>
+    <keyword type="function" name="rclib_string_append_printf ()" link="LibRhythmCat-Refable-String.html#rclib-string-append-printf"/>
+    <keyword type="function" name="rclib_string_append_vprintf ()" link="LibRhythmCat-Refable-String.html#rclib-string-append-vprintf"/>
+    <keyword type="function" name="rclib_string_dup ()" link="LibRhythmCat-Refable-String.html#rclib-string-dup"/>
+    <keyword type="function" name="rclib_string_equal ()" link="LibRhythmCat-Refable-String.html#rclib-string-equal"/>
+    <keyword type="function" name="rclib_string_erase ()" link="LibRhythmCat-Refable-String.html#rclib-string-erase"/>
+    <keyword type="function" name="rclib_string_free ()" link="LibRhythmCat-Refable-String.html#rclib-string-free"/>
+    <keyword type="function" name="rclib_string_get ()" link="LibRhythmCat-Refable-String.html#rclib-string-get"/>
+    <keyword type="function" name="rclib_string_hash ()" link="LibRhythmCat-Refable-String.html#rclib-string-hash"/>
+    <keyword type="function" name="rclib_string_insert ()" link="LibRhythmCat-Refable-String.html#rclib-string-insert"/>
+    <keyword type="function" name="rclib_string_insert_len ()" link="LibRhythmCat-Refable-String.html#rclib-string-insert-len"/>
+    <keyword type="function" name="rclib_string_length ()" link="LibRhythmCat-Refable-String.html#rclib-string-length"/>
+    <keyword type="function" name="rclib_string_new ()" link="LibRhythmCat-Refable-String.html#rclib-string-new"/>
+    <keyword type="function" name="rclib_string_overwrite ()" link="LibRhythmCat-Refable-String.html#rclib-string-overwrite"/>
+    <keyword type="function" name="rclib_string_overwrite_len ()" link="LibRhythmCat-Refable-String.html#rclib-string-overwrite-len"/>
+    <keyword type="function" name="rclib_string_prepend ()" link="LibRhythmCat-Refable-String.html#rclib-string-prepend"/>
+    <keyword type="function" name="rclib_string_prepend_len ()" link="LibRhythmCat-Refable-String.html#rclib-string-prepend-len"/>
+    <keyword type="function" name="rclib_string_printf ()" link="LibRhythmCat-Refable-String.html#rclib-string-printf"/>
+    <keyword type="function" name="rclib_string_ref ()" link="LibRhythmCat-Refable-String.html#rclib-string-ref"/>
+    <keyword type="function" name="rclib_string_set ()" link="LibRhythmCat-Refable-String.html#rclib-string-set"/>
+    <keyword type="function" name="rclib_string_truncate ()" link="LibRhythmCat-Refable-String.html#rclib-string-truncate"/>
+    <keyword type="function" name="rclib_string_unref ()" link="LibRhythmCat-Refable-String.html#rclib-string-unref"/>
+    <keyword type="function" name="rclib_string_vprintf ()" link="LibRhythmCat-Refable-String.html#rclib-string-vprintf"/>
     <keyword type="constant" name="RCLIB_ALBUM_TYPE_FILENAME" link="RCLibAlbum.html#RCLIB-ALBUM-TYPE-FILENAME:CAPS"/>
     <keyword type="constant" name="RCLIB_ALBUM_TYPE_BUFFER" link="RCLibAlbum.html#RCLIB-ALBUM-TYPE-BUFFER:CAPS"/>
     <keyword type="constant" name="RCLIB_CORE_AUDIO_OUTPUT_AUTO" link="RCLibCore.html#RCLIB-CORE-AUDIO-OUTPUT-AUTO:CAPS"/>
@@ -532,5 +577,20 @@
     <keyword type="constant" name="RCLIB_PLUGIN_TYPE_UNKNOWN" link="RCLibPlugin.html#RCLIB-PLUGIN-TYPE-UNKNOWN:CAPS"/>
     <keyword type="constant" name="RCLIB_PLUGIN_TYPE_MODULE" link="RCLibPlugin.html#RCLIB-PLUGIN-TYPE-MODULE:CAPS"/>
     <keyword type="constant" name="RCLIB_PLUGIN_TYPE_LOADER" link="RCLibPlugin.html#RCLIB-PLUGIN-TYPE-LOADER:CAPS"/>
+    <keyword type="constant" name="RCLIB_METADATA_TYPE_NONE" link="LibRhythmCat-Utilities.html#RCLIB-METADATA-TYPE-NONE:CAPS"/>
+    <keyword type="constant" name="RCLIB_METADATA_TYPE_URI" link="LibRhythmCat-Utilities.html#RCLIB-METADATA-TYPE-URI:CAPS"/>
+    <keyword type="constant" name="RCLIB_METADATA_TYPE_TITLE" link="LibRhythmCat-Utilities.html#RCLIB-METADATA-TYPE-TITLE:CAPS"/>
+    <keyword type="constant" name="RCLIB_METADATA_TYPE_ARTIST" link="LibRhythmCat-Utilities.html#RCLIB-METADATA-TYPE-ARTIST:CAPS"/>
+    <keyword type="constant" name="RCLIB_METADATA_TYPE_ALBUM" link="LibRhythmCat-Utilities.html#RCLIB-METADATA-TYPE-ALBUM:CAPS"/>
+    <keyword type="constant" name="RCLIB_METADATA_TYPE_FTYPE" link="LibRhythmCat-Utilities.html#RCLIB-METADATA-TYPE-FTYPE:CAPS"/>
+    <keyword type="constant" name="RCLIB_METADATA_TYPE_LENGTH" link="LibRhythmCat-Utilities.html#RCLIB-METADATA-TYPE-LENGTH:CAPS"/>
+    <keyword type="constant" name="RCLIB_METADATA_TYPE_TRACKNUM" link="LibRhythmCat-Utilities.html#RCLIB-METADATA-TYPE-TRACKNUM:CAPS"/>
+    <keyword type="constant" name="RCLIB_METADATA_TYPE_YEAR" link="LibRhythmCat-Utilities.html#RCLIB-METADATA-TYPE-YEAR:CAPS"/>
+    <keyword type="constant" name="RCLIB_METADATA_TYPE_COMMENT" link="LibRhythmCat-Utilities.html#RCLIB-METADATA-TYPE-COMMENT:CAPS"/>
+    <keyword type="constant" name="RCLIB_METADATA_TYPE_GENRE" link="LibRhythmCat-Utilities.html#RCLIB-METADATA-TYPE-GENRE:CAPS"/>
+    <keyword type="constant" name="RCLIB_METADATA_TYPE_SAMPLERATE" link="LibRhythmCat-Utilities.html#RCLIB-METADATA-TYPE-SAMPLERATE:CAPS"/>
+    <keyword type="constant" name="RCLIB_METADATA_TYPE_BITRATE" link="LibRhythmCat-Utilities.html#RCLIB-METADATA-TYPE-BITRATE:CAPS"/>
+    <keyword type="constant" name="RCLIB_METADATA_TYPE_DEPTH" link="LibRhythmCat-Utilities.html#RCLIB-METADATA-TYPE-DEPTH:CAPS"/>
+    <keyword type="constant" name="RCLIB_METADATA_TYPE_CHANNELS" link="LibRhythmCat-Utilities.html#RCLIB-METADATA-TYPE-CHANNELS:CAPS"/>
   </functions>
 </book>

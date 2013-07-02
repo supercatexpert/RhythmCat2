@@ -7,7 +7,7 @@
 <link rel="home" href="index.html" title="LibRhythmCat Reference Manual">
 <link rel="up" href="ch01.html" title="API reference">
 <link rel="prev" href="LibRhythmCat-Tag-Processor.html" title="Tag Processor">
-<link rel="next" href="object-tree.html" title="Object Hierarchy">
+<link rel="next" href="LibRhythmCat-Refable-String.html" title="Refable String">
 <meta name="generator" content="GTK-Doc V1.18 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
@@ -18,12 +18,14 @@
 <td><a accesskey="u" href="ch01.html"><img src="up.png" width="24" height="24" border="0" alt="Up"></a></td>
 <td><a accesskey="h" href="index.html"><img src="home.png" width="24" height="24" border="0" alt="Home"></a></td>
 <th width="100%" align="center">LibRhythmCat Reference Manual</th>
-<td><a accesskey="n" href="object-tree.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
+<td><a accesskey="n" href="LibRhythmCat-Refable-String.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
 </tr>
 <tr><td colspan="5" class="shortcuts">
 <a href="#LibRhythmCat-Utilities.synopsis" class="shortcut">Top</a>
                    | 
                   <a href="#LibRhythmCat-Utilities.description" class="shortcut">Description</a>
+                   | 
+                  <a href="#LibRhythmCat-Utilities.object-hierarchy" class="shortcut">Object Hierarchy</a>
 </td></tr>
 </table>
 <div class="refentry">
@@ -37,9 +39,42 @@
 </tr></table></div>
 <div class="refsynopsisdiv">
 <a name="LibRhythmCat-Utilities.synopsis"></a><h2>Synopsis</h2>
-<pre class="synopsis">
+<a name="RCLibMetadata"></a><pre class="synopsis">
 #include &lt;rclib-util.h&gt;
 
+                    <a class="link" href="LibRhythmCat-Utilities.html#RCLibMetadata-struct" title="RCLibMetadata">RCLibMetadata</a>;
+enum                <a class="link" href="LibRhythmCat-Utilities.html#RCLibMetadataPropType" title="enum RCLibMetadataPropType">RCLibMetadataPropType</a>;
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *             <a class="link" href="LibRhythmCat-Utilities.html#rclib-metadata-dup-cstring" title="rclib_metadata_dup_cstring ()">rclib_metadata_dup_cstring</a>          (<em class="parameter"><code><a class="link" href="LibRhythmCat-Utilities.html#RCLibMetadata"><span class="type">RCLibMetadata</span></a> *metadata</code></em>,
+                                                         <em class="parameter"><code><a class="link" href="LibRhythmCat-Utilities.html#RCLibMetadataPropType" title="enum RCLibMetadataPropType"><span class="type">RCLibMetadataPropType</span></a> prop</code></em>);
+<span class="returnvalue">void</span>                <a class="link" href="LibRhythmCat-Utilities.html#rclib-metadata-free" title="rclib_metadata_free ()">rclib_metadata_free</a>                 (<em class="parameter"><code><a class="link" href="LibRhythmCat-Utilities.html#RCLibMetadata"><span class="type">RCLibMetadata</span></a> *metadata</code></em>);
+const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *       <a class="link" href="LibRhythmCat-Utilities.html#rclib-metadata-get-cstring" title="rclib_metadata_get_cstring ()">rclib_metadata_get_cstring</a>          (<em class="parameter"><code><a class="link" href="LibRhythmCat-Utilities.html#RCLibMetadata"><span class="type">RCLibMetadata</span></a> *metadata</code></em>,
+                                                         <em class="parameter"><code><a class="link" href="LibRhythmCat-Utilities.html#RCLibMetadataPropType" title="enum RCLibMetadataPropType"><span class="type">RCLibMetadataPropType</span></a> prop</code></em>);
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="returnvalue">gint</span></a>                <a class="link" href="LibRhythmCat-Utilities.html#rclib-metadata-get-int" title="rclib_metadata_get_int ()">rclib_metadata_get_int</a>              (<em class="parameter"><code><a class="link" href="LibRhythmCat-Utilities.html#RCLibMetadata"><span class="type">RCLibMetadata</span></a> *metadata</code></em>,
+                                                         <em class="parameter"><code><a class="link" href="LibRhythmCat-Utilities.html#RCLibMetadataPropType" title="enum RCLibMetadataPropType"><span class="type">RCLibMetadataPropType</span></a> prop</code></em>);
+<span class="returnvalue">gint64</span>              <a class="link" href="LibRhythmCat-Utilities.html#rclib-metadata-get-int64" title="rclib_metadata_get_int64 ()">rclib_metadata_get_int64</a>            (<em class="parameter"><code><a class="link" href="LibRhythmCat-Utilities.html#RCLibMetadata"><span class="type">RCLibMetadata</span></a> *metadata</code></em>,
+                                                         <em class="parameter"><code><a class="link" href="LibRhythmCat-Utilities.html#RCLibMetadataPropType" title="enum RCLibMetadataPropType"><span class="type">RCLibMetadataPropType</span></a> prop</code></em>);
+<a class="link" href="LibRhythmCat-Refable-String.html#RCLibString"><span class="returnvalue">RCLibString</span></a> *       <a class="link" href="LibRhythmCat-Utilities.html#rclib-metadata-get-string" title="rclib_metadata_get_string ()">rclib_metadata_get_string</a>           (<em class="parameter"><code><a class="link" href="LibRhythmCat-Utilities.html#RCLibMetadata"><span class="type">RCLibMetadata</span></a> *metadata</code></em>,
+                                                         <em class="parameter"><code><a class="link" href="LibRhythmCat-Utilities.html#RCLibMetadataPropType" title="enum RCLibMetadataPropType"><span class="type">RCLibMetadataPropType</span></a> prop</code></em>);
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="returnvalue">guint</span></a>               <a class="link" href="LibRhythmCat-Utilities.html#rclib-metadata-get-uint" title="rclib_metadata_get_uint ()">rclib_metadata_get_uint</a>             (<em class="parameter"><code><a class="link" href="LibRhythmCat-Utilities.html#RCLibMetadata"><span class="type">RCLibMetadata</span></a> *metadata</code></em>,
+                                                         <em class="parameter"><code><a class="link" href="LibRhythmCat-Utilities.html#RCLibMetadataPropType" title="enum RCLibMetadataPropType"><span class="type">RCLibMetadataPropType</span></a> prop</code></em>);
+<a class="link" href="LibRhythmCat-Utilities.html#RCLibMetadata"><span class="returnvalue">RCLibMetadata</span></a> *     <a class="link" href="LibRhythmCat-Utilities.html#rclib-metadata-new" title="rclib_metadata_new ()">rclib_metadata_new</a>                  ();
+<a class="link" href="LibRhythmCat-Utilities.html#RCLibMetadata"><span class="returnvalue">RCLibMetadata</span></a> *     <a class="link" href="LibRhythmCat-Utilities.html#rclib-metadata-ref" title="rclib_metadata_ref ()">rclib_metadata_ref</a>                  (<em class="parameter"><code><a class="link" href="LibRhythmCat-Utilities.html#RCLibMetadata"><span class="type">RCLibMetadata</span></a> *metadata</code></em>);
+<span class="returnvalue">void</span>                <a class="link" href="LibRhythmCat-Utilities.html#rclib-metadata-set-cstring" title="rclib_metadata_set_cstring ()">rclib_metadata_set_cstring</a>          (<em class="parameter"><code><a class="link" href="LibRhythmCat-Utilities.html#RCLibMetadata"><span class="type">RCLibMetadata</span></a> *metadata</code></em>,
+                                                         <em class="parameter"><code><a class="link" href="LibRhythmCat-Utilities.html#RCLibMetadataPropType" title="enum RCLibMetadataPropType"><span class="type">RCLibMetadataPropType</span></a> prop</code></em>,
+                                                         <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *value</code></em>);
+<span class="returnvalue">void</span>                <a class="link" href="LibRhythmCat-Utilities.html#rclib-metadata-set-int" title="rclib_metadata_set_int ()">rclib_metadata_set_int</a>              (<em class="parameter"><code><a class="link" href="LibRhythmCat-Utilities.html#RCLibMetadata"><span class="type">RCLibMetadata</span></a> *metadata</code></em>,
+                                                         <em class="parameter"><code><a class="link" href="LibRhythmCat-Utilities.html#RCLibMetadataPropType" title="enum RCLibMetadataPropType"><span class="type">RCLibMetadataPropType</span></a> prop</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> value</code></em>);
+<span class="returnvalue">void</span>                <a class="link" href="LibRhythmCat-Utilities.html#rclib-metadata-set-int64" title="rclib_metadata_set_int64 ()">rclib_metadata_set_int64</a>            (<em class="parameter"><code><a class="link" href="LibRhythmCat-Utilities.html#RCLibMetadata"><span class="type">RCLibMetadata</span></a> *metadata</code></em>,
+                                                         <em class="parameter"><code><a class="link" href="LibRhythmCat-Utilities.html#RCLibMetadataPropType" title="enum RCLibMetadataPropType"><span class="type">RCLibMetadataPropType</span></a> prop</code></em>,
+                                                         <em class="parameter"><code><span class="type">gint64</span> value</code></em>);
+<span class="returnvalue">void</span>                <a class="link" href="LibRhythmCat-Utilities.html#rclib-metadata-set-string" title="rclib_metadata_set_string ()">rclib_metadata_set_string</a>           (<em class="parameter"><code><a class="link" href="LibRhythmCat-Utilities.html#RCLibMetadata"><span class="type">RCLibMetadata</span></a> *metadata</code></em>,
+                                                         <em class="parameter"><code><a class="link" href="LibRhythmCat-Utilities.html#RCLibMetadataPropType" title="enum RCLibMetadataPropType"><span class="type">RCLibMetadataPropType</span></a> prop</code></em>,
+                                                         <em class="parameter"><code><a class="link" href="LibRhythmCat-Refable-String.html#RCLibString"><span class="type">RCLibString</span></a> *value</code></em>);
+<span class="returnvalue">void</span>                <a class="link" href="LibRhythmCat-Utilities.html#rclib-metadata-set-uint" title="rclib_metadata_set_uint ()">rclib_metadata_set_uint</a>             (<em class="parameter"><code><a class="link" href="LibRhythmCat-Utilities.html#RCLibMetadata"><span class="type">RCLibMetadata</span></a> *metadata</code></em>,
+                                                         <em class="parameter"><code><a class="link" href="LibRhythmCat-Utilities.html#RCLibMetadataPropType" title="enum RCLibMetadataPropType"><span class="type">RCLibMetadataPropType</span></a> prop</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> value</code></em>);
+<span class="returnvalue">void</span>                <a class="link" href="LibRhythmCat-Utilities.html#rclib-metadata-unref" title="rclib_metadata_unref ()">rclib_metadata_unref</a>                (<em class="parameter"><code><a class="link" href="LibRhythmCat-Utilities.html#RCLibMetadata"><span class="type">RCLibMetadata</span></a> *metadata</code></em>);
 <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *             <a class="link" href="LibRhythmCat-Utilities.html#rclib-util-detect-encoding-by-locale" title="rclib_util_detect_encoding_by_locale ()">rclib_util_detect_encoding_by_locale</a>
                                                         ();
 const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *       <a class="link" href="LibRhythmCat-Utilities.html#rclib-util-get-cover-search-dir" title="rclib_util_get_cover_search_dir ()">rclib_util_get_cover_search_dir</a>     ();
@@ -55,6 +90,13 @@ const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span c
 </pre>
 </div>
 <div class="refsect1">
+<a name="LibRhythmCat-Utilities.object-hierarchy"></a><h2>Object Hierarchy</h2>
+<pre class="synopsis">
+  GBoxed
+   +----RCLibMetadata
+</pre>
+</div>
+<div class="refsect1">
 <a name="LibRhythmCat-Utilities.description"></a><h2>Description</h2>
 <p>
 Some utility API for the player.
@@ -62,6 +104,482 @@ Some utility API for the player.
 </div>
 <div class="refsect1">
 <a name="LibRhythmCat-Utilities.details"></a><h2>Details</h2>
+<div class="refsect2">
+<a name="RCLibMetadata-struct"></a><h3>RCLibMetadata</h3>
+<pre class="programlisting">typedef struct _RCLibMetadata RCLibMetadata;</pre>
+<p>
+The structure for metadata.
+</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="RCLibMetadataPropType"></a><h3>enum RCLibMetadataPropType</h3>
+<pre class="programlisting">typedef enum {
+    RCLIB_METADATA_TYPE_NONE = 0,
+    RCLIB_METADATA_TYPE_URI = 1,
+    RCLIB_METADATA_TYPE_TITLE = 2,
+    RCLIB_METADATA_TYPE_ARTIST = 3,
+    RCLIB_METADATA_TYPE_ALBUM = 4,
+    RCLIB_METADATA_TYPE_FTYPE = 5,
+    RCLIB_METADATA_TYPE_LENGTH = 6,
+    RCLIB_METADATA_TYPE_TRACKNUM = 7,
+    RCLIB_METADATA_TYPE_YEAR = 8,
+    RCLIB_METADATA_TYPE_COMMENT = 9,
+    RCLIB_METADATA_TYPE_GENRE = 10,
+    RCLIB_METADATA_TYPE_SAMPLERATE = 11,
+    RCLIB_METADATA_TYPE_BITRATE = 12,
+    RCLIB_METADATA_TYPE_DEPTH = 13,
+    RCLIB_METADATA_TYPE_CHANNELS = 14
+} RCLibMetadataPropType;
+</pre>
+<p>
+The enum type for set/get the data in the <a class="link" href="RCLibDbLibraryQueryResult.html#RCLibDbPlaylistData"><span class="type">RCLibDbPlaylistData</span></a>
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><a name="RCLIB-METADATA-TYPE-NONE:CAPS"></a><span class="term"><code class="literal">RCLIB_METADATA_TYPE_NONE</code></span></p></td>
+<td>none type, not used by data
+</td>
+</tr>
+<tr>
+<td><p><a name="RCLIB-METADATA-TYPE-URI:CAPS"></a><span class="term"><code class="literal">RCLIB_METADATA_TYPE_URI</code></span></p></td>
+<td>the URI (string)
+</td>
+</tr>
+<tr>
+<td><p><a name="RCLIB-METADATA-TYPE-TITLE:CAPS"></a><span class="term"><code class="literal">RCLIB_METADATA_TYPE_TITLE</code></span></p></td>
+<td>the title (string)
+</td>
+</tr>
+<tr>
+<td><p><a name="RCLIB-METADATA-TYPE-ARTIST:CAPS"></a><span class="term"><code class="literal">RCLIB_METADATA_TYPE_ARTIST</code></span></p></td>
+<td>the artist (string)
+</td>
+</tr>
+<tr>
+<td><p><a name="RCLIB-METADATA-TYPE-ALBUM:CAPS"></a><span class="term"><code class="literal">RCLIB_METADATA_TYPE_ALBUM</code></span></p></td>
+<td>the album (string)
+</td>
+</tr>
+<tr>
+<td><p><a name="RCLIB-METADATA-TYPE-FTYPE:CAPS"></a><span class="term"><code class="literal">RCLIB_METADATA_TYPE_FTYPE</code></span></p></td>
+<td>the file type (string)
+</td>
+</tr>
+<tr>
+<td><p><a name="RCLIB-METADATA-TYPE-LENGTH:CAPS"></a><span class="term"><code class="literal">RCLIB_METADATA_TYPE_LENGTH</code></span></p></td>
+<td>the time length (<span class="type">gint64</span>)
+</td>
+</tr>
+<tr>
+<td><p><a name="RCLIB-METADATA-TYPE-TRACKNUM:CAPS"></a><span class="term"><code class="literal">RCLIB_METADATA_TYPE_TRACKNUM</code></span></p></td>
+<td>the track number (<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a>)
+</td>
+</tr>
+<tr>
+<td><p><a name="RCLIB-METADATA-TYPE-YEAR:CAPS"></a><span class="term"><code class="literal">RCLIB_METADATA_TYPE_YEAR</code></span></p></td>
+<td>the year (<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a>),
+</td>
+</tr>
+<tr>
+<td><p><a name="RCLIB-METADATA-TYPE-COMMENT:CAPS"></a><span class="term"><code class="literal">RCLIB_METADATA_TYPE_COMMENT</code></span></p></td>
+<td>the comment (string)
+</td>
+</tr>
+<tr>
+<td><p><a name="RCLIB-METADATA-TYPE-GENRE:CAPS"></a><span class="term"><code class="literal">RCLIB_METADATA_TYPE_GENRE</code></span></p></td>
+<td>the genre (string)
+</td>
+</tr>
+<tr>
+<td><p><a name="RCLIB-METADATA-TYPE-SAMPLERATE:CAPS"></a><span class="term"><code class="literal">RCLIB_METADATA_TYPE_SAMPLERATE</code></span></p></td>
+<td>the sample rate (guint)
+</td>
+</tr>
+<tr>
+<td><p><a name="RCLIB-METADATA-TYPE-BITRATE:CAPS"></a><span class="term"><code class="literal">RCLIB_METADATA_TYPE_BITRATE</code></span></p></td>
+<td>the bitrate (guint)
+</td>
+</tr>
+<tr>
+<td><p><a name="RCLIB-METADATA-TYPE-DEPTH:CAPS"></a><span class="term"><code class="literal">RCLIB_METADATA_TYPE_DEPTH</code></span></p></td>
+<td>the bit depth (guint)
+</td>
+</tr>
+<tr>
+<td><p><a name="RCLIB-METADATA-TYPE-CHANNELS:CAPS"></a><span class="term"><code class="literal">RCLIB_METADATA_TYPE_CHANNELS</code></span></p></td>
+<td>the number of channels (guint)
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-metadata-dup-cstring"></a><h3>rclib_metadata_dup_cstring ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *             rclib_metadata_dup_cstring          (<em class="parameter"><code><a class="link" href="LibRhythmCat-Utilities.html#RCLibMetadata"><span class="type">RCLibMetadata</span></a> *metadata</code></em>,
+                                                         <em class="parameter"><code><a class="link" href="LibRhythmCat-Utilities.html#RCLibMetadataPropType" title="enum RCLibMetadataPropType"><span class="type">RCLibMetadataPropType</span></a> prop</code></em>);</pre>
+<p>
+Duplicate C-style string value on the given property of <em class="parameter"><code>metadata</code></em>.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>metadata</code></em> :</span></p></td>
+<td>the <a class="link" href="LibRhythmCat-Refable-String.html#RCLibString"><span class="type">RCLibString</span></a> structure</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>prop</code></em> :</span></p></td>
+<td>the property type</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>The value of the given property. <span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span>
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-metadata-free"></a><h3>rclib_metadata_free ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rclib_metadata_free                 (<em class="parameter"><code><a class="link" href="LibRhythmCat-Utilities.html#RCLibMetadata"><span class="type">RCLibMetadata</span></a> *metadata</code></em>);</pre>
+<p>
+Free the <a class="link" href="LibRhythmCat-Utilities.html#RCLibMetadata"><span class="type">RCLibMetadata</span></a> data structure.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><em class="parameter"><code>metadata</code></em> :</span></p></td>
+<td>the <a class="link" href="LibRhythmCat-Utilities.html#RCLibMetadata"><span class="type">RCLibMetadata</span></a> structure</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-metadata-get-cstring"></a><h3>rclib_metadata_get_cstring ()</h3>
+<pre class="programlisting">const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *       rclib_metadata_get_cstring          (<em class="parameter"><code><a class="link" href="LibRhythmCat-Utilities.html#RCLibMetadata"><span class="type">RCLibMetadata</span></a> *metadata</code></em>,
+                                                         <em class="parameter"><code><a class="link" href="LibRhythmCat-Utilities.html#RCLibMetadataPropType" title="enum RCLibMetadataPropType"><span class="type">RCLibMetadataPropType</span></a> prop</code></em>);</pre>
+<p>
+Get C-style string value on the given property of <em class="parameter"><code>metadata</code></em>.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>metadata</code></em> :</span></p></td>
+<td>the <a class="link" href="LibRhythmCat-Refable-String.html#RCLibString"><span class="type">RCLibString</span></a> structure</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>prop</code></em> :</span></p></td>
+<td>the property type</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>The value of the given property. <span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span>
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-metadata-get-int"></a><h3>rclib_metadata_get_int ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="returnvalue">gint</span></a>                rclib_metadata_get_int              (<em class="parameter"><code><a class="link" href="LibRhythmCat-Utilities.html#RCLibMetadata"><span class="type">RCLibMetadata</span></a> *metadata</code></em>,
+                                                         <em class="parameter"><code><a class="link" href="LibRhythmCat-Utilities.html#RCLibMetadataPropType" title="enum RCLibMetadataPropType"><span class="type">RCLibMetadataPropType</span></a> prop</code></em>);</pre>
+<p>
+Get integer value on the given property of <em class="parameter"><code>metadata</code></em>.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>metadata</code></em> :</span></p></td>
+<td>the <a class="link" href="LibRhythmCat-Refable-String.html#RCLibString"><span class="type">RCLibString</span></a> structure</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>prop</code></em> :</span></p></td>
+<td>the property type</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>The value of the given property.</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-metadata-get-int64"></a><h3>rclib_metadata_get_int64 ()</h3>
+<pre class="programlisting"><span class="returnvalue">gint64</span>              rclib_metadata_get_int64            (<em class="parameter"><code><a class="link" href="LibRhythmCat-Utilities.html#RCLibMetadata"><span class="type">RCLibMetadata</span></a> *metadata</code></em>,
+                                                         <em class="parameter"><code><a class="link" href="LibRhythmCat-Utilities.html#RCLibMetadataPropType" title="enum RCLibMetadataPropType"><span class="type">RCLibMetadataPropType</span></a> prop</code></em>);</pre>
+<p>
+Get 64-bit integer value on the given property of <em class="parameter"><code>metadata</code></em>.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>metadata</code></em> :</span></p></td>
+<td>the <a class="link" href="LibRhythmCat-Refable-String.html#RCLibString"><span class="type">RCLibString</span></a> structure</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>prop</code></em> :</span></p></td>
+<td>the property type</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>The value of the given property.</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-metadata-get-string"></a><h3>rclib_metadata_get_string ()</h3>
+<pre class="programlisting"><a class="link" href="LibRhythmCat-Refable-String.html#RCLibString"><span class="returnvalue">RCLibString</span></a> *       rclib_metadata_get_string           (<em class="parameter"><code><a class="link" href="LibRhythmCat-Utilities.html#RCLibMetadata"><span class="type">RCLibMetadata</span></a> *metadata</code></em>,
+                                                         <em class="parameter"><code><a class="link" href="LibRhythmCat-Utilities.html#RCLibMetadataPropType" title="enum RCLibMetadataPropType"><span class="type">RCLibMetadataPropType</span></a> prop</code></em>);</pre>
+<p>
+Get string value on the given property of <em class="parameter"><code>metadata</code></em>.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>metadata</code></em> :</span></p></td>
+<td>the <a class="link" href="LibRhythmCat-Refable-String.html#RCLibString"><span class="type">RCLibString</span></a> structure</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>prop</code></em> :</span></p></td>
+<td>the property type</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>The value of the given property. <span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span>
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-metadata-get-uint"></a><h3>rclib_metadata_get_uint ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="returnvalue">guint</span></a>               rclib_metadata_get_uint             (<em class="parameter"><code><a class="link" href="LibRhythmCat-Utilities.html#RCLibMetadata"><span class="type">RCLibMetadata</span></a> *metadata</code></em>,
+                                                         <em class="parameter"><code><a class="link" href="LibRhythmCat-Utilities.html#RCLibMetadataPropType" title="enum RCLibMetadataPropType"><span class="type">RCLibMetadataPropType</span></a> prop</code></em>);</pre>
+<p>
+Get unsigned integer value on the given property of <em class="parameter"><code>metadata</code></em>.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>metadata</code></em> :</span></p></td>
+<td>the <a class="link" href="LibRhythmCat-Refable-String.html#RCLibString"><span class="type">RCLibString</span></a> structure</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>prop</code></em> :</span></p></td>
+<td>the property type</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>The value of the given property.</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-metadata-new"></a><h3>rclib_metadata_new ()</h3>
+<pre class="programlisting"><a class="link" href="LibRhythmCat-Utilities.html#RCLibMetadata"><span class="returnvalue">RCLibMetadata</span></a> *     rclib_metadata_new                  ();</pre>
+<p>
+Create a <a class="link" href="LibRhythmCat-Utilities.html#RCLibMetadata"><span class="type">RCLibMetadata</span></a> data structure.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>The <a class="link" href="LibRhythmCat-Utilities.html#RCLibMetadata"><span class="type">RCLibMetadata</span></a>, <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><span class="type">NULL</span></a> if any errors occured. <span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span>
+</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-metadata-ref"></a><h3>rclib_metadata_ref ()</h3>
+<pre class="programlisting"><a class="link" href="LibRhythmCat-Utilities.html#RCLibMetadata"><span class="returnvalue">RCLibMetadata</span></a> *     rclib_metadata_ref                  (<em class="parameter"><code><a class="link" href="LibRhythmCat-Utilities.html#RCLibMetadata"><span class="type">RCLibMetadata</span></a> *metadata</code></em>);</pre>
+<p>
+Increase the reference count of <a class="link" href="LibRhythmCat-Utilities.html#RCLibMetadata"><span class="type">RCLibMetadata</span></a> by 1.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>metadata</code></em> :</span></p></td>
+<td>the <a class="link" href="LibRhythmCat-Utilities.html#RCLibMetadata"><span class="type">RCLibMetadata</span></a> structure</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>The <a class="link" href="LibRhythmCat-Utilities.html#RCLibMetadata"><span class="type">RCLibMetadata</span></a>. <span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span>
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-metadata-set-cstring"></a><h3>rclib_metadata_set_cstring ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rclib_metadata_set_cstring          (<em class="parameter"><code><a class="link" href="LibRhythmCat-Utilities.html#RCLibMetadata"><span class="type">RCLibMetadata</span></a> *metadata</code></em>,
+                                                         <em class="parameter"><code><a class="link" href="LibRhythmCat-Utilities.html#RCLibMetadataPropType" title="enum RCLibMetadataPropType"><span class="type">RCLibMetadataPropType</span></a> prop</code></em>,
+                                                         <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *value</code></em>);</pre>
+<p>
+Set C-style string value on the given property of <em class="parameter"><code>metadata</code></em>.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>metadata</code></em> :</span></p></td>
+<td>the <a class="link" href="LibRhythmCat-Refable-String.html#RCLibString"><span class="type">RCLibString</span></a> structure</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>prop</code></em> :</span></p></td>
+<td>the property type</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>value</code></em> :</span></p></td>
+<td>the value to set</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-metadata-set-int"></a><h3>rclib_metadata_set_int ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rclib_metadata_set_int              (<em class="parameter"><code><a class="link" href="LibRhythmCat-Utilities.html#RCLibMetadata"><span class="type">RCLibMetadata</span></a> *metadata</code></em>,
+                                                         <em class="parameter"><code><a class="link" href="LibRhythmCat-Utilities.html#RCLibMetadataPropType" title="enum RCLibMetadataPropType"><span class="type">RCLibMetadataPropType</span></a> prop</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> value</code></em>);</pre>
+<p>
+Set integer value on the given property of <em class="parameter"><code>metadata</code></em>.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>metadata</code></em> :</span></p></td>
+<td>the <a class="link" href="LibRhythmCat-Refable-String.html#RCLibString"><span class="type">RCLibString</span></a> structure</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>prop</code></em> :</span></p></td>
+<td>the property type</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>value</code></em> :</span></p></td>
+<td>the value to set</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-metadata-set-int64"></a><h3>rclib_metadata_set_int64 ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rclib_metadata_set_int64            (<em class="parameter"><code><a class="link" href="LibRhythmCat-Utilities.html#RCLibMetadata"><span class="type">RCLibMetadata</span></a> *metadata</code></em>,
+                                                         <em class="parameter"><code><a class="link" href="LibRhythmCat-Utilities.html#RCLibMetadataPropType" title="enum RCLibMetadataPropType"><span class="type">RCLibMetadataPropType</span></a> prop</code></em>,
+                                                         <em class="parameter"><code><span class="type">gint64</span> value</code></em>);</pre>
+<p>
+Set 64-bit integer value on the given property of <em class="parameter"><code>metadata</code></em>.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>metadata</code></em> :</span></p></td>
+<td>the <a class="link" href="LibRhythmCat-Refable-String.html#RCLibString"><span class="type">RCLibString</span></a> structure</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>prop</code></em> :</span></p></td>
+<td>the property type</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>value</code></em> :</span></p></td>
+<td>the value to set</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-metadata-set-string"></a><h3>rclib_metadata_set_string ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rclib_metadata_set_string           (<em class="parameter"><code><a class="link" href="LibRhythmCat-Utilities.html#RCLibMetadata"><span class="type">RCLibMetadata</span></a> *metadata</code></em>,
+                                                         <em class="parameter"><code><a class="link" href="LibRhythmCat-Utilities.html#RCLibMetadataPropType" title="enum RCLibMetadataPropType"><span class="type">RCLibMetadataPropType</span></a> prop</code></em>,
+                                                         <em class="parameter"><code><a class="link" href="LibRhythmCat-Refable-String.html#RCLibString"><span class="type">RCLibString</span></a> *value</code></em>);</pre>
+<p>
+Set string value on the given property of <em class="parameter"><code>metadata</code></em>.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>metadata</code></em> :</span></p></td>
+<td>the <a class="link" href="LibRhythmCat-Refable-String.html#RCLibString"><span class="type">RCLibString</span></a> structure</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>prop</code></em> :</span></p></td>
+<td>the property type</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>value</code></em> :</span></p></td>
+<td>the value to set</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-metadata-set-uint"></a><h3>rclib_metadata_set_uint ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rclib_metadata_set_uint             (<em class="parameter"><code><a class="link" href="LibRhythmCat-Utilities.html#RCLibMetadata"><span class="type">RCLibMetadata</span></a> *metadata</code></em>,
+                                                         <em class="parameter"><code><a class="link" href="LibRhythmCat-Utilities.html#RCLibMetadataPropType" title="enum RCLibMetadataPropType"><span class="type">RCLibMetadataPropType</span></a> prop</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> value</code></em>);</pre>
+<p>
+Set unsigned integer value on the given property of <em class="parameter"><code>metadata</code></em>.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>metadata</code></em> :</span></p></td>
+<td>the <a class="link" href="LibRhythmCat-Refable-String.html#RCLibString"><span class="type">RCLibString</span></a> structure</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>prop</code></em> :</span></p></td>
+<td>the property type</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>value</code></em> :</span></p></td>
+<td>the value to set</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-metadata-unref"></a><h3>rclib_metadata_unref ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rclib_metadata_unref                (<em class="parameter"><code><a class="link" href="LibRhythmCat-Utilities.html#RCLibMetadata"><span class="type">RCLibMetadata</span></a> *metadata</code></em>);</pre>
+<p>
+Decrease the reference of <a class="link" href="LibRhythmCat-Utilities.html#RCLibMetadata"><span class="type">RCLibMetadata</span></a> by 1.
+If the reference down to zero, the structure will be freed.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><em class="parameter"><code>metadata</code></em> :</span></p></td>
+<td>the <a class="link" href="LibRhythmCat-Refable-String.html#RCLibString"><span class="type">RCLibString</span></a> structure</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
 <div class="refsect2">
 <a name="rclib-util-detect-encoding-by-locale"></a><h3>rclib_util_detect_encoding_by_locale ()</h3>
 <pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *             rclib_util_detect_encoding_by_locale

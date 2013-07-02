@@ -107,6 +107,7 @@ rclib_cue_set_fallback_encoding
 <FILE>rclib-db</FILE>
 <TITLE>RCLibDb</TITLE>
 <TITLE>RCLibDbLibraryQueryResult</TITLE>
+RCLIB_TYPE_DB_ENTRY
 RCLIB_TYPE_DB_LIBRARY_QUERY_RESULT_PROP_ITER
 RCLibDb
 RCLibDbCatalogData
@@ -114,6 +115,7 @@ RCLibDbCatalogDataType
 RCLibDbCatalogIter
 RCLibDbCatalogType
 RCLibDbClass
+RCLibDbEntry
 RCLibDbLibraryData
 RCLibDbLibraryDataType
 RCLibDbLibraryQueryResult
@@ -455,6 +457,37 @@ rclib_settings_update
 </SECTION>
 
 <SECTION>
+<FILE>rclib-string</FILE>
+RCLibString
+rclib_string_append
+rclib_string_append_len
+rclib_string_append_printf
+rclib_string_append_vprintf
+rclib_string_dup
+rclib_string_equal
+rclib_string_erase
+rclib_string_free
+rclib_string_get
+rclib_string_hash
+rclib_string_insert
+rclib_string_insert_len
+rclib_string_length
+rclib_string_new
+rclib_string_overwrite
+rclib_string_overwrite_len
+rclib_string_prepend
+rclib_string_prepend_len
+rclib_string_printf
+rclib_string_ref
+rclib_string_set
+rclib_string_truncate
+rclib_string_unref
+rclib_string_vprintf
+<SUBSECTION Standard>
+rclib_string_get_type
+</SECTION>
+
+<SECTION>
 <FILE>rclib-tag</FILE>
 RCLibTagMetadata
 rclib_tag_copy_data
@@ -471,6 +504,23 @@ rclib_tag_metadata_get_type
 
 <SECTION>
 <FILE>rclib-util</FILE>
+RCLibMetadata
+RCLibMetadataPropType
+rclib_metadata_dup_cstring
+rclib_metadata_free
+rclib_metadata_get_cstring
+rclib_metadata_get_int
+rclib_metadata_get_int64
+rclib_metadata_get_string
+rclib_metadata_get_uint
+rclib_metadata_new
+rclib_metadata_ref
+rclib_metadata_set_cstring
+rclib_metadata_set_int
+rclib_metadata_set_int64
+rclib_metadata_set_string
+rclib_metadata_set_uint
+rclib_metadata_unref
 rclib_util_detect_encoding_by_locale
 rclib_util_get_cover_search_dir
 rclib_util_get_data_dir
@@ -478,5 +528,7 @@ rclib_util_is_supported_list
 rclib_util_is_supported_media
 rclib_util_search_cover
 rclib_util_set_cover_search_dir
+<SUBSECTION Standard>
+rclib_metadata_get_type
 </SECTION>
 

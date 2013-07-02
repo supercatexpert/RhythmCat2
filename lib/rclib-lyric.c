@@ -24,7 +24,7 @@
  */
 
 #include "rclib-lyric.h"
-#include "rclib-common.h"
+#include "rclib-common-priv.h"
 #include "rclib-marshal.h"
 #include "rclib-core.h"
 #include "rclib-tag.h"

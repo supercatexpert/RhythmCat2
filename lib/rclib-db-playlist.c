@@ -25,7 +25,7 @@
 
 #include "rclib-db.h"
 #include "rclib-db-priv.h"
-#include "rclib-common.h"
+#include "rclib-common-priv.h"
 #include "rclib-tag.h"
 #include "rclib-cue.h"
 #include "rclib-core.h"

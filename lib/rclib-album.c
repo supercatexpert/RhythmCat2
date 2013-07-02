@@ -24,7 +24,7 @@
  */
 
 #include "rclib-album.h"
-#include "rclib-common.h"
+#include "rclib-common-priv.h"
 #include "rclib-core.h"
 #include "rclib-db.h"
 #include "rclib-util.h"

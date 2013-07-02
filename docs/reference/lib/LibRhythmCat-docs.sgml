@@ -27,6 +27,7 @@
     <xi:include href="xml/rclib-settings.xml"/>
     <xi:include href="xml/rclib-tag.xml"/>
     <xi:include href="xml/rclib-util.xml"/>
+    <xi:include href="xml/rclib-string.xml"/>
 
   </chapter>
   <chapter id="object-tree">
