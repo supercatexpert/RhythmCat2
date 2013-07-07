@@ -1,0 +1,83 @@
+Introduction:
+
+RhythmCat2 is a music player which can be used under Linux. It is not only a
+normal music player, it has both command-line interface and graphic user
+interface, and it can extend its features by plug-ins, like lyric show
+in window, desktop lyric show, etc... The GTK+ UI can use custom GTK+ 3
+themes, and the UI layout can be customed partially.
+
+Since this project in just in experimental stage, only GTK+ UI frontend has
+been implemented.
+
+Developing platform:
+
+Operating System: Debian Wheezy (Testing) for AMD64
+Compiler: gcc 4.6.3
+Programming Language: C
+Dependent Libraries (Minimum Runtime Requirement): glib-2.0 (>=2.32)
+    gtk+-3.0(>=3.4) gtk-doc-tools(>=1.18) gstreamer-0.10 (>=0.10.31)
+    gstreamer-plugins-base-0.10 (>=0.10.31)
+    gstreamer-plugins-good-0.10 (>=0.10.31)
+    
+Suggest Libraries: gstreamer-plugins-bad-0.10 gstreamer-plugins-ugly-0.10
+
+It is possible to support plug-in written in Python3 if installed Python3
+development packages and enabled Python3 plug-in support argument in configure.
+
+Developing stage:
+
+Unstable, features are implemented basically, somehow not well tested.
+
+License:
+
+GNU GPL v3.
+You MUST accept the GPL v3 License, then you can use this program and the
+source code.
+You can get the GPL v3 License (plain text) here:
+http://www.gnu.org/licenses/gpl.txt
+Or read the COPYING file in the source archive.
+
+How to install this program:
+
+Get the latest version from Github:
+
+git clone git://github.com/supercatexpert/RhythmCat2.git
+
+Now only source code is available, you should compile it, then you can
+use this program. Before you compile it, you should check the
+developing environment, and the libraries which this program depends. On
+Debian/Ubuntu, you can run the commands below to help you install the packages
+that the compilation needed: 
+
+sudo apt-get install build-essential libtool libgtk-3-dev libgstreamer0.10-dev \
+    libgstreamer-plugins-base0.10-dev libcurl4-openssl-dev gtk-doc-tools
+
+If you want to compile Python3 loader and use Python3 plug-ins, install
+package python3-dev (need Python version 3.2 or above):
+
+sudo apt-get install python3-dev
+
+If you want to play MP3 or other Restricted Audio Format, please install
+GStreamer Bad & Ugly plug-ins. In Debian/Ubuntu, you can just run:
+
+sudo apt-get install gstreamer0.10-plugins-bad gstreamer0.10-plugins-ugly
+
+Then you can try to compile it:
+
+./configure --with-native-plugins --with-python3-plugins
+make
+sudo make install
+
+Notice: You can remove argument '--with-native-plugins' or
+'--with-python3-plugins' if you do not need native plug-ins or
+Python3 plug-ins.
+
+then just run /usr/local/bin/RhythmCat2, feel happy with it!
+
+This program is in experimental stage now. We provide absolute no WARRANTY. 
+If you found any bugs, please send an e-mail to me, and report the bugs you
+found. My e-mail: supercatexpert@gmail.com . Or send the Issue on the 
+Github project page.
+
+
+

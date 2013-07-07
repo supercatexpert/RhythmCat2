@@ -1,0 +1,307 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Cue Parser</title>
+<meta name="generator" content="DocBook XSL Stylesheets V1.76.1">
+<link rel="home" href="index.html" title="LibRhythmCat Reference Manual">
+<link rel="up" href="ch01.html" title="API reference">
+<link rel="prev" href="RCLibCore.html" title="RCLibCore">
+<link rel="next" href="RCLibDbLibraryQueryResult.html" title="RCLibDb">
+<meta name="generator" content="GTK-Doc V1.18 (XML mode)">
+<link rel="stylesheet" href="style.css" type="text/css">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2">
+<tr valign="middle">
+<td><a accesskey="p" href="RCLibCore.html"><img src="left.png" width="24" height="24" border="0" alt="Prev"></a></td>
+<td><a accesskey="u" href="ch01.html"><img src="up.png" width="24" height="24" border="0" alt="Up"></a></td>
+<td><a accesskey="h" href="index.html"><img src="home.png" width="24" height="24" border="0" alt="Home"></a></td>
+<th width="100%" align="center">LibRhythmCat Reference Manual</th>
+<td><a accesskey="n" href="RCLibDbLibraryQueryResult.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
+</tr>
+<tr><td colspan="5" class="shortcuts">
+<a href="#LibRhythmCat-Cue-Parser.synopsis" class="shortcut">Top</a>
+                   | 
+                  <a href="#LibRhythmCat-Cue-Parser.description" class="shortcut">Description</a>
+</td></tr>
+</table>
+<div class="refentry">
+<a name="LibRhythmCat-Cue-Parser"></a><div class="titlepage"></div>
+<div class="refnamediv"><table width="100%"><tr>
+<td valign="top">
+<h2><span class="refentrytitle"><a name="LibRhythmCat-Cue-Parser.top_of_page"></a>Cue Parser</span></h2>
+<p>Cue Parser — CUE Parser.</p>
+</td>
+<td valign="top" align="right"></td>
+</tr></table></div>
+<div class="refsynopsisdiv">
+<a name="LibRhythmCat-Cue-Parser.synopsis"></a><h2>Synopsis</h2>
+<pre class="synopsis">
+#include &lt;rclib-cue.h&gt;
+
+struct              <a class="link" href="LibRhythmCat-Cue-Parser.html#RCLibCueData" title="struct RCLibCueData">RCLibCueData</a>;
+enum                <a class="link" href="LibRhythmCat-Cue-Parser.html#RCLibCueInputType" title="enum RCLibCueInputType">RCLibCueInputType</a>;
+struct              <a class="link" href="LibRhythmCat-Cue-Parser.html#RCLibCueTrack" title="struct RCLibCueTrack">RCLibCueTrack</a>;
+<span class="returnvalue">void</span>                <a class="link" href="LibRhythmCat-Cue-Parser.html#rclib-cue-free" title="rclib_cue_free ()">rclib_cue_free</a>                      (<em class="parameter"><code><a class="link" href="LibRhythmCat-Cue-Parser.html#RCLibCueData" title="struct RCLibCueData"><span class="type">RCLibCueData</span></a> *data</code></em>);
+const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *       <a class="link" href="LibRhythmCat-Cue-Parser.html#rclib-cue-get-fallback-encoding" title="rclib_cue_get_fallback_encoding ()">rclib_cue_get_fallback_encoding</a>     ();
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="LibRhythmCat-Cue-Parser.html#rclib-cue-get-track-num" title="rclib_cue_get_track_num ()">rclib_cue_get_track_num</a>             (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *path</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> **cue_path</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> *track_num</code></em>);
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="returnvalue">guint</span></a>               <a class="link" href="LibRhythmCat-Cue-Parser.html#rclib-cue-read-data" title="rclib_cue_read_data ()">rclib_cue_read_data</a>                 (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *input</code></em>,
+                                                         <em class="parameter"><code><a class="link" href="LibRhythmCat-Cue-Parser.html#RCLibCueInputType" title="enum RCLibCueInputType"><span class="type">RCLibCueInputType</span></a> type</code></em>,
+                                                         <em class="parameter"><code><a class="link" href="LibRhythmCat-Cue-Parser.html#RCLibCueData" title="struct RCLibCueData"><span class="type">RCLibCueData</span></a> *data</code></em>);
+<span class="returnvalue">void</span>                <a class="link" href="LibRhythmCat-Cue-Parser.html#rclib-cue-set-fallback-encoding" title="rclib_cue_set_fallback_encoding ()">rclib_cue_set_fallback_encoding</a>     (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *encoding</code></em>);
+</pre>
+</div>
+<div class="refsect1">
+<a name="LibRhythmCat-Cue-Parser.description"></a><h2>Description</h2>
+<p>
+The data structures and functions for parse track data in CUE
+sheet files.
+</p>
+</div>
+<div class="refsect1">
+<a name="LibRhythmCat-Cue-Parser.details"></a><h2>Details</h2>
+<div class="refsect2">
+<a name="RCLibCueData"></a><h3>struct RCLibCueData</h3>
+<pre class="programlisting">struct RCLibCueData {
+    RCLibCueInputType type;
+    gchar *file;
+    gchar *performer;
+    gchar *title;
+    gchar *genre;
+    guint year;
+    guint length;
+    RCLibCueTrack *track;
+};
+</pre>
+<p>
+The structure for CUE sheet data.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><a class="link" href="LibRhythmCat-Cue-Parser.html#RCLibCueInputType" title="enum RCLibCueInputType"><span class="type">RCLibCueInputType</span></a> <em class="structfield"><code><a name="RCLibCueData.type"></a>type</code></em>;</span></p></td>
+<td>the input type of the CUE file</td>
+</tr>
+<tr>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *<em class="structfield"><code><a name="RCLibCueData.file"></a>file</code></em>;</span></p></td>
+<td>the audio file URI</td>
+</tr>
+<tr>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *<em class="structfield"><code><a name="RCLibCueData.performer"></a>performer</code></em>;</span></p></td>
+<td>the performer</td>
+</tr>
+<tr>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *<em class="structfield"><code><a name="RCLibCueData.title"></a>title</code></em>;</span></p></td>
+<td>the title (it is usually the album name)</td>
+</tr>
+<tr>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *<em class="structfield"><code><a name="RCLibCueData.genre"></a>genre</code></em>;</span></p></td>
+<td>the genre</td>
+</tr>
+<tr>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> <em class="structfield"><code><a name="RCLibCueData.year"></a>year</code></em>;</span></p></td>
+<td>the year number</td>
+</tr>
+<tr>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> <em class="structfield"><code><a name="RCLibCueData.length"></a>length</code></em>;</span></p></td>
+<td>the track length (number)</td>
+</tr>
+<tr>
+<td><p><span class="term"><a class="link" href="LibRhythmCat-Cue-Parser.html#RCLibCueTrack" title="struct RCLibCueTrack"><span class="type">RCLibCueTrack</span></a> *<em class="structfield"><code><a name="RCLibCueData.track"></a>track</code></em>;</span></p></td>
+<td>the track data</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="RCLibCueInputType"></a><h3>enum RCLibCueInputType</h3>
+<pre class="programlisting">typedef enum {
+    RCLIB_CUE_INPUT_URI = 0,
+    RCLIB_CUE_INPUT_PATH = 1,
+    RCLIB_CUE_INPUT_EMBEDDED = 2
+} RCLibCueInputType;
+</pre>
+<p>
+The input data type of CUE.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><a name="RCLIB-CUE-INPUT-URI:CAPS"></a><span class="term"><code class="literal">RCLIB_CUE_INPUT_URI</code></span></p></td>
+<td>the input data is a URI
+</td>
+</tr>
+<tr>
+<td><p><a name="RCLIB-CUE-INPUT-PATH:CAPS"></a><span class="term"><code class="literal">RCLIB_CUE_INPUT_PATH</code></span></p></td>
+<td>the input data is a file path
+</td>
+</tr>
+<tr>
+<td><p><a name="RCLIB-CUE-INPUT-EMBEDDED:CAPS"></a><span class="term"><code class="literal">RCLIB_CUE_INPUT_EMBEDDED</code></span></p></td>
+<td>the input data is from a embedded CUE tag
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="RCLibCueTrack"></a><h3>struct RCLibCueTrack</h3>
+<pre class="programlisting">struct RCLibCueTrack {
+    guint index;
+    gchar *title;
+    gchar *performer;
+    guint64 time0;
+    guint64 time1;
+};
+</pre>
+<p>
+The track data structure of CUE data.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> <em class="structfield"><code><a name="RCLibCueTrack.index"></a>index</code></em>;</span></p></td>
+<td>the track index</td>
+</tr>
+<tr>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *<em class="structfield"><code><a name="RCLibCueTrack.title"></a>title</code></em>;</span></p></td>
+<td>the track title</td>
+</tr>
+<tr>
+<td><p><span class="term"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *<em class="structfield"><code><a name="RCLibCueTrack.performer"></a>performer</code></em>;</span></p></td>
+<td>the track performer (artist)</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="type">guint64</span> <em class="structfield"><code><a name="RCLibCueTrack.time0"></a>time0</code></em>;</span></p></td>
+<td>the INDEX 00 time</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="type">guint64</span> <em class="structfield"><code><a name="RCLibCueTrack.time1"></a>time1</code></em>;</span></p></td>
+<td>the INDEX 01 time (start time)</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-cue-free"></a><h3>rclib_cue_free ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rclib_cue_free                      (<em class="parameter"><code><a class="link" href="LibRhythmCat-Cue-Parser.html#RCLibCueData" title="struct RCLibCueData"><span class="type">RCLibCueData</span></a> *data</code></em>);</pre>
+<p>
+Free the CUE data.
+Notice that the pointer itself will not be free.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><em class="parameter"><code>data</code></em> :</span></p></td>
+<td>the CUE data to free</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-cue-get-fallback-encoding"></a><h3>rclib_cue_get_fallback_encoding ()</h3>
+<pre class="programlisting">const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *       rclib_cue_get_fallback_encoding     ();</pre>
+<p>
+Get the fallback encoding used in the CUE parser, NULL if not set.
+</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-cue-get-track-num"></a><h3>rclib_cue_get_track_num ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rclib_cue_get_track_num             (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *path</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> **cue_path</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> *track_num</code></em>);</pre>
+<p>
+Get the CUE path/URI and track number from given path/URI.
+</p>
+<p>
+e.g. For the given path "/home/test/1.cue:1", you will get
+path "/home/test/1.cue", and track number 1.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>path</code></em> :</span></p></td>
+<td>the file path or URI</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>cue_path</code></em> :</span></p></td>
+<td>the file path or URI of the CUE file. <span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>][<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>track_num</code></em> :</span></p></td>
+<td>the track number. <span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>][<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>Whether the path/URI is valid.</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-cue-read-data"></a><h3>rclib_cue_read_data ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="returnvalue">guint</span></a>               rclib_cue_read_data                 (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *input</code></em>,
+                                                         <em class="parameter"><code><a class="link" href="LibRhythmCat-Cue-Parser.html#RCLibCueInputType" title="enum RCLibCueInputType"><span class="type">RCLibCueInputType</span></a> type</code></em>,
+                                                         <em class="parameter"><code><a class="link" href="LibRhythmCat-Cue-Parser.html#RCLibCueData" title="struct RCLibCueData"><span class="type">RCLibCueData</span></a> *data</code></em>);</pre>
+<p>
+Read and parse data from CUE file or string.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>input</code></em> :</span></p></td>
+<td>the input data</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>type</code></em> :</span></p></td>
+<td>the data type of the input data</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>data</code></em> :</span></p></td>
+<td>the parsed CUE data. <span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>]</span>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>The track number, 0 if the CUE data is incorrect.</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-cue-set-fallback-encoding"></a><h3>rclib_cue_set_fallback_encoding ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rclib_cue_set_fallback_encoding     (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *encoding</code></em>);</pre>
+<p>
+Set the fallback encoding for CUE parser.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><em class="parameter"><code>encoding</code></em> :</span></p></td>
+<td>the new fallback encoding</td>
+</tr></tbody>
+</table></div>
+</div>
+</div>
+</div>
+<div class="footer">
+<hr>
+          Generated by GTK-Doc V1.18</div>
+</body>
+</html>

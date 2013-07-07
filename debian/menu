@@ -1,0 +1,5 @@
+?package(rhythmcat2):needs="X11" \
+  section="Applications/Sound" \
+  title="RhythmCat2 Music Player" \
+  command="/usr/bin/RhythmCat2" \
+  icon="/usr/share/RhythmCat2/icons/RhythmCat2_Icon.xpm"

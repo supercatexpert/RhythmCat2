@@ -1,0 +1,721 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Refable String</title>
+<meta name="generator" content="DocBook XSL Stylesheets V1.76.1">
+<link rel="home" href="index.html" title="LibRhythmCat Reference Manual">
+<link rel="up" href="ch01.html" title="API reference">
+<link rel="prev" href="LibRhythmCat-Utilities.html" title="Utilities">
+<link rel="next" href="object-tree.html" title="Object Hierarchy">
+<meta name="generator" content="GTK-Doc V1.18 (XML mode)">
+<link rel="stylesheet" href="style.css" type="text/css">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2">
+<tr valign="middle">
+<td><a accesskey="p" href="LibRhythmCat-Utilities.html"><img src="left.png" width="24" height="24" border="0" alt="Prev"></a></td>
+<td><a accesskey="u" href="ch01.html"><img src="up.png" width="24" height="24" border="0" alt="Up"></a></td>
+<td><a accesskey="h" href="index.html"><img src="home.png" width="24" height="24" border="0" alt="Home"></a></td>
+<th width="100%" align="center">LibRhythmCat Reference Manual</th>
+<td><a accesskey="n" href="object-tree.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
+</tr>
+<tr><td colspan="5" class="shortcuts">
+<a href="#LibRhythmCat-Refable-String.synopsis" class="shortcut">Top</a>
+                   | 
+                  <a href="#LibRhythmCat-Refable-String.description" class="shortcut">Description</a>
+                   | 
+                  <a href="#LibRhythmCat-Refable-String.object-hierarchy" class="shortcut">Object Hierarchy</a>
+</td></tr>
+</table>
+<div class="refentry">
+<a name="LibRhythmCat-Refable-String"></a><div class="titlepage"></div>
+<div class="refnamediv"><table width="100%"><tr>
+<td valign="top">
+<h2><span class="refentrytitle"><a name="LibRhythmCat-Refable-String.top_of_page"></a>Refable String</span></h2>
+<p>Refable String — Reference countable string</p>
+</td>
+<td valign="top" align="right"></td>
+</tr></table></div>
+<div class="refsynopsisdiv">
+<a name="LibRhythmCat-Refable-String.synopsis"></a><h2>Synopsis</h2>
+<a name="RCLibString"></a><pre class="synopsis">
+#include &lt;rclib-string.h&gt;
+
+                    <a class="link" href="LibRhythmCat-Refable-String.html#RCLibString-struct" title="RCLibString">RCLibString</a>;
+<span class="returnvalue">void</span>                <a class="link" href="LibRhythmCat-Refable-String.html#rclib-string-append" title="rclib_string_append ()">rclib_string_append</a>                 (<em class="parameter"><code><a class="link" href="LibRhythmCat-Refable-String.html#RCLibString"><span class="type">RCLibString</span></a> *str</code></em>,
+                                                         <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *text</code></em>);
+<span class="returnvalue">void</span>                <a class="link" href="LibRhythmCat-Refable-String.html#rclib-string-append-len" title="rclib_string_append_len ()">rclib_string_append_len</a>             (<em class="parameter"><code><a class="link" href="LibRhythmCat-Refable-String.html#RCLibString"><span class="type">RCLibString</span></a> *str</code></em>,
+                                                         <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *text</code></em>,
+                                                         <em class="parameter"><code><span class="type">gssize</span> len</code></em>);
+<span class="returnvalue">void</span>                <a class="link" href="LibRhythmCat-Refable-String.html#rclib-string-append-printf" title="rclib_string_append_printf ()">rclib_string_append_printf</a>          (<em class="parameter"><code><a class="link" href="LibRhythmCat-Refable-String.html#RCLibString"><span class="type">RCLibString</span></a> *str</code></em>,
+                                                         <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *format</code></em>,
+                                                         <em class="parameter"><code>...</code></em>);
+<span class="returnvalue">void</span>                <a class="link" href="LibRhythmCat-Refable-String.html#rclib-string-append-vprintf" title="rclib_string_append_vprintf ()">rclib_string_append_vprintf</a>         (<em class="parameter"><code><a class="link" href="LibRhythmCat-Refable-String.html#RCLibString"><span class="type">RCLibString</span></a> *str</code></em>,
+                                                         <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *format</code></em>,
+                                                         <em class="parameter"><code><span class="type">va_list</span> args</code></em>);
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *             <a class="link" href="LibRhythmCat-Refable-String.html#rclib-string-dup" title="rclib_string_dup ()">rclib_string_dup</a>                    (<em class="parameter"><code><a class="link" href="LibRhythmCat-Refable-String.html#RCLibString"><span class="type">RCLibString</span></a> *str</code></em>);
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="LibRhythmCat-Refable-String.html#rclib-string-equal" title="rclib_string_equal ()">rclib_string_equal</a>                  (<em class="parameter"><code>const <a class="link" href="LibRhythmCat-Refable-String.html#RCLibString"><span class="type">RCLibString</span></a> *str1</code></em>,
+                                                         <em class="parameter"><code>const <a class="link" href="LibRhythmCat-Refable-String.html#RCLibString"><span class="type">RCLibString</span></a> *str2</code></em>);
+<span class="returnvalue">void</span>                <a class="link" href="LibRhythmCat-Refable-String.html#rclib-string-erase" title="rclib_string_erase ()">rclib_string_erase</a>                  (<em class="parameter"><code><a class="link" href="LibRhythmCat-Refable-String.html#RCLibString"><span class="type">RCLibString</span></a> *str</code></em>,
+                                                         <em class="parameter"><code><span class="type">gssize</span> pos</code></em>,
+                                                         <em class="parameter"><code><span class="type">gssize</span> len</code></em>);
+<span class="returnvalue">void</span>                <a class="link" href="LibRhythmCat-Refable-String.html#rclib-string-free" title="rclib_string_free ()">rclib_string_free</a>                   (<em class="parameter"><code><a class="link" href="LibRhythmCat-Refable-String.html#RCLibString"><span class="type">RCLibString</span></a> *str</code></em>);
+const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *       <a class="link" href="LibRhythmCat-Refable-String.html#rclib-string-get" title="rclib_string_get ()">rclib_string_get</a>                    (<em class="parameter"><code>const <a class="link" href="LibRhythmCat-Refable-String.html#RCLibString"><span class="type">RCLibString</span></a> *str</code></em>);
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="returnvalue">guint</span></a>               <a class="link" href="LibRhythmCat-Refable-String.html#rclib-string-hash" title="rclib_string_hash ()">rclib_string_hash</a>                   (<em class="parameter"><code>const <a class="link" href="LibRhythmCat-Refable-String.html#RCLibString"><span class="type">RCLibString</span></a> *str</code></em>);
+<span class="returnvalue">void</span>                <a class="link" href="LibRhythmCat-Refable-String.html#rclib-string-insert" title="rclib_string_insert ()">rclib_string_insert</a>                 (<em class="parameter"><code><a class="link" href="LibRhythmCat-Refable-String.html#RCLibString"><span class="type">RCLibString</span></a> *str</code></em>,
+                                                         <em class="parameter"><code><span class="type">gssize</span> pos</code></em>,
+                                                         <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *text</code></em>);
+<span class="returnvalue">void</span>                <a class="link" href="LibRhythmCat-Refable-String.html#rclib-string-insert-len" title="rclib_string_insert_len ()">rclib_string_insert_len</a>             (<em class="parameter"><code><a class="link" href="LibRhythmCat-Refable-String.html#RCLibString"><span class="type">RCLibString</span></a> *str</code></em>,
+                                                         <em class="parameter"><code><span class="type">gssize</span> pos</code></em>,
+                                                         <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *text</code></em>,
+                                                         <em class="parameter"><code><span class="type">gssize</span> len</code></em>);
+<span class="returnvalue">gsize</span>               <a class="link" href="LibRhythmCat-Refable-String.html#rclib-string-length" title="rclib_string_length ()">rclib_string_length</a>                 (<em class="parameter"><code><a class="link" href="LibRhythmCat-Refable-String.html#RCLibString"><span class="type">RCLibString</span></a> *str</code></em>);
+<a class="link" href="LibRhythmCat-Refable-String.html#RCLibString"><span class="returnvalue">RCLibString</span></a> *       <a class="link" href="LibRhythmCat-Refable-String.html#rclib-string-new" title="rclib_string_new ()">rclib_string_new</a>                    (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *init</code></em>);
+<span class="returnvalue">void</span>                <a class="link" href="LibRhythmCat-Refable-String.html#rclib-string-overwrite" title="rclib_string_overwrite ()">rclib_string_overwrite</a>              (<em class="parameter"><code><a class="link" href="LibRhythmCat-Refable-String.html#RCLibString"><span class="type">RCLibString</span></a> *str</code></em>,
+                                                         <em class="parameter"><code><span class="type">gsize</span> pos</code></em>,
+                                                         <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *text</code></em>);
+<span class="returnvalue">void</span>                <a class="link" href="LibRhythmCat-Refable-String.html#rclib-string-overwrite-len" title="rclib_string_overwrite_len ()">rclib_string_overwrite_len</a>          (<em class="parameter"><code><a class="link" href="LibRhythmCat-Refable-String.html#RCLibString"><span class="type">RCLibString</span></a> *str</code></em>,
+                                                         <em class="parameter"><code><span class="type">gsize</span> pos</code></em>,
+                                                         <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *text</code></em>,
+                                                         <em class="parameter"><code><span class="type">gssize</span> len</code></em>);
+<span class="returnvalue">void</span>                <a class="link" href="LibRhythmCat-Refable-String.html#rclib-string-prepend" title="rclib_string_prepend ()">rclib_string_prepend</a>                (<em class="parameter"><code><a class="link" href="LibRhythmCat-Refable-String.html#RCLibString"><span class="type">RCLibString</span></a> *str</code></em>,
+                                                         <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *text</code></em>);
+<span class="returnvalue">void</span>                <a class="link" href="LibRhythmCat-Refable-String.html#rclib-string-prepend-len" title="rclib_string_prepend_len ()">rclib_string_prepend_len</a>            (<em class="parameter"><code><a class="link" href="LibRhythmCat-Refable-String.html#RCLibString"><span class="type">RCLibString</span></a> *str</code></em>,
+                                                         <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *text</code></em>,
+                                                         <em class="parameter"><code><span class="type">gssize</span> len</code></em>);
+<span class="returnvalue">void</span>                <a class="link" href="LibRhythmCat-Refable-String.html#rclib-string-printf" title="rclib_string_printf ()">rclib_string_printf</a>                 (<em class="parameter"><code><a class="link" href="LibRhythmCat-Refable-String.html#RCLibString"><span class="type">RCLibString</span></a> *str</code></em>,
+                                                         <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *format</code></em>,
+                                                         <em class="parameter"><code>...</code></em>);
+<a class="link" href="LibRhythmCat-Refable-String.html#RCLibString"><span class="returnvalue">RCLibString</span></a> *       <a class="link" href="LibRhythmCat-Refable-String.html#rclib-string-ref" title="rclib_string_ref ()">rclib_string_ref</a>                    (<em class="parameter"><code><a class="link" href="LibRhythmCat-Refable-String.html#RCLibString"><span class="type">RCLibString</span></a> *str</code></em>);
+<span class="returnvalue">void</span>                <a class="link" href="LibRhythmCat-Refable-String.html#rclib-string-set" title="rclib_string_set ()">rclib_string_set</a>                    (<em class="parameter"><code><a class="link" href="LibRhythmCat-Refable-String.html#RCLibString"><span class="type">RCLibString</span></a> *str</code></em>,
+                                                         <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *text</code></em>);
+<span class="returnvalue">void</span>                <a class="link" href="LibRhythmCat-Refable-String.html#rclib-string-truncate" title="rclib_string_truncate ()">rclib_string_truncate</a>               (<em class="parameter"><code><a class="link" href="LibRhythmCat-Refable-String.html#RCLibString"><span class="type">RCLibString</span></a> *str</code></em>,
+                                                         <em class="parameter"><code><span class="type">gsize</span> len</code></em>);
+<span class="returnvalue">void</span>                <a class="link" href="LibRhythmCat-Refable-String.html#rclib-string-unref" title="rclib_string_unref ()">rclib_string_unref</a>                  (<em class="parameter"><code><a class="link" href="LibRhythmCat-Refable-String.html#RCLibString"><span class="type">RCLibString</span></a> *str</code></em>);
+<span class="returnvalue">void</span>                <a class="link" href="LibRhythmCat-Refable-String.html#rclib-string-vprintf" title="rclib_string_vprintf ()">rclib_string_vprintf</a>                (<em class="parameter"><code><a class="link" href="LibRhythmCat-Refable-String.html#RCLibString"><span class="type">RCLibString</span></a> *str</code></em>,
+                                                         <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *format</code></em>,
+                                                         <em class="parameter"><code><span class="type">va_list</span> args</code></em>);
+</pre>
+</div>
+<div class="refsect1">
+<a name="LibRhythmCat-Refable-String.object-hierarchy"></a><h2>Object Hierarchy</h2>
+<pre class="synopsis">
+  GBoxed
+   +----RCLibString
+</pre>
+</div>
+<div class="refsect1">
+<a name="LibRhythmCat-Refable-String.description"></a><h2>Description</h2>
+<p>
+Simple reference countable string data structure.
+</p>
+</div>
+<div class="refsect1">
+<a name="LibRhythmCat-Refable-String.details"></a><h2>Details</h2>
+<div class="refsect2">
+<a name="RCLibString-struct"></a><h3>RCLibString</h3>
+<pre class="programlisting">typedef struct _RCLibString RCLibString;</pre>
+<p>
+The structure for reference countable string.
+</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-string-append"></a><h3>rclib_string_append ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rclib_string_append                 (<em class="parameter"><code><a class="link" href="LibRhythmCat-Refable-String.html#RCLibString"><span class="type">RCLibString</span></a> *str</code></em>,
+                                                         <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *text</code></em>);</pre>
+<p>
+Append <em class="parameter"><code>text</code></em> to <em class="parameter"><code>str</code></em>.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>str</code></em> :</span></p></td>
+<td>the <a class="link" href="LibRhythmCat-Refable-String.html#RCLibString"><span class="type">RCLibString</span></a> structure</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>text</code></em> :</span></p></td>
+<td>the text to append</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-string-append-len"></a><h3>rclib_string_append_len ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rclib_string_append_len             (<em class="parameter"><code><a class="link" href="LibRhythmCat-Refable-String.html#RCLibString"><span class="type">RCLibString</span></a> *str</code></em>,
+                                                         <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *text</code></em>,
+                                                         <em class="parameter"><code><span class="type">gssize</span> len</code></em>);</pre>
+<p>
+Append <em class="parameter"><code>len</code></em> bytes of <em class="parameter"><code>text</code></em> to <em class="parameter"><code>str</code></em>.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>str</code></em> :</span></p></td>
+<td>the <a class="link" href="LibRhythmCat-Refable-String.html#RCLibString"><span class="type">RCLibString</span></a> structure</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>text</code></em> :</span></p></td>
+<td>the text to append</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>len</code></em> :</span></p></td>
+<td>number of bytes of <em class="parameter"><code>text</code></em> to use</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-string-append-printf"></a><h3>rclib_string_append_printf ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rclib_string_append_printf          (<em class="parameter"><code><a class="link" href="LibRhythmCat-Refable-String.html#RCLibString"><span class="type">RCLibString</span></a> *str</code></em>,
+                                                         <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *format</code></em>,
+                                                         <em class="parameter"><code>...</code></em>);</pre>
+<p>
+Appends a formatted string onto the end of <em class="parameter"><code>str</code></em>, just similar to
+#<a class="link" href="LibRhythmCat-Refable-String.html#rclib-string-printf" title="rclib_string_printf ()"><code class="function">rclib_string_printf()</code></a> except that the text is appended to the <em class="parameter"><code>str</code></em>.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>str</code></em> :</span></p></td>
+<td>the <a class="link" href="LibRhythmCat-Refable-String.html#RCLibString"><span class="type">RCLibString</span></a> structure</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>format</code></em> :</span></p></td>
+<td>the string format. See the <code class="function">printf()</code> documentation</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>...</code></em> :</span></p></td>
+<td>the parameters to insert into the format string</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-string-append-vprintf"></a><h3>rclib_string_append_vprintf ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rclib_string_append_vprintf         (<em class="parameter"><code><a class="link" href="LibRhythmCat-Refable-String.html#RCLibString"><span class="type">RCLibString</span></a> *str</code></em>,
+                                                         <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *format</code></em>,
+                                                         <em class="parameter"><code><span class="type">va_list</span> args</code></em>);</pre>
+<p>
+Appends a formatted string onto the end of <em class="parameter"><code>str</code></em>, just similar to
+#<a class="link" href="LibRhythmCat-Refable-String.html#rclib-string-printf" title="rclib_string_printf ()"><code class="function">rclib_string_printf()</code></a> except that the text is appended to the <em class="parameter"><code>str</code></em>.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>str</code></em> :</span></p></td>
+<td>the <a class="link" href="LibRhythmCat-Refable-String.html#RCLibString"><span class="type">RCLibString</span></a> structure</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>format</code></em> :</span></p></td>
+<td>the string format. See the <code class="function">printf()</code> documentation</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>args</code></em> :</span></p></td>
+<td>the list of arguments to insert in the output</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-string-dup"></a><h3>rclib_string_dup ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *             rclib_string_dup                    (<em class="parameter"><code><a class="link" href="LibRhythmCat-Refable-String.html#RCLibString"><span class="type">RCLibString</span></a> *str</code></em>);</pre>
+<p>
+Duplicate the C string inside <em class="parameter"><code>str</code></em>
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>str</code></em> :</span></p></td>
+<td>the <a class="link" href="LibRhythmCat-Refable-String.html#RCLibString"><span class="type">RCLibString</span></a> structure</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>The C string deplicated from <em class="parameter"><code>str</code></em>, use #<a href="/usr/share/gtk-doc/html/glib/glib-Memory-Allocation.html#g-free"><code class="function">g_free()</code></a> to free it.</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-string-equal"></a><h3>rclib_string_equal ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rclib_string_equal                  (<em class="parameter"><code>const <a class="link" href="LibRhythmCat-Refable-String.html#RCLibString"><span class="type">RCLibString</span></a> *str1</code></em>,
+                                                         <em class="parameter"><code>const <a class="link" href="LibRhythmCat-Refable-String.html#RCLibString"><span class="type">RCLibString</span></a> *str2</code></em>);</pre>
+<p>
+Compares two strings for equality, returning TRUE if they are equal.
+    For use with <a href="/usr/share/gtk-doc/html/glib/glib-Hash-Tables.html#GHashTable"><span class="type">GHashTable</span></a>.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>str1</code></em> :</span></p></td>
+<td>the first <a class="link" href="LibRhythmCat-Refable-String.html#RCLibString"><span class="type">RCLibString</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>str2</code></em> :</span></p></td>
+<td>the second <a class="link" href="LibRhythmCat-Refable-String.html#RCLibString"><span class="type">RCLibString</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>
+<a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE:CAPS"><span class="type">TRUE</span></a> if they strings are the same length and contain
+the same bytes.</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-string-erase"></a><h3>rclib_string_erase ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rclib_string_erase                  (<em class="parameter"><code><a class="link" href="LibRhythmCat-Refable-String.html#RCLibString"><span class="type">RCLibString</span></a> *str</code></em>,
+                                                         <em class="parameter"><code><span class="type">gssize</span> pos</code></em>,
+                                                         <em class="parameter"><code><span class="type">gssize</span> len</code></em>);</pre>
+<p>
+Removes <em class="parameter"><code>len</code></em> bytes from <em class="parameter"><code>str</code></em>, starting at position <em class="parameter"><code>pos</code></em>. The rest of
+    the <em class="parameter"><code>str</code></em> is shifted down to fill the gap.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>str</code></em> :</span></p></td>
+<td>the <a class="link" href="LibRhythmCat-Refable-String.html#RCLibString"><span class="type">RCLibString</span></a> structure</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>pos</code></em> :</span></p></td>
+<td>the position of the content to remove</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>len</code></em> :</span></p></td>
+<td>the number of bytes to remove, or -1 to remove all following bytes</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-string-free"></a><h3>rclib_string_free ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rclib_string_free                   (<em class="parameter"><code><a class="link" href="LibRhythmCat-Refable-String.html#RCLibString"><span class="type">RCLibString</span></a> *str</code></em>);</pre>
+<p>
+Free the <a class="link" href="LibRhythmCat-Refable-String.html#RCLibString"><span class="type">RCLibString</span></a> data structure.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><em class="parameter"><code>str</code></em> :</span></p></td>
+<td>the <a class="link" href="LibRhythmCat-Refable-String.html#RCLibString"><span class="type">RCLibString</span></a> structure</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-string-get"></a><h3>rclib_string_get ()</h3>
+<pre class="programlisting">const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="returnvalue">gchar</span></a> *       rclib_string_get                    (<em class="parameter"><code>const <a class="link" href="LibRhythmCat-Refable-String.html#RCLibString"><span class="type">RCLibString</span></a> *str</code></em>);</pre>
+<p>
+Get the C string inside <em class="parameter"><code>str</code></em>
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>str</code></em> :</span></p></td>
+<td>the <a class="link" href="LibRhythmCat-Refable-String.html#RCLibString"><span class="type">RCLibString</span></a> structure</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>The C string inside <em class="parameter"><code>str</code></em>, do not free or modify it.</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-string-hash"></a><h3>rclib_string_hash ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="returnvalue">guint</span></a>               rclib_string_hash                   (<em class="parameter"><code>const <a class="link" href="LibRhythmCat-Refable-String.html#RCLibString"><span class="type">RCLibString</span></a> *str</code></em>);</pre>
+<p>
+Creates a hash code for <em class="parameter"><code>str</code></em>; for use with <a href="/usr/share/gtk-doc/html/glib/glib-Hash-Tables.html#GHashTable"><span class="type">GHashTable</span></a>.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>str</code></em> :</span></p></td>
+<td>the <a class="link" href="LibRhythmCat-Refable-String.html#RCLibString"><span class="type">RCLibString</span></a> structure</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>Hash code for <em class="parameter"><code>str</code></em>.</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-string-insert"></a><h3>rclib_string_insert ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rclib_string_insert                 (<em class="parameter"><code><a class="link" href="LibRhythmCat-Refable-String.html#RCLibString"><span class="type">RCLibString</span></a> *str</code></em>,
+                                                         <em class="parameter"><code><span class="type">gssize</span> pos</code></em>,
+                                                         <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *text</code></em>);</pre>
+<p>
+Inserts a copy of a string into <em class="parameter"><code>str</code></em> at <em class="parameter"><code>pos</code></em>, expanding it if necessary.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>str</code></em> :</span></p></td>
+<td>the <a class="link" href="LibRhythmCat-Refable-String.html#RCLibString"><span class="type">RCLibString</span></a> structure</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>pos</code></em> :</span></p></td>
+<td>the position to insert the copy of the string</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>text</code></em> :</span></p></td>
+<td>the text to insert</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-string-insert-len"></a><h3>rclib_string_insert_len ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rclib_string_insert_len             (<em class="parameter"><code><a class="link" href="LibRhythmCat-Refable-String.html#RCLibString"><span class="type">RCLibString</span></a> *str</code></em>,
+                                                         <em class="parameter"><code><span class="type">gssize</span> pos</code></em>,
+                                                         <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *text</code></em>,
+                                                         <em class="parameter"><code><span class="type">gssize</span> len</code></em>);</pre>
+<p>
+Inserts <em class="parameter"><code>len</code></em> bytes of <em class="parameter"><code>text</code></em> into <em class="parameter"><code>str</code></em> at <em class="parameter"><code>pos</code></em>, expanding it if necessary.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>str</code></em> :</span></p></td>
+<td>the <a class="link" href="LibRhythmCat-Refable-String.html#RCLibString"><span class="type">RCLibString</span></a> structure</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>pos</code></em> :</span></p></td>
+<td>the position to insert the copy of the string</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>text</code></em> :</span></p></td>
+<td>the text to insert</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>len</code></em> :</span></p></td>
+<td>number of bytes of <em class="parameter"><code>text</code></em> to insert</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-string-length"></a><h3>rclib_string_length ()</h3>
+<pre class="programlisting"><span class="returnvalue">gsize</span>               rclib_string_length                 (<em class="parameter"><code><a class="link" href="LibRhythmCat-Refable-String.html#RCLibString"><span class="type">RCLibString</span></a> *str</code></em>);</pre>
+<p>
+Get the string length inside <em class="parameter"><code>str</code></em>
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>str</code></em> :</span></p></td>
+<td>the <a class="link" href="LibRhythmCat-Refable-String.html#RCLibString"><span class="type">RCLibString</span></a> structure</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>The string length.</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-string-new"></a><h3>rclib_string_new ()</h3>
+<pre class="programlisting"><a class="link" href="LibRhythmCat-Refable-String.html#RCLibString"><span class="returnvalue">RCLibString</span></a> *       rclib_string_new                    (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *init</code></em>);</pre>
+<p>
+Create a <a class="link" href="LibRhythmCat-Refable-String.html#RCLibString"><span class="type">RCLibString</span></a> data structure.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>init</code></em> :</span></p></td>
+<td>the initial string</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>The <a class="link" href="LibRhythmCat-Refable-String.html#RCLibString"><span class="type">RCLibString</span></a>, <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#NULL:CAPS"><span class="type">NULL</span></a> if any errors occured. <span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span>
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-string-overwrite"></a><h3>rclib_string_overwrite ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rclib_string_overwrite              (<em class="parameter"><code><a class="link" href="LibRhythmCat-Refable-String.html#RCLibString"><span class="type">RCLibString</span></a> *str</code></em>,
+                                                         <em class="parameter"><code><span class="type">gsize</span> pos</code></em>,
+                                                         <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *text</code></em>);</pre>
+<p>
+Overwrites part of a string, lengthening it if necessary.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>str</code></em> :</span></p></td>
+<td>the <a class="link" href="LibRhythmCat-Refable-String.html#RCLibString"><span class="type">RCLibString</span></a> structure</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>pos</code></em> :</span></p></td>
+<td>the position at which to start overwriting</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>text</code></em> :</span></p></td>
+<td>the text for overwriting</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-string-overwrite-len"></a><h3>rclib_string_overwrite_len ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rclib_string_overwrite_len          (<em class="parameter"><code><a class="link" href="LibRhythmCat-Refable-String.html#RCLibString"><span class="type">RCLibString</span></a> *str</code></em>,
+                                                         <em class="parameter"><code><span class="type">gsize</span> pos</code></em>,
+                                                         <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *text</code></em>,
+                                                         <em class="parameter"><code><span class="type">gssize</span> len</code></em>);</pre>
+<p>
+Overwrites part of a string, lengthening it if necessary.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>str</code></em> :</span></p></td>
+<td>the <a class="link" href="LibRhythmCat-Refable-String.html#RCLibString"><span class="type">RCLibString</span></a> structure</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>pos</code></em> :</span></p></td>
+<td>the position at which to start overwriting</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>text</code></em> :</span></p></td>
+<td>the text for overwriting</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>len</code></em> :</span></p></td>
+<td>the number of bytes to write from <em class="parameter"><code>text</code></em>
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-string-prepend"></a><h3>rclib_string_prepend ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rclib_string_prepend                (<em class="parameter"><code><a class="link" href="LibRhythmCat-Refable-String.html#RCLibString"><span class="type">RCLibString</span></a> *str</code></em>,
+                                                         <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *text</code></em>);</pre>
+<p>
+Add <em class="parameter"><code>text</code></em> on to the start of <em class="parameter"><code>str</code></em>.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>str</code></em> :</span></p></td>
+<td>the <a class="link" href="LibRhythmCat-Refable-String.html#RCLibString"><span class="type">RCLibString</span></a> structure</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>text</code></em> :</span></p></td>
+<td>the text to prepend</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-string-prepend-len"></a><h3>rclib_string_prepend_len ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rclib_string_prepend_len            (<em class="parameter"><code><a class="link" href="LibRhythmCat-Refable-String.html#RCLibString"><span class="type">RCLibString</span></a> *str</code></em>,
+                                                         <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *text</code></em>,
+                                                         <em class="parameter"><code><span class="type">gssize</span> len</code></em>);</pre>
+<p>
+Add <em class="parameter"><code>len</code></em> bytes of <em class="parameter"><code>text</code></em> on to the start of <em class="parameter"><code>str</code></em>.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>str</code></em> :</span></p></td>
+<td>the <a class="link" href="LibRhythmCat-Refable-String.html#RCLibString"><span class="type">RCLibString</span></a> structure</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>text</code></em> :</span></p></td>
+<td>the text to prepend</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>len</code></em> :</span></p></td>
+<td>number of bytes of <em class="parameter"><code>text</code></em> to use</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-string-printf"></a><h3>rclib_string_printf ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rclib_string_printf                 (<em class="parameter"><code><a class="link" href="LibRhythmCat-Refable-String.html#RCLibString"><span class="type">RCLibString</span></a> *str</code></em>,
+                                                         <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *format</code></em>,
+                                                         <em class="parameter"><code>...</code></em>);</pre>
+<p>
+Write a formatted string into <em class="parameter"><code>str</code></em>, just similar to the standard <code class="function">sprintf()</code>
+function.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>str</code></em> :</span></p></td>
+<td>the <a class="link" href="LibRhythmCat-Refable-String.html#RCLibString"><span class="type">RCLibString</span></a> structure</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>format</code></em> :</span></p></td>
+<td>the string format. See the <code class="function">printf()</code> documentation</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>...</code></em> :</span></p></td>
+<td>the parameters to insert into the format string</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-string-ref"></a><h3>rclib_string_ref ()</h3>
+<pre class="programlisting"><a class="link" href="LibRhythmCat-Refable-String.html#RCLibString"><span class="returnvalue">RCLibString</span></a> *       rclib_string_ref                    (<em class="parameter"><code><a class="link" href="LibRhythmCat-Refable-String.html#RCLibString"><span class="type">RCLibString</span></a> *str</code></em>);</pre>
+<p>
+Increase the reference count of <a class="link" href="LibRhythmCat-Refable-String.html#RCLibString"><span class="type">RCLibString</span></a> by 1.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>str</code></em> :</span></p></td>
+<td>the <a class="link" href="LibRhythmCat-Refable-String.html#RCLibString"><span class="type">RCLibString</span></a> structure</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>The <a class="link" href="LibRhythmCat-Refable-String.html#RCLibString"><span class="type">RCLibString</span></a>. <span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span>
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-string-set"></a><h3>rclib_string_set ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rclib_string_set                    (<em class="parameter"><code><a class="link" href="LibRhythmCat-Refable-String.html#RCLibString"><span class="type">RCLibString</span></a> *str</code></em>,
+                                                         <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *text</code></em>);</pre>
+<p>
+Set the <em class="parameter"><code>text</code></em> to <em class="parameter"><code>str</code></em>, replace the string inside <em class="parameter"><code>str</code></em> if exists.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>str</code></em> :</span></p></td>
+<td>the <a class="link" href="LibRhythmCat-Refable-String.html#RCLibString"><span class="type">RCLibString</span></a> structure</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>text</code></em> :</span></p></td>
+<td>the C string to set</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-string-truncate"></a><h3>rclib_string_truncate ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rclib_string_truncate               (<em class="parameter"><code><a class="link" href="LibRhythmCat-Refable-String.html#RCLibString"><span class="type">RCLibString</span></a> *str</code></em>,
+                                                         <em class="parameter"><code><span class="type">gsize</span> len</code></em>);</pre>
+<p>
+Cuts off the end of the <em class="parameter"><code>str</code></em>, leaving the first <em class="parameter"><code>len</code></em> bytes.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>str</code></em> :</span></p></td>
+<td>the <a class="link" href="LibRhythmCat-Refable-String.html#RCLibString"><span class="type">RCLibString</span></a> structure</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>len</code></em> :</span></p></td>
+<td>the new size of <em class="parameter"><code>str</code></em>
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-string-unref"></a><h3>rclib_string_unref ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rclib_string_unref                  (<em class="parameter"><code><a class="link" href="LibRhythmCat-Refable-String.html#RCLibString"><span class="type">RCLibString</span></a> *str</code></em>);</pre>
+<p>
+Decrease the reference of <a class="link" href="LibRhythmCat-Refable-String.html#RCLibString"><span class="type">RCLibString</span></a> by 1.
+If the reference down to zero, the structure will be freed.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><em class="parameter"><code>str</code></em> :</span></p></td>
+<td>the <a class="link" href="LibRhythmCat-Refable-String.html#RCLibString"><span class="type">RCLibString</span></a> structure</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-string-vprintf"></a><h3>rclib_string_vprintf ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rclib_string_vprintf                (<em class="parameter"><code><a class="link" href="LibRhythmCat-Refable-String.html#RCLibString"><span class="type">RCLibString</span></a> *str</code></em>,
+                                                         <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *format</code></em>,
+                                                         <em class="parameter"><code><span class="type">va_list</span> args</code></em>);</pre>
+<p>
+Write a formatted string into <em class="parameter"><code>str</code></em>, just similar to the standard <code class="function">vsprintf()</code>
+function.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>str</code></em> :</span></p></td>
+<td>the <a class="link" href="LibRhythmCat-Refable-String.html#RCLibString"><span class="type">RCLibString</span></a> structure</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>format</code></em> :</span></p></td>
+<td>the string format. See the <code class="function">printf()</code> documentation</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>args</code></em> :</span></p></td>
+<td>the list of arguments to insert in the output</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+</div>
+</div>
+<div class="footer">
+<hr>
+          Generated by GTK-Doc V1.18</div>
+</body>
+</html>

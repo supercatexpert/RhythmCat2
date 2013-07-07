@@ -1,0 +1,165 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>RCUiCellRendererRating</title>
+<meta name="generator" content="DocBook XSL Stylesheets V1.76.1">
+<link rel="home" href="index.html" title="RhythmCat Reference Manual">
+<link rel="up" href="ch01.html" title="API reference">
+<link rel="prev" href="RCUiSpectrumWidget.html" title="RCUiSpectrumWidget">
+<link rel="next" href="RhythmCat-Styles.html" title="Styles">
+<meta name="generator" content="GTK-Doc V1.18 (XML mode)">
+<link rel="stylesheet" href="style.css" type="text/css">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2">
+<tr valign="middle">
+<td><a accesskey="p" href="RCUiSpectrumWidget.html"><img src="left.png" width="24" height="24" border="0" alt="Prev"></a></td>
+<td><a accesskey="u" href="ch01.html"><img src="up.png" width="24" height="24" border="0" alt="Up"></a></td>
+<td><a accesskey="h" href="index.html"><img src="home.png" width="24" height="24" border="0" alt="Home"></a></td>
+<th width="100%" align="center">RhythmCat Reference Manual</th>
+<td><a accesskey="n" href="RhythmCat-Styles.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
+</tr>
+<tr><td colspan="5" class="shortcuts">
+<a href="#RCUiCellRendererRating.synopsis" class="shortcut">Top</a>
+                   | 
+                  <a href="#RCUiCellRendererRating.description" class="shortcut">Description</a>
+                   | 
+                  <a href="#RCUiCellRendererRating.object-hierarchy" class="shortcut">Object Hierarchy</a>
+                   | 
+                  <a href="#RCUiCellRendererRating.properties" class="shortcut">Properties</a>
+                   | 
+                  <a href="#RCUiCellRendererRating.signals" class="shortcut">Signals</a>
+</td></tr>
+</table>
+<div class="refentry">
+<a name="RCUiCellRendererRating"></a><div class="titlepage"></div>
+<div class="refnamediv"><table width="100%"><tr>
+<td valign="top">
+<h2><span class="refentrytitle"><a name="RCUiCellRendererRating.top_of_page"></a>RCUiCellRendererRating</span></h2>
+<p>RCUiCellRendererRating — The rating cell renderer widget.</p>
+</td>
+<td valign="top" align="right"></td>
+</tr></table></div>
+<div class="refsynopsisdiv">
+<a name="RCUiCellRendererRating.synopsis"></a><h2>Synopsis</h2>
+<pre class="synopsis">
+#include &lt;rc-ui-cell-renderer-rating.h&gt;
+
+struct              <a class="link" href="RCUiCellRendererRating.html#RCUiCellRendererRating-struct" title="struct RCUiCellRendererRating">RCUiCellRendererRating</a>;
+struct              <a class="link" href="RCUiCellRendererRating.html#RCUiCellRendererRatingClass" title="struct RCUiCellRendererRatingClass">RCUiCellRendererRatingClass</a>;
+<a href="/usr/share/gtk-doc/html/gtk3/GtkCellRenderer.html"><span class="returnvalue">GtkCellRenderer</span></a> *   <a class="link" href="RCUiCellRendererRating.html#rc-ui-cell-renderer-rating-new" title="rc_ui_cell_renderer_rating_new ()">rc_ui_cell_renderer_rating_new</a>      ();
+</pre>
+</div>
+<div class="refsect1">
+<a name="RCUiCellRendererRating.object-hierarchy"></a><h2>Object Hierarchy</h2>
+<pre class="synopsis">
+  <a href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GObject">GObject</a>
+   +----<a href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GInitiallyUnowned">GInitiallyUnowned</a>
+         +----<a href="/usr/share/gtk-doc/html/gtk3/GtkCellRenderer.html">GtkCellRenderer</a>
+               +----RCUiCellRendererRating
+</pre>
+</div>
+<div class="refsect1">
+<a name="RCUiCellRendererRating.properties"></a><h2>Properties</h2>
+<pre class="synopsis">
+  "<a class="link" href="RCUiCellRendererRating.html#RCUiCellRendererRating--rating" title='The "rating" property'>rating</a>"                   <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gfloat"><span class="type">gfloat</span></a>                : Read / Write
+</pre>
+</div>
+<div class="refsect1">
+<a name="RCUiCellRendererRating.signals"></a><h2>Signals</h2>
+<pre class="synopsis">
+  "<a class="link" href="RCUiCellRendererRating.html#RCUiCellRendererRating-rated" title='The "rated" signal'>rated</a>"                                          : <a href="/usr/share/gtk-doc/html/gobject/gobject-Signals.html#G-SIGNAL-RUN-LAST:CAPS"><code class="literal">Run Last</code></a>
+</pre>
+</div>
+<div class="refsect1">
+<a name="RCUiCellRendererRating.description"></a><h2>Description</h2>
+<p>
+The rating cell renderer widget used in list view.
+</p>
+</div>
+<div class="refsect1">
+<a name="RCUiCellRendererRating.details"></a><h2>Details</h2>
+<div class="refsect2">
+<a name="RCUiCellRendererRating-struct"></a><h3>struct RCUiCellRendererRating</h3>
+<pre class="programlisting">struct RCUiCellRendererRating;</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="RCUiCellRendererRatingClass"></a><h3>struct RCUiCellRendererRatingClass</h3>
+<pre class="programlisting">struct RCUiCellRendererRatingClass {
+};
+</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rc-ui-cell-renderer-rating-new"></a><h3>rc_ui_cell_renderer_rating_new ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/gtk3/GtkCellRenderer.html"><span class="returnvalue">GtkCellRenderer</span></a> *   rc_ui_cell_renderer_rating_new      ();</pre>
+<p>
+Create a cell renderer that will display some pixbufs for representing
+the rating of a song. It is also able to update the rating.
+This widget is copied form Rhythmbox.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>the new cell renderer</td>
+</tr></tbody>
+</table></div>
+</div>
+</div>
+<div class="refsect1">
+<a name="RCUiCellRendererRating.property-details"></a><h2>Property Details</h2>
+<div class="refsect2">
+<a name="RCUiCellRendererRating--rating"></a><h3>The <code class="literal">"rating"</code> property</h3>
+<pre class="programlisting">  "rating"                   <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gfloat"><span class="type">gfloat</span></a>                : Read / Write</pre>
+<p>
+The rating displayed by the renderer, as a floating point value
+between 0.0 and 5.0.
+</p>
+<p>Allowed values: [0,5]</p>
+<p>Default value: 3</p>
+</div>
+</div>
+<div class="refsect1">
+<a name="RCUiCellRendererRating.signal-details"></a><h2>Signal Details</h2>
+<div class="refsect2">
+<a name="RCUiCellRendererRating-rated"></a><h3>The <code class="literal">"rated"</code> signal</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                user_function                      (<a class="link" href="RCUiCellRendererRating.html" title="RCUiCellRendererRating"><span class="type">RCUiCellRendererRating</span></a> *renderer,
+                                                        <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a>                  *score,
+                                                        <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gfloat"><span class="type">gfloat</span></a>                  path,
+                                                        <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>                user_data)      : <a href="/usr/share/gtk-doc/html/gobject/gobject-Signals.html#G-SIGNAL-RUN-LAST:CAPS"><code class="literal">Run Last</code></a></pre>
+<p>
+Emitted when the user changes the rating.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>renderer</code></em> :</span></p></td>
+<td>the <a class="link" href="RCUiCellRendererRating.html" title="RCUiCellRendererRating"><span class="type">RCUiCellRendererRating</span></a>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>score</code></em> :</span></p></td>
+<td>the new rating</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>path</code></em> :</span></p></td>
+<td>string form of the <a href="/usr/share/gtk-doc/html/gtk3/GtkTreeModel.html#GtkTreePath"><span class="type">GtkTreePath</span></a> to the row that was changed</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>user_data</code></em> :</span></p></td>
+<td>user data set when the signal handler was connected.</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+</div>
+</div>
+<div class="footer">
+<hr>
+          Generated by GTK-Doc V1.18</div>
+</body>
+</html>

@@ -1,0 +1,1198 @@
+# Chinese translations for RhythmCat2 package.
+# Copyright (C) 2012 Free Software Foundation, Inc.
+# This file is distributed under the same license as the RhythmCat2 package.
+# SuperCat <supercatexpert@gmail.com>, 2012.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: RhythmCat2 1.9.5\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2013-07-04 02:19+0800\n"
+"PO-Revision-Date: 2012-01-20 20:57+0800\n"
+"Last-Translator: SuperCat <supercatexpert@gmail.com>\n"
+"Language-Team: Chinese (simplified)\n"
+"Language: zh_CN\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../lib/rclib-core.c:125
+msgid "None"
+msgstr "无"
+
+#: ../lib/rclib-core.c:127
+msgid "Pop"
+msgstr "流行"
+
+#: ../lib/rclib-core.c:129
+msgid "Rock"
+msgstr "摇滚"
+
+#: ../lib/rclib-core.c:131
+msgid "Metal"
+msgstr "金属"
+
+#: ../lib/rclib-core.c:133
+msgid "Dance"
+msgstr "舞曲"
+
+#: ../lib/rclib-core.c:135
+msgid "Electronic"
+msgstr "电子乐"
+
+#: ../lib/rclib-core.c:137
+msgid "Jazz"
+msgstr "爵士"
+
+#: ../lib/rclib-core.c:139
+msgid "Classical"
+msgstr "古典"
+
+#: ../lib/rclib-core.c:141
+msgid "Blues"
+msgstr "布鲁斯"
+
+#: ../lib/rclib-core.c:143
+msgid "Vocal"
+msgstr "语音"
+
+#: ../lib/rclib-core.c:943 ../lib/rclib-core.c:952 ../lib/rclib-core.c:962
+#: ../lib/rclib-core.c:972 ../lib/rclib-core.c:982 ../lib/rclib-core.c:992
+#, c-format
+msgid "Cannot load necessary plugin: %s"
+msgstr "无法加载必要的插件: %s"
+
+#: ../lib/rclib-core.c:1001 ../lib/rclib-core.c:1025
+#, c-format
+msgid "Cannot create bin: %s"
+msgstr "无法创建箱柜: %s"
+
+#: ../lib/rclib-core.c:1010 ../lib/rclib-core.c:1035
+#, c-format
+msgid "Cannot link elements!"
+msgstr "无法连接元件!"
+
+#: ../lib/rclib-core.c:1161
+#, c-format
+msgid "The core is already initialized!"
+msgstr "核心已被初始化!"
+
+#: ../lib/rclib-core.c:1878
+msgid "Custom"
+msgstr "自定义"
+
+#: ../ui/rc-ui-effect.c:130 ../ui/rc-ui-effect.c:180
+msgid "EQ Setting File (*.EQF)"
+msgstr "均衡器配置文件 (*.EQF)"
+
+#: ../ui/rc-ui-effect.c:132
+msgid "Save Equalizer Setting..."
+msgstr "保存均衡器配置..."
+
+#: ../ui/rc-ui-effect.c:182
+msgid "Load Equalizer Setting..."
+msgstr "加载均衡器配置..."
+
+#: ../ui/rc-ui-effect.c:276
+msgid "Equalizer"
+msgstr "均衡器"
+
+#: ../ui/rc-ui-effect.c:277
+msgid "Balance"
+msgstr "声道平衡"
+
+#: ../ui/rc-ui-effect.c:313
+msgid "Left"
+msgstr "左"
+
+#: ../ui/rc-ui-effect.c:315
+msgid "Right"
+msgstr "右"
+
+#: ../ui/rc-ui-effect.c:341
+msgid "Audio Effects"
+msgstr "音频特效"
+
+#: ../ui/rc-ui-listmodel.c:432 ../ui/rc-ui-window.c:139
+#: ../ui/rc-ui-window.c:1350
+msgid "Unknown Title"
+msgstr "未知标题"
+
+#: ../ui/rc-ui-listmodel.c:436 ../ui/rc-ui-window.c:150
+#: ../ui/rc-ui-window.c:1351
+msgid "Unknown Artist"
+msgstr "未知艺术家"
+
+#: ../ui/rc-ui-listmodel.c:441 ../ui/rc-ui-window.c:160
+#: ../ui/rc-ui-window.c:1352
+msgid "Unknown Album"
+msgstr "未知专辑"
+
+#: ../ui/rc-ui-listview.c:797
+msgid "Name"
+msgstr "名称"
+
+#: ../ui/rc-ui-listview.c:890
+msgid "Title"
+msgstr "标题"
+
+#: ../ui/rc-ui-listview.c:893 ../ui/rc-ui-settings.c:804
+msgid "Artist"
+msgstr "艺术家"
+
+#: ../ui/rc-ui-listview.c:896 ../ui/rc-ui-settings.c:806
+msgid "Album"
+msgstr "专辑"
+
+#: ../ui/rc-ui-listview.c:899 ../ui/rc-ui-settings.c:808
+msgid "Track"
+msgstr "音轨"
+
+#: ../ui/rc-ui-listview.c:902 ../ui/rc-ui-settings.c:810
+msgid "Year"
+msgstr "年份"
+
+#: ../ui/rc-ui-listview.c:905 ../ui/rc-ui-settings.c:812
+#: ../ui/rc-ui-dialog.c:864
+msgid "Format"
+msgstr "格式"
+
+#: ../ui/rc-ui-listview.c:908 ../ui/rc-ui-settings.c:816
+msgid "Genre"
+msgstr "流派"
+
+#: ../ui/rc-ui-listview.c:911
+msgid "Length"
+msgstr "长度"
+
+#: ../ui/rc-ui-listview.c:914 ../ui/rc-ui-settings.c:814
+msgid "Rating"
+msgstr "评分"
+
+#: ../ui/rc-ui-listview.c:1293
+#, c-format
+msgid "Playlist %u"
+msgstr "播放列表 %u"
+
+#: ../ui/rc-ui-menu.c:409
+msgid "_Playlist"
+msgstr "播放列表(_P)"
+
+#: ../ui/rc-ui-menu.c:410
+msgid "_Library"
+msgstr "音乐库(_L)"
+
+#: ../ui/rc-ui-menu.c:411
+msgid "_View"
+msgstr "视图(_V)"
+
+#: ../ui/rc-ui-menu.c:412
+msgid "_Control"
+msgstr "控制(_C)"
+
+#: ../ui/rc-ui-menu.c:413
+msgid "_Help"
+msgstr "帮助(_H)"
+
+#: ../ui/rc-ui-menu.c:414
+msgid "_Repeat"
+msgstr "重复(_R)"
+
+#: ../ui/rc-ui-menu.c:415
+msgid "Ran_dom"
+msgstr "随机(_D)"
+
+#: ../ui/rc-ui-menu.c:416
+msgid "Sort Playlists"
+msgstr "播放列表排序"
+
+#: ../ui/rc-ui-menu.c:417
+msgid "Sort Music"
+msgstr "音乐排序"
+
+#: ../ui/rc-ui-menu.c:419
+msgid "Open _Music"
+msgstr "打开音乐(_M)"
+
+#: ../ui/rc-ui-menu.c:420
+msgid "Open and play the music file"
+msgstr "打开并播放音乐文件"
+
+#: ../ui/rc-ui-menu.c:423
+msgid "Open _Location"
+msgstr "打开位置(_L)"
+
+#: ../ui/rc-ui-menu.c:424
+msgid "Open a location and play"
+msgstr "打开一个位置并播放"
+
+#: ../ui/rc-ui-menu.c:427
+msgid "_Preferences"
+msgstr "首选项(_P)"
+
+#: ../ui/rc-ui-menu.c:428
+msgid "Configure the player"
+msgstr "配置播放器"
+
+#: ../ui/rc-ui-menu.c:431
+msgid "Plu_gins"
+msgstr "插件(_G)"
+
+#: ../ui/rc-ui-menu.c:432
+msgid "Configure plugins"
+msgstr "插件配置"
+
+#: ../ui/rc-ui-menu.c:435 ../ui/rc-ui-menu.c:651
+msgid "_Quit"
+msgstr "退出(_Q)"
+
+#: ../ui/rc-ui-menu.c:436 ../ui/rc-ui-menu.c:652
+msgid "Quit this player"
+msgstr "退出播放器"
+
+#: ../ui/rc-ui-menu.c:439 ../ui/rc-ui-menu.c:551
+msgid "_New Playlist"
+msgstr "新建播放列表(_N)"
+
+#: ../ui/rc-ui-menu.c:440 ../ui/rc-ui-menu.c:552
+msgid "Create a new playlist"
+msgstr "建立一个播放列表"
+
+#: ../ui/rc-ui-menu.c:443 ../ui/rc-ui-menu.c:555
+msgid "Re_name Playlist"
+msgstr "重命名播放列表(_N)"
+
+#: ../ui/rc-ui-menu.c:444 ../ui/rc-ui-menu.c:556
+msgid "Rename the playlist"
+msgstr "重命名播放列表"
+
+#: ../ui/rc-ui-menu.c:447 ../ui/rc-ui-menu.c:559
+msgid "R_emove Playlist"
+msgstr "删除播放列表(_E)"
+
+#: ../ui/rc-ui-menu.c:448 ../ui/rc-ui-menu.c:560
+msgid "Remove the playlist"
+msgstr "删除播放列表"
+
+#: ../ui/rc-ui-menu.c:451
+msgid "_Export Playlist"
+msgstr "导出播放列表(_E)"
+
+#: ../ui/rc-ui-menu.c:452 ../ui/rc-ui-menu.c:564
+msgid "Export music to a playlist"
+msgstr "导出音乐列表到播放列表文件"
+
+#: ../ui/rc-ui-menu.c:455
+msgid "Export _All Playlists"
+msgstr "导出全部播放列表(_A)"
+
+#: ../ui/rc-ui-menu.c:456
+msgid "Export all playlists to a folder"
+msgstr "导出全部播放列表到指定目录"
+
+#: ../ui/rc-ui-menu.c:459 ../ui/rc-ui-menu.c:567
+msgid "Import _Music"
+msgstr "导入音乐(_M)"
+
+#: ../ui/rc-ui-menu.c:460 ../ui/rc-ui-menu.c:568
+msgid "Import music file"
+msgstr "导入音乐文件"
+
+#: ../ui/rc-ui-menu.c:463 ../ui/rc-ui-menu.c:571
+msgid "Import From _Playlist"
+msgstr "导入播放列表(_P)"
+
+#: ../ui/rc-ui-menu.c:464 ../ui/rc-ui-menu.c:572
+msgid "Import music from playlist"
+msgstr "从播放列表文件中导入音乐"
+
+#: ../ui/rc-ui-menu.c:467
+msgid "Import From _Folder"
+msgstr "导入目录(_F)"
+
+#: ../ui/rc-ui-menu.c:468
+msgid "Import all music from folder"
+msgstr "导入目录中全部音乐文件"
+
+#: ../ui/rc-ui-menu.c:471 ../ui/rc-ui-menu.c:495 ../ui/rc-ui-menu.c:599
+msgid "_Remove Music"
+msgstr "删除音乐(_R)"
+
+#: ../ui/rc-ui-menu.c:472 ../ui/rc-ui-menu.c:588
+msgid "Remove music from playlist"
+msgstr "从播放列表中删除音乐"
+
+#: ../ui/rc-ui-menu.c:475 ../ui/rc-ui-menu.c:499 ../ui/rc-ui-menu.c:575
+msgid "Select _All"
+msgstr "全选(_A)"
+
+#: ../ui/rc-ui-menu.c:476 ../ui/rc-ui-menu.c:576
+msgid "Select all music in the playlist"
+msgstr "选中当前播放列表中全部音乐"
+
+#: ../ui/rc-ui-menu.c:479 ../ui/rc-ui-menu.c:591
+msgid "Re_fresh Playlist"
+msgstr "刷新播放列表(_F)"
+
+#: ../ui/rc-ui-menu.c:480 ../ui/rc-ui-menu.c:592
+msgid "Refresh music information in the playlist"
+msgstr "刷新当前播放列表中的音乐信息"
+
+#: ../ui/rc-ui-menu.c:483 ../ui/rc-ui-menu.c:579
+msgid "Bind _Lyric File"
+msgstr "绑定歌词文件(_L)"
+
+#: ../ui/rc-ui-menu.c:484 ../ui/rc-ui-menu.c:580
+msgid "Bind lyric file to the selected music"
+msgstr "绑定歌词文件到所选音乐"
+
+#: ../ui/rc-ui-menu.c:487 ../ui/rc-ui-menu.c:583
+msgid "Bind Al_bum File"
+msgstr "绑定专辑封面文件(_B)"
+
+#: ../ui/rc-ui-menu.c:488 ../ui/rc-ui-menu.c:584
+msgid "Bind album file to the selected music"
+msgstr "绑定专辑封面文件到所选音乐"
+
+#: ../ui/rc-ui-menu.c:491
+msgid "Add Music File"
+msgstr "添加音乐文件"
+
+#: ../ui/rc-ui-menu.c:492 ../ui/rc-ui-menu.c:596
+msgid "Add music file to the library"
+msgstr "添加音乐文件到音乐库"
+
+#: ../ui/rc-ui-menu.c:496 ../ui/rc-ui-menu.c:600
+msgid "Remove music from the library"
+msgstr "从音乐库删除音乐"
+
+#: ../ui/rc-ui-menu.c:500 ../ui/rc-ui-menu.c:604
+msgid "Select all music in the library list"
+msgstr "选中音乐库列表中所有音乐"
+
+#: ../ui/rc-ui-menu.c:503
+msgid "_Audio Effects"
+msgstr "音频特效(_A)"
+
+#: ../ui/rc-ui-menu.c:504
+msgid "Adjust the audio effects"
+msgstr "调整音频特效"
+
+#: ../ui/rc-ui-menu.c:507 ../ui/rc-ui-menu.c:627
+msgid "_Play/Pause"
+msgstr "播放/暂停(_P)"
+
+#: ../ui/rc-ui-menu.c:508 ../ui/rc-ui-menu.c:628
+msgid "Play or pause the music"
+msgstr "播放或暂停当前播放音乐"
+
+#: ../ui/rc-ui-menu.c:511 ../ui/rc-ui-menu.c:631
+msgid "_Stop"
+msgstr "停止(_S)"
+
+#: ../ui/rc-ui-menu.c:512 ../ui/rc-ui-menu.c:632
+msgid "Stop the music"
+msgstr "停止播放"
+
+#: ../ui/rc-ui-menu.c:515 ../ui/rc-ui-menu.c:635
+msgid "Pre_vious"
+msgstr "上一首(_V)"
+
+#: ../ui/rc-ui-menu.c:516 ../ui/rc-ui-menu.c:636
+msgid "Play previous music"
+msgstr "播放上一首音乐"
+
+#: ../ui/rc-ui-menu.c:519 ../ui/rc-ui-menu.c:639
+msgid "_Next"
+msgstr "下一首(_N)"
+
+#: ../ui/rc-ui-menu.c:520 ../ui/rc-ui-menu.c:640
+msgid "Play next music"
+msgstr "播放下一首音乐"
+
+#: ../ui/rc-ui-menu.c:523
+msgid "_Backward"
+msgstr "后退(_B)"
+
+#: ../ui/rc-ui-menu.c:524
+msgid "Backward 5 seconds"
+msgstr "后退5秒"
+
+#: ../ui/rc-ui-menu.c:527
+msgid "_Forward"
+msgstr "前进(_F)"
+
+#: ../ui/rc-ui-menu.c:528
+msgid "Forward 5 seconds"
+msgstr "前进5秒"
+
+#: ../ui/rc-ui-menu.c:531
+msgid "_Increase Volume"
+msgstr "升高音量(_I)"
+
+#: ../ui/rc-ui-menu.c:532
+msgid "Increase the volume"
+msgstr "升高音量"
+
+#: ../ui/rc-ui-menu.c:535
+msgid "_Decrease Volume"
+msgstr "降低音量(_D)"
+
+#: ../ui/rc-ui-menu.c:536
+msgid "Decrease the volume"
+msgstr "降低音量"
+
+#: ../ui/rc-ui-menu.c:539
+msgid "_Configure Rating Limited Mode"
+msgstr "配置评分限制播放模式(_C)"
+
+#: ../ui/rc-ui-menu.c:540
+msgid "Configure Rating Limited Playing Mode"
+msgstr "配置评分限制播放模式"
+
+#: ../ui/rc-ui-menu.c:543 ../ui/rc-ui-menu.c:647
+msgid "_About"
+msgstr "关于(_A)"
+
+#: ../ui/rc-ui-menu.c:544 ../ui/rc-ui-menu.c:648
+msgid "About this player"
+msgstr "关于这个播放器"
+
+#: ../ui/rc-ui-menu.c:547
+msgid "_Supported Format"
+msgstr "支持格式(_S)"
+
+#: ../ui/rc-ui-menu.c:548
+msgid "Check the supported music format of this player"
+msgstr "查看受到本播放器支持的音乐格式"
+
+#: ../ui/rc-ui-menu.c:563
+msgid "E_xport Playlist"
+msgstr "导出播放列表(_X)"
+
+#: ../ui/rc-ui-menu.c:587
+msgid "R_emove Music"
+msgstr "删除音乐(_E)"
+
+#: ../ui/rc-ui-menu.c:595
+msgid "_Add Music"
+msgstr "添加音乐(_A)"
+
+#: ../ui/rc-ui-menu.c:603
+msgid "_Select All"
+msgstr "全选(_S)"
+
+#: ../ui/rc-ui-menu.c:607
+msgid "_Save Album Image As"
+msgstr "保存专辑封面图像(_S)"
+
+#: ../ui/rc-ui-menu.c:608
+msgid "Save the album image"
+msgstr "保存专辑封面图像"
+
+#: ../ui/rc-ui-menu.c:611 ../ui/rc-ui-window.c:738
+msgid "Importing: 0 remaining"
+msgstr "导入中: 剩余 0"
+
+#: ../ui/rc-ui-menu.c:615 ../ui/rc-ui-window.c:778
+msgid "Refreshing: 0 remaining"
+msgstr "刷新中: 剩余 0"
+
+#: ../ui/rc-ui-menu.c:619
+msgid "Stop _importing"
+msgstr "停止导入(_I)"
+
+#: ../ui/rc-ui-menu.c:620
+msgid "Terminate the remaining importing jobs."
+msgstr "终止剩余的导入工作"
+
+#: ../ui/rc-ui-menu.c:623
+msgid "Stop _refreshing"
+msgstr "停止刷新(_R)"
+
+#: ../ui/rc-ui-menu.c:624
+msgid "Terminate the remaining refreshing jobs."
+msgstr "终止剩余的刷新工作"
+
+#: ../ui/rc-ui-menu.c:643
+msgid "S_how Player"
+msgstr "显示播放器(_H)"
+
+#: ../ui/rc-ui-menu.c:644
+msgid "Show the window of player"
+msgstr "显示播放器窗口"
+
+#: ../ui/rc-ui-menu.c:655
+msgid "Name (Ascending)"
+msgstr "名称 (升序)"
+
+#: ../ui/rc-ui-menu.c:656
+msgid "Sort name in ascending order"
+msgstr "以名称进行升序排列"
+
+#: ../ui/rc-ui-menu.c:659
+msgid "Name (Descending)"
+msgstr "名称 (降序)"
+
+#: ../ui/rc-ui-menu.c:660
+msgid "Sort name in descending order"
+msgstr "以名称进行降序排列"
+
+#: ../ui/rc-ui-menu.c:663
+msgid "Title (Ascending)"
+msgstr "标题 (升序)"
+
+#: ../ui/rc-ui-menu.c:664
+msgid "Sort the title of the music in ascending order"
+msgstr "以音乐标题进行升序排列"
+
+#: ../ui/rc-ui-menu.c:667
+msgid "Title (Descending)"
+msgstr "标题 (降序)"
+
+#: ../ui/rc-ui-menu.c:668
+msgid "Sort the title of the music in descending order"
+msgstr "以音乐标题进行降序排列"
+
+#: ../ui/rc-ui-menu.c:671
+msgid "Artist (Ascending)"
+msgstr "艺术家 (升序)"
+
+#: ../ui/rc-ui-menu.c:672
+msgid "Sort the artist of the music in ascending order"
+msgstr "以艺术家名进行升序排列"
+
+#: ../ui/rc-ui-menu.c:675
+msgid "Artist (Descending)"
+msgstr "艺术家 (降序)"
+
+#: ../ui/rc-ui-menu.c:676
+msgid "Sort the artist of the music in descending order"
+msgstr "以艺术家名进行降序排列"
+
+#: ../ui/rc-ui-menu.c:679
+msgid "Album (Ascending)"
+msgstr "专辑名 (升序)"
+
+#: ../ui/rc-ui-menu.c:680
+msgid "Sort the album of the music in ascending order"
+msgstr "以专辑名进行升序排列"
+
+#: ../ui/rc-ui-menu.c:683
+msgid "Album (Descending)"
+msgstr "专辑名 (降序)"
+
+#: ../ui/rc-ui-menu.c:684
+msgid "Sort the album of the music in descending order"
+msgstr "以专辑名进行降序排列"
+
+#: ../ui/rc-ui-menu.c:687
+msgid "Length (Ascending)"
+msgstr "长度 (升序)"
+
+#: ../ui/rc-ui-menu.c:688
+msgid "Sort the length of the music in ascending order"
+msgstr "以音乐长度进行升序排列"
+
+#: ../ui/rc-ui-menu.c:691
+msgid "Length (Descending)"
+msgstr "长度 (降序)"
+
+#: ../ui/rc-ui-menu.c:692
+msgid "Sort the length of the music in descending order"
+msgstr "以音乐长度进行降序排列"
+
+#: ../ui/rc-ui-menu.c:695
+msgid "Genre (Ascending)"
+msgstr "流派 (升序)"
+
+#: ../ui/rc-ui-menu.c:696
+msgid "Sort the genre of the music in ascending order"
+msgstr "以流派类型进行升序排列"
+
+#: ../ui/rc-ui-menu.c:699
+msgid "Genre (Descending)"
+msgstr "流派 (降序)"
+
+#: ../ui/rc-ui-menu.c:700
+msgid "Sort the genre of the music in descending order"
+msgstr "以流派类型进行降序排列"
+
+#: ../ui/rc-ui-menu.c:703
+msgid "Track Number (Ascending)"
+msgstr "音轨号 (升序)"
+
+#: ../ui/rc-ui-menu.c:704
+msgid "Sort the track number of the music in ascending order"
+msgstr "以音轨号进行升序排列"
+
+#: ../ui/rc-ui-menu.c:707
+msgid "Track Number (Descending)"
+msgstr "音轨号 (降序)"
+
+#: ../ui/rc-ui-menu.c:708
+msgid "Sort the track number of the music in descending order"
+msgstr "以音轨号进行降序排列"
+
+#: ../ui/rc-ui-menu.c:711
+msgid "Year (Ascending)"
+msgstr "年份 (升序)"
+
+#: ../ui/rc-ui-menu.c:712
+msgid "Sort the year of the music in ascending order"
+msgstr "以音乐年份进行升序排列"
+
+#: ../ui/rc-ui-menu.c:715
+msgid "Year (Descending)"
+msgstr "年份 (降序)"
+
+#: ../ui/rc-ui-menu.c:716
+msgid "Sort the year of the music in descending order"
+msgstr "以音乐年份进行降序排列"
+
+#: ../ui/rc-ui-menu.c:719
+msgid "File Type (Ascending)"
+msgstr "文件类型 (升序)"
+
+#: ../ui/rc-ui-menu.c:720
+msgid "Sort the file type of the music in ascending order"
+msgstr "以文件类型进行升序排列"
+
+#: ../ui/rc-ui-menu.c:723
+msgid "File Type (Descending)"
+msgstr "文件类型 (降序)"
+
+#: ../ui/rc-ui-menu.c:724
+msgid "Sort the file type of the music in descending order"
+msgstr "以文件类型进行降序排列"
+
+#: ../ui/rc-ui-menu.c:727
+msgid "Rating (Ascending)"
+msgstr "评分 (升序)"
+
+#: ../ui/rc-ui-menu.c:728
+msgid "Sort the rating of the music in ascending order"
+msgstr "以评分分数进行升序排列"
+
+#: ../ui/rc-ui-menu.c:731
+msgid "Rating (Descending)"
+msgstr "评分 (降序)"
+
+#: ../ui/rc-ui-menu.c:732
+msgid "Sort the rating of the music in descending order"
+msgstr "以评分分数进行降序排列"
+
+#: ../ui/rc-ui-menu.c:741
+msgid "_No Repeat"
+msgstr "不重复(_N)"
+
+#: ../ui/rc-ui-menu.c:742
+msgid "No repeat"
+msgstr "不重复"
+
+#: ../ui/rc-ui-menu.c:744
+msgid "Single _Music Repeat"
+msgstr "单曲重复(_M)"
+
+#: ../ui/rc-ui-menu.c:745
+msgid "Repeat playing single music"
+msgstr "重复播放当前音乐"
+
+#: ../ui/rc-ui-menu.c:747
+msgid "Single _Playlist Repeat"
+msgstr "单列表重复(_P)"
+
+#: ../ui/rc-ui-menu.c:748
+msgid "Repeat playing single playlist"
+msgstr "重复播放当前列表中的音乐"
+
+#: ../ui/rc-ui-menu.c:750
+msgid "_All Playlists Repeat"
+msgstr "全列表重复(_A)"
+
+#: ../ui/rc-ui-menu.c:751
+msgid "Repeat playing all playlists"
+msgstr "重复播放所有列表中的音乐"
+
+#: ../ui/rc-ui-menu.c:759
+msgid "_No Random"
+msgstr "不随机(_N)"
+
+#: ../ui/rc-ui-menu.c:760
+msgid "No random playing"
+msgstr "不随机播放"
+
+#: ../ui/rc-ui-menu.c:762
+msgid "_Single Playlist Random"
+msgstr "单列表随机(_S)"
+
+#: ../ui/rc-ui-menu.c:763
+msgid "Random playing a music in the playlist"
+msgstr "随机播放当前列表中的音乐"
+
+#: ../ui/rc-ui-menu.c:766
+msgid "_All Playlists Random"
+msgstr "全列表随机(_A)"
+
+#: ../ui/rc-ui-menu.c:767
+msgid "Random playing a music in all playlists"
+msgstr "随机播放全部播放列表中的音乐"
+
+#: ../ui/rc-ui-menu.c:776
+msgid "_No Visualize"
+msgstr "无视觉效果(_N)"
+
+#: ../ui/rc-ui-menu.c:777
+msgid "Disable visualize style"
+msgstr "禁用视觉效果"
+
+#: ../ui/rc-ui-menu.c:779
+msgid "_Mono Wavescope"
+msgstr "单通道示波器(_M)"
+
+#: ../ui/rc-ui-menu.c:780
+msgid "Wavescope with one channel"
+msgstr "单通道示波器"
+
+#: ../ui/rc-ui-menu.c:782
+msgid "Multi-_channel Wavescope"
+msgstr "多通道示波器(_C)"
+
+#: ../ui/rc-ui-menu.c:783
+msgid "Wavescope with multi-channel"
+msgstr "多通道示波器"
+
+#: ../ui/rc-ui-menu.c:785
+msgid "_Spectrum"
+msgstr "频谱(_S)"
+
+#: ../ui/rc-ui-menu.c:786
+msgid "Spectrum"
+msgstr "频谱"
+
+#: ../ui/rc-ui-menu.c:795
+msgid "Search All Fields"
+msgstr "搜索所有域"
+
+#: ../ui/rc-ui-menu.c:796
+msgid "Search all fields"
+msgstr "搜索所有域"
+
+#: ../ui/rc-ui-menu.c:798
+msgid "Search Artist"
+msgstr "搜索艺术家"
+
+#: ../ui/rc-ui-menu.c:799
+msgid "Search artists"
+msgstr "搜索艺术家"
+
+#: ../ui/rc-ui-menu.c:801
+msgid "Search Albums"
+msgstr "搜索专辑"
+
+#: ../ui/rc-ui-menu.c:802
+msgid "Search albums"
+msgstr "搜索专辑"
+
+#: ../ui/rc-ui-menu.c:804
+msgid "Search Titles"
+msgstr "搜索标题"
+
+#: ../ui/rc-ui-menu.c:805
+msgid "Search titles"
+msgstr "搜索标题"
+
+#: ../ui/rc-ui-menu.c:814
+msgid "Music _Library"
+msgstr "音乐库(_L)"
+
+#: ../ui/rc-ui-menu.c:815
+msgid "Music library"
+msgstr "音乐库"
+
+#: ../ui/rc-ui-menu.c:818 ../ui/rc-ui-menu.c:822
+msgid "Always On _Top"
+msgstr "总在最上"
+
+#: ../ui/rc-ui-menu.c:819 ../ui/rc-ui-menu.c:823
+msgid "Always on top"
+msgstr "总是处于所有窗口的最上方"
+
+#: ../ui/rc-ui-plugin.c:379
+msgid "Plug-in Configuration"
+msgstr "插件配置"
+
+#: ../ui/rc-ui-settings.c:133
+msgid "Audio Output Plug-in changed successfully."
+msgstr "成功变更音频输出插件"
+
+#: ../ui/rc-ui-settings.c:140
+msgid "Failed to change Audio Output Plug-in!"
+msgstr "变更音频输出插件失败!"
+
+#: ../ui/rc-ui-settings.c:159
+msgid "_Auto play on startup"
+msgstr "启动后自动开始播放(_A)"
+
+#: ../ui/rc-ui-settings.c:161
+msgid "_Load the last playing position"
+msgstr "载入上次播放的位置(_L)"
+
+#: ../ui/rc-ui-settings.c:163
+msgid "Minimize to _tray"
+msgstr "最小化到托盘(_T)"
+
+#: ../ui/rc-ui-settings.c:165
+msgid "Minimize the window if the _close button is clicked"
+msgstr "当点击关闭按钮时，最小化窗口(_C)"
+
+#: ../ui/rc-ui-settings.c:177
+msgid "<b>Hint</b>: Change the audio output plug-in will <b>stop</b> playing."
+msgstr "<b>提示</b>: 变更音频输出插件将会<b>停止</b>播放。"
+
+#: ../ui/rc-ui-settings.c:183
+msgid "<b>General</b>"
+msgstr "<b>常规</b>"
+
+#: ../ui/rc-ui-settings.c:190
+msgid "<b>Audio Output Plug-in</b>"
+msgstr "<b>音频输出插件</b>"
+
+#: ../ui/rc-ui-settings.c:212
+msgid "Automatic"
+msgstr "自动"
+
+#: ../ui/rc-ui-settings.c:221
+msgid "PulseAudio"
+msgstr "PulseAudio"
+
+#: ../ui/rc-ui-settings.c:224
+msgid "ALSA"
+msgstr "ALSA"
+
+#: ../ui/rc-ui-settings.c:232
+msgid "OSS"
+msgstr "OSS"
+
+#: ../ui/rc-ui-settings.c:240
+msgid "Jack"
+msgstr "Jack"
+
+#: ../ui/rc-ui-settings.c:248
+msgid "Waveform"
+msgstr "Waveform"
+
+#: ../ui/rc-ui-settings.c:346
+msgid "_Auto encoding detect (use system language settings)"
+msgstr "自动探测编码 (使用系统语言设定)(_A)"
+
+#: ../ui/rc-ui-settings.c:350
+msgid "Load playlist from _legacy version"
+msgstr "从老版本中载入播放列表(_L)"
+
+#: ../ui/rc-ui-settings.c:352
+msgid "ID3 Tag fallback character encodings"
+msgstr "ID3 标签备选字符编码"
+
+#: ../ui/rc-ui-settings.c:354
+msgid "Lyric text fallback character encodings"
+msgstr "歌词备选字符编码"
+
+#: ../ui/rc-ui-settings.c:357
+msgid "<b>Metadata</b>"
+msgstr "<b>元数据</b>"
+
+#: ../ui/rc-ui-settings.c:369
+msgid "<b>Legacy Support</b>"
+msgstr "<b>老版本支持</b>"
+
+#: ../ui/rc-ui-settings.c:491
+msgid "Disable theme (need to restart the player)"
+msgstr "禁用主题 (需要重启播放器)"
+
+#: ../ui/rc-ui-settings.c:499
+msgid "<b>Theme</b>"
+msgstr "<b>主题</b>"
+
+#: ../ui/rc-ui-settings.c:516
+#, c-format
+msgid "%s (Embedded)"
+msgstr "%s (内置)"
+
+#: ../ui/rc-ui-settings.c:795
+msgid "Hide cover _image"
+msgstr "隐藏专辑封面图像(_I)"
+
+#: ../ui/rc-ui-settings.c:797
+msgid "Hide _lyric labels"
+msgstr "隐藏歌词标签(_L)"
+
+#: ../ui/rc-ui-settings.c:799
+msgid "Hide _spectrum show"
+msgstr "隐藏频谱显示(_S)"
+
+#: ../ui/rc-ui-settings.c:801
+msgid "Show _metadata in multi-columns"
+msgstr "在多个列内显示元数据(_M)"
+
+#: ../ui/rc-ui-settings.c:822
+msgid "<b>Playlist Visible Columns</b>"
+msgstr "<b>播放列表可见列</b>"
+
+#: ../ui/rc-ui-settings.c:825
+msgid "Title column format: "
+msgstr "标题列格式: "
+
+#: ../ui/rc-ui-settings.c:827
+msgid ""
+"<b>Hint</b>: Use <i>%TITLE</i> as title string, <i>%ARTIST</i> as artist "
+"string, <i>%ALBUM</i> as album string, somehow <i>%TITLE</i> must be "
+"included in the format string."
+msgstr ""
+"<b>提示</b>: 使用 <i>%TITLE</i> 代表标题，<i>%ARTIST</i> 代表艺术家，<i>"
+"%ALBUM</i> 代表专辑, 但是 <i>%TITLE</i> 必须包含在格式字符串内。"
+
+#: ../ui/rc-ui-settings.c:867
+msgid "<b>Main Window</b>"
+msgstr "<b>主窗口</b>"
+
+#: ../ui/rc-ui-settings.c:873
+msgid "<b>List Views</b>"
+msgstr "<b>列表视图</b>"
+
+#: ../ui/rc-ui-settings.c:990
+msgid "General"
+msgstr "常规"
+
+#: ../ui/rc-ui-settings.c:991
+msgid "Playlist"
+msgstr "播放列表"
+
+#: ../ui/rc-ui-settings.c:992
+msgid "Appearance"
+msgstr "外观"
+
+#: ../ui/rc-ui-settings.c:993
+msgid "Interface"
+msgstr "界面"
+
+#: ../ui/rc-ui-settings.c:995
+msgid "Player Preferences"
+msgstr "播放器首选项"
+
+#: ../ui/rc-ui-dialog.c:78
+msgid "A music player based on GTK+ 3.0 & GStreamer 1.0"
+msgstr "一个基于 GTK+ 3.0 和 GStreamer 1.0 的音乐播放器"
+
+#: ../ui/rc-ui-dialog.c:137 ../ui/rc-ui-dialog.c:753 ../ui/rc-ui-dialog.c:1180
+msgid "All supported music files(*.FLAC;*.OGG;*.MP3;*.WAV;*.WMA...)"
+msgstr "所有支持的音乐文件(*.FLAC;*.OGG;*.MP3;*.WAV;*.WMA...)"
+
+#: ../ui/rc-ui-dialog.c:140 ../ui/rc-ui-dialog.c:756 ../ui/rc-ui-dialog.c:1183
+msgid "Select the music you want to add..."
+msgstr "选择您想要添加的音乐..."
+
+#: ../ui/rc-ui-dialog.c:190
+msgid "Select the directory you want to import..."
+msgstr "选择您想要导入的目录..."
+
+#: ../ui/rc-ui-dialog.c:241 ../ui/rc-ui-dialog.c:288
+msgid "M3U Playlist(*.M3U)"
+msgstr "M3U 播放列表(*.M3U)"
+
+#: ../ui/rc-ui-dialog.c:244
+msgid "Load the playlist..."
+msgstr "导入播放列表..."
+
+#: ../ui/rc-ui-dialog.c:291 ../ui/rc-ui-dialog.c:708
+msgid "Save the playlist..."
+msgstr "保存播放列表..."
+
+#: ../ui/rc-ui-dialog.c:332
+msgid "Select the directory you want to store the playlists..."
+msgstr "选择您想要保存播放列表的目录..."
+
+#: ../ui/rc-ui-dialog.c:391
+msgid "Set lyric file binding"
+msgstr "设置歌词文件绑定"
+
+#: ../ui/rc-ui-dialog.c:396
+msgid "_Bind lyric file to the music"
+msgstr "绑定歌词文件到音乐(_B)"
+
+#: ../ui/rc-ui-dialog.c:398
+msgid "_Do not bind lyric file"
+msgstr "不绑定歌词文件(_D)"
+
+#: ../ui/rc-ui-dialog.c:400
+msgid "Bind _secondary lyric file to the music"
+msgstr "绑定第二歌词文件到音乐(_S)"
+
+#: ../ui/rc-ui-dialog.c:403
+msgid "Do _not bind secondary lyric file"
+msgstr "不绑定第二歌词文件(_N)"
+
+#: ../ui/rc-ui-dialog.c:404 ../ui/rc-ui-dialog.c:406
+msgid "Select a lyric file"
+msgstr "选择一个歌词文件"
+
+#: ../ui/rc-ui-dialog.c:408
+msgid "The first lyric file binding"
+msgstr "第一歌词文件绑定"
+
+#: ../ui/rc-ui-dialog.c:409
+msgid "The second lyric file binding"
+msgstr "第二歌词文件绑定"
+
+#: ../ui/rc-ui-dialog.c:432 ../ui/rc-ui-dialog.c:438 ../ui/rc-ui-dialog.c:616
+msgid "Image File (*.JPG, *.BMP, *.PNG)..."
+msgstr "图像文件  (*.JPG, *.BMP, *.PNG)..."
+
+#: ../ui/rc-ui-dialog.c:433 ../ui/rc-ui-dialog.c:439
+msgid "Lyric File (*.LRC)"
+msgstr "歌词文件 (*.LRC)"
+
+#: ../ui/rc-ui-dialog.c:600
+msgid "Set album file binding"
+msgstr "设置专辑封面文件版定"
+
+#: ../ui/rc-ui-dialog.c:605
+msgid "_Bind album image file to the music"
+msgstr "绑定专辑封面文件到音乐(_B)"
+
+#: ../ui/rc-ui-dialog.c:607
+msgid "_Do not bind album file"
+msgstr "不帮定专辑封面文件(_D)"
+
+#: ../ui/rc-ui-dialog.c:608
+msgid "Select a album image file"
+msgstr "选择一个专辑封面图像文件"
+
+#: ../ui/rc-ui-dialog.c:801
+msgid "Open Location"
+msgstr "打开位置"
+
+#: ../ui/rc-ui-dialog.c:807
+msgid "Enter the URL of the file you would like to open:"
+msgstr "输入您想要打开的文件的URL:"
+
+#: ../ui/rc-ui-dialog.c:866
+msgid "Supported"
+msgstr "受支持"
+
+#: ../ui/rc-ui-dialog.c:876
+msgid "Supported Audio Format"
+msgstr "支持的音频格式"
+
+#: ../ui/rc-ui-dialog.c:1026
+msgid ""
+"The player does not exit normally, do you want to use the auto-saved "
+"playlist data?"
+msgstr "播放器没有正常退出，您是否想使用自动保存的播放列表数据?"
+
+#: ../ui/rc-ui-dialog.c:1045
+msgid "Do you want to load playlist data from legacy version of RhythmCat?"
+msgstr "您是否想要从老版本的 RhythmCat 播放器中载入播放列表数据?"
+
+#: ../ui/rc-ui-dialog.c:1085
+msgid "Rating Limited Playing Mode"
+msgstr "评分限制播放模式"
+
+#: ../ui/rc-ui-dialog.c:1089
+msgid "_Enable rating limited playing mode"
+msgstr "启用评分限制播放模式(_E)"
+
+#: ../ui/rc-ui-dialog.c:1092
+msgid ""
+"Play the music whose rating is _greater than or equal\n"
+"to the rating limit value"
+msgstr "播放评分大于等于设定值的音乐(_G)"
+
+#: ../ui/rc-ui-dialog.c:1095
+msgid ""
+"Play the music whose rating is _lesser than or equal to\n"
+"the rating limit value"
+msgstr "播放评分小于等于设定值的音乐(_L)"
+
+#: ../ui/rc-ui-dialog.c:1097
+msgid "Rating limit value"
+msgstr "评分限制值"
+
+#: ../ui/rc-ui-window.c:192 ../ui/rc-ui-window.c:377 ../ui/rc-ui-window.c:1353
+msgid "Unknown Format"
+msgstr "未知格式"
+
+#: ../ui/rc-ui-window.c:194
+#, c-format
+msgid "%d kbps "
+msgstr "%d 千比特/秒 "
+
+#: ../ui/rc-ui-window.c:197
+#, c-format
+msgid "%d Hz "
+msgstr "%d 赫兹 "
+
+#: ../ui/rc-ui-window.c:201
+msgid "Mono"
+msgstr "单声道"
+
+#: ../ui/rc-ui-window.c:204
+msgid "Stereo"
+msgstr "立体声"
+
+#: ../ui/rc-ui-window.c:209
+#, c-format
+msgid "%d channels"
+msgstr "%d 声道"
+
+#: ../ui/rc-ui-window.c:723
+#, c-format
+msgid "Importing: %d remaining"
+msgstr "导入中: 剩余 %d"
+
+#: ../ui/rc-ui-window.c:763
+#, c-format
+msgid "Refreshing: %d remaining"
+msgstr "刷新中: 剩余 %d"
+
+#: ../ui/rc-main.c:347
+#, c-format
+msgid ""
+"RhythmCat2, library version %d.%d.%d\n"
+"Copyright (C) 2012 SuperCat <supercatexpert@gmail.com>\n"
+"A music player based on GTK+ 3.0 & GStreamer 0.10\n"
+msgstr ""
+"RhythmCat2, 库版本 %d.%d.%d\n"
+"版权所有 (C) 2012 SuperCat <supercatexpert@gmail.com>\n"
+"一个基于GTK+ 3.0和GStreamer 0.10的音乐播放器\n"
+
+#: ../ui/rc-main.c:437
+msgid "Enable debug mode"
+msgstr "开启除错模式"
+
+#: ../ui/rc-main.c:439
+msgid "Use malloc function in stardard C library"
+msgstr "使用标准C函数库中的malloc"
+
+#: ../ui/rc-main.c:444
+msgid "Output version information and exit"
+msgstr "输出版本信息并退出"
+
+#: ../ui/rc-main.c:480
+#, c-format
+msgid ""
+"%s\n"
+"Run '%s --help' to see a full list of available command line options.\n"
+msgstr ""
+"%s\n"
+"运行 '%s --help' 来查看全部的可用命令行参数列表。\n"
+
+#: ../ui/rc-main.c:549
+msgid "Default Playlist"
+msgstr "默认播放列表"
+
+#~ msgid "_Bug Report"
+#~ msgstr "缺陷报告(_B)"
+
+#~ msgid "Report bugs"
+#~ msgstr "报告程序中的缺陷"

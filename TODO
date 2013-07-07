@@ -1,0 +1,20 @@
+- New information and control pad, client-side decoration
+- Move configuration files to ~/.config/RhythmCat2
+- Move user plug-in files to ~/.local/share/RhythmCat2/plugins
+- Player Command Interpreter build in LibRhythmCat
+- Use desktop.in
+
+Long-term:
+- Command Line Interface (CLI), based on ncurses
+- Mini mode (plug-in?)
+- More plug-ins
+- Non-Unix platform support
+- More interfaces in MPRIS v2.1 support
+- Multi-touch support
+- New icon and default cover image.
+- Make a GTK+ 2 port for legacy systems (Will be RhythmCat 1.4.x).
+
+Other ideas:
+- Better karaoke mode plug-in?
+- Vala support
+

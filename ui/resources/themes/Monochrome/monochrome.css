@@ -1,0 +1,516 @@
+@define-color rc_base_color #4f524f;
+@define-color rc_bg_color #393f3f;
+@define-color rc_text_color #eeeeec;
+@define-color rc_fg_color @rc_text_color;
+@define-color rc_borders #24282a;
+@define-color rc_selected_bg_color #3465a4;
+@define-color rc_selected_fg_color @rc_text_color;
+@define-color rc_unfocused_borders mix(@rc_unfocused_bg_color, @rc_text_color, 0.15);
+@define-color rc_unfocused_base_color @rc_base_color;
+@define-color rc_unfocused_text_color mix(@rc_unfocused_base_color, @rc_text_color, 0.6);
+@define-color rc_unfocused_fg_color mix(@rc_unfocused_bg_color, @rc_text_color, 0.3);
+@define-color rc_unfocused_bg_color @rc_bg_color;
+@define-color rc_unfocused_selected_bg_color mix(@rc_unfocused_bg_color, @rc_text_color, 0.45);
+@define-color rc_unfocused_selected_fg_color @rc_selected_fg_color;
+@define-color rc_insensitive_bg_color alpha(#0b0b0d, 0.0);
+@define-color rc_insensitive_fg_color alpha(#717171, 0.50);
+@define-color rc_insensitive_border_color alpha(#717171, 0.50);
+@define-color rc_scrollbar_trough shade(@rc_bg_color, 1.2);
+@define-color rc_scrollbar_trough_insensitive shade(@rc_bg_color, 1.05);
+@define-color rc_scrollbar_trough shade(@rc_unfocused_bg_color, 1.2);
+@define-color rc_scrollbar_slider mix(@rc_scrollbar_trough, @rc_fg_color, 0.5);
+@define-color rc_scrollbar_slider_prelight mix(@rc_scrollbar_trough, @rc_fg_color, 0.7);
+@define-color rc_scrollbar_slider_active @rc_selected_bg_color;
+@define-color rc_scrollbar_slider_insensitive alpha(black, 0);
+@define-color rc_scrollbar_slider_unfocused shade(@rc_unfocused_base_color, 0.8);
+@define-color rc_scale_fill shade (@rc_insensitive_border_color, 0.90);
+@define-color rc_scale_progress_fill #2c85e2;
+@define-color rc_button_gradient_color_a shade (@rc_bg_color, 1.1);
+@define-color rc_button_gradient_color_b shade (@rc_bg_color, 0.9);
+@define-color rc_button_hover_gradient_color_a shade (@rc_button_gradient_color_a, 1.10);
+@define-color rc_button_hover_gradient_color_b shade (@rc_button_gradient_color_b, 1.02);
+@define-color rc_button_active_gradient_color_a shade (@rc_button_gradient_color_b, 0.7);
+@define-color rc_button_active_gradient_color_b shade (@rc_button_gradient_color_a, 0.7);
+
+#RC2MainWindow.background
+{
+    background-color: @rc_bg_color;
+    background-image: none;
+}
+
+#RC2MainWindow #RC2TitleLabel,
+#RC2MainWindow #RC2ArtistLabel,
+#RC2MainWindow #RC2AlbumLabel,
+#RC2MainWindow #RC2InfoLabel,
+#RC2MainWindow #RC2LengthLabel,
+#RC2MiniWindow GtkLabel
+{
+    color: @rc_text_color;
+    font-family: Cantarell, Dejavu Sans
+}
+
+#RC2MainWindow #RC2TitleLabel:backdrop,
+#RC2MainWindow #RC2ArtistLabel:backdrop,
+#RC2MainWindow #RC2AlbumLabel:backdrop,
+#RC2MainWindow #RC2InfoLabel:backdrop,
+#RC2MainWindow #RC2LengthLabel:backdrop,
+#RC2MiniWindow GtkLabel:backdrop
+{
+    color: @rc_unfocused_text_color;
+    font-family: Cantarell, Dejavu Sans
+}
+
+#RC2MainWindow #RC2TimeLabel
+{
+    color: #6CD02F;
+    font-family: Cantarell, Dejavu Sans
+}
+
+#RC2MainWindow #RC2TimeLabel:backdrop
+{
+    color: shade(#6CD02F, 0.7);
+    font-family: Cantarell, Dejavu Sans
+}
+
+#RC2MainWindow #RC2Lyric1ScrollableLabel,
+#RC2MainWindow #RC2Lyric2ScrollableLabel
+{
+    background-color: @rc_bg_color;
+    background-image: none;
+    color: @rc_text_color;
+    font-family: Cantarell, Dejavu Sans
+}
+
+#RC2MainWindow #RC2Lyric1ScrollableLabel:backdrop,
+#RC2MainWindow #RC2Lyric2ScrollableLabel:backdrop
+{
+    background-color: @rc_bg_color;
+    background-image: none;
+    color: @rc_unfocused_text_color;
+    font-family: Cantarell, Dejavu Sans
+}
+
+#RC2MainWindow RCUiSpectrumWidget#RC2SpectrumWidget
+{
+    background-color: @rc_bg_color;
+    background-image: none;
+    -RCUiSpectrumWidget-wave-channel1-color: #00F000;
+    -RCUiSpectrumWidget-wave-channel2-color: #F00000;
+    color: #00A0F0;
+}
+
+#RC2MainWindow RCUiSpectrumWidget#RC2SpectrumWidget:backdrop
+{
+    background-color: @rc_bg_color;
+    background-image: none;
+    -RCUiSpectrumWidget-wave-channel1-color: shade(#00F000, 0.6);
+    -RCUiSpectrumWidget-wave-channel2-color: shade(#F00000, 0.6);
+    color: shade(#00A0F0, 0.5);
+}
+
+#RC2MainWindow #RC2ListPaned
+{
+    background-color: @rc_base_color;
+    background-image: none;
+}
+
+#RC2MainWindow #RC2ListPaned:prelight
+{
+    background-color: shade(@rc_base_color, 1.3);
+    background-image: none;
+}
+
+#RC2MainWindow #RC2ListPaned:active
+{
+    background-color: shade(@rc_base_color, 1.1);
+    background-image: none;
+}
+
+#RC2MainWindow #RC2CatalogScrolledWindow
+{
+    background-color: @rc_bg_color;
+    background-image: none;
+}
+
+#RC2MainWindow #RC2CatalogScrolledWindow.frame
+{
+    border-style: solid;
+    border-color: @rc_borders;
+    border-width: 1px;
+    border-radius: 2px;
+    padding: 0;
+}
+
+#RC2MainWindow #RC2CatalogScrolledWindow .scrollbar,
+#RC2MainWindow #RC2PlaylistScrolledWindow .scrollbar
+{
+    background-image: none;
+    border-style: solid;
+    -GtkRange-trough-border: 0;
+    -GtkScrollbar-has-backward-stepper: false;
+    -GtkScrollbar-has-forward-stepper: false;
+    -GtkRange-slider-width: 13;
+    -GtkScrollbar-min-slider-length: 42;
+    -GtkRange-stepper-spacing: 0;
+    -GtkRange-trough-under-steppers: 1;
+}
+
+#RC2MainWindow #RC2CatalogScrolledWindow .scrollbars-junction,
+#RC2MainWindow #RC2CatalogScrolledWindow .scrollbar.trough,
+#RC2MainWindow #RC2PlaylistScrolledWindow .scrollbars-junction,
+#RC2MainWindow #RC2PlaylistScrolledWindow .scrollbar.trough
+{
+    background-image: none;
+    background-color: @rc_scrollbar_trough;
+    border-width: 0;
+    border-radius: 0;
+    border-image: none;
+}
+
+#RC2MainWindow #RC2CatalogScrolledWindow .scrollbar.button,
+#RC2MainWindow #RC2CatalogScrolledWindow .scrollbar.button:active,
+#RC2MainWindow #RC2CatalogScrolledWindow .scrollbar.button:active:hover,
+#RC2MainWindow #RC2CatalogScrolledWindow .scrollbar.button:insensitive,
+#RC2MainWindow #RC2PlaylistScrolledWindow .scrollbar.button,
+#RC2MainWindow #RC2PlaylistScrolledWindow .scrollbar.button:active,
+#RC2MainWindow #RC2PlaylistScrolledWindow .scrollbar.button:active:hover,
+#RC2MainWindow #RC2PlaylistScrolledWindow .scrollbar.button:insensitive
+{
+    border-style: none;
+    border-image: none;
+    border-radius: 0;
+    background-image: none;
+    background-color: transparent;
+}
+
+#RC2MainWindow #RC2CatalogScrolledWindow .scrollbar.button:active,
+#RC2MainWindow #RC2CatalogScrolledWindow .scrollbar.button:active:hover,
+#RC2MainWindow #RC2PlaylistScrolledWindow .scrollbar.button:active,
+#RC2MainWindow #RC2PlaylistScrolledWindow .scrollbar.button:active:hover
+{
+    background-color: mix(@rc_scrollbar_slider, @rc_scrollbar_trough, 0.8);
+}
+
+#RC2MainWindow #RC2CatalogScrolledWindow .scrollbar.button.top:hover,
+#RC2MainWindow #RC2PlaylistScrolledWindow .scrollbar.button.top:hover
+{
+    box-shadow: 0 -1 inset mix(@rc_scrollbar_slider, @rc_scrollbar_trough, 0.8);
+}
+
+#RC2MainWindow #RC2CatalogScrolledWindow .scrollbar.button.bottom:hover,
+#RC2MainWindow #RC2PlaylistScrolledWindow .scrollbar.button.bottom:hover
+{
+    box-shadow: 0 1 inset mix(@rc_scrollbar_slider, @rc_scrollbar_trough, 0.8);
+}
+
+#RC2MainWindow #RC2CatalogScrolledWindow .scrollbar.button.right:hover,
+#RC2MainWindow #RC2PlaylistScrolledWindow .scrollbar.button.right:hover
+{
+    box-shadow: 1 0 inset mix(@rc_scrollbar_slider, @rc_scrollbar_trough, 0.8);
+}
+
+#RC2MainWindow #RC2CatalogScrolledWindow .scrollbar.button.left:hover,
+#RC2MainWindow #RC2PlaylistScrolledWindow .scrollbar.button.left:hover
+{
+    box-shadow: -1 0 inset mix(@rc_scrollbar_slider, @rc_scrollbar_trough, 0.8);
+}
+
+#RC2MainWindow #RC2CatalogScrolledWindow .scrollbar.button,
+#RC2MainWindow #RC2PlaylistScrolledWindow .scrollbar.button
+{
+    color: @rc_scrollbar_slider;
+}
+
+#RC2MainWindow #RC2CatalogScrolledWindow .scrollbar.button:hover,
+#RC2MainWindow #RC2PlaylistScrolledWindow .scrollbar.button:hover
+{
+    color: @rc_scrollbar_slider_prelight;
+}
+
+#RC2MainWindow #RC2CatalogScrolledWindow .scrollbar.button:insensitive,
+#RC2MainWindow #RC2PlaylistScrolledWindow .scrollbar.button:insensitive
+{
+    color: mix(@rc_scrollbar_slider, @rc_scrollbar_trough, 0.6);
+}
+
+#RC2MainWindow #RC2CatalogScrolledWindow .scrollbar.button:active,
+#RC2MainWindow #RC2PlaylistScrolledWindow .scrollbar.button:active
+{
+    color: @rc_scrollbar_slider_active;
+}
+
+#RC2MainWindow #RC2CatalogScrolledWindow .scrollbar.trough.vertical,
+#RC2MainWindow #RC2PlaylistScrolledWindow .scrollbar.trough.vertical
+{
+       box-shadow: -1 0 inset alpha(@rc_text_color, 0.05), 1 0 inset alpha(@rc_text_color, 0.1);
+}
+
+#RC2MainWindow #RC2CatalogScrolledWindow .scrollbar.trough.horizontal,
+#RC2MainWindow #RC2PlaylistScrolledWindow .scrollbar.trough.horizontal
+{
+   box-shadow: 0 -1 inset alpha(@rc_text_color, 0.05), 0 1 inset alpha(@rc_text_color, 0.1);
+}
+
+#RC2MainWindow #RC2CatalogScrolledWindow .scrollbar.trough:insensitive,
+#RC2MainWindow #RC2PlaylistScrolledWindow .scrollbar.trough:insensitive
+{
+    background-color: @rc_scrollbar_trough_insensitive;
+    border-style: solid;
+    border-image: none;
+    border-color: transparent;
+    border-width: 3px;
+}
+
+#RC2MainWindow #RC2CatalogScrolledWindow .scrollbar.slider,
+#RC2MainWindow #RC2PlaylistScrolledWindow .scrollbar.slider
+{
+    background-image: none;
+    background-color: @rc_scrollbar_slider;
+    border-radius: 6px;
+    border-style: solid;
+    border-image: none;
+    border-color: transparent;
+    border-width: 3px;
+}
+
+#RC2MainWindow #RC2CatalogScrolledWindow .scrollbar.slider:hover,
+#RC2MainWindow #RC2PlaylistScrolledWindow .scrollbar.slider:hover
+{
+    transition: 1000ms linear;
+    background-image: none;
+    background-color: @rc_scrollbar_slider_prelight;
+    border-style: solid;
+    border-image: none;
+    border-color: transparent;
+    border-width: 3px;
+}
+
+#RC2MainWindow #RC2CatalogScrolledWindow .scrollbar.slider:prelight:active,
+#RC2MainWindow #RC2PlaylistScrolledWindow .scrollbar.slider:prelight:active
+{
+    background-image: none;
+    background-color: @rc_scrollbar_slider_active;
+    border-style: solid;
+    border-image: none;
+    border-color: transparent;
+    border-width: 3px;
+}
+
+#RC2MainWindow #RC2CatalogScrolledWindow .scrollbar.slider:insensitive,
+#RC2MainWindow #RC2PlaylistScrolledWindow .scrollbar.slider:insensitive
+{
+    background-color: @rc_scrollbar_slider_insensitive;
+    border-style: solid;
+    border-image: none;
+    border-color: transparent;
+    border-width: 3px;
+}
+
+#RC2MainWindow #RC2CatalogListView,
+#RC2MainWindow #RC2CatalogListView.view,
+#RC2MainWindow #RC2PlaylistListView,
+#RC2MainWindow #RC2PlaylistListView.view
+{
+    background-color: @rc_base_color;
+    background-image: none;
+    color: @rc_text_color;
+    font-family: Cantarell, Dejavu Sans
+}
+
+#RC2MainWindow #RC2CatalogListView:backdrop,
+#RC2MainWindow #RC2CatalogListView.view:backdrop,
+#RC2MainWindow #RC2PlaylistListView:backdrop,
+#RC2MainWindow #RC2PlaylistListView.view:backdrop
+{
+    background-color: @rc_base_color;
+    background-image: none;
+    color: @rc_unfocused_text_color;
+    font-family: Cantarell, Dejavu Sans
+}
+
+#RC2MainWindow #RC2CatalogListView.view:selected,
+#RC2MainWindow #RC2PlaylistListView.view:selected
+{
+    background-color: @rc_selected_bg_color;
+    background-image: none;
+    color: @rc_text_color;
+}
+
+#RC2MainWindow #RC2CatalogListView.view:selected:backdrop,
+#RC2MainWindow #RC2PlaylistListView.view:selected:backdrop
+{
+    background-color: @rc_unfocused_selected_bg_color;
+    background-image: none;
+    color: @theme_selected_fg_color;
+}
+
+#RC2MainWindow #RC2CatalogListView:insensitive,
+#RC2MainWindow #RC2CatalogListView.view:insensitive,
+#RC2MainWindow #RC2PlaylistListView:insensitive,
+#RC2MainWindow #RC2PlaylistListView.view:insensitive
+{
+    background-color: @rc_insensitive_bg_color;
+    background-image: none;
+    color: @rc_insensitive_fg_color;
+}
+
+#RC2MainWindow #RC2CatalogListView.view:prelight,
+#RC2MainWindow #RC2PlaylistListView.view:prelight
+{
+    background-color: shade(@rc_base_color, 0.8);
+    background-image: none;
+    color: @theme_selected_fg_color;
+}
+
+#RC2MainWindow #RC2TimeScale
+{
+    -GtkScale-slider-length: 16;
+    -GtkRange-slider-width: 20;
+    -GtkRange-trough-border: 0;
+    background-color: @rc_bg_color;
+}
+
+#RC2MainWindow #RC2TimeScale.slider,
+#RC2MainWindow #RC2TimeScale.slider:hover,
+#RC2MainWindow #RC2TimeScale.slider:backdrop,
+#RC2MainWindow #RC2TimeScale.slider:insensitive
+#RC2MainWindow #RC2TimeScale.slider:insensitive:backdrop
+{
+    border-width: 0;
+    border-radius: 0;
+    border-style: none;
+    color: alpha(@rc_base_color, 0.0);
+    background-color: alpha(@rc_base_color, 0.0);
+}
+
+#RC2MainWindow #RC2TimeScale.trough
+#RC2MainWindow #RC2TimeScale.trough.highlight,
+#RC2MainWindow #RC2TimeScale.trough.vertical,
+#RC2MainWindow #RC2TimeScale.trough:backdrop
+{
+    border-width: 1px;
+    border-radius: 2px;
+    border-style: solid;
+    background-color: shade(@rc_scale_fill, 1.5);
+    background-image: none;
+    border-image: none;
+}
+
+#RC2MainWindow #RC2TimeScale.trough,
+#RC2MainWindow #RC2TimeScale.trough.highlight,
+#RC2MainWindow #RC2TimeScale.trough.vertical
+{
+    border-color: @rc_borders;
+}
+
+#RC2MainWindow #RC2TimeScale.trough:backdrop {
+    border-color: @rc_unfocused_borders;
+}
+
+#RC2MainWindow #RC2TimeScale.trough:insensitive
+{
+    background-color: @rc_insensitive_bg_color;
+    background-image: none;
+    border-image: none;
+    border-style: solid;
+    box-shadow: none;
+    border-color: @rc_insensitive_border_color;
+}
+
+#RC2MainWindow #RC2TimeScale.progressbar
+{
+    background-color: @rc_scale_progress_fill;
+    border-width: 1px;
+    border-radius: 2px;
+    border-style: none;
+}
+
+#RC2MainWindow #RC2TimeScale.progressbar:backdrop
+{
+    background-color: shade(@rc_scale_progress_fill, 0.6);
+    -adwaita-progressbar-pattern: none;
+}
+
+#RC2MainWindow #RC2TimeScale.mark
+{
+    color: shade (@rc_bg_color, 0.56);
+}
+
+#RC2MainWindow #RC2TimeScale.slider,
+#RC2MainWindow #RC2TimeScale.slider.horizontal
+{
+    background-image: url("scale-slider-horz-dark.png");
+}
+
+#RC2MainWindow #RC2TimeScale.slider:backdrop,
+#RC2MainWindow #RC2TimeScale.slider.horizontal:backdrop
+{
+    background-image: url("scale-slider-horz-backdrop-dark.png");
+}
+
+#RC2MainWindow #RC2TimeScale.slider:insensitive,
+#RC2MainWindow #RC2TimeScale.slider.horizontal:insensitive
+{
+    background-image: url("scale-slider-horz-insensitive-dark.png");
+}
+
+#RC2MainWindow #RC2TimeScale.slider:backdrop:insensitive,
+#RC2MainWindow #RC2TimeScale.slider.horizontal:backdrop:insensitive
+{
+    background-image: url("scale-slider-horz-backdrop-insensitive-dark.png");
+}
+
+#RC2MainWindow #RC2ControlButton.button,
+#RC2MainWindow #RC2VolumeButton.button
+{
+    padding: 1px 4px;
+    -GtkWidget-focus-line-width: 2;
+    -GtkButton-child-displacement-x: 1;
+    -GtkButton-child-displacement-y: 1;
+    -GtkButton-image-spacing: 4;
+    -GtkButton-interior-focus: true;
+    -GtkButton-default-border: 0;
+    -GtkButton-inner-border: 0;
+    color: @rc_text_color;
+    border-radius: 3px;
+    border-width: 1px;
+    border-style: none;
+    background-image: -gtk-gradient (linear, left top, left bottom,
+        from (@rc_button_gradient_color_a),
+        to (@rc_button_gradient_color_b));
+}
+
+#RC2MainWindow #RC2ControlButton.button:hover,
+#RC2MainWindow #RC2VolumeButton:hover
+{
+    background-image: -gtk-gradient (linear, left top, left bottom,
+        from (@rc_button_hover_gradient_color_a),
+        to (@rc_button_hover_gradient_color_b));
+}
+
+#RC2MainWindow #RC2ControlButton.button:active,
+#RC2MainWindow #RC2ControlButton.button:hover:active,
+#RC2MainWindow #RC2VolumeButton:active,
+#RC2MainWindow #RC2VolumeButton.button:hover:active
+{
+    background-image: -gtk-gradient (linear, left top, left bottom,
+        from (@rc_button_active_gradient_color_a),
+        to (alpha (@rc_button_active_gradient_color_b, 0.13)));
+}
+
+#RC2MainWindow #RC2ControlButton.button:insensitive,
+#RC2MainWindow #RC2VolumeButton.button:insensitive
+{
+    background-image: none;
+    background-color: @rc_insensitive_bg_color;
+    color: @rc_insensitive_fg_color;
+    border-image: none;
+    border-style: solid;
+}
+
+#RC2MainWindow #RC2ControlButton.button.default,
+#RC2MainWindow #RC2VolumeButton.button.default
+{
+    border-width: 1px;
+}
+

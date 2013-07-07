@@ -1,0 +1,11 @@
+#!/bin/sh
+
+make clean
+rm -f Makefile
+rm -f ./*/Makefile
+
+cd po
+rm -f Makefile.in
+rm -f RhythmCat.pot
+rm -f *.gmo
+rm -f *.po~

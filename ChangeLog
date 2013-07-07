@@ -1,0 +1,172 @@
+2012-01-03  SuperCat    <supercatexpert@gmail.com>
+
+	* The first build.
+
+2012-02-26  SuperCat    <supercatexpert@gmail.com>
+
+    * Version 1.9.1 released.
+    
+2012-03-13  SuperCat    <supercatexpert@gmail.com>
+
+    * Added plug-in support system.
+    * Added Python3 plug-in loader.
+    
+2012-03-25  SuperCat    <supercatexpert@gmail.com>
+
+    * Settings UI is available now.
+    * Plug-in configuration UI is available now.
+    
+2012-04-03  SuperCat    <supercatexpert@gmail.com>
+
+    * Desktop Lyric plug-in is available now.
+    * Version 1.9.2 released.
+    
+2012-04-11  SuperCat    <supercatexpert@gmail.com>
+
+    * Move multimedia key support into plug-in (in base plug-ins).
+    
+2012-04-11  SuperCat    <supercatexpert@gmail.com>
+
+    * Move MPRIS2 support into plug-in (in base plug-ins).
+    * The items in catalog and playlist list views can be searched
+      by using keyboard now.
+
+2012-04-17  SuperCat    <supercatexpert@gmail.com>
+
+    * Cover image, lyric labels, and spectrum show can be hided now.
+    
+2012-04-19  SuperCat    <supercatexpert@gmail.com>
+
+    * Change the GLib dependency to version 2.32. Use new threads
+      API in GLib.
+      
+2012-04-21  SuperCat    <supercatexpert@gmail.com>
+
+    * The GTK+ UI layout can be customed partially (like playlist view,
+      panel, etc).
+    * Missing music item in the playlist will be marked.
+    
+2012-04-22  SuperCat    <supercatexpert@gmail.com>
+
+    * Completed debian packaging scripts.
+    * Added multiarch library support.
+    
+2012-04-25  SuperCat    <supercatexpert@gmail.com>
+
+    * Auto-save playlist file if the playlist has been modified (the scan cycle
+      is 120s), if the auto-save playlist exists when the player starts, the
+      user can use that file.
+    * Debian and Fedora package files are ready.
+    
+2012-04-26  SuperCat    <supercatexpert@gmail.com>
+
+    * It is possible to load playlist data from legacy version now.
+        
+2012-04-27  SuperCat    <supercatexpert@gmail.com>   
+
+    * Added GI(GObject Introspection) support for both LibRhythmCat2 and
+      RhythmCat2.
+    * Added GIR (GObject Introspection Repository) package files for Debian.
+    * Added GIR files into Fedora RPM packages.
+    
+2012-05-11  SuperCat    <supercatexpert@gmail.com>
+
+    * Change the GTK+ dependency to version 3.4. Fixed css theme compatibility
+      problem on GTK+ 3.4.
+    
+2012-05-23  SuperCat    <supercatexpert@gmail.com>  
+
+    * Use json-glib instead of json-c now.
+
+2012-06-04  SuperCat    <supercatexpert@gmail.com>
+
+    * Made some new classes.
+    * Fixed some bugs.
+    * It is possible to close window by using Esc in Preferences,
+      Audio Effect and plug-in configuartion windows now.
+
+2012-06-11  SuperCat    <supercatexpert@gmail.com>
+
+    * Fixed some bugs.
+    * Use new data format for playlist database (compressed XML), need a
+      converter if you want to migrate data from old version of RhythmCat2.
+    * Added buffering presentation if playing live media.
+    * Modified some APIs, old plug-ins may not work with new player core
+      library.
+    
+2012-06-16  SuperCat    <supercatexpert@gmail.com>
+
+    * Added rating limited playing mode (playing the music whose rating is
+      larger or lesser than the rating you set), the configuration UI is
+      to be finished.
+    * Killed all warnings in GIR Scanner while compiling.
+      
+2012-06-17  SuperCat    <supercatexpert@gmail.com>
+
+    * Version 1.9.4 released.  
+    * Updated plug-in magic number, so old plug-ins cannot be used.
+    * Fixed some bugs.
+
+2012-07-01  SuperCat    <supercatexpert@gmail.com>
+
+    * Removed spectrum part from LibRhythmCat, and implemented it in UI part.
+    * Add wave scope style in spectrum show.
+
+2012-07-19  SuperCat    <supercatexpert@gmail.com>
+
+    * Rewrited the text rendering part of the desktop lyric plug-in, lowered
+      the CPU usage, and shadow effect is also implemented.
+
+2012-08-05  SuperCat    <supercatexpert@gmail.com>
+
+    * Rewrited the text rendering part of the lyric show plug-in.
+    * Added X11 multimedia key support in mediakey plug-in for non-GNOME users.
+
+2012-08-16  SuperCat    <supercatexpert@gmail.com>
+
+    * Moved some playlist functions to a new source file.
+
+2012-08-19  SuperCat    <supercatexpert@gmail.com>
+
+    * Use private pointer in the instance object directly instead of
+      GET_PRIVATE macro now, for improving the performance.
+
+2012-09-10   SuperCat    <supercatexpert@gmail.com>
+
+    * Hid the RCLibDbCatalog & RCLibDbPlaylist struct implements, just use
+      set/get functions to access the data inside
+    * Implemented some basic library APIs.
+    * Changed to version 1.9.5.
+    
+2012-10-10   SuperCat    <supercatexpert@gmail.com>
+
+    * Catalog & Playlist can be read in multi-threads now.
+    * Added query interface for Catalog & Playlist.
+    * Catalog & Playlist API changed.
+    
+2012-10-24   SuperCat    <supercatexpert@gmail.com>
+
+    * Switchable audio output sink.
+     
+2012-10-25   SuperCat    <supercatexpert@gmail.com>
+
+    * It is possible to sort in the catalogs (by the playlist names) now.
+ 
+2012-10-26   SuperCat    <supercatexpert@gmail.com>
+
+    * It is possible to sort in the playlist (by some metadata types of the
+      music) now.
+
+2013-02-04   SuperCat    <supercatexpert@gmail.com>
+
+    * Added music library.
+
+2013-02-21   SuperCat    <supercatexpert@gmail.com>
+
+    * Added GStreamer 1.0 support (except plug-ins).
+
+2013-02-23   SuperCat    <supercatexpert@gmail.com>
+
+    * Can be compiled with GStreamer 1.0 completely now.
+    * Fixed some bugs in Music Library.
+    

@@ -1,0 +1,554 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>RCLibPlayer</title>
+<meta name="generator" content="DocBook XSL Stylesheets V1.76.1">
+<link rel="home" href="index.html" title="LibRhythmCat Reference Manual">
+<link rel="up" href="ch01.html" title="API reference">
+<link rel="prev" href="RCLibLyric.html" title="RCLibLyric">
+<link rel="next" href="RCLibPlugin.html" title="RCLibPlugin">
+<meta name="generator" content="GTK-Doc V1.18 (XML mode)">
+<link rel="stylesheet" href="style.css" type="text/css">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2">
+<tr valign="middle">
+<td><a accesskey="p" href="RCLibLyric.html"><img src="left.png" width="24" height="24" border="0" alt="Prev"></a></td>
+<td><a accesskey="u" href="ch01.html"><img src="up.png" width="24" height="24" border="0" alt="Up"></a></td>
+<td><a accesskey="h" href="index.html"><img src="home.png" width="24" height="24" border="0" alt="Home"></a></td>
+<th width="100%" align="center">LibRhythmCat Reference Manual</th>
+<td><a accesskey="n" href="RCLibPlugin.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
+</tr>
+<tr><td colspan="5" class="shortcuts">
+<a href="#RCLibPlayer.synopsis" class="shortcut">Top</a>
+                   | 
+                  <a href="#RCLibPlayer.description" class="shortcut">Description</a>
+                   | 
+                  <a href="#RCLibPlayer.object-hierarchy" class="shortcut">Object Hierarchy</a>
+                   | 
+                  <a href="#RCLibPlayer.signals" class="shortcut">Signals</a>
+</td></tr>
+</table>
+<div class="refentry">
+<a name="RCLibPlayer"></a><div class="titlepage"></div>
+<div class="refnamediv"><table width="100%"><tr>
+<td valign="top">
+<h2><span class="refentrytitle"><a name="RCLibPlayer.top_of_page"></a>RCLibPlayer</span></h2>
+<p>RCLibPlayer — The player scheduler</p>
+</td>
+<td valign="top" align="right"></td>
+</tr></table></div>
+<div class="refsynopsisdiv">
+<a name="RCLibPlayer.synopsis"></a><h2>Synopsis</h2>
+<pre class="synopsis">
+#include &lt;rclib-player.h&gt;
+
+struct              <a class="link" href="RCLibPlayer.html#RCLibPlayer-struct" title="struct RCLibPlayer">RCLibPlayer</a>;
+struct              <a class="link" href="RCLibPlayer.html#RCLibPlayerClass" title="struct RCLibPlayerClass">RCLibPlayerClass</a>;
+enum                <a class="link" href="RCLibPlayer.html#RCLibPlayerRandomMode" title="enum RCLibPlayerRandomMode">RCLibPlayerRandomMode</a>;
+enum                <a class="link" href="RCLibPlayer.html#RCLibPlayerRepeatMode" title="enum RCLibPlayerRepeatMode">RCLibPlayerRepeatMode</a>;
+<span class="returnvalue">void</span>                <a class="link" href="RCLibPlayer.html#rclib-player-exit" title="rclib_player_exit ()">rclib_player_exit</a>                   ();
+<a href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GObject"><span class="returnvalue">GObject</span></a> *           <a class="link" href="RCLibPlayer.html#rclib-player-get-instance" title="rclib_player_get_instance ()">rclib_player_get_instance</a>           ();
+<a class="link" href="RCLibPlayer.html#RCLibPlayerRandomMode" title="enum RCLibPlayerRandomMode"><span class="returnvalue">RCLibPlayerRandomMode</span></a> <a class="link" href="RCLibPlayer.html#rclib-player-get-random-mode" title="rclib_player_get_random_mode ()">rclib_player_get_random_mode</a>      ();
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RCLibPlayer.html#rclib-player-get-rating-limit" title="rclib_player_get_rating_limit ()">rclib_player_get_rating_limit</a>       (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gfloat"><span class="type">gfloat</span></a> *rating</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> *condition</code></em>);
+<a class="link" href="RCLibPlayer.html#RCLibPlayerRepeatMode" title="enum RCLibPlayerRepeatMode"><span class="returnvalue">RCLibPlayerRepeatMode</span></a> <a class="link" href="RCLibPlayer.html#rclib-player-get-repeat-mode" title="rclib_player_get_repeat_mode ()">rclib_player_get_repeat_mode</a>      ();
+<span class="returnvalue">void</span>                <a class="link" href="RCLibPlayer.html#rclib-player-init" title="rclib_player_init ()">rclib_player_init</a>                   ();
+<span class="returnvalue">void</span>                <a class="link" href="RCLibPlayer.html#rclib-player-play-library" title="rclib_player_play_library ()">rclib_player_play_library</a>           (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *uri</code></em>);
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RCLibPlayer.html#rclib-player-play-next" title="rclib_player_play_next ()">rclib_player_play_next</a>              (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> jump</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> repeat</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> loop</code></em>);
+<span class="returnvalue">void</span>                <a class="link" href="RCLibPlayer.html#rclib-player-play-playlist" title="rclib_player_play_playlist ()">rclib_player_play_playlist</a>          (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> iter</code></em>);
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RCLibPlayer.html#rclib-player-play-prev" title="rclib_player_play_prev ()">rclib_player_play_prev</a>              (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> jump</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> repeat</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> loop</code></em>);
+<span class="returnvalue">void</span>                <a class="link" href="RCLibPlayer.html#rclib-player-set-random-mode" title="rclib_player_set_random_mode ()">rclib_player_set_random_mode</a>        (<em class="parameter"><code><a class="link" href="RCLibPlayer.html#RCLibPlayerRandomMode" title="enum RCLibPlayerRandomMode"><span class="type">RCLibPlayerRandomMode</span></a> mode</code></em>);
+<span class="returnvalue">void</span>                <a class="link" href="RCLibPlayer.html#rclib-player-set-rating-limit" title="rclib_player_set_rating_limit ()">rclib_player_set_rating_limit</a>       (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> state</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gfloat"><span class="type">gfloat</span></a> rating</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> condition</code></em>);
+<span class="returnvalue">void</span>                <a class="link" href="RCLibPlayer.html#rclib-player-set-repeat-mode" title="rclib_player_set_repeat_mode ()">rclib_player_set_repeat_mode</a>        (<em class="parameter"><code><a class="link" href="RCLibPlayer.html#RCLibPlayerRepeatMode" title="enum RCLibPlayerRepeatMode"><span class="type">RCLibPlayerRepeatMode</span></a> mode</code></em>);
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gulong"><span class="returnvalue">gulong</span></a>              <a class="link" href="RCLibPlayer.html#rclib-player-signal-connect" title="rclib_player_signal_connect ()">rclib_player_signal_connect</a>         (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *name</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/gobject/gobject-Closures.html#GCallback"><span class="type">GCallback</span></a> callback</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> data</code></em>);
+<span class="returnvalue">void</span>                <a class="link" href="RCLibPlayer.html#rclib-player-signal-disconnect" title="rclib_player_signal_disconnect ()">rclib_player_signal_disconnect</a>      (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gulong"><span class="type">gulong</span></a> handler_id</code></em>);
+</pre>
+</div>
+<div class="refsect1">
+<a name="RCLibPlayer.object-hierarchy"></a><h2>Object Hierarchy</h2>
+<pre class="synopsis">
+  <a href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GObject">GObject</a>
+   +----RCLibPlayer
+</pre>
+</div>
+<div class="refsect1">
+<a name="RCLibPlayer.signals"></a><h2>Signals</h2>
+<pre class="synopsis">
+  "<a class="link" href="RCLibPlayer.html#RCLibPlayer-random-mode-changed" title='The "random-mode-changed" signal'>random-mode-changed</a>"                            : <a href="/usr/share/gtk-doc/html/gobject/gobject-Signals.html#G-SIGNAL-RUN-FIRST:CAPS"><code class="literal">Run First</code></a>
+  "<a class="link" href="RCLibPlayer.html#RCLibPlayer-repeat-mode-changed" title='The "repeat-mode-changed" signal'>repeat-mode-changed</a>"                            : <a href="/usr/share/gtk-doc/html/gobject/gobject-Signals.html#G-SIGNAL-RUN-FIRST:CAPS"><code class="literal">Run First</code></a>
+</pre>
+</div>
+<div class="refsect1">
+<a name="RCLibPlayer.description"></a><h2>Description</h2>
+<p>
+The <a class="link" href="RCLibPlayer.html" title="RCLibPlayer"><span class="type">RCLibPlayer</span></a> is a class which schedules the player, like sequential
+playing, repeat playing, and random playing. The playing mode can be set
+easily by the given API.
+</p>
+</div>
+<div class="refsect1">
+<a name="RCLibPlayer.details"></a><h2>Details</h2>
+<div class="refsect2">
+<a name="RCLibPlayer-struct"></a><h3>struct RCLibPlayer</h3>
+<pre class="programlisting">struct RCLibPlayer;</pre>
+<p>
+The advanced player scheduler. The contents of the <a class="link" href="RCLibPlayer.html" title="RCLibPlayer"><span class="type">RCLibPlayer</span></a> structure
+are private and should only be accessed via the provided API.
+</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="RCLibPlayerClass"></a><h3>struct RCLibPlayerClass</h3>
+<pre class="programlisting">struct RCLibPlayerClass {
+};
+</pre>
+<p>
+<a class="link" href="RCLibPlayer.html" title="RCLibPlayer"><span class="type">RCLibPlayer</span></a> class.
+</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="RCLibPlayerRandomMode"></a><h3>enum RCLibPlayerRandomMode</h3>
+<pre class="programlisting">typedef enum {
+    RCLIB_PLAYER_RANDOM_NONE,
+    RCLIB_PLAYER_RANDOM_SINGLE,
+    RCLIB_PLAYER_RANDOM_ALL
+} RCLibPlayerRandomMode;
+</pre>
+<p>
+The enum type for random playing mode type.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><a name="RCLIB-PLAYER-RANDOM-NONE:CAPS"></a><span class="term"><code class="literal">RCLIB_PLAYER_RANDOM_NONE</code></span></p></td>
+<td>no random playing 
+</td>
+</tr>
+<tr>
+<td><p><a name="RCLIB-PLAYER-RANDOM-SINGLE:CAPS"></a><span class="term"><code class="literal">RCLIB_PLAYER_RANDOM_SINGLE</code></span></p></td>
+<td>random playing in current playlist
+</td>
+</tr>
+<tr>
+<td><p><a name="RCLIB-PLAYER-RANDOM-ALL:CAPS"></a><span class="term"><code class="literal">RCLIB_PLAYER_RANDOM_ALL</code></span></p></td>
+<td>random playing in all playlists
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="RCLibPlayerRepeatMode"></a><h3>enum RCLibPlayerRepeatMode</h3>
+<pre class="programlisting">typedef enum {
+    RCLIB_PLAYER_REPEAT_NONE,
+    RCLIB_PLAYER_REPEAT_SINGLE,
+    RCLIB_PLAYER_REPEAT_LIST,
+    RCLIB_PLAYER_REPEAT_ALL
+} RCLibPlayerRepeatMode;
+</pre>
+<p>
+The enum type for repeat playing mode type.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><a name="RCLIB-PLAYER-REPEAT-NONE:CAPS"></a><span class="term"><code class="literal">RCLIB_PLAYER_REPEAT_NONE</code></span></p></td>
+<td>no repeat
+</td>
+</tr>
+<tr>
+<td><p><a name="RCLIB-PLAYER-REPEAT-SINGLE:CAPS"></a><span class="term"><code class="literal">RCLIB_PLAYER_REPEAT_SINGLE</code></span></p></td>
+<td>repeat playing current music
+</td>
+</tr>
+<tr>
+<td><p><a name="RCLIB-PLAYER-REPEAT-LIST:CAPS"></a><span class="term"><code class="literal">RCLIB_PLAYER_REPEAT_LIST</code></span></p></td>
+<td>repeat playing music in current playlist
+</td>
+</tr>
+<tr>
+<td><p><a name="RCLIB-PLAYER-REPEAT-ALL:CAPS"></a><span class="term"><code class="literal">RCLIB_PLAYER_REPEAT_ALL</code></span></p></td>
+<td>repeat playing music in all playlists
+</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-player-exit"></a><h3>rclib_player_exit ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rclib_player_exit                   ();</pre>
+<p>
+Unload the running player scheduler instance.
+</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-player-get-instance"></a><h3>rclib_player_get_instance ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GObject"><span class="returnvalue">GObject</span></a> *           rclib_player_get_instance           ();</pre>
+<p>
+Get the running <a class="link" href="RCLibPlayer.html" title="RCLibPlayer"><span class="type">RCLibPlayer</span></a> instance.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>The running instance. <span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span>
+</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-player-get-random-mode"></a><h3>rclib_player_get_random_mode ()</h3>
+<pre class="programlisting"><a class="link" href="RCLibPlayer.html#RCLibPlayerRandomMode" title="enum RCLibPlayerRandomMode"><span class="returnvalue">RCLibPlayerRandomMode</span></a> rclib_player_get_random_mode      ();</pre>
+<p>
+Get the random mode using now in the player.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>The random mode.</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-player-get-rating-limit"></a><h3>rclib_player_get_rating_limit ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rclib_player_get_rating_limit       (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gfloat"><span class="type">gfloat</span></a> *rating</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> *condition</code></em>);</pre>
+<p>
+Get the rating limit playing mode configuration data.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>rating</code></em> :</span></p></td>
+<td>the rating value to return. <span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>][<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>condition</code></em> :</span></p></td>
+<td>the condition to return. <span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>][<acronym title="NULL is ok, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>Whether rating limit playing mode is enabled.</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-player-get-repeat-mode"></a><h3>rclib_player_get_repeat_mode ()</h3>
+<pre class="programlisting"><a class="link" href="RCLibPlayer.html#RCLibPlayerRepeatMode" title="enum RCLibPlayerRepeatMode"><span class="returnvalue">RCLibPlayerRepeatMode</span></a> rclib_player_get_repeat_mode      ();</pre>
+<p>
+Get the repeat mode using now in the player.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>The repeat mode.</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-player-init"></a><h3>rclib_player_init ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rclib_player_init                   ();</pre>
+<p>
+Initialize the player scheduler.
+</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-player-play-library"></a><h3>rclib_player_play_library ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rclib_player_play_library           (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *uri</code></em>);</pre>
+<p>
+Play the URI of the music in the music library.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><em class="parameter"><code>uri</code></em> :</span></p></td>
+<td>the URI of the music item in the library</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-player-play-next"></a><h3>rclib_player_play_next ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rclib_player_play_next              (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> jump</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> repeat</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> loop</code></em>);</pre>
+<p>
+Play the next music.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>jump</code></em> :</span></p></td>
+<td>whether the player should be jump to the next playlist
+if the playing music is the last one in current playlist</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>repeat</code></em> :</span></p></td>
+<td>whether repeat playing the current music if there is no
+next one</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>loop</code></em> :</span></p></td>
+<td>whether the player should be jump to the first playlist
+if the playing one is the last</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>Whether the player is set to play.</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-player-play-playlist"></a><h3>rclib_player_play_playlist ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rclib_player_play_playlist          (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> iter</code></em>);</pre>
+<p>
+Play the iter to the playlist in the music database.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><em class="parameter"><code>iter</code></em> :</span></p></td>
+<td>the iter to the playlist</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-player-play-prev"></a><h3>rclib_player_play_prev ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rclib_player_play_prev              (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> jump</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> repeat</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> loop</code></em>);</pre>
+<p>
+Play the previous music.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>jump</code></em> :</span></p></td>
+<td>whether the player should be jump to the previous playlist
+if the playing music is the first one in current playlist</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>repeat</code></em> :</span></p></td>
+<td>whether repeat playing the current music if there is no
+previous one</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>loop</code></em> :</span></p></td>
+<td>whether the player should be jump to the last playlist
+if the playing one is the first</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>Whether the player is set to play.</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-player-set-random-mode"></a><h3>rclib_player_set_random_mode ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rclib_player_set_random_mode        (<em class="parameter"><code><a class="link" href="RCLibPlayer.html#RCLibPlayerRandomMode" title="enum RCLibPlayerRandomMode"><span class="type">RCLibPlayerRandomMode</span></a> mode</code></em>);</pre>
+<p>
+Set the random mode for the player.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><em class="parameter"><code>mode</code></em> :</span></p></td>
+<td>the new random mode to set</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-player-set-rating-limit"></a><h3>rclib_player_set_rating_limit ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rclib_player_set_rating_limit       (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> state</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gfloat"><span class="type">gfloat</span></a> rating</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> condition</code></em>);</pre>
+<p>
+Set the rating limit playing mode. if <em class="parameter"><code>condition</code></em> is set to <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#TRUE:CAPS"><span class="type">TRUE</span></a>,
+the player will play the music whose rating is less or equal than
+the rating limit value, if it is <a href="/usr/share/gtk-doc/html/glib/glib-Standard-Macros.html#FALSE:CAPS"><span class="type">FALSE</span></a>, the player will play the
+the music whose rating is more or equal than the rating limit.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>state</code></em> :</span></p></td>
+<td>enable or disable the rating limit playing mode</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>rating</code></em> :</span></p></td>
+<td>the rating limit value</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>condition</code></em> :</span></p></td>
+<td>the condition</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-player-set-repeat-mode"></a><h3>rclib_player_set_repeat_mode ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rclib_player_set_repeat_mode        (<em class="parameter"><code><a class="link" href="RCLibPlayer.html#RCLibPlayerRepeatMode" title="enum RCLibPlayerRepeatMode"><span class="type">RCLibPlayerRepeatMode</span></a> mode</code></em>);</pre>
+<p>
+Set the repeat mode for the player.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><em class="parameter"><code>mode</code></em> :</span></p></td>
+<td>the new repeat mode to set</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-player-signal-connect"></a><h3>rclib_player_signal_connect ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gulong"><span class="returnvalue">gulong</span></a>              rclib_player_signal_connect         (<em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *name</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/gobject/gobject-Closures.html#GCallback"><span class="type">GCallback</span></a> callback</code></em>,
+                                                         <em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> data</code></em>);</pre>
+<p>
+Connect the GCallback function to the given signal for the running
+instance of <a class="link" href="RCLibPlayer.html" title="RCLibPlayer"><span class="type">RCLibPlayer</span></a> object.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>name</code></em> :</span></p></td>
+<td>the name of the signal</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>callback</code></em> :</span></p></td>
+<td>the the <a href="/usr/share/gtk-doc/html/gobject/gobject-Closures.html#GCallback"><span class="type">GCallback</span></a> to connect. <span class="annotation">[<acronym title="The callback is valid only during the call to the method."><span class="acronym">scope call</span></acronym>]</span>
+</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>data</code></em> :</span></p></td>
+<td>the user data</td>
+</tr>
+<tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>The handler ID.</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rclib-player-signal-disconnect"></a><h3>rclib_player_signal_disconnect ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rclib_player_signal_disconnect      (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gulong"><span class="type">gulong</span></a> handler_id</code></em>);</pre>
+<p>
+Disconnects a handler from the running <a class="link" href="RCLibPlayer.html" title="RCLibPlayer"><span class="type">RCLibPlayer</span></a> instance so it
+will not be called during any future or currently ongoing emissions
+of the signal it has been connected to. The <span class="type">handler_id</span> becomes
+invalid and may be reused.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><em class="parameter"><code>handler_id</code></em> :</span></p></td>
+<td>handler id of the handler to be disconnected</td>
+</tr></tbody>
+</table></div>
+</div>
+</div>
+<div class="refsect1">
+<a name="RCLibPlayer.signal-details"></a><h2>Signal Details</h2>
+<div class="refsect2">
+<a name="RCLibPlayer-random-mode-changed"></a><h3>The <code class="literal">"random-mode-changed"</code> signal</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                user_function                      (<a class="link" href="RCLibPlayer.html" title="RCLibPlayer"><span class="type">RCLibPlayer</span></a> *player,
+                                                        <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a>        mode,
+                                                        <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>     user_data)      : <a href="/usr/share/gtk-doc/html/gobject/gobject-Signals.html#G-SIGNAL-RUN-FIRST:CAPS"><code class="literal">Run First</code></a></pre>
+<p>
+The ::random-mode-changed signal is emitted when a new random playing
+mode has been set.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>player</code></em> :</span></p></td>
+<td>the <a class="link" href="RCLibPlayer.html" title="RCLibPlayer"><span class="type">RCLibPlayer</span></a> that received the signal</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>mode</code></em> :</span></p></td>
+<td>the new random mode</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>user_data</code></em> :</span></p></td>
+<td>user data set when the signal handler was connected.</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="RCLibPlayer-repeat-mode-changed"></a><h3>The <code class="literal">"repeat-mode-changed"</code> signal</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                user_function                      (<a class="link" href="RCLibPlayer.html" title="RCLibPlayer"><span class="type">RCLibPlayer</span></a> *player,
+                                                        <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a>        mode,
+                                                        <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>     user_data)      : <a href="/usr/share/gtk-doc/html/gobject/gobject-Signals.html#G-SIGNAL-RUN-FIRST:CAPS"><code class="literal">Run First</code></a></pre>
+<p>
+The ::repeat-mode-changed signal is emitted when a new repeat playing
+mode has been set.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>player</code></em> :</span></p></td>
+<td>the <a class="link" href="RCLibPlayer.html" title="RCLibPlayer"><span class="type">RCLibPlayer</span></a> that received the signal</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>mode</code></em> :</span></p></td>
+<td>the new repeat mode</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>user_data</code></em> :</span></p></td>
+<td>user data set when the signal handler was connected.</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+</div>
+</div>
+<div class="footer">
+<hr>
+          Generated by GTK-Doc V1.18</div>
+</body>
+</html>

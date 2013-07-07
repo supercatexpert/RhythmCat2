@@ -1,0 +1,350 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>RCUiMainWindow</title>
+<meta name="generator" content="DocBook XSL Stylesheets V1.76.1">
+<link rel="home" href="index.html" title="RhythmCat Reference Manual">
+<link rel="up" href="ch01.html" title="API reference">
+<link rel="prev" href="RCMainApplication.html" title="RCMainApplication">
+<link rel="next" href="RCUiLibraryWindow.html" title="RCUiLibraryWindow">
+<meta name="generator" content="GTK-Doc V1.18 (XML mode)">
+<link rel="stylesheet" href="style.css" type="text/css">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="2">
+<tr valign="middle">
+<td><a accesskey="p" href="RCMainApplication.html"><img src="left.png" width="24" height="24" border="0" alt="Prev"></a></td>
+<td><a accesskey="u" href="ch01.html"><img src="up.png" width="24" height="24" border="0" alt="Up"></a></td>
+<td><a accesskey="h" href="index.html"><img src="home.png" width="24" height="24" border="0" alt="Home"></a></td>
+<th width="100%" align="center">RhythmCat Reference Manual</th>
+<td><a accesskey="n" href="RCUiLibraryWindow.html"><img src="right.png" width="24" height="24" border="0" alt="Next"></a></td>
+</tr>
+<tr><td colspan="5" class="shortcuts">
+<a href="#RCUiMainWindow.synopsis" class="shortcut">Top</a>
+                   | 
+                  <a href="#RCUiMainWindow.description" class="shortcut">Description</a>
+                   | 
+                  <a href="#RCUiMainWindow.object-hierarchy" class="shortcut">Object Hierarchy</a>
+                   | 
+                  <a href="#RCUiMainWindow.implemented-interfaces" class="shortcut">Implemented Interfaces</a>
+                   | 
+                  <a href="#RCUiMainWindow.signals" class="shortcut">Signals</a>
+</td></tr>
+</table>
+<div class="refentry">
+<a name="RCUiMainWindow"></a><div class="titlepage"></div>
+<div class="refnamediv"><table width="100%"><tr>
+<td valign="top">
+<h2><span class="refentrytitle"><a name="RCUiMainWindow.top_of_page"></a>RCUiMainWindow</span></h2>
+<p>RCUiMainWindow — The main window of the player</p>
+</td>
+<td valign="top" align="right"></td>
+</tr></table></div>
+<div class="refsynopsisdiv">
+<a name="RCUiMainWindow.synopsis"></a><h2>Synopsis</h2>
+<pre class="synopsis">
+#include &lt;rc-ui-window.h&gt;
+
+struct              <a class="link" href="RCUiMainWindow.html#RCUiMainWindow-struct" title="struct RCUiMainWindow">RCUiMainWindow</a>;
+struct              <a class="link" href="RCUiMainWindow.html#RCUiMainWindowClass" title="struct RCUiMainWindowClass">RCUiMainWindowClass</a>;
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RCUiMainWindow.html#rc-ui-main-window-cover-image-get-visible" title="rc_ui_main_window_cover_image_get_visible ()">rc_ui_main_window_cover_image_get_visible</a>
+                                                        ();
+<span class="returnvalue">void</span>                <a class="link" href="RCUiMainWindow.html#rc-ui-main-window-cover-image-set-visible" title="rc_ui_main_window_cover_image_set_visible ()">rc_ui_main_window_cover_image_set_visible</a>
+                                                        (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> visible</code></em>);
+<a href="/usr/share/gtk-doc/html/gdk-pixbuf/gdk-pixbuf-The-GdkPixbuf-Structure.html#GdkPixbuf"><span class="returnvalue">GdkPixbuf</span></a> *         <a class="link" href="RCUiMainWindow.html#rc-ui-main-window-get-default-cover-image" title="rc_ui_main_window_get_default_cover_image ()">rc_ui_main_window_get_default_cover_image</a>
+                                                        ();
+<a href="/usr/share/gtk-doc/html/gtk3/GtkWidget.html"><span class="returnvalue">GtkWidget</span></a> *         <a class="link" href="RCUiMainWindow.html#rc-ui-main-window-get-widget" title="rc_ui_main_window_get_widget ()">rc_ui_main_window_get_widget</a>        ();
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RCUiMainWindow.html#rc-ui-main-window-lyric-labels-get-visible" title="rc_ui_main_window_lyric_labels_get_visible ()">rc_ui_main_window_lyric_labels_get_visible</a>
+                                                        ();
+<span class="returnvalue">void</span>                <a class="link" href="RCUiMainWindow.html#rc-ui-main-window-lyric-labels-set-visible" title="rc_ui_main_window_lyric_labels_set_visible ()">rc_ui_main_window_lyric_labels_set_visible</a>
+                                                        (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> visible</code></em>);
+<span class="returnvalue">void</span>                <a class="link" href="RCUiMainWindow.html#rc-ui-main-window-playlist-scrolled-window-set-horizontal-policy" title="rc_ui_main_window_playlist_scrolled_window_set_horizontal_policy ()">rc_ui_main_window_playlist_scrolled_window_set_horizontal_policy</a>
+                                                        (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> state</code></em>);
+<span class="returnvalue">void</span>                <a class="link" href="RCUiMainWindow.html#rc-ui-main-window-present-main-window" title="rc_ui_main_window_present_main_window ()">rc_ui_main_window_present_main_window</a>
+                                                        ();
+<span class="returnvalue">void</span>                <a class="link" href="RCUiMainWindow.html#rc-ui-main-window-set-keep-above-state" title="rc_ui_main_window_set_keep_above_state ()">rc_ui_main_window_set_keep_above_state</a>
+                                                        (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> state</code></em>);
+<span class="returnvalue">void</span>                <a class="link" href="RCUiMainWindow.html#rc-ui-main-window-show" title="rc_ui_main_window_show ()">rc_ui_main_window_show</a>              ();
+<a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            <a class="link" href="RCUiMainWindow.html#rc-ui-main-window-spectrum-get-visible" title="rc_ui_main_window_spectrum_get_visible ()">rc_ui_main_window_spectrum_get_visible</a>
+                                                        ();
+<span class="returnvalue">void</span>                <a class="link" href="RCUiMainWindow.html#rc-ui-main-window-spectrum-set-style" title="rc_ui_main_window_spectrum_set_style ()">rc_ui_main_window_spectrum_set_style</a>
+                                                        (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> style</code></em>);
+<span class="returnvalue">void</span>                <a class="link" href="RCUiMainWindow.html#rc-ui-main-window-spectrum-set-visible" title="rc_ui_main_window_spectrum_set_visible ()">rc_ui_main_window_spectrum_set_visible</a>
+                                                        (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> visible</code></em>);
+</pre>
+</div>
+<div class="refsect1">
+<a name="RCUiMainWindow.object-hierarchy"></a><h2>Object Hierarchy</h2>
+<pre class="synopsis">
+  <a href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GObject">GObject</a>
+   +----<a href="/usr/share/gtk-doc/html/gobject/gobject-The-Base-Object-Type.html#GInitiallyUnowned">GInitiallyUnowned</a>
+         +----<a href="/usr/share/gtk-doc/html/gtk3/GtkWidget.html">GtkWidget</a>
+               +----<a href="/usr/share/gtk-doc/html/gtk3/GtkContainer.html">GtkContainer</a>
+                     +----<a href="/usr/share/gtk-doc/html/gtk3/GtkBin.html">GtkBin</a>
+                           +----<a href="/usr/share/gtk-doc/html/gtk3/GtkWindow.html">GtkWindow</a>
+                                 +----RCUiMainWindow
+</pre>
+</div>
+<div class="refsect1">
+<a name="RCUiMainWindow.implemented-interfaces"></a><h2>Implemented Interfaces</h2>
+<p>
+RCUiMainWindow implements
+ AtkImplementorIface and  <a href="/usr/share/gtk-doc/html/gtk3/GtkBuildable.html">GtkBuildable</a>.</p>
+</div>
+<div class="refsect1">
+<a name="RCUiMainWindow.signals"></a><h2>Signals</h2>
+<pre class="synopsis">
+  "<a class="link" href="RCUiMainWindow.html#RCUiMainWindow-keep-above-changed" title='The "keep-above-changed" signal'>keep-above-changed</a>"                             : <a href="/usr/share/gtk-doc/html/gobject/gobject-Signals.html#G-SIGNAL-RUN-FIRST:CAPS"><code class="literal">Run First</code></a>
+</pre>
+</div>
+<div class="refsect1">
+<a name="RCUiMainWindow.description"></a><h2>Description</h2>
+<p>
+This module implements the main window class <a class="link" href="RCUiMainWindow.html" title="RCUiMainWindow"><span class="type">RCUiMainWindow</span></a>,
+which implements the main window of the player.
+</p>
+</div>
+<div class="refsect1">
+<a name="RCUiMainWindow.details"></a><h2>Details</h2>
+<div class="refsect2">
+<a name="RCUiMainWindow-struct"></a><h3>struct RCUiMainWindow</h3>
+<pre class="programlisting">struct RCUiMainWindow;</pre>
+<p>
+The data structure used for <a class="link" href="RCUiMainWindow.html" title="RCUiMainWindow"><span class="type">RCUiMainWindow</span></a> class.
+</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="RCUiMainWindowClass"></a><h3>struct RCUiMainWindowClass</h3>
+<pre class="programlisting">struct RCUiMainWindowClass {
+};
+</pre>
+<p>
+<a class="link" href="RCUiMainWindow.html#RCUiMainWindowClass" title="struct RCUiMainWindowClass"><span class="type">RCUiMainWindowClass</span></a> class.
+</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rc-ui-main-window-cover-image-get-visible"></a><h3>rc_ui_main_window_cover_image_get_visible ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rc_ui_main_window_cover_image_get_visible
+                                                        ();</pre>
+<p>
+Get the visibilty of the spectrum show widget.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>Whether the widget is visible.</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rc-ui-main-window-cover-image-set-visible"></a><h3>rc_ui_main_window_cover_image_set_visible ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rc_ui_main_window_cover_image_set_visible
+                                                        (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> visible</code></em>);</pre>
+<p>
+Set the visibilty of the cover image widget.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><em class="parameter"><code>visible</code></em> :</span></p></td>
+<td>whether the widget is visible</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rc-ui-main-window-get-default-cover-image"></a><h3>rc_ui_main_window_get_default_cover_image ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/gdk-pixbuf/gdk-pixbuf-The-GdkPixbuf-Structure.html#GdkPixbuf"><span class="returnvalue">GdkPixbuf</span></a> *         rc_ui_main_window_get_default_cover_image
+                                                        ();</pre>
+<p>
+Get the default cover image of the player.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>The default cover image. <span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span>
+</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rc-ui-main-window-get-widget"></a><h3>rc_ui_main_window_get_widget ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/gtk3/GtkWidget.html"><span class="returnvalue">GtkWidget</span></a> *         rc_ui_main_window_get_widget        ();</pre>
+<p>
+Get the main window widget. If the widget is not initialized
+yet, it will be initialized.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>The main window widget. <span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span>
+</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rc-ui-main-window-lyric-labels-get-visible"></a><h3>rc_ui_main_window_lyric_labels_get_visible ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rc_ui_main_window_lyric_labels_get_visible
+                                                        ();</pre>
+<p>
+Get the visibilty of the lyric label widgets.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><span class="emphasis"><em>Returns</em></span> :</span></p></td>
+<td>Whether the widget is visible.</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rc-ui-main-window-lyric-labels-set-visible"></a><h3>rc_ui_main_window_lyric_labels_set_visible ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rc_ui_main_window_lyric_labels_set_visible
+                                                        (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> visible</code></em>);</pre>
+<p>
+Set the visibilty of the lyric label widgets.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><em class="parameter"><code>visible</code></em> :</span></p></td>
+<td>whether the widget is visible</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rc-ui-main-window-playlist-scrolled-window-set-horizontal-policy"></a><h3>rc_ui_main_window_playlist_scrolled_window_set_horizontal_policy ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rc_ui_main_window_playlist_scrolled_window_set_horizontal_policy
+                                                        (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> state</code></em>);</pre>
+<p>
+Set the horizontal policy state of the playlist scrolled window.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><em class="parameter"><code>state</code></em> :</span></p></td>
+<td>the policy state</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rc-ui-main-window-present-main-window"></a><h3>rc_ui_main_window_present_main_window ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rc_ui_main_window_present_main_window
+                                                        ();</pre>
+<p>
+Present the main window, if it is hided.
+</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rc-ui-main-window-set-keep-above-state"></a><h3>rc_ui_main_window_set_keep_above_state ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rc_ui_main_window_set_keep_above_state
+                                                        (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> state</code></em>);</pre>
+<p>
+Keep the player above the other windows.
+Notice that it depends on the Window Manager,
+in some WMs, it may has no effect.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><em class="parameter"><code>state</code></em> :</span></p></td>
+<td>the new state</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rc-ui-main-window-show"></a><h3>rc_ui_main_window_show ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rc_ui_main_window_show              ();</pre>
+<p>
+Show the main window of the player.
+</p>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rc-ui-main-window-spectrum-get-visible"></a><h3>rc_ui_main_window_spectrum_get_visible ()</h3>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>            rc_ui_main_window_spectrum_get_visible
+                                                        ();</pre>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rc-ui-main-window-spectrum-set-style"></a><h3>rc_ui_main_window_spectrum_set_style ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rc_ui_main_window_spectrum_set_style
+                                                        (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> style</code></em>);</pre>
+<p>
+Set the visualize style of the spectrum widget in the player.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><em class="parameter"><code>style</code></em> :</span></p></td>
+<td>the visualize style</td>
+</tr></tbody>
+</table></div>
+</div>
+<hr>
+<div class="refsect2">
+<a name="rc-ui-main-window-spectrum-set-visible"></a><h3>rc_ui_main_window_spectrum_set_visible ()</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                rc_ui_main_window_spectrum_set_visible
+                                                        (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> visible</code></em>);</pre>
+<p>
+Set the visibilty of the spectrum show widget.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><em class="parameter"><code>visible</code></em> :</span></p></td>
+<td>whether the widget is visible</td>
+</tr></tbody>
+</table></div>
+</div>
+</div>
+<div class="refsect1">
+<a name="RCUiMainWindow.signal-details"></a><h2>Signal Details</h2>
+<div class="refsect2">
+<a name="RCUiMainWindow-keep-above-changed"></a><h3>The <code class="literal">"keep-above-changed"</code> signal</h3>
+<pre class="programlisting"><span class="returnvalue">void</span>                user_function                      (<a class="link" href="RCUiMainWindow.html" title="RCUiMainWindow"><span class="type">RCUiMainWindow</span></a> *window,
+                                                        <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a>        state,
+                                                        <a href="/usr/share/gtk-doc/html/glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a>        user_data)      : <a href="/usr/share/gtk-doc/html/gobject/gobject-Signals.html#G-SIGNAL-RUN-FIRST:CAPS"><code class="literal">Run First</code></a></pre>
+<p>
+The ::keep-above-changed signal is emitted when the keep above
+state of the main window changed.
+</p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>window</code></em> :</span></p></td>
+<td>the <a class="link" href="RCUiMainWindow.html" title="RCUiMainWindow"><span class="type">RCUiMainWindow</span></a> that received the signal</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>state</code></em> :</span></p></td>
+<td>the state</td>
+</tr>
+<tr>
+<td><p><span class="term"><em class="parameter"><code>user_data</code></em> :</span></p></td>
+<td>user data set when the signal handler was connected.</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+</div>
+</div>
+<div class="footer">
+<hr>
+          Generated by GTK-Doc V1.18</div>
+</body>
+</html>
